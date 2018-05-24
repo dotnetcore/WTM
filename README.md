@@ -25,3 +25,4 @@ WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 
 
 
 框架文档地址：http://wtmdoc.walkingtec.cn  文档还在不断完善中。。。
+框架QQ交流群：694148336
