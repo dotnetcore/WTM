@@ -8,13 +8,13 @@
     <PackageId>$(ProjectName)</PackageId>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://gitee.com/alienwow/DotNetCore.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/WalkingTec/WalkingTec.Mvvm.git</RepositoryUrl>
     <PackageLicenseUrl>http://license.walkingtec.cn</PackageLicenseUrl>
     <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
     <PackageIconUrl>http://license.walkingtec.cn/walkingtec.mvvm.ico</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn</PackageReleaseNotes>
+    <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
     <PackageOutputPath></PackageOutputPath>
     <IncludeSymbols>false</IncludeSymbols>
     <IncludeSource>false</IncludeSource>

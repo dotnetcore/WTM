@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- 版本前缀 -->
-    <VersionPrefix>1.3.10</VersionPrefix>
+    <VersionPrefix>1.3.11</VersionPrefix>
     <!--
       开发期：
         Pre-alpha（不完整测试版）：有时候软件会在Alpha或Beta版本前先发布Pre-alpha版本。一般而言相对于Alpha或Beta版本，Pre-alpha版本是一个功能不完整的版本。
