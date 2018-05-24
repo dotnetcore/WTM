@@ -1,0 +1,13 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs.FrameworkRoleVM
+
+<wt:form vm="@Model">
+    <wt:quote>确定要删除这条数据么：</wt:quote>
+    <wt:textbox field="Entity.RoleCode" />
+    <wt:textbox field="Entity.RoleName" />
+    <wt:textarea field="Entity.RoleRemark" disabled="true" />
+    <wt:hidden field="Entity.ID" />
+    <wt:row align=" AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

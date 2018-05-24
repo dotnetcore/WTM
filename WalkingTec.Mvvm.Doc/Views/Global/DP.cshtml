@@ -1,0 +1,47 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>WTM框架支持关联表的数据权限</p>
+
+<wt:fieldset field-set-style="Simple" title="定义数据权限">
+    系统支持哪些表的数据权限是需要在代码中定义的。比如下面的代码定义了系统需要将用户角色表作为一个数据权限：
+    <wt:code title="Program.cs">
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        BuildWebHost(args).Run();
+    }
+
+    public static IWebHost BuildWebHost(string[] args) =>            
+        WebHost.CreateDefaultBuilder(args)
+            .ConfigureServices(x =>
+            {
+                List<IDataPrivilege> pris = new List<IDataPrivilege>();
+                pris.Add(new DataPrivilegeInfo<TestRole>("测试角色", y => y.RoleName));
+                x.AddFrameworkService(dataPrivilegeSettings: pris);
+                x.AddLayui();
+            })
+            .Configure(x =>
+            {
+                x.UseFrameworkService();
+            })
+            .Build();
+
+}
+    </wt:code>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="配置数据权限">
+    <p>框架提供了一个系统管理模块，封装在WalkingTec.Mvvm.Admin中，其中就包括配置数据权限的功能，具体请参考框架管理模块中的数据权限管理功能</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="使用数据权限">
+    <p>数据权限的配置都记录在框架自带的DataPrivileges表中，自己编写查询语句或者存储过程时可以直接使用表中的数据</p>
+    <p>如果使用lambda编写查询语句，可以使用系统提供的DpWhere函数来简化数据权限的验证</p>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+

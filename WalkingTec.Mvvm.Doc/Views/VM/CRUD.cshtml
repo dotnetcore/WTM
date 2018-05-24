@@ -1,0 +1,188 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BaseCRUDVM是框架中负责增删改的VM，它继承自BaseVM，提供了标准的DoAdd,DoEdit,DoDelete函数</p>
+<wt:fieldset field-set-style="Simple" title="建立一个BaseCRUDVM">
+    <p>建立BaseCRUDVM非常简单，只需要将关联的Model作为泛型变量就可以了。下面以学校的模型为例，学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
+    <wt:code title="SchoolVM.cs">
+public class SchoolVM : BaseCRUDVM&ltSchool&gt
+{
+
+}
+    </wt:code>
+    <p>是的，就是这么简单，对于没有附加要求的单表来说，只是继承BaseCRUDVM就足够了</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="使用BaseCRUDVM">
+    <p>在Controller中使用BaseCRUDVM的步骤也是一目了然，请看下面的例子</p>
+    <wt:code title="SchoolController.cs">
+[ActionDescription("学校管理")]
+public class SchoolController : BaseController
+{
+    #region 新建
+    [ActionDescription("新建")]
+    public ActionResult Create()
+    {
+        var vm = CreateVM&ltSchoolVM&gt();
+        return PartialView(vm);
+    }
+
+    [HttpPost]
+    [ActionDescription("新建")]
+    public ActionResult Create(SchoolVM vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            return PartialView(vm);
+        }
+        else
+        {
+            vm.DoAdd();
+            return FFResult().CloseDialog().RefreshGrid();
+        }
+    }
+    #endregion
+
+    #region 修改
+    [ActionDescription("修改")]
+    public ActionResult Edit(Guid id)
+    {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+    }
+
+    [ActionDescription("修改")]
+    [HttpPost]
+    public ActionResult Edit(SchoolVM vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            return PartialView(vm);
+        }
+        else
+        {
+            vm.DoEdit();
+            return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
+        }
+    }
+    #endregion
+
+    #region 删除
+    [ActionDescription("删除")]
+    public ActionResult Delete(Guid id)
+    {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+    }
+
+    [ActionDescription("删除")]
+    [HttpPost]
+    public ActionResult Delete(Guid id, IFormCollection nouse)
+    {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        vm.DoDelete();
+        if (!ModelState.IsValid)
+        {
+            return PartialView(vm);
+        }
+        else
+        {
+            return FFResult().CloseDialog().RefreshGrid();
+        }
+    }
+    #endregion
+
+    #region 详细
+    [ActionDescription("详细")]
+    public ActionResult Details(Guid id)
+    {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+    }
+    #endregion
+
+}
+    </wt:code>
+
+    <wt:quote>
+        <p>必须使用CreateVM函数来创建ViewModel，而不要直接new。CreateVM函数会将当前Controller的Session，ModelState等信息传递给VM，并进行一些框架内部的操作</p>
+        <p>FFResult是框架提供的一个辅助类，主要是方便开发人员返回常用js，比如关闭当前窗口，刷新grid等</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="自定义验证">
+    <p>BaseCRUDVM继承自BaseVM，所以一样可以通过重写Validate方法来实现复杂的自定义验证</p>
+    <p>同时，对于使用比较多的字段唯一性的验证，BaseCRUDVM提供了一个更方便的方式，重写SetDuplicatedCheck方法</p>
+    <p>下面的例子扩充了SchoolVM，加入了唯一性的验证，SchoolCode和SchoolName两个字段都不能重复</p>
+    <wt:code title="SchoolVM.cs">
+public class SchoolVM : BaseCRUDVM&ltSchool&gt
+{
+    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+    {
+        var rv = CreateFieldsInfo(SimpleField(x => x.SchoolCode));
+        rv.AddGroup(SimpleField(x => x.SchoolName));
+        return rv;
+    }
+}
+    </wt:code>
+    <p>框架同时支持组合字段的唯一性验证，比如下面的例子，SchoolName和SchoolType两个字段组合起来不能重复,同时SchoolCode也不能重复</p>
+    <wt:code title="SchoolVM.cs">
+public class SchoolVM : BaseCRUDVM&ltSchool&gt
+{
+    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+    {
+        var rv = CreateFieldsInfo(SimpleField(x => x.SchoolName),SimpleField(x => x.SchoolType));
+        rv.AddGroup(SimpleField(x => x.SchoolCode));
+        return rv;
+    }
+}
+    </wt:code>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="主要函数">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">函数</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DoAdd()</td>
+                <td>数据库添加操作</td>
+            </tr>
+            <tr>
+                <td>DoEdit(bool updateAllFields = false)</td>
+                <td>数据库修改操作,updateAllFields默认为false，只修改Post回来的字段，如果updateAllFields为true，将修改所有字段</td>
+            </tr>
+            <tr>
+                <td>DoDelete()</td>
+                <td>数据库删除操作，对于继承自PersistPoco的模型，会把IsValid字段设为false，从而进行假删除</td>
+            </tr>
+            <tr>
+                <td>DoRealDelete()</td>
+                <td>无论是否继承自PersistPoco，都进行删除</td>
+            </tr>
+            <tr>
+                <td>GetById(Guid Id)</td>
+                <td>根据Id获取Model</td>
+            </tr>
+            <tr>
+                <td>SetInclude(params Expression&ltFunc&ltTModel, object&gt&gt[] exps)</td>
+                <td>设置默认关联的表，一般在构造函数中调用，然后在GetById中会自动关联设置的表</td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+        <p>DoAdd,DoEdit,DoDelete,DoRealDelete都有默认实现，对于更加复杂的逻辑，可以重写这些方法</p>
+    </wt:quote>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo');
+    </script>

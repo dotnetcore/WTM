@@ -1,0 +1,154 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BaseBatchVM是框架中负责批量更新和删除的VM，它本身继承自BaseVM，同时它是一个组合VM，内部包括了一个ListVM用来显示批量操作的列表，以及一个BaseVM用来设置需要更新的字段</p>
+<wt:fieldset field-set-style="Simple" title="建立一个BaseBatchVM">
+    <p>建立一个BatchVM分两步</p>
+    <p>1. 建立一个普通的VM用来设置需要批量更新的字段</p>
+    <p>2. 建立一个BatchVM并使用第一步建立的VM作为泛型变量</p>
+    <p>下面以学校的模型为例，演示如何建立一个BatchVM对学校数据进行批量修改和删除。学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
+    <wt:code title="SchoolBatchVM.cs">
+public class SchoolBatchVM : BaseBatchVM&ltSchool, School_BatchEdit&gt
+{
+    public SchoolBatchVM()
+    {
+        ListVM = new SchoolListVM();
+        LinkedVM = new School_BatchEdit();
+    }
+}
+
+/// <summary>
+/// 批量编辑字段类
+/// </summary>
+public class School_BatchEdit : BaseVM
+{
+    [Display(Name = "学校类型")]
+    public SchoolTypeEnum? SchoolType { get; set; }
+
+}
+    </wt:code>
+    <p>以上代码定义了一个简单的BatchVM，用来批量修改学校类型这个字段，以及批量删除学校数据</p>
+    <wt:quote>
+        <p>ListVM指向一个继承自BasePagedListVM的类，负责显示数据列表</p>
+        <p>LinkedVM指向一个继承自BaseVM的类，负责指定需要更新的字段</p>
+    </wt:quote>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="使用BaseBatchVM">
+    <p>在Controller中使用BatchVM和使用其他VM是一样的，请看下面的例子</p>
+    <wt:code title="SchoolController.cs">
+#region 批量修改
+[HttpPost]
+[ActionDescription("批量修改")]
+public ActionResult BatchEdit(Guid[] IDs)
+{
+    var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("批量修改")]
+public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
+{
+    if (!ModelState.IsValid || !vm.DoBatchEdit())
+    {
+        return PartialView("BatchEdit",vm);
+    }
+    else
+    {
+        return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+    }
+}
+#endregion
+
+#region 批量删除
+[HttpPost]
+[ActionDescription("批量删除")]
+public ActionResult BatchDelete(Guid[] IDs)
+{
+    var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("批量删除")]
+public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
+{
+    if (!ModelState.IsValid || !vm.DoBatchDelete())
+    {
+        return PartialView("BatchDelete",vm);
+    }
+    else
+    {
+        return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+    }
+}
+#endregion
+
+}
+    </wt:code>
+
+    <wt:quote>
+        <p>DoBatchEdit和DoBatchDelete是BatchVM中提供的函数，用于进行批量修改和删除</p>
+        <p>必须使用CreateVM函数来创建ViewModel，而不要直接new。CreateVM函数会将当前Controller的Session，ModelState等信息传递给VM，并进行一些框架内部的操作</p>
+        <p>FFResult是框架提供的一个辅助类，主要是方便开发人员返回常用js，比如关闭当前窗口，刷新grid等</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="自定义验证">
+    <p>BaseBatchVM继承自BaseVM，所以一样可以通过重写Validate方法来实现复杂的自定义验证</p>
+    <p>BatchVM定义了一个CheckIfCanDelete方法，重写该方法可以在批量删除时定义一些验证逻辑</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="主要属性">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ListVM</td>
+                <td>一个继承自BasePagedListVM的类，负责输出列表数据</td>
+            </tr>
+            <tr>
+                <td>LinkedVM</td>
+                <td>一个继承自BaseVM的类，负责定义需要批量修改的字段</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="主要函数">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">函数</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DoBatchDelete()</td>
+                <td>进行批量删除</td>
+            </tr>
+            <tr>
+                <td>DoBatchEdit()</td>
+                <td>进行批量修改。通过对比BatchVM中绑定Model中的字段和LinkedVM中定义的字段，如果有同名字段，则修改</td>
+            </tr>
+            <tr>
+                <td>CheckIfCanDelete()</td>
+                <td>批量删除时的验证条件，需要在在继承类中重写</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo');
+    </script>

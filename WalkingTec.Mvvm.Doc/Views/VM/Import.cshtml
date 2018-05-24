@@ -1,0 +1,140 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BaseTemplateVM和BaseImportVM是框架中负责导入的VM，TemplateVM用来定义Excel模板，ImportVM使用TemplateVM定义的模板进行导入操作</p>
+<wt:fieldset field-set-style="Simple" title="建立一个BaseImportVM">
+    <p>ImportVM需要使用TemplateVM中定义的模板，所以建立ImportVM需要两个步骤</p>
+    <p>1. 建立一个TemplateVM，并定义需要导入的字段</p>
+    <p>2. 建立一个ImportVM，将第一步创建的TemplateVM作为泛型变量传入</p>
+    <p>下面以学校的模型为例，演示如何建立一个ImportVM进行学校信息的导入。学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "学校编码")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    [Display(Name = "学校名称")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    [Display(Name = "学校类型")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    [Display(Name = "备注")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+
+}    
+        </wt:code>
+    <p>对于简单的导入，以上代码就足够了，只是继承基类并定义需要导入的字段，框架会完成导入工作</p>
+    <wt:quote>
+        ExcelPropety是框架提供的类，用来定义需要导入的列
+    </wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="使用BaseImportVM">
+    <p>在Controller中使用BaseImportVM的步骤也是一目了然，请看下面的例子</p>
+    <wt:code title="SchoolController.cs">
+#region 导入
+[ActionDescription("导入")]
+public ActionResult Import()
+{
+    var vm = CreateVM&ltSchoolImportVM&gt();
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("导入")]
+public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
+{
+    if (vm.ErrorListVM.EntityList.Count &gt 0 || !vm.BatchSaveData())
+    {
+        return PartialView(vm);
+    }
+    else
+    {
+        return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+    }
+}
+#endregion
+    </wt:code>
+    <wt:quote>
+        <p>BatchSaveData是ImportVM中定义的函数，它会进行最终的导入数据库的操作</p>
+        <p>必须使用CreateVM函数来创建ViewModel，而不要直接new。CreateVM函数会将当前Controller的Session，ModelState等信息传递给VM，并进行一些框架内部的操作</p>
+        <p>FFResult是框架提供的一个辅助类，主要是方便开发人员返回常用js，比如关闭当前窗口，刷新grid等</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="自定义验证">
+    <p>ImportVM会根据关联的Model找到其对应的BaseCRUDVM，如果能找到，则调用BaseCRUDVM中的Validate和SetDuplicatedCheck方法来进行逻辑验证和数据重复性验证</p>
+    <p>同时，ImportVM本身也可以重写SetDuplicatedCheck方法，最终框架会合并ImportVM和BaseCRUDVM中的数据重复性验证</p>
+    <p>SetDuplicatedCheck的写法请参考BaseCRUDVM中的对应章节</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="复杂的导入模板">
+    <p>框架支持更复杂的模板，比如导入的时候需要用下拉菜单来选择关联表数据</p>
+    <p>比如前面的例子，如果学校名称必须从下拉菜单中选择，我们可以这样实现</p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "学校编码")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    [Display(Name = "学校名称")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    [Display(Name = "学校类型")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    [Display(Name = "备注")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+
+    protected override void InitVM()
+    {
+        SchoolName_Excel.DataType = ColumnDataType.ComboBox;
+        SchoolName_Excel.ListItems = new List&ltComboSelectListItem&gt
+        {
+            new ComboSelectListItem{ Text="aaa", Value="aaa"},
+            new ComboSelectListItem{ Text="bbb", Value="bbb"},
+            new ComboSelectListItem{ Text="ccc", Value="ccc"},
+            new ComboSelectListItem{ Text="ddd", Value="ddd"},
+        };
+    }
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+
+}    
+    </wt:code>
+    <p>如上所示，我们将SchoolName列的DataType设定为ComboBox，并指定其ListItems就可以了，框架会在生成模板的时候自动在Excel里生成下拉菜单</p>
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="主要函数">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">函数</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GenerateTemplate()</td>
+                <td>生成模板</td>
+            </tr>
+            <tr>
+                <td>SetEntityList</td>
+                <td>将模板数据保存到本地类中，如果默认逻辑不能支持需求，可以在子类中重写此函数</td>
+            </tr>
+            <tr>
+                <td>BatchSaveData</td>
+                <td>进行最终的数据库写入操作，如果默认逻辑不能支持需求，可以在子类中重写此函数</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo');
+    </script>

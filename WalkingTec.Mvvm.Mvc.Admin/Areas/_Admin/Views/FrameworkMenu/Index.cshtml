@@ -1,0 +1,16 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.PageName" />
+        <wt:textbox field="Searcher.ModuleName" />
+        <wt:textbox field="Searcher.ActionName" />
+    </wt:row>
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:combobox field="Searcher.IsPublic" />
+        <wt:combobox field="Searcher.FolderOnly" />
+        <wt:combobox field="Searcher.ShowOnMenu" />
+    </wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" hidden-grid-index="true" />
+

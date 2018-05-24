@@ -1,0 +1,93 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+WTM框架提供了一个BaseController，所有框架内编写的Controller都应该继承这个基类，BaseController提供了很多方便的属性和方法
+
+<wt:fieldset field-set-style="Simple" title="属性说明">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ConfigInfo</td>
+                <td>获取配置文件数据，详见<a href="/#/Global/Global">全局变量</a></td>
+            </tr>
+            <tr>
+                <td>GlobaInfo</td>
+                <td>获取一些全局变量，详见<a href="/#/Global/Global">全局变量</a></td>
+            </tr>
+            <tr>
+                <td>UIService</td>
+                <td>获取UI服务，提供一些函数方便的生成前台html控件</td>
+            </tr>
+            <tr>
+                <td>Cache</td>
+                <td>获取缓存</td>
+            </tr>
+            <tr>
+                <td>ParentWindowId</td>
+                <td>获取前台页面父级页面的Id</td>
+            </tr>
+            <tr>
+                <td>CurrentWindowId</td>
+                <td>获取前台页面当前窗口的Id</td>
+            </tr>
+            <tr>
+                <td>DC</td>
+                <td>数据库环境</td>
+            </tr>
+            <tr>
+                <td>LoginUserInfo</td>
+                <td>当前登陆用户信息</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="方法说明">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">方法</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CreateVM()</td>
+                <td>新建一个ViewModel，框架内的VM都应该在Controller里通过这个函数创建</td>
+            </tr>
+            <tr>
+                <td>CreateDC()</td>
+                <td>创建数据库环境</td>
+            </tr>
+            <tr>
+                <td>RedoValidation()</td>
+                <td>模拟MVC的方式验证一个Model</td>
+            </tr>
+            <tr>
+                <td>RedoUpdateModel</td>
+                <td>模拟MVC的方式根据Post过来的数据初始化一个Model</td>
+            </tr>
+            <tr>
+                <td>DoLog()</td>
+                <td>记录日志</td>
+            </tr>
+            <tr>
+                <td>FFResult()</td>
+                <td>继承自ContentResult，用来输出一些常用的js给前台</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<script>
+        layui.table.init('parse-table-demo');
+</script>

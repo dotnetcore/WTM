@@ -1,0 +1,36 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+框架有一些自定义的属性可以写在Controller或Controller中的方法上
+
+<wt:fieldset field-set-style="Simple" title="ActionDescription">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>框架会使用这里定义的名称作为Model名和Action名存在FrameworkModules和FrameworkActions表中</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="AllRight">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>AllRight标记的Controller或者方法会跳过页面权限验证，只要用户登陆了就可以访问</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Public">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>Public标记的Controller或者方法为公开方法，不需要登陆就可以访问</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="DebugOnly">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>DebugOnly标记的Controller或者方法只有在配置文件中IsQuickDebug为true时才可以访问</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="FixConnection">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>FixConnection标记的Controller或者方法将使用指定的数据库作为默认DataContext，详情请见<a href="/#/Global/CS">数据库分库</a></p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="ReInit">
+    <p>可以写在Controller或Controller中的方法上</p>
+    <p>框架默认会在Post回来的VM验证失败时自动调用VM中的ReInitVM()方法，通过标记ReInit可以改变这种默认行为</p>
+</wt:fieldset>

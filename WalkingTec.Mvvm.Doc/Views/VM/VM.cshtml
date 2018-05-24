@@ -1,0 +1,157 @@
+﻿<p>BaseVM是WTM框架中的基础VM，框架中所有内置的VM都继承自它，同时框架要求开发者自定义的VM也都要继承它</p>
+<br />
+<wt:quote>
+    BaseVM提供了连接Controller与View之间的，让开发者编写逻辑的地方。如果需要对数据进行增删改查，导入导出等操作，请继承更具体的VM
+</wt:quote>
+<wt:fieldset field-set-style="Simple" title="建立一个VM">
+    <p>建立一个基础的VM非常简单，只需要继承BaseVM就可以了,下面我们建立一个LoginVM来处理用户登陆的操作</p>
+    <wt:code title="LoginVM.cs">
+using WalkingTec.Mvvm.Core;
+
+public class LoginVM : BaseVM{
+
+}
+    </wt:code>
+    <p>上面的代码定义了一个LoginVM，它有什么用呢？</p>
+    <p>简单来说，当你在Controller中通过CreateVM方法创建这个VM，框架会自动将编写逻辑需要的很多数据传递给VM，比如当前登陆用户的信息，表单提交的信息，当前数据库连接等等</p>
+    <p>同时，VM里的属性还可以用来绑定前台页面控件，这样一个VM连接了前台，后台和数据库，在VM里你可以访问所有需要的信息来编写你需要的逻辑</p>
+    <p>我们来完善一下LoginVM，来演示一个简单的登陆操作</p>
+    <wt:code title="LoginVM.cs">
+using WalkingTec.Mvvm.Core;
+
+public class LoginVM : BaseVM{
+
+    [Display(Name = "账号")]
+    [Required(AllowEmptyStrings = false)]
+    [StringLength(10)]
+    public string Username { get; set; }
+
+    [Display(Name = "密码")]
+    [Required(AllowEmptyStrings = false)]
+    [StringLength(10,ErrorMessage ="{0}最多输入{1}个字符")]
+    public string Password { get; set; }
+
+    public LoginUserInfo DoLogin()
+    {
+        //根据用户名和密码查询用户
+        var user = DC.Set<FrameworkUserBase>()
+            .Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password.ToLower() == Password.ToLower() && x.IsValid == true)
+            .SingleOrDefault();
+            //如果没有找到则输出错误
+            if (user == null)
+            {
+                MSD.AddModelError("", "登录失败");
+            }
+        return user;
+    }
+}
+    </wt:code>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="使用VM">
+    <p>我们把登陆的全部逻辑封装在了LoginVM中，这样在Controller里，我们的代码就非常简单了</p>
+    <wt:code title="LoginController.cs">
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Mvc;
+
+[Public]
+public class LoginController : BaseController
+{
+    [ActionDescription("登录")]
+    public IActionResult Login()
+    {
+        LoginVM vm = CreateVM<LoginVM>();
+        return View(vm);
+    }
+
+    [HttpPost]
+    public ActionResult Login(LoginVM vm)
+    {
+        var user = vm.DoLogin();
+        if (user == null)
+        {
+            return View(vm);
+        }
+        else
+        {
+            return Redirect("/home/index");
+        }
+    }
+}
+    </wt:code>
+
+    <wt:quote>
+        BaseController是框架提供的Controller基类，所有应用框架的Controller都应该继承这个类，详见Controller部分的文档<br />
+        [Public],[ActionDescription]等属性都是框架提供的应用于Controller和Action上的属性，详见Controller部分的文档<br />
+        在Controller中使用CreateVM来初始化VM，这样做可以把当前请求的很多信息传递给VM，比如数据库连接，Session等
+    </wt:quote>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="VM的自定义验证">
+    <p>简单的单一字段验证可以通过在属性上加Attribute的方式来实现</p>
+    <p>复杂的验证逻辑可以通过重写BaseVM中的Validate方法来实现</p>
+    <p>下面的代码演示了一个修改密码的VM</p>
+    <wt:code title="ChangePasswordVM.cs">
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using WalkingTec.Mvvm.Core;
+
+namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
+{
+    public class ChangePasswordVM : BaseVM
+    {
+        [Display(Name = "用户名")]
+        public string ITCode { get; set; }
+
+        [Display(Name = "当前密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string OldPassword { get; set; }
+
+        [Display(Name = "新密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string NewPassword { get; set; }
+
+        [Display(Name = "新密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string NewPasswordComfirm { get; set; }
+
+        public override void Validate()
+        {
+            //检查原密码是否正确，如不正确则输出错误
+            if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null){
+                MSD.AddModelError("OldPassword", "当前密码错误");
+            }
+            //检查两次新密码是否输入一致，如不一致则输出错误
+            if (NewPassword != NewPasswordComfirm)
+            {
+                MSD.AddModelError("NewPasswordComfirm", "两次新密码输入不一致");
+            }
+        }
+
+        public void DoChange()
+        {
+            var user = DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode).SingleOrDefault();
+            if (user != null)
+            {
+                user.Password = Utils.GetMD5String(NewPassword);
+            }
+            DC.SaveChanges();
+        }
+    }
+}
+    </wt:code>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="VM的初始化">
+    <p>重写VM中的InitVM和ReInitVM方法，进行VM需要初始化的变量和操作，之所以要将初始化的代码放到这里，是因为只有在InitVM和ReInitVM之后，VM中的DataContext,Session,ModelState等才有值</p>
+    <p>InitVM是在CreateVM时调用，ReInitVM是在Post回来时模型验证出错的时候调用，如果没有重写ReInitVM方法，则会默认调用InitVM方法</p>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>

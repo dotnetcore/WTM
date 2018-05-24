@@ -1,0 +1,9 @@
+﻿@model $vmnamespace$.$modelname$VM
+
+<wt:form vm="@Model">$fields$
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

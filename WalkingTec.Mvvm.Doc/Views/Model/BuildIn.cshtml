@@ -1,0 +1,73 @@
+﻿框架提供了10多个内置模型，用于实现框架自带的用户，角色，权限，菜单，日志等功能
+
+<table lay-filter="parse-table-demo">
+    <thead>
+        <tr>
+            <th lay-data="{field:'username', width:200}">模型</th>
+            <th lay-data="{field:'joinTime', width:400}">描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ActionLog</td>
+            <td>日志模型，框架的日志记录功能依赖这个模型</td>
+        </tr>
+        <tr>
+            <td>DataPrivilege</td>
+            <td>数据权限模型，框架的自动数据过滤依赖这个模型</td>
+        </tr>
+        <tr>
+            <td>FileAttachment</td>
+            <td>附件模型，框架提供的附件的上传下载的功能依赖这个模型</td>
+        </tr>
+        <tr>
+            <td>FrameworkAction</td>
+            <td>动作模型，用于记录框架内所有Controller下的方法</td>
+        </tr>
+        <tr>
+            <td>FrameworkArea</td>
+            <td>区域模型，用于记录框架内所有的Area</td>
+        </tr>
+        <tr>
+            <td>FrameworkDomain</td>
+            <td>域模型，用于实现跨域的单点登录</td>
+        </tr>
+        <tr>
+            <td>FrameworkMenu</td>
+            <td>菜单模型，用于实现菜单的配置</td>
+        </tr>
+        <tr>
+            <td>FrameworkModule</td>
+            <td>模块模型，用于记录框架内所有Controller</td>
+        </tr>
+        <tr>
+            <td>FrameworkRole</td>
+            <td>角色模型，用于实现角色管理</td>
+        </tr>
+        <tr>
+            <td>FrameworkGroup</td>
+            <td>用户组模型，用于实现用户组管理</td>
+        </tr>
+        <tr>
+            <td>FrameworkUser</td>
+            <td>用户模型，用于实现用户管理</td>
+        </tr>
+        <tr>
+            <td>FunctionPrivilege</td>
+            <td>页面权限模型，框架的自动页面权限判断依赖这个模型</td>
+        </tr>
+    </tbody>
+</table>
+
+<wt:quote>
+    <p>框架提供了针对这些内置模型的管理页面，引用WalkingTec.Mvvm.Admin这个包即可</p>
+    <p>如果框架提供的管理页面不能满足需求，开发者可以根据这些模型自己编写管理页面和逻辑</p>
+    <p>如果内置模型也不能满足要求，开发者可以通过继承模型的方式添加需要的字段，但已有字段不能修改，因为框架许多内置功能依赖这些字段</p>
+</wt:quote>
+
+<script>
+    layui.table.init('parse-table-demo');
+</script>
+
+
+

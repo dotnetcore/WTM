@@ -1,0 +1,58 @@
+<Project>
+  <PropertyGroup>
+    <!-- 版本前缀 -->
+    <VersionPrefix>1.3.10</VersionPrefix>
+    <!--
+      开发期：
+        Pre-alpha（不完整测试版）：有时候软件会在Alpha或Beta版本前先发布Pre-alpha版本。一般而言相对于Alpha或Beta版本，Pre-alpha版本是一个功能不完整的版本。
+
+        Alpha（测试版）：Alpha版本仍然需要测试，其功能亦未完善，因为它是整个软件发布周期中的第一个阶段，所以它的名称是“Alpha”，希腊字母中的第一个字母“α”。
+              Alpha版本通常会送到开发软件的组织或某群体中的软件测试者作内部测试。在市场上，越来越多公司会邀请外部客户或合作伙伴参与其测试。这令软件在此阶段有更大的可用性测试。
+              在测试的第一个阶段中，开发者通常会进行白盒测试。其他测试会在稍后时间由其他测试团体以黑盒或灰盒技术进行，不过有时会同时进行。
+
+        Beta（公开测试版）：Beta版本是软件最早对外公开的软件版本，由公众参与测试。一般来说，Beta包含所有功能，但可能有一些已知问题和较轻微的程序错误（BUG）。
+              Beta版本的测试者通常是开发软件的组织的客户，他们会以免费或优惠价钱得到软件。Beta版本亦作为测试产品的支持和市场反应等。
+              其他情况，例如微软曾以Community Technology Preview（简称CTP，中文称为“社区技术预览”）为发布软件的测试版本之一，
+              微软将这个阶段的软件散布给有需要先行试用的用户或厂商，并收集这些人的使用经验，以便作为进一步修正软件的参考。
+
+        ReleaseCandidate（RC）：指可能成为最终产品的候选版本，如果未出现问题则可发布成为正式版本。在此阶段的产品通常包含所有功能、或接近完整，亦不会出现严重问题。
+              多数开源软件会推出两个RC版本，最后的RC2则成为正式版本。闭源软件较少公开使用，微软公司在Windows 7上应用此名称。
+              苹果公司把在这阶段的产品称为“Golden Master Candidate”（简称GM Candidate），而最后的GM即成为正式版本。
+      完成期：
+        Release to Manufacting（RTM,生产商发放版）：是软件产品准备交付时使用的术语。
+              某些计算机程序以“RTM”作为软件版本代号，例如微软Windows 7发行零售版前的RTM版本主要是发放给组装机生产商用，
+              使制造商能够提早进行集成工作或解决软件与硬件设备可能遇到的错误。RTM版本并不一定意味着创作者解决了软件所有问题；
+              仍有可能向公众发布前更新版本。以Windows 7为例：RTM版与零售版的版本号是一样的。
+
+        General availability（GA,一般可用）:是所有必要的商业活动已经完成，该软件产品已经可以发售的阶段。然而，这取决于语言、地域
+              和电子设备与媒体的可用性。商业活动可能也包括安全性和合法测试，以及本地化和全球销售的可能性评估。RTM与GA的间隔可能会是1周
+              或几个月，因为在此过程中需要进行许多商业活动·。在这个阶段，可以说软件已经“上线”了。
+
+        Release to Web（RTW,网络分发）：或称Web发布是一种利用互联网进行分发的软件交付方式。制造商在这种类型的发布中并不生产实体软件。随着互联网使用人数的增长，RTW变得越来越普遍。
+
+        Stable（稳定版）：稳定版本来自预览版本释出使用与改善而修正完成。为目前所使用的软件在匹配需求规格的硬件与操作系统中运行不会造成严重的不兼容或是硬件冲突，其已受过某定量的测试无误后所释出者。
+     -->
+    
+    
+    <!-- 版本后缀 -->
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <!-- 产品创建版本号 -->
+    <ProductBuildNumber></ProductBuildNumber>
+    <!-- NuGet 包后缀 -->
+    <PackageSuffix></PackageSuffix>
+
+    <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
+    <!-- 文件版本 -->
+    <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
+    <!-- 产品版本 = 版本前缀-版本后缀-产品创建版本号 -->
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(ProductBuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(ProductBuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(ProductBuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(ProductBuildNumber)' != ''">$(VersionPrefix)-$(ProductBuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(ProductBuildNumber)' == ''">$(VersionPrefix)</Version>
+
+    <!-- NuGet包版本 = 版本前缀-版本后缀-包后缀 -->
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(PackageSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(PackageSuffix)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(PackageSuffix)' == ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
+using $modelnamespace$;
+$othernamespace$
+
+namespace $vmnamespace$
+{
+    public class $modelname$VM : BaseCRUDVM<$modelname$>
+    {$pros$
+
+        public $modelname$VM()
+        {$include$
+        }
+
+        protected override void InitVM()
+        {$init$
+        }
+
+    }
+}

@@ -1,0 +1,222 @@
+﻿@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
+<wt:fieldset field-set-style="Simple" title="Row">
+    <p>使用Row控件是最简单的控制表单布局的方式，Row的主要属性有</p>
+    <table lay-filter="rowtable">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>items-per-row</td>
+                <td>每行的内部控件数量，枚举，可选2,3,4,6,12</td>
+            </tr>
+            <tr>
+                <td>align</td>
+                <td>水平对其，可选左，右和居中</td>
+            </tr>
+            <tr>
+                <td>Colspan</td>
+                <td>可应用于所有控件，设定在父容器中跨几列</td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model.Vm" width="600">
+                    <wt:row items-per-row="ItemsPerRowEnum.Three">
+                        <wt:textbox field="Vm.Entity.ITCode" />
+                        <wt:textbox field="Vm.Entity.Password" is-password="true" />
+                        <wt:textbox field="Vm.Entity.Name" />
+                        <wt:textbox field="Vm.Entity.CellPhone" colspan="2" />
+                        <wt:textbox field="Vm.Entity.HomePhone" colspan="3" />
+                    </wt:row>
+                    <wt:row align="AlignEnum.Right">
+                        <wt:submitbutton disabled="true" />
+                        <wt:closebutton disabled="true" />
+                    </wt:row>
+                </wt:form>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:form vm="@Model.Vm" width="600"&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
+        &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+        &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
+        &ltwt:textbox field="Vm.Entity.Name" /&gt
+        &ltwt:textbox field="Vm.Entity.CellPhone" colspan="2" /&gt
+        &ltwt:textbox field="Vm.Entity.HomePhone" colspan="3" /&gt
+    &lt/wt:row&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton disabled="true" /&gt
+        &ltwt:closebutton disabled="true" /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Tab">
+    <p>使用Tab进行选项卡的布局，主要属性有</p>
+    <table lay-filter="rowtable">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>allow-close</td>
+                <td>是否允许选项卡关闭</td>
+            </tr>
+            <tr>
+                <td>selected-index</td>
+                <td>默认选中的选项卡</td>
+            </tr>
+            <tr>
+                <td>tab-style</td>
+                <td>选项卡样式，可选Default或者Simple</td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:tab>
+                    <wt:tabheaders>
+                        <wt:tabheader title="基本信息" />
+                        <wt:tabheader title="附加信息" />
+                    </wt:tabheaders>
+                    <wt:tabcontents>
+                        <wt:tabcontent width="600">
+                            <p>可嵌套任何组件</p>
+                            <wt:textbox field="Vm.Entity.ITCode" />
+                            <wt:textbox field="Vm.Entity.Password" is-password="true" />
+                        </wt:tabcontent>
+                        <wt:tabcontent width="600">
+                            <p>可嵌套任何组件</p>
+                            <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                <wt:textbox field="Vm.Entity.CellPhone" />
+                                <wt:textbox field="Vm.Entity.HomePhone" />
+                            </wt:row>
+                        </wt:tabcontent>
+                    </wt:tabcontents>
+                </wt:tab>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:tab&gt
+    &ltwt:tabheaders&gt
+        &ltwt:tabheader title="基本信息" /&gt
+        &ltwt:tabheader title="附加信息" /&gt
+    &lt/wt:tabheaders&gt
+    &ltwt:tabcontents&gt
+        &ltwt:tabcontent  width="600"&gt
+            &ltp&gt可嵌套任何组件&lt/p&gt
+            &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+            &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
+        &lt/wt:tabcontent&gt
+        &ltwt:tabcontent  width="600"&gt
+            &ltp&gt可嵌套任何组件&lt/p&gt
+            &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
+                &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
+            &lt/wt:row&gt
+        &lt/wt:tabcontent&gt
+    &lt/wt:tabcontents&gt
+&lt/wt:tab&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Panel">
+    <p>使用Panel进行面板布局，主要属性有</p>
+    <table lay-filter="rowtable">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>title</td>
+                <td>Panel的标题</td>
+            </tr>
+            <tr>
+                <td>collapsed</td>
+                <td>是否折叠</td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:panel width="500" title="这是一个Panel">
+                    <div style="height:300px">
+                        <p>内部可嵌套任何组件</p>
+                    </div>
+                </wt:panel>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:panel width="500" title="这是一个Panel"&gt
+    &ltdiv style="height:300px"&gt
+        &ltp&gt内部可嵌套任何组件&lt/p&gt
+    &lt/div&gt
+&lt/wt:panel&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Dialog">
+    <p>您可以使用多种方式弹出新层，比如使用LinkButton控件，或者ListVM中的Action，或者在页面中直接调用框架提供的OpenDialog的javascript方法</p>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:linkbutton window-title="这是一个弹出窗" target=" ButtonTargetEnum.Layer" window-width="800" window-height="600" url="/QuickStart/Intro" text="点我弹框" />
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:linkbutton window-title="这是一个弹出窗" target=" ButtonTargetEnum.Layer" window-width="800" window-height="600" url="/QuickStart/Intro" text="点我弹框" /&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+</script>
+<script>
+    layui.table.init('rowtable');
+</script>

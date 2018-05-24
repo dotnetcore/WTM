@@ -1,0 +1,8 @@
+﻿@model $vmnamespace$.$modelname$VM
+
+<wt:form vm="@Model">$fields$
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

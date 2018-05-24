@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Description>WalkingTec.Mvvm</Description>
+    <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
+    <Title>$(AssemblyName)</Title>
+  </PropertyGroup>
+
+  <Import Project="..\build\common.props" />
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <NoWarn>1701;1702;1705;1591;1570;0809</NoWarn>
+  </PropertyGroup>
+
+  <!-- <ItemGroup>
+      <Content Include="wwwroot\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+  </ItemGroup> -->
+
+  <ItemGroup>
+    <None Remove="GeneratorFiles\BatchDeleteView.txt" />
+    <None Remove="GeneratorFiles\BatchEditView.txt" />
+    <None Remove="GeneratorFiles\BatchVM.txt" />
+    <None Remove="GeneratorFiles\Controller.txt" />
+    <None Remove="GeneratorFiles\CreateView.txt" />
+    <None Remove="GeneratorFiles\CrudVM.txt" />
+    <None Remove="GeneratorFiles\DeleteView.txt" />
+    <None Remove="GeneratorFiles\EditView.txt" />
+    <None Remove="GeneratorFiles\HeaderFormat.txt" />
+    <None Remove="GeneratorFiles\ImportView.txt" />
+    <None Remove="GeneratorFiles\ImportVM.txt" />
+    <None Remove="GeneratorFiles\ListView.txt" />
+    <None Remove="GeneratorFiles\ListVM.txt" />
+    <None Remove="GeneratorFiles\Searcher.txt" />
+    <None Remove="SetupFiles\home\ChangePassword.txt" />
+    <None Remove="SetupFiles\home\Header.txt" />
+    <None Remove="SetupFiles\home\Index.txt" />
+    <None Remove="SetupFiles\home\Login.txt" />
+    <None Remove="SetupFiles\home\Menu.txt" />
+    <None Remove="SetupFiles\home\PIndex.txt" />
+    <None Remove="SetupFiles\layui\Layout.txt" />
+    <None Remove="SetupFiles\layui\PLayout.txt" />
+    <None Remove="SetupFiles\layui\Program.txt" />
+    <None Remove="SetupFiles\layui\ViewImports.txt" />
+    <None Remove="SetupFiles\Proj.txt" />
+    <None Remove="SetupFiles\SetupIndex.txt" />
+    <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
+    <None Remove="SetupFiles\vms\IndexVM.txt" />
+    <None Remove="SetupFiles\vms\LoginVM.txt" />
+    <None Remove="Views\_CodeGen\SetField.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\HeaderFormat.txt" />
+    <EmbeddedResource Include="GeneratorFiles\BatchDeleteView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\BatchEditView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\BatchVM.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Controller.txt" />
+    <EmbeddedResource Include="GeneratorFiles\CreateView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\CrudVM.txt" />
+    <EmbeddedResource Include="GeneratorFiles\DeleteView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\DetailsView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\EditView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ImportView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ImportVM.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ListView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="SetupFiles\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
+    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\_Framework\Selector.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
+    <EmbeddedResource Include="SetupFiles\DataContext.txt" />
+    <EmbeddedResource Include="SetupFiles\HomeController.txt" />
+    <EmbeddedResource Include="SetupFiles\home\ChangePassword.txt" />
+    <EmbeddedResource Include="SetupFiles\home\Header.txt" />
+    <EmbeddedResource Include="SetupFiles\home\Index.txt" />
+    <EmbeddedResource Include="SetupFiles\home\Login.txt" />
+    <EmbeddedResource Include="SetupFiles\home\Menu.txt" />
+    <EmbeddedResource Include="SetupFiles\home\PIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\layui\layui.zip" />
+    <EmbeddedResource Include="SetupFiles\layui\Layout.txt" />
+    <EmbeddedResource Include="SetupFiles\layui\PLayout.txt" />
+    <EmbeddedResource Include="SetupFiles\layui\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\layui\ViewImports.txt" />
+    <EmbeddedResource Include="SetupFiles\LoginController.txt" />
+    <EmbeddedResource Include="SetupFiles\ViewStart.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ValidationMsg.zh-cn.resx">
+      <LastGenOutput>ValidationMsg.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,320 @@
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using WalkingTec.Mvvm.Core;
+using System.Linq;
+
+namespace WalkingTec.Mvvm.Mvc
+{
+    public enum UIEnum { LayUI}
+    public enum ProjectTypeEnum { Single, Multi}
+
+    public class SetupVM : BaseVM
+    {
+        private string version = "1.3.10";
+
+        public bool EnableLog { get; set; }
+
+        public bool LogExceptionOnly { get; set; }
+
+        public DBTypeEnum? DbType { get; set; }
+
+        public string CS { get; set; }
+
+        public string CookiePre { get; set; }
+
+        public SaveFileModeEnum? FileMode { get; set; }
+
+        public string UploadDir { get; set; }
+
+        public int? Rpp { get; set; }
+
+        public UIEnum? UI { get; set; }
+
+        public ProjectTypeEnum? ProjectType { get; set; }
+
+        [ValidateNever()]
+        public string EntryDir { get; set; }
+
+
+        public string _mainDir;
+        [ValidateNever()]
+        public string MainDir
+        {
+            get
+            {
+                if (_mainDir == null)
+                {
+                    _mainDir = EntryDir?.Replace("\\bin\\Debug\\netcoreapp2.0\\", "", true, null);
+                }
+                return _mainDir;
+            }
+            set
+            {
+                _mainDir = value;
+            }
+        }
+
+        private string _mainNs;
+        [ValidateNever()]
+        public string MainNs
+        {
+            get
+            {
+                if (_mainNs == null)
+                {
+                    int index = MainDir.LastIndexOf("\\");
+                    if (index > 0)
+                    {
+                        _mainNs = MainDir.Substring(index + 1);
+                    }
+                    else
+                    {
+                        _mainNs = MainDir;
+                    }
+                }
+                return _mainNs;
+            }
+            set
+            {
+                _mainNs = value;
+            }
+        }
+
+
+        protected override void InitVM()
+        {
+            EnableLog = true;
+            LogExceptionOnly = true;
+            CS = "";
+            UI = UIEnum.LayUI;
+            DbType = DBTypeEnum.MySql;
+            CookiePre = "WTM";
+            FileMode = SaveFileModeEnum.Database;
+            UploadDir = "";
+            Rpp = 20;
+        }
+
+        public void DoSetup()
+        {
+            string vmdir = MainDir;
+            string datadir = MainDir;
+            string modeldir = MainDir;
+            string vmns = MainNs + ".ViewModels";
+            string datans = MainNs;
+            string modelns = MainNs;
+            if (ProjectType == ProjectTypeEnum.Single)
+            {
+                Directory.CreateDirectory($"{MainDir}\\Models");
+                Directory.CreateDirectory($"{MainDir}\\ViewModels\\HomeVMs");
+                vmdir = MainDir + "\\ViewModels";
+            }
+            else
+            {
+                Directory.CreateDirectory($"{MainDir}.ViewModel\\HomeVMs");
+                Directory.CreateDirectory($"{MainDir}.Model");
+                Directory.CreateDirectory($"{MainDir}.DataAccess");
+                vmdir = MainDir + ".ViewModel";
+                datadir = MainDir + ".DataAccess";
+                modeldir = MainDir + ".Model";
+                vmns = MainNs + ".ViewModel";
+                datans = MainNs + ".DataAccess";
+                modelns = MainNs + ".Model";
+                File.WriteAllText($"{modeldir}\\{modelns}.csproj", GetResource("Proj.txt"));
+                File.WriteAllText($"{vmdir}\\{vmns}.csproj", GetResource("Proj.txt"));
+                File.WriteAllText($"{datadir}\\{datans}.csproj", GetResource("Proj.txt"));
+            }
+            Directory.CreateDirectory($"{MainDir}\\Areas");
+            Directory.CreateDirectory($"{MainDir}\\Controllers");
+            Directory.CreateDirectory($"{MainDir}\\Views\\Home");
+            Directory.CreateDirectory($"{MainDir}\\Views\\Login");
+            Directory.CreateDirectory($"{MainDir}\\Views\\Shared");
+            Directory.CreateDirectory($"{MainDir}\\wwwroot");
+
+            File.WriteAllText($"{MainDir}\\appsettings.json", GetResource("Appsettings.txt")
+                .Replace("$cs$", CS ?? "")
+                .Replace("$dbtype$", DbType.ToString())
+                .Replace("$cookiepre$", CookiePre ?? "")
+                .Replace("$enablelog$", EnableLog.ToString().ToLower())
+                .Replace("$logexception$", LogExceptionOnly.ToString().ToLower())
+                .Replace("$rpp$", Rpp == null ? "" : Rpp.ToString())
+                .Replace("$filemode$", FileMode.ToString())
+                .Replace("$uploaddir$", UploadDir ?? "")
+                );
+            File.WriteAllText($"{datadir}\\DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans));
+            File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("HomeController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Controllers\\LoginController.cs", GetResource("LoginController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\_ViewStart.cshtml", GetResource("ViewStart.txt"));
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Index.cshtml", GetResource("home.Index.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\Login\\ChangePassword.cshtml", GetResource("home.ChangePassword.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Header.cshtml", GetResource("home.Header.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{vmdir}\\HomeVMs\\ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{vmdir}\\HomeVMs\\IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{vmdir}\\HomeVMs\\LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+
+            if (UI == UIEnum.LayUI)
+            {
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_Layout.cshtml", GetResource("layui.Layout.txt").Replace("$ns$", MainNs));
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_PLayout.cshtml", GetResource("layui.PLayout.txt").Replace("$ns$", MainNs));
+                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt").Replace("$ns$", MainNs));
+                File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"));
+                File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"));
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                var sr = assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.layui.layui.zip");
+                System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
+                foreach (var entry in zip.Entries)
+                {
+                    if (entry.FullName.EndsWith("/"))
+                    {
+                        Directory.CreateDirectory($"{MainDir}\\wwwroot\\{entry.FullName}");
+                    }
+                    else
+                    {
+                        var f = File.OpenWrite($"{MainDir}\\wwwroot\\{entry.FullName}");
+                        var z = entry.Open();
+                        z.CopyTo(f);
+                        f.Flush();
+                        f.Dispose();
+                        z.Dispose();
+                    }
+                }
+                sr.Dispose();
+            }
+            if (ProjectType == ProjectTypeEnum.Single)
+            {
+                var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
+                if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                {
+                    proj = proj.Replace("</Project>", $@"
+  <ItemGroup>
+    <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
+    <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
+  </ItemGroup >
+</Project>
+");
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj);
+                }
+            }
+            if (ProjectType == ProjectTypeEnum.Multi)
+            {
+                var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
+                if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                {
+                    proj = proj.Replace("</Project>", $@"
+  <ItemGroup>
+    <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
+    <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
+    <ProjectReference Include=""..\{modelns}\{modelns}.csproj"" />
+    <ProjectReference Include=""..\{datans}\{datans}.csproj"" />
+    <ProjectReference Include=""..\{vmns}\{vmns}.csproj"" />
+ </ItemGroup >
+</Project>
+");
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj);
+                }
+                //修改modelproject
+                var modelproj = File.ReadAllText($"{modeldir}\\{modelns}.csproj");
+                if (modelproj.IndexOf("WalkingTec.Mvvm.Core") < 0)
+                {
+                    modelproj = modelproj.Replace("</Project>", $@"
+  <ItemGroup>
+    <PackageReference Include=""WalkingTec.Mvvm.Core"" Version=""{version}"" />
+  </ItemGroup >
+</Project>
+");
+                    File.WriteAllText($"{modeldir}\\{modelns}.csproj", modelproj);
+                }
+                //修改dataproject
+                var dataproj = File.ReadAllText($"{datadir}\\{datans}.csproj");
+                if (dataproj.IndexOf($"{modelns}.csproj") < 0)
+                {
+                    dataproj = dataproj.Replace("</Project>", $@"
+  <ItemGroup>
+    <ProjectReference Include=""..\{modelns}\{modelns}.csproj"" />
+  </ItemGroup >
+</Project>
+");
+                    File.WriteAllText($"{datadir}\\{datans}.csproj", dataproj);
+                }
+                //修改viewmodelproject
+                var vmproj = File.ReadAllText($"{vmdir}\\{vmns}.csproj");
+                if (vmproj.IndexOf($"{modelns}.csproj") < 0)
+                {
+                    vmproj = vmproj.Replace("</Project>", $@"
+  <ItemGroup>
+    <ProjectReference Include=""..\{modelns}\{modelns}.csproj"" />
+  </ItemGroup >
+</Project>
+");
+                    File.WriteAllText($"{vmdir}\\{vmns}.csproj", vmproj);
+                }
+                var solution = File.ReadAllText($"{Directory.GetParent(MainDir)}\\{MainNs}.sln");
+                if (solution.IndexOf($"{modelns}.csproj") < 0)
+                {
+                    Guid g1 = Guid.NewGuid();
+                    Guid g2 = Guid.NewGuid();
+                    Guid g3 = Guid.NewGuid();
+                    solution = solution.Replace("EndProject", $@"EndProject
+Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{modelns}"", ""{modelns}\{modelns}.csproj"", ""{{{g1}}}""
+EndProject
+Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{datans}"", ""{datans}\{datans}.csproj"", ""{{{g2}}}""
+EndProject
+Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{vmns}"", ""{vmns}\{vmns}.csproj"", ""{{{g3}}}""
+EndProject
+");
+                    solution = solution.Replace(".Release|Any CPU.Build.0 = Release|Any CPU", $@".Release|Any CPU.Build.0 = Release|Any CPU
+		{{{g1}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{{{g1}}}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{{{g1}}}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{{{g1}}}.Release|Any CPU.Build.0 = Release|Any CPU
+		{{{g2}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{{{g2}}}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{{{g2}}}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{{{g2}}}.Release|Any CPU.Build.0 = Release|Any CPU
+		{{{g3}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{{{g3}}}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{{{g3}}}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{{{g3}}}.Release|Any CPU.Build.0 = Release|Any CPU");
+                    File.WriteAllText($"{Directory.GetParent(MainDir)}\\{MainNs}.sln", solution);
+                }
+            }
+            if (File.Exists($"{MainDir}\\Startup.cs"))
+            {
+                File.Delete($"{MainDir}\\Startup.cs");
+            }
+        }
+
+        public string GetIndex()
+        {
+            var rv = GetResource("SetupIndex.txt");
+            string dbname = "";
+            if (MainNs.Contains("."))
+            {
+                dbname = MainNs.Split('.').Last() + "_db";
+            }
+            else
+            {
+                dbname = MainNs + "_db";
+            }
+            rv = rv.Replace("{vm.CookiePre}", CookiePre).Replace("{vm.Rpp}", Rpp?.ToString()).Replace("$dbname$", dbname);
+            return rv;
+        }
+
+        private string GetResource(string fileName)
+        {
+            //获取编译在程序中的Controller原始代码文本
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            var textStreamReader = new StreamReader(assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.{fileName}"));
+            string content = textStreamReader.ReadToEnd();
+            textStreamReader.Close();
+            return content;
+        }
+
+    }
+}

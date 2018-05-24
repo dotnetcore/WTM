@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Description>WalkingTec.Mvvm</Description>
+    <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
+    <Title>$(AssemblyName)</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+  
+  <Import Project="..\build\common.props" />
+  
+  <ItemGroup>
+    <None Remove="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Create.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Delete.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Details.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Edit.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Import.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Index.cshtml" />
+    <None Remove="Areas\_Admin\Views\FrameworkUser\Password.cshtml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Delete.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Details.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Password.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Edit.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Import.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Index.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Details.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Index.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Index.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\BatchDelete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\DataFunction.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Delete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Details.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Edit.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Import.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Index.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\BatchCreate.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Delete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Details.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Edit.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Index.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\UnsetPages.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\BatchDelete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Delete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Details.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Edit.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Import.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\Index.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkRole\PageFunction.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\_ViewImports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
+  </ItemGroup>
+
+</Project>

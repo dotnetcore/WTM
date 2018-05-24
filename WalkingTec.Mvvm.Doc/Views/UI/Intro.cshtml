@@ -1,0 +1,198 @@
+﻿@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
+<wt:quote>
+    <p>WTM框架使用TagHelper提供了丰富的前端控件，目前框架只支持LayUI，后期会增加更多</p>
+    <p>框架整体的运转并不依赖于LayUI，开发人员可以使用最普通的Html来编写页面，框架提供的控件只是简化编写难度，提高速度</p>
+    <p>前端页面中，wt:开头的为框架提供的控件</p>
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="表单">
+    <p>表单及其内部控件是开发中最长用到的，使用框架提供的TagHelper可以快速构建一个表单</p>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model.Vm" width="600">
+                    <wt:textbox field="Vm.Entity.ITCode" />
+                    <wt:textbox field="Vm.Entity.Password" is-password="true" />
+                    <wt:textbox field="Vm.Entity.Name" />
+                    <wt:upload field="Vm.Entity.PhotoId" />
+                    <wt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" />
+                    <wt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" />
+                    <wt:combobox field="Vm.Entity.Sex" />
+                    <wt:textbox field="Vm.Entity.CellPhone" />
+                    <wt:textbox field="Vm.Entity.HomePhone" />
+                    <wt:textbox field="Vm.Entity.Email" />
+                    <wt:textbox field="Vm.Entity.ZipCode" />
+                    <wt:textbox field="Vm.Entity.Address" />
+                    <wt:row align="AlignEnum.Right">
+                        <wt:submitbutton disabled="true"/>
+                        <wt:closebutton  disabled="true"/>
+                    </wt:row>
+                </wt:form>
+            </wt:tabcontent>
+            <wt:tabcontent>
+            <wt:code>
+&ltwt:form vm="@Model.Vm"&gt
+    &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+    &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
+    &ltwt:textbox field="Vm.Entity.Name" /&gt
+    &ltwt:upload field="Vm.Entity.PhotoId" /&gt
+    &ltwt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" /&gt
+    &ltwt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" /&gt
+    &ltwt:combobox field="Vm.Entity.Sex" /&gt
+    &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
+    &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
+    &ltwt:textbox field="Vm.Entity.Email" /&gt
+    &ltwt:textbox field="Vm.Entity.ZipCode" /&gt
+    &ltwt:textbox field="Vm.Entity.Address" /&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton theme=" ButtonThemeEnum.Disabled" /&gt
+        &ltwt:closebutton /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+
+            </wt:code>
+                </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="列表">
+    <p>使用框架提供的grid控件可以快速输出列表</p>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:searchpanel vm="@Model.ListVm" reset-btn="true">
+                    <wt:row items-per-row="ItemsPerRowEnum.Three">
+                        <wt:textbox field="ListVm.Searcher.ITCode" />
+                        <wt:textbox field="ListVm.Searcher.Name" />
+                        <wt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" />
+                    </wt:row>
+                </wt:searchpanel>
+                <wt:grid vm="@Model.ListVm" />
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:searchpanel vm="@Model.ListVm" reset-btn="true"&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
+        &ltwt:textbox field="ListVm.Searcher.ITCode" /&gt
+        &ltwt:textbox field="ListVm.Searcher.Name" /&gt
+        &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" /&gt
+    &lt/wt:row&gt
+&lt/wt:searchpanel&gt
+&ltwt:grid vm="@Model.ListVm" /&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="布局">
+    <p>使用框架提供的Panel，Tab，Row等控件实现页面的布局</p>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model.Vm">
+                    <wt:tab>
+                        <wt:tabheaders>
+                            <wt:tabheader title="基本信息" />
+                            <wt:tabheader title="附加信息" />
+                        </wt:tabheaders>
+                        <wt:tabcontents>
+                            <wt:tabcontent>
+                                <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                    <wt:textbox field="Vm.Entity.ITCode" />
+                                    <wt:textbox field="Vm.Entity.Password" is-password="true" />
+                                </wt:row>
+                                <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                    <wt:textbox field="Vm.Entity.Name" />
+                                    <wt:upload field="Vm.Entity.PhotoId" />
+                                </wt:row>
+                                <wt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" />
+                                <wt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" />
+                            </wt:tabcontent>
+                            <wt:tabcontent>
+                                <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                    <wt:combobox field="Vm.Entity.Sex" />
+                                </wt:row>
+                                <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                    <wt:textbox field="Vm.Entity.CellPhone" />
+                                    <wt:textbox field="Vm.Entity.HomePhone" />
+                                </wt:row>
+                                <wt:row items-per-row="ItemsPerRowEnum.Two">
+                                    <wt:textbox field="Vm.Entity.Email" />
+                                    <wt:textbox field="Vm.Entity.ZipCode" />
+                                </wt:row>
+                                <wt:textbox field="Vm.Entity.Address" />
+                            </wt:tabcontent>
+                        </wt:tabcontents>
+                    </wt:tab>
+                    <wt:row align="AlignEnum.Right">
+                        
+                        <wt:submitbutton disabled="true"/>
+                        <wt:closebutton disabled="true"/>
+                    </wt:row>
+                </wt:form>   
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:form vm="@Model.Vm"&gt
+    &ltwt:tab&gt
+        &ltwt:tabheaders&gt
+            &ltwt:tabheader title="基本信息" /&gt
+            &ltwt:tabheader title="附加信息" /&gt
+        &lt/wt:tabheaders&gt
+        &ltwt:tabcontents&gt
+            &ltwt:tabcontent&gt
+                &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                    &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+                    &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
+                &lt/wt:row&gt
+                &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                    &ltwt:textbox field="Vm.Entity.Name" /&gt
+                    &ltwt:upload field="Vm.Entity.PhotoId" /&gt
+                &lt/wt:row&gt
+                &ltwt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" /&gt
+                &ltwt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" /&gt
+            &lt/wt:tabcontent&gt
+            &ltwt:tabcontent&gt
+                &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                    &ltwt:combobox field="Vm.Entity.Sex" /&gt
+                &lt/wt:row&gt
+                &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                    &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
+                    &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
+                &lt/wt:row&gt
+                &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+                    &ltwt:textbox field="Vm.Entity.Email" /&gt
+                    &ltwt:textbox field="Vm.Entity.ZipCode" /&gt
+                &lt/wt:row&gt
+                &ltwt:textbox field="Vm.Entity.Address" /&gt
+            &lt/wt:tabcontent&gt
+        &lt/wt:tabcontents&gt
+    &lt/wt:tab&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton disabled="true" /&gt
+        &ltwt:closebutton disabled="true" /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>

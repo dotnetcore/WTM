@@ -1,0 +1,74 @@
+﻿<wt:fieldset field-set-style="Simple" title="TopBasePoco">
+    <p>TopBasePoco是框架所有模型的基类，它只定义了一个Guid的主键，所有其他模型都必须直接或间接继承TopBasePoco，否则框架的其他自动化操作无法执行</p>
+    <wt:quote>
+        <p>这意味着框架只支持Guid为唯一主键的数据库设计，虽然不同的人对此有不同的看法，但其实任何表的设计都不妨碍再加一个Guid的主键</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="BasePoco">
+    <p>BasePoco是框架所有内置模型的基类，它在TopBasePoco的基础上增加了创建人，修改人，创建时间和修改时间四个字段，对于大多数模型，这些字段都是需要的</p>
+    <p>建议用户自定义的模型都继承BasePoco</p>
+    <wt:quote>
+        <p>框架自带的添加和修改操作会自动更新创建人，修改人，创建时间和修改时间这些字段</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="PersistPoco">
+    <p>PersistPoco在BasePoco的基础上增加了IsValid字段，指示框架对这类模型进行假删除</p>
+    <wt:quote>
+        <p>框架自带的删除功能会自动将继承PersistPoco的模型的IsValid字段设为false，而不会真正删除它</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="其他">
+    框架除了要求模型必须最终继承自TopBasePoco之外，没有其他额外要求。只要遵循EF Core的方式创建模型类就可以
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="示例">
+    <wt:quote>
+        <p>以下代码创建了一个学校的模型</p>
+    </wt:quote>
+
+    <wt:code title="School.cs">
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using WalkingTec.Mvvm.Core;
+
+namespace FirstProject.Model
+{
+    public enum SchoolTypeEnum {
+        [Display(Name = "公立学校")]
+        PUB,
+        [Display(Name = "私立学校")]
+        PRI
+    }
+
+    public class School : BasePoco
+    {
+        [Display(Name = "学校编码")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        [StringLength(3)]
+        public string SchoolCode { get; set; }
+
+        [Display(Name = "学校名称")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        public string SchoolName { get; set; }
+
+        [Display(Name = "学校类型")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        public SchoolTypeEnum? SchoolType { get; set; }
+
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
+    }
+}
+    </wt:code>
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+</script>

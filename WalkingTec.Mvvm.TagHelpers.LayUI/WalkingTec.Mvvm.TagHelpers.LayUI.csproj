@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Description>WalkingTec.Mvvm</Description>
+    <AssemblyName>WalkingTec.Mvvm.TagHelpers.LayUI</AssemblyName>
+    <Title>$(AssemblyName)</Title>
+  </PropertyGroup>
+
+  <!-- <ItemGroup>
+    <Content Include="wwwroot\**\*.*" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup> -->
+
+  <Import Project="..\build\common.props" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591;1570;0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
+  </ItemGroup>
+
+</Project>

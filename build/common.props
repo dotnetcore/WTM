@@ -1,0 +1,35 @@
+<Project>
+  <Import Project="..\version.props" />
+  <PropertyGroup>
+    <Product>WalkingTec.Mvvm</Product>
+    <Authors>Michael,Alienwow</Authors>
+    <Company>Michael,Alienwow</Company>
+    <Copyright>Copyright © WalkingTec 2018</Copyright>
+    <PackageId>$(ProjectName)</PackageId>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://gitee.com/alienwow/DotNetCore.git</RepositoryUrl>
+    <PackageLicenseUrl>http://license.walkingtec.cn</PackageLicenseUrl>
+    <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
+    <PackageIconUrl>http://license.walkingtec.cn/walkingtec.mvvm.ico</PackageIconUrl>
+    <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn</PackageReleaseNotes>
+    <PackageOutputPath></PackageOutputPath>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IncludeSource>false</IncludeSource>
+    <MinClientVersion>4.1.0</MinClientVersion>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,106 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>WTM框架支持自动选择读写分离的数据库，以及根据条件动态使用不同的数据库连接</p>
+
+<wt:fieldset field-set-style="Simple" title="读写分离">
+    框架会自动识别ConnectionString中以下划线+数字结尾的key值，作为只读库，比如下面的定义：
+    <wt:code>
+"ConnectionStrings": [
+    {
+        "Key": "default",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_1",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo1;Trusted_Connection=True;MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_2",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo2;Trusted_Connection=True;MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_3",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo3;Trusted_Connection=True;MultipleActiveResultSets=true"
+    },
+]
+    </wt:code>
+    <p>这个配置文件定义了四个连接字符串，default是写库，default_1,default_2,default_3是三个只读库</p>
+    <p>框架会默认在所有标记了HttpPost的Controller方法中使用写库来创建DataContext，而在其他方法中随机选择一个读库</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="指定连接字符串">
+    <p>如果框架的默认实现不能满足需求，可以使用FixConnection属性来指定连接字符串，比如下面的Controller</p>
+    <wt:code>
+[FixConnection(DBOperationEnum.Read, CsName = "test")]
+[HttpPost]
+public IActionResult Create()
+{
+    var testDc = this.DC;
+    return PartialView();
+}
+    </wt:code>
+    <p>通过在方法上加FixConnection，我们指定这个方法里的DC应该使用连接字符串是test开头的只读库，框架会去寻找比如test_1,test_2,test_3...这种key值的连接字符串，如果找不到就会使用叫test的连接字符串，如果仍然找不到，则会使用默认的default</p>
+    <p>另一种指定连接字符串的方法是不使用Controller和VM中已经生成的DC，而是直接使用指定连接字符串新实例化一个DataContext，比如</p>
+    <wt:code>
+[HttpPost]
+public IActionResult Create()
+{
+    var testDc = new DataContext("test_2");
+    return PartialView();
+}
+    </wt:code>
+    <p>以上代码指定使用key值为test_2的连接字符串来创建一个新的DataContext</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="动态选择连接字符串">
+    <p>框架可以根据页面传递过来的数据，或者session里的信息等动态选择需要连接的数据库，请看以下代码</p>
+    <wt:code title="Program.cs">
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        BuildWebHost(args).Run();
+    }
+
+    public static IWebHost BuildWebHost(string[] args) =&gt            
+        WebHost.CreateDefaultBuilder(args)
+            .ConfigureServices(x =&gt
+            {
+                x.AddFrameworkService(CsSector: CSSelector);
+                x.AddLayui();
+            })
+            .Configure(x =&gt
+            {
+                x.UseFrameworkService();
+            })
+            .Build();
+
+    public static string CSSelector(ActionExecutingContext context)
+    {
+        var userinfo = (context.Controller as BaseController).LoginUserInfo;
+        if(userinfo == null)
+        {
+            return "default";
+        }
+        else
+        {
+            if (userinfo.ITCode.StartsWith("a"))
+            {
+                return "user1";
+            }
+            else
+            {
+                return "user2";
+            }
+        }
+    }
+}
+    </wt:code>
+    <p>上面的代码将一个用于选择连接字符串的函数传给了AddFrameworkService，这个函数根据当前登录用户来选择使用的数据库。没有登陆时用default，用户名以a开头时用user1库，其他用user2库</p>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+

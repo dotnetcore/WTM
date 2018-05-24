@@ -1,0 +1,124 @@
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Linq;
+using WalkingTec.Mvvm.Core;
+
+namespace WalkingTec.Mvvm.TagHelpers.LayUI
+{
+    public abstract class BaseFieldTag : BaseElementTag
+    {
+        protected const string REQUIRED_ATTR_NAME = "field";
+        /// <summary>
+        /// 绑定的字段 必填
+        /// </summary>
+        public ModelExpression Field { get; set; }
+
+        public bool Disabled { get; set; }
+
+        public string Name { get; set; }
+
+        public string LabelText { get; set; }
+
+        public int? LabelWidth { get; set; }
+
+        public bool HideLabel { get; set; }
+        private string _id;
+        public new string Id
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_id))
+                {
+                    return Utils.GetIdByName(Field.Name) ?? string.Empty;
+                }
+                else
+                {
+                    return _id;
+                }
+            }
+            set
+            {
+                _id = value;
+            }
+        }
+
+        /// <summary>
+        /// 不需要生成必填验证
+        /// </summary>
+        private static readonly string[] _excludeType = new string[]
+        {
+            "checkbox",
+            "radio",
+            "select"
+        };
+        public override void Process(TagHelperContext context, TagHelperOutput output)
+        {
+            var preHtml = string.Empty;
+            var postHtml = string.Empty;
+            var requiredDot = string.Empty;
+            if (output.Attributes.TryGetAttribute("id", out TagHelperAttribute a) == false)
+            {
+                output.Attributes.SetAttribute("id", Id ?? string.Empty);
+            }
+            if (output.Attributes.TryGetAttribute("name", out TagHelperAttribute b) == false)
+            {
+                output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
+            }
+            if (Disabled)
+            {
+                output.Attributes.SetAttribute("readonly", string.Empty);
+                output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
+                output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
+            }
+
+            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired)
+            {
+                requiredDot = "<font color='red'>*</font>";
+                if (!(this is UploadTagHelper)) // 上传组件自定义验证
+                {
+                    if (!_excludeType.Contains(output.Attributes["type"]?.Value?.ToString()))
+                    {
+                        output.Attributes.Add("lay-verify", "required");
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(LabelText))
+            {
+                LabelText = Field.Metadata.DisplayName ?? Field.Metadata.PropertyName;
+            }
+
+            if (LabelWidth == null && context.Items.ContainsKey("formlabelwidth"))
+            {
+                LabelWidth = (int)context.Items["formlabelwidth"];
+            }
+            //如果不显示label则隐藏
+
+            if (HideLabel == false)
+            {
+                preHtml += $@"
+<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
+    <label for=""{Id}"" class=""layui-form-label"" {(LabelWidth == null ? string.Empty : "style='width:" + LabelWidth + "px'")}>{requiredDot}{LabelText}:</label>
+    <div class=""layui-input-block"" {(LabelWidth == null ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
+";
+            }
+            else
+            {
+                preHtml += $@"
+<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
+    <div class=""layui-input-block"" style=""margin-left:0px"">
+";
+            }
+            postHtml += $@"
+    </div>
+</div>
+";
+
+
+            output.PreElement.SetHtmlContent(preHtml + output.PreElement.GetContent());
+            output.PostElement.AppendHtml(postHtml);
+            base.Process(context, output);
+        }
+
+    }
+}

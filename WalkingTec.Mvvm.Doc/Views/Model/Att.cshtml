@@ -1,0 +1,16 @@
+﻿框架会读取模型字段的属性来自动进行前台和后台的数据验证
+
+<wt:fieldset field-set-style="Simple" title="Required">
+    <p>框架前台控件绑定的字段如果标有Required属性，则框架会自动在空间名称后面加红色的星号提示用户必填，并自动生成验证必填项的js脚本</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Display">
+    <p>框架前台控件绑定的字段如果标有Display属性，则框架会默认使用Display里面定义的名称作为控件前面的Label</p>
+    <p>框架显示枚举字段时会默认使用枚举上面标记的Display里的内容</p>
+    <p>框架输出验证错误信息时会默认使用错误字段Display里的内容作为名称</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="其他属性">
+    <p>框架对于StringLength,Range,Regex等属性都会自动生成前台js脚本进行验证</p>
+</wt:fieldset>
+

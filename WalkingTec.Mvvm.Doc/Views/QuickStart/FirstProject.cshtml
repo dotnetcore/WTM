@@ -1,0 +1,64 @@
+﻿<style>
+    img {
+        width:800px;
+        border:1px solid black
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="在VS中建立第一个WTM项目">
+    <wt:quote>
+        <p>建立一个使用WTM框架的项目非常简单</p>
+        <p>这里演示了如何使用VisualStudio建立一个WTM项目，如果你使用Code，步骤是一样的，只是有的地方需要手动运行命令行</p>
+    </wt:quote>
+    <ul class="doc">
+        <li>
+            在VS中选择新建项目，然后选择Asp.net Core Web应用程序<br /><br />
+            <img src="~/imgs/FirstProject1.png"  /><br /><br />
+        </li>
+        <li>
+            在具体项目类型中，选择模型视图控制器模式的Web应用程序<br /><br />
+            <img src="~/imgs/FirstProject2.png" /><br /><br />
+        </li>
+        <li>
+            VS使用标准模板为我们建立了一个asp.net core的项目<br /><br />
+            <img src="~/imgs/FirstProject3.png" /><br /><br />
+        </li>
+        <li>
+            添加Nuget包WalkingTec.Mvvm.Mvc<br /><br />
+            <img src="~/imgs/FirstProject4.png" /><br /><br />
+        </li>
+        <li>
+            添加完毕之后，把vs生成的那些框架不需要的文件都删除掉，只保留启动mvc必须的几个文件<br /><br />
+            <img src="~/imgs/FirstProject5.png" /><br /><br />
+            删除完毕之后，目录结构如下<br /><br />
+            <img src="~/imgs/FirstProject6.png" /><br /><br />
+        </li>
+        <li>
+            然后，我们按F5直接调试，结果是意料之中的，我们把所有Controller都删了，自然不会有任何页面，直接报错<br /><br />
+            <img src="~/imgs/FirstProject7.png" /><br /><br />
+        </li>
+        <li>
+            我们在地址后面加/_setup，这是之前引用的WalkingTec.Mvvm.Mvc中封装的页面，用来帮助我们快速搭建框架<br /><br />
+            <img src="~/imgs/FirstProject9.png" /><br /><br />
+        </li>
+        <li>
+            默认使用的是和VS一起安装的SqlServer的localdb，默认库名是WTM，当然你可以改成mysql的连接字符串。<br />
+            当前只支持Layui一种前端框架，后续会支持其他。<br />
+            项目类型中默认是单一项目，也可以选择把Model，ViewModel和Data分开不同的项目生成。<br />
+            设置完毕之后停止调试，你会发现项目中多了不少东西<br /><br />
+            <img src="~/imgs/FirstProject10.png" /><br /><br />
+            这些文件是框架自动生成的登陆和首页，另外注意nuget引用了WalkingTec.Mvvm.Admin，这个dll封装了一系列后台程序常用的功能，比如日志，权限，菜单，角色等等。如果你觉得不需要或者想重新自己写，那就删除Admin的引用就可以了<br />
+            <wt:quote>如果选择多项目生成，你可能需要在生成完毕之后关闭VisualStudio，然后重新打开解决方案</wt:quote>
+            <br />
+        </li>
+        <li>
+            再按F5进行调试，登陆之后你会发现一个架子已经给你搭好了<br /><br />
+            <img src="~/imgs/FirstProject11.png" /><br /><br />
+        </li>
+    </ul>
+
+    <wt:quote>
+        <p>搭建WTM框架整个过程也就两分钟，不需要写一行代码就获得了一个后台应用程序的标准结构和常用功能。
+        <p>接下来让我们开始开发业务模块吧，你会发现用WTM框架编写业务模块同样快捷高效</p>
+    </wt:quote>
+
+</wt:fieldset>

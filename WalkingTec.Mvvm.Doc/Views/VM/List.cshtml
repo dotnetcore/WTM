@@ -1,0 +1,279 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BasePagedListVM是框架中负责分页展示数据和导出的VM，它继承自BaseVM</p>
+<wt:fieldset field-set-style="Simple" title="建立一个BasePagedListVM">
+    <p>建立BasePagedListVM主要有以下几部</p>
+    <p>1. 定义继承自BasePagedListVM的类，将关联的Model作为泛型变量</p>
+    <p>2. 重写GetSearchQuery函数，将查询语句和逻辑写在这个函数里</p>
+    <p>3. 重写InitGridHeader函数，这个函数定义列表显示的列</p>
+    <p>4. 重写InitGridAction函数，这个函数定义列表中需要出现的操作按钮</p>
+    <p>下面以学校模型为例，展示如何编写一个简单的ListVM，学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
+{
+    protected override List&ltGridAction&gt InitGridAction()
+    {
+        return new List&ltGridAction&gt
+        {
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+        };
+    }
+
+    protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool&gt&gt{
+            this.MakeGridHeader(x =&gt x.SchoolCode),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+
+    public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt().OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+    </wt:code>
+    <p>上面代码建立了一个简单的ListVM，它没有任何搜索条件，默认每页20行查询所有School的数据，并使用输出列表同样的逻辑来完成导出Excel。同时它定义了新建，修改等按钮</p>
+    <wt:quote>
+        <p>RecordsPerPage属性可以设置每页行数，默认是20行，NeedPage属性可以设定是否要进行分页</p>
+        <p>MakeStandardExportAction的作用是在列表上生成一个导出按钮</p>
+        <p>MakeGridHeaderAction的作用是在列表上增加一个操作列，操作列中出现的按钮是在InitGridAction中定义的所有ShowInRow为true的动作。当使用MakeStandardAction创建默认动作时，修改，删除和详细都是每行显示的</p>
+    </wt:quote>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="使用BasePagedListVM">
+    <p>在Controller中使用BasePagedListVM的步骤也是一目了然，请看下面的例子</p>
+    <wt:code title="SchoolController.cs">
+#region 搜索
+[ActionDescription("搜索")]
+public ActionResult Index()
+{
+    var vm = CreateVM&ltSchoolListVM&gt();
+    return PartialView(vm);
+}
+#endregion
+    </wt:code>
+
+    <wt:quote>
+        <p>必须使用CreateVM函数来创建ViewModel，而不要直接new。CreateVM函数会将当前Controller的Session，ModelState等信息传递给VM，并进行一些框架内部的操作</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Searcher">
+    <p>上面的例子并没有任何搜索条件，真实场景中这种情况是很少的，要在列表中加入搜索条件，有两个步骤</p>
+    <p>1. 定义一个继承自BaseSearcher的类，将搜索条件作为类的属性，并把ListVM类的第二个泛型变量设定为这个Searcher</p>
+    <p>2. 在GetSearchQuery函数中使用Searcher的数据来编写查询语句</p>
+    <p>比如建立一个下面的Searcher用于搜索学校数据</p>
+    <wt:code title="SchoolSearcher.cs">
+public class SchoolSearcher : BaseSearcher
+{
+    [Display(Name = "学校编码")]
+    public String SchoolCode { get; set; }
+    [Display(Name = "学校名称")]
+    public String SchoolName { get; set; }
+    [Display(Name = "学校类型")]
+    public SchoolTypeEnum? SchoolType { get; set; }
+}
+    </wt:code>
+    <p>然后修改SchoolListVM，将它的定义和SchoolSearcher关联 public class SchoolListVM : BasePagedListVM&ltSchool, SchoolSearcher&gt</p>
+    <p>最后修改GetSearchQuery，使用Searcher的数据</p>
+    <wt:code title="SchoolVM.cs">
+public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+{
+    var query = DC.Set&ltSchool&gt()
+        .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+        .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+        .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+        .OrderBy(x =&gt x.ID);
+    return query;
+}
+    </wt:code>
+    <wt:quote>
+        <p>CheckContain，CheckEqual等是框架提供的便捷函数，用来替换where语句，并优化生成的查询语句</p>
+    </wt:quote>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="自定义输出">
+    <p>实际情况中，我们并不总是输出数据库中的原始数据，很多时候我们需要对原有数据进行加工，转换，或者显示数据库中并不存在的新列</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+    protected override List&ltGridAction&gt InitGridAction()
+    {
+        return new List&ltGridAction&gt
+        {
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+        };
+    }
+
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            this.MakeGridHeader(x =&gt x.SchoolCode),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            this.MakeGridHeader(x =&gt x.Total).SetFormat(TotalFormat),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+
+    private string TotalFormat(School_View entity, object val)
+    {
+        return entity.SchoolCode + "," + entity.SchoolName + "," + entity.SchoolType;
+    }
+
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public string Total {get;set;}
+}
+
+    </wt:code>
+    <p>上面代码中，我们新建了School_View类，用于扩展School来显示模型中并不存在的字段</p>
+    <p>然后我们通过在列上调用SetFormat方法来指定一个函数用于返回这列需要显示的数据</p>
+    <wt:quote>
+        <p>SetFormat接受的方法可以直接返回string，也可以返回List&ltColumnFormatInfo&gt</p>
+        <p>ColumnFormatInfo的作用主要是方便我们生成一些按钮显示在列表中，如果返回string的话，比如我们需要根据某列数据生成一个按钮，点击按钮后弹出指定url的窗口，可能需要开发人员编写大量js</p>
+        <p>ColumnFormatInfo提供了很多扩展函数方便开发人员生成各种按钮，比如MakeDialogButton，MakeScriptButton，MakeDownloadButton等</p>
+    </wt:quote>
+    <p>以下例子演示了一个SetFormat的函数，它根据用户的照片ID，生成两个按钮，一个用来下载，一个用来弹出窗口直接显示照片</p>
+    <wt:code>
+private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, object val)
+{
+    return new List&ltColumnFormatInfo&gt
+    {
+        ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
+        ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+    };
+}
+
+    </wt:code>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="主要属性">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Searcher</td>
+                <td>获取关联的搜索类</td>
+            </tr>
+            <tr>
+                <td>EntityList</td>
+                <td>获取搜索结果</td>
+            </tr>
+            <tr>
+                <td>RecordsPerPage</td>
+                <td>分页行数，默认时20条</td>
+            </tr>
+            <tr>
+                <td>NeedPage</td>
+                <td>是否需要分页，默认为true</td>
+            </tr>
+            <tr>
+                <td>SearcherMode</td>
+                <td>搜索模式，用来判断当前搜索是普通列表，导出，批量操作等</td>
+            </tr>
+
+        </tbody>
+    </table>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="主要函数">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">函数</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>InitGridAction()</td>
+                <td>初始化列表需要显示的操作按钮</td>
+            </tr>
+            <tr>
+                <td>MakeStandardAction()</td>
+                <td>根据默认设置生成添加，修改，删除，详细，导入的按钮</td>
+            </tr>
+            <tr>
+                <td>MakeStandardExportAction()</td>
+                <td>生成导出Excel的按钮</td>
+            </tr>
+            <tr>
+                <td>InitGridHeader()</td>
+                <td>初始化列表需要显示的列</td>
+            </tr>
+            <tr>
+                <td>GetSearchQuery()</td>
+                <td>获取查询语句</td>
+            </tr>
+            <tr>
+                <td>GetExportQuery()</td>
+                <td>获取导出时的查询语句，如不重写，默认调用GetSearchQuery</td>
+            </tr>
+            <tr>
+                <td>GetCheckedExportQuery()</td>
+                <td>获取勾选指定数据导出时的查询语句，如不重写，默认调用GetSearchQuery</td>
+            </tr>
+            <tr>
+                <td>GetSelectorQuery()</td>
+                <td>获取选择器模式下的查询语句，如不重写，默认调用GetSearchQuery</td>
+            </tr>
+            <tr>
+                <td>GetBatchQuery</td>
+                <td>获取批量模式下的查询语句，如不重写，默认调用GetSearchQuery</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo');
+    </script>

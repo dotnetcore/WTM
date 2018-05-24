@@ -1,0 +1,18 @@
+﻿@model WalkingTec.Mvvm.Mvc.CodeGenVM
+
+
+<wt:form vm="@Model" url="/_CodeGen/Gen" label-width="150">
+    <wt:quote>
+        请进行字段配置<br />
+    </wt:quote>
+    <wt:hidden field="SelectedModel" />
+    <wt:hidden field="Area" />
+    <wt:hidden field="ModuleName" />
+    <wt:hidden field="MainDir" />
+    <wt:grid vm="FieldList"  use-local-data="true" hidden-checkbox="true" hidden-panel="true" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="确定生成代码" />
+        <wt:closebutton />
+    </wt:row>
+
+</wt:form>

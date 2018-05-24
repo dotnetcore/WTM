@@ -1,0 +1,109 @@
+﻿WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，只是提供FrameworkContext作为基类并定义了一些辅助函数
+
+<wt:fieldset field-set-style="Simple" title="方法说明">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">方法</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FrameworkContext(string cs)</td>
+                <td>根据指定连接字符串创建数据库环境</td>
+            </tr>
+            <tr>
+                <td>FrameworkContext(string cs, DBTypeEnum dbtype)</td>
+                <td>根据指定连接字符串和数据库类型创建数据库环境</td>
+            </tr>
+            <tr>
+                <td>AddEntity()</td>
+                <td>添加一条记录</td>
+            </tr>
+            <tr>
+                <td>UpdateEntity()</td>
+                <td>修改一条记录</td>
+            </tr>
+            <tr>
+                <td>UpdateProperty()</td>
+                <td>针对单个字段进行修改</td>
+            </tr>
+            <tr>
+                <td>DeleteEntity()</td>
+                <td>删除一条记录</td>
+            </tr>
+            <tr>
+                <td>CascadeDelete()</td>
+                <td>对于树形结构进行级联删除</td>
+            </tr>
+            <tr>
+                <td>DataInit()</td>
+                <td>数据初始化，子类可重写这个函数进行自己的数据初始化</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<p>另外框架本身定义了一些列的表，用以支撑框架内部操作，它们是</p>
+<wt:fieldset field-set-style="Simple" title="内置数据表">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">表名</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FrameworkAreas</td>
+                <td>系统区域，一个Area对应一个区域，第一次生成数据库时框架会反射所有Area，Controller，Action并把信息记录在这个表中</td>
+            </tr>
+            <tr>
+                <td>FrameworkModules</td>
+                <td>每个区域下的模块，一个Controller对应一个模块</td>
+            </tr>
+            <tr>
+                <td>FrameworkActions</td>
+                <td>每个模块下的方法</td>
+            </tr>
+            <tr>
+                <td>FrameworkMenus</td>
+                <td>系统菜单</td>
+            </tr>
+
+            <tr>
+                <td>DataPrivileges</td>
+                <td>数据权限</td>
+            </tr>
+            <tr>
+                <td>FunctionPrivileges</td>
+                <td>页面权限</td>
+            </tr>
+            <tr>
+                <td>FileAttachments</td>
+                <td>系统附件</td>
+            </tr>
+            <tr>
+                <td>FrameworkUsers</td>
+                <td>用户表</td>
+            </tr>
+            <tr>
+                <td>FrameworkRoles</td>
+                <td>角色</td>
+            </tr>
+            <tr>
+                <td>FrameworkGroups</td>
+                <td>用户组</td>
+            </tr>
+            <tr>
+                <td>ActionLogs</td>
+                <td>系统日志</td>
+            </tr>
+
+        </tbody>
+    </table>
+</wt:fieldset>
+<script>
+        layui.table.init('parse-table-demo');
+</script>

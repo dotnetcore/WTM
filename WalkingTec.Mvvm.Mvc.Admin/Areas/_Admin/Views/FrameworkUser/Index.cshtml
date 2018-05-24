@@ -1,0 +1,10 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms.FrameworkUserListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.ITCode" />
+        <wt:textbox field="Searcher.Name" />
+        <wt:combobox field="Searcher.IsValid" empty-text="全部"/>
+    </wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />

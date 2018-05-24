@@ -1,0 +1,9 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms.TestRoleListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true" >
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.RoleCode" />
+        <wt:textbox field="Searcher.RoleName" />
+    </wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />

@@ -1,0 +1,93 @@
+﻿@model WalkingTec.Mvvm.Core.IBasePagedListVM<WalkingTec.Mvvm.Core.BasePoco,WalkingTec.Mvvm.Core.BaseSearcher>
+@using WalkingTec.Mvvm.Core.Extensions;
+@using Newtonsoft.Json;
+@{
+    var tempvar = $"var_{Guid.NewGuid().ToNoSplitString()}";
+}
+
+<script>
+    function submitSelect() {
+        var res = []
+            ,multiSel = @(ViewBag.MultiSel.ToString().ToLower())
+            ,displayStrArr = []
+            ,hiddenStrArr = [];
+        selected = @(tempvar);
+        @if (ViewBag.SubmitFunc != null)
+        {
+            @(ViewBag.SubmitFunc.ToString())<Text>(selected);</Text>;
+        }
+        if (selected.length > 0) {
+            if (!multiSel && selected.length > 1) {
+                layui.layer.msg('最多只能选择一行');
+                return;
+            }
+            for (var i = 0; i < selected.length; i++) {
+                displayStrArr.push(selected[i]['@ViewBag.TextName']);
+                hiddenStrArr.push("<input type='hidden' name='@ViewBag.FieldName' value='" + selected[i]['@ViewBag.ValName'] +"' />");
+            }
+        }
+
+        ff.CloseDialog();
+
+        var vals = $('#@(ViewBag.SelId)_Container input[type=hidden]');
+        for (var i = 0; i < vals.length; i++) {
+            vals[i].remove();
+        }
+        $("#@(ViewBag.SelId)_Display").val(displayStrArr.join(","));
+        $("#@(ViewBag.SelId)_Display").after(hiddenStrArr.join(''));
+    }
+
+    Array.prototype.removeByID = function (val) {
+        var index = -1;
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].ID == val.ID) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
+    var @(tempvar) = @Html.Raw(ViewBag.SelectData);
+    function gridCheckedFunc(obj) {
+        var ids = []
+            ,gridId = 'wtTable_@Model.UniqueId';
+        if (obj.checked === true) {  //选中
+            if (obj.type === "all") { // 全选
+                var selected = ff.GetSelectionData(gridId);
+                for (var i = 0; i < selected.length; i++) {
+                    for (var j = 0; j < @(tempvar).length; j++) { // 是否已经选中
+                        if (@(tempvar).ID == selected[i].ID) break;
+                    }
+                    @(tempvar).push(selected[i]);
+                }
+            } else {
+                @(tempvar).push(obj.data);
+            }
+        } else {  //取消选中
+            if (obj.type === "all") { // 取消全选
+                var nonSelected = ff.GetNonSelectionData(gridId);
+                //移除未选中数据
+                for (var i = 0; i < nonSelected.length; i++) {
+                    @(tempvar).removeByID(nonSelected[i]);
+                }
+            } else {
+                @(tempvar).removeByID(obj.data);
+            }
+        }
+        for (var i = 0; i < @(tempvar).length; i++) {
+            ids.push(@(tempvar)[i].ID);
+        }
+        wtVar_@(Model.UniqueId).config.where.Ids = ids;
+    }
+</script>
+
+<wt:container style="margin:10px;">
+    $$SearchPanel$$
+    <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" height="400" />
+    <wt:row align="AlignEnum.Right">
+        <wt:button click="submitSelect();" text="确定" size="ButtonSizeEnum.Normal" />
+    </wt:row>
+</wt:container>

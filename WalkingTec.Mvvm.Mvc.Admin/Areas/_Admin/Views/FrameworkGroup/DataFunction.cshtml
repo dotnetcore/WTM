@@ -1,0 +1,14 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupMDVM
+
+<wt:form vm="@Model">
+    <wt:row items-per-row=" ItemsPerRowEnum.Two">
+        <wt:display field="Entity.GroupCode" />
+        <wt:display field="Entity.GroupName" />
+    </wt:row>
+    <wt:grid vm="ListVM" height=500 hidden-checkbox="true" hidden-grid-index="true" hidden-panel="true"/>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

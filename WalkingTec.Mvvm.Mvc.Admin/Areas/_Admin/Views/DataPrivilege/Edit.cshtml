@@ -1,0 +1,30 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
+<wt:form vm="@Model">
+    <wt:hidden field=" DpType" />
+    <wt:combobox field="Entity.TableName" items="TableNames"  disabled="true"/>
+    <wt:checkbox field="SelectedItemsID" items="AllItems" />
+    <wt:row id="userrow">
+        <wt:textbox field="UserItCode"  disabled="true" />
+    </wt:row>
+    <wt:row id="grouprow">
+        <wt:combobox field="Entity.GroupId" items="AllGroups" disabled="true"/>
+    </wt:row>
+    <br /><br />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
+<script>
+    DbTypeChange({ value: $('#DpType').val() });
+    function DbTypeChange(data) {
+        if (data.value == "UserGroup") {
+            $('#userrow').css('display', 'none');
+            $('#grouprow').css('display', 'block');
+        }
+        else {
+            $('#userrow').css('display', 'block');
+            $('#grouprow').css('display', 'none');
+        }
+    }
+</script>

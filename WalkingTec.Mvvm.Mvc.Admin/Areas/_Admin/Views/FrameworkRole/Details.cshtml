@@ -1,0 +1,10 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs.FrameworkRoleMDVM
+
+<wt:form vm="@Model">
+    <wt:display field="Entity.RoleCode" />
+    <wt:display field="Entity.RoleName" />
+    <wt:textarea field="Entity.RoleRemark" disabled="true" />
+    <wt:row align=" AlignEnum.Right">
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

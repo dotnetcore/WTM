@@ -1,0 +1,15 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms.TestRoleVM
+
+<wt:form vm="@Model" label-width="100">
+    <wt:row items-per-row="ItemsPerRowEnum.Two">
+        <wt:textbox field="Entity.RoleCode" />
+        <wt:textbox field="Entity.RoleName" />
+    </wt:row>
+    <wt:row items-per-row="ItemsPerRowEnum.Two">
+        <wt:textbox field="Entity.RoleRemark" />
+    </wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
