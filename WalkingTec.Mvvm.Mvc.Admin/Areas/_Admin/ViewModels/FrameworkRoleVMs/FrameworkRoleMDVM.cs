@@ -18,6 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         protected override void InitVM()
         {
+            ListVM.CopyContext(this);
             ListVM.Searcher.RoleID = Entity.ID;
         }
 
