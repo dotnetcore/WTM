@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_id))
                 {
-                    return Utils.GetIdByName(Field.Name) ?? string.Empty;
+                    return Utils.GetIdByName(Field?.Name) ?? string.Empty;
                 }
                 else
                 {
@@ -41,6 +41,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 _id = value;
             }
         }
+
+        public string PaddingText { get; set; }
 
         /// <summary>
         /// 不需要生成必填验证
@@ -62,7 +64,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (output.Attributes.TryGetAttribute("name", out TagHelperAttribute b) == false)
             {
-                output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
+                output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field?.Name : Name);
             }
             if (Disabled)
             {
@@ -85,7 +87,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (string.IsNullOrEmpty(LabelText))
             {
-                LabelText = Field.Metadata.DisplayName ?? Field.Metadata.PropertyName;
+                LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                if(LabelText == null)
+                {
+                    HideLabel = true;
+                }
             }
 
             if (LabelWidth == null && context.Items.ContainsKey("formlabelwidth"))
@@ -99,20 +105,32 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 preHtml += $@"
 <div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
     <label for=""{Id}"" class=""layui-form-label"" {(LabelWidth == null ? string.Empty : "style='width:" + LabelWidth + "px'")}>{requiredDot}{LabelText}:</label>
-    <div class=""layui-input-block"" {(LabelWidth == null ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
+    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {(LabelWidth == null ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
 ";
             }
             else
             {
                 preHtml += $@"
 <div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
-    <div class=""layui-input-block"" style=""margin-left:0px"">
+    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" style=""margin-left:0px"">
 ";
             }
-            postHtml += $@"
+            if (string.IsNullOrEmpty(PaddingText))
+            {
+                postHtml += $@"
     </div>
 </div>
 ";
+            }
+            else
+            {
+                postHtml += $@"
+    </div>
+<label class=""layui-form-label"" >{PaddingText}</label>
+</div>
+";
+
+            }
 
 
             output.PreElement.SetHtmlContent(preHtml + output.PreElement.GetContent());

@@ -81,14 +81,14 @@
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
-&ltwt:searchpanel vm="@Model.ListVm" reset-btn="true"&gt
+&ltwt:searchpanel vm="@@Model.ListVm" reset-btn="true"&gt
     &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
         &ltwt:textbox field="ListVm.Searcher.ITCode" /&gt
         &ltwt:textbox field="ListVm.Searcher.Name" /&gt
         &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" /&gt
     &lt/wt:row&gt
 &lt/wt:searchpanel&gt
-&ltwt:grid vm="@Model.ListVm" /&gt
+&ltwt:grid vm="@@Model.ListVm" /&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -148,7 +148,7 @@
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
-&ltwt:form vm="@Model.Vm"&gt
+&ltwt:form vm="@@Model.Vm"&gt
     &ltwt:tab&gt
         &ltwt:tabheaders&gt
             &ltwt:tabheader title="基本信息" /&gt

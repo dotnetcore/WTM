@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    [HtmlTargetElement("wt:display", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
+    [HtmlTargetElement("wt:display", TagStructure = TagStructure.WithoutEndTag)]
     public class DisplayTagHelper : BaseFieldTag
     {
+        public string DisplayText { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             bool isFile = false;
@@ -46,7 +48,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.Add("class", "layui-form-label");
                 output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset");
                 var val = string.Empty;
-                if (Field.Model != null)
+                if (Field?.Model != null)
                 {
                     if (Field.Model.GetType().IsEnumOrNullableEnum())
                     {
@@ -56,6 +58,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         val = Field.Model.ToString();
                     }
+                }
+                else
+                {
+                    val = DisplayText;
                 }
                 output.Content.AppendHtml(val);
             }

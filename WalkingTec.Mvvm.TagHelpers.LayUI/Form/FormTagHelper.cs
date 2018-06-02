@@ -27,10 +27,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 _id = value;
             }
         }
+
+        /// <summary>
+        /// 提交表单的Url
+        /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// 表单绑定的Vm
+        /// </summary>
         public ModelExpression Vm { get; set; }
 
+        /// <summary>
+        /// 提交前调用的js
+        /// </summary>
         public string BeforeSubmit { get; set; }
 
         /// <summary>
@@ -42,6 +52,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 设置表单内控件前面label的长度，默认为80
         /// </summary>
         public int? LabelWidth { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var baseVM = Vm?.Model as BaseVM;
@@ -79,6 +90,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
+                //设置提交地址，如果不指定Url，默认为当前页面。如果绑定Vm为BatchVM，将提交地址由BatchXXX变为DoBatchXXX。
+                //因为框架默认的Batch本身是一个Post方法，无法使用同名方法处理提交后的工作
                 if (Vm.Model is IBaseBatchVM<BaseVM>)
                 {
                     output.Attributes.SetAttribute("action", baseVM?.CurrentUrl.Replace("/Batch", "/DoBatch") ?? "#");
