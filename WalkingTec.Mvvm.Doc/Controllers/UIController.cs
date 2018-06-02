@@ -5,6 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Doc.FrameworkUserVms;
+using WalkingTec.Mvvm.Doc.Models;
+using WalkingTec.Mvvm.Doc.ViewModels.MajorVms;
+using WalkingTec.Mvvm.Doc.ViewModels.SchoolVms;
+using WalkingTec.Mvvm.Doc.ViewModels.StudentVms;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
@@ -34,11 +38,25 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("表单")]
         public IActionResult Form()
         {
-            var vm = CreateVM<FrameworkAllVM>();
-            vm.Vm = CreateVM<FrameworkUserVM>();
-            vm.ListVm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<SchoolVm>();
             return PartialView(vm);
         }
+
+        [ActionDescription("文本框")]
+        public IActionResult TextBox()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("下拉框")]
+        public IActionResult ComboBox()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+
         [ActionDescription("数据表格")]
         public IActionResult Grid()
         {
@@ -51,6 +69,50 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Js()
         {
             return PartialView();
+        }
+
+        public IActionResult GetSchool(string keywords)
+        {
+            List<School> schools = new List<School>()
+            {
+                new School { SchoolName = "清华大学"},
+                new School { SchoolName = "北京大学"},
+                new School { SchoolName = "复旦大学"},
+                new School { SchoolName = "北京工业大学"},
+                new School { SchoolName = "浙江大学"},
+            };
+            var rv = schools.Where(x=>x.SchoolName.StartsWith(keywords)).Select(x => new { Text = x.SchoolName, Value = x.SchoolName }).ToList();
+            return Json(rv);
+        }
+
+        public IActionResult GetMajorBySchool(string id)
+        {
+            List<School> schools = new List<School>()
+            {
+                new School { SchoolName = "清华大学", Majors = new List<Major>(){
+                    new Major{ MajorName = "物理系"},
+                    new Major{ MajorName = "数学系"},
+                } },
+                new School { SchoolName = "北京大学", Majors = new List<Major>(){
+                    new Major{ MajorName = "文学系"},
+                    new Major{ MajorName = "历史系"},
+                }},
+                new School { SchoolName = "复旦大学", Majors = new List<Major>(){
+                    new Major{ MajorName = "生物系"},
+                    new Major{ MajorName = "化学系"},
+                }},
+                new School { SchoolName = "北京工业大学", Majors = new List<Major>(){
+                    new Major{ MajorName = "工业控制"},
+                    new Major{ MajorName = "计算机软件"},
+                }},
+                new School { SchoolName = "浙江大学", Majors = new List<Major>(){
+                    new Major{ MajorName = "人文系"},
+                    new Major{ MajorName = "经济系"},
+                }},
+            };
+
+            var rv = schools.Where(x => x.SchoolName == id).SelectMany(x=>x.Majors).Select(x => new { Text = x.MajorName, Value = x.ID }).ToList();
+            return Json(rv);
         }
     }
 }

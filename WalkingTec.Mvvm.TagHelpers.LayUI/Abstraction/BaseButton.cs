@@ -71,6 +71,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 if(Disabled == true)
                 {
                     Theme = ButtonThemeEnum.Disabled;
+                    output.Attributes.SetAttribute(new TagHelperAttribute("disabled"));
                 }
                 if (Theme != null && Theme != ButtonThemeEnum.Normal)
                 {
@@ -90,7 +91,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Content.SetHtmlContent(Text ?? string.Empty);
             }
-            if (string.IsNullOrEmpty(Click) == false)
+            if (string.IsNullOrEmpty(Click) == false && Disabled == false)
             {
                 output.PostElement.AppendHtml($@"
 <script>

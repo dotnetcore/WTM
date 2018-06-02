@@ -1,1 +1,89 @@
-﻿Form
+﻿@model WalkingTec.Mvvm.Doc.ViewModels.SchoolVms.SchoolVm
+
+<wt:quote>
+    <p>WTM提供了10多种表单控件，涵盖了绝大部分后台管理类型程序的需要</p>
+    <p>WTM框架内的表单控件主要简化了几方面的工作</p>
+    <ul class="doc">
+        <li>自动根据绑定字段上的Display属性生成控件前面的Label</li>
+        <li>自动判断绑定字段是否必填，如果必填则加上星号</li>
+        <li>自动根据绑定字段上的验证属性生成前台验证js</li>
+        <li>自动将后台验证产生的错误输出到表单中</li>
+    </ul>
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="Form">
+    <p>一个表单通常由一个Form控件来代表，Form控件内部嵌套了其他表单控件，并包含提交按钮</p>
+    <p>Form的常用属性有：</p>
+        <table lay-filter="parse-table-demo">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'username', width:200}">属性</th>
+                    <th lay-data="{field:'joinTime', width:600}">描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Id</td>
+                    <td>表单Id，如不需要其他js操作，可以不填</td>
+                </tr>
+                <tr>
+                    <td>Url</td>
+                    <td>表单提交地址，默认为当前页面地址</td>
+                </tr>
+                <tr>
+                    <td>Vm</td>
+                    <td>表单绑定的ViewModel，必填</td>
+                </tr>
+                <tr>
+                    <td>BeforeSubmit</td>
+                    <td>表单提交前需要执行的js</td>
+                </tr>
+                <tr>
+                    <td>OldPost</td>
+                    <td>是否使用传统的提交整个页面的方式，而不使用ajax提交，默认为false</td>
+                </tr>
+                <tr>
+                    <td>LabelWidth</td>
+                    <td>表单内部标签的长度，默认为80</td>
+                </tr>
+            </tbody>
+        </table>
+        <wt:tab>
+            <wt:tabheaders>
+                <wt:tabheader title="效果" />
+                <wt:tabheader title="代码" />
+            </wt:tabheaders>
+            <wt:tabcontents>
+                <wt:tabcontent>
+                    <wt:form vm="@Model" width="600">
+                        <wt:textbox field="Entity.SchoolCode" />
+                        <wt:textbox field="Entity.SchoolName" />
+                        <wt:combobox field="Entity.SchoolType" />
+                        <wt:row align="AlignEnum.Right">
+                            <wt:submitbutton disabled="true" />
+                            <wt:closebutton disabled="true" />
+                        </wt:row>
+                    </wt:form>
+                </wt:tabcontent>
+                <wt:tabcontent>
+                    <wt:code>
+&ltwt:form vm="@@Model" width="600"&gt
+    &ltwt:textbox field="Entity.SchoolCode" /&gt
+    &ltwt:textbox field="Entity.SchoolName" /&gt
+    &ltwt:combobox field="Entity.SchoolType" /&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton disabled="true" /&gt
+        &ltwt:closebutton disabled="true" /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+                    </wt:code>
+                </wt:tabcontent>
+            </wt:tabcontents>
+        </wt:tab>
+
+
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+        layui.table.init('parse-table-demo');
+   </script>
