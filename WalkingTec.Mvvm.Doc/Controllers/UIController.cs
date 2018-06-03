@@ -56,6 +56,26 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("勾选框")]
+        public IActionResult CheckBox()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Radio")]
+        public IActionResult Radio()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("日期控件")]
+        public IActionResult DateTime()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
 
         [ActionDescription("数据表格")]
         public IActionResult Grid()
