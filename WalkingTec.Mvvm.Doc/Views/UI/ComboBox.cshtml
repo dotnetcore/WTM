@@ -44,11 +44,15 @@
                 </tr>
                 <tr>
                     <td>YesText</td>
-                    <td>当绑定字段为布尔类型是，对应true显示的文本</td>
+                    <td>当绑定字段为布尔类型是，对应true显示的文本，默认为‘是’</td>
+                </tr>
+                <tr>
+                    <td>NoText</td>
+                    <td>当绑定字段为布尔类型是，对应false显示的文本，默认为‘否’</td>
                 </tr>
                 <tr>
                     <td>Items</td>
-                    <td>列表数据源，当绑定字段为布尔或枚举时，框架会自动反射下来列表，不需要填</td>
+                    <td>列表数据源，当绑定字段为布尔或枚举时，框架会自动反射下拉列表，不需要填</td>
                 </tr>
                 <tr>
                     <td>MultiSelect</td>
@@ -74,6 +78,7 @@
             <li>当绑定枚举字段时，框架自动反射枚举，根据每个枚举值的display属性作为Text，枚举值本身作为Value来生成下拉菜单</li>
             <li>当绑定布尔字段时，框架根据YesText和NoText的值作为Text，布尔值作为Value来生成下拉菜单，默认true显示‘是’，false显示‘否’</li>
             <li>当指定了items数据源时，框架使用ComboSelectListItem中的Text属性作为Text，Value属性作为Value来生成下拉菜单</li>
+            <li>items数据源也可以指定为其他类型的List，这种情况下框架会为List中的每一项调用ToString作为下拉菜单的Text和Value</li>
         </ul>
     </wt:quote>
         <wt:tab>

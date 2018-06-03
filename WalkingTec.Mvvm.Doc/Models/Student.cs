@@ -60,6 +60,9 @@ namespace WalkingTec.Mvvm.Doc.Models
         [Display(Name = "是否有效")]
         public bool IsValid { get; set; }
 
+        [Display(Name = "入学日期")]
+        public DateTime? EnRollDate { get; set; }
+
         [Display(Name = "专业")]
         public List<StudentMajor> Majors { get; set; }
     }
