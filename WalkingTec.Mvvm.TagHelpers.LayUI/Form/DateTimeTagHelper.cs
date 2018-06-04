@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// Min
         /// 1.  如果值为字符类型，则：年月日必须用 -（中划线）分割、时分秒必须用 :（半角冒号）号分割。这里并非遵循 format 设定的格式
-        /// 2.  如果值为整数类型，且数字＜86400000，则数字代表天数，如：min: -7，即代表最小日期在7天前，正数代表若干天后
+        /// 2.  如果值为整数类型，且数字 ＜ 86400000，则数字代表天数，如：min: -7，即代表最小日期在7天前，正数代表若干天后
         /// 3.  如果值为整数类型，且数字 ≥ 86400000，则数字代表时间戳，如：max: 4073558400000，即代表最大日期在：公元3000年1月1日
         /// </summary>
         public string Min { get; set; }
@@ -98,6 +98,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string Format { get; set; }
         /// <summary>
         /// 层叠顺序
+        /// 类型：Number，默认值：66666666
+        /// 一般用于解决与其它元素的互相被遮掩的问题。如果 position 参数设为 static 时，该参数无效。
         /// </summary>
         public int? ZIndex { get; set; }
         /// <summary>
@@ -115,10 +117,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool? Calendar { get; set; }
         /// <summary>
         /// 标注重要日子
-        /// 标注          格式                      说明
+        /// 标注          格式                    说明
         /// 每年的日期   {'0-9-18': '国耻'}        0 即代表每一年
         /// 每月的日期   {'0-0-15': '中旬'}        0-0 即代表每年每月（layui 2.1.1/layDate 5.0.4 新增）
-        /// 特定的日期   {'2017-8-21': '发布')     -
+        /// 特定的日期   {'2017-8-21': '发布'}     -
         /// </summary>
         public Dictionary<string, string> Mark { get; set; }
         /// <summary>

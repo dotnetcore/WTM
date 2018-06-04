@@ -1,95 +1,288 @@
 ﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
+@{
+    var mark = new Dictionary<string, string>()
+    {
+        {"0-9-18", "国耻" },
+        {"0-0-15", "中旬" },
+        {"2018-05-24", "发布" }
+    };
+}
+
 <wt:fieldset field-set-style="Simple" title="DateTime">
     <p>DateTime的常用属性有：</p>
-        <table lay-filter="parse-table-demo">
-            <thead>
-                <tr>
-                    <th lay-data="{field:'username', width:200}">属性</th>
-                    <th lay-data="{field:'joinTime', width:600}">描述</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Id</td>
-                    <td>控件Id，默认根据绑定字段名称生成</td>
-                </tr>
-                <tr>
-                    <td>Field</td>
-                    <td>绑定字段，必填</td>
-                </tr>
-                <tr>
-                    <td>Disabled</td>
-                    <td>是否禁用</td>
-                </tr>
-                <tr>
-                    <td>Name</td>
-                    <td>控件Name，默认根据绑定字段名称生成</td>
-                </tr>
-                <tr>
-                    <td>LabelText</td>
-                    <td>标签内容</td>
-                </tr>
-                <tr>
-                    <td>LabelWidth</td>
-                    <td>标签的长度，默认为80</td>
-                </tr>
-                <tr>
-                    <td>HideLabel</td>
-                    <td>是否隐藏标签</td>
-                </tr>
-                <tr>
-                    <td>Type</td>
-                    <td>显示方式，可以选择Year，Month，Date，Time和Datetime</td>
-                </tr>
-                <tr>
-                    <td>Range</td>
-                    <td>是否开启日期范围选择，默认为false</td>
-                </tr>
-            </tbody>
-        </table>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>显示方式，可以选择Year，Month，Date，Time和Datetime</td>
+            </tr>
+            <tr>
+                <td>Range</td>
+                <td>是否开启日期范围选择，默认为false</td>
+            </tr>
+            <tr>
+                <td>RangeSplit</td>
+                <td>时间范围分隔符 默认 ~</td>
+            </tr>
+            <tr>
+                <td>Min/Max</td>
+                <td>
+                    1.  如果值为字符类型，则：年月日必须用 -（中划线）分割、时分秒必须用 :（半角冒号）号分割。这里并非遵循 format 设定的格式
+                    2.  如果值为整数类型，且数字 ＜ 86400000，则数字代表天数，如：min: -7，即代表最小日期在7天前，正数代表若干天后
+                    3.  如果值为整数类型，且数字 ≥ 86400000，则数字代表时间戳，如：max: 4073558400000，即代表最大日期在：公元3000年1月1日
+                </td>
+            </tr>
+            <tr>
+                <td>Format</td>
+                <td>
+                    时间自定义格式 默认值：yyyy-MM-d
+                    yyyy    年份，至少四位数。如果不足四位，则前面补零
+                    y       年份，不限制位数，即不管年份多少位，前面均不补零
+                    MM      月份，至少两位数。如果不足两位，则前面补零。
+                    M       月份，允许一位数。
+                    dd      日期，至少两位数。如果不足两位，则前面补零。
+                    d       日期，允许一位数。
+                    HH      小时，至少两位数。如果不足两位，则前面补零。
+                    H       小时，允许一位数。
+                    mm      分钟，至少两位数。如果不足两位，则前面补零。
+                    m       分钟，允许一位数。
+                    ss      秒数，至少两位数。如果不足两位，则前面补零。
+                    s       秒数，允许一位数。
+                </td>
+            </tr>
+            <tr>
+                <td>ZIndex</td>
+                <td>
+                    层叠顺序，一般用于解决与其它元素的互相被遮掩的问题。如果 position 参数设为 static 时，该参数无效。
+                    类型：Number，默认值：66666666
+                </td>
+            </tr>
+            <tr>
+                <td>ShowBottom</td>
+                <td>是否显示底部栏</td>
+            </tr>
+            <tr>
+                <td>Lang</td>
+                <td>语言 默认CN，可以选择CN，EN</td>
+            </tr>
+            <tr>
+                <td>Calendar</td>
+                <td>是否显示公历节日，内置了一些我国通用的公历重要节日，通过设置 true 来开启。国际版不会显示。</td>
+            </tr>
+            <tr>
+                <td>Mark</td>
+                <td>
+                    标注重要日子
+                    标注          格式                    说明
+                    每年的日期   {'0-9-18': '国耻'}        0 即代表每一年
+                    每月的日期   {'0-0-15': '中旬'}        0-0 即代表每年每月（layui 2.1.1/layDate 5.0.4 新增）
+                    特定的日期   {'2017-8-21': '发布')     -
+                </td>
+            </tr>
+            <tr>
+                <td>ReadyFunc</td>
+                <td>
+                    控件初始打开的回调，控件在打开时触发。
+                    回调返回2个参数：初始的日期时间对象、当前实例对象
+                </td>
+            </tr>
+            <tr>
+                <td>ChangeFunc</td>
+                <td>
+                    日期时间被切换后的回调
+                    年月日时间被切换时都会触发。
+                    回调返回4个参数，分别代表：生成的值、日期时间对象、结束的日期时间对象、当前实例对象
+                </td>
+            </tr>
+            <tr>
+                <td>DoneFunc</td>
+                <td>
+                    控件选择完毕后的回调
+                    点击日期、清空、现在、确定均会触发。
+                    回调返回4个参数，分别代表：生成的值、日期时间对象、结束的日期时间对象、当前实例对象
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
     <wt:quote>
         <p>DateTime重点</p>
-
     </wt:quote>
-        <wt:tab>
-            <wt:tabheaders>
-                <wt:tabheader title="效果" />
-                <wt:tabheader title="代码" />
-            </wt:tabheaders>
-            <wt:tabcontents>
-                <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
-                        <wt:datetime field="Entity.EnRollDate" />
-                        <wt:datetime field="Entity.UpdateTime" type="Datetime"/>
-                        <wt:row align="AlignEnum.Right">
-                            <wt:submitbutton disabled="true" />
-                            <wt:closebutton disabled="true" />
-                        </wt:row>
-                    </wt:form>
-                </wt:tabcontent>
-                <wt:tabcontent>
-                    <wt:code>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model" width="600">
+                    <wt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" />
+                    <wt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" />
+                    <wt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" />
+                    <wt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" />
+                    <wt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" />
+                    <wt:datetime field="Entity.UpdateTime"
+                                 min="2018-01-01 00:00:00"
+                                 max="2018-08-01 23:59:59"
+                                 type="Datetime"
+                                 range="true"
+                                 range-split="~"
+                                 format="yyyy-MM-ddTHH:mm:ss" />
+                    <wt:datetime field="Entity.EnTimeRange1"
+                                 type="Datetime"
+                                 lang="DateTimeLangEnum.EN" />
+                    <wt:datetime field="Entity.EnTimeRange2"
+                                 type="Datetime"
+                                 calendar="true" />
+                    <wt:datetime field="Entity.EnTimeRange3"
+                                 type="Datetime"
+                                 mark="@mark" />
+                    <wt:datetime field="Entity.EnTimeRange4"
+                                 type="Datetime"
+                                 range="true"
+                                 ready-func="readyFunc"
+                                 change-func="changeFunc"
+                                 done-func="doneFunc" />
+                    <wt:row align="AlignEnum.Right">
+                        <wt:submitbutton disabled="true" />
+                        <wt:closebutton disabled="true" />
+                    </wt:row>
+                </wt:form>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+@@{
+    var mark = new Dictionary&ltstring, string&gt()
+    {
+        {"0-9-18", "国耻" },
+        {"0-0-15", "中旬" },
+        {"2018-05-24", "发布" }
+    };
+}
+
 &ltwt:form vm="@@Model" width="600"&gt
-    &ltwt:combobox field="Entity.Sex" /&gt
-    &ltwt:combobox field="Entity.IsValid" /&gt
-    &ltwt:combobox field="Entity.IsValid" yes-text="真的是" no-text="真不是" /&gt
-    &ltwt:combobox field="SelectedSchool" label-text="学校" items="AllSchools" /&gt
-    &ltwt:combobox field="SelectedSchool2" label-text="学校搜索" items="AllSchools" enable-search="true"/&gt
-    &ltwt:combobox field="SelectedSchools" label-text="学校多选" items="AllSchools" multi-select="true" /&gt
+    &ltwt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" /&gt
+    &ltwt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" /&gt
+    &ltwt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" /&gt
+    &ltwt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" /&gt
+    &ltwt:datetime field="Entity.UpdateTime"
+                    min="2018-01-01 00:00:00"
+                    max="2018-08-01 23:59:59"
+                    type="Datetime"
+                    range="true"
+                    range-split="~"
+                    format="yyyy-MM-ddTHH:mm:ss" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange1"
+                    type="Datetime"
+                    lang="DateTimeLangEnum.EN" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange2"
+                    type="Datetime"
+                    calendar="true" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange3"
+                    type="Datetime"
+                    mark="@@mark" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange4"
+                    type="Datetime"
+                    range="true"
+                    ready-func="readyFunc"
+                    change-func="changeFunc"
+                    done-func="doneFunc"/&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
     &lt/wt:row&gt
 &lt/wt:form&gt
 
-                    </wt:code>
-                </wt:tabcontent>
-            </wt:tabcontents>
-        </wt:tab>
+&ltscript&gt
+    layui.code({ about: false });
+    layui.table.init('parse-table-demo', { limit: 100, height: 'full-400' });
+
+    function readyFunc(value, _this) {
+        console.log("readyFunc");
+        console.log(value)
+        console.log(_this)
+    }
+    function changeFunc(value, date, endDate, _this) {
+        console.log("changeFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+    function doneFunc(value, date, endDate, _this) {
+        console.log("doneFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+&lt/script&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
 </wt:fieldset>
 
-    <script>
-        layui.code({ about: false });
-        layui.table.init('parse-table-demo');
-    </script>
+<script>
+    layui.code({ about: false });
+    layui.table.init('parse-table-demo', { limit: 100, height: 'full-400' });
+
+    function readyFunc(value, _this) {
+        console.log("readyFunc");
+        console.log(value)
+        console.log(_this)
+    }
+    function changeFunc(value, date, endDate, _this) {
+        console.log("changeFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+    function doneFunc(value, date, endDate, _this) {
+        console.log("doneFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+</script>
