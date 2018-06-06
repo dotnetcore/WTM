@@ -704,7 +704,7 @@ var isPost = false;
                 #region 在数据列表外部套上一层 Panel
 
                 output.PreElement.AppendHtml($@"
-<div class=""layui-collapse"" style=""border:0;"">
+<div class=""layui-collapse"" >
   <div class=""layui-colla-item"">
     <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"">数据列表
       <!-- 数据列表按钮组 -->

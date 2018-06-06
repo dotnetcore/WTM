@@ -14,7 +14,7 @@ namespace $ns$.Controllers
         {
             ViewData["title"] = "WalkingTec MVVM Framework";
             var vm = CreateVM<IndexVM>();
-            vm.Menu = FFMenus.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, null, x => x.Url, SortByName: false);
+            vm.Menu = FFMenus.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x=>x.IConId.ToString(), x => x.Url, SortByName: false);
             return View(vm);
         }
 

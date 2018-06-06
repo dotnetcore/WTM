@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             output.PreContent.AppendHtml($@"
-<div class=""layui-collapse"" style=""border:0;"">
+<div class=""layui-collapse"" style=""margin-bottom:5px;"">
   <div class=""layui-colla-item"">
     <h2 class=""layui-colla-title"">搜索条件
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">

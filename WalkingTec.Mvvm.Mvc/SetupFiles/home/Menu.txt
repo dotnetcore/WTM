@@ -5,13 +5,13 @@
         {
             <li class="layui-nav-item">
                 <a class="" href="javascript:;">
-                    @if (!string.IsNullOrEmpty(item.ICon)){<img class="layui-nav-img" src="@item.ICon">}@item.Text
+                    @if (!string.IsNullOrEmpty(item.ICon)){<img class="layui-nav-img" src="/_Framework/GetFile?id=@item.ICon">}@item.Text
                 </a>
                 <dl class="layui-nav-child">
                     @foreach (var child in item.Children)
                     {
                         <dd><a href="javascript:;ff.LoadPage('@child.Url')">
-                            @if (!string.IsNullOrEmpty(child.ICon)){<img class="layui-nav-img" src="@child.ICon">}@child.Text
+                            @if (!string.IsNullOrEmpty(child.ICon)){<img class="layui-nav-img" src="/_Framework/GetFile?id=@child.ICon">}@child.Text
                         </a></dd>
                     }
                 </dl>
