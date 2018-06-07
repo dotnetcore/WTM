@@ -358,6 +358,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if(Loading == null)
+            {
+                Loading = true;
+            }
             var vmQualifiedName = Vm.Model.GetType().AssemblyQualifiedName;
             vmQualifiedName = vmQualifiedName.Substring(0, vmQualifiedName.LastIndexOf(", Version="));
 
