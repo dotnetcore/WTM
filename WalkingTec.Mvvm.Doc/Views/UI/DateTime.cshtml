@@ -1,5 +1,14 @@
 ﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
+@{
+    var mark = new Dictionary<string, string>()
+    {
+        {"0-9-18", "国耻" },
+        {"0-0-15", "中旬" },
+        {"2018-05-24", "发布" }
+    };
+}
+
 <wt:fieldset field-set-style="Simple" title="DateTime">
     <p>DateTime的常用属性有：</p>
     <table lay-filter="parse-table-demo">
@@ -61,7 +70,7 @@
             <tr>
                 <td>Format</td>
                 <td>
-                    自定义格式 默认值：yyyy-MM-dd
+                    时间自定义格式 默认值：yyyy-MM-d
                     yyyy    年份，至少四位数。如果不足四位，则前面补零
                     y       年份，不限制位数，即不管年份多少位，前面均不补零
                     MM      月份，至少两位数。如果不足两位，则前面补零。
@@ -136,7 +145,6 @@
     </table>
     <wt:quote>
         <p>DateTime重点</p>
-
     </wt:quote>
     <wt:tab>
         <wt:tabheaders>
@@ -146,8 +154,33 @@
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:form vm="@Model" width="600">
-                    <wt:datetime field="Entity.EnRollDate" max="2018-6-3" min="2018-6-1" />
-                    <wt:datetime field="Entity.UpdateTime" max="2018-6-3" min="2018-6-1" type="Datetime" range="true" range-split="---" />
+                    <wt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" />
+                    <wt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" />
+                    <wt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" />
+                    <wt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" />
+                    <wt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" />
+                    <wt:datetime field="Entity.UpdateTime"
+                                 min="2018-01-01 00:00:00"
+                                 max="2018-08-01 23:59:59"
+                                 type="Datetime"
+                                 range="true"
+                                 range-split="~"
+                                 format="yyyy-MM-ddTHH:mm:ss" />
+                    <wt:datetime field="Entity.EnTimeRange1"
+                                 type="Datetime"
+                                 lang="DateTimeLangEnum.EN" />
+                    <wt:datetime field="Entity.EnTimeRange2"
+                                 type="Datetime"
+                                 calendar="true" />
+                    <wt:datetime field="Entity.EnTimeRange3"
+                                 type="Datetime"
+                                 mark="@mark" />
+                    <wt:datetime field="Entity.EnTimeRange4"
+                                 type="Datetime"
+                                 range="true"
+                                 ready-func="readyFunc"
+                                 change-func="changeFunc"
+                                 done-func="doneFunc" />
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
                         <wt:closebutton disabled="true" />
@@ -156,18 +189,73 @@
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
+@@{
+    var mark = new Dictionary&ltstring, string&gt()
+    {
+        {"0-9-18", "国耻" },
+        {"0-0-15", "中旬" },
+        {"2018-05-24", "发布" }
+    };
+}
+
 &ltwt:form vm="@@Model" width="600"&gt
-    &ltwt:combobox field="Entity.Sex" /&gt
-    &ltwt:combobox field="Entity.IsValid" /&gt
-    &ltwt:combobox field="Entity.IsValid" yes-text="真的是" no-text="真不是" /&gt
-    &ltwt:combobox field="SelectedSchool" label-text="学校" items="AllSchools" /&gt
-    &ltwt:combobox field="SelectedSchool2" label-text="学校搜索" items="AllSchools" enable-search="true"/&gt
-    &ltwt:combobox field="SelectedSchools" label-text="学校多选" items="AllSchools" multi-select="true" /&gt
+    &ltwt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" /&gt
+    &ltwt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" /&gt
+    &ltwt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" /&gt
+    &ltwt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" /&gt
+    &ltwt:datetime field="Entity.UpdateTime"
+                    min="2018-01-01 00:00:00"
+                    max="2018-08-01 23:59:59"
+                    type="Datetime"
+                    range="true"
+                    range-split="~"
+                    format="yyyy-MM-ddTHH:mm:ss" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange1"
+                    type="Datetime"
+                    lang="DateTimeLangEnum.EN" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange2"
+                    type="Datetime"
+                    calendar="true" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange3"
+                    type="Datetime"
+                    mark="@@mark" /&gt
+    &ltwt:datetime field="Entity.EnTimeRange4"
+                    type="Datetime"
+                    range="true"
+                    ready-func="readyFunc"
+                    change-func="changeFunc"
+                    done-func="doneFunc"/&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
     &lt/wt:row&gt
 &lt/wt:form&gt
+
+&ltscript&gt
+    layui.code({ about: false });
+    layui.table.init('parse-table-demo', { limit: 100, height: 'full-400' });
+
+    function readyFunc(value, _this) {
+        console.log("readyFunc");
+        console.log(value)
+        console.log(_this)
+    }
+    function changeFunc(value, date, endDate, _this) {
+        console.log("changeFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+    function doneFunc(value, date, endDate, _this) {
+        console.log("doneFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+&lt/script&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -177,4 +265,24 @@
 <script>
     layui.code({ about: false });
     layui.table.init('parse-table-demo', { limit: 100, height: 'full-400' });
+
+    function readyFunc(value, _this) {
+        console.log("readyFunc");
+        console.log(value)
+        console.log(_this)
+    }
+    function changeFunc(value, date, endDate, _this) {
+        console.log("changeFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
+    function doneFunc(value, date, endDate, _this) {
+        console.log("doneFunc");
+        console.log(value)
+        console.log(date)
+        console.log(endDate)
+        console.log(_this)
+    }
 </script>
