@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 标注          格式                    说明
         /// 每年的日期   {'0-9-18': '国耻'}        0 即代表每一年
         /// 每月的日期   {'0-0-15': '中旬'}        0-0 即代表每年每月（layui 2.1.1/layDate 5.0.4 新增）
-        /// 特定的日期   {'2017-8-21': '发布')     -
+        /// 特定的日期   {'2017-8-21': '发布'}     -
         /// </summary>
         public Dictionary<string, string> Mark { get; set; }
         /// <summary>
