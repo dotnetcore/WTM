@@ -213,7 +213,7 @@
         });
     },
 
-    OpenDialog: function(url, windowid, title, width, height, para) {
+    OpenDialog: function (url, windowid, title, width, height, para) {
         let layer = layui.layer;
         var index = layer.load(2);
         var wid = this.GetCookie("windowids");
@@ -241,29 +241,34 @@
                 layer.close(index);
                 alert("加载失败");
             },
-            success: function (str) {
+            success: function (str, textStatus, request) {
                 layer.close(index);
-                let area = 'auto';
-                if (width !== undefined && width !== null && height !== undefined && height !== null) {
-                    area = [width + 'px', height + 'px'];
+                if (request.getResponseHeader('IsScript') === 'true') {
+                    eval(str);
                 }
-                if (width !== undefined && width !== null && (height === undefined || height === null)) {
-                    area = width + 'px';
-                }
-                if (title === undefined || title === null || title === '') {
-                    title = false;
-                }
-                layer.open({
-                    type: 1
-                    , title: title //不显示标题栏
-                    , area: area
-                    , shade: 0.8
-                    , id: windowid //设定一个id，防止重复弹出
-                    , content: str
-                    , end: function () {
-                        ff.SetCookie("windowids", owid);
+                else {
+                    let area = 'auto';
+                    if (width !== undefined && width !== null && height !== undefined && height !== null) {
+                        area = [width + 'px', height + 'px'];
                     }
-                });
+                    if (width !== undefined && width !== null && (height === undefined || height === null)) {
+                        area = width + 'px';
+                    }
+                    if (title === undefined || title === null || title === '') {
+                        title = false;
+                    }
+                    layer.open({
+                        type: 1
+                        , title: title //不显示标题栏
+                        , area: area
+                        , shade: 0.8
+                        , id: windowid //设定一个id，防止重复弹出
+                        , content: str
+                        , end: function () {
+                            ff.SetCookie("windowids", owid);
+                        }
+                    });
+                }
             }
         });
     },
