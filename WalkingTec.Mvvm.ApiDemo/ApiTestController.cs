@@ -11,15 +11,15 @@ using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace WalkingTec.Mvvm.Demo
+namespace WalkingTec.Mvvm.ApiDemo
 {
-    [Route("api/[controller]")]
-    public class ApiTestController : BaseApiController
+    [Route("api/user")]
+    public class UserController : BaseApiController
     {
 
         // GET: api/<controller>
-        [HttpGet]
-        public IActionResult Get([FromQuery]FrameworkUserSearcher searcher)
+        [HttpPost("Search")]
+        public IActionResult Search(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
@@ -102,9 +102,9 @@ namespace WalkingTec.Mvvm.Demo
 
         }
 
-        [HttpGet]
+        [HttpPost("ExportExcel")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcel([FromQuery]FrameworkUserSearcher searcher)
+        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
@@ -113,9 +113,9 @@ namespace WalkingTec.Mvvm.Demo
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [HttpGet]
+        [HttpPost("CheckExportExcel")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcel([FromQuery]List<Guid> ids)
+        public IActionResult ExportExcel(List<Guid> ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Ids = ids;

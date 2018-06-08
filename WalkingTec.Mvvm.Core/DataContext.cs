@@ -69,6 +69,15 @@ namespace WalkingTec.Mvvm.Core
             DBType = dbtype;
         }
 
+        public IDataContext CreateNew()
+        {
+           return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+        }
+
+        public IDataContext ReCreate()
+        {
+            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+        }
         /// <summary>
         /// 将一个实体设为填加状态
         /// </summary>
@@ -97,7 +106,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -114,7 +123,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -128,7 +137,7 @@ namespace WalkingTec.Mvvm.Core
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }

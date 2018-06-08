@@ -358,6 +358,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if(Loading == null)
+            {
+                Loading = true;
+            }
             var vmQualifiedName = Vm.Model.GetType().AssemblyQualifiedName;
             vmQualifiedName = vmQualifiedName.Substring(0, vmQualifiedName.LastIndexOf(", Version="));
 
@@ -649,6 +653,15 @@ var isPost = false;
             output.PostElement.AppendHtml($@"
 <script>
   var table = layui.table;
+  /* 暂时解决 layui table首次及table.reload()无loading的bug */
+  var layer = layui.layer;
+  var msg = layer.msg('数据请求中', {{
+    icon: 16,
+    time: -1,
+    anim: -1,
+    fixed: false
+  }})
+  /* 暂时解决 layui table首次及table.reload()无loading的bug */
   {TableJSVar} = table.render({{
     elem: '#{Id}'
     ,id: '{Id}'
@@ -671,7 +684,9 @@ var isPost = false;
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
-    {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $",done: function(res,curr,count){{{DoneFunc}(res,curr,count)}}")}
+,done: function(res,curr,count){{layer.close(msg);
+    {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
+}}
   }});
   
   // 监听工具条
@@ -704,7 +719,7 @@ var isPost = false;
                 #region 在数据列表外部套上一层 Panel
 
                 output.PreElement.AppendHtml($@"
-<div class=""layui-collapse"" style=""border:0;"">
+<div class=""layui-collapse"" >
   <div class=""layui-colla-item"">
     <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"">数据列表
       <!-- 数据列表按钮组 -->

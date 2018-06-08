@@ -672,18 +672,6 @@ where S : struct
             }
         }
 
-        public static IDataContext CreateNew(this IDataContext self)
-        {
-            return (IDataContext)self.GetType().GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { self.CSName });
-        }
-
-        public static IDataContext ReCreate(this IDataContext self)
-        {
-            var rv = (IDataContext)self.GetType().GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { self.CSName });
-            self.Dispose();
-            return rv;
-        }
-
         public static string GetTableName<T>(this IDataContext self)
         {
             if (self.Database.IsSqlServer())
@@ -701,24 +689,15 @@ where S : struct
         {
             try
             {
-                //self.Model.FindEntityType(typeof(T)).FindForeignKey()
-
-                string sql = self.Set<T>().Include(listFieldName).ToString();
-                Match match = null;
-                if (self.Database.IsMySql())
+                var test = self.Model.FindEntityType(typeof(T)).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent.Name == listFieldName).FirstOrDefault();
+                if(test != null && test.Properties.Count > 0)
                 {
-                    match = Regex.Match(sql, @"JOIN .*? = \`.*?\`.\`(?<name>.*?)\`", RegexOptions.IgnoreCase);
+                    return test.Properties[0].Name;
                 }
                 else
                 {
-                    match = Regex.Match(sql, @"JOIN .*? = \[.*?\].\[(?<name>.*?)\]", RegexOptions.IgnoreCase);
+                    return "";
                 }
-                string tablename = "";
-                if (match.Success)
-                {
-                    tablename = match.Groups["name"].Value;
-                }
-                return tablename;
             }
             catch
             {
