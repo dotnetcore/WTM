@@ -1,1 +1,29 @@
-﻿Log
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="日志管理">
+    <wt:quote>
+        <p>有图有真相，先上图：</p>
+        <img width="1200" height="600" src="~/imgs/admin-log.png" />
+    </wt:quote>
+    <wt:quote>
+        <p>
+            上面这张图就是框架管理模块中的日志管理。可以查询到系统的操作日志。日志中记录了每个模块，每个操作，操作人，操作人IP，以及操作时间等相关信息。
+            通过日志便于我们分析系统问题，例如：日志列表中还有耗时的字段，可以根据此字段，知道每个Action执行的时间长短，从而可以知道那些操作比较耗时，
+            进而有针对性的对系统进行优化。 查询条件中有日志的类型，类型分为：普通、异常、调试三种，根据异常日志可以发现系统问题，这个异常信息对于开发调试过程非常有帮助。
+        </p>
+    </wt:quote>
+    <wt:quote>
+    <p>
+        点击导出Excel，可以将日志导出为Excel表格，便于查看和备份。点击详情，可以查看日志的详细信息，如果是异常日志，抛出的异常堆栈信息可以在详情中查看到。
+    </p>
+    </wt:quote>
+    <wt:quote>
+        <p>
+            日志的记录可以通过appsetting.json配置文件中的EnableLog的配置，设置是否记录日志，还可以通过LogExceptionOnly的配置，设置是否只记录异常日志，为各位使用者提供了灵活的日志记录配置。
+        </p>
+        <img src="~/imgs/admin-appsettings.png" />
+    </wt:quote>
+</wt:fieldset>

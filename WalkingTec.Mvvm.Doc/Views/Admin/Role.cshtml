@@ -1,1 +1,55 @@
-﻿Role
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="角色管理">
+    <wt:quote>
+        <p>老规矩，先上图：</p>
+        <img width="1200" height="600" src="~/imgs/admin-role.png" />
+    </wt:quote>
+    <wt:quote>
+        <p>
+            通过角色管理的菜单，进入角色管理界面，可以看到系统中的角色列表。
+            通过此处功能可以新增角色、修改角色、删除角色、批量删除、导入、导出、页面权限的功能。其中，页面权限的功能比较特别。通过该功能，可以赋予某个角色某些权限。
+            框架的权限控制到了每个Action，这为系统提供了灵活多变的权限管理的功能。
+        </p>
+    </wt:quote>
+    <wt:quote>
+        <p>
+            新增角色。如下图：
+        </p>
+        <img src="~/imgs/admin-role-create.png" />
+    </wt:quote>
+    <wt:quote>
+        <p>
+            修改角色。如下图：
+        </p>
+        <img src="~/imgs/admin-role-edit.png" />
+    </wt:quote>
+    <wt:quote>
+        <p>
+            角色详细信息。如下图：
+        </p>
+        <img src="~/imgs/admin-role-detail.png" />
+    </wt:quote>
+    <wt:quote>
+        <p>
+            角色导入，在导入之前，可以下载模板，填写模板信息后，通过导入批量添加角色信息，如图：
+        </p>
+        <img src="~/imgs/admin-role-import.png" />
+        <p>导入过程中，一旦有数据的错误，会在导入的弹出窗口中显示错误信息。</p>
+    </wt:quote>
+    <wt:quote>
+        <p>
+            页面权限，给某个角色添加页面权限，权限粒度控制到了每个动作上，如图：
+        </p>
+        <img src="~/imgs/admin-role-page.png" />
+        <p>
+            配置过程中，有允许、拒绝、未设置三个选择。选择了允许，表明该角色具有该页面或功能的权限。
+            页面权限列表显示的是菜单管理中的数据。也就是说，通过菜单配置后的页面都将在此处显示。菜单是一个树形结构的数据格式，具有上下级关系。
+            如果父级配置了允许，子集如果选择未设置，将使用父级的权限。
+            维护完毕后，点击提交，即可保存该角色的页面权限，为后续用户登陆，显示不同的菜单，提供数据来源。
+        </p>
+    </wt:quote>
+</wt:fieldset>
