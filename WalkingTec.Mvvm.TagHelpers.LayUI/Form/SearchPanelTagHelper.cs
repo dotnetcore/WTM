@@ -130,7 +130,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 // 阻止事件冒泡
 $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
 $('#{SearchBtnId}').on('click', function () {{
-    table.reload('{GridId}',{{where: $.extend({TableJSVar}.config.where,ff.GetSearchFormData('{Id}','{Vm.Name}'))}})
+  /* 暂时解决 layui table首次及table.reload()无loading的bug */
+    var layer = layui.layer;
+    var msg = layer.msg('数据请求中', {{
+        icon: 16,
+        time: -1,
+        anim: -1,
+        fixed: false
+    }})
+    table.reload('{GridId}',{{where: $.extend({TableJSVar}.config.where,ff.GetSearchFormData('{Id}','{Vm.Name}')),
+done: function(res,curr,count){{layer.close(msg);}}}})
+  /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
 </script>");
             return base.ProcessAsync(context, output);
