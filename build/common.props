@@ -9,7 +9,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/WalkingTec/WalkingTec.Mvvm.git</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/WalkingTec/WalkingTec.Mvvm/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/WalkingTec/WalkingTec.Mvvm/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
     <PackageIconUrl>http://imgs.walkingtec.cn/logo.png</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
