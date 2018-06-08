@@ -2,16 +2,16 @@
   <Import Project="..\version.props" />
   <PropertyGroup>
     <Product>WalkingTec.Mvvm</Product>
-    <Authors>Michael,Alienwow</Authors>
-    <Company>Michael,Alienwow</Company>
+    <Authors>Michael,Vito</Authors>
+    <Company>Michael,Vito</Company>
     <Copyright>Copyright © WalkingTec 2018</Copyright>
     <PackageId>$(ProjectName)</PackageId>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/WalkingTec/WalkingTec.Mvvm.git</RepositoryUrl>
-    <PackageLicenseUrl>http://license.walkingtec.cn</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/WalkingTec/WalkingTec.Mvvm/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
-    <PackageIconUrl>http://license.walkingtec.cn/walkingtec.mvvm.ico</PackageIconUrl>
+    <PackageIconUrl>http://imgs.walkingtec.cn/logo.png</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
