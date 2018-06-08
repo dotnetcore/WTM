@@ -111,6 +111,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values"></param>
         /// <param name="passInit"></param>
         /// <returns>创建的ViewModel</returns>
+        [NonAction]
         private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
         {
             //通过反射创建ViewModel并赋值
@@ -273,6 +274,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="Ids">VM的列表主键数组，针对ListVM和BatchVM等有列表的VM，如果不为空则根据数组读取数据</param>
         /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
         /// <returns></returns>
+        [NonAction]
         public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
@@ -280,6 +282,7 @@ namespace WalkingTec.Mvvm.Mvc
             return CreateVM(typeof(T), Id, Ids, dir, passInit) as T;
         }
 
+        [NonAction]
         public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = false)
         {
             return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
@@ -287,6 +290,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region CreateDC
+        [NonAction]
         public virtual IDataContext CreateDC(bool isLog = false)
         {
             string cs = CurrentCS;
@@ -300,6 +304,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region 重新加载model
+        [NonAction]
         private void SetReInit(ModelStateDictionary msd, BaseVM model)
         {
             var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
@@ -322,6 +327,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region 验证mode
+        [NonAction]
         public bool RedoValidation(object item)
         {
             if (ControllerContext == null)
@@ -367,6 +373,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="vm">ViewModel</param>
         /// <param name="prefix">prefix</param>
         /// <returns>成功返回True，失败返回False</returns>
+        [NonAction]
         public bool RedoUpdateModel(object vm, string prefix = null)
         {
             try
@@ -386,6 +393,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
+        [NonAction]
         private T ReadFromCache<T>(string key, Func<T> setFunc)
         {
             if (Cache.TryGetValue(key, out T rv) == false)
@@ -400,6 +408,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        [NonAction]
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
         {
             var log = Log.Clone() as ActionLog;
