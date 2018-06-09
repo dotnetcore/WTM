@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }}
             else{{
                 $('#{Id}').val(res.data.id);
-                let del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.data.name+""  删除</button>"";
+                var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.data.name+""  删除</button>"";
                 $('#{Id}label').html(del);
                 $('#{Id}del').on('click',function(){{
                     {Id}DoDelete(res.data.id);
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         url: '/_Framework/GetFileName/{Field.Model}',
         async: false,
         success: function(data) {{
-            let del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"";
+            var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"";
             $('#{Id}label').html(del);
             $('#{Id}del').on('click',function(){{
                 {Id}DoDelete('{Field.Model}');

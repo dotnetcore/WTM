@@ -1,4 +1,10 @@
-﻿window.ff = {
+﻿
+if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (prefix) {
+        return this.slice(0, prefix.length) === prefix;
+    };
+}
+window.ff = {
     SetCookie: function (name, value, allwindow) {
         var cookiePrefix = '', windowGuid = '';
 
@@ -17,7 +23,7 @@
         }
     },
 
-    GetCookie: function(name, allwindow) {
+    GetCookie: function (name, allwindow) {
         if (allwindow) {
             return $.cookie(DONOTUSE_COOKIEPRE + name);
         }
@@ -32,7 +38,7 @@
      * @param {string} gridId
      * @returns {Array<string>}
      */
-    GetSelections: function(gridId) {
+    GetSelections: function (gridId) {
         var checkStatus = layui.table.checkStatus(gridId);
         var data = checkStatus.data;
         var ids = [];
@@ -49,7 +55,7 @@
      * @param {string} gridId
      * @returns {Array<string>}
      */
-    GetNonSelections: function(gridId) {
+    GetNonSelections: function (gridId) {
         var nums = 0 // 未选中个数
             , invalidNum = 0
             , ids = [] // 未选中id
@@ -73,7 +79,7 @@
      * @param {string} gridId
      * @returns {Array<object>}
      */
-    GetSelectionData: function(gridId) {
+    GetSelectionData: function (gridId) {
         return layui.table.checkStatus(gridId).data;
     },
 
@@ -82,7 +88,7 @@
      * @param {string} gridId
      * @returns {Array<object>}
      */
-    GetNonSelectionData: function(gridId) {
+    GetNonSelectionData: function (gridId) {
         var nums = 0 // 未选中个数
             , invalidNum = 0
             , arr = [] // 未选中数据
@@ -106,7 +112,7 @@
      * @param {string} gridId
      * @returns {boolean}
      */
-    GetIsSelectAll: function(gridId) {
+    GetIsSelectAll: function (gridId) {
         return layui.table.checkStatus(gridId).isAll;
     },
 
@@ -114,8 +120,8 @@
      * 提示消息
      * @param {string} msg
      */
-    Alert: function(msg) {
-        let layer = layui.layer;
+    Alert: function (msg) {
+        var layer = layui.layer;
         layer.alert(msg);
     },
 
@@ -123,14 +129,14 @@
      * 提示消息
      * @param {string} msg
      */
-    Msg: function(msg) {
-        let layer = layui.layer;
+    Msg: function (msg) {
+        var layer = layui.layer;
         layer.msg(msg);
     },
 
-    LoadPage: function(url) {
+    LoadPage: function (url) {
         this.SetCookie("windowids", null);
-        let layer = layui.layer;
+        var layer = layui.layer;
         var index = layer.load(2);
         url = decodeURIComponent(url);
         DONOTUSE_IGNOREHASH = true;
@@ -152,8 +158,8 @@
     },
 
 
-    LoadPage1: function(url, where) {
-        let layer = layui.layer, index = layer.load(2);
+    LoadPage1: function (url, where) {
+        var layer = layui.layer, index = layer.load(2);
         $.ajax({
             url: decodeURIComponent(url),
             type: 'GET',
@@ -163,7 +169,7 @@
             },
             error: function (xhr, status, error) {
                 layer.close(index);
-               layer.alert('加载失败');
+                layer.alert('加载失败');
             },
             complete: function () {
                 ff.SetCookie("windowids", null);
@@ -171,11 +177,11 @@
         });
     },
 
-    GetPostData: function(formid) {
-        let datastr = $('#' + formid).serialize();
-        let checkboxes = $('#' + formid + ' :checkbox');
+    GetPostData: function (formid) {
+        var datastr = $('#' + formid).serialize();
+        var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
-            let ck = checkboxes[i];
+            var ck = checkboxes[i];
             if (ck.checked === false && (ck.value == true || ck.value == false)) {
                 datastr += "&" + ck.name + "=false";
             }
@@ -183,9 +189,9 @@
         return datastr;
     },
 
-    PostForm: function(url, formid, divid) {
-        let layer = layui.layer;
-        let index = layer.load(2);
+    PostForm: function (url, formid, divid) {
+        var layer = layui.layer;
+        var index = layer.load(2);
         $.ajax({
             cache: false,
             type: "POST",
@@ -213,8 +219,8 @@
         });
     },
 
-    OpenDialog: function(url, windowid, title, width, height, para) {
-        let layer = layui.layer;
+    OpenDialog: function (url, windowid, title, width, height, para) {
+        var layer = layui.layer;
         var index = layer.load(2);
         var wid = this.GetCookie("windowids");
         var owid = wid;
@@ -226,7 +232,7 @@
         }
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
-        let getpost = "GET";
+        var getpost = "GET";
         if (para != undefined) {
             getpost = "Post";
         }
@@ -241,35 +247,40 @@
                 layer.close(index);
                 alert("加载失败");
             },
-            success: function (str) {
+            success: function (str, textStatus, request) {
                 layer.close(index);
-                let area = 'auto';
-                if (width !== undefined && width !== null && height !== undefined && height !== null) {
-                    area = [width + 'px', height + 'px'];
+                if (request.getResponseHeader('IsScript') === 'true') {
+                    eval(str);
                 }
-                if (width !== undefined && width !== null && (height === undefined || height === null)) {
-                    area = width + 'px';
-                }
-                if (title === undefined || title === null || title === '') {
-                    title = false;
-                }
-                layer.open({
-                    type: 1
-                    , title: title //不显示标题栏
-                    , area: area
-                    , shade: 0.8
-                    , id: windowid //设定一个id，防止重复弹出
-                    , content: str
-                    , end: function () {
-                        ff.SetCookie("windowids", owid);
+                else {
+                    var area = 'auto';
+                    if (width !== undefined && width !== null && height !== undefined && height !== null) {
+                        area = [width + 'px', height + 'px'];
                     }
-                });
+                    if (width !== undefined && width !== null && (height === undefined || height === null)) {
+                        area = width + 'px';
+                    }
+                    if (title === undefined || title === null || title === '') {
+                        title = false;
+                    }
+                    layer.open({
+                        type: 1
+                        , title: title //不显示标题栏
+                        , area: area
+                        , shade: 0.8
+                        , id: windowid //设定一个id，防止重复弹出
+                        , content: str
+                        , end: function () {
+                            ff.SetCookie("windowids", owid);
+                        }
+                    });
+                }
             }
         });
     },
 
-    OpenDialog2: function(url, windowid, title, width, height, tempId, para) {
-        let layer = layui.layer;
+    OpenDialog2: function (url, windowid, title, width, height, tempId, para) {
+        var layer = layui.layer;
         var index = layer.load(2);
         var wid = this.GetCookie("windowids");
         var owid = wid;
@@ -281,7 +292,7 @@
         }
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
-        let getpost = "GET";
+        var getpost = "GET";
         if (para != undefined) {
             getpost = "Post";
         }
@@ -312,7 +323,7 @@
                     str = str.replace('$$SearchPanel$$', template);
                 }
                 layer.close(index);
-                let area = 'auto';
+                var area = 'auto';
                 if (width !== undefined && width !== null && height !== undefined && height !== null) {
                     area = [width + 'px', height + 'px'];
                 }
@@ -337,12 +348,12 @@
         });
     },
 
-    CloseDialog: function() {
-        let layer = layui.layer;
+    CloseDialog: function () {
+        var layer = layui.layer;
         var wid = this.GetCookie("windowids");
         if (wid !== null && wid !== '') {
-            let windowid = wid.split(",").pop();
-            let index = $('#' + windowid).parent('.layui-layer').attr("times");
+            var windowid = wid.split(",").pop();
+            var index = $('#' + windowid).parent('.layui-layer').attr("times");
             layer.close(index);
             this.SetCookie("windowids", wid);
         }
@@ -351,16 +362,16 @@
         }
     },
 
-    CloseAllDialog: function() {
-        let layer = layui.layer;
+    CloseAllDialog: function () {
+        var layer = layui.layer;
         layer.closeAll();
     },
 
-    LinkedChange: function(url, target) {
+    LinkedChange: function (url, target) {
         $.get(url, {}, function (data, status) {
             if (status === "success") {
                 $('#' + target).html('<option value = "">请选择</option>');
-                //for (let item of data.data) {
+                //for (var item of data.data) {
                 for (var i = 0; i < data.data.length; i++) {
                     var item = data.data[i];
                     if (item.selected == true) {
@@ -385,7 +396,7 @@
      * @param {string} formId
      * @returns {Array<object>}
      */
-    GetFormArray: function(formId) {
+    GetFormArray: function (formId) {
         var searchForm = $('#' + formId), filter = [], fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
@@ -401,7 +412,7 @@
      * @param {string} formId
      * @returns {object}
      */
-    GetFormDataWithoutNull: function(formId) {
+    GetFormDataWithoutNull: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
@@ -417,7 +428,7 @@
      * @param {string} formId
      * @returns {object}
      */
-    GetFormData: function(formId) {
+    GetFormData: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
@@ -433,8 +444,8 @@
      * @param {string} listvm
      * @returns {object}
      */
-    GetSearchFormData: function(formId, listvm) {
-        let data = ff.GetFormData(formId);
+    GetSearchFormData: function (formId, listvm) {
+        var data = ff.GetFormData(formId);
         for (var attr in data) {
             if (attr.startsWith(listvm + ".")) {
                 data[attr.replace(listvm + ".", "")] = data[attr];
@@ -449,7 +460,7 @@
      * @param {string} url
      * @param {string} formId
      */
-    DownloadExcelOrPdf: function(url, formId) {
+    DownloadExcelOrPdf: function (url, formId) {
         var formData = ff.GetFormArray(formId);
         for (var i = 0; i < formData.length; i++) {
             url = url + "&" + formData[i].name + "=" + formData[i].value;
@@ -466,8 +477,8 @@
      * RefreshGrid
      * @param {string} dialogid
      */
-    RefreshGrid: function(dialogid) {
-        const tables = $('#' + dialogid + ' table');
+    RefreshGrid: function (dialogid) {
+        var tables = $('#' + dialogid + ' table');
         if (tables.length > 0) {
             table.reload(tables[0].id);
         }

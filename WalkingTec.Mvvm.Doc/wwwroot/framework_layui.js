@@ -1,4 +1,10 @@
-﻿window.ff = {
+﻿
+if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (prefix) {
+        return this.slice(0, prefix.length) === prefix;
+    };
+}
+window.ff = {
     SetCookie: function (name, value, allwindow) {
         var cookiePrefix = '', windowGuid = '';
 
@@ -115,7 +121,7 @@
      * @param {string} msg
      */
     Alert: function (msg) {
-        let layer = layui.layer;
+        var layer = layui.layer;
         layer.alert(msg);
     },
 
@@ -124,13 +130,13 @@
      * @param {string} msg
      */
     Msg: function (msg) {
-        let layer = layui.layer;
+        var layer = layui.layer;
         layer.msg(msg);
     },
 
     LoadPage: function (url) {
         this.SetCookie("windowids", null);
-        let layer = layui.layer;
+        var layer = layui.layer;
         var index = layer.load(2);
         url = decodeURIComponent(url);
         DONOTUSE_IGNOREHASH = true;
@@ -153,7 +159,7 @@
 
 
     LoadPage1: function (url, where) {
-        let layer = layui.layer, index = layer.load(2);
+        var layer = layui.layer, index = layer.load(2);
         $.ajax({
             url: decodeURIComponent(url),
             type: 'GET',
@@ -172,10 +178,10 @@
     },
 
     GetPostData: function (formid) {
-        let datastr = $('#' + formid).serialize();
-        let checkboxes = $('#' + formid + ' :checkbox');
+        var datastr = $('#' + formid).serialize();
+        var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
-            let ck = checkboxes[i];
+            var ck = checkboxes[i];
             if (ck.checked === false && (ck.value == true || ck.value == false)) {
                 datastr += "&" + ck.name + "=false";
             }
@@ -184,8 +190,8 @@
     },
 
     PostForm: function (url, formid, divid) {
-        let layer = layui.layer;
-        let index = layer.load(2);
+        var layer = layui.layer;
+        var index = layer.load(2);
         $.ajax({
             cache: false,
             type: "POST",
@@ -214,7 +220,7 @@
     },
 
     OpenDialog: function (url, windowid, title, width, height, para) {
-        let layer = layui.layer;
+        var layer = layui.layer;
         var index = layer.load(2);
         var wid = this.GetCookie("windowids");
         var owid = wid;
@@ -226,7 +232,7 @@
         }
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
-        let getpost = "GET";
+        var getpost = "GET";
         if (para != undefined) {
             getpost = "Post";
         }
@@ -241,35 +247,40 @@
                 layer.close(index);
                 alert("加载失败");
             },
-            success: function (str) {
+            success: function (str, textStatus, request) {
                 layer.close(index);
-                let area = 'auto';
-                if (width !== undefined && width !== null && height !== undefined && height !== null) {
-                    area = [width + 'px', height + 'px'];
+                if (request.getResponseHeader('IsScript') === 'true') {
+                    eval(str);
                 }
-                if (width !== undefined && width !== null && (height === undefined || height === null)) {
-                    area = width + 'px';
-                }
-                if (title === undefined || title === null || title === '') {
-                    title = false;
-                }
-                layer.open({
-                    type: 1
-                    , title: title //不显示标题栏
-                    , area: area
-                    , shade: 0.8
-                    , id: windowid //设定一个id，防止重复弹出
-                    , content: str
-                    , end: function () {
-                        ff.SetCookie("windowids", owid);
+                else {
+                    var area = 'auto';
+                    if (width !== undefined && width !== null && height !== undefined && height !== null) {
+                        area = [width + 'px', height + 'px'];
                     }
-                });
+                    if (width !== undefined && width !== null && (height === undefined || height === null)) {
+                        area = width + 'px';
+                    }
+                    if (title === undefined || title === null || title === '') {
+                        title = false;
+                    }
+                    layer.open({
+                        type: 1
+                        , title: title //不显示标题栏
+                        , area: area
+                        , shade: 0.8
+                        , id: windowid //设定一个id，防止重复弹出
+                        , content: str
+                        , end: function () {
+                            ff.SetCookie("windowids", owid);
+                        }
+                    });
+                }
             }
         });
     },
 
     OpenDialog2: function (url, windowid, title, width, height, tempId, para) {
-        let layer = layui.layer;
+        var layer = layui.layer;
         var index = layer.load(2);
         var wid = this.GetCookie("windowids");
         var owid = wid;
@@ -281,7 +292,7 @@
         }
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
-        let getpost = "GET";
+        var getpost = "GET";
         if (para != undefined) {
             getpost = "Post";
         }
@@ -312,7 +323,7 @@
                     str = str.replace('$$SearchPanel$$', template);
                 }
                 layer.close(index);
-                let area = 'auto';
+                var area = 'auto';
                 if (width !== undefined && width !== null && height !== undefined && height !== null) {
                     area = [width + 'px', height + 'px'];
                 }
@@ -338,11 +349,11 @@
     },
 
     CloseDialog: function () {
-        let layer = layui.layer;
+        var layer = layui.layer;
         var wid = this.GetCookie("windowids");
         if (wid !== null && wid !== '') {
-            let windowid = wid.split(",").pop();
-            let index = $('#' + windowid).parent('.layui-layer').attr("times");
+            var windowid = wid.split(",").pop();
+            var index = $('#' + windowid).parent('.layui-layer').attr("times");
             layer.close(index);
             this.SetCookie("windowids", wid);
         }
@@ -352,7 +363,7 @@
     },
 
     CloseAllDialog: function () {
-        let layer = layui.layer;
+        var layer = layui.layer;
         layer.closeAll();
     },
 
@@ -360,7 +371,7 @@
         $.get(url, {}, function (data, status) {
             if (status === "success") {
                 $('#' + target).html('<option value = "">请选择</option>');
-                //for (let item of data.data) {
+                //for (var item of data.data) {
                 for (var i = 0; i < data.data.length; i++) {
                     var item = data.data[i];
                     if (item.selected == true) {
@@ -434,7 +445,7 @@
      * @returns {object}
      */
     GetSearchFormData: function (formId, listvm) {
-        let data = ff.GetFormData(formId);
+        var data = ff.GetFormData(formId);
         for (var attr in data) {
             if (attr.startsWith(listvm + ".")) {
                 data[attr.replace(listvm + ".", "")] = data[attr];
@@ -467,7 +478,7 @@
      * @param {string} dialogid
      */
     RefreshGrid: function (dialogid) {
-        const tables = $('#' + dialogid + ' table');
+        var tables = $('#' + dialogid + ' table');
         if (tables.length > 0) {
             table.reload(tables[0].id);
         }
