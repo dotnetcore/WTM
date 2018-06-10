@@ -1,0 +1,10 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs.EmployeeListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:combobox field="Searcher.CompanyID" items="Searcher.AllCompanys" empty-text="全部" />
+<wt:textbox field="Searcher.Name" />
+<wt:combobox field="Searcher.Sex" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />
