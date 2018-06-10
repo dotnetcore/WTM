@@ -8,14 +8,14 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.CompanyVMs
 {
-    public class TestRoleSearcher : BaseSearcher
+    public class CompanySearcher : BaseSearcher
     {
-        [Display(Name = "角色编号")]
-        public String RoleCode { get; set; }
-        [Display(Name = "角色名称")]
-        public String RoleName { get; set; }
+        [Display(Name = "公司名称")]
+        public String Name { get; set; }
+        [Display(Name = "公司描述")]
+        public String Description { get; set; }
 
         protected override void InitVM()
         {

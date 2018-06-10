@@ -1,1 +1,98 @@
-﻿Dp
+﻿<wt:fieldset field-set-style="Simple" title="数据权限-模块截图">
+    <img width="1200" height="600" src="~/imgs/admin-dataprivilege.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="数据权限-功能介绍">
+    数据权限从名字来看，很容易理解，即具有查看和操作某些数据的权限。
+    举个例子，有公司表和员工表，业务场景中，通常逻辑时各个公司的管理员，只能够管理自己公司的员工，然而可能某些人的权力比较大，可以管理其中的两个公司，这就涉及到数据权限问题了，这里的数据权限为公司权限。
+    因为公司是业务数据，会不断变化，怎样才能做到根据公司来过滤员工数据呢？下面就为大家介绍，框架如何实现数据权限的过滤。
+    <ol class="doc">
+        <li>添加数据权限</li>
+        <wt:quote>
+            数据权限在系统开发阶段，就应该确定好。当业务上将数据权限确定好之后，需要在代码中将数据权限声明给框架，让框架知道，系统中有哪些数据权限。声明的方式就是在Programe文件中的配置服务中
+        </wt:quote>
+        <wt:code>
+            public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+            .ConfigureServices(x =>
+            {
+                List<IDataPrivilege> pris = new List<IDataPrivilege>();
+                pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
+                x.AddFrameworkService(dataPrivilegeSettings: pris);
+                x.AddLayui();
+            })
+            .Configure(x =>
+            {
+            x.UseFrameworkService();
+            })
+            .Build();
+        </wt:code>
+        配置如下代码：
+        <wt:code>
+        List<IDataPrivilege> pris = new List<IDataPrivilege>();
+        pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
+        x.AddFrameworkService(dataPrivilegeSettings: pris);
+        </wt:code>
+        <p>当数据权限有多个的时候，继续在此添加即可，例如：</p>
+        <wt:code>
+        List<IDataPrivilege> pris = new List<IDataPrivilege>();
+        pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
+        pris.Add(new DataPrivilegeInfo<Department>("部门权限", m => m.Name));
+        x.AddFrameworkService(dataPrivilegeSettings: pris);
+        </wt:code>
+        <p>
+        通过上述配置后，系统可以知道有哪些数据权限。在新建数据权限过程中，"数据权限"字段的下拉列表中，会显示出配置的数据权限的内容。如图：<br />
+        <img src="~/imgs/admin-dataprivilege-create.png" />
+        </p>
+        <p>
+            选择公司权限后，系统会将所有公司表中的数据显示到"允许访问"字段中，所以，需要在公司表中添加业务数据，之后可以通过勾选"允许访问"中的业务数据，从而达到分配数据权限的目的。如图：<br />
+            <img src="~/imgs/admin-dataprivilege-create2-1.png" width="1200" height="600"  />
+            <img src="~/imgs/admin-dataprivilege-create2.png" />
+        </p>
+        <p>
+        分配数据权限可以分配到用户组，也可以分配到单个用户。"权限类别"上选择用户组权限，即可分配到用户组上，选择用户权限，即可分配到用户上。<br />
+        用户组和用户的输入框具有模糊查询的功能，便于用户进行选择。如图：<br />
+        <img src="~/imgs/admin-dataprivilege-create3.png" />
+        </p>
+        <li>使用数据权限</li>
+        查询条件中通过LoginUserInfo.DataPrivileges使用数据权限
+        <wt:code>
+            public class EmployeeSearcher : BaseSearcher
+            {
+                public List<ComboSelectListItem>
+                    AllCompanys { get; set; }
+                    [Display(Name = "所属公司")]
+                    public Guid CompanyID { get; set; }
+                    [Display(Name = "员工姓名")]
+                    public String Name { get; set; }
+                    [Display(Name = "员工性别")]
+                    public SexEnum Sex { get; set; }
+
+                    protected override void InitVM()
+                    {
+                        AllCompanys = DC.Set<Company>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.Name);
+                    }
+            }
+        </wt:code>
+        查询的数据列表通过DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)方式根据数据权限过滤数据
+        <wt:code>
+            public override IOrderedQueryable<Employee_View> GetSearchQuery()
+            {
+                var query = DC.Set<Employee>()
+                    .CheckEqual(Searcher.CompanyID, x=>x.CompanyID)
+                    .CheckContain(Searcher.Name, x=>x.Name)
+                    .CheckEqual(Searcher.Sex, x=>x.Sex)
+                    .DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)
+                    .Select(x => new Employee_View
+                    {
+                        ID = x.ID,
+                        Name_view = x.Company.Name,
+                        Name = x.Name,
+                        Age = x.Age,
+                        Sex = x.Sex,
+                    })
+                    .OrderBy(x => x.ID);
+                    return query;
+            }
+        </wt:code>
+    </ol>
+</wt:fieldset>

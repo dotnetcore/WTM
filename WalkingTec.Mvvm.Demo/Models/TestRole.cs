@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Demo.bbb
+namespace WalkingTec.Mvvm.Demo.Models
 {
     public class TestRole : BasePoco
     {

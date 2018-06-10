@@ -1,0 +1,11 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.CompanyVMs.CompanyVM
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.Name" />
+<wt:display field="Entity.Description" />
+</wt:row>
+    <wt:row align=" AlignEnum.Right">
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

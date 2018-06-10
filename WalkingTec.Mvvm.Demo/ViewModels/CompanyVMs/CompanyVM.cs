@@ -7,12 +7,12 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.ShipperInfoVMs
+namespace WalkingTec.Mvvm.Demo.ViewModels.CompanyVMs
 {
-    public class ShipperInfoVM : BaseCRUDVM<ShipperInfo>
+    public class CompanyVM : BaseCRUDVM<Company>
     {
 
-        public ShipperInfoVM()
+        public CompanyVM()
         {
         }
 
