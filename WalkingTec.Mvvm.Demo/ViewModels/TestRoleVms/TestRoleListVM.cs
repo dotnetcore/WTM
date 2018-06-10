@@ -6,7 +6,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using WalkingTec.Mvvm.Demo.bbb;
+using WalkingTec.Mvvm.Demo.Models;
 
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms

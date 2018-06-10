@@ -8,14 +8,14 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.CompanyVMs
 {
-    public class TestRoleBatchVM : BaseBatchVM<TestRole, TestRole_BatchEdit>
+    public class CompanyBatchVM : BaseBatchVM<Company, Company_BatchEdit>
     {
-        public TestRoleBatchVM()
+        public CompanyBatchVM()
         {
-            ListVM = new TestRoleListVM();
-            LinkedVM = new TestRole_BatchEdit();
+            ListVM = new CompanyListVM();
+            LinkedVM = new Company_BatchEdit();
         }
 
         protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
@@ -28,10 +28,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
 	/// <summary>
     /// 批量编辑字段类
     /// </summary>
-    public class TestRole_BatchEdit : BaseVM
+    public class Company_BatchEdit : BaseVM
     {
-        public int test { get; set; }
-        public string abc { get; set; }
+
         protected override void InitVM()
         {
         }

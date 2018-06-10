@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.aaa;
-using WalkingTec.Mvvm.Demo.bbb;
+using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -18,6 +18,9 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<TestUser> TestUsers { get; set; }
         public DbSet<TestRole> TestRoles { get; set; }
         public DbSet<ShipperInfo> ShipperInfo { get; set; }
+
+        public DbSet<Company> Companys { get; set; }
+        public DbSet<Employee> Employee { get; set; }
 
         public async override Task<bool> DataInit(object allModules)
         {
