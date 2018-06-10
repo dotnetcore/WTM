@@ -21,8 +21,6 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Intro()
         {
             var vm = CreateVM<FrameworkAllVM>();
-            vm.Vm = CreateVM<FrameworkUserVM>();
-            vm.ListVm = CreateVM<FrameworkUserListVM>();
             return PartialView(vm);
         }
 
@@ -30,8 +28,6 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Layout()
         {
             var vm = CreateVM<FrameworkAllVM>();
-            vm.Vm = CreateVM<FrameworkUserVM>();
-            vm.ListVm = CreateVM<FrameworkUserListVM>();
             return PartialView(vm);
         }
 
@@ -80,9 +76,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("数据表格")]
         public IActionResult Grid()
         {
-            var vm = CreateVM<FrameworkAllVM>();
-            vm.Vm = CreateVM<FrameworkUserVM>();
-            vm.ListVm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<StudentListVm>();
             return PartialView(vm);
         }
         [ActionDescription("Js函数")]

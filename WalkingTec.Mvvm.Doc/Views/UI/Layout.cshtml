@@ -32,11 +32,11 @@
             <wt:tabcontent>
                 <wt:form vm="@Model.Vm" width="600">
                     <wt:row items-per-row="ItemsPerRowEnum.Three">
-                        <wt:textbox field="Vm.Entity.ITCode" />
+                        <wt:textbox field="Vm.Entity.LoginName" />
                         <wt:textbox field="Vm.Entity.Password" is-password="true" />
                         <wt:textbox field="Vm.Entity.Name" />
                         <wt:textbox field="Vm.Entity.CellPhone" colspan="2" />
-                        <wt:textbox field="Vm.Entity.HomePhone" colspan="3" />
+                        <wt:textbox field="Vm.Entity.Address" colspan="3" />
                     </wt:row>
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
@@ -48,11 +48,11 @@
                 <wt:code>
 &ltwt:form vm="@Model.Vm" width="600"&gt
     &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
-        &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+        &ltwt:textbox field="Vm.Entity.LoginName" /&gt
         &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
         &ltwt:textbox field="Vm.Entity.Name" /&gt
         &ltwt:textbox field="Vm.Entity.CellPhone" colspan="2" /&gt
-        &ltwt:textbox field="Vm.Entity.HomePhone" colspan="3" /&gt
+        &ltwt:textbox field="Vm.Entity.Address" colspan="3" /&gt
     &lt/wt:row&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
@@ -104,14 +104,14 @@
                     <wt:tabcontents>
                         <wt:tabcontent width="600">
                             <p>可嵌套任何组件</p>
-                            <wt:textbox field="Vm.Entity.ITCode" />
+                            <wt:textbox field="Vm.Entity.LoginName" />
                             <wt:textbox field="Vm.Entity.Password" is-password="true" />
                         </wt:tabcontent>
                         <wt:tabcontent width="600">
                             <p>可嵌套任何组件</p>
                             <wt:row items-per-row="ItemsPerRowEnum.Two">
                                 <wt:textbox field="Vm.Entity.CellPhone" />
-                                <wt:textbox field="Vm.Entity.HomePhone" />
+                                <wt:textbox field="Vm.Entity.Address" />
                             </wt:row>
                         </wt:tabcontent>
                     </wt:tabcontents>
@@ -127,14 +127,14 @@
     &ltwt:tabcontents&gt
         &ltwt:tabcontent  width="600"&gt
             &ltp&gt可嵌套任何组件&lt/p&gt
-            &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+            &ltwt:textbox field="Vm.Entity.LoginName" /&gt
             &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
         &lt/wt:tabcontent&gt
         &ltwt:tabcontent  width="600"&gt
             &ltp&gt可嵌套任何组件&lt/p&gt
             &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
                 &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
-                &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
+                &ltwt:textbox field="Vm.Entity.Address" /&gt
             &lt/wt:row&gt
         &lt/wt:tabcontent&gt
     &lt/wt:tabcontents&gt

@@ -15,15 +15,13 @@
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:form vm="@Model.Vm" width="600">
-                    <wt:textbox field="Vm.Entity.ITCode" />
+                    <wt:textbox field="Vm.Entity.LoginName" />
                     <wt:textbox field="Vm.Entity.Password" is-password="true" />
                     <wt:textbox field="Vm.Entity.Name" />
                     <wt:upload field="Vm.Entity.PhotoId" />
-                    <wt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" />
-                    <wt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" />
+                    <wt:checkbox field="Vm.SelectedSchools" items="Vm.AllSchools" />
                     <wt:combobox field="Vm.Entity.Sex" />
                     <wt:textbox field="Vm.Entity.CellPhone" />
-                    <wt:textbox field="Vm.Entity.HomePhone" />
                     <wt:textbox field="Vm.Entity.Email" />
                     <wt:textbox field="Vm.Entity.ZipCode" />
                     <wt:textbox field="Vm.Entity.Address" />
@@ -36,15 +34,13 @@
             <wt:tabcontent>
             <wt:code>
 &ltwt:form vm="@Model.Vm"&gt
-    &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+    &ltwt:textbox field="Vm.Entity.LoginName" /&gt
     &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
     &ltwt:textbox field="Vm.Entity.Name" /&gt
     &ltwt:upload field="Vm.Entity.PhotoId" /&gt
-    &ltwt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" /&gt
-    &ltwt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" /&gt
+    &ltwt:checkbox field="Vm.SelectedSchools" items="Vm.AllSchools" /&gt
     &ltwt:combobox field="Vm.Entity.Sex" /&gt
     &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
-    &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
     &ltwt:textbox field="Vm.Entity.Email" /&gt
     &ltwt:textbox field="Vm.Entity.ZipCode" /&gt
     &ltwt:textbox field="Vm.Entity.Address" /&gt
@@ -72,18 +68,18 @@
             <wt:tabcontent>
                 <wt:searchpanel vm="@Model.ListVm" reset-btn="true">
                     <wt:row items-per-row="ItemsPerRowEnum.Three">
-                        <wt:textbox field="ListVm.Searcher.ITCode" />
+                        <wt:textbox field="ListVm.Searcher.LoginName" />
                         <wt:textbox field="ListVm.Searcher.Name" />
                         <wt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" />
                     </wt:row>
                 </wt:searchpanel>
-                <wt:grid vm="@Model.ListVm" />
+                <wt:grid vm="@Model.ListVm" use-local-data="true"/>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
 &ltwt:searchpanel vm="@@Model.ListVm" reset-btn="true"&gt
     &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
-        &ltwt:textbox field="ListVm.Searcher.ITCode" /&gt
+        &ltwt:textbox field="ListVm.Searcher.LoginName" /&gt
         &ltwt:textbox field="ListVm.Searcher.Name" /&gt
         &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" /&gt
     &lt/wt:row&gt
@@ -113,15 +109,14 @@
                         <wt:tabcontents>
                             <wt:tabcontent>
                                 <wt:row items-per-row="ItemsPerRowEnum.Two">
-                                    <wt:textbox field="Vm.Entity.ITCode" />
+                                    <wt:textbox field="Vm.Entity.LoginName" />
                                     <wt:textbox field="Vm.Entity.Password" is-password="true" />
                                 </wt:row>
                                 <wt:row items-per-row="ItemsPerRowEnum.Two">
                                     <wt:textbox field="Vm.Entity.Name" />
                                     <wt:upload field="Vm.Entity.PhotoId" />
                                 </wt:row>
-                                <wt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" />
-                                <wt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" />
+                                <wt:checkbox field="Vm.SelectedSchools" items="Vm.AllSchools" />
                             </wt:tabcontent>
                             <wt:tabcontent>
                                 <wt:row items-per-row="ItemsPerRowEnum.Two">
@@ -129,7 +124,6 @@
                                 </wt:row>
                                 <wt:row items-per-row="ItemsPerRowEnum.Two">
                                     <wt:textbox field="Vm.Entity.CellPhone" />
-                                    <wt:textbox field="Vm.Entity.HomePhone" />
                                 </wt:row>
                                 <wt:row items-per-row="ItemsPerRowEnum.Two">
                                     <wt:textbox field="Vm.Entity.Email" />
@@ -157,15 +151,14 @@
         &ltwt:tabcontents&gt
             &ltwt:tabcontent&gt
                 &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
-                    &ltwt:textbox field="Vm.Entity.ITCode" /&gt
+                    &ltwt:textbox field="Vm.Entity.LoginName" /&gt
                     &ltwt:textbox field="Vm.Entity.Password" is-password="true" /&gt
                 &lt/wt:row&gt
                 &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
                     &ltwt:textbox field="Vm.Entity.Name" /&gt
                     &ltwt:upload field="Vm.Entity.PhotoId" /&gt
                 &lt/wt:row&gt
-                &ltwt:checkbox field="Vm.SelectedRolesIDs" items="Vm.AllRoles" /&gt
-                &ltwt:checkbox field="Vm.SelectedGroupIDs" items="Vm.AllGroups" /&gt
+                &ltwt:checkbox field="Vm.SelectedSchools" items="Vm.AllSchools" /&gt
             &lt/wt:tabcontent&gt
             &ltwt:tabcontent&gt
                 &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
@@ -173,7 +166,6 @@
                 &lt/wt:row&gt
                 &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
                     &ltwt:textbox field="Vm.Entity.CellPhone" /&gt
-                    &ltwt:textbox field="Vm.Entity.HomePhone" /&gt
                 &lt/wt:row&gt
                 &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
                     &ltwt:textbox field="Vm.Entity.Email" /&gt
