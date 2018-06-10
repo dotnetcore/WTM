@@ -151,6 +151,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 <wt:fieldset field-set-style="Simple" title="VM的初始化">
     <p>重写VM中的InitVM和ReInitVM方法，进行VM需要初始化的变量和操作，之所以要将初始化的代码放到这里，是因为只有在InitVM和ReInitVM之后，VM中的DataContext,Session,ModelState等才有值</p>
     <p>InitVM是在CreateVM时调用，ReInitVM是在Post回来时模型验证出错的时候调用，如果没有重写ReInitVM方法，则会默认调用InitVM方法</p>
+    <p>当手工通过new的方式建立vm时，需要手动调用InitVM和/或ReInitVM，并使用CopyContext方法从其他VM中复制DataContext,Session,ModelState等值</p>
 </wt:fieldset>
     <script>
         layui.code({ about: false });
