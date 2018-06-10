@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.bbb;
 
-namespace WalkingTec.Mvvm.Demo.aaa
+namespace WalkingTec.Mvvm.Demo.Models
 {
     public class TestUser : BasePoco
     {
