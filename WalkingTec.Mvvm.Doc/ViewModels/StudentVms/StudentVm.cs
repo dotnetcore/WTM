@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -13,9 +14,11 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
         public string SelectedSchool { get; set; }
         public string SelectedSchool2 { get; set; }
         public string SelectedSchool3 { get; set; }
+        [Display(Name = "学校")]
         public List<string> SelectedSchools { get; set; }
         public string SelectedMajor { get; set; }
-        protected override void InitVM()
+
+        public StudentVm()
         {
             AllSchools = new List<ComboSelectListItem>()
             {
