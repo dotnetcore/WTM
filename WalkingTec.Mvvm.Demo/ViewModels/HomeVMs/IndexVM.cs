@@ -27,6 +27,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             {
                 var rv = AllMenu.Where(x =>x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.Url, SortByName: false);
                 RemoveUnAccessableMenu(rv, LoginUserInfo);
+                RemoveEmptyMenu(rv);
                 return rv;
             }
         }
@@ -68,6 +69,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             {
                 menus.Remove(remove);
             }
+        }
+
+        private void RemoveEmptyMenu(List<TreeSelectListItem> menus)
+        {
+            for(int i = 0; i < menus.Count; i++)
+            {
+                if(menus[i].Children == null || menus[i].Children.Count == 0)
+                {
+                    menus.RemoveAt(i);
+                    i--;
+                }
+            }
+
         }
 
     }
