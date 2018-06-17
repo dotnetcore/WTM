@@ -88,11 +88,11 @@ namespace WalkingTec.Mvvm.Mvc
         {
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/favicon.ico")
-                {
-                    await context.Response.WriteAsync(string.Empty);
-                    return;
-                }
+                //if (context.Request.Path == "/favicon.ico")
+                //{
+                //    await context.Response.WriteAsync(string.Empty);
+                //    return;
+                //}
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
                 {
