@@ -11,6 +11,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
     {
         public IActionResult Index()
         {
+            LoginUserInfo = new LoginUserInfo { ITCode = "admin" };
             ViewData["title"] = "WalkingTec MVVM Framework";
             ViewData["menu"] = FFMenus?.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null,null, x => x.Url, SortByName: false);
             return View();
