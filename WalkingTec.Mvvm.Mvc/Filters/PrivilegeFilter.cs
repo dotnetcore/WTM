@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     if (controller is BaseController c)
                     {
-                        context.Result = c.Redirect("/Login/Login?rd=" + HttpUtility.UrlEncode(controller.BaseUrl));
+                        context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType="text/html" };
                     }
                     else if (controller is ControllerBase c2)
                     {
