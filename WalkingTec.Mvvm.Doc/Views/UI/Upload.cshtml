@@ -1,0 +1,94 @@
+﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+
+<wt:fieldset field-set-style="Simple" title="Combobox">
+    <p>Upload控件用于文件上传，常用属性有：</p>
+        <table lay-filter="parse-table-demo">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'username', width:200}">属性</th>
+                    <th lay-data="{field:'joinTime', width:600}">描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Id</td>
+                    <td>控件Id，默认根据绑定字段名称生成</td>
+                </tr>
+                <tr>
+                    <td>Field</td>
+                    <td>绑定字段，比如绑定一个指向FileAttachment的Id字段，必填</td>
+                </tr>
+                <tr>
+                    <td>Disabled</td>
+                    <td>是否禁用</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>控件Name，默认根据绑定字段名称生成</td>
+                </tr>
+                <tr>
+                    <td>LabelText</td>
+                    <td>标签内容</td>
+                </tr>
+                <tr>
+                    <td>LabelWidth</td>
+                    <td>标签的长度，默认为80</td>
+                </tr>
+                <tr>
+                    <td>HideLabel</td>
+                    <td>是否隐藏标签</td>
+                </tr>
+                <tr>
+                    <td>FileSize</td>
+                    <td>文件大小限制，单位Kb</td>
+                </tr>
+                <tr>
+                    <td>UploadType</td>
+                    <td>文件类型限制，可选 AllFiles, ImageFile, ZipFile, ExcelFile, WordFile, PDFFile, TextFile</td>
+                </tr>
+                <tr>
+                    <td>CustomType</td>
+                    <td>如果常用UploadType不支持，可以自定义文件类型限制，例如rar</td>
+                </tr>
+            </tbody>
+        </table>
+    <wt:quote>
+        <p>Upload控件和框架提供的FileAttachment紧密相连，直接绑定一个指向FileAttachment的Id字段，框架会自动完成附件的保存和删除</p>
+        <p>可以在appsetting文件种设定SaveFileMode来指定框架附件的保存方式，目前支持DataBase和Local</p>
+        <p>下面的例子在选择文件之后没有效果，因为这个文档项目没有支持保存附件的数据库</p>
+    </wt:quote>
+        <wt:tab>
+            <wt:tabheaders>
+                <wt:tabheader title="效果" />
+                <wt:tabheader title="代码" />
+            </wt:tabheaders>
+            <wt:tabcontents>
+                <wt:tabcontent>
+                    <wt:form vm="@Model" width="600">
+                        <wt:upload field="Entity.PhotoId" upload-type="ImageFile" />
+                        <wt:row align="AlignEnum.Right">
+                            <wt:submitbutton disabled="true" />
+                            <wt:closebutton disabled="true" />
+                        </wt:row>
+                    </wt:form>
+                </wt:tabcontent>
+                <wt:tabcontent>
+                    <wt:code>
+&ltwt:form vm="@@Model" width="600"&gt
+    &ltwt:upload field="Entity.PhotoId" upload-type="ImageFile"  /&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton disabled="true" /&gt
+        &ltwt:closebutton disabled="true" /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+
+                    </wt:code>
+                </wt:tabcontent>
+            </wt:tabcontents>
+        </wt:tab>
+</wt:fieldset>
+
+    <script>
+        layui.code({ about: false });
+        layui.table.init('parse-table-demo');
+    </script>

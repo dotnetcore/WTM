@@ -66,10 +66,26 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("日期控件")]
+        [ActionDescription("DateTime")]
         public IActionResult DateTime()
         {
             var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Upload")]
+        public IActionResult Upload()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Selector")]
+        public IActionResult Selector()
+        {
+            var vm = CreateVM<MajorVm>();
+            vm.StudentList = new StudentListVm();
+            vm.StudentList.CopyContext(vm);
             return PartialView(vm);
         }
 
@@ -79,6 +95,8 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             var vm = CreateVM<StudentListVm>();
             return PartialView(vm);
         }
+
+
         [ActionDescription("Js函数")]
         public IActionResult Js()
         {
