@@ -64,29 +64,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            var oldroles = DC.Set<FrameworkUserRole>().Where(x => x.UserId == Entity.ID).ToList();
-            var oldgroups = DC.Set<FrameworkUserGroup>().Where(x => x.UserId == Entity.ID).ToList();
-            foreach (var item in oldroles)
+            if(SelectedRolesIDs == null || SelectedRolesIDs.Count == 0)
             {
-                DC.DeleteEntity(item);
+                FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
             }
-            foreach (var item in oldgroups)
+            else
             {
-                DC.DeleteEntity(item);
+                Entity.UserRoles = new List<FrameworkUserRole>();
+                SelectedRolesIDs.ForEach(x => Entity.UserRoles.Add(new FrameworkUserRole { ID = Guid.NewGuid(), UserId = Entity.ID, RoleId = x }));
             }
-            if (SelectedRolesIDs != null)
+            if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
             {
-                foreach (var item in SelectedRolesIDs)
-                {
-                    DC.Set<FrameworkUserRole>().Add(new FrameworkUserRole { UserId = Entity.ID, RoleId = item });
-                }
+                FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
             }
-            if (SelectedGroupIDs != null)
+            else
             {
-                foreach (var groupid in SelectedGroupIDs)
-                {
-                    Entity.UserGroups.Add(new FrameworkUserGroup { GroupId = groupid });
-                }
+                SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
             }
             base.DoEdit();
         }
