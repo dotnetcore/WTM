@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -23,6 +25,7 @@ namespace WalkingTec.Mvvm.Core
         public string GroupRemark { get; set; }
 
         [Display(Name = "用户")]
+        [JsonIgnore]
         public List<FrameworkUserGroup> UserGroups { get; set; }
 
         [NotMapped]

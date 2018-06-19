@@ -144,10 +144,15 @@ window.ff = {
         $.ajax({
             url: url,
             type: 'GET',
-            success: function (data) {
+            success: function (data, textStatus, request) {
                 window.location.hash = '#' + url;
-                $('#DONOTUSE_MAINPANEL').html(data);
-                $('#DONOTUSE_MAINPANEL').scrollTop(0);
+                if (request.getResponseHeader('IsScript') === 'true') {
+                    eval(data);
+                }
+                else {
+                    $('#DONOTUSE_MAINPANEL').html(data);
+                    $('#DONOTUSE_MAINPANEL').scrollTop(0);
+                }
                 layer.close(index);
             },
             error: function (data) {

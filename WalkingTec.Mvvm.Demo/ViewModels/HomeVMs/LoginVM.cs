@@ -40,7 +40,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 MSD.AddModelError("", "登录失败");
                 return null;
             }
-
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
             //查找登录用户的数据权限
@@ -52,8 +51,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             rv.Id = user.ID;
             rv.ITCode = user.ITCode;
             rv.Name = user.Name;
-            rv.Roles = user.UserRoles.Select(x => x.Role).ToList();
-            rv.Groups = user.UserGroups.Select(x => x.Group).ToList();
+            rv.Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList();
+            rv.Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList();
             rv.DataPrivileges = dpris;
             if (IgnorePris == false)
             {
