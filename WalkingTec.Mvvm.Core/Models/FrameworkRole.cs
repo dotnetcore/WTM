@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -24,6 +26,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "备注")]
         public string RoleRemark { get; set; }
 
+        [JsonIgnore]
         public List<FrameworkUserRole> UserRoles { get; set; }
 
         [NotMapped]
