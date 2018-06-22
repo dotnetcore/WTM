@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
 {
     public class TestRoleListVM : BasePagedListVM<TestRole_View, TestRoleSearcher>
     {
@@ -34,6 +34,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
                 this.MakeGridHeader(x => x.RoleCode),
                 this.MakeGridHeader(x => x.RoleName),
                 this.MakeGridHeader(x => x.RoleRemark),
+                this.MakeGridHeader(x => x.test),
+                this.MakeGridHeader(x => x.abc),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -41,14 +43,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
         public override IOrderedQueryable<TestRole_View> GetSearchQuery()
         {
             var query = DC.Set<TestRole>()
-                .CheckContain(Searcher.RoleCode, x=>x.RoleCode)
-                .CheckContain(Searcher.RoleName, x=>x.RoleName)
+                .CheckContain(Searcher.abc, x=>x.abc)
                 .Select(x => new TestRole_View
                 {
 				    ID = x.ID,
                     RoleCode = x.RoleCode,
                     RoleName = x.RoleName,
                     RoleRemark = x.RoleRemark,
+                    test = x.test,
+                    abc = x.abc,
                 })
                 .OrderBy(x => x.ID);
             return query;

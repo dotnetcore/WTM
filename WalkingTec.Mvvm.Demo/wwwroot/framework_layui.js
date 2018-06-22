@@ -224,6 +224,31 @@ window.ff = {
         });
     },
 
+    BgRequest(url,para) {
+        var layer = layui.layer;
+        var index = layer.load(2);
+       var getpost = "GET";
+        if (para != undefined) {
+            getpost = "Post";
+        }
+      $.ajax({
+            cache: false,
+            type: getpost,
+            url: url,
+            data: para,
+            async: true,
+            error: function (request) {
+                layer.close(index);
+                alert("加载失败");
+            },
+            success: function (str, textStatus, request) {
+                layer.close(index);
+                eval(str);
+            }
+        });
+
+    },
+
     OpenDialog: function (url, windowid, title, width, height, para) {
         var layer = layui.layer;
         var index = layer.load(2);

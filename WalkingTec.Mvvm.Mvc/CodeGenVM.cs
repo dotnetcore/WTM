@@ -232,22 +232,22 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public void DoGen()
         {
-            File.WriteAllText($"{ControllerDir}\\{ModelName}Controller.cs",GenerateController());
+            File.WriteAllText($"{ControllerDir}\\{ModelName}Controller.cs",GenerateController(), Encoding.UTF8);
 
-            File.WriteAllText($"{VmDir}\\{ModelName}VM.cs", GenerateVM("CrudVM"));
-            File.WriteAllText($"{VmDir}\\{ModelName}ListVM.cs", GenerateVM("ListVM"));
-            File.WriteAllText($"{VmDir}\\{ModelName}BatchVM.cs", GenerateVM("BatchVM"));
-            File.WriteAllText($"{VmDir}\\{ModelName}ImportVM.cs", GenerateVM("ImportVM"));
-            File.WriteAllText($"{VmDir}\\{ModelName}Searcher.cs", GenerateVM("Searcher"));
+            File.WriteAllText($"{VmDir}\\{ModelName}VM.cs", GenerateVM("CrudVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}\\{ModelName}ListVM.cs", GenerateVM("ListVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}\\{ModelName}BatchVM.cs", GenerateVM("BatchVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}\\{ModelName}ImportVM.cs", GenerateVM("ImportVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}\\{ModelName}Searcher.cs", GenerateVM("Searcher"), Encoding.UTF8);
 
-            File.WriteAllText($"{ViewDir}\\Index.cshtml", GenerateView("ListView"));
-            File.WriteAllText($"{ViewDir}\\Create.cshtml", GenerateView("CreateView"));
-            File.WriteAllText($"{ViewDir}\\Edit.cshtml", GenerateView("EditView"));
-            File.WriteAllText($"{ViewDir}\\Delete.cshtml", GenerateView("DeleteView"));
-            File.WriteAllText($"{ViewDir}\\Details.cshtml", GenerateView("DetailsView"));
-            File.WriteAllText($"{ViewDir}\\Import.cshtml", GenerateView("ImportView"));
-            File.WriteAllText($"{ViewDir}\\BatchEdit.cshtml", GenerateView("BatchEditView"));
-            File.WriteAllText($"{ViewDir}\\BatchDelete.cshtml", GenerateView("BatchDeleteView"));
+            File.WriteAllText($"{ViewDir}\\Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\Create.cshtml", GenerateView("CreateView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\Edit.cshtml", GenerateView("EditView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\Delete.cshtml", GenerateView("DeleteView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\Details.cshtml", GenerateView("DetailsView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\Import.cshtml", GenerateView("ImportView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
+            File.WriteAllText($"{ViewDir}\\BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
 
         }
 

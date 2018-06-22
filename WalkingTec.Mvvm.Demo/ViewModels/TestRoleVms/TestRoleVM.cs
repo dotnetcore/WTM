@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
 {
     public class TestRoleVM : BaseCRUDVM<TestRole>
     {
