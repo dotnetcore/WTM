@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
 {
     public class TestRoleBatchVM : BaseBatchVM<TestRole, TestRole_BatchEdit>
     {
@@ -30,8 +30,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
     /// </summary>
     public class TestRole_BatchEdit : BaseVM
     {
-        public int test { get; set; }
-        public string abc { get; set; }
+
         protected override void InitVM()
         {
         }

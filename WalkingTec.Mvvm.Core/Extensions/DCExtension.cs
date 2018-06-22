@@ -312,7 +312,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 tableNameList.Add(typename);
 
             }
-            var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
+            //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
             return DPWhere(baseQuery, dps, tableNameList, IdFields);
         }
 
@@ -361,7 +361,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         fieldName = fieldName.Remove(fieldName.Length - 2);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
-                        var IsTableName = tableName?.Where(x => x.Contains(fieldName)).FirstOrDefault();
+                        var IsTableName = tableName?. Where(x => x.ToLower().Contains(fieldName.ToLower())).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
                         {
                             continue;

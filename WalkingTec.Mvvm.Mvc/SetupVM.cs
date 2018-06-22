@@ -123,9 +123,9 @@ namespace WalkingTec.Mvvm.Mvc
                 vmns = MainNs + ".ViewModel";
                 datans = MainNs + ".DataAccess";
                 modelns = MainNs + ".Model";
-                File.WriteAllText($"{modeldir}\\{modelns}.csproj", GetResource("Proj.txt"));
-                File.WriteAllText($"{vmdir}\\{vmns}.csproj", GetResource("Proj.txt"));
-                File.WriteAllText($"{datadir}\\{datans}.csproj", GetResource("Proj.txt"));
+                File.WriteAllText($"{modeldir}\\{modelns}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
+                File.WriteAllText($"{vmdir}\\{vmns}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
+                File.WriteAllText($"{datadir}\\{datans}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
             }
             Directory.CreateDirectory($"{MainDir}\\Areas");
             Directory.CreateDirectory($"{MainDir}\\Controllers");
@@ -142,29 +142,29 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("$logexception$", LogExceptionOnly.ToString().ToLower())
                 .Replace("$rpp$", Rpp == null ? "" : Rpp.ToString())
                 .Replace("$filemode$", FileMode.ToString())
-                .Replace("$uploaddir$", UploadDir ?? "")
+                .Replace("$uploaddir$", UploadDir ?? ""), Encoding.UTF8
                 );
-            File.WriteAllText($"{datadir}\\DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans));
-            File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("HomeController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Controllers\\LoginController.cs", GetResource("LoginController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\_ViewStart.cshtml", GetResource("ViewStart.txt"));
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Index.cshtml", GetResource("home.Index.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\Login\\ChangePassword.cshtml", GetResource("home.ChangePassword.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Header.cshtml", GetResource("home.Header.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{vmdir}\\HomeVMs\\ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{vmdir}\\HomeVMs\\IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
-            File.WriteAllText($"{vmdir}\\HomeVMs\\LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns));
+            File.WriteAllText($"{datadir}\\DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("HomeController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Controllers\\LoginController.cs", GetResource("LoginController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\_ViewStart.cshtml", GetResource("ViewStart.txt"), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Index.cshtml", GetResource("home.Index.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Login\\ChangePassword.cshtml", GetResource("home.ChangePassword.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Header.cshtml", GetResource("home.Header.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{vmdir}\\HomeVMs\\ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{vmdir}\\HomeVMs\\IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{vmdir}\\HomeVMs\\LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
 
             if (UI == UIEnum.LayUI)
             {
-                File.WriteAllText($"{MainDir}\\Views\\Shared\\_Layout.cshtml", GetResource("layui.Layout.txt").Replace("$ns$", MainNs));
-                File.WriteAllText($"{MainDir}\\Views\\Shared\\_PLayout.cshtml", GetResource("layui.PLayout.txt").Replace("$ns$", MainNs));
-                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt").Replace("$ns$", MainNs));
-                File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"));
-                File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"));
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_Layout.cshtml", GetResource("layui.Layout.txt").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_PLayout.cshtml", GetResource("layui.PLayout.txt").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"), Encoding.UTF8);
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 var sr = assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.layui.layui.zip");
                 System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
@@ -198,7 +198,7 @@ namespace WalkingTec.Mvvm.Mvc
   </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj);
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
                 }
             }
             if (ProjectType == ProjectTypeEnum.Multi)
@@ -216,7 +216,7 @@ namespace WalkingTec.Mvvm.Mvc
  </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj);
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
                 }
                 //修改modelproject
                 var modelproj = File.ReadAllText($"{modeldir}\\{modelns}.csproj");
@@ -228,7 +228,7 @@ namespace WalkingTec.Mvvm.Mvc
   </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{modeldir}\\{modelns}.csproj", modelproj);
+                    File.WriteAllText($"{modeldir}\\{modelns}.csproj", modelproj, Encoding.UTF8);
                 }
                 //修改dataproject
                 var dataproj = File.ReadAllText($"{datadir}\\{datans}.csproj");
@@ -240,7 +240,7 @@ namespace WalkingTec.Mvvm.Mvc
   </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{datadir}\\{datans}.csproj", dataproj);
+                    File.WriteAllText($"{datadir}\\{datans}.csproj", dataproj, Encoding.UTF8);
                 }
                 //修改viewmodelproject
                 var vmproj = File.ReadAllText($"{vmdir}\\{vmns}.csproj");
@@ -252,7 +252,7 @@ namespace WalkingTec.Mvvm.Mvc
   </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{vmdir}\\{vmns}.csproj", vmproj);
+                    File.WriteAllText($"{vmdir}\\{vmns}.csproj", vmproj, Encoding.UTF8);
                 }
                 var solution = File.ReadAllText($"{Directory.GetParent(MainDir)}\\{MainNs}.sln");
                 if (solution.IndexOf($"{modelns}.csproj") < 0)
@@ -281,7 +281,7 @@ EndProject
 		{{{g3}}}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{{{g3}}}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{{{g3}}}.Release|Any CPU.Build.0 = Release|Any CPU");
-                    File.WriteAllText($"{Directory.GetParent(MainDir)}\\{MainNs}.sln", solution);
+                    File.WriteAllText($"{Directory.GetParent(MainDir)}\\{MainNs}.sln", solution, Encoding.UTF8);
                 }
             }
             if (File.Exists($"{MainDir}\\Startup.cs"))

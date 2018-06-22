@@ -28,7 +28,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 传递多个 Id 或 null
         /// </summary>
-        MultiIdWithNull
+        MultiIdWithNull,
+        AddRow,
+        RemoveRow
     }
 
     #endregion

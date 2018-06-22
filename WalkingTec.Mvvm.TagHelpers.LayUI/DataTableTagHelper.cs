@@ -622,19 +622,30 @@ var ids = ff.GetSelections('{Id}');
                         }
 
                         gridBtnEventStrBuilder.Append($@"
-case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
+case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
+                        if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
+                        {
+
+                        }
+                        else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
+                        {
+
+                        }
+                        else {
+                            gridBtnEventStrBuilder.Append($@"
 var isPost = false;
 {script}
 {(string.IsNullOrEmpty(item.OnClickFunc) ?
-    (item.ShowDialog ?
-        $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
-        : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
-            $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}');"
-            : $"$.ajax({{cache: false,type: 'GET',url: '{url}',async: true,success: function(data, textStatus, request) {{eval(data);}} }})"
-            )
-    )
-    : $"{item.OnClickFunc}();")}
-}};break;
+        (item.ShowDialog ?
+            $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
+            : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
+                $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}');"
+                : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
+                )
+        )
+        : $"{item.OnClickFunc}();")}");
+                        }
+                        gridBtnEventStrBuilder.Append($@"}};break;
 ");
                     }
                 }
@@ -662,7 +673,7 @@ var isPost = false;
     fixed: false
   }})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
-  {TableJSVar} = table.render({{
+var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
@@ -687,7 +698,10 @@ var isPost = false;
 ,done: function(res,curr,count){{layer.close(msg);
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
-  }});
+}}
+
+
+  {TableJSVar} = table.render({Id}option);
   
   // 监听工具条
   function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""

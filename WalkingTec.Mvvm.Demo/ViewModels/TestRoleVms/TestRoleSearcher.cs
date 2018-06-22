@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,14 +8,11 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms
+namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
 {
     public class TestRoleSearcher : BaseSearcher
     {
-        [Display(Name = "角色编号")]
-        public String RoleCode { get; set; }
-        [Display(Name = "角色名称")]
-        public String RoleName { get; set; }
+        public String abc { get; set; }
 
         protected override void InitVM()
         {

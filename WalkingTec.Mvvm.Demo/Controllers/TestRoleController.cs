@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.TestRoleVms;
+using WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("测试角色管理")]
+    [ActionDescription("测试用户啊")]
     public class TestRoleController : BaseController
     {
         #region 搜索
@@ -111,10 +111,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 详细
         [ActionDescription("详细")]
-        public PartialViewResult Details(Guid id)
+        public ActionResult Details(Guid id)
         {
-            var v = CreateVM<TestRoleVM>(id);
-            return PartialView("Details", v);
+            var vm = CreateVM<TestRoleVM>(id);
+            return PartialView(vm);
         }
         #endregion
 
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
-                return PartialView(vm);
+                return PartialView("BatchEdit",vm);
             }
             else
             {
@@ -157,7 +157,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                return PartialView(vm);
+                return PartialView("BatchDelete",vm);
             }
             else
             {
