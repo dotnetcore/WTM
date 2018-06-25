@@ -526,9 +526,13 @@ window.ff = {
         for (val in data) {
             if (typeof (data[val]) == 'string') {
                 data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
-            }
+                var re = /(<input .*?)\s*\/>/ig;
+                var r = "";
+                while (r = re.exec(data[val])) {
+                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "')\" />";
+                }
+           }
         }
-        debugger;
         loaddata.push(data);
         option.url = null;
         option.limit = 20;
@@ -543,15 +547,20 @@ window.ff = {
             for (val in loaddata[i]) {
                 if (typeof (loaddata[i][val]) == 'string') {
                     loaddata[i][val] = loaddata[i][val].replace(/\[.*?\]/ig, "[" + i + "]");
-                }
+                    loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");               }
             }
         }
         option.url = null;
         option.limit = 20;
         option.data = loaddata;
         layui.table.render(option);
-    }
+    },
 
+    gridcellchange: function (ele, gridid, row, col) {
+        var loaddata = layui.table.cache[gridid];
+        loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/ig, "value=\"" + ele.value + "\"");
+        
+    }
 }
 
 //window.ff = new WalkingTecUI();
