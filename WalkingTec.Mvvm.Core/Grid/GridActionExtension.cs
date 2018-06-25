@@ -255,7 +255,6 @@ namespace WalkingTec.Mvvm.Core
             self.HideOnToolBar = hideOnToolBar;
             return self;
         }
-
-        #endregion
+      #endregion
     }
 }

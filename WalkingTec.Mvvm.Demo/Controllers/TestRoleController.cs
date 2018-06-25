@@ -4,6 +4,8 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs;
+using WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -34,6 +36,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid)
             {
+                vm.ListVM.EntityList = vm.Entity.Employees;
+                vm.ListVM.ProcessListError();
                 return PartialView(vm);
             }
             else

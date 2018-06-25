@@ -94,6 +94,19 @@ namespace WalkingTec.Mvvm.Mvc
             return PartialView(listVM);
         }
 
+        [ActionDescription("获取单行空数据")]
+        public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
+        {
+            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
+            string data = listVM.GetSingleDataJson(null);
+            var rv = new ContentResult
+            {
+                ContentType = "application/json",
+                Content = data
+            };
+            return rv;
+        }
+
         /// <summary>
         /// 获取分页数据
         /// </summary>

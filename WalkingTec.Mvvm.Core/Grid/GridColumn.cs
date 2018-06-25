@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -120,6 +121,8 @@ namespace WalkingTec.Mvvm.Core
         }
 
         public EditTypeEnum? EditType { get; set; }
+
+        public List<ComboSelectListItem> ListItems { get; set; }
 
         #region 只读属性 生成 Excel 及其 表头用
 
@@ -331,7 +334,14 @@ namespace WalkingTec.Mvvm.Core
             var col = CompiledCol?.Invoke(source as T);
             if (Format == null)
             {
-                rv = col?.ToString();
+                if (col?.GetType().IsEnumOrNullableEnum() == true)
+                {
+                    rv = (int)col;
+                }
+                else
+                {
+                    rv = col?.ToString();
+                }
             }
             else
             {

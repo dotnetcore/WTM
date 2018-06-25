@@ -136,6 +136,14 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="entity"></param>
         /// <returns></returns>
         string SetFullRowBgColor(object entity);
+
+        T CreateEmptyEntity();
+
+        /// <summary>
+        /// 用于为子表生成可编辑Grid时，内部控件名称前缀
+        /// </summary>
+        string DetailGridPrix { get; set; }
+
         #endregion
 
     }

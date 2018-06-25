@@ -35,6 +35,7 @@ namespace WalkingTec.Mvvm.Core
 
     #endregion
 
+
     #region 标准列表动作
     /// <summary>
     /// 标准列表动作

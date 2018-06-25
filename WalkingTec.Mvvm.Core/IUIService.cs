@@ -21,5 +21,8 @@ namespace WalkingTec.Mvvm.Core
         string MakeRadio(bool ischeck, string text = null, string name = null, string value = null, bool isReadOnly = false);
 
         string MakeCombo(string name = null, List<ComboSelectListItem> value = null, string selectedValue = null, string emptyText = null, bool isReadOnly = false);
+
+        string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false);
+
     }
 }

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="key">字段名称</param>
         /// <param name="errorMessage">错误信息</param>
         void AddModelError(string key, string errorMessage);
-
+        void RemoveModelError(string key);
         int Count { get; }
 
         IEnumerable<string> Keys { get; }

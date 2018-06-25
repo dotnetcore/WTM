@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                     }
                     else
-                    {
+                    {                        
                         if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
                         {
                             model.DoReInit();

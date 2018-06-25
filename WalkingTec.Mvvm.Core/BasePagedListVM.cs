@@ -193,10 +193,10 @@ namespace WalkingTec.Mvvm.Core
 
 
                         //建立excel单元格
-                        var cell            = dr.CreateCell(colIndex);
-                        ICellStyle style    = null;
-                        IFont font          = null;
-                        var styleKey        = string.Empty;
+                        var cell = dr.CreateCell(colIndex);
+                        ICellStyle style = null;
+                        IFont font = null;
+                        var styleKey = string.Empty;
                         //获取设定的单元格背景色
                         string backColor = col.GetBackGroundColor(row);
                         //获取设定的单元格前景色
@@ -302,7 +302,7 @@ namespace WalkingTec.Mvvm.Core
                 var cell = row.CreateCell(colIndex);
                 cell.CellStyle = style;
                 cell.SetCellValue(col.Title);
-                var bcount  = col.BottomChildren.Count();
+                var bcount = col.BottomChildren.Count();
                 var rowspan = 0;
                 if (rowIndex == 0)
                 {
@@ -427,7 +427,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>数据列表</returns>
         public IEnumerable<TModel> GetEntityList()
         {
-            if (IsSearched == false)
+            if (IsSearched == false && (EntityList == null || EntityList.Count == 0))
             {
                 DoSearch();
             }
@@ -615,7 +615,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         count = 0;
                     }
-                    if(Searcher.Limit == 0)
+                    if (Searcher.Limit == 0)
                     {
                         Searcher.Limit = ConfigInfo.RPP;
                     }
@@ -756,12 +756,62 @@ namespace WalkingTec.Mvvm.Core
         public void AddErrorColumn()
         {
             //寻找所有Header为错误信息的列，如果没有则添加
-            if (_gridHeaders.Where(x => x.Title == "错误").FirstOrDefault() == null)
+            if (GridHeaders.Where(x => x.Title == "错误").FirstOrDefault() == null)
             {
-                var temp = _gridHeaders as List<GridColumn<TModel>>;
-                temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "错误"));
+                var temp = GridHeaders as List<GridColumn<TModel>>;
+                if (temp.Where(x => x.ColumnType == GridColumnTypeEnum.Action).FirstOrDefault() == null)
+                {
+                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "错误").SetForeGroundFunc(x => "ff0000"));
+                }
+                else
+                {
+                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "错误").SetForeGroundFunc(x => "ff0000"));
+                }
             }
         }
+
+        public void ProcessListError()
+        {
+            bool haserror = false;
+            List<string> keys = new List<string>();
+            if (string.IsNullOrEmpty(DetailGridPrix) == false) {
+                foreach (var item in MSD.Keys)
+                {
+                    if (item.StartsWith(DetailGridPrix)) {
+                        var errors = MSD[item];
+                        if(errors.Count > 0)
+                        {
+                            Regex r = new Regex($"{DetailGridPrix}\\[(.*?)\\]");
+                            try
+                            {
+                                if (int.TryParse(r.Match(item).Groups[1].Value, out int index))
+                                {
+                                    EntityList[index].BatchError = errors.Select(x=>x.ErrorMessage).ToSpratedString();
+                                    keys.Add(item);
+                                    haserror = true;
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                }
+                foreach (var item in keys)
+                {
+                    MSD.RemoveModelError(item);
+                }
+                if (haserror)
+                {
+                    AddErrorColumn();
+                }
+            }
+        }
+
+        public TModel CreateEmptyEntity()
+        {
+            return typeof(TModel).GetConstructor(Type.EmptyTypes).Invoke(null) as TModel;
+        }
+
+        public string DetailGridPrix {get;set;}
 
         #endregion
     }

@@ -45,5 +45,10 @@ namespace WalkingTec.Mvvm.Core.Implement
         {
             return "";
         }
+
+        public string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
+        {
+            return "";
+        }
     }
 }

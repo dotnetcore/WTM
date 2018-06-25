@@ -11,15 +11,15 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
 {
-    public class EmployeeListVM : BasePagedListVM<Employee_View, EmployeeSearcher>
+    public class EmployeeListVM : BasePagedListVM<Employee, EmployeeSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800).SetParameterType(GridActionParameterTypesEnum.AddRow),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800).SetParameterType( GridActionParameterTypesEnum.RemoveRow),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
@@ -28,41 +28,27 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
             };
         }
 
-        protected override IEnumerable<IGridColumn<Employee_View>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<Employee>> InitGridHeader()
         {
-            return new List<GridColumn<Employee_View>>{
-                this.MakeGridHeader(x => x.Name_view),
-                this.MakeGridHeader(x => x.Name),
-                this.MakeGridHeader(x => x.Age),
-                this.MakeGridHeader(x => x.Sex),
+            return new List<GridColumn<Employee>>{
+                this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x => x.Age).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x => x.Sex).SetEditType(EditTypeEnum.ComboBox, new List<ComboSelectListItem>{ new ComboSelectListItem{ Text="请选择", Value="" },new ComboSelectListItem{ Text = "男", Value="0" },new ComboSelectListItem{ Text = "女", Value="1" } }),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
 
-        public override IOrderedQueryable<Employee_View> GetSearchQuery()
+        public override IOrderedQueryable<Employee> GetSearchQuery()
         {
             var query = DC.Set<Employee>()
                 .CheckEqual(Searcher.CompanyID, x=>x.CompanyID)
                 .CheckContain(Searcher.Name, x=>x.Name)
                 .CheckEqual(Searcher.Sex, x=>x.Sex)
-                .DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)
-                .Select(x => new Employee_View
-                {
-				    ID = x.ID,
-                    Name_view = x.Company.Name,
-                    Name = x.Name,
-                    Age = x.Age,
-                    Sex = x.Sex,
-                })
+                .DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)               
                 .OrderBy(x => x.ID);
             return query;
         }
 
     }
 
-    public class Employee_View : Employee{
-        [Display(Name = "公司名称")]
-        public String Name_view { get; set; }
-
-    }
 }

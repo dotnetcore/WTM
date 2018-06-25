@@ -12,13 +12,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <param name="self">是否需要对数据进行Json编码</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco
+        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco,new()
         {
-            //如果列表没有执行过搜索，则自动执行
-            if (self.IsSearched == false)
-            {
-                self.DoSearch();
-            }
             var sb = new StringBuilder();
             var el = self.GetEntityList().ToList();
             //如果列表主键都为0，则生成自增主键，避免主键重复
@@ -30,7 +25,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             for (int x = 0; x < el.Count; x++)
             {
                 var sou = el[x];
-                sb.Append(self.GetSingleDataJson(sou));
+                sb.Append(self.GetSingleDataJson(sou,x));
                 if (x < el.Count - 1)
                 {
                     sb.Append(",");
@@ -89,17 +84,23 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="self"></param>
         /// <param name="sou">数据</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, T sou) where T : TopBasePoco
+        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj,int index = 0) where T : TopBasePoco
         {
             var sb = new StringBuilder();
             var RowBgColor = string.Empty;
             var RowColor = string.Empty;
+            T sou = obj as T;
+            if (sou == null)
+            {
+                sou = self.CreateEmptyEntity();
+            }
             RowBgColor = self.SetFullRowBgColor(sou);
             RowColor = self.SetFullRowColor(sou);
             var isSelected = self.GetIsSelected(sou);
             //循环所有列
             sb.Append("{");
-            var containsID = false;
+            bool containsID = false;
+            bool addHiddenID = false;
             foreach (var baseCol in self.GetHeaders())
             {
                 foreach (var col in baseCol.BottomChildren)
@@ -137,48 +138,77 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //设定列名，如果是主键ID，则列名为id，如果不是主键列，则使用f0，f1,f2...这种方式命名，避免重复
                     sb.Append($"\"{col.Field}\":");
                     var html = string.Empty;
-                    var info = col.GetText(sou);
 
-                    if (info is ColumnFormatInfo)
+                    if (col.EditType == EditTypeEnum.Text || col.EditType == null)
                     {
-                        html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
-                    }
-                    else if (info is List<ColumnFormatInfo>)
-                    {
-                        var temp = string.Empty;
-                        foreach (var item in info as List<ColumnFormatInfo>)
+
+                        var info = col.GetText(sou);
+
+                        if (info is ColumnFormatInfo)
                         {
-                            temp += GetFormatResult(self as BaseVM, item);
-                            temp += "&nbsp;&nbsp;";
+                            html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
                         }
-                        html = temp;
+                        else if (info is List<ColumnFormatInfo>)
+                        {
+                            var temp = string.Empty;
+                            foreach (var item in info as List<ColumnFormatInfo>)
+                            {
+                                temp += GetFormatResult(self as BaseVM, item);
+                                temp += "&nbsp;&nbsp;";
+                            }
+                            html = temp;
+                        }
+                        else
+                        {
+                            html = info.ToString();
+                        }
+                        if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
+                        {
+                            html += $@"<input hidden name=""{self.DetailGridPrix}[].Id"" value=""{sou.ID}""/>";
+                            addHiddenID = true;
+                        }
+                        var ptype = col.FieldType;
+                        //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
+                        if (ptype == typeof(bool) || ptype == typeof(bool?))
+                        {
+                            if (html.ToLower() == "true")
+                            {
+                                html = (self as BaseVM).UIService.MakeCheckBox(true, isReadOnly: true);
+                            }
+                            if (html.ToLower() == "false" || html == string.Empty)
+                            {
+                                html = (self as BaseVM).UIService.MakeCheckBox(false, isReadOnly: true);
+                            }
+                        }
+                        //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
+                        else if (ptype.IsEnumOrNullableEnum())
+                        {
+                            html = PropertyHelper.GetEnumDisplayName(ptype, html);
+                        }
+                        if (style != string.Empty)
+                        {
+                            html = $"<div style=\"{style}\">{html}</div>";
+                        }
                     }
                     else
                     {
-                        html = info.ToString();
-                    }
-
-                    var ptype = col.FieldType;
-                    //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
-                    if (ptype == typeof(bool) || ptype == typeof(bool?))
-                    {
-                        if (html.ToLower() == "true")
+                        string val = col.GetText(sou).ToString();
+                        string name = $"{self.DetailGridPrix}[{index}].{col.Field}";
+                        switch (col.EditType)
                         {
-                            html = (self as BaseVM).UIService.MakeCheckBox(true,isReadOnly:true);
+                            case EditTypeEnum.TextBox:
+                                html = (self as BaseVM).UIService.MakeTextBox(name, val);
+                                break;
+                            case EditTypeEnum.CheckBox:
+                                bool.TryParse(val, out bool nb);
+                                html = (self as BaseVM).UIService.MakeCheckBox(nb,null, name,"true");
+                                break;
+                            case EditTypeEnum.ComboBox:
+                                html = (self as BaseVM).UIService.MakeCombo(name, col.ListItems, val);
+                                break;
+                            default:
+                                break;
                         }
-                        if (html.ToLower() == "false" || html == string.Empty)
-                        {
-                            html = (self as BaseVM).UIService.MakeCheckBox(false, isReadOnly: true);
-                        }
-                    }
-                    //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
-                    else if (ptype.IsEnumOrNullableEnum())
-                    {
-                        html = PropertyHelper.GetEnumDisplayName(ptype, html);
-                    }
-                    if (style != string.Empty)
-                    {
-                        html = $"<div style=\"{style}\">{html}</div>";
                     }
                     html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     sb.Append(html);

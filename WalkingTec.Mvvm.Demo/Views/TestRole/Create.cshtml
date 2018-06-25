@@ -1,13 +1,15 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs.TestRoleVM
 
 <wt:form vm="@Model">
-<wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:textbox field="Entity.RoleCode" />
-<wt:textbox field="Entity.RoleName" />
-<wt:textbox field="Entity.RoleRemark" />
-<wt:textbox field="Entity.test" />
-<wt:textbox field="Entity.abc" />
-</wt:row>
+    <wt:row items-per-row="ItemsPerRowEnum.Two">
+        <wt:textbox field="Entity.RoleCode" />
+        <wt:textbox field="Entity.RoleName" />
+        <wt:textbox field="Entity.RoleRemark" />
+        <wt:textbox field="Entity.test" />
+        <wt:textbox field="Entity.abc" />
+    </wt:row>
+    <wt:grid vm="@Model.ListVM" use-local-data="true"/>
+
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

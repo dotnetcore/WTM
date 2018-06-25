@@ -13,6 +13,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
 {
     public class TestRoleListVM : BasePagedListVM<TestRole_View, TestRoleSearcher>
     {
+        public TestRoleListVM()
+        {
+            DetailGridPrix = "TestList";
+        }
+
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
@@ -34,6 +39,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
                 this.MakeGridHeader(x => x.RoleCode),
                 this.MakeGridHeader(x => x.RoleName),
                 this.MakeGridHeader(x => x.RoleRemark),
+                this.MakeGridHeader(x => x.Ano).SetEditType(EditTypeEnum.CheckBox),
                 this.MakeGridHeader(x => x.test),
                 this.MakeGridHeader(x => x.abc),
                 this.MakeGridHeaderAction(width: 200)
@@ -60,6 +66,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.TestRoleVMs
     }
 
     public class TestRole_View : TestRole{
-
+        public bool Ano { get; set; }
     }
 }
