@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         public string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
         {
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
-            return $@"<input class=""layui-input"" style=""height:28px""  name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" {disable}/>";
+            return $@"<input class=""layui-input"" style=""height:28px""  name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" {disable} />";
 
         }
         public string MakeRedirectButton(ButtonTypesEnum buttonType, string url, string buttonText)
