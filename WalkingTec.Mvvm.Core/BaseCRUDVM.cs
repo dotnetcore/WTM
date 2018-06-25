@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core
                                 var ft = subtype.GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
                                 foreach (var f in ft)
                                 {
-                                    var fileid = subtype.GetProperty(f.Name + "ID").GetValue(ent);
+                                    var fileid = subtype.GetProperty(f.Name + "Id").GetValue(ent);
                                     if (fileid != null)
                                     {
                                         var file = DC.Set<FileAttachment>().Find(fileid);
