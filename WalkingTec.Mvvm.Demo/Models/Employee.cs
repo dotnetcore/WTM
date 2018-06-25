@@ -21,6 +21,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public int Age { get; set; }
 
         [Display(Name = "员工性别")]
-        public SexEnum Sex { get; set; }
+        [Required(ErrorMessage = "{0}是必填项")]
+        public SexEnum? Sex { get; set; }
     }
 }

@@ -24,7 +24,11 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum EditTypeEnum
     {
-        Text = 0
+        Text,
+        TextBox,
+        ComboBox,
+        Datetime,
+        CheckBox
     }
 
     /// <summary>
@@ -126,6 +130,8 @@ namespace WalkingTec.Mvvm.Core
         int ChildrenLength { get; }
 
         EditTypeEnum? EditType { get; set; }
+
+        List<ComboSelectListItem> ListItems { get; set; }
 
         #region 只读属性 生成 Excel 及其 表头用
 

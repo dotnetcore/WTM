@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         public string MakeCombo(string name = null, List<ComboSelectListItem> value = null, string selectedValue = null, string emptyText = null, bool isReadOnly = false)
         {
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
-            string rv = $"<select name=\"{name}\" lay-ignore>";
+            string rv = $"<select name=\"{name}\" class=\"layui-input\" style=\"height:28px\"   lay-ignore>";
             if(string.IsNullOrEmpty(emptyText) == false)
             {
                 rv += $@"
@@ -79,8 +79,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             {
                 foreach (var item in value)
                 {
-                    rv += $@"
+                    if (item.Value == selectedValue)
+                    {
+                        rv += $@"
+<option value='{item.Value}' selected>{item.Text}</option>";
+
+                    }
+                    else
+                    {
+                        rv += $@"
 <option value='{item.Value}'>{item.Text}</option>";
+                    }
                 }
             }
             rv += $@"
@@ -89,7 +98,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return rv;
         }
 
+        public string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
+        {
+            var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
+            return $@"<input class=""layui-input"" style=""height:28px""  name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" {disable}/>";
 
+        }
         public string MakeRedirectButton(ButtonTypesEnum buttonType, string url, string buttonText)
         {
             return "";

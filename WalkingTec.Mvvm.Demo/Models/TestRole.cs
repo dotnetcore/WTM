@@ -30,5 +30,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [NotMapped]
         public string abc { get; set; }
 
+        [NotMapped]
+        public List<Employee> Employees { get; set; }
     }
 }

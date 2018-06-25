@@ -337,7 +337,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
-                    EditType = item.EditType
+                    //EditType = item.EditType
                 };
                 if (item.Children != null && item.Children.Count() > 0)
                 {
@@ -470,7 +470,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
-                    EditType = item.EditType
+                    //EditType = item.EditType
                 };
                 switch (item.ColumnType)
                 {
@@ -520,7 +520,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         // Grid 行内按钮
                         if (item.ShowInRow)
                         {
-                            rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
+                            if (item.ParameterType != GridActionParameterTypesEnum.RemoveRow)
+                            {
+                                rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
+                            }
+                            else
+                            {
+                                rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
+                            }
+
                         }
 
                         // Grid 工具条按钮
@@ -625,7 +633,8 @@ var ids = ff.GetSelections('{Id}');
 case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
                         if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
                         {
-
+                            gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null)});
+");
                         }
                         else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
                         {

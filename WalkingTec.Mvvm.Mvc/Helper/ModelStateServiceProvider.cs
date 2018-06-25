@@ -37,6 +37,11 @@ namespace WalkingTec.Mvvm.Mvc
             _states.AddModelError(key, errorMessage);
         }
 
+        public void RemoveModelError(string key)
+        {
+            _states.Remove(key);
+        }
+
         public void Clear()
         {
             _states.Clear();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -264,10 +265,11 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="self"></param>
         /// <param name="editType">单元格编辑类型</param>
         /// <returns></returns>
-        public static GridColumn<T> SetEditType<T>(this GridColumn<T> self, EditTypeEnum editType = EditTypeEnum.Text)
+        public static GridColumn<T> SetEditType<T>(this GridColumn<T> self, EditTypeEnum editType = EditTypeEnum.Text, List<ComboSelectListItem> listitems = null)
             where T : TopBasePoco
         {
             self.EditType = editType;
+            self.ListItems = listitems;
             return self;
         }
 

@@ -338,6 +338,7 @@ window.ff = {
                 alert("加载失败");
             },
             success: function (str) {
+                debugger;
                 var regGridId = /<\s{0,}table\s+id\s{0,}=\s{0,}"(.*)"\s+lay-filter/im;
                 var regGridVar = /wtVar_(.*)\s{0,}=\s{0,}table.render\({/im;
                 if ($(tempId).length > 0 && regGridId.test(str) && regGridVar.test(str)) {
@@ -518,7 +519,39 @@ window.ff = {
                 searchBtns[0].click();
             }
         }
+    },
+
+    AddGridRow: function (gridid,option, data) {
+        var loaddata = layui.table.cache[gridid];
+        for (val in data) {
+            if (typeof (data[val]) == 'string') {
+                data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
+            }
+        }
+        debugger;
+        loaddata.push(data);
+        option.url = null;
+        option.limit = 20;
+        option.data = loaddata;
+        layui.table.render(option);
+    },
+
+    RemoveGridRow: function (gridid, option, index) {
+        var loaddata = layui.table.cache[gridid];
+        loaddata.splice(index-1,1);
+        for (var i = 0; i < loaddata.length; i++) {
+            for (val in loaddata[i]) {
+                if (typeof (loaddata[i][val]) == 'string') {
+                    loaddata[i][val] = loaddata[i][val].replace(/\[.*?\]/ig, "[" + i + "]");
+                }
+            }
+        }
+        option.url = null;
+        option.limit = 20;
+        option.data = loaddata;
+        layui.table.render(option);
     }
+
 }
 
 //window.ff = new WalkingTecUI();
