@@ -79,7 +79,8 @@ namespace WalkingTec.Mvvm.Mvc
                     );
                 }
             });
-            services.AddSingleton<IUIService, DefaultUIService>();
+           
+        services.AddSingleton<IUIService, DefaultUIService>();
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -102,6 +103,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             app.UseExceptionHandler("/_Framework/Error");
 
+            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 RequestPath = new PathString("/_js"),
