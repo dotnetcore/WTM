@@ -73,7 +73,7 @@ namespace FirstProject.DataAccess
 {
     public class DataContext : FrameworkContext
     {
-        public DbSet<School> Schools { get; set; }
+        public DbSet&ltSchool&gt Schools { get; set; }
 
         public DataContext(string cs, DBTypeEnum dbtype)
         : base(cs, dbtype)

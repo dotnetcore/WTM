@@ -102,8 +102,13 @@ namespace WalkingTec.Mvvm.Mvc
 
             app.UseExceptionHandler("/_Framework/Error");
 
-            app.UseStaticFiles();
-
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/_js"),
+                FileProvider = new EmbeddedFileProvider(
+                    typeof(_CodeGenController).GetTypeInfo().Assembly, 
+                    "WalkingTec.Mvvm.Mvc")
+            });
             app.UseSession();
 
             app.UseMvc(routes =>
