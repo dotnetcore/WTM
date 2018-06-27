@@ -487,6 +487,7 @@ namespace WalkingTec.Mvvm.Core
             //如果在复制过程中已经有错误，则直接输出错误
             if (ErrorListVM.EntityList.Count > 0)
             {
+                DoReInit();
                 return false;
             }
             //进行Model层面的验证
@@ -574,6 +575,7 @@ namespace WalkingTec.Mvvm.Core
             if (ErrorListVM.EntityList.Count > 0)
             {
                 (vm as BaseVM)?.MSD.Clear();
+                DoReInit();
                 return false;
             }
 
@@ -630,6 +632,7 @@ namespace WalkingTec.Mvvm.Core
             //如果有错误，则返回
             if (ErrorListVM.EntityList.Count > 0)
             {
+                DoReInit();
                 return false;
             }
             //如果没有错误，更新数据库
@@ -642,6 +645,7 @@ namespace WalkingTec.Mvvm.Core
                 catch (Exception e)
                 {
                     SetExceptionMessage(e, null);
+                    DoReInit();
                     return false;
                 }
             }
