@@ -531,9 +531,10 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetBatchQuery()
         {
             var baseQuery = GetSearchQuery();
-            if (ReplaceWhere == null && Ids != null)
+            var ids = Ids ?? new List<Guid>();
+            if (ReplaceWhere == null)
             {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => Ids.Contains(x.ID));
+                WhereReplaceModifier mod = new WhereReplaceModifier(x => ids.Contains(x.ID));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
