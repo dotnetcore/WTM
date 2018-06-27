@@ -515,7 +515,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var vm = Vm.Model as BaseVM;
                 foreach (var item in actionCol)
                 {
-                    if (vm.LoginUserInfo?.IsAccessable(item.Url) == true)
+                    if (vm.LoginUserInfo?.IsAccessable(item.Url) == true || item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
                     {
                         // Grid 行内按钮
                         if (item.ShowInRow)
