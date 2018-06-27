@@ -526,9 +526,13 @@ window.ff = {
             if (typeof (data[val]) == 'string') {
                 data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
                 var re = /(<input .*?)\s*\/>/ig;
+                var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
                 var r = "";
                 while (r = re.exec(data[val])) {
-                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "')\" />";
+                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />";
+                }
+                while (r = re2.exec(data[val])) {
+                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >" + r[2];
                 }
            }
         }
@@ -555,9 +559,17 @@ window.ff = {
         layui.table.render(option);
     },
 
-    gridcellchange: function (ele, gridid, row, col) {
+    gridcellchange: function (ele, gridid, row, col,celltype) {
         var loaddata = layui.table.cache[gridid];
-        loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/ig, "value=\"" + ele.value + "\"");
+        if (celltype == 0) {
+            loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/ig, "value=\"" + ele.value + "\"");
+        }
+        if (celltype == 1) {
+            loaddata[row][col] = loaddata[row][col].replace(/(<option .*?) selected\s*>/ig, "$1>");
+            var re = new RegExp("(<option\\s*value\\s*=\\s*[\"']" + ele.value + "[\"'])\s*>", "ig");
+            debugger;
+            loaddata[row][col] = loaddata[row][col].replace(re, "$1 selected>");
+        }
         
     }
 }
