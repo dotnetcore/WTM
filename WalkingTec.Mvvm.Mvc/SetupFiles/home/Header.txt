@@ -1,6 +1,6 @@
 ﻿@model WalkingTec.Mvvm.Core.BaseVM
 
-<div class="layui-logo" style="width:unset"><img src="/logo.png" width="48" />WalkingTec.Mvvm Framework</div>
+<div class="layui-logo" style="width:300px"><img src="/logo.png" width="48" />WalkingTec.Mvvm Framework</div>
 
 <ul class="layui-nav layui-layout-right">
     <li class="layui-nav-item">
