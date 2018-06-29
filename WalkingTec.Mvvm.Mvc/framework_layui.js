@@ -224,14 +224,14 @@ window.ff = {
         });
     },
 
-    BgRequest(url,para) {
+    BgRequest: function (url, para) {
         var layer = layui.layer;
         var index = layer.load(2);
-       var getpost = "GET";
+        var getpost = "GET";
         if (para != undefined) {
             getpost = "Post";
         }
-      $.ajax({
+        $.ajax({
             cache: false,
             type: getpost,
             url: url,
@@ -520,7 +520,7 @@ window.ff = {
         }
     },
 
-    AddGridRow: function (gridid,option, data) {
+    AddGridRow: function (gridid, option, data) {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
             if (typeof (data[val]) == 'string') {
@@ -534,7 +534,7 @@ window.ff = {
                 while (r = re2.exec(data[val])) {
                     data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >" + r[2];
                 }
-           }
+            }
         }
         loaddata.push(data);
         option.url = null;
@@ -545,12 +545,13 @@ window.ff = {
 
     RemoveGridRow: function (gridid, option, index) {
         var loaddata = layui.table.cache[gridid];
-        loaddata.splice(index-1,1);
+        loaddata.splice(index - 1, 1);
         for (var i = 0; i < loaddata.length; i++) {
             for (val in loaddata[i]) {
                 if (typeof (loaddata[i][val]) == 'string') {
                     loaddata[i][val] = loaddata[i][val].replace(/\[.*?\]/ig, "[" + i + "]");
-                    loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");               }
+                    loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");
+                }
             }
         }
         option.url = null;
@@ -559,7 +560,7 @@ window.ff = {
         layui.table.render(option);
     },
 
-    gridcellchange: function (ele, gridid, row, col,celltype) {
+    gridcellchange: function (ele, gridid, row, col, celltype) {
         var loaddata = layui.table.cache[gridid];
         if (celltype == 0) {
             loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/ig, "value=\"" + ele.value + "\"");
@@ -570,7 +571,7 @@ window.ff = {
             debugger;
             loaddata[row][col] = loaddata[row][col].replace(re, "$1 selected>");
         }
-        
+
     }
 }
 
