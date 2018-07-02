@@ -334,14 +334,7 @@ namespace WalkingTec.Mvvm.Core
             var col = CompiledCol?.Invoke(source as T);
             if (Format == null)
             {
-                if (col?.GetType().IsEnumOrNullableEnum() == true)
-                {
-                    rv = (int)col;
-                }
-                else
-                {
-                    rv = col?.ToString();
-                }
+                rv = col?.ToString();
             }
             else
             {

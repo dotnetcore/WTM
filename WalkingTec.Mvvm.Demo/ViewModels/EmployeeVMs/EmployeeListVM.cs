@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
             return new List<GridColumn<Employee>>{
                 this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.Age).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x => x.Sex).SetEditType(EditTypeEnum.ComboBox, new List<ComboSelectListItem>{ new ComboSelectListItem{ Text="请选择", Value="" },new ComboSelectListItem{ Text = "男", Value="0" },new ComboSelectListItem{ Text = "女", Value="1" } }),
+                this.MakeGridHeader(x => x.Sex).SetEditType(EditTypeEnum.ComboBox, typeof(SexEnum).ToListItems(pleaseSelect:true)),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
