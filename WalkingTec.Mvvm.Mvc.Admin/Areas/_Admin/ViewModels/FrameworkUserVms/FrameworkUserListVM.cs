@@ -33,6 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Name),
+                this.MakeGridHeader(x => x.Sex),
                 this.MakeGridHeader(x => x.IsValid).SetHeader("启用").SetWidth(80),
                 this.MakeGridHeader(x => x.CellPhone),
                 this.MakeGridHeader(x => x.HomePhone),
@@ -90,7 +91,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     HomePhone = x.HomePhone,
                     IsValid = x.IsValid,
                     UserRoles = x.UserRoles,
-                    UserGroups = x.UserGroups
+                    UserGroups = x.UserGroups,
+                    Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
             return query;

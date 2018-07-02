@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="self">枚举类型</param>
         /// <param name="value">value</param>
         /// <returns>下拉菜单数据列表</returns>
-        public static List<ComboSelectListItem> ToListItems(this Type self,object value=null)
+        public static List<ComboSelectListItem> ToListItems(this Type self,object value=null, bool pleaseSelect = false)
         {
             string[] names = null;
             //如果是枚举
@@ -41,6 +41,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     rv.Add(newitem);
                 }
+            }
+            if(pleaseSelect == true)
+            {
+                rv.Insert(0, new ComboSelectListItem { Text = "请选择", Value = "" });
             }
             return rv;
         }
