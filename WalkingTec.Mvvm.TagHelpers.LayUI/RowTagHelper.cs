@@ -11,12 +11,21 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public ItemsPerRowEnum? ItemsPerRow { get; set; }
 
         public AlignEnum? Align { get; set; }
+
+        public int Space { get; set; }
         public string Id { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", "layui-row");
+            if (Space > 0)
+            {
+                output.Attributes.SetAttribute("class", $"layui-row layui-col-space{Space}");
+            }
+            else
+            {
+                output.Attributes.SetAttribute("class", $"layui-row ");
+            }
             if (string.IsNullOrEmpty(Id) == false){
                 output.Attributes.SetAttribute("id", Id);
             }

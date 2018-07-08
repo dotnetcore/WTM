@@ -186,7 +186,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     context.HttpContext.Response.OnStarting(() =>
                     {
-                        return context.HttpContext.Response.WriteAsync($"<div id='{model.ViewDivId}'>");
+                        return context.HttpContext.Response.WriteAsync($"<div id='{model.ViewDivId}' style='height:100%;'>");
                     });
                 }
             }
