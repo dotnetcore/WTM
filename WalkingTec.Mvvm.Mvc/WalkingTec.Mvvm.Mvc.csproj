@@ -20,6 +20,7 @@
   </ItemGroup> -->
 
   <ItemGroup>
+    <None Remove="echarts.common.min.js" />
     <None Remove="framework_layui.js" />
     <None Remove="GeneratorFiles\BatchDeleteView.txt" />
     <None Remove="GeneratorFiles\BatchEditView.txt" />
@@ -54,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="echarts.common.min.js" />
     <EmbeddedResource Include="framework_layui.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </EmbeddedResource>

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>@ViewData["title"]</title>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <script src="/jquery.min.js"></script>
@@ -12,6 +12,8 @@
     <script src="/layui/formSelects.js"></script>
     <script src="/layui/autocomplete.js"></script>
     <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
+    <script src="/_js/echarts.common.min.js"></script>
+
     <script>
         var DONOTUSE_IGNOREHASH = false;
         var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
