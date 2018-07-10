@@ -58,6 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     Entity.UserGroups.Add(new FrameworkUserGroup { GroupId = groupid });
                 }
             }
+            Entity.IsValid = true;
             Entity.Password = Utils.GetMD5String(Entity.Password);
             base.DoAdd();
         }
@@ -75,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
             if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
             {
-                FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
+                FC.Add("Entity.SelectedGroupIDs.DONOTUSECLEAR", "true");
             }
             else
             {
