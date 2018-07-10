@@ -14,8 +14,8 @@ namespace WalkingTec.Mvvm.Core
     {
         [Display(Name = "角色编号")]
         [Required(ErrorMessage = "{0}是必填项")]
-        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
-        [StringLength(3)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "{0}必须是数字")]
+        [StringLength(100, ErrorMessage = "{0}最大100位")]
         public string RoleCode { get; set; }
 
         [Display(Name = "角色名称")]
