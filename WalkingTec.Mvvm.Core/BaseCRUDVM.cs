@@ -260,17 +260,6 @@ namespace WalkingTec.Mvvm.Core
                                 {
                                     ent.CreateBy = LoginUserInfo?.ITCode;
                                 }
-
-                                var ft = subtype.GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-                                foreach (var f in ft)
-                                {
-                                    var fileid = subtype.GetProperty(f.Name + "Id").GetValue(ent);
-                                    if (fileid != null)
-                                    {
-                                        var file = DC.Set<FileAttachment>().Find(fileid);
-                                        file.IsTemprory = false;
-                                    }
-                                }
                             }
                         }
                     }
@@ -281,17 +270,6 @@ namespace WalkingTec.Mvvm.Core
 
             //添加数据
             DC.Set<TModel>().Add(Entity);
-            //如果数据中包括附件，则把附件的是否临时的属性设为false，代表已经有数据用这个附件了
-            var fa = typeof(TModel).GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-            foreach (var f in fa)
-            {
-                var fileid = typeof(TModel).GetProperty(f.Name + "Id").GetValue(Entity);
-                if (fileid != null)
-                {
-                    var file = DC.Set<FileAttachment>().Find(fileid);
-                    file.IsTemprory = false;
-                }
-            }
 
             //删除不需要的附件
             if(DeletedFileIds != null)
@@ -405,16 +383,6 @@ namespace WalkingTec.Mvvm.Core
                                     if (string.IsNullOrEmpty(ent.UpdateBy))
                                     {
                                         ent.UpdateBy = LoginUserInfo.ITCode;
-                                    }
-                                    var ft = subtype.GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-                                    foreach (var f in ft)
-                                    {
-                                        var fileid = subtype.GetProperty(f.Name + "ID").GetValue(ent);
-                                        if (fileid != null)
-                                        {
-                                            var file = DC.Set<FileAttachment>().Find(fileid);
-                                            file.IsTemprory = false;
-                                        }
                                     }
                                 }
                                 foreach (var itempro in itemPros)
