@@ -118,6 +118,7 @@
                     <select name="FileMode">
                         <option value="Database">保存到数据库</option>
                         <option value="Local">保存到硬盘</option>
+                        <option value="DFS">保存到DFS文件服务器</option>
                     </select>
                 </td>
             </tr>

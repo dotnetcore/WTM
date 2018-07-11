@@ -154,6 +154,7 @@ namespace WalkingTec.Mvvm.Mvc
             File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\FrontPage.cshtml", GetResource("home.FrontPage.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);

@@ -19,7 +19,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagOnly;
             output.Attributes.Add("type", type);
             output.Attributes.Add("name", Field.Name);
-            output.Attributes.Add("value", Field.Model);
+            if (DefaultValue != null)
+            {
+                output.Attributes.Add("value", DefaultValue);
+            }
+            else
+            {
+                output.Attributes.Add("value", Field?.Model);
+            }
             output.Attributes.Add("placeholder", placeHolder);
             output.Attributes.Add("class", "layui-input");
             base.Process(context, output);

@@ -14,10 +14,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("placeholder", placeHolder);
             output.Attributes.Add("class", "layui-textarea");
-            if (Field.Model != null)
+            if (DefaultValue != null)
             {
-                output.Content.SetContent(Field.Model?.ToString());
+                output.Content.SetContent(DefaultValue.ToString());
             }
+            else
+            {
+                output.Content.SetContent(Field?.Model?.ToString());
+            }
+
             base.Process(context, output);
         }
     }

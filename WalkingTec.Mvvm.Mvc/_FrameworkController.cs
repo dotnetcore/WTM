@@ -276,7 +276,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload(SaveFileModeEnum? sm = null, bool IsTemprory = true)
+        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true)
         {
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.SaveFileMode : sm;
@@ -285,7 +285,7 @@ namespace WalkingTec.Mvvm.Mvc
             vm.Entity.Length = FileData.Length;
             vm.Entity.UploadTime = DateTime.Now;
             vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
+            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, groupName, FileData.FileName, sm);
             vm.Entity.IsTemprory = IsTemprory;
             if ((!string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
             {

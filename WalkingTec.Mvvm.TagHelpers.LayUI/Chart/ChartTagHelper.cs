@@ -123,17 +123,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             }
             s += "]";
 
-            string xAxis, yAxis = "";
-            if(IsHorizontal == false)
+            string xAxis = "", yAxis = "";
+            if (Type != ChartTypeEnum.Pie)
             {
-                xAxis = "xAxis: {type: 'category'},";
-                yAxis = "yAxis: {},";
-            }
-            else
-            {
-                xAxis = "xAxis: {},";
-                yAxis = "yAxis: {type: 'category'},";
+                if (IsHorizontal == false)
+                {
+                    xAxis = "xAxis: {type: 'category'},";
+                    yAxis = "yAxis: {},";
+                }
+                else
+                {
+                    xAxis = "xAxis: {},";
+                    yAxis = "yAxis: {type: 'category'},";
 
+                }
             }
             output.PostElement.AppendHtml($@"
 <script>

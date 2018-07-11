@@ -44,6 +44,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string PaddingText { get; set; }
 
+        public object DefaultValue { get; set; }
+
         /// <summary>
         /// 不需要生成必填验证
         /// </summary>
