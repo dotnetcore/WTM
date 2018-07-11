@@ -687,10 +687,15 @@ where S : struct
 
         public static string GetFKName<T>(this IDataContext self, string listFieldName) where T : class
         {
+            return GetFKName(self, typeof(T), listFieldName);
+        }
+
+        public static string GetFKName(this IDataContext self, Type source, string listFieldName)
+        {
             try
             {
-                var test = self.Model.FindEntityType(typeof(T)).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent.Name == listFieldName).FirstOrDefault();
-                if(test != null && test.Properties.Count > 0)
+                var test = self.Model.FindEntityType(source).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent.Name == listFieldName).FirstOrDefault();
+                if (test != null && test.Properties.Count > 0)
                 {
                     return test.Properties[0].Name;
                 }
