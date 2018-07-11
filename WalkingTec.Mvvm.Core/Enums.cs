@@ -19,7 +19,8 @@
     public enum SaveFileModeEnum
     {
         Local = 0,//本地
-        Database = 1//数据库
+        Database = 1,//数据库
+        DFS = 2 //DFS
     };
 
     /// <summary>

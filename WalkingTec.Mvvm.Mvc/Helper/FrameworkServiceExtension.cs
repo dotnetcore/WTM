@@ -15,10 +15,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Mvc.Filters;
 
@@ -52,6 +54,7 @@ namespace WalkingTec.Mvvm.Mvc
                 con.DataPrivilegeSettings = new List<IDataPrivilege>();
             }
             services.AddSingleton(con);
+            SetupDFS(con);
             services.AddMvc(options =>
             {
                 options.Filters.Add(new DataContextFilter(CsSector));
@@ -592,6 +595,24 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return null;
             }
+        }
+
+        private static void SetupDFS(Configs con)
+        {
+            FDFSConfig.ConnectionTimeout = con.DFSServer.ConnectionTimeout ?? 100;
+            FDFSConfig.Connection_LifeTime = con.DFSServer.ConnectionLifeTime ?? 3600;
+            FDFSConfig.Storage_MaxConnection = con.DFSServer.StorageMaxConnection ?? 100;
+            FDFSConfig.Tracker_MaxConnection = con.DFSServer.TrackerMaxConnection ?? 100;
+            List<IPEndPoint> TrackerServers = new List<IPEndPoint>();
+            foreach (var tracker in con.DFSServer.Trackers)
+            {
+                if (string.IsNullOrEmpty(tracker.IP) == false)
+                {
+                    var point = new IPEndPoint(IPAddress.Parse(tracker.IP), tracker.Port);
+                    TrackerServers.Add(point);
+                }
+            }
+            FDFSConfig.Trackers = TrackerServers;
         }
     }
 }

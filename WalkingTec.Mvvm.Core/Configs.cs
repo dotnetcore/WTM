@@ -9,6 +9,21 @@ namespace WalkingTec.Mvvm.Core
         public string Value { get; set; }
     }
 
+    public class DFS
+    {
+        public int? StorageMaxConnection { get; set; }
+        public int? TrackerMaxConnection { get; set; }
+        public int? ConnectionTimeout { get; set; }
+        public int? ConnectionLifeTime { get; set; }
+        public List<DFSTracker> Trackers { get; set; }
+    }
+
+    public class DFSTracker
+    {
+        public string IP { get; set; }
+        public int Port { get; set; }
+    }
+
     public class Configs
     {
         #region 数据库连接字符串
@@ -285,6 +300,30 @@ namespace WalkingTec.Mvvm.Core
                 _dataPrivilegeSettings = value;
             }
         }
+        #endregion
+
+        #region DFS配置
+        private DFS _dfsServer;
+        /// <summary>
+        /// 数据库连接字符串
+        /// </summary>
+        public DFS DFSServer
+        {
+            get
+            {
+
+                if (_dfsServer == null)
+                {
+                    _dfsServer = new DFS();
+                }
+                return _dfsServer;
+            }
+            set
+            {
+                _dfsServer = value;
+            }
+        }
+
         #endregion
 
     }

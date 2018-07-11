@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.FDFS;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -68,7 +69,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="FileName"></param>
         /// <param name="savePlace"></param>
         /// <returns></returns>
-        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con, string FileName = null, SaveFileModeEnum? savePlace = null)
+        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con,string groupName = null, string FileName = null, SaveFileModeEnum? savePlace = null)
         {
             savePlace = savePlace == null ? con.SaveFileMode : savePlace;
             var ext = string.Empty;
@@ -105,7 +106,32 @@ namespace WalkingTec.Mvvm.Core
                     vm.Entity.FileData = new FileAttachmentData();
                 }
             }
-            FileData.Dispose();
+            else if (savePlace == SaveFileModeEnum.DFS)
+            {
+                using (var dataStream = new System.IO.MemoryStream())
+                {
+                    StorageNode node = null;
+                    FileData.CopyTo(dataStream);
+
+                    if (!string.IsNullOrEmpty(groupName))
+                    {
+                        node = FDFSClient.GetStorageNode(groupName);
+                    }
+                    else
+                    {
+                        node = FDFSClient.GetStorageNode();
+                    }
+
+                    if (node != null)
+                    {
+                        vm.Entity.Path = "/" + FDFSClient.UploadFile(node, dataStream.ToArray(), vm.Entity.FileExt);
+                        vm.Entity.GroupName = node.GroupName;
+                    }
+                    vm.Entity.FileData = new FileAttachmentData();
+
+                }
+                FileData.Dispose();
+            }
             return vm;
         }
 
@@ -133,6 +159,13 @@ namespace WalkingTec.Mvvm.Core
                     hssfworkbook = new HSSFWorkbook(file);
                 }
             }
+            if (saveMode == SaveFileModeEnum.DFS)
+            {
+                using (MemoryStream ms = new MemoryStream(FDFSClient.DownloadFile(fa.GroupName, fa.Path.TrimStart('/'))))
+                {
+                    hssfworkbook = new HSSFWorkbook(ms);
+                }
+            }
             return hssfworkbook;
         }
 
@@ -156,6 +189,15 @@ namespace WalkingTec.Mvvm.Core
                     break;
                 case SaveFileModeEnum.Database:
                     data = DC.Set<FileAttachment>().Include(x => x.FileData).Where(x => x.ID == fa.ID).Select(x => x.FileData.FileData).FirstOrDefault();
+                    break;
+                case SaveFileModeEnum.DFS:
+                    try
+                    {
+                        data = FDFSClient.DownloadFile(fa.GroupName, fa.Path.TrimStart('/'));
+                    }
+                    catch (FDFSException)
+                    {
+                    }
                     break;
             }
             return data;

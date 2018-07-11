@@ -67,7 +67,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.PreElement.SetHtmlContent(preHtml+output.PreElement.GetContent());
                     output.PostElement.AppendHtml(postHtml);
                 }
-                context.Items["ipr"] = 0;
             }
             //输出事件
             switch (this)
