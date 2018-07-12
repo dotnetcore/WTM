@@ -694,7 +694,7 @@ where S : struct
         {
             try
             {
-                var test = self.Model.FindEntityType(source).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent.Name == listFieldName).FirstOrDefault();
+                var test = self.Model.FindEntityType(source).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent?.Name == listFieldName).FirstOrDefault();
                 if (test != null && test.Properties.Count > 0)
                 {
                     return test.Properties[0].Name;

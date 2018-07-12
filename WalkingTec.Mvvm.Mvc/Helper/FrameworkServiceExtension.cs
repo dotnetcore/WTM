@@ -604,12 +604,15 @@ namespace WalkingTec.Mvvm.Mvc
             FDFSConfig.Storage_MaxConnection = con.DFSServer.StorageMaxConnection ?? 100;
             FDFSConfig.Tracker_MaxConnection = con.DFSServer.TrackerMaxConnection ?? 100;
             List<IPEndPoint> TrackerServers = new List<IPEndPoint>();
-            foreach (var tracker in con.DFSServer.Trackers)
+            if (con.DFSServer?.Trackers != null)
             {
-                if (string.IsNullOrEmpty(tracker.IP) == false)
+                foreach (var tracker in con.DFSServer.Trackers)
                 {
-                    var point = new IPEndPoint(IPAddress.Parse(tracker.IP), tracker.Port);
-                    TrackerServers.Add(point);
+                    if (string.IsNullOrEmpty(tracker.IP) == false)
+                    {
+                        var point = new IPEndPoint(IPAddress.Parse(tracker.IP), tracker.Port);
+                        TrackerServers.Add(point);
+                    }
                 }
             }
             FDFSConfig.Trackers = TrackerServers;

@@ -305,24 +305,6 @@ namespace WalkingTec.Mvvm.Core
             }
             var pros = typeof(TModel).GetProperties();
 
-            #region 附件
-            //如果数据中包括附件，则把附件的是否临时的属性设为false，代表已经有数据用这个附件了
-            var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-            foreach (var f in fa)
-            {
-                var fileid = typeof(TModel).GetProperty(f.Name + "Id").GetValue(Entity);
-                if (fileid != null)
-                {
-                    var file = DC.Set<FileAttachment>().Find(fileid);
-                    if (file != null)
-                    {
-                        file.IsTemprory = false;
-                    }
-                }
-            }
-            #endregion
-
-
             #region 更新子表
             foreach (var pro in pros)
             {

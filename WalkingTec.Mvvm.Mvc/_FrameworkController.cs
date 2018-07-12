@@ -285,7 +285,7 @@ namespace WalkingTec.Mvvm.Mvc
             vm.Entity.Length = FileData.Length;
             vm.Entity.UploadTime = DateTime.Now;
             vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, groupName, FileData.FileName, sm);
+            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm, groupName);
             vm.Entity.IsTemprory = IsTemprory;
             if ((!string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
             {
