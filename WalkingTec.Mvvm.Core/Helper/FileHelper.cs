@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="FileName"></param>
         /// <param name="savePlace"></param>
         /// <returns></returns>
-        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con,string groupName = null, string FileName = null, SaveFileModeEnum? savePlace = null)
+        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con,string FileName = null, SaveFileModeEnum? savePlace = null, string groupName = null)
         {
             savePlace = savePlace == null ? con.SaveFileMode : savePlace;
             var ext = string.Empty;
