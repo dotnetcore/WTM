@@ -24,6 +24,8 @@ namespace WalkingTec.Mvvm.Core
         public List<FrameworkRole> Roles { get; set; }
 
         public List<FrameworkGroup> Groups { get; set; }
+
+        public Dictionary<string,object> Attributes { get; set; }
         /// <summary>
         /// 用户的页面权限列表
         /// </summary>
