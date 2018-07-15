@@ -332,7 +332,7 @@ namespace WalkingTec.Mvvm.Mvc
             else
             {
                 Response.Body.Write(data, 0, data.Count());
-                return null;
+                return new EmptyResult();
             }
         }
 
