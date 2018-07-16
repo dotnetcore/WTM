@@ -6,7 +6,7 @@
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
-  <Import Project="..\build\common.props" />
+  <Import Project="..\..\common.props" />
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605</WarningsAsErrors>

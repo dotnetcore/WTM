@@ -12,7 +12,7 @@
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   
-  <Import Project="..\build\common.props" />
+  <Import Project="..\..\common.props" />
   
   <ItemGroup>
     <None Remove="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />

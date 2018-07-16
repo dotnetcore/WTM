@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
@@ -6,13 +6,7 @@
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
-  <!-- <ItemGroup>
-    <Content Include="wwwroot\**\*.*" >
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup> -->
-
-  <Import Project="..\build\common.props" />
+  <Import Project="..\..\common.props" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;1591;1570;0169</NoWarn>
