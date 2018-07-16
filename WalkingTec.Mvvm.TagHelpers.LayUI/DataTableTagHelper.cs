@@ -304,7 +304,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 排除的搜索条件
         /// </summary>
-        private static readonly string[] ExcludeParams = new string[]
+        private static readonly string[] _excludeParams = new string[]
         {
             "Page",
             "Limit",
@@ -318,6 +318,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             "IsPostBack",
             "DC",
             "LoginUserInfo"
+        };
+
+        /// <summary>
+        /// 排除的搜索条件类型，搜索条件数据源可能会存储在Searcher对象中
+        /// </summary>
+        private static readonly Type[] _excludeTypes = new Type[]
+        {
+            typeof(List<ComboSelectListItem>),
+            typeof(ComboSelectListItem[]),
+            typeof(IEnumerable<ComboSelectListItem>)
         };
 
         private void CalcChildCol(List<List<LayuiColumn>> layuiCols, List<IGridColumn<TopBasePoco>> rawCols, int maxDepth, int depth)
@@ -358,7 +368,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if(Loading == null)
+            if (Loading == null)
             {
                 Loading = true;
             }
@@ -407,9 +417,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 if (ListVM.Searcher != null)
                 {
                     var props = ListVM.Searcher.GetType().GetProperties();
+                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToArray();
                     foreach (var prop in props)
                     {
-                        if (!ExcludeParams.Contains(prop.Name))
+                        if (!_excludeParams.Contains(prop.Name))
                         {
                             Filter.Add($"Searcher.{prop.Name}", prop.GetValue(ListVM.Searcher));
                         }
@@ -640,7 +651,8 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         {
 
                         }
-                        else {
+                        else
+                        {
                             gridBtnEventStrBuilder.Append($@"
 var isPost = false;
 {script}
