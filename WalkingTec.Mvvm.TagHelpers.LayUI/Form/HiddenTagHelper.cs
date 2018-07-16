@@ -32,6 +32,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 _id = value;
             }
         }
+        public string DefaultValue { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -44,7 +45,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.Add("type", "hidden");
 
                 output.Attributes.Add("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
-                output.Attributes.Add("value", value);
+
+                if (DefaultValue != null)
+                {
+                    output.Attributes.Add("value", DefaultValue);
+                }
+                else
+                {
+                    output.Attributes.Add("value", value);
+                }
                 output.Attributes.Add("class", "layui-input");
             }
             else
@@ -104,7 +113,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.Attributes.Add("type", "hidden");
 
                     output.Attributes.Add("name", string.IsNullOrEmpty(Name) ? Field.Name : Name);
-                    output.Attributes.Add("value", value);
+
+                    if (DefaultValue != null)
+                    {
+                        output.Attributes.Add("value", DefaultValue);
+                    }
+                    else
+                    {
+                        output.Attributes.Add("value", value);
+                    }
                     output.Attributes.Add("class", "layui-input");
                     output.Attributes.SetAttribute("id", Id);
                 }

@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string PaddingText { get; set; }
 
-        public object DefaultValue { get; set; }
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// 不需要生成必填验证
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (string.IsNullOrEmpty(LabelText))
             {
                 LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
-                if(LabelText == null)
+                if (LabelText == null)
                 {
                     HideLabel = true;
                 }
