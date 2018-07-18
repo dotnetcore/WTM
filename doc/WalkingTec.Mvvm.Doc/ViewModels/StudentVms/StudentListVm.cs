@@ -39,7 +39,11 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 new Student{ LoginName = "zhaoliu", Name="赵六", Sex= Models.SexEnum.Female, CellPhone="13035698123", ExcelIndex = 3, IsValid = false, ID = new Guid("0C7F6A24-A08D-46BD-86AC-6B6A391A9F04")},
             };
 
-            var query = data.AsQueryable()
+            var query = data.AsQueryable().Where(x=>
+                    (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
+                    (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
+                    (Searcher.Sex == null || x.Sex == Searcher.Sex) 
+                )
                 .OrderBy(x => x.ExcelIndex);
             return query;
         }
