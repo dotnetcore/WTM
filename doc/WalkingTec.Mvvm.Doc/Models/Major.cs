@@ -28,6 +28,8 @@ namespace WalkingTec.Mvvm.Doc.Models
 
         [Display(Name = "学生")]
         public List<StudentMajor> Students { get; set; }
+        [Display(Name = "学生")]
+        public List<StudentMajor> Students2 { get; set; }
 
     }
 }

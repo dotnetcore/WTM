@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Mvc
             , string _DONOT_USE_SUBMIT
         )
         {
-            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<BasePoco, ISearcher>;
+            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
             {

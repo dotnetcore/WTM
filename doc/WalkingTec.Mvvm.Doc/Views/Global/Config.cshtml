@@ -24,6 +24,18 @@
   "RPP": 20, 
   "SaveFileMode": "Database", 
   "UploadDir": "", 
+  "DFSServer": {
+    "StorageMaxConnection": 100,
+    "TrackerMaxConnection": 100,
+    "ConnectionTimeout": 100,
+    "ConnectionLifeTime": 100,
+    "Trackers": [
+      {
+        "IP": "127.0.0.1",
+        "Port": 22122
+      }
+    ]
+  },
   "AppSettings": [
     {
       "Key": "aaa",
@@ -76,11 +88,15 @@
             </tr>
             <tr>
                 <td>SaveFileMode</td>
-                <td>框架附件储存模式，可选Database和local</td>
+                <td>框架附件储存模式，可选Database，local和dfs</td>
             </tr>
             <tr>
                 <td>UploadDir</td>
-                <td>当上传文件选择Local时，指定硬盘目录</td>
+                <td>当附件储存模式选择Local时，指定硬盘目录</td>
+            </tr>
+            <tr>
+                <td>DFSServer</td>
+                <td>当附件储存模式选择DFS时，指定DFS服务器的信息</td>
             </tr>
             <tr>
                 <td>AppSettings</td>
