@@ -1,8 +1,17 @@
 ﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
     <wt:radio field=" DpType" change-func="DbTypeChange" />
-    <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
-    <wt:checkbox field="SelectedItemsID" items="AllItems" />
+    <wt:combobox field="Entity.TableName" items="TableNames" change-func="TableNameChange" />
+    <wt:combobox field="PrivilegeType" change-func="PriTypeChange" label-text="选择权限" />
+    <wt:row id="prirow">
+        <wt:selector list-vm="ListVM" field="SelectedItemsID" text-bind="ListVM.EntityList[0].Text" label-text="">
+            <wt:searchpanel vm="ListVM">
+                <wt:row items-per-row=" ItemsPerRowEnum.Two">
+                    <wt:textbox field="ListVM.Searcher.TableName" />
+                </wt:row>
+            </wt:searchpanel>
+        </wt:selector>
+    </wt:row>
     <wt:row id="userrow">
         <wt:textbox field="UserItCode" search-url="/_Admin/FrameworkUser/GetUserById" />
     </wt:row>
@@ -17,6 +26,7 @@
 </wt:form>
 <script>
     DbTypeChange({ value: 'UserGroup' });
+    PriTypeChange({ value: $('#PrivilegeType').val() });
     function DbTypeChange(data) {
         if (data.value == "UserGroup") {
             $('#userrow').css('display', 'none');
@@ -27,20 +37,29 @@
             $('#grouprow').css('display', 'none');
         }
     }
+    function TableNameChange(data) {
+        //$.get('/_Admin/DataPrivilege/GetPrivilegeByTableName?table=' + data.value, {}, function (data, status) {
+        //    if (status === "success") {
+        //        var div = $('#SelectedItemsID').parent();
+        //        div.html('');
+        //        for (let item of data.data) {
+        //            div.append("<input type='checkbox' name='SelectedItemsID' value='"+item.value+"' title='"+item.text+"' />");
+        //        }
+        //        var form = layui.form;
+        //        form.render('checkbox');
+        //    }
+        //    else {
+        //        layer.alert('获取数据失败');
+        //    }
+        //});
+    }
     function PriTypeChange(data) {
-        $.get('/_Admin/DataPrivilege/GetPrivilegeByTableName?table=' + data.value, {}, function (data, status) {
-            if (status === "success") {
-                var div = $('#SelectedItemsID').parent();
-                div.html('');
-                for (let item of data.data) {
-                    div.append("<input type='checkbox' name='SelectedItemsID' value='"+item.value+"' title='"+item.text+"' />");
-                }
-                var form = layui.form;
-                form.render('checkbox');
-            }
-            else {
-                layer.alert('获取数据失败');
-            }
-        });
+        if (data.value == "All") {
+            $('#prirow').css('display', 'none');
+        }
+        else {
+            $('#prirow').css('display', 'block');
+        }
+
     }
 </script>
