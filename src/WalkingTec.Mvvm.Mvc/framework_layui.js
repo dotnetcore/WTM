@@ -524,6 +524,9 @@ window.ff = {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
             if (typeof (data[val]) == 'string') {
+                if (val == "ID") {
+                    data[val] = ff.guid();
+                }
                 data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
                 var re = /(<input .*?)\s*\/>/ig;
                 var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
@@ -572,6 +575,15 @@ window.ff = {
             loaddata[row][col] = loaddata[row][col].replace(re, "$1 selected>");
         }
 
+    },
+
+    guid:function(){
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 }
 
