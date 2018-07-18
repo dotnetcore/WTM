@@ -8,15 +8,6 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
-    public enum PrivilegeTypeEnum
-    {
-
-        [Display(Name = "全部权限")]
-        All,
-        [Display(Name = "指定权限")]
-        Selected
-    }
-
     public class DataPrivilegeVM : BaseCRUDVM<DataPrivilege>
     {
         public List<ComboSelectListItem> TableNames { get; set; }
@@ -26,15 +17,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public List<Guid?> SelectedItemsID { get; set; }
         [Display(Name ="用户")]
         public string UserItCode { get; set; }
-        public PrivilegeTypeEnum PrivilegeType { get; set; }
-        
+
         [Display(Name = "权限类别")]
         public DpTypeEnum DpType { get; set; }
-
-        public PrivilegeItemListVM ListVM { get; set; }
         public DataPrivilegeVM()
         {
-            ListVM = new PrivilegeItemListVM();
         }
 
         protected override void InitVM()
