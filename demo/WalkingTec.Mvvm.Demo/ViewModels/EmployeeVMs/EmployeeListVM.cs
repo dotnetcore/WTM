@@ -17,9 +17,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800).SetParameterType(GridActionParameterTypesEnum.AddRow),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800).SetParameterType( GridActionParameterTypesEnum.RemoveRow),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),

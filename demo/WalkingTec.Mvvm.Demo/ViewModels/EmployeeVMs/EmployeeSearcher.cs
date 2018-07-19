@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
     {
         public List<ComboSelectListItem> AllCompanys { get; set; }
         [Display(Name = "所属公司")]
-        public Guid CompanyID { get; set; }
+        public Guid? CompanyID { get; set; }
         [Display(Name = "员工姓名")]
         public String Name { get; set; }
         [Display(Name = "员工性别")]
