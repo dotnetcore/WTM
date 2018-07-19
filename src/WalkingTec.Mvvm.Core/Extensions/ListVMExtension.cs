@@ -162,11 +162,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         {
                             html = info.ToString();
                         }
-                        if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
-                        {
-                            html += $@"<input hidden name=""{self.DetailGridPrix}[].Id"" value=""{sou.ID}""/>";
-                            addHiddenID = true;
-                        }
                         var ptype = col.FieldType;
                         //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
                         if (ptype == typeof(bool) || ptype == typeof(bool?))
@@ -210,6 +205,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 break;
                         }
                     }
+                    if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
+                    {
+                        html += $@"<input hidden name=""{self.DetailGridPrix}[{index}].ID"" value=""{sou.ID}""/>";
+                        addHiddenID = true;
+                    }
+
                     html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     sb.Append(html);
                     sb.Append(",");
