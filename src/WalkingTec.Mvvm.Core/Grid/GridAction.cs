@@ -48,7 +48,9 @@ namespace WalkingTec.Mvvm.Core
         Details,
         BatchEdit,
         BatchDelete,
-        Import
+        Import,
+        AddRow,
+        RemoveRow
     }
     #endregion
 

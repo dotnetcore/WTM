@@ -57,6 +57,11 @@ namespace WalkingTec.Mvvm.Core
                     gridname = "新建";
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
+                case GridActionStandardTypesEnum.AddRow:
+                    iconcls = "icon-add";
+                    gridname = "新建";
+                    paraType = GridActionParameterTypesEnum.AddRow;
+                    break;
                 case GridActionStandardTypesEnum.Edit:
                     iconcls = "icon-edit";
                     gridname = "修改";
@@ -68,6 +73,13 @@ namespace WalkingTec.Mvvm.Core
                     iconcls = "icon-delete";
                     gridname = "删除";
                     paraType = GridActionParameterTypesEnum.SingleId;
+                    showInRow = true;
+                    hideOnToolBar = true;
+                    break;
+                case GridActionStandardTypesEnum.RemoveRow:
+                    iconcls = "icon-delete";
+                    gridname = "删除";
+                    paraType = GridActionParameterTypesEnum.RemoveRow;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;

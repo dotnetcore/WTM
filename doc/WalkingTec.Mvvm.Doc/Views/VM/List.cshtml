@@ -190,6 +190,68 @@ private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, obje
 
     </wt:code>
 </wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="表格中使用控件">
+    <p>在项目中，我们还经常遇到使用grid来批量编辑数据的情况，</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM2.cs">
+    public class StudentListVm : BasePagedListVM&ltStudent,StudentSearcher&gt
+    {
+        public StudentListVm()
+        {
+            DetailGridPrix = "Students";
+        }
+
+        protected override List&ltGridAction&gt InitGridAction()
+        {
+            return new List&ltGridAction&gt
+            {
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.AddRow, ""),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.RemoveRow, ""),
+
+            };
+        }
+
+        protected override IEnumerable&ltIGridColumn&ltStudent&gt&gt InitGridHeader()
+        {
+            return new List&ltGridColumn&ltStudent&gt&gt{
+                this.MakeGridHeader(x =&gt x.LoginName).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x =&gt x.Name).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x =&gt x.Sex).SetEditType(EditTypeEnum.ComboBox, typeof(Models.SexEnum).ToListItems(pleaseSelect:true)),
+                this.MakeGridHeader(x =&gt x.CellPhone).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x=&gtx.IsValid).SetEditType(EditTypeEnum.CheckBox)
+            };
+        }
+
+        public override IOrderedQueryable&ltStudent&gt GetSearchQuery()
+        {
+            List&ltStudent&gt data = new List&ltStudent&gt
+            {
+                new Student{ LoginName = "zhangsan", Name="张三", Sex= Models.SexEnum.Male, CellPhone="13012213483", ExcelIndex = 0, IsValid = true, ID = new Guid("6F5C2D15-4871-4083-B269-06F456A4F1B6")},
+                new Student{ LoginName = "lisi", Name="李四", Sex= Models.SexEnum.Male, CellPhone="13075829654", ExcelIndex = 1, IsValid = false, ID = new Guid("9C7BC358-B8BD-4547-AFC1-11BF6F2B608B")},
+                new Student{ LoginName = "wangwu", Name="王五", Sex= Models.SexEnum.Male, CellPhone="13098635100", ExcelIndex = 2, IsValid = true, ID = new Guid("3BF9217C-1ACF-4D80-9899-42CFDA4C8746")},
+                new Student{ LoginName = "zhaoliu", Name="赵六", Sex= Models.SexEnum.Female, CellPhone="13035698123", ExcelIndex = 3, IsValid = false, ID = new Guid("0C7F6A24-A08D-46BD-86AC-6B6A391A9F04")},
+            };
+
+            var query = data.AsQueryable().Where(x=&gt
+                    (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
+                    (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
+                    (Searcher.Sex == null || x.Sex == Searcher.Sex) 
+                )
+                .OrderBy(x =&gt x.ExcelIndex);
+            return query;
+        }
+
+    }
+
+
+    </wt:code>
+    <p>上面代码中，我们首先指定了DetailGridPrix字段，这个字段是告诉框架提交之后应该将数据保存在哪里，比如我们设定DetailGridPrix="Students"，那么提交的时候，框架会使用Students[0].Id,Students[0].Name,Students[1].Id,Students[1].Name这种形式来提交数据</p>
+    <p>然后在InitGridAction方法中，我们定义了两个按钮，分别是AddRow和RemoveRow类型。这两个按钮负责动态给Grid添加或者删除行</p>
+    <p>最后再InitGridHeader方法中，我们使用SetEditType方法给每一列定义需要使用的控件</p>
+</wt:fieldset>
+
+
 <wt:fieldset field-set-style="Simple" title="主要属性">
     <table lay-filter="parse-table-demo">
         <thead>
