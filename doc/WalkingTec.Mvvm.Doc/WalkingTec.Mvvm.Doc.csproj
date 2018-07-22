@@ -24,4 +24,10 @@
     <Folder Include="wwwroot\imgs\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\UI\Others.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

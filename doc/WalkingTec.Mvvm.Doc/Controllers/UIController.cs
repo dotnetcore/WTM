@@ -89,6 +89,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("Others")]
+        public IActionResult Others()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
         [ActionDescription("数据表格")]
         public IActionResult Grid()
         {

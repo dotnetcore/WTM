@@ -1,0 +1,213 @@
+﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+
+<wt:fieldset field-set-style="Simple" title="Hidden">
+    <p>Hidden常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>DefaultValue</td>
+                <td>默认值，如果有值则忽略绑定字段的值</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="Display">
+    <p>Display用于显示文本，常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>DisplayText</td>
+                <td>手工指定要显示的文本</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="TextArea">
+    <p>TextArea和TextBox用法基本一样，常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>EmptyText</td>
+                <td>无数据时显示的提示文本</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Switch">
+    <p>Switch是checkbox的变形，适用于处理布尔值，常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>LayText</td>
+                <td>可自定义开关两种状态的文本</td>
+            </tr>
+            <tr>
+                <td>Checked</td>
+                <td>是否打开</td>
+            </tr>
+            <tr>
+                <td>Value</td>
+                <td>打开时传递的值</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="FieldSet">
+    <p>FieldSet是把一些控件分为一组，并用细线框起来，常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td>组标题</td>
+            </tr>
+            <tr>
+                <td>FieldSetStyle</td>
+                <td>样式，可选Default或者Simple</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+    layui.table.init('parse-table-demo');
+</script>
