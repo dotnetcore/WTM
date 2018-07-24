@@ -1,0 +1,10 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.SchoolCode" />
+<wt:textbox field="Searcher.SchoolName" />
+<wt:combobox field="Searcher.SchoolType" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />

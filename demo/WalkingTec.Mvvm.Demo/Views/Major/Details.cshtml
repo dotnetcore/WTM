@@ -1,0 +1,13 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorVM
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.MajorCode" />
+<wt:display field="Entity.MajorName" />
+<wt:display field="Entity.Remark" />
+<wt:display field="Entity.School.SchoolName" />
+</wt:row>
+    <wt:row align=" AlignEnum.Right">
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

@@ -1,0 +1,16 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
+
+<wt:form vm="@Model">
+	<wt:quote>确定要删除这条数据么：</wt:quote>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.SchoolCode" />
+<wt:display field="Entity.SchoolName" />
+<wt:display field="Entity.SchoolType" />
+<wt:display field="Entity.Remark" />
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align=" AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

@@ -20,11 +20,10 @@ namespace WalkingTec.Mvvm.Demo
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(x =>
                 {
-                    List<IDataPrivilege> pris = new List<IDataPrivilege>();
-                    pris.Add(new DataPrivilegeInfo<TestRole>("测试角色", y => y.RoleName));
+                    //List<IDataPrivilege> pris = new List<IDataPrivilege>();
+                    //pris.Add(new DataPrivilegeInfo<School>("学校", y => y.SchoolName));
                     //x.AddFrameworkService(dataPrivilegeSettings: pris);
-                    //pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
-                    x.AddFrameworkService(dataPrivilegeSettings: pris);
+                    x.AddFrameworkService();
                     x.AddLayui();
                 })
                 .Configure(x =>
