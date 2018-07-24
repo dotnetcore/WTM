@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.AddRow, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
                 this.MakeStandardAction("Employee", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
@@ -31,9 +31,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.EmployeeVMs
         protected override IEnumerable<IGridColumn<Employee>> InitGridHeader()
         {
             return new List<GridColumn<Employee>>{
-                this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
+               this.MakeGridHeader(x => x.Name).SetEditType(EditTypeEnum.TextBox),
+                 this.MakeGridHeader(x => x.Sex).SetEditType(EditTypeEnum.ComboBox, typeof(SexEnum).ToListItems(pleaseSelect:true)),
                 this.MakeGridHeader(x => x.Age).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x => x.Sex).SetEditType(EditTypeEnum.ComboBox, typeof(SexEnum).ToListItems(pleaseSelect:true)),
                 this.MakeGridHeaderAction(width: 200)
             };
         }

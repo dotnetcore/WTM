@@ -530,13 +530,8 @@ window.ff = {
                 data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
                 var re = /(<input .*?)\s*\/>/ig;
                 var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
-                var r = "";
-                while (r = re.exec(data[val])) {
-                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />";
-                }
-                while (r = re2.exec(data[val])) {
-                    data[val] = r[1] + " onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >" + r[2];
-                }
+                data[val]=data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
+                data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
             }
         }
         loaddata.push(data);
