@@ -1,9 +1,0 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.ShipperInfoVMs.ShipperInfoListVM
-
-<wt:searchpanel vm="@Model" reset-btn="true">
-<wt:row items-per-row="ItemsPerRowEnum.Three">
-<wt:textbox field="Searcher.shipper_code" />
-<wt:textbox field="Searcher.shipper_name" />
-</wt:row>
-</wt:searchpanel>
-<wt:grid vm="@Model" />

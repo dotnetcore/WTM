@@ -1,0 +1,10 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.MajorCode" />
+<wt:textbox field="Searcher.MajorName" />
+<wt:combobox field="Searcher.SchoolId" items="Searcher.AllSchools" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />
