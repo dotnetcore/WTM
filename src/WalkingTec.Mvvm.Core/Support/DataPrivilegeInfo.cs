@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -15,7 +16,7 @@ namespace WalkingTec.Mvvm.Core
         //数据权限名称
         string PrivillegeName { get; set; }
         //获取数据权限的下拉菜单
-        List<ComboSelectListItem> GetItemList(IDataContext dc, List<DataPrivilege> dps);
+        List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user);
     }
 
     /// <summary>
@@ -47,10 +48,17 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="dc">dc</param>
         /// <param name="dps">数据权限</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
-        public List<ComboSelectListItem> GetItemList(IDataContext dc, List<DataPrivilege> dps)
+        public List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user)
         {
             List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            rv = dc.Set<T>().GetSelectListItems(dps,_where, _displayField, null, ignorDataPrivilege: true);
+            if (user.Roles.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges.Where(x=>x.RelateId == null).FirstOrDefault() == null)
+            {
+                rv = dc.Set<T>().Where(x=>user.DataPrivileges.Select(y=>y.RelateId).Contains(x.ID)).GetSelectListItems(null, _where, _displayField, null, ignorDataPrivilege: true);
+            }
+            else
+            {
+                rv = dc.Set<T>().GetSelectListItems(null, _where, _displayField, null, ignorDataPrivilege: true);
+            }
             return rv;
         }
     }

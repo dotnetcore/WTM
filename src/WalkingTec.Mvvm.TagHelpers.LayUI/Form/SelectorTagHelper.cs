@@ -104,6 +104,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 listVM.Ids = list;
                 listVM.NeedPage = false;
                 listVM.IsSearched = false;
+                listVM.ClearEntityList();
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
                 var entityList = listVM.GetEntityList().ToList();
                 foreach (var item in entityList)

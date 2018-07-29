@@ -1,0 +1,9 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.LoginName" />
+<wt:textbox field="Searcher.Name" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" />

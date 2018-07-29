@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == Entity.TableName).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, null);
+                AllItems = dps.GetItemList(DC, LoginUserInfo);
             }
             SelectedItemsID = new List<Guid?>();
             List<Guid?> rids = null;
@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == Entity.TableName).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, null);
+                AllItems = dps.GetItemList(DC, LoginUserInfo);
             }
         }
 
