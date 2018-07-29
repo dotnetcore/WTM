@@ -50,6 +50,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>Model集合</returns>
         IEnumerable<T> GetEntityList();
 
+        void ClearEntityList();
         /// <summary>
         /// 获取Searcher
         /// </summary>

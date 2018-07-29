@@ -244,6 +244,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string CheckedFunc { get; set; }
 
+        public string PanelTitle { get; set; }
+
         #region 需要修改
         // TODO 需要修改
         /// <summary>
@@ -756,7 +758,7 @@ var {Id}option = {{
                 output.PreElement.AppendHtml($@"
 <div class=""layui-collapse"" >
   <div class=""layui-colla-item"">
-    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"">数据列表
+    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"">{PanelTitle ?? "数据列表"}
       <!-- 数据列表按钮组 -->
       <div style=""text-align:right;margin-top:-43px;"">{toolBarBtnStrBuilder}</div>
     </h2>

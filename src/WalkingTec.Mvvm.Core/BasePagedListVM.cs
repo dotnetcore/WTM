@@ -812,6 +812,11 @@ namespace WalkingTec.Mvvm.Core
             return typeof(TModel).GetConstructor(Type.EmptyTypes).Invoke(null) as TModel;
         }
 
+        public void ClearEntityList()
+        {
+            EntityList?.Clear();
+        }
+
         public string DetailGridPrix {get;set;}
 
         #endregion

@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, null);
+                AllItems = dps.GetItemList(DC, LoginUserInfo);
             }
             return Json(AllItems);
         }

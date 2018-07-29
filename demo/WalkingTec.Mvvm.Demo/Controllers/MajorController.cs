@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.MajorVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("专业管理")]
+    [ActionDescription("专业管理（一对多）")]
     public class MajorController : BaseController
     {
         #region 搜索

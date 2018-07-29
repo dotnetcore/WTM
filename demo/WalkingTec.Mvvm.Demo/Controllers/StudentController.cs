@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("学校管理（单表）")]
-    public class SchoolController : BaseController
+    [ActionDescription("学生管理（多对多）")]
+    public class StudentController : BaseController
     {
         #region 搜索
         [ActionDescription("搜索")]
         public ActionResult Index()
         {
-            var vm = CreateVM<SchoolListVM>();
+            var vm = CreateVM<StudentListVM>();
             return PartialView(vm);
         }
         #endregion
@@ -24,13 +24,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("新建")]
         public ActionResult Create()
         {
-            var vm = CreateVM<SchoolVM>();
+            var vm = CreateVM<StudentVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("新建")]
-        public ActionResult Create(SchoolVM vm)
+        public ActionResult Create(StudentVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -56,13 +56,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         public ActionResult Edit(Guid id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
 
         [ActionDescription("修改")]
         [HttpPost]
-        public ActionResult Edit(SchoolVM vm)
+        public ActionResult Edit(StudentVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("删除")]
         public ActionResult Delete(Guid id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
 
@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(Guid id, IFormCollection nouse)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = CreateVM<StudentVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("详细")]
         public ActionResult Details(Guid id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -123,13 +123,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量修改")]
         public ActionResult BatchEdit(Guid[] IDs)
         {
-            var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
+            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchEdit(StudentBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
@@ -147,13 +147,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量删除")]
         public ActionResult BatchDelete(Guid[] IDs)
         {
-            var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
+            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchDelete(StudentBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -170,13 +170,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("导入")]
         public ActionResult Import()
         {
-            var vm = CreateVM<SchoolImportVM>();
+            var vm = CreateVM<StudentImportVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("导入")]
-        public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
+        public ActionResult Import(StudentImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
