@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -469,5 +472,81 @@ namespace WalkingTec.Mvvm.Core
             }
             return menu;
         }
+
+        #region 执行存储过程返回datatable
+        /// <summary>
+        /// 执行存储过程，返回datatable结果集
+        /// </summary>
+        /// <param name="command">存储过程名称</param>
+        /// <param name="paras">存储过程参数</param>
+        /// <returns></returns>
+        public DataTable RunSP(string command, params object[] paras)
+        {
+            return Run(command, CommandType.StoredProcedure, paras);
+        }
+        #endregion
+
+        #region 执行Sql语句，返回datatable
+        public DataTable RunSQL(string sql, params object[] paras)
+        {
+            return Run(sql, CommandType.Text, paras);
+        }
+        #endregion
+
+        #region 执行存储过程或Sql语句返回DataTable
+        /// <summary>
+        /// 执行存储过程或Sql语句返回DataTable
+        /// </summary>
+        /// <param name="sql">存储过程名称或Sql语句</param>
+        /// <param name="commandType">命令类型</param>
+        /// <param name="paras">参数</param>
+        /// <returns></returns>
+        private DataTable Run(string sql, CommandType commandType, params object[] paras)
+        {
+            DataTable table = new DataTable();
+            switch (this.DBType)
+            {
+                case DBTypeEnum.SqlServer:
+                    SqlConnection con = this.Database.GetDbConnection() as SqlConnection;
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    using (SqlCommand cmd = new SqlCommand(sql, con))
+                    {
+                        adapter.SelectCommand = cmd;
+                        cmd.CommandTimeout = 2400;
+                        cmd.CommandType = commandType;
+                        if (paras != null)
+                        {
+                            foreach (var param in paras)
+                                cmd.Parameters.Add(param);
+                        }
+                        adapter.Fill(table);
+                        adapter.SelectCommand.Parameters.Clear();
+                    }
+                    break;
+                case DBTypeEnum.MySql:
+                    MySqlConnection mySqlCon = this.Database.GetDbConnection() as MySqlConnection;
+                    using (MySqlCommand cmd = new MySqlCommand(sql, mySqlCon))
+                    {
+                        if (mySqlCon.State == ConnectionState.Closed)
+                        {
+                            mySqlCon.Open();
+                        }
+                        cmd.CommandTimeout = 2400;
+                        cmd.CommandType = commandType;
+                        if (paras != null)
+                        {
+                            foreach (var param in paras)
+                                cmd.Parameters.Add(param);
+                        }
+                        MySqlDataReader dr = cmd.ExecuteReader();
+                        table.Load(dr);
+                        dr.Close();
+                        mySqlCon.Close();
+                    }
+                    break;
+            }
+            return table;
+        }
+        #endregion
     }
 }

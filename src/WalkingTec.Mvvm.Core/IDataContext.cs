@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -109,6 +110,22 @@ namespace WalkingTec.Mvvm.Core
 
         IDataContext CreateNew();
         IDataContext ReCreate();
+
+        /// <summary>
+        /// 执行存储过程，返回datatable
+        /// </summary>
+        /// <param name="command">存储过程名称</param>
+        /// <param name="paras">参数</param>
+        /// <returns></returns>
+        DataTable RunSP(string command, params object[] paras);
+
+        /// <summary>
+        /// 执行sql语句，返回datatable
+        /// </summary>
+        /// <param name="command">查询sql语句</param>
+        /// <param name="paras">参数</param>
+        /// <returns></returns>
+        DataTable RunSQL(string command, params object[] paras);
 
     }
 }
