@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 //searcher.DoReInit();
                             }
                         }
-                        temp.LinkedVM.DoInit();
+                        temp.LinkedVM?.DoInit();
                     }
                     if (model is IBaseImport<BaseTemplateVM>)
                     {
