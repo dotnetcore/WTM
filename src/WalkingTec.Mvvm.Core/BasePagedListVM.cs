@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -40,6 +44,16 @@ namespace WalkingTec.Mvvm.Core
         where TModel : TopBasePoco
         where TSearcher : BaseSearcher
     {
+
+        public DataTable EntityDataTable { get; set; }
+
+        public virtual DbCommand GetSearchCommand()
+        {
+            return null;
+        }
+
+        private bool HeaderOnly;
+
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
@@ -100,7 +114,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         protected virtual IEnumerable<IGridColumn<TModel>> InitGridHeader()
         {
-            return new List<IGridColumn<TModel>>();
+            List<IGridColumn<TModel>> rv = new List<IGridColumn<TModel>>();
+            var cmd = GetSearchCommand();
+            if(cmd != null)
+            {
+                var temp = RecordsPerPage;
+                RecordsPerPage = 1;
+                IsSearched = false;
+                DoSearch();
+                IsSearched = false;
+                RecordsPerPage = temp;
+                for (int i = 0; i < EntityDataTable.Columns.Count; i++)
+                {
+                    var col = EntityDataTable.Columns[i];
+                    rv.Add(new GridColumn<TModel>() { Title = col.ColumnName });
+                }
+            }
+            return rv;
         }
         protected virtual List<GridAction> InitGridAction()
         {
@@ -559,95 +589,174 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public virtual void DoSearch()
         {
-            IOrderedQueryable<TModel> query = null;
-            //根据搜索模式调用不同的函数
-            switch (SearcherMode)
+            var cmd = GetSearchCommand();
+            if (cmd == null)
             {
-                case ListVMSearchModeEnum.Search:
-                    query = GetSearchQuery();
-                    break;
-                case ListVMSearchModeEnum.Export:
-                    query = GetExportQuery();
-                    break;
-                case ListVMSearchModeEnum.Batch:
-                    query = GetBatchQuery();
-                    break;
-                case ListVMSearchModeEnum.MasterDetail:
-                    query = GetMasterDetailsQuery();
-                    break;
-                case ListVMSearchModeEnum.CheckExport:
-                    query = GetCheckedExportQuery();
-                    break;
-                case ListVMSearchModeEnum.Selector:
-                    query = GetSelectorQuery();
-                    break;
-                default:
-                    query = GetSearchQuery();
-                    break;
-            }
-
-            //如果设定了替换条件，则使用替换条件替换Query中的Where语句
-            if (ReplaceWhere != null)
-            {
-                var mod = new WhereReplaceModifier(ReplaceWhere);
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            }
-            if (string.IsNullOrEmpty(Searcher.SortInfo) == false)
-            {
-                var mod = new OrderReplaceModifier(Searcher.SortInfo);
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            }
-            if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
-            {
-                var mod = new IsValidModifier();
-                var newExp = mod.Modify(query.Expression);
-                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-            }
-            if (PassSearch == false)
-            {
-                //如果需要分页，则添加分页语句
-                if (NeedPage && Searcher.Limit != -1)
+                IOrderedQueryable<TModel> query = null;
+                //根据搜索模式调用不同的函数
+                switch (SearcherMode)
                 {
-                    //获取返回数据的数量
-                    var count = query.Count();
-                    if (count < 0)
+                    case ListVMSearchModeEnum.Search:
+                        query = GetSearchQuery();
+                        break;
+                    case ListVMSearchModeEnum.Export:
+                        query = GetExportQuery();
+                        break;
+                    case ListVMSearchModeEnum.Batch:
+                        query = GetBatchQuery();
+                        break;
+                    case ListVMSearchModeEnum.MasterDetail:
+                        query = GetMasterDetailsQuery();
+                        break;
+                    case ListVMSearchModeEnum.CheckExport:
+                        query = GetCheckedExportQuery();
+                        break;
+                    case ListVMSearchModeEnum.Selector:
+                        query = GetSelectorQuery();
+                        break;
+                    default:
+                        query = GetSearchQuery();
+                        break;
+                }
+
+                //如果设定了替换条件，则使用替换条件替换Query中的Where语句
+                if (ReplaceWhere != null)
+                {
+                    var mod = new WhereReplaceModifier(ReplaceWhere);
+                    var newExp = mod.Modify(query.Expression);
+                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                }
+                if (string.IsNullOrEmpty(Searcher.SortInfo) == false)
+                {
+                    var mod = new OrderReplaceModifier(Searcher.SortInfo);
+                    var newExp = mod.Modify(query.Expression);
+                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                }
+                if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
+                {
+                    var mod = new IsValidModifier();
+                    var newExp = mod.Modify(query.Expression);
+                    query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+                }
+                if (PassSearch == false)
+                {
+                    //如果需要分页，则添加分页语句
+                    if (NeedPage && Searcher.Limit != -1)
                     {
-                        count = 0;
+                        //获取返回数据的数量
+                        var count = query.Count();
+                        if (count < 0)
+                        {
+                            count = 0;
+                        }
+                        if (Searcher.Limit == 0)
+                        {
+                            Searcher.Limit = ConfigInfo.RPP;
+                        }
+                        //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
+                        Searcher.Count = count;
+                        Searcher.PageCount = (int)Math.Ceiling((1.0 * Searcher.Count / Searcher.Limit));
+                        if (Searcher.Page <= 0)
+                        {
+                            Searcher.Page = 1;
+                        }
+                        if (Searcher.PageCount > 0 && Searcher.Page > Searcher.PageCount)
+                        {
+                            Searcher.Page = Searcher.PageCount;
+                        }
+                        EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                     }
-                    if (Searcher.Limit == 0)
+                    else //如果不需要分页则直接获取数据
                     {
-                        Searcher.Limit = ConfigInfo.RPP;
-                    }
-                    //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
-                    Searcher.Count = count;
-                    Searcher.PageCount = (int)Math.Ceiling((1.0 * Searcher.Count / Searcher.Limit));
-                    if (Searcher.Page <= 0)
-                    {
+                        EntityList = query.AsNoTracking().ToList();
+                        Searcher.Count = EntityList.Count();
+                        Searcher.Limit = EntityList.Count();
                         Searcher.Page = 1;
                     }
-                    if (Searcher.PageCount > 0 && Searcher.Page > Searcher.PageCount)
-                    {
-                        Searcher.Page = Searcher.PageCount;
-                    }
-                    EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                 }
-                else //如果不需要分页则直接获取数据
+                else
                 {
                     EntityList = query.AsNoTracking().ToList();
-                    Searcher.Count = EntityList.Count();
-                    Searcher.Limit = EntityList.Count();
-                    Searcher.Page = 1;
                 }
             }
             else
             {
-                EntityList = query.AsNoTracking().ToList();
+                ProcessCommand(cmd);
             }
             IsSearched = true;
             //调用AfterDoSearch函数来处理自定义的后续操作
             AfterDoSearcher();
+        }
+
+
+        private void ProcessCommand(DbCommand cmd)
+        {
+            object total;
+            if (DC.Database.IsMySql())
+            {
+                List<MySqlParameter> parms = new List<MySqlParameter>();
+                foreach (MySqlParameter item in cmd.Parameters)
+                {
+                    parms.Add(new MySqlParameter(string.Format("@{0}", item.ParameterName), item.Value));
+                }
+
+                parms.Add(new MySqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
+                parms.Add(new MySqlParameter("@NeedPage", (NeedPage && RecordsPerPage != -1)));
+                parms.Add(new MySqlParameter("@CurrentPage", Searcher.Page));
+                parms.Add(new MySqlParameter("@RecordsPerPage", RecordsPerPage));
+                parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+                parms.Add(new MySqlParameter("@HeaderOnly", HeaderOnly));
+
+                MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64);
+                outp.Value = 0;
+                outp.Direction = System.Data.ParameterDirection.Output;
+                parms.Add(outp);
+
+                var pa = parms.ToArray();
+
+                EntityDataTable = DC.RunSP(cmd.CommandText, pa);
+                total = outp.Value;
+            }
+            else
+            {
+                List<SqlParameter> parms = new List<SqlParameter>();
+                foreach (SqlParameter item in cmd.Parameters)
+                {
+                    parms.Add(new SqlParameter(string.Format("@{0}", item.ParameterName), item.Value));
+                }
+
+                parms.Add(new SqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
+                parms.Add(new SqlParameter("@NeedPage", (NeedPage && RecordsPerPage != -1)));
+                parms.Add(new SqlParameter("@CurrentPage", Searcher.Page));
+                parms.Add(new SqlParameter("@RecordsPerPage", RecordsPerPage));
+                parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+                parms.Add(new SqlParameter("@HeaderOnly", HeaderOnly));
+
+                SqlParameter outp = new SqlParameter("@TotalRecords", 0);
+                outp.Direction = System.Data.ParameterDirection.Output;
+                parms.Add(outp);
+                var pa = parms.ToArray();
+
+                EntityDataTable = DC.RunSP(cmd.CommandText, pa);
+                total = outp.Value;
+
+            }
+            if (NeedPage && RecordsPerPage != -1){
+                if (total != null)
+                {
+                    try
+                    {
+                        Searcher.Count = (long)total;
+                        Searcher.PageCount = (int)((Searcher.Count - 1) / RecordsPerPage + 1);
+                    }
+                    catch { }
+                }
+            }
+            else
+            {
+                Searcher.PageCount = EntityDataTable.Rows.Count;
+            }
+    
         }
 
         public DateTime AddTime(DateTime dt, string type, int size)
