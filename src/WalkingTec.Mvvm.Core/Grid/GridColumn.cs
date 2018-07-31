@@ -217,15 +217,21 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+
+        private Type _fieldType;
         /// <summary>
         /// 获取值域类型
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>       
         public Type FieldType
         {
             get
             {
-                return PI?.PropertyType;
+                return _fieldType ?? PI?.PropertyType;
+            }
+            set
+            {
+                _fieldType = value;
             }
         }
 

@@ -7,6 +7,15 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
 {
+
+    public enum MajorTypeEnum
+    {
+        [Display(Name = "必修")]
+        Required,
+        [Display(Name = "选修")]
+        Optional
+    }
+
     public class Major : BasePoco
     {
         [Display(Name = "专业编码")]
@@ -19,6 +28,10 @@ namespace WalkingTec.Mvvm.Demo.Models
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
         public string MajorName { get; set; }
+
+        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "专业类别")]
+        public MajorTypeEnum? MajorType { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }

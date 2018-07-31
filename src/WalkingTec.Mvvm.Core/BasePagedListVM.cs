@@ -114,20 +114,20 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         protected virtual IEnumerable<IGridColumn<TModel>> InitGridHeader()
         {
-            List<IGridColumn<TModel>> rv = new List<IGridColumn<TModel>>();
+            List<GridColumn<TModel>> rv = new List<GridColumn<TModel>>();
             var cmd = GetSearchCommand();
             if(cmd != null)
             {
-                var temp = RecordsPerPage;
-                RecordsPerPage = 1;
+                var temp = Searcher.Limit;
+                Searcher.Limit = 0;
                 IsSearched = false;
                 DoSearch();
                 IsSearched = false;
-                RecordsPerPage = temp;
+                Searcher.Limit = temp;
                 for (int i = 0; i < EntityDataTable.Columns.Count; i++)
                 {
                     var col = EntityDataTable.Columns[i];
-                    rv.Add(new GridColumn<TModel>() { Title = col.ColumnName });
+                    rv.Add(new GridColumn<TModel>() { Title = col.ColumnName, FieldType = col.DataType , Field = col.ColumnName, Align = GridColumnAlignEnum.Left});
                 }
             }
             return rv;
@@ -148,157 +148,244 @@ namespace WalkingTec.Mvvm.Core
             NeedPage = false;
             if (IsSearched == false)
             {
+                GetHeaders();
                 DoSearch();
             }
-
-            //准备好sheet，每6万行生成一个sheet
-            var sheetno = ((EntityList.Count - 1) / 60000) + 1;
             HSSFWorkbook workbook = new HSSFWorkbook();
             List<HSSFSheet> sheets = new List<NPOI.HSSF.UserModel.HSSFSheet>();
-
-            var headerStyle = workbook.CreateCellStyle();
-            //设定单元格边框
-            headerStyle.BorderBottom = BorderStyle.Thin;
-            headerStyle.BorderLeft = BorderStyle.Thin;
-            headerStyle.BorderRight = BorderStyle.Thin;
-            headerStyle.BorderTop = BorderStyle.Thin;
-            //用灰色填充背景
-            var headerbg = HSSFColor.Grey25Percent.Index;
-            headerStyle.FillForegroundColor = headerbg;
-            headerStyle.FillPattern = FillPattern.SolidForeground;
-            headerStyle.FillBackgroundColor = headerbg;
-            //去掉 Id 列和动作列
-            RemoveActionAndIdColumn();
-            //循环生成所有sheet，并为每个sheet添加表头
-            var headerrows = 0;
-            for (int i = 1; i <= sheetno; i++)
+            if (EntityDataTable != null)
             {
-                HSSFSheet sheet = workbook.CreateSheet("Sheet" + i) as HSSFSheet;
-                //生成表头
-                headerrows = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
-                sheets.Add(sheet);
-            }
+                //准备好sheet，每6万行生成一个sheet
+                var sheetno = ((EntityDataTable.Rows.Count - 1) / 60000) + 1;
 
-            var rowIndex = headerrows;
-            var colIndex = 0;
-
-            //Excel中用到的style，每种前景色和背景色的组合为一个style。Nopi值支持4000个style，所以同样的style要重复使用
-            Dictionary<string, ICellStyle> styles = new Dictionary<string, ICellStyle>();
-            //Excel中用到的font，主要是为了更改字体颜色
-            Dictionary<string, IFont> fonts = new Dictionary<string, IFont>();
-            //循环数据
-            foreach (var row in EntityList)
-            {
-                var sheetindex = ((rowIndex - headerrows) / 60000);
-                colIndex = 0;
-                string bgColor = "";
-                string fColor = "";
-                //获取设定的行背景色
-                bgColor = SetFullRowBgColor(row);
-                //获取设定的行前景色
-                fColor = SetFullRowColor(row);
-                var dr = sheets[sheetindex].CreateRow(rowIndex - sheetindex * 60000) as HSSFRow;
-                foreach (var baseCol in GridHeaders)
+                var headerStyle = workbook.CreateCellStyle();
+                //设定单元格边框
+                headerStyle.BorderBottom = BorderStyle.Thin;
+                headerStyle.BorderLeft = BorderStyle.Thin;
+                headerStyle.BorderRight = BorderStyle.Thin;
+                headerStyle.BorderTop = BorderStyle.Thin;
+                //用灰色填充背景
+                var headerbg = HSSFColor.Grey25Percent.Index;
+                headerStyle.FillForegroundColor = headerbg;
+                headerStyle.FillPattern = FillPattern.SolidForeground;
+                headerStyle.FillBackgroundColor = headerbg;
+                //去掉 Id 列和动作列
+                RemoveActionAndIdColumn();
+                //循环生成所有sheet，并为每个sheet添加表头
+                var headerrows = 0;
+                for (int i = 1; i <= sheetno; i++)
                 {
-                    //处理枚举变量的多语言 
-                    bool IsEmunBoolParp = false;
-                    var proType = baseCol.FieldType;
-                    if (proType.IsEnumOrNullableEnum())
+                    HSSFSheet sheet = workbook.CreateSheet("Sheet" + i) as HSSFSheet;
+                    //生成表头
+                    headerrows = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
+                    sheets.Add(sheet);
+                }
+
+                var rowIndex = headerrows;
+                var colIndex = 0;
+
+                //Excel中用到的style，每种前景色和背景色的组合为一个style。Nopi值支持4000个style，所以同样的style要重复使用
+                Dictionary<string, ICellStyle> styles = new Dictionary<string, ICellStyle>();
+                //Excel中用到的font，主要是为了更改字体颜色
+                Dictionary<string, IFont> fonts = new Dictionary<string, IFont>();
+                //循环数据
+                foreach (DataRow row in EntityDataTable.Rows)
+                {
+                    var sheetindex = ((rowIndex - headerrows) / 60000);
+                    colIndex = 0;
+                    var dr = sheets[sheetindex].CreateRow(rowIndex - sheetindex * 60000) as HSSFRow;
+                    foreach (var baseCol in GridHeaders)
                     {
-                        IsEmunBoolParp = true;
+
+                        foreach (var col in baseCol.BottomChildren)
+                        {
+
+                            //获取数据，并过滤特殊字符
+                            string text = Regex.Replace(row[col.Title].ToString(), @"<[^>]*>", String.Empty);
+
+
+                            //建立excel单元格
+                            var cell = dr.CreateCell(colIndex);
+                            ICellStyle style = null;
+                            IFont font = null;
+                            var styleKey = string.Empty;
+                            //如果已经有符合条件的style，则使用
+                            if (styles.ContainsKey(styleKey))
+                            {
+                                style = styles[styleKey];
+                            }
+                            //如果没有，则新建一个style
+                            else
+                            {
+                                var newKey = "";
+                                var newFontKey = "";
+                                //新建style
+                                style = workbook.CreateCellStyle();
+                                //设定单元格边框
+                                style.BorderBottom = BorderStyle.Thin;
+                                style.BorderLeft = BorderStyle.Thin;
+                                style.BorderRight = BorderStyle.Thin;
+                                style.BorderTop = BorderStyle.Thin;
+                                //如果行前景色或单元格前景色有值，则设定单元格的填充颜色
+                                //将新建的style添加到集合中
+                                styles.Add(newKey, style);
+                            }
+                            cell.CellStyle = style;
+                            cell.SetCellValue(text);
+                            colIndex++;
+                        }
                     }
+                    rowIndex++;
+                }
+            }
+            else
+            {
+                //准备好sheet，每6万行生成一个sheet
+                var sheetno = ((EntityList.Count - 1) / 60000) + 1;
+                var headerStyle = workbook.CreateCellStyle();
+                //设定单元格边框
+                headerStyle.BorderBottom = BorderStyle.Thin;
+                headerStyle.BorderLeft = BorderStyle.Thin;
+                headerStyle.BorderRight = BorderStyle.Thin;
+                headerStyle.BorderTop = BorderStyle.Thin;
+                //用灰色填充背景
+                var headerbg = HSSFColor.Grey25Percent.Index;
+                headerStyle.FillForegroundColor = headerbg;
+                headerStyle.FillPattern = FillPattern.SolidForeground;
+                headerStyle.FillBackgroundColor = headerbg;
+                //去掉 Id 列和动作列
+                RemoveActionAndIdColumn();
+                //循环生成所有sheet，并为每个sheet添加表头
+                var headerrows = 0;
+                for (int i = 1; i <= sheetno; i++)
+                {
+                    HSSFSheet sheet = workbook.CreateSheet("Sheet" + i) as HSSFSheet;
+                    //生成表头
+                    headerrows = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
+                    sheets.Add(sheet);
+                }
 
-                    foreach (var col in baseCol.BottomChildren)
+                var rowIndex = headerrows;
+                var colIndex = 0;
+
+                //Excel中用到的style，每种前景色和背景色的组合为一个style。Nopi值支持4000个style，所以同样的style要重复使用
+                Dictionary<string, ICellStyle> styles = new Dictionary<string, ICellStyle>();
+                //Excel中用到的font，主要是为了更改字体颜色
+                Dictionary<string, IFont> fonts = new Dictionary<string, IFont>();
+                //循环数据
+                foreach (var row in EntityList)
+                {
+                    var sheetindex = ((rowIndex - headerrows) / 60000);
+                    colIndex = 0;
+                    string bgColor = "";
+                    string fColor = "";
+                    //获取设定的行背景色
+                    bgColor = SetFullRowBgColor(row);
+                    //获取设定的行前景色
+                    fColor = SetFullRowColor(row);
+                    var dr = sheets[sheetindex].CreateRow(rowIndex - sheetindex * 60000) as HSSFRow;
+                    foreach (var baseCol in GridHeaders)
                     {
-
-                        //获取数据，并过滤特殊字符
-                        string text = Regex.Replace(col.GetText(row).ToString(), @"<[^>]*>", String.Empty);
-
                         //处理枚举变量的多语言 
-
-                        if (IsEmunBoolParp)
+                        bool IsEmunBoolParp = false;
+                        var proType = baseCol.FieldType;
+                        if (proType.IsEnumOrNullableEnum())
                         {
-                            text = PropertyHelper.GetEnumDisplayName(proType, text);
+                            IsEmunBoolParp = true;
                         }
 
+                        foreach (var col in baseCol.BottomChildren)
+                        {
 
-                        //建立excel单元格
-                        var cell = dr.CreateCell(colIndex);
-                        ICellStyle style = null;
-                        IFont font = null;
-                        var styleKey = string.Empty;
-                        //获取设定的单元格背景色
-                        string backColor = col.GetBackGroundColor(row);
-                        //获取设定的单元格前景色
-                        string foreColor = col.GetForeGroundColor(row);
-                        //如果行背景色或单元格背景色有值，则用颜色的ARGB的值作为style的key
-                        if (bgColor != "" || backColor != "")
-                        {
-                            styleKey = backColor == "" ? bgColor : backColor;
-                        }
-                        //如果行前景色或单元格前景色有值，则用颜色的ARGB加上背景色的ARGB作为style的key
-                        if (fColor != "" || foreColor != "")
-                        {
-                            styleKey += foreColor == "" ? foreColor : fColor;
-                        }
-                        //如果已经有符合条件的style，则使用
-                        if (styles.ContainsKey(styleKey))
-                        {
-                            style = styles[styleKey];
-                        }
-                        //如果没有，则新建一个style
-                        else
-                        {
-                            var newKey = "";
-                            var newFontKey = "";
-                            //新建style
-                            style = workbook.CreateCellStyle();
-                            //设定单元格边框
-                            style.BorderBottom = BorderStyle.Thin;
-                            style.BorderLeft = BorderStyle.Thin;
-                            style.BorderRight = BorderStyle.Thin;
-                            style.BorderTop = BorderStyle.Thin;
-                            //如果行前景色或单元格前景色有值，则设定单元格的填充颜色
+                            //获取数据，并过滤特殊字符
+                            string text = Regex.Replace(col.GetText(row).ToString(), @"<[^>]*>", String.Empty);
+
+                            //处理枚举变量的多语言 
+
+                            if (IsEmunBoolParp)
+                            {
+                                text = PropertyHelper.GetEnumDisplayName(proType, text);
+                            }
+
+
+                            //建立excel单元格
+                            var cell = dr.CreateCell(colIndex);
+                            ICellStyle style = null;
+                            IFont font = null;
+                            var styleKey = string.Empty;
+                            //获取设定的单元格背景色
+                            string backColor = col.GetBackGroundColor(row);
+                            //获取设定的单元格前景色
+                            string foreColor = col.GetForeGroundColor(row);
+                            //如果行背景色或单元格背景色有值，则用颜色的ARGB的值作为style的key
                             if (bgColor != "" || backColor != "")
                             {
-                                newKey = backColor == "" ? bgColor : backColor;
-                                var ci = Utils.GetExcelColor(backColor == "" ? bgColor : backColor);
-                                style.FillForegroundColor = ci;
-                                style.FillPattern = FillPattern.SolidForeground;
-                                style.FillBackgroundColor = ci;
+                                styleKey = backColor == "" ? bgColor : backColor;
                             }
-                            //如果行前景色或单元格前景色有值，则设定单元格的字体的颜色
+                            //如果行前景色或单元格前景色有值，则用颜色的ARGB加上背景色的ARGB作为style的key
                             if (fColor != "" || foreColor != "")
                             {
-                                newFontKey = foreColor == "" ? foreColor : fColor;
-                                newKey += foreColor == "" ? foreColor : fColor;
-                                //如果已经有符合条件的字体，则使用
-                                if (fonts.ContainsKey(newFontKey))
-                                {
-                                    font = fonts[newFontKey];
-                                }
-                                //如果没有，则新建
-                                else
-                                {
-                                    //新建字体
-                                    font = workbook.CreateFont();
-                                    //设定字体颜色
-                                    font.Color = Utils.GetExcelColor(foreColor == "" ? fColor : foreColor);
-                                    //向集合中添加新字体
-                                    fonts.Add(newFontKey, font);
-                                }
-                                //设定style中的字体
-                                style.SetFont(font);
+                                styleKey += foreColor == "" ? foreColor : fColor;
                             }
-                            //将新建的style添加到集合中
-                            styles.Add(newKey, style);
+                            //如果已经有符合条件的style，则使用
+                            if (styles.ContainsKey(styleKey))
+                            {
+                                style = styles[styleKey];
+                            }
+                            //如果没有，则新建一个style
+                            else
+                            {
+                                var newKey = "";
+                                var newFontKey = "";
+                                //新建style
+                                style = workbook.CreateCellStyle();
+                                //设定单元格边框
+                                style.BorderBottom = BorderStyle.Thin;
+                                style.BorderLeft = BorderStyle.Thin;
+                                style.BorderRight = BorderStyle.Thin;
+                                style.BorderTop = BorderStyle.Thin;
+                                //如果行前景色或单元格前景色有值，则设定单元格的填充颜色
+                                if (bgColor != "" || backColor != "")
+                                {
+                                    newKey = backColor == "" ? bgColor : backColor;
+                                    var ci = Utils.GetExcelColor(backColor == "" ? bgColor : backColor);
+                                    style.FillForegroundColor = ci;
+                                    style.FillPattern = FillPattern.SolidForeground;
+                                    style.FillBackgroundColor = ci;
+                                }
+                                //如果行前景色或单元格前景色有值，则设定单元格的字体的颜色
+                                if (fColor != "" || foreColor != "")
+                                {
+                                    newFontKey = foreColor == "" ? foreColor : fColor;
+                                    newKey += foreColor == "" ? foreColor : fColor;
+                                    //如果已经有符合条件的字体，则使用
+                                    if (fonts.ContainsKey(newFontKey))
+                                    {
+                                        font = fonts[newFontKey];
+                                    }
+                                    //如果没有，则新建
+                                    else
+                                    {
+                                        //新建字体
+                                        font = workbook.CreateFont();
+                                        //设定字体颜色
+                                        font.Color = Utils.GetExcelColor(foreColor == "" ? fColor : foreColor);
+                                        //向集合中添加新字体
+                                        fonts.Add(newFontKey, font);
+                                    }
+                                    //设定style中的字体
+                                    style.SetFont(font);
+                                }
+                                //将新建的style添加到集合中
+                                styles.Add(newKey, style);
+                            }
+                            cell.CellStyle = style;
+                            cell.SetCellValue(text);
+                            colIndex++;
                         }
-                        cell.CellStyle = style;
-                        cell.SetCellValue(text);
-                        colIndex++;
                     }
+                    rowIndex++;
                 }
-                rowIndex++;
             }
             //获取Excel文件的二进制数据
             byte[] rv = new byte[] { };
@@ -701,11 +788,10 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 parms.Add(new MySqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
-                parms.Add(new MySqlParameter("@NeedPage", (NeedPage && RecordsPerPage != -1)));
+                parms.Add(new MySqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
                 parms.Add(new MySqlParameter("@CurrentPage", Searcher.Page));
-                parms.Add(new MySqlParameter("@RecordsPerPage", RecordsPerPage));
+                parms.Add(new MySqlParameter("@RecordsPerPage", Searcher.Limit));
                 parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
-                parms.Add(new MySqlParameter("@HeaderOnly", HeaderOnly));
 
                 MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64);
                 outp.Value = 0;
@@ -726,11 +812,10 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 parms.Add(new SqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
-                parms.Add(new SqlParameter("@NeedPage", (NeedPage && RecordsPerPage != -1)));
+                parms.Add(new SqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
                 parms.Add(new SqlParameter("@CurrentPage", Searcher.Page));
-                parms.Add(new SqlParameter("@RecordsPerPage", RecordsPerPage));
+                parms.Add(new SqlParameter("@RecordsPerPage", Searcher.Limit));
                 parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
-                parms.Add(new SqlParameter("@HeaderOnly", HeaderOnly));
 
                 SqlParameter outp = new SqlParameter("@TotalRecords", 0);
                 outp.Direction = System.Data.ParameterDirection.Output;
@@ -741,13 +826,13 @@ namespace WalkingTec.Mvvm.Core
                 total = outp.Value;
 
             }
-            if (NeedPage && RecordsPerPage != -1){
+            if (NeedPage && Searcher.Limit != -1){
                 if (total != null)
                 {
                     try
                     {
                         Searcher.Count = (long)total;
-                        Searcher.PageCount = (int)((Searcher.Count - 1) / RecordsPerPage + 1);
+                        Searcher.PageCount = (int)((Searcher.Count - 1) / Searcher.Limit + 1);
                     }
                     catch { }
                 }
@@ -880,8 +965,9 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public void ProcessListError()
+        public void ProcessListError(List<TModel> Entities)
         {
+            EntityList = Entities;
             bool haserror = false;
             List<string> keys = new List<string>();
             if (string.IsNullOrEmpty(DetailGridPrix) == false) {

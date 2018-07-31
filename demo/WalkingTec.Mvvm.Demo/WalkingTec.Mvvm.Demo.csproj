@@ -22,5 +22,14 @@
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\School\Create2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\School\Edit2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
 </Project>
 

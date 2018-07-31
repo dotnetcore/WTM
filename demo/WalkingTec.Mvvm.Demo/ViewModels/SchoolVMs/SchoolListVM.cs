@@ -18,7 +18,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+                this.MakeAction("School","Create2","主子表新建","主子表新建", GridActionParameterTypesEnum.NoId, dialogWidth:800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+                this.MakeAction("School","Edit2","主子表修改","主子表修改", GridActionParameterTypesEnum.SingleId, dialogWidth:800).SetShowInRow(true).SetHideOnToolBar(true),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
@@ -35,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => x.Remark),
-                this.MakeGridHeaderAction(width: 200)
+                this.MakeGridHeaderAction(width: 500)
             };
         }
 

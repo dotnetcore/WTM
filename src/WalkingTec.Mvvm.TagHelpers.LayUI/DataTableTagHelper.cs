@@ -772,7 +772,9 @@ var {Id}option = {{
 
                 #endregion
             }
-
+            output.PostElement.AppendHtml($@"
+{ (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
+");
             base.Process(context, output);
         }
     }

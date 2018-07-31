@@ -423,7 +423,10 @@ namespace WalkingTec.Mvvm.Core
                                         {
                                             if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && setnames.Contains(itempro.Name))
                                             {
-                                                DC.UpdateProperty(i, itempro.Name);
+                                                if (itempro.Name != "ID")
+                                                {
+                                                    DC.UpdateProperty(i, itempro.Name);
+                                                }
                                             }
                                         }
 
