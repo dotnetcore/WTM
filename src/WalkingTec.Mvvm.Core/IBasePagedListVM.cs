@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -14,6 +16,8 @@ namespace WalkingTec.Mvvm.Core
         where T : TopBasePoco
         where S : ISearcher
     {
+        DataTable EntityDataTable { get; set; }
+
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>

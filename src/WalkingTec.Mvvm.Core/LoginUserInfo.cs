@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>true代表可以访问，false代表不能访问</returns>
         public bool IsAccessable(string url)
         {
-            url = Regex.Replace(url, "/dobatch(.*?)", "/batch$1");
+            url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
             var menus = GlobalData.AllMenus;
             var publicActions = GlobalData.AllAccessUrls;
 
