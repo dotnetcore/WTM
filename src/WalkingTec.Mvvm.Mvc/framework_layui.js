@@ -509,15 +509,18 @@ window.ff = {
      * RefreshGrid
      * @param {string} dialogid
      */
-    RefreshGrid: function (dialogid) {
+    RefreshGrid: function (dialogid, index) {
+        if (index == undefined) {
+            index = 0;
+        }
         var tables = $('#' + dialogid + ' table');
-        if (tables.length > 0) {
-            table.reload(tables[0].id);
+        if (tables.length > index) {
+            table.reload(tables[index].id);
         }
         else {
             var searchBtns = $('#' + dialogid + ' form a[class*=layui-btn]');
-            if (searchBtns.length > 0) {
-                searchBtns[0].click();
+            if (searchBtns.length > index) {
+                searchBtns[index].click();
             }
         }
     },
@@ -525,18 +528,23 @@ window.ff = {
     AddGridRow: function (gridid, option, data) {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
+            if (val == "ID") {
+                data[val] = ff.guid();
+            }
+        }
+        for (val in data) {
             if (typeof (data[val]) == 'string') {
-                if (val == "ID") {
-                    data[val] = ff.guid();
-                }
                 data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
                 var re = /(<input .*?)\s*\/>/ig;
                 var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
+                var re3 = /(.*?)<input hidden name=\"(.*?)\.id\" .*?\/>(.*?)/ig;
                 data[val]=data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
                 data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
+                data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\""+data["ID"]+"\"/> $3");
             }
         }
-        loaddata.push(data);
+        debugger;
+       loaddata.push(data);
         option.url = null;
         option.limit = 20;
         option.data = loaddata;
@@ -561,14 +569,14 @@ window.ff = {
     },
 
     gridcellchange: function (ele, gridid, row, col, celltype) {
+        debugger;
         var loaddata = layui.table.cache[gridid];
         if (celltype == 0) {
-            loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/ig, "value=\"" + ele.value + "\"");
+            loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/i, "value=\"" + ele.value + "\"");
         }
         if (celltype == 1) {
             loaddata[row][col] = loaddata[row][col].replace(/(<option .*?) selected\s*>/ig, "$1>");
             var re = new RegExp("(<option\\s*value\\s*=\\s*[\"']" + ele.value + "[\"'])\s*>", "ig");
-            debugger;
             loaddata[row][col] = loaddata[row][col].replace(re, "$1 selected>");
         }
 
