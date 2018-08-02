@@ -185,7 +185,6 @@ window.ff = {
     GetPostData: function (formid) {
         var datastr = $('#' + formid).serialize();
         var test = $('#' + formid).serializeArray();
-        debugger;
         var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
@@ -513,7 +512,7 @@ window.ff = {
         if (index == undefined) {
             index = 0;
         }
-        var tables = $('#' + dialogid + ' table');
+        var tables = $('#' + dialogid + ' table[id]');
         if (tables.length > index) {
             table.reload(tables[index].id);
         }
