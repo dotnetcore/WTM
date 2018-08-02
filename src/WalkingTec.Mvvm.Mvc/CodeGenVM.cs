@@ -510,17 +510,17 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 checktype = proType.GetGenericArguments()[0];
                             }
-                            if (checktype.IsPrimitive || checktype == typeof(string))
+                            if(checktype == typeof(bool) || checktype.IsEnum())
+                            {
+                                fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" />");
+                            }
+                            else if (checktype.IsPrimitive || checktype == typeof(string))
                             {
                                 fieldstr.Append($@"<wt:textbox field=""{pre}.{item.FieldName}"" />");
                             }
-                            if (checktype == typeof(DateTime))
+                            else if (checktype == typeof(DateTime))
                             {
                                 fieldstr.Append($@"<wt:datetime field=""{pre}.{item.FieldName}"" />");
-                            }
-                            if (checktype.IsEnum())
-                            {
-                                fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" />");
                             }
                         }
                     }

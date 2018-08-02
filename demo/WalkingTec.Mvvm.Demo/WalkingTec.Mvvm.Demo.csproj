@@ -30,6 +30,9 @@
     <Content Update="Views\School\Edit2.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Student\Index2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 </Project>
 

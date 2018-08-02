@@ -18,6 +18,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             var vm = CreateVM<StudentListVM>();
             return PartialView(vm);
         }
+        [ActionDescription("搜索（多列表）")]
+        public ActionResult Index2()
+        {
+            var vm = CreateVM<StudentSearchVM>();
+            vm.ValidList.Searcher.IsValid = true;
+            vm.InValidList.Searcher.IsValid = false;
+            return PartialView(vm);
+        }
         #endregion
 
         #region 新建
@@ -46,7 +54,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGrid();
+                    if (vm.Entity.IsValid == true)
+                    {
+                        return FFResult().CloseDialog().RefreshGrid(index:0);
+                    }
+                    else
+                    {
+                        return FFResult().CloseDialog().RefreshGrid(index: 1);
+                    }
                 }
             }
         }
