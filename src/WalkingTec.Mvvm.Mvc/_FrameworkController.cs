@@ -79,16 +79,19 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.SubmitFunc = _DONOT_USE_SUBMIT;
 
             #region 获取选中的数据
+            ViewBag.SelectData = "[]";
+            if(listVM.Ids?.Count > 0)
+            {
+                var originNeedPage = listVM.NeedPage;
+                listVM.NeedPage = false;
+                listVM.SearcherMode = ListVMSearchModeEnum.Batch;
 
-            listVM.NeedPage = false;
-            listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                ViewBag.SelectData = (listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson();
 
-            ViewBag.SelectData = (listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson();
-
-            listVM.IsSearched = false;
-            listVM.SearcherMode = ListVMSearchModeEnum.Selector;
-            listVM.NeedPage = true;
-
+                listVM.IsSearched = false;
+                listVM.SearcherMode = ListVMSearchModeEnum.Selector;
+                listVM.NeedPage = originNeedPage;
+            }
             #endregion
 
             return PartialView(listVM);

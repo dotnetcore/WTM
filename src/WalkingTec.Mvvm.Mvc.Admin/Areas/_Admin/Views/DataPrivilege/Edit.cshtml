@@ -1,13 +1,17 @@
 ﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
     <wt:hidden field=" DpType" />
-    <wt:combobox field="Entity.TableName" items="TableNames"  disabled="true"/>
-    <wt:checkbox field="SelectedItemsID" items="AllItems" />
+    <wt:combobox field="Entity.TableName" items="TableNames" disabled="true" />
+    <wt:combobox field="IsAll" change-func="IsAllChange" />
+    <wt:row id="selector">
+        <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" label-text="" paras="Searcher.TableName=@Model.Entity.TableName">
+        </wt:selector>
+    </wt:row>
     <wt:row id="userrow">
-        <wt:textbox field="UserItCode"  disabled="true" />
+        <wt:textbox field="UserItCode" disabled="true" />
     </wt:row>
     <wt:row id="grouprow">
-        <wt:combobox field="Entity.GroupId" items="AllGroups" disabled="true"/>
+        <wt:combobox field="Entity.GroupId" items="AllGroups" disabled="true" />
     </wt:row>
     <br /><br />
     <wt:row align="AlignEnum.Right">
@@ -17,6 +21,7 @@
 </wt:form>
 <script>
     DbTypeChange({ value: $('#DpType').val() });
+    IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
     function DbTypeChange(data) {
         if (data.value == "UserGroup") {
             $('#userrow').css('display', 'none');
@@ -27,4 +32,14 @@
             $('#grouprow').css('display', 'none');
         }
     }
+    function IsAllChange(data) {
+        debugger;
+        if (data.value == 'true') {
+            $('#selector').css('display', 'none');
+        }
+        else {
+            $('#selector').css('display', 'block');
+        }
+    }
+
 </script>

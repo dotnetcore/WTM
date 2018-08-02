@@ -140,27 +140,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Areas._Admin.Controllers
         }
         #endregion
 
-
-        #region 详细
-        [ActionDescription("详细")]
-        public PartialViewResult Details(Guid id)
-        {
-            var role = CreateVM<FrameworkGroupMDVM>(id);
-            role.ListVM.SearcherMode = ListVMSearchModeEnum.Custom1;
-            return PartialView(role);
-        }
-        #endregion
-
         #region 页面权限
-        [ActionDescription("页面权限")]
+        [ActionDescription("数据权限")]
         public PartialViewResult DataFunction(Guid id)
         {
-            var role = CreateVM<FrameworkGroupMDVM>(id);
-            role.ListVM.SearcherMode = ListVMSearchModeEnum.Custom2;
+            var role = CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupId == id);
             return PartialView(role);
         }
 
-        [ActionDescription("页面权限")]
+        [ActionDescription("数据权限")]
         [HttpPost]
         public ActionResult DataFunction(FrameworkGroupMDVM vm, IFormCollection noUse)
         {
