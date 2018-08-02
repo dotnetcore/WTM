@@ -581,6 +581,19 @@ window.ff = {
 
     },
 
+    clearSelector: function (id) {
+        $("#"+id).val("");
+        $("#" + id + "_Display").val("");
+        var vals = $('#'+"id"+'_Container input[type=hidden]');
+        for (var i = 0; i < vals.length; i++) {
+            vals[i].remove();
+        }
+    },
+
+    setSelectorPara: function (id, obj) {
+        eval(id + "filter = obj;");
+    },
+
     guid:function(){
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)

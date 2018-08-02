@@ -1,10 +1,12 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorListVM
 
+<br />
+<wt:quote>本页查询使用了数据权限，请给登陆用户配置学校的数据权限才能看到数据</wt:quote>
 <wt:searchpanel vm="@Model" reset-btn="true">
-<wt:row items-per-row="ItemsPerRowEnum.Three">
-<wt:textbox field="Searcher.MajorCode" />
-<wt:textbox field="Searcher.MajorName" />
-<wt:combobox field="Searcher.SchoolId" items="Searcher.AllSchools" empty-text="全部" />
-</wt:row>
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.MajorCode" />
+        <wt:textbox field="Searcher.MajorName" />
+        <wt:combobox field="Searcher.SchoolId" items="Searcher.AllSchools" empty-text="全部" />
+    </wt:row>
 </wt:searchpanel>
 <wt:grid vm="@Model" />

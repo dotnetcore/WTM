@@ -20,34 +20,34 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         [Display(Name = "权限类别")]
         public DpTypeEnum DpType { get; set; }
+
+        public DpListVM DpList { get; set; }
+        [Display(Name = "全部权限")]
+        public bool? IsAll { get; set; }
         public DataPrivilegeVM()
         {
+            DpList = new DpListVM();
+            IsAll = false;
         }
 
         protected override void InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
             AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
-            AllItems = new List<ComboSelectListItem>();
             TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
-            var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == Entity.TableName).SingleOrDefault();
-            if (dps != null)
-            {
-                AllItems = dps.GetItemList(DC, LoginUserInfo);
-            }
             SelectedItemsID = new List<Guid?>();
             List<Guid?> rids = null;
             if (DpType == DpTypeEnum.User)
             {
-                rids = DC.Set<DataPrivilege>().Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, userid = user.ID }).Where(x => x.dp.TableName == Entity.TableName && x.userid == Entity.UserId).Select(x => x.dp.RelateId).ToList();
+                rids = DC.Set<DataPrivilege>().Where(x => x.TableName == Entity.TableName && x.UserId == Entity.UserId).Select(x => x.RelateId).ToList();
             }
             else
             {
-                rids = DC.Set<DataPrivilege>().Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, groupid = group.ID }).Where(x => x.dp.TableName == Entity.TableName && x.groupid == Entity.GroupId).Select(x => x.dp.RelateId).ToList();
+                rids = DC.Set<DataPrivilege>().Where(x => x.TableName == Entity.TableName && x.GroupId == Entity.GroupId).Select(x => x.RelateId).ToList();
             }
             if (rids.Contains(null))
             {
-                SelectedItemsID.Add(null);
+                IsAll = true;
             }
             else
             {
@@ -61,11 +61,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             TableNames = new List<ComboSelectListItem>();
             AllItems = new List<ComboSelectListItem>();
             TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
-            var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == Entity.TableName).SingleOrDefault();
-            if (dps != null)
-            {
-                AllItems = dps.GetItemList(DC, LoginUserInfo);
-            }
         }
 
         public override void Validate()
@@ -102,7 +97,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         public override void DoAdd()
         {
-            if (SelectedItemsID == null)
+            if (SelectedItemsID == null && IsAll == false)
             {
                 return;
             }
@@ -124,26 +119,51 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             if (DpType == DpTypeEnum.User)
             {
-                foreach (var id in SelectedItemsID)
+                if (IsAll == true)
                 {
                     DataPrivilege dp = new DataPrivilege();
-                    dp.RelateId = id;
+                    dp.RelateId = null;
                     dp.UserId = Entity.UserId;
                     dp.TableName = this.Entity.TableName;
                     dp.DomainId = this.Entity.DomainId;
                     DC.Set<DataPrivilege>().Add(dp);
+
+                }
+                else
+                {
+                    foreach (var id in SelectedItemsID)
+                    {
+                        DataPrivilege dp = new DataPrivilege();
+                        dp.RelateId = id;
+                        dp.UserId = Entity.UserId;
+                        dp.TableName = this.Entity.TableName;
+                        dp.DomainId = this.Entity.DomainId;
+                        DC.Set<DataPrivilege>().Add(dp);
+                    }
                 }
             }
             else
             {
-                foreach (var id in SelectedItemsID)
+                if (IsAll == true)
                 {
                     DataPrivilege dp = new DataPrivilege();
-                    dp.RelateId = id;
+                    dp.RelateId = null;
                     dp.GroupId = Entity.GroupId;
                     dp.TableName = this.Entity.TableName;
                     dp.DomainId = this.Entity.DomainId;
                     DC.Set<DataPrivilege>().Add(dp);
+                }
+                else
+                {
+                    foreach (var id in SelectedItemsID)
+                    {
+                        DataPrivilege dp = new DataPrivilege();
+                        dp.RelateId = id;
+                        dp.GroupId = Entity.GroupId;
+                        dp.TableName = this.Entity.TableName;
+                        dp.DomainId = this.Entity.DomainId;
+                        DC.Set<DataPrivilege>().Add(dp);
+                    }
                 }
             }
             DC.SaveChanges();
@@ -167,31 +187,55 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 DC.Set<DataPrivilege>().Attach(dp);
                 DC.DeleteEntity(dp);
             }
-            if (SelectedItemsID != null)
+            if(IsAll == true)
             {
                 if (DpType == DpTypeEnum.User)
                 {
-                    foreach (var id in SelectedItemsID)
-                    {
-                        DataPrivilege dp = new DataPrivilege();
-                        dp.RelateId = id;
-                        dp.UserId = Entity.UserId;
-                        dp.TableName = this.Entity.TableName;
-                        dp.DomainId = this.Entity.DomainId;
-                        DC.Set<DataPrivilege>().Add(dp);
-                    }
+                    DataPrivilege dp = new DataPrivilege();
+                    dp.RelateId = null;
+                    dp.UserId = Entity.UserId;
+                    dp.TableName = this.Entity.TableName;
+                    dp.DomainId = this.Entity.DomainId;
+                    DC.Set<DataPrivilege>().Add(dp);
 
                 }
                 else
                 {
-                    foreach (var id in SelectedItemsID)
+                    DataPrivilege dp = new DataPrivilege();
+                    dp.RelateId = null;
+                    dp.GroupId = Entity.GroupId;
+                    dp.TableName = this.Entity.TableName;
+                    dp.DomainId = this.Entity.DomainId;
+                    DC.Set<DataPrivilege>().Add(dp);
+                }
+            }
+            else {
+                if (SelectedItemsID != null)
+                {
+                    if (DpType == DpTypeEnum.User)
                     {
-                        DataPrivilege dp = new DataPrivilege();
-                        dp.RelateId = id;
-                        dp.GroupId = Entity.GroupId;
-                        dp.TableName = this.Entity.TableName;
-                        dp.DomainId = this.Entity.DomainId;
-                        DC.Set<DataPrivilege>().Add(dp);
+                        foreach (var id in SelectedItemsID)
+                        {
+                            DataPrivilege dp = new DataPrivilege();
+                            dp.RelateId = id;
+                            dp.UserId = Entity.UserId;
+                            dp.TableName = this.Entity.TableName;
+                            dp.DomainId = this.Entity.DomainId;
+                            DC.Set<DataPrivilege>().Add(dp);
+                        }
+
+                    }
+                    else
+                    {
+                        foreach (var id in SelectedItemsID)
+                        {
+                            DataPrivilege dp = new DataPrivilege();
+                            dp.RelateId = id;
+                            dp.GroupId = Entity.GroupId;
+                            dp.TableName = this.Entity.TableName;
+                            dp.DomainId = this.Entity.DomainId;
+                            DC.Set<DataPrivilege>().Add(dp);
+                        }
                     }
                 }
             }
