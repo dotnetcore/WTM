@@ -398,6 +398,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
             // TODO 转换有问题
+            Page = ListVM.NeedPage;
             if (UseLocalData)
             {
                 // 不需要分页
@@ -673,7 +674,6 @@ var isPost = false;
                     }
                 }
             }
-            Page = ListVM.NeedPage;
             #endregion
 
             #region DataTable
@@ -707,7 +707,7 @@ var {Id}option = {{
     ,request: {JsonConvert.SerializeObject(request)}
     ,response: {JsonConvert.SerializeObject(response)}
     {(Page ?? true ? ",page:true" : ",page:{layout:['count']}")}
-    ,limit: {(Page ?? true ? $"{Limit ?? 50}" : $"0")}
+    ,limit: {(Page ?? true ? $"{Limit ?? 50}" : $"{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(Page ?? true ?
         (Limits == null || Limits.Length == 0 ? ",limits:[10,20,50,80,100,150,200]" : $",limits:{JsonConvert.SerializeObject(Limits)}")
         : string.Empty)}
