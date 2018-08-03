@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -15,20 +16,37 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco,new()
         {
             var sb = new StringBuilder();
-            var el = self.GetEntityList().ToList();
-            //如果列表主键都为0，则生成自增主键，避免主键重复
-            if (el.All(x => x.ID == Guid.Empty))
+            self.GetHeaders();
+            self.DoSearch();
+            if (self.EntityDataTable != null)
             {
-                el.ForEach(x => x.ID = Guid.NewGuid());
-            }
-            //循环生成列表数据
-            for (int x = 0; x < el.Count; x++)
-            {
-                var sou = el[x];
-                sb.Append(self.GetSingleDataJson(sou,x));
-                if (x < el.Count - 1)
+                for(int i = 0; i < self.EntityDataTable.Rows.Count; i++)
                 {
-                    sb.Append(",");
+                    sb.Append(self.GetSingleRowJson(self.EntityDataTable.Rows[i], i));
+                    if (i < self.EntityDataTable.Rows.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
+
+                }
+            }
+            else
+            {
+                var el = self.GetEntityList().ToList();
+                //如果列表主键都为0，则生成自增主键，避免主键重复
+                if (el.All(x => x.ID == Guid.Empty))
+                {
+                    el.ForEach(x => x.ID = Guid.NewGuid());
+                }
+                //循环生成列表数据
+                for (int x = 0; x < el.Count; x++)
+                {
+                    var sou = el[x];
+                    sb.Append(self.GetSingleDataJson(sou, x));
+                    if (x < el.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
                 }
             }
             return $"[{sb.ToString()}]";
@@ -223,6 +241,90 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             // 标识当前行数据是否被选中
             sb.Append($@",""LAY_CHECKED"":{sou.Checked.ToString().ToLower()}");
+            sb.Append(string.Empty);
+            sb.Append("}");
+            return sb.ToString();
+        }
+
+
+        public static string GetSingleRowJson<T>(this IBasePagedListVM<T, BaseSearcher> self, DataRow obj, int index = 0) where T : TopBasePoco
+        {
+            var sb = new StringBuilder();
+            //循环所有列
+            sb.Append("{");
+            bool containsID = false;
+            bool addHiddenID = false;
+            foreach (var baseCol in self.GetHeaders())
+            {
+                foreach (var col in baseCol.BottomChildren)
+                {
+                    if (col.ColumnType != GridColumnTypeEnum.Normal)
+                    {
+                        continue;
+                    }
+                    if (col.Title.ToLower() == "Id")
+                    {
+                        containsID = true;
+                    }
+                    sb.Append($"\"{col.Title}\":");
+                    var html = string.Empty;
+
+                    if (col.EditType == EditTypeEnum.Text || col.EditType == null)
+                    {
+
+                        var info = obj[col.Title];
+
+                        if (info is ColumnFormatInfo)
+                        {
+                            html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
+                        }
+                        else if (info is List<ColumnFormatInfo>)
+                        {
+                            var temp = string.Empty;
+                            foreach (var item in info as List<ColumnFormatInfo>)
+                            {
+                                temp += GetFormatResult(self as BaseVM, item);
+                                temp += "&nbsp;&nbsp;";
+                            }
+                            html = temp;
+                        }
+                        else
+                        {
+                            html = info.ToString();
+                        }
+                        var ptype = col.FieldType;
+                        //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
+                        if (ptype == typeof(bool) || ptype == typeof(bool?))
+                        {
+                            if (html.ToLower() == "true")
+                            {
+                                html = (self as BaseVM).UIService.MakeCheckBox(true, isReadOnly: true);
+                            }
+                            if (html.ToLower() == "false" || html == string.Empty)
+                            {
+                                html = (self as BaseVM).UIService.MakeCheckBox(false, isReadOnly: true);
+                            }
+                        }
+                        //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
+                        else if (ptype.IsEnumOrNullableEnum())
+                        {
+                            html = PropertyHelper.GetEnumDisplayName(ptype, html);
+                        }
+                    }
+
+                    html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                    sb.Append(html);
+                    sb.Append(",");
+                }
+            }
+            sb.Append($"\"TempIsSelected\":\"{"0" }\"");
+            if (containsID == false)
+            {
+
+                sb.Append($",\"ID\":\"{Guid.NewGuid().ToString()}\"");
+            }
+            // 标识当前行数据是否被选中
+            sb.Append($@",""LAY_CHECKED"":false");
             sb.Append(string.Empty);
             sb.Append("}");
             return sb.ToString();

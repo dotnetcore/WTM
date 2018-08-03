@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             return new List<ColumnFormatInfo>
             {
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,"修改",800,600,"修改"),
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,"修改",800,null,"修改"),
                 ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,"删除",null,null,showDialog:false)
             };
         }

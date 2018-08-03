@@ -59,6 +59,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.LoginName, x=>x.LoginName)
                 .CheckContain(Searcher.Name, x=>x.Name)
+                .CheckEqual(Searcher.IsValid, x=>x.IsValid)
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,
