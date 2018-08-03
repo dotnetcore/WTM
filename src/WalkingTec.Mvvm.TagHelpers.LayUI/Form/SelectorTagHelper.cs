@@ -67,7 +67,47 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         /// </summary>
         public ModelExpression ValBind { get; set; }
 
+        /// <summary>
+        /// 用于指定弹出窗口的搜索条件，多条件逗号分隔，例如Searcher.Con1=a,Searcher.Con2=b
+        /// </summary>
+        public string Paras { get; set; }
+
         public string SubmitFunc { get; set; }
+
+        /// <summary>
+        /// 弹出窗口之前运行的js函数
+        /// </summary>
+        public string BeforeOnpenDialogFunc { get; set; }
+
+
+        /// <summary>
+        /// 排除的搜索条件
+        /// </summary>
+        private static readonly string[] _excludeParams = new string[]
+        {
+            "Page",
+            "Limit",
+            "Count",
+            "PageCount",
+            "FC",
+            "DC",
+            "VMFullName",
+            "SortInfo",
+            "TreeMode",
+            "IsPostBack",
+            "DC",
+            "LoginUserInfo"
+        };
+
+        /// <summary>
+        /// 排除的搜索条件类型，搜索条件数据源可能会存储在Searcher对象中
+        /// </summary>
+        private static readonly Type[] _excludeTypes = new Type[]
+        {
+            typeof(List<ComboSelectListItem>),
+            typeof(ComboSelectListItem[]),
+            typeof(IEnumerable<ComboSelectListItem>)
+        };
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -90,13 +130,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     list.Add(Guid.Parse(Field.Model.ToString()));
                 }
             }
-
+            if (ListVM == null || ListVM.Model == null)
+                throw new Exception("Selector 组件指定的 ListVM 必须要实例化");
+            var listVM = ListVM.Model as IBasePagedListVM<TopBasePoco, ISearcher>;
             var value = new List<string>();
             if (list.Count > 0)
             {
-                if (ListVM == null || ListVM.Model == null)
-                    throw new Exception("Selector 组件指定的 ListVM 必须要实例化");
-                var listVM = ListVM.Model as IBasePagedListVM<TopBasePoco, ISearcher>;
                 if (context.Items.ContainsKey("model") == true)
                 {
                     listVM.CopyContext(context.Items["model"] as BaseVM);
@@ -106,6 +145,21 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 listVM.IsSearched = false;
                 listVM.ClearEntityList();
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                if (!string.IsNullOrEmpty(Paras))
+                {
+                    var p = Paras.Split(',');
+                    Regex r = new Regex("(\\s*)\\S*?=\\S*?(\\s*)");
+                    foreach (var item in p)
+                    {
+                        var s = Regex.Split(item, "=");
+                        if (s != null && s.Length == 2)
+                        {
+                            listVM.SetPropertyValue(s[0], s[1]);
+                        }
+
+                    }
+                }
+
                 var entityList = listVM.GetEntityList().ToList();
                 foreach (var item in entityList)
                 {
@@ -197,6 +251,40 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     Filter.Add("_DONOT_USE_SUBMIT", SubmitFunc);
                 }
+                if (listVM.Searcher != null)
+                {
+                    var props = listVM.Searcher.GetType().GetProperties();
+                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToArray();
+                    foreach (var prop in props)
+                    {
+                        if (!_excludeParams.Contains(prop.Name))
+                        {
+                            Filter.Add($"Searcher.{prop.Name}", prop.GetValue(listVM.Searcher));
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Paras))
+                {
+                    var p = Paras.Split(',');
+                    Regex r = new Regex("(\\s*)\\S*?=\\S*?(\\s*)");
+                    foreach (var item in p)
+                    {
+                        var s = Regex.Split(item, "=");
+                        if (s != null && s.Length ==2)
+                        {
+                            if (Filter.ContainsKey(s[0]))
+                            {
+                                Filter[s[0]] = s[1];
+                            }
+                            else
+                            {
+                                Filter.Add(s[0], s[1]);
+                            }
+                        }
+
+                    }
+                }
                 var hiddenStr = string.Empty;
                 var sb = new StringBuilder();
                 foreach (var item in list)
@@ -211,14 +299,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 <button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? "选择"}</button>
 <hidden id='{Id}' name='{Field.Name}' />
 <script>
+var {Id}filter = {{}};
 $('#{Id}_Select').on('click',function(){{
+    {(string.IsNullOrEmpty(BeforeOnpenDialogFunc)==true?"":"var data={};"+ FormatFuncName(BeforeOnpenDialogFunc) + ";")}
     var filter = {JsonConvert.SerializeObject(Filter)};
     var vals = $('#{Id}_Container input[type=hidden]');
-    filter.Ids = []
+    filter.Ids = [];
     for(var i=0;i<vals.length;i++){{
         filter.Ids.push(vals[i].value);
-    }}
-    ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? string.Empty}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"},'#Temp{Id}', filter);
+    }};
+    var ffilter = $.extend(filter, {Id}filter)
+
+    ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? string.Empty}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}

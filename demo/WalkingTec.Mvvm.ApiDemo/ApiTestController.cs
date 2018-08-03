@@ -8,11 +8,15 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WalkingTec.Mvvm.ApiDemo
 {
+    /// <summary>
+    /// 用户
+    /// </summary>
     [Route("api/user")]
     public class UserController : BaseApiController
     {

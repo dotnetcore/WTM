@@ -188,5 +188,79 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
         }
         #endregion
+
+
+        #region 主子表新建
+        [ActionDescription("主子表新建")]
+        public ActionResult Create2()
+        {
+            var vm = CreateVM<SchoolVM>();
+            vm.MajorList.DetailGridPrix = "Entity.Majors";
+            return PartialView(vm);
+        }
+
+        [HttpPost]
+        [ActionDescription("主子表新建")]
+        public ActionResult Create2(SchoolVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.MajorList.ProcessListError(vm.Entity.Majors);
+                return PartialView(vm);
+            }
+            else
+            {
+                vm.DoAdd();
+                if (!ModelState.IsValid)
+                {
+                    vm.MajorList.ProcessListError(vm.Entity.Majors);
+                    vm.DoReInit();
+                    return PartialView(vm);
+                }
+                else
+                {
+                    return FFResult().CloseDialog().RefreshGrid();
+                }
+            }
+        }
+        #endregion
+
+
+        #region 主子表修改
+        [ActionDescription("主子表修改")]
+        public ActionResult Edit2(Guid id)
+        {
+            var vm = CreateVM<SchoolVM>(id);
+            vm.MajorList.DetailGridPrix = "Entity.Majors";
+            vm.MajorList.Searcher.SchoolId = id;
+            return PartialView(vm);
+        }
+
+        [ActionDescription("主子表修改")]
+        [HttpPost]
+        public ActionResult Edit2(SchoolVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.MajorList.ProcessListError(vm.Entity.Majors);
+                return PartialView(vm);
+            }
+            else
+            {
+                vm.DoEdit();
+                if (!ModelState.IsValid)
+                {
+                    vm.DoReInit();
+                    vm.MajorList.ProcessListError(vm.Entity.Majors);
+                    return PartialView(vm);
+                }
+                else
+                {
+                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
+                }
+            }
+        }
+        #endregion
+
     }
 }

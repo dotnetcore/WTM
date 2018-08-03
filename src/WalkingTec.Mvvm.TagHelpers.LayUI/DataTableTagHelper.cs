@@ -707,7 +707,7 @@ var {Id}option = {{
     ,request: {JsonConvert.SerializeObject(request)}
     ,response: {JsonConvert.SerializeObject(response)}
     {(Page ?? true ? ",page:true" : ",page:{layout:['count']}")}
-    ,limit: {(Page ?? true ? $"{Limit ?? 50}" : $"{ListVM.GetEntityList().Count()}")}
+    ,limit: {(Page ?? true ? $"{Limit ?? 50}" : $"0")}
     {(Page ?? true ?
         (Limits == null || Limits.Length == 0 ? ",limits:[10,20,50,80,100,150,200]" : $",limits:{JsonConvert.SerializeObject(Limits)}")
         : string.Empty)}
@@ -772,7 +772,9 @@ var {Id}option = {{
 
                 #endregion
             }
-
+            output.PostElement.AppendHtml($@"
+{ (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
+");
             base.Process(context, output);
         }
     }

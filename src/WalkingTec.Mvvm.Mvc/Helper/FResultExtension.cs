@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Mvc
             return self;
         }
 
-        public static FResult RefreshGrid(this FResult self, string winId = "")
+        public static FResult RefreshGrid(this FResult self, string winId = "", int index = 0)
         {
             if (string.IsNullOrEmpty(winId))
             {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc
                     winId = "DONOTUSE_MAINPANEL";
                 }
             }
-            self.ContentBuilder.Append($"ff.RefreshGrid('{winId}');");
+            self.ContentBuilder.Append($"ff.RefreshGrid('{winId}',{index});");
             return self;
         }
 

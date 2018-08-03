@@ -22,6 +22,7 @@ namespace WalkingTec.Mvvm.Demo
                 {
                     List<IDataPrivilege> pris = new List<IDataPrivilege>();
                     pris.Add(new DataPrivilegeInfo<School>("学校", y => y.SchoolName));
+                    pris.Add(new DataPrivilegeInfo<Major>("专业", y => y.MajorName));
                     x.AddFrameworkService(dataPrivilegeSettings: pris);
                     //x.AddFrameworkService();
                     x.AddLayui();

@@ -33,6 +33,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             return new List<GridColumn<Major_View>>{
                 this.MakeGridHeader(x => x.MajorCode),
                 this.MakeGridHeader(x => x.MajorName),
+                this.MakeGridHeader(x => x.MajorType),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeader(x => x.SchoolName_view),
                 this.MakeGridHeaderAction(width: 200)
@@ -45,11 +46,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 .CheckContain(Searcher.MajorCode, x=>x.MajorCode)
                 .CheckContain(Searcher.MajorName, x=>x.MajorName)
                 .CheckEqual(Searcher.SchoolId, x=>x.SchoolId)
+                .DPWhere(LoginUserInfo.DataPrivileges, x=>x.SchoolId)
                 .Select(x => new Major_View
                 {
 				    ID = x.ID,
                     MajorCode = x.MajorCode,
                     MajorName = x.MajorName,
+                    MajorType = x.MajorType,
                     Remark = x.Remark,
                     SchoolName_view = x.School.SchoolName,
                 })
