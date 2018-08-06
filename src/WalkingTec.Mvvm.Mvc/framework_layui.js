@@ -184,7 +184,6 @@ window.ff = {
 
     GetPostData: function (formid) {
         var datastr = $('#' + formid).serialize();
-        var test = $('#' + formid).serializeArray();
         var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
