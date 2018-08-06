@@ -27,6 +27,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         public string SelectButtonText { get; set; }
 
         /// <summary>
+        /// 选择按钮宽度，默认50
+        /// </summary>
+        public int? SelectButtonWidth { get; set; }
+        /// <summary>
         /// 标题
         /// </summary>
         public string WindowTitle { get; set; }
@@ -219,7 +223,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
                 #region 移除因 RowTagHelper 生成的外层 div 即 <div class="layui-col-xs6"></div>
 
-                var regStart = new Regex(@"^<div\s+class=""layui-col-xs[0-9]+"">");
+                var regStart = new Regex(@"^<div\s+class=""layui-col-md[0-9]+"">");
                 var regEnd = new Regex("</div>$");
                 content = regStart.Replace(content, string.Empty);
                 content = regEnd.Replace(content, string.Empty);
@@ -292,7 +296,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     sb.Append($"<input type='hidden' name='{Field.Name}' value='{item.ToString()}' />");
                 }
                 hiddenStr = sb.ToString();
-                output.PreElement.AppendHtml($@"<div id=""{Id}_Container"" style=""position:absolute;right:50px;left:0px;width:auto"">");
+                output.PreElement.AppendHtml($@"<div id=""{Id}_Container"" style=""position:absolute;right:{SelectButtonWidth?.ToString()??"50"}px;left:0px;width:auto"">");
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
