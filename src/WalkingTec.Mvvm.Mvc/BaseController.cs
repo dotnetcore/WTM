@@ -317,7 +317,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
                 temp.LinkedVM?.DoInit();
-                temp.ListVM.DoSearch();
+                //temp.ListVM.DoSearch();
             }
             //如果ViewModel是ListVM，则初始化Searcher并调用Searcher的InitVM方法
             if (rv is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
