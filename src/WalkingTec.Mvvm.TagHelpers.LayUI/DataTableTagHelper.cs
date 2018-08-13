@@ -663,7 +663,7 @@ var isPost = false;
         (item.ShowDialog ?
             $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
             : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
-                $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}');"
+                $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)});"
                 : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
                 )
         )

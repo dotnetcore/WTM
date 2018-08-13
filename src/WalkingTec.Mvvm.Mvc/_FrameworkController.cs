@@ -176,7 +176,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         /// <param name="_DONOT_USE_VMNAME"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [ActionDescription("导出")]
         public IActionResult GetExportExcel(string _DONOT_USE_VMNAME)
         {
@@ -184,6 +184,13 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var item in Request.Query.Keys)
             {
                 qs.Add(item, Request.Query[item]);
+            }
+            foreach (var item in Request.Form)
+            {
+                if(qs.ContainsKey(item.Key) == false)
+                {
+                    qs.Add(item.Key, item.Value);
+                }
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
