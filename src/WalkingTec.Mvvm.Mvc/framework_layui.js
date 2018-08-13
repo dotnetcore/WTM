@@ -490,17 +490,19 @@ window.ff = {
      * @param {string} url
      * @param {string} formId
      */
-    DownloadExcelOrPdf: function (url, formId) {
-        var formData = ff.GetFormArray(formId);
-        for (var i = 0; i < formData.length; i++) {
-            url = url + "&" + formData[i].name + "=" + formData[i].value;
-        }
+    DownloadExcelOrPdf: function (url, formId, defaultcondition) {
+        var formData = ff.GetSearchFormData(formId);
+        $.extend(defaultcondition,formData);
         $.cookie("DONOTUSEDOWNLOADING", "1", { path: '/' });
-        var aTag = $('<a>');
-        aTag.attr("href", url);
-        $("body").append(aTag);
-        aTag[0].click();
-        aTag.remove();
+        var form = $('<form method="POST" action="' + url + '">');
+        for (var attr in defaultcondition) {
+            if (defaultcondition[attr] != null) {
+                form.append($('<input type="hidden" name="' + attr + '" value="' + defaultcondition[attr] + '">'));
+            }
+        };
+        $('body').append(form);
+        form.submit();
+        form.remove();
     },
 
     /**
