@@ -43,12 +43,12 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
             where V : ISearcher
         {
-            var iconcls         = string.Empty;
-            var actionName      = standardType.ToString();
-            var gridname        = string.Empty;
-            var paraType        = GridActionParameterTypesEnum.NoId;
-            var showInRow       = false;
-            var hideOnToolBar   = false;
+            var iconcls = string.Empty;
+            var actionName = standardType.ToString();
+            var gridname = string.Empty;
+            var paraType = GridActionParameterTypesEnum.NoId;
+            var showInRow = false;
+            var hideOnToolBar = false;
 
             switch (standardType)
             {
@@ -172,7 +172,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
             where V : ISearcher
         {
-            var iconcls         = string.Empty;
+            var iconcls = string.Empty;
 
             var list = new List<string>();
             foreach (var item in whereStr)
@@ -188,13 +188,45 @@ namespace WalkingTec.Mvvm.Core
                 Area = areaName,
                 ControllerName = controllerName,
                 ActionName = actionName,
-                ParameterType = paraType,
-
+                ParameterType = paraType, 
                 IconCls = iconcls,
                 DialogWidth = dialogWidth ?? 800,
                 DialogHeight = dialogHeight,
                 ShowDialog = true,
                 whereStr = list.ToArray()
+            };
+        }
+
+        public static GridAction MakeActionsGroup<T, V>(this IBasePagedListVM<T, V> self
+            , string name
+            , List<GridAction> subActions
+            , params Expression<Func<T, object>>[] whereStr)
+            where T : TopBasePoco
+            where V : ISearcher
+        {
+            var iconcls = string.Empty;
+
+            var list = new List<string>();
+            foreach (var item in whereStr)
+            {
+                list.Add(PropertyHelper.GetPropertyName(item));
+            }
+
+            return new GridAction
+            {
+                ButtonId = Guid.NewGuid().ToString(),
+                Name = name,
+                DialogTitle = "",
+                Area = "",
+                ControllerName = "",
+                ActionName = "ActionsGroup",
+                ParameterType =  GridActionParameterTypesEnum.NoId, 
+                IconCls = iconcls,
+                DialogWidth = 0,
+                DialogHeight = 0,
+                ShowDialog = false,
+                whereStr = list.ToArray(),
+                 SubActions= subActions
             };
         }
 
@@ -267,6 +299,17 @@ namespace WalkingTec.Mvvm.Core
             self.HideOnToolBar = hideOnToolBar;
             return self;
         }
-      #endregion
+        /// <summary>
+        /// 把按钮当作容器,添加按钮的子按钮
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="subActions">子按钮</param>
+        /// <returns></returns>
+        public static GridAction SetSubActions(this GridAction self, List<GridAction> subActions)
+        {
+            self.SubActions = subActions;
+            return self;
+        }
+        #endregion
     }
 }

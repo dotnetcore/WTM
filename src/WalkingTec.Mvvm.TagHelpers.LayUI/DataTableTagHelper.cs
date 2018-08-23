@@ -529,149 +529,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var vm = Vm.Model as BaseVM;
                 foreach (var item in actionCol)
                 {
-                    if (vm.LoginUserInfo?.IsAccessable(item.Url) == true || item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
-                    {
-                        // Grid 行内按钮
-                        if (item.ShowInRow)
-                        {
-                            if (item.ParameterType != GridActionParameterTypesEnum.RemoveRow)
-                            {
-                                rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
-                            }
-                            else
-                            {
-                                rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
-                            }
-
-                        }
-
-                        // Grid 工具条按钮
-                        if (!item.HideOnToolBar)
-                        {
-                            var icon = string.Empty;
-                            switch (item.ActionName)
-                            {
-                                case "Create":
-                                    icon = @"<i class=""layui-icon"">&#xe654;</i>";
-                                    break;
-                                case "Delete":
-                                case "BatchDelete":
-                                    icon = @"<i class=""layui-icon"">&#xe640;</i>";
-                                    break;
-                                case "Edit":
-                                case "BatchEdit":
-                                    icon = @"<i class=""layui-icon"">&#xe642;</i>";
-                                    break;
-                                case "Details":
-                                    icon = @"<i class=""layui-icon"">&#xe60e;</i>";
-                                    break;
-                                case "Import":
-                                    icon = @"<i class=""layui-icon"">&#xe630;</i>";
-                                    break;
-                                case "GetExportExcel":
-                                    icon = @"<i class=""layui-icon"">&#xe62d;</i>";
-                                    break;
-                            }
-                            toolBarBtnStrBuilder.Append($@"<a href=""javascript:void(0)"" onclick=""wtToolBarFunc_{Id}({{event:'{item.Area + item.ControllerName + item.ActionName + item.QueryString}'}});"" class=""layui-btn layui-btn-sm"">{icon}{item.Name}</a>");
-                        }
-                        var url = item.Url;
-                        if (item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") // 导出按钮 接口地址
-                        {
-                            url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
-                        }
-                        var script = new StringBuilder($"var tempUrl = '{url}';");
-                        if (SPECIAL_ACTION.Contains(item.ActionName))
-                        {
-                            script.Append($@"tempUrl = tempUrl + '&id=' + data.ID;");
-                        }
-                        else
-                        {
-                            switch (item.ParameterType)
-                            {
-                                case GridActionParameterTypesEnum.NoId: break;
-                                case GridActionParameterTypesEnum.SingleId:
-                                    script.Append($@"
-if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
-    var ids = ff.GetSelections('{Id}');
-    if(ids.length == 0){{
-        layui.layer.msg('请选择一行');
-        return;
-    }}else if(ids.length > 1){{
-        layui.layer.msg('最多只能选择一行');
-        return;
-    }}else{{
-        tempUrl = tempUrl + '&id=' + ids[0];
-    }}
-}}else{{
-    tempUrl = tempUrl + '&id=' + data.ID;
-}}
-");
-                                    break;
-                                case GridActionParameterTypesEnum.MultiIds:
-                                    script.Append($@"
-isPost = true;
-var ids = ff.GetSelections('{Id}');
-if(ids.length == 0){{
-    layui.layer.msg('请至少选择一行');
-    return;
-}}
-");
-                                    break;
-                                case GridActionParameterTypesEnum.SingleIdWithNull:
-                                    script.Append($@"
-var ids = [];
-if(data != null && data.ID != null){{
-    ids.push(data.ID);
-}} else {{
-    ids = ff.GetSelections('{Id}');
-}}
-if(ids.length > 1){{
-    layui.layer.msg('最多只能选择一行');
-    return;
-}}else if(ids.length == 1){{
-    tempUrl = tempUrl + '&id=' + ids[0];
-}}
-");
-                                    break;
-                                case GridActionParameterTypesEnum.MultiIdWithNull:
-                                    script.Append($@"
-var ids = ff.GetSelections('{Id}');
-{(item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ? "if(ids.length>0) tempUrl = tempUrl + '&Ids=' + ids.join('&Ids=');" : "isPost = true;")}
-");
-                                    break;
-                                default: break;
-                            }
-                        }
-
-                        gridBtnEventStrBuilder.Append($@"
-case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
-                        if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
-                        {
-                            gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null)});
-");
-                        }
-                        else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
-                        {
-
-                        }
-                        else
-                        {
-                            gridBtnEventStrBuilder.Append($@"
-var isPost = false;
-{script}
-{(string.IsNullOrEmpty(item.OnClickFunc) ?
-        (item.ShowDialog ?
-            $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
-            : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
-                $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)});"
-                : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
-                )
-        )
-        : $"{item.OnClickFunc}();")}");
-                        }
-                        gridBtnEventStrBuilder.Append($@"}};break;
-");
-                    }
+                    AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
                 }
             }
             #endregion
@@ -754,11 +612,11 @@ var {Id}option = {{
             else // 有 Panel
             {
                 #region 在数据列表外部套上一层 Panel
-
+                toolBarBtnStrBuilder.Append("<style type=\"text/css\">.buttongroup:hover{opacity: initial;}</style>");
                 output.PreElement.AppendHtml($@"
 <div class=""layui-collapse"" >
   <div class=""layui-colla-item"">
-    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"">{PanelTitle ?? "数据列表"}
+    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"" style=""overflow: visible;"">{PanelTitle ?? "数据列表"}
       <!-- 数据列表按钮组 -->
       <div style=""text-align:right;margin-top:-43px;"">{toolBarBtnStrBuilder}</div>
     </h2>
@@ -776,6 +634,215 @@ var {Id}option = {{
 { (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
             base.Process(context, output);
+        }
+        /// <summary>
+        /// 添加按钮
+        /// </summary>
+        /// <param name="vmQualifiedName"></param>
+        /// <param name="rowBtnStrBuilder"></param>
+        /// <param name="toolBarBtnStrBuilder"></param>
+        /// <param name="gridBtnEventStrBuilder"></param>
+        /// <param name="vm"></param>
+        /// <param name="item"></param>
+        /// <param name="isSub"></param>
+        private void AddSubButton(string vmQualifiedName, StringBuilder rowBtnStrBuilder, StringBuilder toolBarBtnStrBuilder, StringBuilder gridBtnEventStrBuilder, BaseVM vm, GridAction item,bool isSub =false)
+        {
+            if (vm.LoginUserInfo?.IsAccessable(item.Url) == true || item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
+            {
+                // Grid 行内按钮
+                if (item.ShowInRow)
+                {
+                    if (item.ParameterType != GridActionParameterTypesEnum.RemoveRow)
+                    {
+                        rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
+                    }
+                    else
+                    {
+                        rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
+                    }
+
+                }
+
+                // Grid 工具条按钮
+                if (!item.HideOnToolBar)
+                {
+                    var icon = string.Empty;
+                    switch (item.ActionName)
+                    {
+                        case "Create":
+                            icon = @"<i class=""layui-icon"">&#xe654;</i>";
+                            break;
+                        case "Delete":
+                        case "BatchDelete":
+                            icon = @"<i class=""layui-icon"">&#xe640;</i>";
+                            break;
+                        case "Edit":
+                        case "BatchEdit":
+                            icon = @"<i class=""layui-icon"">&#xe642;</i>";
+                            break;
+                        case "Details":
+                            icon = @"<i class=""layui-icon"">&#xe60e;</i>";
+                            break;
+                        case "Import":
+                            icon = @"<i class=""layui-icon"">&#xe630;</i>";
+                            break;
+                        case "GetExportExcel":
+                            icon = @"<i class=""layui-icon"">&#xe62d;</i>";
+                            break;
+                        case "ActionsGroup":
+                            //icon = @"<i class=""layui-icon"">&#xe62d;</i>";
+                            break;
+                    }
+                    //如果是按钮组容器，加载子按钮
+                    if (item.ActionName.Equals("ActionsGroup")
+                        && item.SubActions != null && item.SubActions.Count > 0)
+                    {
+                        StringBuilder subBarBtnStrList = new StringBuilder();
+                        foreach (var subItem in item.SubActions)
+                        {
+                            StringBuilder subBarBtnStr = new StringBuilder(); 
+                            AddSubButton(vmQualifiedName, rowBtnStrBuilder, subBarBtnStr, gridBtnEventStrBuilder, vm, subItem,true);
+                            if (subBarBtnStr.Length>0)
+                            {
+                                subBarBtnStrList.AppendFormat("<dd style=\"padding: 0 0px;margin-bottom:1px;line-height: initial;\">{0}</dd>", subBarBtnStr.ToString());
+                            }
+                        }
+
+                        
+                        toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel buttongroup"" id=""btn_{item.ButtonId}"">
+                                 <div class=""layui-select-title"" style=""padding-right:20px;"">
+                                        {item.Name}
+                                 <i class=""layui-edge""></i>
+                                 </div>
+                                 <dl class=""layui-anim layui-anim-upbit"" style=""top: initial;padding:1px 0px 0px 0px;"" >
+                                    {subBarBtnStrList.ToString()}
+                                 </dl>
+                                 </button>");
+                        if (!toolBarBtnStrBuilder.ToString().Contains("layui.use(["))
+                        {
+                            toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"">layui.use([""form""], function () {{
+                            var form = layui.form, $ = layui.jquery; 
+                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
+                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
+                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
+                                            e.stopPropagation();
+                                        }});
+                            $(document).click(function(event) {{ 
+                            var _con2 = $("".downpanel"");
+                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
+                            _con2.removeClass(""layui -form-selected""); 
+                            }}
+                            }});
+                            }});</script>");
+                        }
+
+                        //按钮组时直接返回
+                        return;
+                    }
+                    else
+                    {
+                        string substyle = isSub? "style=\"width: 100%;\"": ""; 
+                        toolBarBtnStrBuilder.Append($@"<a href=""javascript:void(0)"" onclick=""wtToolBarFunc_{Id}({{event:'{item.Area + item.ControllerName + item.ActionName + item.QueryString}'}});"" class=""layui-btn layui-btn-sm"" {substyle}>{icon}{item.Name}</a>");
+                    }
+                }
+                var url = item.Url;
+                if (item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") // 导出按钮 接口地址
+                {
+                    url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
+                }
+                var script = new StringBuilder($"var tempUrl = '{url}';");
+                if (SPECIAL_ACTION.Contains(item.ActionName))
+                {
+                    script.Append($@"tempUrl = tempUrl + '&id=' + data.ID;");
+                }
+                else
+                {
+                    switch (item.ParameterType)
+                    {
+                        case GridActionParameterTypesEnum.NoId: break;
+                        case GridActionParameterTypesEnum.SingleId:
+                            script.Append($@"
+if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
+    var ids = ff.GetSelections('{Id}');
+    if(ids.length == 0){{
+        layui.layer.msg('请选择一行');
+        return;
+    }}else if(ids.length > 1){{
+        layui.layer.msg('最多只能选择一行');
+        return;
+    }}else{{
+        tempUrl = tempUrl + '&id=' + ids[0];
+    }}
+}}else{{
+    tempUrl = tempUrl + '&id=' + data.ID;
+}}
+");
+                            break;
+                        case GridActionParameterTypesEnum.MultiIds:
+                            script.Append($@"
+isPost = true;
+var ids = ff.GetSelections('{Id}');
+if(ids.length == 0){{
+    layui.layer.msg('请至少选择一行');
+    return;
+}}
+");
+                            break;
+                        case GridActionParameterTypesEnum.SingleIdWithNull:
+                            script.Append($@"
+var ids = [];
+if(data != null && data.ID != null){{
+    ids.push(data.ID);
+}} else {{
+    ids = ff.GetSelections('{Id}');
+}}
+if(ids.length > 1){{
+    layui.layer.msg('最多只能选择一行');
+    return;
+}}else if(ids.length == 1){{
+    tempUrl = tempUrl + '&id=' + ids[0];
+}}
+");
+                            break;
+                        case GridActionParameterTypesEnum.MultiIdWithNull:
+                            script.Append($@"
+var ids = ff.GetSelections('{Id}');
+{(item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ? "if(ids.length>0) tempUrl = tempUrl + '&Ids=' + ids.join('&Ids=');" : "isPost = true;")}
+");
+                            break;
+                        default: break;
+                    }
+                }
+
+                gridBtnEventStrBuilder.Append($@"
+case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
+                if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
+                {
+                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null)});
+");
+                }
+                else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
+                {
+
+                }
+                else
+                {
+                    gridBtnEventStrBuilder.Append($@"
+var isPost = false;
+{script}
+{(string.IsNullOrEmpty(item.OnClickFunc) ?
+(item.ShowDialog ?
+    $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
+    : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
+        $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)});"
+        : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
+        )
+)
+: $"{item.OnClickFunc}();")}");
+                }
+                gridBtnEventStrBuilder.Append($@"}};break;
+");
+            }
         }
     }
 }

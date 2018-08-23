@@ -1,10 +1,43 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM
-
+<style type="text/css">
+    /*.layui-colla-title {
+        overflow: visible;
+    }
+     .downpanel:hover {
+        opacity: initial;
+    }*/ 
+    /*.downpanel .layui-select-title {
+        padding-right: 20px;
+    }*/
+    /*.layui-form-select dl {
+        top: initial;
+        padding:1px 0px 0px 0px;
+    }
+        .layui-form-select dl dd {
+            padding: 0 0px;
+            margin-bottom:1px;
+            line-height: initial;
+        }*/
+        /*.layui-form-select dl a {
+            width: 100%;
+        }*/
+</style>
 <wt:searchpanel vm="@Model" reset-btn="true">
-<wt:row items-per-row="ItemsPerRowEnum.Three">
-<wt:textbox field="Searcher.SchoolCode" />
-<wt:textbox field="Searcher.SchoolName" />
-<wt:combobox field="Searcher.SchoolType" empty-text="全部" />
-</wt:row>
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.SchoolCode" />
+        <wt:textbox field="Searcher.SchoolName" />
+        <wt:combobox field="Searcher.SchoolType" empty-text="全部" />
+    </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<button type="button" class="layui-btn layui-btn-sm layui-unselect layui-form-select downpanel" style="" id="BatchBtn">
+    <div class="layui-select-title">
+        批量操作
+        <i class="layui-edge"></i>
+    </div> 
+    <dl class="layui-anim layui-anim-upbit">
+        <dd><a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_1b943be0533e49628e3f44496ebd1cca({event:'SchoolImport'});" class="layui-btn layui-btn-sm"><i class="layui-icon"></i>导入</a></dd>
+        <dd><a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_1b943be0533e49628e3f44496ebd1cca({event:'SchoolImport'});" class="layui-btn layui-btn-sm"><i class="layui-icon"></i>导入2</a></dd>
+    </dl>
+</button>
+
+<wt:grid vm="@Model" /> 

@@ -50,7 +50,8 @@ namespace WalkingTec.Mvvm.Core
         BatchDelete,
         Import,
         AddRow,
-        RemoveRow
+        RemoveRow,
+        ActionsGroup
     }
     #endregion
 

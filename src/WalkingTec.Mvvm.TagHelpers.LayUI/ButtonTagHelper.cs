@@ -7,6 +7,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            output.Content.Clear();
             output.Attributes.SetAttribute("type", "button");
             base.Process(context, output);
         }
