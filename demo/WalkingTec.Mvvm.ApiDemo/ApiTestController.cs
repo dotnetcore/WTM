@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             var rv = new ContentResult
             {
                 ContentType = "application/json;charset=utf-8",
-                Content = $@"{{""Data"":{vm.GetDataJson()},""Count"":{vm.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}",
+                Content = $@"{{""Data"":{vm.GetDataJson()},""Count"":{vm.Searcher.Count},""Page"":{vm.Searcher.Page},""PageCount"":{vm.Searcher.PageCount}}}",
             };
             return rv;
         }
@@ -45,8 +45,8 @@ namespace WalkingTec.Mvvm.ApiDemo
         }
 
         // POST api/<controller>
-        [HttpPost]
-        public IActionResult Post([FromBody]FrameworkUserVM vm)
+        [HttpPost("Add")]
+        public IActionResult Add([FromBody]FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -61,15 +61,15 @@ namespace WalkingTec.Mvvm.ApiDemo
                 }
                 else
                 {
-                    return CreatedAtAction(nameof(Get), new { id = vm.Entity.ID }, vm);
+                    return Ok(vm.Entity);
                 }
             }
 
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public IActionResult Put([FromBody]FrameworkUserVM vm)
+        [HttpPut("Edit/{id}")]
+        public IActionResult Edit([FromBody]FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -84,13 +84,13 @@ namespace WalkingTec.Mvvm.ApiDemo
                 }
                 else
                 {
-                    return CreatedAtAction(nameof(Get), new { id = vm.Entity.ID }, vm);
+                    return Ok(vm.Entity);
                 }
             }
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpGet("Delete/{ids}")]
         public IActionResult Delete(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
@@ -101,31 +101,29 @@ namespace WalkingTec.Mvvm.ApiDemo
             }
             else
             {
-                return Ok();
+                return Ok(vm.Entity);
             }
 
         }
 
         [HttpPost("ExportExcel")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        public IActionResult ExportExcel(List<Guid> ids, FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
-            vm.Searcher = searcher;
-            vm.SearcherMode = ListVMSearchModeEnum.Export;
+            if (ids != null && ids.Count > 0)
+            {
+                vm.Ids = ids;
+                vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
+            }
+            else
+            {
+                vm.Searcher = searcher;
+                vm.SearcherMode = ListVMSearchModeEnum.Export;
+            }
             var data = vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [HttpPost("CheckExportExcel")]
-        [ActionDescription("导出")]
-        public IActionResult ExportExcel(List<Guid> ids)
-        {
-            var vm = CreateVM<FrameworkUserListVM>();
-            vm.Ids = ids;
-            vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
-        }
     }
 }
