@@ -3,8 +3,7 @@
 .Publish/
 *.tar.gz
 *.ppk
-NuPack-dev.cmd
-NuPack.cmd
+NuPack*
 
 Migrations/
 *.pubxml

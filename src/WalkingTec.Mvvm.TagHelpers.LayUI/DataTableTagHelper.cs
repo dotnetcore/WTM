@@ -750,7 +750,7 @@ var {Id}option = {{
                 {
                     url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
                 }
-                var script = new StringBuilder($"var tempUrl = '{url}';");
+                var script = new StringBuilder($"var tempUrl = '{url}',whereStr={JsonConvert.SerializeObject(item.whereStr)};");
                 if (SPECIAL_ACTION.Contains(item.ActionName))
                 {
                     script.Append($@"tempUrl = tempUrl + '&id=' + data.ID;");
@@ -772,9 +772,14 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
         return;
     }}else{{
         tempUrl = tempUrl + '&id=' + ids[0];
+        var objs = ff.GetSelectionData('{Id}');
+        if(objs!=null && objs.length > 0){{
+            tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
+        }}
     }}
 }}else{{
     tempUrl = tempUrl + '&id=' + data.ID;
+    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }}
 ");
                             break;
@@ -793,8 +798,13 @@ if(ids.length == 0){{
 var ids = [];
 if(data != null && data.ID != null){{
     ids.push(data.ID);
+    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }} else {{
     ids = ff.GetSelections('{Id}');
+    var objs = ff.GetSelectionData('{Id}');
+    if(objs!=null && objs.length > 0){{
+        tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
+    }}
 }}
 if(ids.length > 1){{
     layui.layer.msg('最多只能选择一行');
