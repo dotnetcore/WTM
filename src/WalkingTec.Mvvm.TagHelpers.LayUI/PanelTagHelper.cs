@@ -63,7 +63,6 @@ if (typeof(Event) === 'function') {{
   window.dispatchEvent(evt);
 }}}}, 10);     
 }});
-}});
 
 </script>
 ");
