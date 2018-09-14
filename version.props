@@ -1,9 +1,9 @@
 ﻿<Project>
   <PropertyGroup>
-    <VersionPrefix>1.3.32</VersionPrefix>
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''">pre1</VersionSuffix>
+    <VersionPrefix>1.3.33</VersionPrefix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
     <ProductBuildNumber></ProductBuildNumber>
-    <PackageSuffix>insider001</PackageSuffix>
+    <PackageSuffix></PackageSuffix>
 
     <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
     <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
