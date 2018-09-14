@@ -605,30 +605,37 @@ var {Id}option = {{
 ");
             #endregion
 
-            if (HiddenPanel) // 无 Panel
-            {
+            //if (HiddenPanel) // 无 Panel
+            //{
                 output.PreElement.AppendHtml($@"<div style=""text-align:right"">{toolBarBtnStrBuilder}</div>");
-            }
-            else // 有 Panel
-            {
-                #region 在数据列表外部套上一层 Panel
-                toolBarBtnStrBuilder.Append("<style type=\"text/css\">.buttongroup:hover{opacity: initial;}</style>");
-                output.PreElement.AppendHtml($@"
-<div class=""layui-collapse"" >
-  <div class=""layui-colla-item"">
-    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"" style=""overflow: visible;"">{PanelTitle ?? "数据列表"}
-      <!-- 数据列表按钮组 -->
-      <div style=""text-align:right;margin-top:-43px;"">{toolBarBtnStrBuilder}</div>
-    </h2>
-    <div class=""layui-colla-content layui-show"" style=""padding:0;"">
-");
-                output.PostElement.AppendHtml($@"
-    </div>
-  </div>
-</div>
-<script>layui.element.init();/*阻止事件冒泡*/$('#{tempGridTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})</script>");
+           // }
+//            else // 有 Panel
+//            {
+//                #region 在数据列表外部套上一层 Panel
+//                toolBarBtnStrBuilder.Append("<style type=\"text/css\">.buttongroup:hover{opacity: initial;}</style>");
+//                output.PreElement.AppendHtml($@"
+//<div class=""layui-collapse donotuse_fill donotuse_pdiv"" >
+//  <div class=""layui-colla-item donotuse_fill donotuse_pdiv"">
+//    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"" style=""overflow: visible;"">{PanelTitle ?? "数据列表"}
+//      <!-- 数据列表按钮组 -->
+//      <div style=""text-align:right;margin-top:-43px;"">{toolBarBtnStrBuilder}</div>
+//    </h2>
+//    <div class=""layui-colla-content layui-show donotuse_fill donotuse_pdiv"" style=""padding:0;"">
+//");
+//                output.PostElement.AppendHtml($@"
+//    </div>
+//  </div>
+//</div>
+//<script>layui.element.init();$('#{tempGridTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})</script>");
 
-                #endregion
+            //    #endregion
+            //}
+            if(Height == null)
+            {
+                output.PostElement.AppendHtml($@"
+<script>$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('overflow','unset');
+
+</script>");
             }
             output.PostElement.AppendHtml($@"
 { (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}

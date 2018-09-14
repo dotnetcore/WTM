@@ -543,11 +543,10 @@ window.ff = {
                 data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\""+data["ID"]+"\"/> $3");
             }
         }
-        debugger;
        loaddata.push(data);
         option.url = null;
-        option.limit = 20;
         option.data = loaddata;
+        option.limit = 9999;
         layui.table.render(option);
     },
 
@@ -563,13 +562,12 @@ window.ff = {
             }
         }
         option.url = null;
-        option.limit = 20;
         option.data = loaddata;
+        option.limit = 9999;
         layui.table.render(option);
     },
 
     gridcellchange: function (ele, gridid, row, col, celltype) {
-        debugger;
         var loaddata = layui.table.cache[gridid];
         if (celltype == 0) {
             loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/i, "value=\"" + ele.value + "\"");

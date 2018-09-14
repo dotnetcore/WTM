@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             output.PostElement.AppendHtml($@"
 <script type=""text/javascript"">
-// 阻止事件冒泡
+layui.element.init();
 $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
 $('#{SearchBtnId}').on('click', function () {{
   /* 暂时解决 layui table首次及table.reload()无loading的bug */

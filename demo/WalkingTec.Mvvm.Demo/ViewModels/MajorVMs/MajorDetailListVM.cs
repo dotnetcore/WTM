@@ -13,6 +13,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 {
     public class MajorDetailListVM : BasePagedListVM<Major, MajorSearcher>
     {
+        public MajorDetailListVM()
+        {
+            NeedPage = false;
+        }
+
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
