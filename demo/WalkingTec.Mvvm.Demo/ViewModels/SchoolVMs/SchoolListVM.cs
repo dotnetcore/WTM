@@ -18,11 +18,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                 this.MakeStandardExportAction(null,false,ExportEnum.Excel),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "新建","", dialogWidth: 800),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "新建","", dialogWidth: 800),
+                this.MakeAction("School","Create2","主子表新建","主子表新建", GridActionParameterTypesEnum.NoId,dialogWidth:800),
+                this.MakeAction("School","Edit2","主子表修改","主子表修改", GridActionParameterTypesEnum.SingleId,dialogWidth:800),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+                this.MakeStandardExportAction(null,false,ExportEnum.Excel),
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入1","", dialogWidth: 800),
-                       this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入2","", dialogWidth: 800),
+                      this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入2","", dialogWidth: 800),
                  }),
 
             };
@@ -42,12 +46,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         public override IOrderedQueryable<School_View> GetSearchQuery()
         {
             var query = DC.Set<School>()
-                .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
-                .CheckContain(Searcher.SchoolName, x=>x.SchoolName)
-                .CheckEqual(Searcher.SchoolType, x=>x.SchoolType)
+                .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
+                .CheckContain(Searcher.SchoolName, x => x.SchoolName)
+                .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
                 .Select(x => new School_View
                 {
-				    ID = x.ID,
+                    ID = x.ID,
                     SchoolCode = x.SchoolCode,
                     SchoolName = x.SchoolName,
                     SchoolType = x.SchoolType,
@@ -59,7 +63,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
     }
 
-    public class School_View : School{
+    public class School_View : School
+    {
 
     }
 }

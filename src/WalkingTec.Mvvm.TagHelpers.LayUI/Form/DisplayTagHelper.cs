@@ -2,6 +2,7 @@
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq;
+using System;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -9,6 +10,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     public class DisplayTagHelper : BaseFieldTag
     {
         public string DisplayText { get; set; }
+
+        public string Format { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -53,6 +56,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     if (Field.Model.GetType().IsEnumOrNullableEnum())
                     {
                         val = PropertyHelper.GetEnumDisplayName(Field.Model.GetType(), Field.Model.ToString());
+                    }
+                    if(Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as DateTime?).Value.ToString(Format);
+                        }
                     }
                     else
                     {
