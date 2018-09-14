@@ -492,7 +492,7 @@ window.ff = {
      */
     DownloadExcelOrPdf: function (url, formId, defaultcondition) {
         var formData = ff.GetSearchFormData(formId);
-        $.extend(defaultcondition,formData);
+        $.extend(defaultcondition, formData);
         $.cookie("DONOTUSEDOWNLOADING", "1", { path: '/' });
         var form = $('<form method="POST" action="' + url + '">');
         for (var attr in defaultcondition) {
@@ -538,9 +538,9 @@ window.ff = {
                 var re = /(<input .*?)\s*\/>/ig;
                 var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
                 var re3 = /(.*?)<input hidden name=\"(.*?)\.id\" .*?\/>(.*?)/ig;
-                data[val]=data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
+                data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
                 data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
-                data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\""+data["ID"]+"\"/> $3");
+                data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\"" + data["ID"] + "\"/> $3");
             }
         }
        loaddata.push(data);
@@ -581,9 +581,9 @@ window.ff = {
     },
 
     clearSelector: function (id) {
-        $("#"+id).val("");
+        $("#" + id).val("");
         $("#" + id + "_Display").val("");
-        var vals = $('#'+"id"+'_Container input[type=hidden]');
+        var vals = $('#' + "id" + '_Container input[type=hidden]');
         for (var i = 0; i < vals.length; i++) {
             vals[i].remove();
         }
@@ -593,13 +593,30 @@ window.ff = {
         eval(id + "filter = obj;");
     },
 
-    guid:function(){
+    guid: function () {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
                 .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    },
+
+    /**
+     * concatWhereStr
+     * @param {string} tempUrl
+     * @param {Array<string>} whereStr
+     * @param {object} data
+     */
+    concatWhereStr: function (tempUrl, whereStr, data) {
+        if (tempUrl == null) tempUrl = "";
+        if (data == null) return tempUrl;
+        if (whereStr != null && whereStr.length > 0) {
+            for (var i = 0; i < whereStr.length; i++) {
+                tempUrl = tempUrl + '&' + whereStr[i] + '=' + data[whereStr[i]];
+            }
+        }
+        return tempUrl;
     }
 }
 
