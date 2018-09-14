@@ -54,7 +54,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     var element = layui.element;
     element.init();
 element.on('collapse({tid})', function(data){{
-    $(window).trigger(""resize"");  
+setTimeout(function () {{ 
+if (typeof(Event) === 'function') {{
+  window.dispatchEvent(new Event('resize'));
+}} else {{
+  var evt = window.document.createEvent('UIEvents'); 
+  evt.initUIEvent('resize', true, false, window, 0); 
+  window.dispatchEvent(evt);
+}}}}, 10);     
+}});
 }});
 
 </script>
