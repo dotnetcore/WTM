@@ -633,7 +633,7 @@ var {Id}option = {{
             if(Height == null)
             {
                 output.PostElement.AppendHtml($@"
-<script>$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('overflow','unset');
+<script>$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
 
 </script>");
             }
