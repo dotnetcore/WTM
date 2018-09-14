@@ -142,7 +142,7 @@ $('#{SearchBtnId}').on('click', function () {{
 done: function(res,curr,count){{layer.close(msg);}}}})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
-element.on('collapse({tempSearchTitleId})', function(data){{
+layui.element.on('collapse({tempSearchTitleId})', function(data){{
 setTimeout(function () {{ 
 if (typeof(Event) === 'function') {{
   window.dispatchEvent(new Event('resize'));
