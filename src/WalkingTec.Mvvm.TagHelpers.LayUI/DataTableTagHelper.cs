@@ -652,7 +652,7 @@ var {Id}option = {{
         /// <param name="vm"></param>
         /// <param name="item"></param>
         /// <param name="isSub"></param>
-        private void AddSubButton(string vmQualifiedName, StringBuilder rowBtnStrBuilder, StringBuilder toolBarBtnStrBuilder, StringBuilder gridBtnEventStrBuilder, BaseVM vm, GridAction item,bool isSub =false)
+        private void AddSubButton(string vmQualifiedName, StringBuilder rowBtnStrBuilder, StringBuilder toolBarBtnStrBuilder, StringBuilder gridBtnEventStrBuilder, BaseVM vm, GridAction item, bool isSub = false)
         {
             if (vm.LoginUserInfo?.IsAccessable(item.Url) == true || item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
             {
@@ -707,15 +707,15 @@ var {Id}option = {{
                         StringBuilder subBarBtnStrList = new StringBuilder();
                         foreach (var subItem in item.SubActions)
                         {
-                            StringBuilder subBarBtnStr = new StringBuilder(); 
-                            AddSubButton(vmQualifiedName, rowBtnStrBuilder, subBarBtnStr, gridBtnEventStrBuilder, vm, subItem,true);
-                            if (subBarBtnStr.Length>0)
+                            StringBuilder subBarBtnStr = new StringBuilder();
+                            AddSubButton(vmQualifiedName, rowBtnStrBuilder, subBarBtnStr, gridBtnEventStrBuilder, vm, subItem, true);
+                            if (subBarBtnStr.Length > 0)
                             {
                                 subBarBtnStrList.AppendFormat("<dd style=\"padding: 0 0px;margin-bottom:1px;line-height: initial;\">{0}</dd>", subBarBtnStr.ToString());
                             }
                         }
 
-                        
+
                         toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel buttongroup"" id=""btn_{item.ButtonId}"">
                                  <div class=""layui-select-title"" style=""padding-right:20px;"">
                                         {item.Name}
@@ -748,7 +748,7 @@ var {Id}option = {{
                     }
                     else
                     {
-                        string substyle = isSub? "style=\"width: 100%;\"": ""; 
+                        string substyle = isSub ? "style=\"width: 100%;\"" : "";
                         toolBarBtnStrBuilder.Append($@"<a href=""javascript:void(0)"" onclick=""wtToolBarFunc_{Id}({{event:'{item.Area + item.ControllerName + item.ActionName + item.QueryString}'}});"" class=""layui-btn layui-btn-sm"" {substyle}>{icon}{item.Name}</a>");
                     }
                 }
@@ -757,10 +757,30 @@ var {Id}option = {{
                 {
                     url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
                 }
-                var script = new StringBuilder($"var tempUrl = '{url}';");
+                var script = new StringBuilder($"var tempUrl = '{url}',whereStr={JsonConvert.SerializeObject(item.whereStr)};");
                 if (SPECIAL_ACTION.Contains(item.ActionName))
                 {
                     script.Append($@"tempUrl = tempUrl + '&id=' + data.ID;");
+                    switch (item.ParameterType)
+                    {
+                        case GridActionParameterTypesEnum.SingleId:
+                        case GridActionParameterTypesEnum.SingleIdWithNull:
+                            if (item.whereStr != null && item.whereStr.Length > 0)
+                            {
+                                script.Append($@"
+if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
+    var objs = ff.GetSelectionData('{Id}');
+    if(objs!=null && objs.length > 0){{
+        tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
+    }}
+}}else{{
+    tempUrl = tempUrl + '&id=' + data.ID;
+    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
+}}
+");
+                            }
+                            break;
+                    }
                 }
                 else
                 {
@@ -779,9 +799,14 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
         return;
     }}else{{
         tempUrl = tempUrl + '&id=' + ids[0];
+        var objs = ff.GetSelectionData('{Id}');
+        if(objs!=null && objs.length > 0){{
+            tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
+        }}
     }}
 }}else{{
     tempUrl = tempUrl + '&id=' + data.ID;
+    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }}
 ");
                             break;
@@ -800,8 +825,13 @@ if(ids.length == 0){{
 var ids = [];
 if(data != null && data.ID != null){{
     ids.push(data.ID);
+    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }} else {{
     ids = ff.GetSelections('{Id}');
+    var objs = ff.GetSelectionData('{Id}');
+    if(objs!=null && objs.length > 0){{
+        tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
+    }}
 }}
 if(ids.length > 1){{
     layui.layer.msg('最多只能选择一行');
