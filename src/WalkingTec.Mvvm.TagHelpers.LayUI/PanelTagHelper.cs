@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -20,6 +21,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
+            string tid = Guid.NewGuid().ToString().Replace("-", "");
+            output.Attributes.Add("lay-filter", tid);
             if (PanelType == PanelType.Collapse)
             {
                 output.Attributes.SetAttribute("class", "layui-collapse");
@@ -50,6 +53,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
     var element = layui.element;
     element.init();
+element.on('collapse({tid})', function(data){{
+    $(window).trigger(""resize"");  
+}});
+
 </script>
 ");
             base.Process(context, output);

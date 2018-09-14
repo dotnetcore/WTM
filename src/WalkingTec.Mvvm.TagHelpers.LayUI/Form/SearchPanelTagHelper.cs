@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             output.PreContent.AppendHtml($@"
-<div class=""layui-collapse"" style=""margin-bottom:5px;"">
+<div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
   <div class=""layui-colla-item"">
     <h2 class=""layui-colla-title"">搜索条件
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">
@@ -142,6 +142,17 @@ $('#{SearchBtnId}').on('click', function () {{
 done: function(res,curr,count){{layer.close(msg);}}}})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
+element.on('collapse({tempSearchTitleId})', function(data){{
+setTimeout(function () {{ 
+if (typeof(Event) === 'function') {{
+  window.dispatchEvent(new Event('resize'));
+}} else {{
+  var evt = window.document.createEvent('UIEvents'); 
+  evt.initUIEvent('resize', true, false, window, 0); 
+  window.dispatchEvent(evt);
+}}}}, 10);     
+}});
+
 </script>");
             return base.ProcessAsync(context, output);
         }
