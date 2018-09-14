@@ -51,8 +51,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 }
             }).SetFormat((entity,v)=> { return ((double)v).ToString("f2"); }));
             header.Add(this.MakeGridHeader(x => x.IP, 120));
-            header.Add(this.MakeGridHeader(x => x.Remark, 120));
-            header.Add(this.MakeGridHeaderAction(width: 80));
+            header.Add(this.MakeGridHeader(x => x.Remark));
+            header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;
         }
