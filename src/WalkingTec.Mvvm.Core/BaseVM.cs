@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,8 +33,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// VM实例的Id
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]        
         public string UniqueId
         {
             get
@@ -53,20 +49,17 @@ namespace WalkingTec.Mvvm.Core
         /// 上传文件的Id，方便导入等操作中进行绑定，这类操作需要上传文件但不需要记录在数据库中，所以Model层中没有文件Id的字段
         /// </summary>
         [Display(Name = "UploadFile")]
-        [ValidateNever()]
         public Guid? UploadFileId { get; set; }
 
         /// <summary>
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
         /// </summary>
-        [ValidateNever()]
         public string WindowIds { get; set; }
 
         private string _viewdivid;
         /// <summary>
         /// PartialView中主Div的Id
         /// </summary>
-        [ValidateNever()]
         public string ViewDivId
         {
             set { _viewdivid = value; }
@@ -83,14 +76,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 数据库环境
         /// </summary>
-        [BindNever()]
-        [ValidateNever()]
         public IDataContext DC { get; set; }
 
         /// <summary>
         /// 获取VM的全名
         /// </summary>
-        [ValidateNever()]
         public string VMFullName
         {
             get
@@ -104,8 +94,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取VM所在Dll
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public string CreatorAssembly
         {
             get; set;
@@ -114,45 +102,34 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取当前使用的连接字符串
         /// </summary>
-        [ValidateNever()]
         public string CurrentCS { get; set; }
 
         /// <summary>
         /// 指示是否使用固定连接字符串
         /// </summary>
-        [ValidateNever()]
         public bool FromFixedCon { get; set; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取配置文件的信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Configs ConfigInfo { get; set; }
 
         /// <summary>
         /// 获取DbContext构造函数
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public ConstructorInfo DataContextCI { get; set; }
 
 
-        [ValidateNever()]
-        [BindNever()]
         public IUIService UIService { get; set; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
-        [ValidateNever()]
         public string CurrentWindowId
         {
             get
@@ -170,7 +147,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
-        [ValidateNever()]
         public string ParentWindowId
         {
             get
@@ -192,8 +168,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 当前登录人信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public LoginUserInfo LoginUserInfo
         {
             get
@@ -210,28 +184,21 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 当前Url
         /// </summary>
-        [ValidateNever()]
         public string CurrentUrl { get; set; }
 
         /// <summary>
         /// Session信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public ISessionService Session { get; set; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public IModelStateService MSD { get; set; }
 
         /// <summary>
         /// 日志信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public ActionLog Log { get; set; }
 
         /// <summary>

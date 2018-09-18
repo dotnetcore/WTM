@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using System;
@@ -37,60 +35,34 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 下载模板显示名称
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public string FileDisplayName { get; set; }
 
         /// <summary>
         /// 错误列表
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public TemplateErrorListVM ErrorListVM { get; set; }
 
         /// <summary>
         /// 是否验证模板类型（当其他系统模板导入到某模块时可设置为False）
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public bool ValidityTemplateType { get; set; }
 
         /// <summary>
         /// 下载模版页面的参数
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Dictionary<string, string> Parms { get; set; }
 
         private List<T> _templateData;
-        /// <summary>
-        /// 从模版中获取的数据列表
-        /// </summary>
-        [ValidateNever()]
-        [BindNever()]
-        public List<T> TemplateData
-        {
-            get
-            {
-                if (_templateData == null)
-                {
-                    DoMapList();
-                }
-                return _templateData;
-            }
-        }
+
 
         /// <summary>
         /// 要导入的Model列表
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public List<P> EntityList { get; set; }
 
         /// <summary>
         /// 模版
         /// </summary>
-        [ValidateNever()]
         public T Template { get; set; }
 
         //Model数据是否已被赋值
@@ -150,9 +122,12 @@ namespace WalkingTec.Mvvm.Core
             //获取Model类的所有属性
             var pros = typeof(P).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var excelPros = typeof(T).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
-
+            if(_templateData == null)
+            {
+                DoMapList();
+            }
             //循环Excel中的数据
-            foreach (var item in TemplateData)
+            foreach (var item in _templateData)
             {
                 int rowIndex = 2;
                 bool isMainData = false;
@@ -1010,7 +985,6 @@ namespace WalkingTec.Mvvm.Core
     }
 
     #region 辅助类
-    [ValidateNever()]
     public class ErrorMessage : TopBasePoco
     {
         [Display(Name = "行号")]
@@ -1022,7 +996,6 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 错误数据列表
     /// </summary>
-    [ValidateNever()]
     public class TemplateErrorListVM : BasePagedListVM<ErrorMessage, BaseSearcher>
     {
 
