@@ -139,7 +139,9 @@ $('#{SearchBtnId}').on('click', function () {{
         fixed: false
     }})
     table.reload('{GridId}',{{where: $.extend({TableJSVar}.config.where,ff.GetSearchFormData('{Id}','{Vm.Name}')),
-done: function(res,curr,count){{layer.close(msg);}}}})
+done: function(res,curr,count){{
+    layer.close(msg);
+    $('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');}}}})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
 layui.element.on('collapse({tempSearchTitleId})', function(data){{
