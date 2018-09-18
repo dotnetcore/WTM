@@ -6,8 +6,6 @@ using System.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -17,34 +15,25 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 下载模板显示名称
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public string FileDisplayName { get; set; }
         /// <summary>
         /// 是否验证模板类型（当其他系统模板导入到某模块时可设置为False）
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public bool ValidityTemplateType { get; set; }
 
         /// <summary>
         /// 需要导出的数据
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public DataTable TemplateDataTable { get; set; }
 
         /// <summary>
         /// 下载模版页面参数
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Dictionary<string, string> Parms { get; set; }
 
         /// <summary>
         /// Excel索引
         /// </summary>
-        [ValidateNever()]
         public long ExcelIndex { get; set; }
         #endregion
 

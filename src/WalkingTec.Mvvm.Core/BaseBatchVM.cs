@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
+﻿using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -55,20 +52,16 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 批量列表VM
         /// </summary>
-        [ValidateNever()]
         public IBasePagedListVM<TopBasePoco, ISearcher> ListVM { get; set; }
 
         /// <summary>
         /// 批量操作的错误
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Dictionary<Guid, string> ErrorMessage { get; set; }
 
         /// <summary>
         /// 列表数据的Id数组
         /// </summary>
-        [ValidateNever()]
         public Guid[] Ids { get; set; }
 
         /// <summary>
