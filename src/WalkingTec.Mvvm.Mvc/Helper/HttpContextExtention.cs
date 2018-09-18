@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Linq;
 
-namespace WalkingTec.Mvvm.Core.Extensions
+namespace WalkingTec.Mvvm.Mvc
 {
     public static class HttpContextExtention
     {

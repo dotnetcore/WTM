@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,35 +15,29 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 当前页
         /// </summary>
-        [ValidateNever()]
         public int Page { get; set; }
         /// <summary>
         /// 每页数
         /// </summary>
-        [ValidateNever()]
         public int Limit { get; set; }
         /// <summary>
         /// 记录数
         /// </summary>
-        [ValidateNever()]
         public long Count { get; set; }
         /// <summary>
         /// 分页数
         /// </summary>
-        [ValidateNever()]
         public int PageCount { get; set; }
         #endregion
 
         /// <summary>
         /// 记录 Controller 中的表单数据
         /// </summary>
-        [ValidateNever()]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取VM的全名
         /// </summary>
-        [ValidateNever()]
         public string VMFullName
         {
             get
@@ -59,21 +51,15 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 数据库环境
         /// </summary>
-        [BindNever()]
-        [ValidateNever()]
         public IDataContext DC { get; set; }
 
         /// <summary>
         /// Session信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public ISessionService Session { get; set; }
         /// <summary>
         /// 当前登录人信息
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public LoginUserInfo LoginUserInfo
         {
             get
@@ -91,28 +77,23 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 排序信息
         /// </summary>
-        [ValidateNever()]
         public string SortInfo { get; set; }
         /// <summary>
         /// 是否搜索树形结构数据
         /// </summary>
-        [ValidateNever()]
         public bool TreeMode { get; set; }
         /// <summary>
         /// 树形结构数据父Id
         /// </summary>
-        [ValidateNever()]
         public Guid? ParentId { get; set; }
         /// <summary>
         /// 是否有效，针对继承PersistPoco的Model
         /// </summary>
         [Display(Name = "有效")]
-        [ValidateNever()]
         public bool? IsValid { get; set; }
         /// <summary>
         /// 用于框架判断列表页是否全局刷新
         /// </summary>
-        [ValidateNever()]
         public bool IsPostBack { get; set; }
         #endregion
 

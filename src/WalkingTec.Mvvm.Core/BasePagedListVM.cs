@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
@@ -57,8 +55,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public int ChildrenDepth { get; set; }
 
         private IEnumerable<IGridColumn<TModel>> _gridHeaders;
@@ -66,8 +62,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// GridHeaders
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public IEnumerable<IGridColumn<TModel>> GridHeaders
         {
             get
@@ -95,8 +89,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 页面动作
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public List<GridAction> GridActions
         {
             get
@@ -465,41 +457,33 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
-        [ValidateNever()]
         public List<Guid> Ids { get; set; }
 
         /// <summary>
         /// 每页行数
         /// </summary>
-        [ValidateNever()]
         [Obsolete("弃用，改用 DataTableHelper上的Limit")]
         public int RecordsPerPage { get; set; }
 
         /// <summary>
         /// 是否已经搜索过
         /// </summary>
-        [ValidateNever()]
         public bool IsSearched { get; set; }
 
-        [ValidateNever()]
         public bool PassSearch { get; set; }
         /// <summary>
         /// 查询模式
         /// </summary>
-        [ValidateNever()]
         public ListVMSearchModeEnum SearcherMode { get; set; }
 
         /// <summary>
         /// 是否需要分页
         /// </summary>
-        [ValidateNever()]
         public bool NeedPage { get; set; }
 
         /// <summary>
         /// 数据列表
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public List<TModel> EntityList { get; set; }
 
 
@@ -511,7 +495,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 使用 VM 的 Id 来生成 SearcherDiv 的 Id
         /// </summary>
-        [ValidateNever()]
         public string SearcherDivId
         {
             get { return this.UniqueId + "Searcher"; }
@@ -521,8 +504,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 替换查询条件，如果被赋值，则列表会使用里面的Lambda来替换原有Query里面的Where条件
         /// </summary>
-        [ValidateNever()]
-        [BindNever()]
         public Expression<Func<TopBasePoco, bool>> ReplaceWhere { get; set; }
 
         /// <summary>
