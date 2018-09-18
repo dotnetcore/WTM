@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,8 +68,6 @@ namespace WalkingTec.Mvvm.Core
     public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco
     {
         public TModel Entity { get; set; }
-        [ValidateNever()]
-        [BindNever()]
         public bool ByPassBaseValidation { get; set; }
 
         //保存读取时Include的内容
