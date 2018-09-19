@@ -607,7 +607,7 @@ var {Id}option = {{
 
             //if (HiddenPanel) // 无 Panel
             //{
-                output.PreElement.AppendHtml($@"<div style=""text-align:right"">{toolBarBtnStrBuilder}</div>");
+                output.PreElement.AppendHtml($@"<div style=""text-align:right;margin-right:15px"">{toolBarBtnStrBuilder}</div>");
            // }
 //            else // 有 Panel
 //            {
