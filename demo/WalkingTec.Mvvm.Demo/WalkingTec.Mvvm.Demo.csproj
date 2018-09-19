@@ -7,6 +7,14 @@
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile />
+  </PropertyGroup>
+
   <Import Project="..\..\common.props" />
 
   <ItemGroup>

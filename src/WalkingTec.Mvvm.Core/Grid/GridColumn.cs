@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 隐藏列
         /// </summary>
-        public bool Hidden { get; set; }
+        public bool? Hide { get; set; }
 
         /// <summary>
         /// 子列

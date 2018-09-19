@@ -38,18 +38,6 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
         /// <summary>
-        /// 是否隐藏
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="self"></param>
-        /// <param name="hidden"></param>
-        /// <returns></returns>
-        public static GridColumn<T> SetHidden<T>(this GridColumn<T> self, bool hidden) where T : TopBasePoco
-        {
-            self.Hidden = hidden;
-            return self;
-        }
-        /// <summary>
         /// 列头
         /// </summary>
         /// <typeparam name="T"></typeparam>
