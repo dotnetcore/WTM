@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Core
                     alignType = GridColumnAlignEnum.Left;
                 }
             }
-            
+
             return new GridColumn<T>(columnExp, width) { ColumnType = GridColumnTypeEnum.Normal, Align = alignType };
         }
 
@@ -243,6 +243,25 @@ namespace WalkingTec.Mvvm.Core
         //    self.Templet = templet;
         //    return self;
         //}
+
+        [Obsolete("该方法已经被弃用，请使用 SetHide 代替")]
+        public static GridColumn<T> SetHidden<T>(this GridColumn<T> self, bool hidden = true) where T : TopBasePoco
+        {
+            return self;
+        }
+
+        /// <summary>
+        /// 是否隐藏
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="hide"></param>
+        /// <returns></returns>
+        public static GridColumn<T> SetHide<T>(this GridColumn<T> self, bool hide = true) where T : TopBasePoco
+        {
+            self.Hide = hide;
+            return self;
+        }
 
         /// <summary>
         /// 设定列宽不可改变

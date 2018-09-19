@@ -5,13 +5,15 @@
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <NoWarn>1701;1702;1705;1591;1570;0414</NoWarn>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <NoWarn>1701;1702;1705;1591;1570;0414</NoWarn>
   </PropertyGroup>
-  
+
   <Import Project="..\..\common.props" />
   
   <ItemGroup>
