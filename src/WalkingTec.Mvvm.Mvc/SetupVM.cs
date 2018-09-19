@@ -174,11 +174,16 @@ namespace WalkingTec.Mvvm.Mvc
                 System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
                 foreach (var entry in zip.Entries)
                 {
-                    if (entry.FullName.EndsWith("/"))
+                    int index = entry.FullName.LastIndexOf("/");
+                    if (index >= 0)
                     {
-                        Directory.CreateDirectory($"{MainDir}\\wwwroot\\{entry.FullName}");
+                        string dir = $"{MainDir}\\wwwroot\\{entry.FullName.Substring(0, index)}";
+                        if (Directory.Exists(dir) == false)
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
                     }
-                    else
+                    if(entry.FullName.EndsWith("/") == false)
                     {
                         var f = File.OpenWrite($"{MainDir}\\wwwroot\\{entry.FullName}");
                         var z = entry.Open();
