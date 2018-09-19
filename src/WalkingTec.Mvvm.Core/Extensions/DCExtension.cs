@@ -674,15 +674,7 @@ where S : struct
 
         public static string GetTableName<T>(this IDataContext self)
         {
-            if (self.Database.IsSqlServer())
-            {
-                return self.Model.FindEntityType(typeof(T)).SqlServer().TableName;
-            }
-            if (self.Database.IsMySql())
-            {
-                return self.Model.FindEntityType(typeof(T)).MySql().TableName;
-            }
-            return "";
+            return self.Model.FindEntityType(typeof(T)).SqlServer().TableName;
         }
 
         public static string GetFKName<T>(this IDataContext self, string listFieldName) where T : class
