@@ -213,7 +213,12 @@ namespace WalkingTec.Mvvm.Core
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
             //附件表合并
-            modelBuilder.Entity<FileAttachment>().HasOne(x => x.FileData).WithOne(x => x.FileAttachment);
+            modelBuilder.Entity<FileAttachment>().OwnsOne(
+            o => o.FileData,
+            sa =>
+            {
+                sa.Property(p => p.FileData).HasColumnName("FileData");
+            });
 
             var modelAsms = Utils.GetAllAssembly();
 

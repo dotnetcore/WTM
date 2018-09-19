@@ -111,6 +111,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ProjectType == ProjectTypeEnum.Single)
             {
                 Directory.CreateDirectory($"{MainDir}\\Models");
+                File.WriteAllText($"{MainDir}\\Models\\ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}\\ViewModels\\HomeVMs");
                 vmdir = MainDir + "\\ViewModels";
             }

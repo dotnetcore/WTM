@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,9 +39,9 @@ namespace WalkingTec.Mvvm.Core
     /// FileAttachmentData
     /// </summary>
     [Table("FileAttachments")]
+    [Owned()]
     public class FileAttachmentData : TopBasePoco
     {
-        public FileAttachment FileAttachment { get; set; }
         public byte[] FileData { get; set; }
     }
 }
