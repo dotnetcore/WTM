@@ -349,6 +349,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
+                    Hide = item.Hide
                     //EditType = item.EditType
                 };
                 if (item.Children != null && item.Children.Count() > 0)
@@ -368,6 +369,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 CalcChildCol(layuiCols, nextCols, maxDepth, depth + 1);
             }
         }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (Loading == null)
@@ -484,6 +486,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
+                    Hide = item.Hide
                     //EditType = item.EditType
                 };
                 switch (item.ColumnType)
@@ -630,7 +633,7 @@ var {Id}option = {{
 
             //    #endregion
             //}
-            if(Height == null)
+            if (Height == null)
             {
                 output.PostElement.AppendHtml($@"
 <script>$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
@@ -642,6 +645,7 @@ var {Id}option = {{
 ");
             base.Process(context, output);
         }
+
         /// <summary>
         /// 添加按钮
         /// </summary>

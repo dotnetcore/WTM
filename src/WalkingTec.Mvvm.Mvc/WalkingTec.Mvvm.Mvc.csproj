@@ -7,10 +7,15 @@
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605</WarningsAsErrors>
-    <NoWarn>1701;1702;1705;1591;1570;0809</NoWarn>
+    <NoWarn>1701;1702;1705;1591;1570;0414;0809</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <NoWarn>1701;1702;1705;1591;1570;0414;0809</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

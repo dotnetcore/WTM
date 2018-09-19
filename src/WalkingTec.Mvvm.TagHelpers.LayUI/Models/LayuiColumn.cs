@@ -4,7 +4,9 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-
+    /// <summary>
+    /// LayuiColumnTypeEnum
+    /// </summary>
     public enum LayuiColumnTypeEnum
     {
         /// <summary>
@@ -24,6 +26,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         Numbers
     }
+
     /// <summary>
     /// LayuiColumn
     /// </summary>
@@ -32,13 +35,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         #region Interface Property
 
         #region Special
-    
+
         /// <summary>
         /// 设定复选框列
         /// <para>与 checkbox 参数搭配使用，如果设置 true，则表示复选框默认全部选中。</para>
         /// </summary>
         [JsonProperty("LAY_CHECKED")]
         public bool? LAY_CHECKED { get; set; }
+
         /// <summary>
         /// 绑定工具条
         /// <para>通常你需要在表格的每一行加上 查看、编辑、删除 这样类似的操作按钮，</para>
@@ -68,34 +72,40 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         [JsonProperty("field")]
         public string Field { get; set; }
+
         /// <summary>
         /// 设定标题名称
         /// <para>即表头各列的标题</para>
         /// </summary>
         [JsonProperty("title")]
         public string Title { get; set; }
+
         /// <summary>
         /// 设定列宽
         /// <para>列宽的设定也通常是必须的（“特殊列”除外，如：复选框列、工具列等），它关系到表格的整体美观程度。</para>
         /// </summary>
         [JsonProperty("width")]
         public int? Width { get; set; }
+
         /// <summary>
         /// 即横跨的单元格数，这种情况下不用设置field和width
         /// </summary>
         [JsonProperty("colspan")]
         public int? Colspan { get; set; }
+
         /// <summary>
         /// 即纵向跨越的单元格数
         /// </summary>
         [JsonProperty("rowspan")]
         public int? Rowspan { get; set; }
+
         /// <summary>
         /// 是否允许排序 (ASCII码排序)
         /// <para>如果设置 true，则在对应的表头显示排序icon，从而对列开启排序功能。</para>
         /// </summary>
         [JsonProperty("sort")]
         public bool? Sort { get; set; }
+
         /// <summary>
         /// 是否固定列
         /// <para>如果设置 Left 或 Right，则对应的列将会被固定在左或右，不随滚动条而滚动。</para>
@@ -103,12 +113,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         [JsonProperty("fixed")]
         [JsonConverter(typeof(StringEnumConverter), true)]
         public GridColumnFixedEnum? Fixed { get; set; }
+
         /// <summary>
         /// 对齐方式
         /// </summary>
         [JsonProperty("align")]
         [JsonConverter(typeof(StringEnumConverter), true)]
         public GridColumnAlignEnum Align { get; set; }
+
         /// <summary>
         /// 是否允许编辑
         /// <para>如果设置 true，则对应列的单元格将会被允许编辑，目前只支持type="text"的input编辑。</para>
@@ -116,6 +128,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         [JsonProperty("edit")]
         [JsonConverter(typeof(StringEnumConverter), true)]
         public EditTypeEnum? EditType { get; set; }
+
         /// <summary>
         /// 自定义模板
         /// <para>在默认情况下，单元格的内容是完全按照数据接口返回的content原样输出的，</para>
@@ -130,6 +143,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         [JsonProperty("unresize")]
         public bool? UnResize { get; set; }
-        #endregion        
+
+        /// <summary>
+        /// 隐藏列
+        /// </summary>
+        [JsonProperty("hide")]
+        public bool? Hide { get; set; }
+
+        #endregion
     }
 }
