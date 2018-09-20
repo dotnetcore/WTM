@@ -142,22 +142,14 @@ $('#{SearchBtnId}').on('click', function () {{
         done: function(res,curr,count){{
             layer.close(msg);
             if(this.height == undefined){{
-                $('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
+                $('.layui-table-view').css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
+                ff.triggerResize();
             }}
         }}
     }})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
-layui.element.on('collapse({tempSearchTitleId})', function(data){{
-setTimeout(function () {{ 
-if (typeof(Event) === 'function') {{
-  window.dispatchEvent(new Event('resize'));
-}} else {{
-  var evt = window.document.createEvent('UIEvents'); 
-  evt.initUIEvent('resize', true, false, window, 0); 
-  window.dispatchEvent(evt);
-}}}}, 10);     
-}});
+layui.element.on('collapse({tempSearchTitleId})', function(data){{ff.triggerResize()}});
 
 </script>");
             return base.ProcessAsync(context, output);
