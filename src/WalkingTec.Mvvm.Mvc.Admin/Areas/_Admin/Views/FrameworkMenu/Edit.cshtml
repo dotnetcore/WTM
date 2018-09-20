@@ -22,16 +22,13 @@
                     <wt:combobox field="Entity.ParentId" items="AllParents" />
                 </wt:row>
                 <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:switch field="Entity.FolderOnly" lay-text="是|否" />
-                    <wt:switch field="Entity.IsInherit" lay-text="是|否" />
-                </wt:row>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:switch field="Entity.ShowOnMenu" lay-text="是|否" />
-                    <wt:switch field="Entity.IsPublic" lay-text="是|否" />
-                </wt:row>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
                     <wt:textbox field="Entity.DisplayOrder" />
                     <wt:upload field="Entity.IConId" upload-type="ImageFile" />
+                </wt:row>
+                <wt:row items-per-row="ItemsPerRowEnum.Four">
+                    <wt:switch field="Entity.ShowOnMenu" lay-text="是|否" />
+                    <wt:switch field="Entity.FolderOnly" lay-text="是|否" />
+                    <wt:switch field="Entity.IsPublic" lay-text="是|否" />
                 </wt:row>
                 <div style="height:100px"></div>
             </wt:tabcontent>

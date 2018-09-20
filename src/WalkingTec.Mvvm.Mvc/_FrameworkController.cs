@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var data = DC.Set<FrameworkMenu>()
              .Where(x => x.DomainId == did)
-             .Select(x => new SimpleMenu { Id = x.ID, ActionId = x.ActionId, IsInherit = x.IsInherit, IsPublic = x.IsPublic, Url = x.Url, ParentId = x.ParentId })
+             .Select(x => new SimpleMenu { Id = x.ID, ActionId = x.ActionId, IsPublic = x.IsPublic, Url = x.Url, ParentId = x.ParentId })
              .ToList();
             return Json(data);
         }

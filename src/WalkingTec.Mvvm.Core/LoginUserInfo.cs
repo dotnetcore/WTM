@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Core
             //如果没有直接对应的，且如果当前menu设定了继承属性，则递归寻找上层菜单是否可以访问
             else
             {
-                if (menu.Parent == null || menu.IsInherit == false)
+                if (menu.Parent == null)
                 {
                     return false;
                 }

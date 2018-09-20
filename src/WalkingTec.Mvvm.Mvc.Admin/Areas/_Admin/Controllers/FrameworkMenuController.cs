@@ -35,7 +35,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 vm.Entity.ParentId = id;
             }
             vm.Entity.IsInside = true;
-            vm.Entity.IsInherit = true;
             vm.Entity.IsPublic = false;
             vm.Entity.FolderOnly = false;
             vm.Entity.ShowOnMenu = true;
@@ -71,7 +70,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult BatchCreate(Guid? id)
         {
             var vm = CreateVM<FrameworkMenuVM>();
-            vm.Entity.IsInherit = true;
             vm.Entity.IsPublic = false;
             vm.Entity.FolderOnly = false;
             vm.Entity.ShowOnMenu = true;
