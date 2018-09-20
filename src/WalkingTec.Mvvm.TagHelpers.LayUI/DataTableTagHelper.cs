@@ -557,7 +557,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     fixed: false
   }})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
-var {Id}option = {{
+ var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
@@ -580,6 +580,7 @@ var {Id}option = {{
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
 ,done: function(res,curr,count){{layer.close(msg);
+    {(Height==null ? "$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px'); " : string.Empty)}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
 }}
@@ -633,13 +634,6 @@ var {Id}option = {{
 
             //    #endregion
             //}
-            if (Height == null)
-            {
-                output.PostElement.AppendHtml($@"
-<script>$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
-
-</script>");
-            }
             output.PostElement.AppendHtml($@"
 { (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
