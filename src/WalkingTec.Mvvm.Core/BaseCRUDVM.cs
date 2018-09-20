@@ -559,28 +559,25 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public virtual void DoRealDelete()
         {
-            var pros = typeof(TModel).GetProperties();
-            //如果包含附件，则先删除附件
-            var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-            foreach (var f in fa)
-            {
-                if (f.GetValue(Entity) is FileAttachment file)
-                {
-                    if (file.SaveFileMode == SaveFileModeEnum.Local && !string.IsNullOrEmpty(file.Path))
-                    {
-                        Utils.DeleteFile(file.Path);
-                    }
-                    FileAttachmentData fd = new FileAttachmentData() { ID = file.ID };
-                    DC.DeleteEntity(fd);
-                    DC.DeleteEntity(file);
-                }
-            }
-            DC.DeleteEntity(Entity);
             try
             {
+                DC.DeleteEntity(Entity);
                 DC.SaveChanges();
+                var pros = typeof(TModel).GetProperties();
+                //如果包含附件，则先删除附件
+                var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+                foreach (var f in fa)
+                {
+                    if (f.GetValue(Entity) is FileAttachment file)
+                    {
+                        FileAttachmentVM ofa = new FileAttachmentVM();
+                        ofa.CopyContext(this);
+                        ofa.SetEntityById(file.ID);
+                        ofa.DoDelete();
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }
