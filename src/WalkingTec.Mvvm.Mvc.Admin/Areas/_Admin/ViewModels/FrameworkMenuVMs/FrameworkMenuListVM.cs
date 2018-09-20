@@ -48,7 +48,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.ShowOnMenu, 60),
                         this.MakeGridHeader(x => x.FolderOnly, 60),
                         this.MakeGridHeader(x => x.IsPublic, 60),
-                        this.MakeGridHeader(x => x.IsInherit, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
                         this.MakeGridHeader(x => x.ICon, 100),
                         this.MakeGridHeaderAction(width: 290)
@@ -63,7 +62,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             string rv = "";
             rv += UIService.MakeRadio(item.Allowed, "允许","menu_"+item.ID, "1");
             rv += UIService.MakeRadio(item.Denied, "拒绝", "menu_" + item.ID, "2");
-            rv += UIService.MakeRadio(item.Allowed==false && item.Denied == false, "未设置", "menu_" + item.ID, "0");
+            rv += UIService.MakeRadio(item.Allowed==false && item.Denied == false, "继承父级", "menu_" + item.ID, "0");
             return rv;
         }
 
@@ -134,7 +133,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     ShowOnMenu = x.ShowOnMenu,
                     FolderOnly = x.FolderOnly,
                     IsPublic = x.IsPublic,
-                    IsInherit = x.IsInherit,
                     DisplayOrder = x.DisplayOrder,
                     ExtraOrder = order++,
                     ParentID = x.ParentId,
@@ -158,7 +156,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     ShowOnMenu = x.ShowOnMenu,
                     FolderOnly = x.FolderOnly,
                     IsPublic = x.IsPublic,
-                    IsInherit = x.IsInherit,
                     DisplayOrder = x.DisplayOrder,
                     ExtraOrder = order++,
                     ParentID = x.ParentId,
@@ -213,8 +210,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public bool? FolderOnly { get; set; }
         [Display(Name = "公开")]
         public bool? IsPublic { get; set; }
-        [Display(Name = "继承")]
-        public bool? IsInherit { get; set; }
         [Display(Name = "顺序")]
         public int? DisplayOrder { get; set; }
         [Display(Name = "图标")]

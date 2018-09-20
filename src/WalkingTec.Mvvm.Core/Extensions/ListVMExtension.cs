@@ -229,7 +229,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         addHiddenID = true;
                     }
 
-                    html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                    html = "\"" + html.Replace("<","&lt").Replace(">", "&gt").Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     sb.Append(html);
                     sb.Append(",");
                 }

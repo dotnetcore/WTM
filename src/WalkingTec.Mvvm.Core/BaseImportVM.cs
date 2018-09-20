@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public Dictionary<string, string> Parms { get; set; }
 
-        private List<T> _templateData;
+        protected List<T> TemplateData;
 
 
         /// <summary>
@@ -122,12 +122,12 @@ namespace WalkingTec.Mvvm.Core
             //获取Model类的所有属性
             var pros = typeof(P).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             var excelPros = typeof(T).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
-            if(_templateData == null)
+            if(TemplateData == null)
             {
                 DoMapList();
             }
             //循环Excel中的数据
-            foreach (var item in _templateData)
+            foreach (var item in TemplateData)
             {
                 int rowIndex = 2;
                 bool isMainData = false;
@@ -640,7 +640,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 Template.InitExcelData();
                 Template.InitCustomFormat();
-                _templateData = new List<T>();
+                TemplateData = new List<T>();
                 HSSFWorkbook hssfworkbook = new HSSFWorkbook();
                 if (UploadFileId == null)
                 {
@@ -760,7 +760,7 @@ namespace WalkingTec.Mvvm.Core
                         propetyIndex++;
                     }
                     result.ExcelIndex = rowIndex;
-                    _templateData.Add(result);
+                    TemplateData.Add(result);
                     rowIndex++;
                 }
                 return;

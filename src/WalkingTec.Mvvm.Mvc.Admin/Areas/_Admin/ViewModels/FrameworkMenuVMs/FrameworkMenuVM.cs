@@ -213,7 +213,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     menu.ActionId = action.ID;
                     menu.ModuleId = action.ModuleId;
                     menu.FolderOnly = false;
-                    menu.IsInherit = true;
                     menu.IsPublic = false;
                     menu.Parent = Entity;
                     menu.ShowOnMenu = false;
