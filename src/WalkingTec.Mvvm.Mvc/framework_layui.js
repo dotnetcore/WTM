@@ -543,7 +543,7 @@ window.ff = {
                 data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\"" + data["ID"] + "\"/> $3");
             }
         }
-       loaddata.push(data);
+        loaddata.push(data);
         option.url = null;
         option.data = loaddata;
         option.limit = 9999;
@@ -617,6 +617,24 @@ window.ff = {
             }
         }
         return tempUrl;
+    },
+
+    triggerResize: function () {
+        setTimeout(function () {
+            {
+                if (typeof (Event) === 'function') {
+                    {
+                        window.dispatchEvent(new Event('resize'));
+                    }
+                } else {
+                    {
+                        var evt = window.document.createEvent('UIEvents');
+                        evt.initUIEvent('resize', true, false, window, 0);
+                        window.dispatchEvent(evt);
+                    }
+                }
+            }
+        }, 10);     
     }
 }
 

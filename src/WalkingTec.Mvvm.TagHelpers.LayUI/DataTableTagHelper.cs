@@ -580,7 +580,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
 ,done: function(res,curr,count){{layer.close(msg);
-    {(Height==null ? "$('.layui-table-view').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px'); " : string.Empty)}
+    {(Height==null ? "$('.layui-table-view').css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
 }}
