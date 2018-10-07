@@ -69,16 +69,13 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>true代表可以访问，false代表不能访问</returns>
         public bool IsAccessable(string url)
         {
-            url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
-            var menus = GlobalData.AllMenus;
-            var publicActions = GlobalData.AllAccessUrls;
-
             // 如果是调试 或者 url 为 null or 空字符串
             if (Configs.IsQuickDebug || string.IsNullOrEmpty(url))
             {
                 return true;
             }
             //循环所有不限制访问的url，如果含有当前判断的url，则认为可以访问
+            var publicActions = GlobalData.AllAccessUrls;
             foreach (var au in publicActions)
             {
                 if (new Regex(au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
@@ -86,11 +83,14 @@ namespace WalkingTec.Mvvm.Core
                     return true;
                 }
             }
-            //如果没有页面权限，则直接返回false
+            //如果没有任何页面权限，则直接返回false
             if (FunctionPrivileges == null)
             {
                 return false;
             }
+
+
+            url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
 
             //如果url以#开头，一般是javascript使用的临时地址，不需要判断，直接返回true
             url = url.Trim();
@@ -99,32 +99,8 @@ namespace WalkingTec.Mvvm.Core
             {
                 return true;
             }
-            //寻找菜单中是否有与当前判断的url完全相同的
-            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
-
-            //如果没有，抹掉当前url的参数，用不带参数的url比对
-            if (menu == null)
-            {
-                var pos = url.IndexOf("?");
-                if (pos > 0)
-                {
-                    url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
-                }
-            }
-
-            //如果还没找到，则判断url是否为/controller/action/id这种格式，如果是则抹掉/id之后再对比
-            if (menu == null)
-            {
-                var split = url.Split('/');
-                if (split.Length >= 2 && Guid.TryParse(split.Last(), out Guid longTest))
-                {
-                    var pos = url.LastIndexOf("/");
-                    url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
-                }
-            }
-
+            var menus = GlobalData.AllMenus;
+            var menu = Utils.FindMenu(url);
             //如果最终没有找到，说明系统菜单中并没有配置这个url，返回false
             if (menu == null)
             {

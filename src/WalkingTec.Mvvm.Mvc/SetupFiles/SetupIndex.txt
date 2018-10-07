@@ -138,6 +138,16 @@
                     </select>
                 </td>
             </tr>
+			<tr>
+                <td>页面显示：</td>
+                <td>
+                    <select name="PageMode">
+                        <option value="Single">单页面</option>
+                        <option value="Tab">Tab页</option>
+                    </select>
+                </td>
+            </tr>
+
             <tr>
                 <td>项目结构：</td>
                 <td>

@@ -184,8 +184,36 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
+                    string pagetitle = "";
+                    var menu = Utils.FindMenu(context.HttpContext.Request.Path);
+                    if(menu == null)
+                    {
+                        var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                        var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                        if (actDes != null)
+                        {
+                            if(ctrlDes != null)
+                            {
+                                pagetitle = ctrlDes.Description + " - ";
+                            }
+                            pagetitle += actDes.Description;
+                        }
+                    }
+                    else
+                    {
+                        if(menu.ParentId != null)
+                        {
+                            var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
+                            if(pmenu != null)
+                            {
+                                pagetitle = pmenu.PageName + " - ";
+                            }
+                        }
+                        pagetitle += menu.PageName;
+                    }
                     context.HttpContext.Response.OnStarting(() =>
                     {
+                        context.HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
                         return context.HttpContext.Response.WriteAsync($"<div id='{model.ViewDivId}' class='donotuse_pdiv'>");
                     });
                 }

@@ -28,7 +28,10 @@
     /// </summary>
     public enum DBTypeEnum { SqlServer, MySql }
 
-
+    /// <summary>
+    /// 页面显示方式
+    /// </summary>
+    public enum PageModeEnum { Single, Tab}
     /// <summary>
     /// Notification出现的位置
     /// </summary>
