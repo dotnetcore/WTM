@@ -142,7 +142,7 @@ $('#{SearchBtnId}').on('click', function () {{
         done: function(res,curr,count){{
             layer.close(msg);
             if(this.height == undefined){{
-                $('.layui-table-view').css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');$('.layui-table-main').addClass('donotuse_fill');$('.layui-table-header').css('min-height','40px');
+                var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
                 ff.triggerResize();
             }}
         }}
