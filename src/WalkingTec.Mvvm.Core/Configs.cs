@@ -235,6 +235,28 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        #region 页面显示方式
+        private PageModeEnum? _pageMode;
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        public PageModeEnum PageMode
+        {
+            get
+            {
+                if (_pageMode == null)
+                {
+                    _pageMode = PageModeEnum.Single;
+                }
+                return _pageMode.Value;
+            }
+            set
+            {
+                _pageMode = value;
+            }
+        }
+        #endregion
+
         #region 加密密钥
         private string _encryptKey;
         /// <summary>

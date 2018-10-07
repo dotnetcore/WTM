@@ -26,6 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [AllRights]
+        [ActionDescription("首页")]
         public IActionResult FrontPage()
         {
             List<ChartData> cd1 = new List<ChartData>();

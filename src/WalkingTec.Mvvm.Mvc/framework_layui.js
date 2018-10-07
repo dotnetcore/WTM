@@ -1,4 +1,6 @@
 ﻿
+/*eslint eqeqeq: ["error", "smart"]*/
+
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (prefix) {
         return this.slice(0, prefix.length) === prefix;
@@ -33,11 +35,6 @@ window.ff = {
         }
     },
 
-    /**
-     * 获取所有选中的 Id
-     * @param {string} gridId
-     * @returns {Array<string>}
-     */
     GetSelections: function (gridId) {
         var checkStatus = layui.table.checkStatus(gridId);
         var data = checkStatus.data;
@@ -50,11 +47,6 @@ window.ff = {
         return ids;
     },
 
-    /**
-     * 获取所有未选中的 Id
-     * @param {string} gridId
-     * @returns {Array<string>}
-     */
     GetNonSelections: function (gridId) {
         var nums = 0 // 未选中个数
             , invalidNum = 0
@@ -74,20 +66,10 @@ window.ff = {
         return ids;
     },
 
-    /**
-     * 获取所有选中的数据
-     * @param {string} gridId
-     * @returns {Array<object>}
-     */
     GetSelectionData: function (gridId) {
         return layui.table.checkStatus(gridId).data;
     },
 
-    /**
-     * 获取所有未选中的数据
-     * @param {string} gridId
-     * @returns {Array<object>}
-     */
     GetNonSelectionData: function (gridId) {
         var nums = 0 // 未选中个数
             , invalidNum = 0
@@ -107,28 +89,15 @@ window.ff = {
         return arr;
     },
 
-    /**
-     * 是否全部选中
-     * @param {string} gridId
-     * @returns {boolean}
-     */
     GetIsSelectAll: function (gridId) {
         return layui.table.checkStatus(gridId).isAll;
     },
 
-    /**
-     * 提示消息
-     * @param {string} msg
-     */
     Alert: function (msg) {
         var layer = layui.layer;
         layer.alert(msg);
     },
 
-    /**
-     * 提示消息
-     * @param {string} msg
-     */
     Msg: function (msg) {
         var layer = layui.layer;
         layer.msg(msg);
@@ -139,25 +108,55 @@ window.ff = {
         var layer = layui.layer;
         var index = layer.load(2);
         url = decodeURIComponent(url);
-        DONOTUSE_IGNOREHASH = true;
 
         $.ajax({
             url: url,
             type: 'GET',
             success: function (data, textStatus, request) {
-                window.location.hash = '#' + url;
                 if (request.getResponseHeader('IsScript') === 'true') {
                     eval(data);
                 }
                 else {
-                    $('#DONOTUSE_MAINPANEL').html(data);
-                    $('#DONOTUSE_MAINPANEL').scrollTop(0);
+                    if ($.cookie("pagemode") === 'Tab') {
+                        $('#DONOTUSE_MAINPANEL').css('overflow', 'hidden');
+                        if ($('#DONOTUSE_MAINTAB').length === 0) {
+                            $('#DONOTUSE_MAINPANEL').html('<div class="layui-tab donotuse_pdiv" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
+                            layui.element.on('tab(maintab)', function (data) {
+                                $('.layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
+                                $('.layui-tab-content .layui-show').css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv');
+                                if (data.elem.context.attributes !== undefined) {
+                                    var surl = data.elem.context.attributes['lay-id'].value;
+                                    if (surl !== undefined && surl !== null && surl !== '') {
+                                        DONOTUSE_IGNOREHASH = true;
+                                        window.location.hash = '#' + surl;
+                                    }
+                                }
+                            });
+                        }
+                        if ($('li[lay-id="' + url + '"]').length === 0) {
+                            var title = $.cookie("pagetitle");
+                            layui.element.tabAdd('maintab', { title: title, content: data, id: url });
+                            ff.triggerResize();
+                        }
+                        layui.element.tabChange('maintab', url);
+                    }
+                    else {
+                        $('#DONOTUSE_MAINPANEL').html(data);
+                        $('#DONOTUSE_MAINPANEL').scrollTop(0);
+                    }
                 }
                 layer.close(index);
             },
-            error: function (data) {
+            error: function () {
                 layer.close(index);
                 layer.alert('加载失败');
+            },
+            complete: function () {
+                if (window.location.hash !== "#" + url) {
+                    DONOTUSE_IGNOREHASH = true;
+                    window.location.hash = '#' + url;
+                }
+
             }
         });
     },
@@ -187,7 +186,7 @@ window.ff = {
         var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
-            if (ck.checked === false && (ck.value == true || ck.value == false)) {
+            if (ck.checked === false && (ck.value === true || ck.value === false)) {
                 datastr += "&" + ck.name + "=false";
             }
         }
@@ -209,7 +208,7 @@ window.ff = {
             },
             success: function (data, textStatus, request) {
                 var wid = ff.GetCookie("windowids");
-                if (wid == null || wid == "") {
+                if (wid == null || wid === "") {
                     DONOTUSE_IGNOREHASH = true;
                     window.location.hash = '#' + url;
                 }
@@ -228,7 +227,7 @@ window.ff = {
         var layer = layui.layer;
         var index = layer.load(2);
         var getpost = "GET";
-        if (para != undefined) {
+        if (para !== undefined) {
             getpost = "Post";
         }
         $.ajax({
@@ -263,7 +262,7 @@ window.ff = {
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
         var getpost = "GET";
-        if (para != undefined) {
+        if (para !== undefined) {
             getpost = "Post";
         }
 
@@ -323,7 +322,7 @@ window.ff = {
         this.SetCookie("windowids", wid);
         this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
         var getpost = "GET";
-        if (para != undefined) {
+        if (para !== undefined) {
             getpost = "Post";
         }
 
@@ -404,7 +403,7 @@ window.ff = {
                 //for (var item of data.data) {
                 for (var i = 0; i < data.data.length; i++) {
                     var item = data.data[i];
-                    if (item.selected == true) {
+                    if (item.selected === true) {
                         $('#' + target).append('<option value = "' + item.value + '" selected>' + item.text + '</option>');
                     }
                     else {
@@ -421,11 +420,6 @@ window.ff = {
 
     },
 
-    /**
-     * 获取表单数据数组
-     * @param {string} formId
-     * @returns {Array<object>}
-     */
     GetFormArray: function (formId) {
         var searchForm = $('#' + formId), filter = [], fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
@@ -437,11 +431,6 @@ window.ff = {
         return filter;
     },
 
-    /**
-     * 获取表单数据
-     * @param {string} formId
-     * @returns {object}
-     */
     GetFormDataWithoutNull: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
@@ -453,11 +442,6 @@ window.ff = {
         return filter;
     },
 
-    /**
-     * 获取表单数据
-     * @param {string} formId
-     * @returns {object}
-     */
     GetFormData: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
@@ -468,12 +452,6 @@ window.ff = {
         return filter;
     },
 
-    /**
-     * 获取搜索表单数据
-     * @param {string} formId
-     * @param {string} listvm
-     * @returns {object}
-     */
     GetSearchFormData: function (formId, listvm) {
         var data = ff.GetFormData(formId);
         for (var attr in data) {
@@ -485,11 +463,6 @@ window.ff = {
         return data;
     },
 
-    /**
-     * 下载 Excel 或者 Pdf
-     * @param {string} url
-     * @param {string} formId
-     */
     DownloadExcelOrPdf: function (url, formId, defaultcondition) {
         var formData = ff.GetSearchFormData(formId);
         $.extend(defaultcondition, formData);
@@ -507,10 +480,11 @@ window.ff = {
 
     /**
      * RefreshGrid
-     * @param {string} dialogid
+     * @param {string} dialogid the dialogid
+     * @param {number} index the grid index
      */
     RefreshGrid: function (dialogid, index) {
-        if (index == undefined) {
+        if (index === undefined) {
             index = 0;
         }
         var tables = $('#' + dialogid + ' table[id]');
@@ -528,7 +502,7 @@ window.ff = {
     AddGridRow: function (gridid, option, data) {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
-            if (val == "ID") {
+            if (val === "ID") {
                 data[val] = ff.guid();
             }
         }
@@ -569,10 +543,10 @@ window.ff = {
 
     gridcellchange: function (ele, gridid, row, col, celltype) {
         var loaddata = layui.table.cache[gridid];
-        if (celltype == 0) {
+        if (celltype === 0) {
             loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/i, "value=\"" + ele.value + "\"");
         }
-        if (celltype == 1) {
+        if (celltype === 1) {
             loaddata[row][col] = loaddata[row][col].replace(/(<option .*?) selected\s*>/ig, "$1>");
             var re = new RegExp("(<option\\s*value\\s*=\\s*[\"']" + ele.value + "[\"'])\s*>", "ig");
             loaddata[row][col] = loaddata[row][col].replace(re, "$1 selected>");
@@ -602,12 +576,6 @@ window.ff = {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     },
 
-    /**
-     * concatWhereStr
-     * @param {string} tempUrl
-     * @param {Array<string>} whereStr
-     * @param {object} data
-     */
     concatWhereStr: function (tempUrl, whereStr, data) {
         if (tempUrl == null) tempUrl = "";
         if (data == null) return tempUrl;
@@ -622,7 +590,7 @@ window.ff = {
     triggerResize: function () {
         setTimeout(function () {
             {
-                if (typeof (Event) === 'function') {
+                if (typeof(Event) === 'function') {
                     {
                         window.dispatchEvent(new Event('resize'));
                     }
@@ -634,12 +602,6 @@ window.ff = {
                     }
                 }
             }
-        }, 10);     
+        }, 10);
     }
-}
-
-//window.ff = new WalkingTecUI();
-//window.onbeforeunload = function () {
-//    ff.SetCookie("windowids", null);
-//    ff.SetCookie("toplayerindex", null);
-//}
+};

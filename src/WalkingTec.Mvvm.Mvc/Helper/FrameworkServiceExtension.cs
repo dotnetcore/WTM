@@ -90,13 +90,24 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app)
         {
+            var configs = app.ApplicationServices.GetRequiredService<Configs>();
+            var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+
+            if (configs == null)
+            {
+                throw new InvalidOperationException("Can not find Configs service, make sure you call AddFrameworkService at ConfigService");
+            }
+            if (gd == null)
+            {
+                throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
+            }
+        
             app.Use(async (context, next) =>
             {
-                //if (context.Request.Path == "/favicon.ico")
-                //{
-                //    await context.Response.WriteAsync(string.Empty);
-                //    return;
-                //}
+                if (context.Request.Path == "/")
+                {
+                    context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
+                }
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
                 {
@@ -126,17 +137,6 @@ namespace WalkingTec.Mvvm.Mvc
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            var configs = app.ApplicationServices.GetRequiredService<Configs>();
-            var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
-
-            if (configs == null)
-            {
-                throw new InvalidOperationException("Can not find Configs service, make sure you call AddFrameworkService at ConfigService");
-            }
-            if (gd == null)
-            {
-                throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
-            }
             var cs = configs.ConnectionStrings.Select(x => x.Value);
             foreach (var item in cs)
             {

@@ -47,6 +47,42 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        public static FrameworkMenu FindMenu(string url)
+        {
+            var menus = GlobalServices.GetRequiredService<GlobalData>()?.AllMenus;
+            if(menus == null)
+            {
+                return null;
+            }
+            //寻找菜单中是否有与当前判断的url完全相同的
+            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+
+            //如果没有，抹掉当前url的参数，用不带参数的url比对
+            if (menu == null)
+            {
+                var pos = url.IndexOf("?");
+                if (pos > 0)
+                {
+                    url = url.Substring(0, pos);
+                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                }
+            }
+
+            //如果还没找到，则判断url是否为/controller/action/id这种格式，如果是则抹掉/id之后再对比
+            if (menu == null)
+            {
+                var split = url.Split('/');
+                if (split.Length >= 2 && Guid.TryParse(split.Last(), out Guid longTest))
+                {
+                    var pos = url.LastIndexOf("/");
+                    url = url.Substring(0, pos);
+                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                }
+            }
+            return menu;
+        }
+
+
         public static string GetIdByName(string fieldName)
         {
             return fieldName == null ? "" : fieldName.Replace(".", "_").Replace("[", "_").Replace("]", "_");
