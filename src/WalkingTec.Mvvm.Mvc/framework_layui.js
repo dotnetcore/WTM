@@ -122,8 +122,9 @@ window.ff = {
                         if ($('#DONOTUSE_MAINTAB').length === 0) {
                             $('#DONOTUSE_MAINPANEL').html('<div class="layui-tab donotuse_pdiv" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
                             layui.element.on('tab(maintab)', function (data) {
-                                $('.layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
-                                $('.layui-tab-content .layui-show').css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv');
+                                $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
+                                $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
+                                ff.triggerResize();
                                 if (data.elem.context.attributes !== undefined) {
                                     var surl = data.elem.context.attributes['lay-id'].value;
                                     if (surl !== undefined && surl !== null && surl !== '') {
@@ -136,7 +137,6 @@ window.ff = {
                         if ($('li[lay-id="' + url + '"]').length === 0) {
                             var title = $.cookie("pagetitle");
                             layui.element.tabAdd('maintab', { title: title, content: data, id: url });
-                            ff.triggerResize();
                         }
                         layui.element.tabChange('maintab', url);
                     }
