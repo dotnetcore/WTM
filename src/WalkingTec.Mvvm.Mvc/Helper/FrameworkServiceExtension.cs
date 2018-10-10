@@ -271,8 +271,6 @@ namespace WalkingTec.Mvvm.Mvc
             ConstructorInfo ci = null;
             foreach (var ass in AllAssembly)
             {
-                if (ass.FullName.StartsWith("WalkingTec.Mvvm."))
-                {
                     try
                     {
                         var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext").ToList();
@@ -283,7 +281,6 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                     }
                     catch { }
-                }
             }
             return ci;
         }
