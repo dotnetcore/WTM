@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 try
                 {
-                    if (dll.FullName.StartsWith("Microsoft.") == false)
+                    if (dll.Name.StartsWith("Microsoft.") == false)
                     {
                         rv.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
                     }
