@@ -142,7 +142,7 @@ namespace WalkingTec.Mvvm.Mvc
             File.WriteAllText($"{MainDir}\\appsettings.json", GetResource("Appsettings.txt")
                 .Replace("$cs$", CS ?? "")
                 .Replace("$dbtype$", DbType.ToString())
-                .Replace("pagemode", PageMode.ToString())
+                .Replace("$pagemode$", PageMode.ToString())
                 .Replace("$cookiepre$", CookiePre ?? "")
                 .Replace("$enablelog$", EnableLog.ToString().ToLower())
                 .Replace("$logexception$", LogExceptionOnly.ToString().ToLower())
