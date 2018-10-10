@@ -1,6 +1,6 @@
 ﻿
 /*eslint eqeqeq: ["error", "smart"]*/
-
+DONOTUSE_TABLAYID = undefined;
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (prefix) {
         return this.slice(0, prefix.length) === prefix;
@@ -130,6 +130,7 @@ window.ff = {
                                     if (surl !== undefined && surl !== null && surl !== '') {
                                         DONOTUSE_IGNOREHASH = true;
                                         window.location.hash = '#' + surl;
+                                        DONOTUSE_TABLAYID = surl;
                                     }
                                 }
                             });
@@ -139,6 +140,7 @@ window.ff = {
                             layui.element.tabAdd('maintab', { title: title, content: data, id: url });
                         }
                         layui.element.tabChange('maintab', url);
+                        DONOTUSE_TABLAYID = url;
                     }
                     else {
                         $('#DONOTUSE_MAINPANEL').html(data);
@@ -472,7 +474,7 @@ window.ff = {
             if (defaultcondition[attr] != null) {
                 form.append($('<input type="hidden" name="' + attr + '" value="' + defaultcondition[attr] + '">'));
             }
-        };
+        }
         $('body').append(form);
         form.submit();
         form.remove();
@@ -487,12 +489,16 @@ window.ff = {
         if (index === undefined) {
             index = 0;
         }
-        var tables = $('#' + dialogid + ' table[id]');
+        var tab = "";
+        if (DONOTUSE_TABLAYID !== undefined) {
+            tab = " .layui-tab-item.layui-show";
+        }
+        var tables = $('#' + dialogid + tab + ' table[id]');
         if (tables.length > index) {
             table.reload(tables[index].id);
         }
         else {
-            var searchBtns = $('#' + dialogid + ' form a[class*=layui-btn]');
+            var searchBtns = $('#' + dialogid + tab + ' form a[class*=layui-btn]');
             if (searchBtns.length > index) {
                 searchBtns[index].click();
             }

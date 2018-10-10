@@ -64,6 +64,9 @@
                     @(tempvar).push(selected[i]);
                 }
             } else {
+                if (obj.data.ID === undefined) {
+                    obj.data = ff.GetSelectionData(gridId).pop();
+                }
                 @(tempvar).push(obj.data);
             }
         } else {  //取消选中
