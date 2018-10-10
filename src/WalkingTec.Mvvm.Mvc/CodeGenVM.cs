@@ -54,7 +54,9 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (_mainDir == null)
                 {
-                    _mainDir = EntryDir?.Replace("\\bin\\Debug\\netcoreapp2.0\\", "", true, null);
+                    int index = EntryDir?.IndexOf("\\bin\\Debug\\") ?? 0;
+
+                    _mainDir = EntryDir?.Substring(0, index);
                 }
                 return _mainDir;
             }
