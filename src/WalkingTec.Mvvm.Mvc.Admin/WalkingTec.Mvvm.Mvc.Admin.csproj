@@ -65,7 +65,6 @@
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Create.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\DataFunction.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Delete.cshtml" />
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Details.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Edit.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Import.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Index.cshtml" />

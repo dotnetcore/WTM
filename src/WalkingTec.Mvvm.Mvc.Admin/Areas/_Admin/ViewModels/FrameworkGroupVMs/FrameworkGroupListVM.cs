@@ -14,7 +14,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "新建","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "修改","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "删除", "_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
                 this.MakeAction("FrameworkGroup","DataFunction","数据权限","数据权限", GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
