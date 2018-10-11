@@ -303,7 +303,7 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    optionsBuilder.UseSqlServer(CSName);
+                    optionsBuilder.UseSqlServer(CSName,op=>op.UseRowNumberForPaging());
                     break;
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);

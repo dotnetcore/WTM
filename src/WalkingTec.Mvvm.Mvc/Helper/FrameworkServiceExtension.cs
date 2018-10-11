@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Mvc
                         "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
                     )
                 );
-                var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
+                var admin = gd.AllAssembly.Where(x=>x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
                 if(admin != null)
                 {
                     options.FileProviders.Add(
