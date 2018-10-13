@@ -4,50 +4,51 @@
     }
 </style>
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
-    <wt:code title="appsettings.json">
-{
-  "ConnectionStrings": [
+<wt:code title="appsettings.json">
     {
-      "Key": "default",
-      "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
+    "ConnectionStrings": [
+    {
+    "Key": "default",
+    "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
     },
     {
-      "Key": "test",
-      "Value": "Server=(localdb)\\mssqllocaldb;Database=test;Trusted_Connection=True;MultipleActiveResultSets=true"
+    "Key": "test",
+    "Value": "Server=(localdb)\\mssqllocaldb;Database=test;Trusted_Connection=True;MultipleActiveResultSets=true"
     }
-  ],
-  "DBType": "SqlServer", 
-  "CookiePre": "WTM", 
-  "EnableLog": true, 
-  "LogExceptionOnly": false, 
-  "IsQuickDebug": true, 
-  "RPP": 20, 
-  "SaveFileMode": "Database", 
-  "UploadDir": "", 
-  "DFSServer": {
+    ],
+    "DBType": "SqlServer",
+    "CookiePre": "WTM",
+    "EnableLog": true,
+    "LogExceptionOnly": false,
+    "IsQuickDebug": true,
+    "RPP": 20,
+    "SaveFileMode": "Database",
+    "UploadDir": "",
+    "PageMode": "Tab", 
+    "DFSServer": {
     "StorageMaxConnection": 100,
     "TrackerMaxConnection": 100,
     "ConnectionTimeout": 100,
     "ConnectionLifeTime": 100,
     "Trackers": [
-      {
-        "IP": "127.0.0.1",
-        "Port": 22122
-      }
-    ]
-  },
-  "AppSettings": [
     {
-      "Key": "aaa",
-      "Value": "bbb"
+    "IP": "127.0.0.1",
+    "Port": 22122
+    }
+    ]
+    },
+    "AppSettings": [
+    {
+    "Key": "aaa",
+    "Value": "bbb"
     },
     {
-      "Key": "ccc",
-      "Value": "ddd"
+    "Key": "ccc",
+    "Value": "ddd"
     }
-  ]
-}
-    </wt:code>
+    ]
+    }
+</wt:code>
 
 <wt:fieldset field-set-style="Simple" title="配置说明">
     <table lay-filter="parse-table-demo">
@@ -93,6 +94,10 @@
             <tr>
                 <td>UploadDir</td>
                 <td>当附件储存模式选择Local时，指定硬盘目录</td>
+            </tr>
+            <tr>
+                <td>PageMode</td>
+                <td>多页面的展现方式，可选Single或者Tab</td>
             </tr>
             <tr>
                 <td>DFSServer</td>
