@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,9 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
+using WalkingTec.Mvvm.Mvc.Json;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -45,7 +48,7 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = GetGlobalData();
             services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
-            if(dataPrivilegeSettings != null)
+            if (dataPrivilegeSettings != null)
             {
                 con.DataPrivilegeSettings = dataPrivilegeSettings;
             }
@@ -57,11 +60,22 @@ namespace WalkingTec.Mvvm.Mvc
             SetupDFS(con);
             services.AddMvc(options =>
             {
+                // ModelBinderProviders
+                options.ModelBinderProviders.Insert(0, new StringBinderProvider());
+
+                // Filters
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
             })
-            .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            .AddJsonOptions(options =>
+            {
+                //忽略循环引用
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+                // custom ContractResolver
+                options.SerializerSettings.ContractResolver = new WTMContractResolver();
+            });
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
@@ -71,8 +85,8 @@ namespace WalkingTec.Mvvm.Mvc
                         "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
                     )
                 );
-                var admin = gd.AllAssembly.Where(x=>x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
-                if(admin != null)
+                var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
+                if (admin != null)
                 {
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(
@@ -82,8 +96,8 @@ namespace WalkingTec.Mvvm.Mvc
                     );
                 }
             });
-           
-        services.AddSingleton<IUIService, DefaultUIService>();
+
+            services.AddSingleton<IUIService, DefaultUIService>();
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -101,7 +115,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
-        
+
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path == "/")
@@ -122,7 +136,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 RequestPath = new PathString("/_js"),
                 FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly, 
+                    typeof(_CodeGenController).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
             app.UseSession();
@@ -142,7 +156,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
                 dc.DataInit(gd.AllModule);
-            }            
+            }
             return app;
         }
 
@@ -271,16 +285,16 @@ namespace WalkingTec.Mvvm.Mvc
             ConstructorInfo ci = null;
             foreach (var ass in AllAssembly)
             {
-                    try
+                try
+                {
+                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext").ToList();
+                    ci = t.Where(x => x.Name != "FrameworkContext").FirstOrDefault()?.GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) });
+                    if (ci != null)
                     {
-                        var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext").ToList();
-                        ci = t.Where(x => x.Name != "FrameworkContext").FirstOrDefault()?.GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) });
-                        if (ci != null)
-                        {
-                            break;
-                        }
+                        break;
                     }
-                    catch { }
+                }
+                catch { }
             }
             return ci;
         }
@@ -335,7 +349,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     continue;
                 }
-                if(pubattr.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
+                if (pubattr.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
                 }
@@ -420,7 +434,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         if (method.Name.ToLower().StartsWith("dobatch"))
                         {
-                            if(model.Actions.Where(x => "do"+x.MethodName.ToLower() == method.Name.ToLower()).FirstOrDefault() != null)
+                            if (model.Actions.Where(x => "do" + x.MethodName.ToLower() == method.Name.ToLower()).FirstOrDefault() != null)
                             {
                                 continue;
                             }
@@ -453,7 +467,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (areaattr.Length > 0)
                     {
                         string areaName = (areaattr[0] as AreaAttribute).RouteValue;
-                        var existArea = modules.Where(x => x.Area?.AreaName == areaName).Select(x=>x.Area).FirstOrDefault();
+                        var existArea = modules.Where(x => x.Area?.AreaName == areaName).Select(x => x.Area).FirstOrDefault();
                         if (existArea == null)
                         {
                             model.Area = new FrameworkArea
@@ -569,7 +583,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var path = Assembly.GetEntryAssembly().Location;
             var library = DependencyContext.Default.RuntimeLibraries.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefault();
-            if(library == null)
+            if (library == null)
             {
                 return null;
             }
@@ -591,7 +605,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             var assemblies = new List<string>();
             r.TryResolveAssemblyPaths(wrapper, assemblies);
-            if(assemblies.Count > 0)
+            if (assemblies.Count > 0)
             {
                 return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblies[0]);
             }
