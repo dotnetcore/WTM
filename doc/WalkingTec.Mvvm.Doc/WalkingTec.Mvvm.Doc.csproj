@@ -19,14 +19,4 @@
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\imgs\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\UI\Others.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-  </ItemGroup>
-
 </Project>

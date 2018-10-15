@@ -6,14 +6,6 @@
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591;1570;0414</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591;1570;0414</NoWarn>
-  </PropertyGroup>
-
   <Import Project="..\..\common.props" />
   
   <ItemGroup>
@@ -87,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
