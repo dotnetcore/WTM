@@ -261,11 +261,15 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
                     }
-                    using (var dc = ctrl.CreateDC(true))
+                    try
                     {
-                        dc.Set<ActionLog>().Add(log);
-                        dc.SaveChanges();
+                        using (var dc = ctrl.CreateDC(true))
+                        {
+                            dc.Set<ActionLog>().Add(log);
+                            dc.SaveChanges();
+                        }
                     }
+                    catch { }
                 }
             }
             if (context.Exception != null)

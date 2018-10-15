@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,11 +34,13 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 记录 Controller 中的表单数据
         /// </summary>
+        [JsonIgnore]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取VM的全名
         /// </summary>
+        [JsonIgnore]
         public string VMFullName
         {
             get
@@ -51,15 +54,18 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 数据库环境
         /// </summary>
+        [JsonIgnore]
         public IDataContext DC { get; set; }
 
         /// <summary>
         /// Session信息
         /// </summary>
+        [JsonIgnore]
         public ISessionService Session { get; set; }
         /// <summary>
         /// 当前登录人信息
         /// </summary>
+        [JsonIgnore]
         public LoginUserInfo LoginUserInfo
         {
             get
@@ -81,10 +87,12 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 是否搜索树形结构数据
         /// </summary>
+        [JsonIgnore]
         public bool TreeMode { get; set; }
         /// <summary>
         /// 树形结构数据父Id
         /// </summary>
+        [JsonIgnore]
         public Guid? ParentId { get; set; }
         /// <summary>
         /// 是否有效，针对继承PersistPoco的Model
@@ -94,6 +102,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 用于框架判断列表页是否全局刷新
         /// </summary>
+        [JsonIgnore]
         public bool IsPostBack { get; set; }
         #endregion
 

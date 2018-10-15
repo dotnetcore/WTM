@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,10 +10,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserVM : BaseCRUDVM<FrameworkUserBase>
     {
+        [JsonIgnore]
         public List<ComboSelectListItem> AllRoles { get; set; }
         [Display(Name = "角色")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
+        [JsonIgnore]
         public List<ComboSelectListItem> AllGroups { get; set; }
         [Display(Name = "用户组")]
         public List<Guid> SelectedGroupIDs { get; set; }

@@ -330,5 +330,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return sb.ToString();
         }
 
+        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
+        {
+            return $@"{{""Data"":{self.GetDataJson()},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount}}}";
+        }
     }
 }
