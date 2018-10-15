@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// VM实例的Id
         /// </summary>
+        [JsonIgnore]
         public string UniqueId
         {
             get
@@ -54,12 +56,14 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
         /// </summary>
+        [JsonIgnore]
         public string WindowIds { get; set; }
 
         private string _viewdivid;
         /// <summary>
         /// PartialView中主Div的Id
         /// </summary>
+        [JsonIgnore]
         public string ViewDivId
         {
             set { _viewdivid = value; }
@@ -76,11 +80,13 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 数据库环境
         /// </summary>
+        [JsonIgnore]
         public IDataContext DC { get; set; }
 
         /// <summary>
         /// 获取VM的全名
         /// </summary>
+        [JsonIgnore]
         public string VMFullName
         {
             get
@@ -94,6 +100,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取VM所在Dll
         /// </summary>
+        [JsonIgnore]
         public string CreatorAssembly
         {
             get; set;
@@ -107,29 +114,35 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 指示是否使用固定连接字符串
         /// </summary>
+        [JsonIgnore]
         public bool FromFixedCon { get; set; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
         /// </summary>
+        [JsonIgnore]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取配置文件的信息
         /// </summary>
+        [JsonIgnore]
         public Configs ConfigInfo { get; set; }
 
         /// <summary>
         /// 获取DbContext构造函数
         /// </summary>
+        [JsonIgnore]
         public ConstructorInfo DataContextCI { get; set; }
 
 
+        [JsonIgnore]
         public IUIService UIService { get; set; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
+        [JsonIgnore]
         public string CurrentWindowId
         {
             get
@@ -147,6 +160,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
+        [JsonIgnore]
         public string ParentWindowId
         {
             get
@@ -168,6 +182,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 当前登录人信息
         /// </summary>
+        [JsonIgnore]
         public LoginUserInfo LoginUserInfo
         {
             get
@@ -184,26 +199,31 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 当前Url
         /// </summary>
+        [JsonIgnore]
         public string CurrentUrl { get; set; }
 
         /// <summary>
         /// Session信息
         /// </summary>
+        [JsonIgnore]
         public ISessionService Session { get; set; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
+        [JsonIgnore]
         public IModelStateService MSD { get; set; }
 
         /// <summary>
         /// 日志信息
         /// </summary>
+        [JsonIgnore]
         public ActionLog Log { get; set; }
 
         /// <summary>
         /// 用于保存删除的附件ID
         /// </summary>
+        [JsonIgnore]
         public List<Guid> DeletedFileIds { get; set; }
         #endregion
 

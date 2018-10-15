@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,18 +39,21 @@ namespace WalkingTec.Mvvm.Core
         [NotMapped]
         //[JsonConverter(typeof(InternalBoolConverter))]
         //[JsonProperty("LAY_CHECKED")]
+        [JsonIgnore]
         public bool Checked { get; set; }
 
         /// <summary>
         /// BatchError
         /// </summary>
         [NotMapped]
+        [JsonIgnore]
         public string BatchError { get; set; }
 
         /// <summary>
         /// ExcelIndex
         /// </summary>
         [NotMapped]
+        [JsonIgnore]
         public long ExcelIndex { get; set; }
 
     }

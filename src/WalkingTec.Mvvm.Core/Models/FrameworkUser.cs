@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -74,6 +75,7 @@ namespace WalkingTec.Mvvm.Core
         public List<FrameworkUserGroup> UserGroups { get; set; }
 
         [Display(Name = "搜索条件" )]
+        [JsonIgnore]
         public List<SearchCondition> SearchConditions { get; set; } 
 
         [NotMapped]

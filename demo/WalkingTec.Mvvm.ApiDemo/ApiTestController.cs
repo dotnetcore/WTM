@@ -17,31 +17,27 @@ namespace WalkingTec.Mvvm.ApiDemo
     /// <summary>
     /// 用户
     /// </summary>
+    [ApiController]
     [Route("api/user")]
     public class UserController : BaseApiController
     {
 
         // GET: api/<controller>
         [HttpPost("Search")]
-        public IActionResult Search(FrameworkUserSearcher searcher)
+        public string Search(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
             vm.DoSearch();
-            var rv = new ContentResult
-            {
-                ContentType = "application/json;charset=utf-8",
-                Content = $@"{{""Data"":{vm.GetDataJson()},""Count"":{vm.Searcher.Count},""Page"":{vm.Searcher.Page},""PageCount"":{vm.Searcher.PageCount}}}",
-            };
-            return rv;
+            return vm.GetJson();
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public IActionResult Get(Guid id)
+        public FrameworkUserBase Get(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
-            return Ok(vm.Entity);
+            return vm.Entity;
         }
 
         // POST api/<controller>
