@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         val = PropertyHelper.GetEnumDisplayName(Field.Model.GetType(), Field.Model.ToString());
                     }
-                    if(Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
+                    else if(Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
                     {
                         if (string.IsNullOrEmpty(Format))
                         {
