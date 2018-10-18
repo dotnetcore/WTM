@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,7 +75,10 @@ namespace WalkingTec.Mvvm.Mvc
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
                 // custom ContractResolver
-                options.SerializerSettings.ContractResolver = new WTMContractResolver();
+                options.SerializerSettings.ContractResolver = new WTMContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
             });
 
             services.Configure<RazorViewEngineOptions>(options =>
