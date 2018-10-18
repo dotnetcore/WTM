@@ -60,12 +60,9 @@
         }
     </style>
 </head>
-<body>
-    <div id="DONOTUSE_MAINPANEL">
-    </div>
+<body class="layui-layout-body">
     @RenderBody()
     <script>
         layui.element.init();
     </script>
-</body>
-</html>
+</body></html>

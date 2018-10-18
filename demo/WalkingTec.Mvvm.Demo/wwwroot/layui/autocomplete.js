@@ -40,8 +40,8 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             loading: "加载中"
         },
         response: {
-            code: 'Code',
-            data: 'Data'
+            code: 'code',
+            data: 'data'
         },
         ajax: [],
         data: [],

@@ -327,7 +327,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 foreach (var pro in pros)
                 {
-                    if (pro.RelatedField == null)
+                    if (string.IsNullOrEmpty(pro.RelatedField))
                     {
                         headerstring += $@"
                 this.MakeGridHeader(x => x.{pro.FieldName}),";

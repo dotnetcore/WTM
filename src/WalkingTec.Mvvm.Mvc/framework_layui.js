@@ -125,7 +125,7 @@ window.ff = {
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
                                 ff.triggerResize();
-                                if (data.elem.context.attributes !== undefined) {
+                                if (data.elem.context.attributes !== undefined && data.elem.context.attributes !== null) {
                                     var surl = data.elem.context.attributes['lay-id'].value;
                                     if (surl !== undefined && surl !== null && surl !== '') {
                                         DONOTUSE_IGNOREHASH = true;
