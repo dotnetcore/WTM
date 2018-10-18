@@ -1,74 +1,17 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "command": "dotnet build",
-      "label": "dev",
-      "type": "shell", // shell process
-      "windows": {
-        "args": [
-          "${workspaceRoot}/WalkingTec.Mvvm.Demo/WalkingTec.Mvvm.Demo.csproj"
-        ]
-      },
-      "problemMatcher": "$msCompile",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "echo": true,
-        "reveal": "always", // always silent never
-        "focus": false,
-        "panel": "shared" // shared dedicated new
-      }
-    },
-    {
-      "command": "dotnet build -c Release",
-      "label": "release",
-      "type": "shell", // shell process
-      "problemMatcher": "$msCompile",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "echo": true,
-        "reveal": "always", // always silent never
-        "focus": false,
-        "panel": "shared" // shared dedicated new
-      }
-    },
-    {
-      "command": "./Pack.cmd",
-      "label": "pack",
-      "type": "shell",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "command": "dotnet build",
-      "label": "doc",
-      "type": "shell", // shell process
-      "windows": {
-        "args": [
-          "${workspaceRoot}/WalkingTec.Mvvm.Doc/WalkingTec.Mvvm.Doc.csproj"
-        ]
-      },
-      "problemMatcher": "$msCompile",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "echo": true,
-        "reveal": "always", // always silent never
-        "focus": false,
-        "panel": "shared" // shared dedicated new
-      }
-    }
-  ]
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet build",
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
 }
