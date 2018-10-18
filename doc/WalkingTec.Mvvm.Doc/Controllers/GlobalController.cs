@@ -37,5 +37,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [ActionDescription("发布")]
+        public IActionResult Publish()
+        {
+            return PartialView();
+        }
     }
 }

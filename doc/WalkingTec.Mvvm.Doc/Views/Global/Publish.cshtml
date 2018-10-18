@@ -1,0 +1,15 @@
+﻿<style>
+    fieldset img {
+        width: 800px;
+        border: 1px solid black
+    }
+
+    a {
+        color: #01aaed
+    }
+</style>
+<p>始用WTM框架的代码在发布的时候需要注意一点</p>
+<p>Dotnet core 2.1默认不支持将页面嵌入到dll中，这在本地调试的时候看不出来，但是发布之后就会出现找不到页面的问题。</p>
+<p>解决办法是修改项目文件，在其中加入&ltCopyRefAssembliesToPublishDirectory&gttrue&lt/CopyRefAssembliesToPublishDirectory&gt，如下图所示</p>
+<img src="~/imgs/publish.jpg" /><br /><br />
+
