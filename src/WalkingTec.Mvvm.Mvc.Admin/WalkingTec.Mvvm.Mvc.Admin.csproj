@@ -9,49 +9,18 @@
   <Import Project="..\..\common.props" />
   
   <ItemGroup>
-    <None Remove="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Create.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Delete.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Details.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Edit.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Import.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Index.cshtml" />
-    <None Remove="Areas\_Admin\Views\FrameworkUser\Password.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Delete.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Details.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Password.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Edit.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Import.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Index.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  
-  <ItemGroup>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Delete.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Details.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Password.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Edit.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Import.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Index.cshtml"/>
     <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Details.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Index.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Edit.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Index.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\BatchDelete.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Create.cshtml" />
