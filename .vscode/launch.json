@@ -1,66 +1,45 @@
 {
-  // Use IntelliSense to find out which attributes exist for C# debugging
-  // Use hover for the description of the existing attributes
-  // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": ".NET Core Launch (console)-Admin",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "dev",
-      "program": "${workspaceRoot}/WalkingTec.Mvvm.Demo/bin/Debug/netcoreapp2.0/WalkingTec.Mvvm.Demo.dll",
-      "cwd": "${workspaceRoot}/WalkingTec.Mvvm.Demo",
-      "stopAtEntry": false,
-      "windows": {
-        "console": "internalConsole",
-        "env": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/demo/WalkingTec.Mvvm.Demo/bin/Debug/netcoreapp2.1/WalkingTec.Mvvm.Demo.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/demo/WalkingTec.Mvvm.Demo",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
         },
-      },
-      "launchBrowser": {
-        "enabled": true,
-        "args": "${auto-detect-url}",
-        "windows": {
-          "command": "cmd.exe",
-          "args": "/C start ${auto-detect-url}"
-        },
-        "osx": {
-          "command": "open"
-        },
-        "linux": {
-          "command": "xdg-open"
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
         }
-      }
-    },
-    {
-      "name": ".NET Core Launch (console)-Doc",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "doc",
-      "program": "${workspaceRoot}/WalkingTec.Mvvm.Doc/bin/Debug/netcoreapp2.0/WalkingTec.Mvvm.Doc.dll",
-      "cwd": "${workspaceRoot}/WalkingTec.Mvvm.Doc",
-      "stopAtEntry": false,
-      "windows": {
-        "console": "internalConsole",
-        "env": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
-        }
-      },
-      "launchBrowser": {
-        "enabled": true,
-        "args": "${auto-detect-url}",
-        "windows": {
-          "command": "cmd.exe",
-          "args": "/C start ${auto-detect-url}"
-        },
-        "osx": {
-          "command": "open"
-        },
-        "linux": {
-          "command": "xdg-open"
-        }
-      }
-    }
-  ]
+    ]
 }
