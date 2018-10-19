@@ -714,7 +714,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         }
 
 
-                        toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel buttongroup"" id=""btn_{item.ButtonId}"">
+                        toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel"" style=""z-index:10;"" id=""btn_{item.ButtonId}"">
                                  <div class=""layui-select-title"" style=""padding-right:20px;"">
                                         {item.Name}
                                  <i class=""layui-edge""></i>
