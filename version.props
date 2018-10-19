@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <VersionPrefix>1.3.48</VersionPrefix>
+    <VersionPrefix>1.3.49</VersionPrefix>
     <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
     <ProductBuildNumber></ProductBuildNumber>
     <PackageSuffix></PackageSuffix>
