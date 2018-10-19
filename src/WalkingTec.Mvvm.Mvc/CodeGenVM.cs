@@ -286,7 +286,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 foreach (var pro in pros)
                 {
-                    if (pro.RelatedField != null)
+                    if (string.IsNullOrEmpty(pro.RelatedField) == false)
                     {
                         var subtype = Type.GetType(pro.RelatedField);
                         if (typeof(TopBasePoco).IsAssignableFrom(subtype) == false || subtype == typeof(FileAttachment))
@@ -395,7 +395,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string prostr = "";
                 string initstr = "";
                 string includestr = "";
-                var pros = FieldInfos.Where(x => x.IsFormField == true && x.RelatedField != null).ToList();
+                var pros = FieldInfos.Where(x => x.IsFormField == true && string.IsNullOrEmpty(x.RelatedField)==false).ToList();
                 foreach (var pro in pros)
                 {
                     var subtype = Type.GetType(pro.RelatedField);
@@ -423,7 +423,7 @@ namespace WalkingTec.Mvvm.Mvc
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsImportField == true).ToList();
                 foreach (var pro in pros)
                 {
-                    if (pro.RelatedField != null)
+                    if (string.IsNullOrEmpty(pro.RelatedField) == false)
                     {
                         var subtype = Type.GetType(pro.RelatedField);
                         if (typeof(TopBasePoco).IsAssignableFrom(subtype) == false || subtype == typeof(FileAttachment))
@@ -477,7 +477,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (name == "DeleteView" || name == "DetailsView")
                     {
-                        if (item.RelatedField != null && item.SubField != "`file")
+                        if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField != "`file")
                         {
                             fieldstr.Append($@"<wt:display field=""{pre}.{item.FieldName.Substring(0, item.FieldName.Length - 2)}.{item.SubField}"" />");
                         }
@@ -488,7 +488,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        if (item.RelatedField != null)
+                        if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
                             if (item.SubField == "`file")
                             {
@@ -541,7 +541,7 @@ namespace WalkingTec.Mvvm.Mvc
                 fieldstr.Append(Environment.NewLine);
                 foreach (var item in pros)
                 {
-                    if (item.RelatedField != null)
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var fname = "All" + item.FieldName.Substring(0, item.FieldName.Length - 2) + "s";
                         fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" items=""Searcher.{fname}"" empty-text=""全部"" />");
