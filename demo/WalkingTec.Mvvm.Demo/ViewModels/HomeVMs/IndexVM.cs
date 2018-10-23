@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             }
             else
             {
-                var rv = AllMenu.Where(x =>x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.Url, SortByName: false);
+                var rv = AllMenu.Where(x =>x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.IsInside==true ? x.Url : "/_framework/outside?url="+x.Url, SortByName: false);
                 RemoveUnAccessableMenu(rv, LoginUserInfo);
                 RemoveEmptyMenu(rv);
                 return rv;
