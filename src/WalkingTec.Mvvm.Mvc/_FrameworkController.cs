@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -371,6 +372,49 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return Content(html);
 
+        }
+
+        [AllRights]
+        public IActionResult OutSide(string url)
+        {
+            var ctrlActDesc = this.ControllerContext.ActionDescriptor as ControllerActionDescriptor;
+            string pagetitle = "";
+            var menu = Utils.FindMenu(url);
+            if (menu == null)
+            {
+                var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                if (actDes != null)
+                {
+                    if (ctrlDes != null)
+                    {
+                        pagetitle = ctrlDes.Description + " - ";
+                    }
+                    pagetitle += actDes.Description;
+                }
+            }
+            else
+            {
+                if (menu.ParentId != null)
+                {
+                    var pmenu = GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
+                    if (pmenu != null)
+                    {
+                        pagetitle = pmenu.PageName + " - ";
+                    }
+                }
+                pagetitle += menu.PageName;
+            }
+            HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
+
+            if (LoginUserInfo.IsAccessable(url) == true)
+            {
+                return Content($"<iframe width='100%' height='100%' frameborder=0 border=0 src='{url}'></iframe>");
+            }
+            else
+            {
+                throw new Exception("您没有访问该页面的权限");
+            }
         }
     }
 }
