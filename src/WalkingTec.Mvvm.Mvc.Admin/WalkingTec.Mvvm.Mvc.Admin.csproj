@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
@@ -9,14 +9,14 @@
   <Import Project="..\..\common.props" />
   
   <ItemGroup>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Delete.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Details.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Password.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Edit.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Import.cshtml"/>
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Index.cshtml"/>
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Delete.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Details.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Password.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Edit.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Import.cshtml" />
+    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Index.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Details.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\ActionLog\Index.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\DataPrivilege\Create.cshtml" />
@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />

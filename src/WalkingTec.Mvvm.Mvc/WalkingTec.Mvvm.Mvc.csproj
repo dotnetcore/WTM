@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <Title>$(AssemblyName)</Title>
@@ -71,11 +71,11 @@
     <EmbeddedResource Include="SetupFiles\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
-    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml"/>
-    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml"/>
-    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml"/>
-    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml"/>
-    <EmbeddedResource Include="Views\_Framework\Selector.cshtml"/>
+    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
+    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\HomeController.txt" />
@@ -99,7 +99,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
   </ItemGroup>
 
   <ItemGroup>
