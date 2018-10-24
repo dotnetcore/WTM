@@ -5,11 +5,11 @@
 
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        @Html.Partial("Header",Model)
+        @await Html.PartialAsync("Header",Model)
     </div>
 
     <div class="layui-side layui-bg-black">
-        @Html.Partial("Menu", Model)
+        @await Html.PartialAsync("Menu", Model)
     </div>
 
     <div class="layui-body" id="DONOTUSE_MAINPANEL" >
