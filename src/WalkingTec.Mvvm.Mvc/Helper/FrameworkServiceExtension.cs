@@ -39,13 +39,6 @@ namespace WalkingTec.Mvvm.Mvc
                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                .Build();
 
-            services.AddMemoryCache();
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = ".WalkingTec.Session";
-                options.IdleTimeout = TimeSpan.FromSeconds(3600);
-            });
             var gd = GetGlobalData();
             services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
@@ -58,6 +51,13 @@ namespace WalkingTec.Mvvm.Mvc
                 con.DataPrivilegeSettings = new List<IDataPrivilege>();
             }
             services.AddSingleton(con);
+            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = con.CookiePre+".Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(3600);
+            });
             SetupDFS(con);
             services.AddMvc(options =>
             {
@@ -79,7 +79,8 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
-            });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
