@@ -50,8 +50,6 @@ namespace WalkingTec.Mvvm.Core
             return null;
         }
 
-        private bool HeaderOnly;
-
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
@@ -108,7 +106,7 @@ namespace WalkingTec.Mvvm.Core
         {
             List<GridColumn<TModel>> rv = new List<GridColumn<TModel>>();
             var cmd = GetSearchCommand();
-            if(cmd != null)
+            if (cmd != null)
             {
                 var temp = Searcher.Limit;
                 Searcher.Limit = 0;
@@ -119,7 +117,7 @@ namespace WalkingTec.Mvvm.Core
                 for (int i = 0; i < EntityDataTable.Columns.Count; i++)
                 {
                     var col = EntityDataTable.Columns[i];
-                    rv.Add(new GridColumn<TModel>() { Title = col.ColumnName, FieldType = col.DataType , Field = col.ColumnName, Align = GridColumnAlignEnum.Left});
+                    rv.Add(new GridColumn<TModel>() { Title = col.ColumnName, FieldType = col.DataType, Field = col.ColumnName, Align = GridColumnAlignEnum.Left });
                 }
             }
             return rv;
@@ -199,7 +197,6 @@ namespace WalkingTec.Mvvm.Core
                             //建立excel单元格
                             var cell = dr.CreateCell(colIndex);
                             ICellStyle style = null;
-                            IFont font = null;
                             var styleKey = string.Empty;
                             //如果已经有符合条件的style，则使用
                             if (styles.ContainsKey(styleKey))
@@ -209,8 +206,7 @@ namespace WalkingTec.Mvvm.Core
                             //如果没有，则新建一个style
                             else
                             {
-                                var newKey = "";
-                                var newFontKey = "";
+                                var newKey = string.Empty;
                                 //新建style
                                 style = workbook.CreateCellStyle();
                                 //设定单元格边框
@@ -774,9 +770,11 @@ namespace WalkingTec.Mvvm.Core
                 parms.Add(new MySqlParameter("@RecordsPerPage", Searcher.Limit));
                 parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
 
-                MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64);
-                outp.Value = 0;
-                outp.Direction = System.Data.ParameterDirection.Output;
+                MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64)
+                {
+                    Value = 0,
+                    Direction = ParameterDirection.Output
+                };
                 parms.Add(outp);
 
                 var pa = parms.ToArray();
@@ -798,8 +796,10 @@ namespace WalkingTec.Mvvm.Core
                 parms.Add(new SqlParameter("@RecordsPerPage", Searcher.Limit));
                 parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
 
-                SqlParameter outp = new SqlParameter("@TotalRecords", 0);
-                outp.Direction = System.Data.ParameterDirection.Output;
+                SqlParameter outp = new SqlParameter("@TotalRecords", 0)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 parms.Add(outp);
                 var pa = parms.ToArray();
 
@@ -807,7 +807,8 @@ namespace WalkingTec.Mvvm.Core
                 total = outp.Value;
 
             }
-            if (NeedPage && Searcher.Limit != -1){
+            if (NeedPage && Searcher.Limit != -1)
+            {
                 if (total != null)
                 {
                     try
@@ -822,7 +823,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 Searcher.PageCount = EntityDataTable.Rows.Count;
             }
-    
+
         }
 
         public DateTime AddTime(DateTime dt, string type, int size)
@@ -951,19 +952,21 @@ namespace WalkingTec.Mvvm.Core
             EntityList = Entities;
             bool haserror = false;
             List<string> keys = new List<string>();
-            if (string.IsNullOrEmpty(DetailGridPrix) == false) {
+            if (string.IsNullOrEmpty(DetailGridPrix) == false)
+            {
                 foreach (var item in MSD.Keys)
                 {
-                    if (item.StartsWith(DetailGridPrix)) {
+                    if (item.StartsWith(DetailGridPrix))
+                    {
                         var errors = MSD[item];
-                        if(errors.Count > 0)
+                        if (errors.Count > 0)
                         {
                             Regex r = new Regex($"{DetailGridPrix}\\[(.*?)\\]");
                             try
                             {
                                 if (int.TryParse(r.Match(item).Groups[1].Value, out int index))
                                 {
-                                    EntityList[index].BatchError = errors.Select(x=>x.ErrorMessage).ToSpratedString();
+                                    EntityList[index].BatchError = errors.Select(x => x.ErrorMessage).ToSpratedString();
                                     keys.Add(item);
                                     haserror = true;
                                 }
@@ -993,7 +996,7 @@ namespace WalkingTec.Mvvm.Core
             EntityList?.Clear();
         }
 
-        public string DetailGridPrix {get;set;}
+        public string DetailGridPrix { get; set; }
 
         #endregion
     }

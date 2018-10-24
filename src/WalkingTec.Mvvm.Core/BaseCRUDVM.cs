@@ -313,9 +313,8 @@ namespace WalkingTec.Mvvm.Core
                     if (ftype.IsSubclassOf(typeof(TopBasePoco)))
                     {
                         //界面传过来的子表数据
-                        IEnumerable<TopBasePoco> list = pro.GetValue(Entity) as IEnumerable<TopBasePoco>;
 
-                        if (list != null && list.Count() > 0)
+                        if (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list && list.Count() > 0)
                         {
                             //获取外键字段名称
                             string fkname = DC.GetFKName<TModel>(pro.Name);
@@ -577,7 +576,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }

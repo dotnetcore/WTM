@@ -293,8 +293,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>返回表达式上层第一个不是where的节点</returns>
         private Expression GetParentExpNotWhere(MethodCallExpression exp)
         {
-            var parentNode = exp.Arguments[0] as MethodCallExpression;
-            if (parentNode == null )
+            if (!(exp.Arguments[0] is MethodCallExpression parentNode))
             {
                 return exp.Arguments[0];
             }
@@ -342,9 +341,8 @@ namespace WalkingTec.Mvvm.Core
             if (_addMode == false)
             {
                 var aType = node.Arguments[0].Type;
-                var parentNode = node.Arguments[0] as MethodCallExpression;
                 //如果节点的上一个节点是where
-                if (parentNode != null && parentNode.Method.Name.ToLower() == "where" && aType.GetTypeInfo().IsGenericType)
+                if (node.Arguments[0] is MethodCallExpression parentNode && parentNode.Method.Name.ToLower() == "where" && aType.GetTypeInfo().IsGenericType)
                 {
                     //继续往上找到不是where的节点
                     var nowhereNode = GetParentExpNotWhere(parentNode);
@@ -353,8 +351,10 @@ namespace WalkingTec.Mvvm.Core
                     //使用上面不是where的节点直接拼接本节点，从而删除了中间的where
                     if ((gType == typeof(IQueryable<>) || gType == typeof(EntityQueryable<>)) && argType == _modelType)
                     {
-                        var paras = new List<Expression>();
-                        paras.Add(nowhereNode);
+                        var paras = new List<Expression>
+                        {
+                            nowhereNode
+                        };
                         paras.AddRange(node.Arguments.Skip(1).ToList());
                         var rv = Expression.Call(
                          node.Method,
@@ -375,7 +375,6 @@ namespace WalkingTec.Mvvm.Core
         private Type _modelType;
         private bool _needAdd = true;
         private int _mode = 0; //0是搜素模式，1是添加模式
-        private bool _added = false;
         private Expression<Func<PersistPoco, bool>> _where;
 
         /// <summary>
@@ -459,8 +458,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>返回表达式上层第一个不是where的节点</returns>
         private Expression GetParentExpNotWhere(MethodCallExpression exp)
         {
-            var parentNode = exp.Arguments[0] as MethodCallExpression;
-            if (parentNode == null)
+            if (!(exp.Arguments[0] is MethodCallExpression parentNode))
             {
                 return exp.Arguments[0];
             }
@@ -491,7 +489,6 @@ namespace WalkingTec.Mvvm.Core
                      new Type[] { _modelType },
                      node,
                      Expression.Lambda(modifiedWhere, new ParameterExpression[] { pe }));
-                    _added = true;
                     return rv;
                 }
             }
@@ -608,12 +605,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (node.Method.Name.ToLower() == "select")
                 {
-                    var ue = node.Arguments[1] as UnaryExpression;
-                    if (ue != null)
+                    if (node.Arguments[1] is UnaryExpression ue)
                     {
                         var inner = ue.Operand as LambdaExpression;
-                        var memberinit = inner.Body as MemberInitExpression;
-                        if (memberinit != null)
+                        if (inner.Body is MemberInitExpression memberinit)
                         {
                             _columns = new List<string>();
                             foreach (var m in memberinit.Bindings)
@@ -654,8 +649,7 @@ namespace WalkingTec.Mvvm.Core
             for (int i = 0; i < node.Bindings.Count; i++)
             {
                 bool islist = false;
-                var ma = node.Bindings[i] as MemberAssignment;
-                if (ma != null && ma.Expression.Type.GetTypeInfo().IsGenericType == true)
+                if (node.Bindings[i] is MemberAssignment ma && ma.Expression.Type.GetTypeInfo().IsGenericType == true)
                 {
                     if (ma.Expression.Type.GetGenericTypeDefinition() != typeof(Nullable<>))
                     {

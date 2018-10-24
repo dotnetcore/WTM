@@ -12,10 +12,12 @@ namespace WalkingTec.Mvvm.Core.FDFS
             FDFSRequest trackerRequest = QUERY_STORE_WITHOUT_GROUP_ONE.Instance.GetRequest();
             QUERY_STORE_WITHOUT_GROUP_ONE.Response trackerResponse = new QUERY_STORE_WITHOUT_GROUP_ONE.Response(trackerRequest.GetResponse());
             IPEndPoint storeEndPoint = new IPEndPoint(IPAddress.Parse(trackerResponse.IPStr), trackerResponse.Port);
-            StorageNode result = new StorageNode();
-            result.GroupName = trackerResponse.GroupName;
-            result.EndPoint = storeEndPoint;
-            result.StorePathIndex = trackerResponse.StorePathIndex;
+            StorageNode result = new StorageNode
+            {
+                GroupName = trackerResponse.GroupName,
+                EndPoint = storeEndPoint,
+                StorePathIndex = trackerResponse.StorePathIndex
+            };
             return result;
         }
 
@@ -29,10 +31,12 @@ namespace WalkingTec.Mvvm.Core.FDFS
             FDFSRequest trackerRequest = QUERY_STORE_WITH_GROUP_ONE.Instance.GetRequest(groupName);
             QUERY_STORE_WITH_GROUP_ONE.Response trackerResponse = new QUERY_STORE_WITH_GROUP_ONE.Response(trackerRequest.GetResponse());
             IPEndPoint storeEndPoint = new IPEndPoint(IPAddress.Parse(trackerResponse.IPStr), trackerResponse.Port);
-            StorageNode result = new StorageNode();
-            result.GroupName = trackerResponse.GroupName;
-            result.EndPoint = storeEndPoint;
-            result.StorePathIndex = trackerResponse.StorePathIndex;
+            StorageNode result = new StorageNode
+            {
+                GroupName = trackerResponse.GroupName,
+                EndPoint = storeEndPoint,
+                StorePathIndex = trackerResponse.StorePathIndex
+            };
             return result;
         }
         /// <summary>
@@ -65,7 +69,7 @@ namespace WalkingTec.Mvvm.Core.FDFS
         /// <summary>
         /// 上传从文件
         /// </summary>
-        /// <param name="storageNode">GetStorageNode方法返回的存储节点</param>
+        /// <param name="groupName">groupName</param>
         /// <param name="contentByte">文件内容</param>
         /// <param name="master_filename">主文件名</param>
         /// <param name="prefix_name">从文件后缀</param>
