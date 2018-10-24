@@ -340,8 +340,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                 {
-                    TopBasePoco bp = pro.GetValue(item) as TopBasePoco;
-                    if (bp != null)
+                    if (pro.GetValue(item) is TopBasePoco bp)
                     {
                         rv = TryValidateModel(bp);
                     }
@@ -351,8 +350,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var ftype = pro.PropertyType.GenericTypeArguments.First();
                     if (ftype.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                     {
-                        IEnumerable<TopBasePoco> list = pro.GetValue(item) as IEnumerable<TopBasePoco>;
-                        if (list != null)
+                        if (pro.GetValue(item) is IEnumerable<TopBasePoco> list)
                         {
                             foreach (var li in list)
                             {

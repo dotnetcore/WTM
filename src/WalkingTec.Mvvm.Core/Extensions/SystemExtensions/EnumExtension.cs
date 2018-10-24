@@ -14,8 +14,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <param name="self">枚举类型</param>
         /// <param name="value">value</param>
+        /// <param name="pleaseSelect">pleaseSelect</param>
         /// <returns>下拉菜单数据列表</returns>
-        public static List<ComboSelectListItem> ToListItems(this Type self,object value=null, bool pleaseSelect = false)
+        public static List<ComboSelectListItem> ToListItems(this Type self, object value = null, bool pleaseSelect = false)
         {
             string[] names = null;
             //如果是枚举
@@ -35,14 +36,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 foreach (var name in names)
                 {
                     var newitem = new ComboSelectListItem { Text = PropertyHelper.GetEnumDisplayName(self, name), Value = name };
-                    if(value != null && name == value.ToString())
+                    if (value != null && name == value.ToString())
                     {
                         newitem.Selected = true;
                     }
                     rv.Add(newitem);
                 }
             }
-            if(pleaseSelect == true)
+            if (pleaseSelect == true)
             {
                 rv.Insert(0, new ComboSelectListItem { Text = "请选择", Value = "" });
             }

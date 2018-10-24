@@ -24,7 +24,8 @@ namespace WalkingTec.Mvvm.Demo
             base.OnConfiguring(optionsBuilder.UseLoggerFactory(WTMLoggerFactory));
 
         }
-        public new static readonly LoggerFactory WTMLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
+        public static readonly LoggerFactory WTMLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
 #endif
 
     }

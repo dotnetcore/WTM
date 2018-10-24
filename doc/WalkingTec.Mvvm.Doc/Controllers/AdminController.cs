@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
@@ -19,13 +15,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         }
 
         [ActionDescription("日志管理")]
-        public IActionResult Log()
+        public new IActionResult Log()
         {
             return PartialView();
         }
 
         [ActionDescription("用户管理")]
-        public IActionResult User()
+        public new IActionResult User()
         {
             return PartialView();
         }

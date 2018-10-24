@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Core.FDFS
                 _connection.Close();
                 return body;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _connection.Release();
                 //throw ex;//可以看Storage节点的log看

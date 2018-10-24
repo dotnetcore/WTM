@@ -381,6 +381,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="Id">VM的主键，如果不为空则自动根据主键读取数据</param>
         /// <param name="Ids">VM的列表主键数组，针对ListVM和BatchVM等有列表的VM，如果不为空则根据数组读取数据</param>
         /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
+        /// <param name="passInit"></param>
         /// <returns></returns>
         public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
@@ -443,8 +444,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                 {
-                    TopBasePoco bp = pro.GetValue(item) as TopBasePoco;
-                    if (bp != null)
+                    if (pro.GetValue(item) is TopBasePoco bp)
                     {
                         rv = TryValidateModel(bp);
                     }
@@ -454,8 +454,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var ftype = pro.PropertyType.GenericTypeArguments.First();
                     if (ftype.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
                     {
-                        IEnumerable<TopBasePoco> list = pro.GetValue(item) as IEnumerable<TopBasePoco>;
-                        if (list != null)
+                        if (pro.GetValue(item) is IEnumerable<TopBasePoco> list)
                         {
                             foreach (var li in list)
                             {
@@ -539,8 +538,10 @@ namespace WalkingTec.Mvvm.Mvc
         [NonAction]
         public FResult FFResult()
         {
-            var rv = new FResult();
-            rv.Controller = this;
+            var rv = new FResult
+            {
+                Controller = this
+            };
             rv.Controller.Response.Headers.Add("IsScript", "true");
             return rv;
         }
