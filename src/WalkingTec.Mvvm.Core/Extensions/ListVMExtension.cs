@@ -100,15 +100,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
-        /// <param name="sou">数据</param>
+        /// <param name="obj">数据</param>
+        /// <param name="index">index</param>
         /// <returns>Json格式的数据</returns>
         public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj,int index = 0) where T : TopBasePoco
         {
             var sb = new StringBuilder();
             var RowBgColor = string.Empty;
             var RowColor = string.Empty;
-            T sou = obj as T;
-            if (sou == null)
+            if (!(obj is T sou))
             {
                 sou = self.CreateEmptyEntity();
             }
@@ -253,7 +253,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //循环所有列
             sb.Append("{");
             bool containsID = false;
-            bool addHiddenID = false;
             foreach (var baseCol in self.GetHeaders())
             {
                 foreach (var col in baseCol.BottomChildren)

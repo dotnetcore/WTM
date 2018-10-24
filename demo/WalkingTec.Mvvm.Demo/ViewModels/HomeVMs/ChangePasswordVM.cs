@@ -28,7 +28,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         /// <summary>
         /// 自定义验证函数，验证原密码是否正确，并验证两次新密码是否输入一致
         /// </summary>
-        /// <param name="validationContext">验证环境</param>
         /// <returns>验证结果</returns>
         public override void Validate()
         {

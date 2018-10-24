@@ -283,6 +283,7 @@ namespace WalkingTec.Mvvm.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="editType">单元格编辑类型</param>
+        /// <param name="listitems">listitems</param>
         /// <returns></returns>
         public static GridColumn<T> SetEditType<T>(this GridColumn<T> self, EditTypeEnum editType = EditTypeEnum.Text, List<ComboSelectListItem> listitems = null)
             where T : TopBasePoco
