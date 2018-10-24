@@ -68,6 +68,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="con"></param>
         /// <param name="FileName"></param>
         /// <param name="savePlace"></param>
+        /// <param name="groupName"></param>
         /// <returns></returns>
         public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con,string FileName = null, SaveFileModeEnum? savePlace = null, string groupName = null)
         {
@@ -86,8 +87,10 @@ namespace WalkingTec.Mvvm.Core
                 using (var dataStream = new System.IO.MemoryStream())
                 {
                     FileData.CopyTo(dataStream);
-                    vm.Entity.FileData = new FileAttachmentData();
-                    vm.Entity.FileData.FileData = dataStream.ToArray();
+                    vm.Entity.FileData = new FileAttachmentData
+                    {
+                        FileData = dataStream.ToArray()
+                    };
                 }
             }
             else if (savePlace == SaveFileModeEnum.Local)

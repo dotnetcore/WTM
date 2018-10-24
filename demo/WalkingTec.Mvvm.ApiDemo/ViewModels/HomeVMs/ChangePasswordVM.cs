@@ -12,23 +12,22 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.HomeVMs
 
         [Display(Name = "当前密码")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string OldPassword { get; set; }
 
         [Display(Name = "新密码")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string NewPassword { get; set; }
 
         [Display(Name = "新密码")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string NewPasswordComfirm { get; set; }
 
         /// <summary>
         /// 自定义验证函数，验证原密码是否正确，并验证两次新密码是否输入一致
         /// </summary>
-        /// <param name="validationContext">验证环境</param>
         /// <returns>验证结果</returns>
         public override void Validate()
         {

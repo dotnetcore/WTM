@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Core.FDFS
         /// <summary>
         /// Convert Long to byte[]
         /// </summary>
-        /// <param name="n"></param>
+        /// <param name="l"></param>
         /// <returns></returns>
         public static byte[] LongToBuffer(long l)
         {
@@ -94,14 +94,14 @@ namespace WalkingTec.Mvvm.Core.FDFS
             Array.Copy(bsKey, 0, buff, bsFileId.Length, bsKey.Length);
             Array.Copy(bsTimestamp, 0, buff, bsFileId.Length + bsKey.Length, bsTimestamp.Length);
 
-            return md5(buff);
+            return Md5(buff);
         }
         /// <summary>
         /// md5 function
         /// </summary>
         /// <param name="source">source the input buffer </param>
         /// <returns>md5 string </returns>
-        public static string md5(byte[] source)
+        public static string Md5(byte[] source)
         {
 
             string pwd = "";

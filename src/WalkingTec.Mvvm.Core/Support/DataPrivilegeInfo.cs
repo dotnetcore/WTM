@@ -36,17 +36,17 @@ namespace WalkingTec.Mvvm.Core
 
         public DataPrivilegeInfo(string name, Expression<Func<T, string>> displayField, Expression<Func<T, bool>> where = null)
         {
-            this.ModelName = typeof(T).Name;
-            this.PrivillegeName = name;
-            this._displayField = displayField;
-            this._where = where;
+            ModelName = typeof(T).Name;
+            PrivillegeName = name;
+            _displayField = displayField;
+            _where = where;
         }
 
         /// <summary>
         /// 获取数据权限的下拉菜单
         /// </summary>
         /// <param name="dc">dc</param>
-        /// <param name="dps">数据权限</param>
+        /// <param name="user">user</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
         public List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user)
         {
