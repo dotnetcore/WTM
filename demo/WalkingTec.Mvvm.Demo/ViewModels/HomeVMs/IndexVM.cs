@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -54,7 +55,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             foreach (var menu in menus)
             {
                 //判断是否有权限，如果没有，则添加到需要移除的列表中
-                if (!string.IsNullOrEmpty(menu.Url) && info.IsAccessable(menu.Url) == false)
+                var url = menu.Url;
+                if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
+                {
+                    url = url.Replace("/_framework/outside?url=", "");
+                }
+                if (!string.IsNullOrEmpty(url) && info.IsAccessable(HttpUtility.UrlDecode(url)) == false)
                 {
                     toRemove.Add(menu);
                 }

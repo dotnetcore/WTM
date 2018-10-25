@@ -108,7 +108,10 @@ window.ff = {
         var layer = layui.layer;
         var index = layer.load(2);
         url = decodeURIComponent(url);
-
+        var re = /(\/_framework\/outside\?url=)(.*?)$/ig;
+        url = url.replace(re, function (match, p1, p2) {
+            return p1 + encodeURIComponent(p2);
+        });
         $.ajax({
             url: url,
             type: 'GET',

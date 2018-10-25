@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -378,6 +379,7 @@ namespace WalkingTec.Mvvm.Mvc
         [AllRights]
         public IActionResult OutSide(string url)
         {
+            url = HttpUtility.UrlDecode(url);
             var ctrlActDesc = this.ControllerContext.ActionDescriptor as ControllerActionDescriptor;
             string pagetitle = "";
             var menu = Utils.FindMenu(url);
@@ -462,6 +464,7 @@ namespace WalkingTec.Mvvm.Mvc
         [Public]
         public IActionResult IsAccessable(string url)
         {
+            url = HttpUtility.UrlDecode(url);
             Response.Headers.Add("Access-Control-Allow-Origin", Request.Headers["Origin"]);
             Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
