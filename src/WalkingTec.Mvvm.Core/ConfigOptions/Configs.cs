@@ -1,33 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using WalkingTec.Mvvm.Core.ConfigOptions;
 
 namespace WalkingTec.Mvvm.Core
 {
-    
-    public class KV
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-    }
-
-    public class DFS
-    {
-        public int? StorageMaxConnection { get; set; }
-        public int? TrackerMaxConnection { get; set; }
-        public int? ConnectionTimeout { get; set; }
-        public int? ConnectionLifeTime { get; set; }
-        public List<DFSTracker> Trackers { get; set; }
-    }
-
-    public class DFSTracker
-    {
-        public string IP { get; set; }
-        public int Port { get; set; }
-    }
-
+    /// <summary>
+    /// Configs
+    /// </summary>
     public class Configs
     {
         #region 数据库连接字符串
+
         private List<KV> _connectStrings;
+
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
@@ -35,7 +20,6 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-
                 if (_connectStrings == null)
                 {
                     _connectStrings = new List<KV>();
@@ -47,14 +31,17 @@ namespace WalkingTec.Mvvm.Core
                 _connectStrings = value;
             }
         }
+
         #endregion
 
         #region 是否是调试模式
-        private  bool? _isQuickDebug;
+
+        private bool? _isQuickDebug;
+
         /// <summary>
         /// 是否启动调试模式
         /// </summary>
-        public  bool IsQuickDebug
+        public bool IsQuickDebug
         {
             get
             {
@@ -69,7 +56,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region Cookie前缀
+
         private string _cookiePre;
+
         /// <summary>
         /// 代理，用于系统访问外部网站
         /// </summary>
@@ -77,21 +66,24 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                return _cookiePre ?? "";
+                return _cookiePre ?? string.Empty;
             }
             set
             {
                 _cookiePre = value;
             }
         }
+
         #endregion
 
         #region 文件存储方式
-        private  SaveFileModeEnum? _saveFileMode;
+
+        private SaveFileModeEnum? _saveFileMode;
+
         /// <summary>
         /// 文件存储方式
         /// </summary>
-        public  SaveFileModeEnum SaveFileMode
+        public SaveFileModeEnum SaveFileMode
         {
             get
             {
@@ -106,23 +98,25 @@ namespace WalkingTec.Mvvm.Core
                 _saveFileMode = value;
             }
         }
+
         #endregion
 
         #region 上传文件路径
-        private  string _uploadDir;
+        private string _uploadDir;
+
         /// <summary>
         /// 上传文件路径
         /// </summary>
-        public  string UploadDir
+        public string UploadDir
         {
             get
             {
                 if (_uploadDir == null)
                 {
-                    _uploadDir ="c:\\upload";
+                    _uploadDir = DefaultConfigConsts.DEFAULT_UPLOAD_DIR;
                     if (!string.IsNullOrEmpty(_uploadDir))
                     {
-                        System.IO.Directory.CreateDirectory(_uploadDir);
+                        Directory.CreateDirectory(_uploadDir);
                     }
                 }
                 return _uploadDir;
@@ -132,10 +126,13 @@ namespace WalkingTec.Mvvm.Core
                 _uploadDir = value;
             }
         }
+
         #endregion
 
         #region 是否启用日志
+
         private bool? _enableLog;
+
         /// <summary>
         /// 是否启动调试模式
         /// </summary>
@@ -154,7 +151,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 是否在log中只记录一场
+
         private bool? _logExceptionOnly;
+
         /// <summary>
         /// 是否启动调试模式
         /// </summary>
@@ -173,7 +172,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 默认列表行数
+
         private int? _rpp;
+
         /// <summary>
         /// 默认列表行数
         /// </summary>
@@ -183,7 +184,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_rpp == null)
                 {
-                    _rpp = 20;
+                    _rpp = DefaultConfigConsts.DEFAULT_RPP;
                 }
                 return _rpp.Value;
             }
@@ -192,10 +193,13 @@ namespace WalkingTec.Mvvm.Core
                 _rpp = value;
             }
         }
+
         #endregion
 
         #region 自动更新数据库
+
         private bool? _syncdb;
+
         /// <summary>
         /// 是否自动更新数据库
         /// </summary>
@@ -214,7 +218,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 数据库类型
+
         private DBTypeEnum? _dbtype;
+
         /// <summary>
         /// 数据库类型
         /// </summary>
@@ -233,10 +239,13 @@ namespace WalkingTec.Mvvm.Core
                 _dbtype = value;
             }
         }
+
         #endregion
 
         #region 页面显示方式
+
         private PageModeEnum? _pageMode;
+
         /// <summary>
         /// 数据库类型
         /// </summary>
@@ -258,7 +267,9 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 加密密钥
+
         private string _encryptKey;
+
         /// <summary>
         /// 数据库类型
         /// </summary>
@@ -277,10 +288,13 @@ namespace WalkingTec.Mvvm.Core
                 _encryptKey = value;
             }
         }
+
         #endregion
 
         #region 自定义应用配置
+
         private List<KV> _appSettings;
+
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
@@ -288,7 +302,6 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-
                 if (_appSettings == null)
                 {
                     _appSettings = new List<KV>();
@@ -304,13 +317,13 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 数据权限配置
+
         private List<IDataPrivilege> _dataPrivilegeSettings;
 
         public List<IDataPrivilege> DataPrivilegeSettings
         {
             get
             {
-
                 if (_dataPrivilegeSettings == null)
                 {
                     _dataPrivilegeSettings = new List<IDataPrivilege>();
@@ -322,18 +335,20 @@ namespace WalkingTec.Mvvm.Core
                 _dataPrivilegeSettings = value;
             }
         }
+
         #endregion
 
         #region DFS配置
+
         private DFS _dfsServer;
+
         /// <summary>
-        /// 数据库连接字符串
+        /// DFS配置
         /// </summary>
         public DFS DFSServer
         {
             get
             {
-
                 if (_dfsServer == null)
                 {
                     _dfsServer = new DFS();
@@ -343,6 +358,34 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _dfsServer = value;
+            }
+        }
+
+        #endregion
+
+        #region 文件相关设置
+
+        private FileUploadOptions _fileUploadOptions;
+
+        /// <summary>
+        /// 文件相关设置
+        /// </summary>
+        public FileUploadOptions FileUploadOptions
+        {
+            get
+            {
+                if (_fileUploadOptions == null)
+                {
+                    _fileUploadOptions = new FileUploadOptions()
+                    {
+                        UploadLimit = DefaultConfigConsts.DEFAULT_UPLOAD_LIMIT
+                    };
+                }
+                return _fileUploadOptions;
+            }
+            set
+            {
+                _fileUploadOptions = value;
             }
         }
 

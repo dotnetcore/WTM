@@ -1,5 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Loader;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -13,13 +22,6 @@ using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Runtime.Loader;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
@@ -32,12 +34,30 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class FrameworkServiceExtension
     {
-        public static IServiceCollection AddFrameworkService(this IServiceCollection services, Func<ActionExecutingContext, string> CsSector = null, List<IDataPrivilege> dataPrivilegeSettings = null)
+        public static IServiceCollection AddFrameworkService(this IServiceCollection services,
+            Func<ActionExecutingContext, string> CsSector = null,
+            List<IDataPrivilege> dataPrivilegeSettings = null,
+            WebHostBuilderContext webHostBuilderContext = null
+        )
         {
-            var config = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-               .Build();
+            IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
+            IConfigurationRoot config = null;
+
+            var configBuilder = 
+                    new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            if (webHostBuilderContext != null)
+            {
+                configBuilder
+                    .AddJsonFile(
+                        $"appsettings.{env.EnvironmentName}.json", 
+                        optional: true, 
+                        reloadOnChange: true
+                    );
+            }
+            config = configBuilder.Build();
 
             var gd = GetGlobalData();
             services.AddSingleton(gd);
@@ -55,7 +75,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.Cookie.Name = con.CookiePre+".Session";
+                options.Cookie.Name = con.CookiePre + ".Session";
                 options.IdleTimeout = TimeSpan.FromSeconds(3600);
             });
             SetupDFS(con);
@@ -80,7 +100,7 @@ namespace WalkingTec.Mvvm.Mvc
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
+
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
@@ -100,6 +120,12 @@ namespace WalkingTec.Mvvm.Mvc
                         )
                     );
                 }
+            });
+
+            services.Configure<FormOptions>(y =>
+            {
+                y.ValueLengthLimit = int.MaxValue;
+                y.MultipartBodyLengthLimit = 20 * 1024 * 1024;
             });
 
             services.AddSingleton<IUIService, DefaultUIService>();
