@@ -19,13 +19,14 @@ namespace WalkingTec.Mvvm.Demo
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
+                .ConfigureServices((hostingCtx, x) =>
                 {
-                    List<IDataPrivilege> pris = new List<IDataPrivilege>();
-                    pris.Add(new DataPrivilegeInfo<School>("学校", y => y.SchoolName));
-                    pris.Add(new DataPrivilegeInfo<Major>("专业", y => y.MajorName));
+                    var pris = new List<IDataPrivilege>
+                    {
+                        new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
+                        new DataPrivilegeInfo<Major>("专业", y => y.MajorName)
+                    };
                     x.AddFrameworkService(dataPrivilegeSettings: pris);
-                    //x.AddFrameworkService();
                     x.AddLayui();
                 })
                 .Configure(x =>
