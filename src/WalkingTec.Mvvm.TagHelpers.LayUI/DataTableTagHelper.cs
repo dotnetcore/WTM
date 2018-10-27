@@ -1,93 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Newtonsoft.Json;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
-    /// <summary>
-    /// 排序类型
-    /// </summary>
-    public enum SortTypeEnum
-    {
-        /// <summary>
-        /// 升序
-        /// </summary>
-        ASC = 0,
-        /// <summary>
-        /// 降序
-        /// </summary>
-        DESC
-    }
-    /// <summary>
-    /// 表格风格枚举
-    /// </summary>
-    public enum DataTableSkinEnum
-    {
-        /// <summary>
-        /// 行边框风格
-        /// </summary>
-        Line = 0,
-        /// <summary>
-        /// 列边框风格
-        /// </summary>
-        Row,
-        /// <summary>
-        /// 无边框风格
-        /// </summary>
-        Nob
-    }
-    /// <summary>
-    /// 表格尺寸枚举
-    /// </summary>
-    public enum DataTableSizeEnum
-    {
-        /// <summary>
-        /// 小尺寸
-        /// </summary>
-        SM = 0,
-        /// <summary>
-        /// 大尺寸
-        /// </summary>
-        LG
-    }
-    /// <summary>
-    /// HTTP Method 
-    /// </summary>
-    public enum HttpMethodEnum
-    {
-        /// <summary>
-        /// HTTP GET Method
-        /// </summary>
-        GET = 0,
-        /// <summary>
-        /// HTTP POST Method
-        /// </summary>
-        POST
-    }
     [HtmlTargetElement("wt:grid", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class DataTableTagHelper : TagHelper
     {
+        #region const
         protected const string REQUIRED_ATTR_NAME = "vm";
 
-        private static readonly string[] SPECIAL_ACTION = new string[] { "Delete", "Edit", "Details" };
         /// <summary>
         /// 用于存储 DataTable render后返回的table变量的前缀
         /// </summary>
         public const string TABLE_JSVAR_PREFIX = "wtVar_";
+
         /// <summary>
         /// 用于自动生成的 GridId 的前缀
         /// </summary>
         public const string TABLE_ID_PREFIX = "wtTable_";
+
         /// <summary>
         /// 用于生成操作列
         /// </summary>
-        public const string TABLE_TOOLBAR_PREFIX = "wtToolBar_";
+        public const string TABLE_TOOLBAR_PREFIX = "wtToolBar_"; 
+        #endregion
+
         private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
         {
             NullValueHandling = NullValueHandling.Ignore
@@ -171,10 +115,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
-        /// <summary>
-        /// 隐藏 Grid 的 Panel 默认false
-        /// </summary>
-        public bool HiddenPanel { get; set; }
         private string ToolBarId => $"{TABLE_TOOLBAR_PREFIX}{ListVM.UniqueId}";
         /// <summary>
         /// 设定复选框列 默认false
@@ -199,11 +139,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <para>full-差值: 高度将始终铺满，无论浏览器尺寸如何。这是一个特定的语法格式，其中 full 是固定的，而 差值 则是一个数值，这需要你来预估，比如：表格容器距离浏览器顶部和底部的距离“和” <para>
         /// </summary>
         public int? Height { get; set; }
+
         /// <summary>
         /// 设定容器宽度 默认值：'auto'
         /// table容器的默认宽度是 auto，你可以借助该参数设置一个固定值，当容器中的内容超出了该宽度时，会自动出现横向滚动条。
         /// </summary>
         public int? Width { get; set; }
+
         /// <summary>
         /// 接口地址
         /// </summary>
@@ -213,19 +155,23 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <para>如果无需自定义HTTP类型，可不加该参数 <see cref="HttpMethodEnum" /></para>
         /// </summary>
         public HttpMethodEnum? Method { get; set; }
+
         /// <summary>
         /// 查询条件
         /// </summary>
         public Dictionary<string, object> Filter { get; set; }
+
         /// <summary>
         /// 直接赋值数据
         /// <para>你也可以对表格直接赋值，而无需配置异步数据请求接口。他既适用于只展示一页数据，也非常适用于对一段已知数据进行多页展示。</para>
         /// </summary>
         public ModelExpression Data { get; set; }
+
         /// <summary>
         /// 直接从 ListVM的EntityList获取数据
         /// </summary>
         public bool UseLocalData { get; set; }
+
         /// <summary>
         /// 数据渲染完的回调
         /// <para>无论是异步请求数据，还是直接赋值数据，都会触发该回调。你可以利用该回调做一些表格以外元素的渲染。</para>
@@ -235,6 +181,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <para>count:  得到数据总量</para>
         /// </summary>
         public string DoneFunc { get; set; }
+
         /// <summary>
         /// 复选框选中事件
         /// 点击复选框时触发，回调函数返回一个object参数，携带的成员如下：
@@ -244,8 +191,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string CheckedFunc { get; set; }
 
-        public string PanelTitle { get; set; }
-
         #region 需要修改
         // TODO 需要修改
         /// <summary>
@@ -253,6 +198,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <para>用于在数据表格渲染完毕时，默认按某个字段排序。注：该参数为 layui 2.1.1 新增</para>
         /// </summary>
         public ModelExpression InitSortField { get; set; }
+
         /// <summary>
         /// 初始排序 类型默认ASC
         /// <para>用于在数据表格渲染完毕时，默认按某个字段排序。注：该参数为 layui 2.1.1 新增</para>
@@ -264,6 +210,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 是否开启分页 默认 true
         /// </summary>
         public bool? Page { get; set; }
+
         /// <summary>
         /// 每页数据量可选项
         /// <para>默认值：[10,20,30,40,50,70,80,90]</para>
@@ -274,20 +221,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 默认每页数量 50
         /// </summary>
         public int? Limit { get; set; }
+
         /// <summary>
         /// 是否显示加载条 默认 true
         /// <para>如果设置 false，则在切换分页时，不会出现加载条。该参数只适用于“异步数据请求”的方式（即设置了url的情况下）</para>
         /// </summary>
         public bool? Loading { get; set; }
+
         /// <summary>
         /// 用于设定表格风格，若使用默认风格不设置该属性即可
         /// </summary>
         public DataTableSkinEnum? Skin { get; set; }
+
         /// <summary>
         /// 隔行背景，默认true
         /// <para>若不开启隔行背景，设置为false即可</para>
         /// </summary>
         public bool? Even { get; set; }
+
         /// <summary>
         /// 用于设定表格尺寸，若使用默认尺寸不设置该属性即可
         /// </summary>
@@ -580,7 +531,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
 ,done: function(res,curr,count){{layer.close(msg);
-    {(Height==null ? $"var tab = $('#{Id} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
+    {(Height == null ? $"var tab = $('#{Id} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
 }}
@@ -609,31 +560,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             #endregion
 
-            //if (HiddenPanel) // 无 Panel
-            //{
-                output.PreElement.AppendHtml($@"<div style=""text-align:right;margin-right:15px"">{toolBarBtnStrBuilder}</div>");
-           // }
-//            else // 有 Panel
-//            {
-//                #region 在数据列表外部套上一层 Panel
-//                toolBarBtnStrBuilder.Append("<style type=\"text/css\">.buttongroup:hover{opacity: initial;}</style>");
-//                output.PreElement.AppendHtml($@"
-//<div class=""layui-collapse donotuse_fill donotuse_pdiv"" >
-//  <div class=""layui-colla-item donotuse_fill donotuse_pdiv"">
-//    <h2 id=""{tempGridTitleId}"" class=""layui-colla-title"" style=""overflow: visible;"">{PanelTitle ?? "数据列表"}
-//      <!-- 数据列表按钮组 -->
-//      <div style=""text-align:right;margin-top:-43px;"">{toolBarBtnStrBuilder}</div>
-//    </h2>
-//    <div class=""layui-colla-content layui-show donotuse_fill donotuse_pdiv"" style=""padding:0;"">
-//");
-//                output.PostElement.AppendHtml($@"
-//    </div>
-//  </div>
-//</div>
-//<script>layui.element.init();$('#{tempGridTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})</script>");
-
-            //    #endregion
-            //}
+            output.PreElement.AppendHtml($@"<div style=""text-align:right;margin-right:15px"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
 { (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
@@ -650,9 +577,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <param name="vm"></param>
         /// <param name="item"></param>
         /// <param name="isSub"></param>
-        private void AddSubButton(string vmQualifiedName, StringBuilder rowBtnStrBuilder, StringBuilder toolBarBtnStrBuilder, StringBuilder gridBtnEventStrBuilder, BaseVM vm, GridAction item, bool isSub = false)
+        private void AddSubButton(
+            string vmQualifiedName,
+            StringBuilder rowBtnStrBuilder,
+            StringBuilder toolBarBtnStrBuilder,
+            StringBuilder gridBtnEventStrBuilder,
+            BaseVM vm,
+            GridAction item,
+            bool isSub = false
+        )
         {
-            if (vm.LoginUserInfo?.IsAccessable(item.Url) == true || item.ParameterType == GridActionParameterTypesEnum.AddRow || item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
+            if (vm.LoginUserInfo?.IsAccessable(item.Url) == true ||
+                item.ParameterType == GridActionParameterTypesEnum.AddRow ||
+                item.ParameterType == GridActionParameterTypesEnum.RemoveRow
+            )
             {
                 // Grid 行内按钮
                 if (item.ShowInRow)
@@ -665,7 +603,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
                     }
-
                 }
 
                 // Grid 工具条按钮
@@ -700,9 +637,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     //如果是按钮组容器，加载子按钮
                     if (item.ActionName.Equals("ActionsGroup")
-                        && item.SubActions != null && item.SubActions.Count > 0)
+                        && item.SubActions != null &&
+                        item.SubActions.Count > 0
+                    )
                     {
-                        StringBuilder subBarBtnStrList = new StringBuilder();
+                        var subBarBtnStrList = new StringBuilder();
                         foreach (var subItem in item.SubActions)
                         {
                             StringBuilder subBarBtnStr = new StringBuilder();
@@ -712,7 +651,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                                 subBarBtnStrList.AppendFormat("<dd style=\"padding: 0 0px;margin-bottom:1px;line-height: initial;\">{0}</dd>", subBarBtnStr.ToString());
                             }
                         }
-
 
                         toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel"" style=""z-index:10;"" id=""btn_{item.ButtonId}"">
                                  <div class=""layui-select-title"" style=""padding-right:20px;"">
@@ -756,37 +694,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
                 }
                 var script = new StringBuilder($"var tempUrl = '{url}',whereStr={JsonConvert.SerializeObject(item.whereStr)};");
-                if (SPECIAL_ACTION.Contains(item.ActionName))
+
+                switch (item.ParameterType)
                 {
-                    script.Append($@"tempUrl = tempUrl + '&id=' + data.ID;");
-                    switch (item.ParameterType)
-                    {
-                        case GridActionParameterTypesEnum.SingleId:
-                        case GridActionParameterTypesEnum.SingleIdWithNull:
-                            if (item.whereStr != null && item.whereStr.Length > 0)
-                            {
-                                script.Append($@"
-if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
-    var objs = ff.GetSelectionData('{Id}');
-    if(objs!=null && objs.length > 0){{
-        tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
-    }}
-}}else{{
-    tempUrl = tempUrl + '&id=' + data.ID;
-    tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
-}}
-");
-                            }
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (item.ParameterType)
-                    {
-                        case GridActionParameterTypesEnum.NoId: break;
-                        case GridActionParameterTypesEnum.SingleId:
-                            script.Append($@"
+                    case GridActionParameterTypesEnum.NoId: break;
+                    case GridActionParameterTypesEnum.SingleId:
+                        script.Append($@"
 if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
     var ids = ff.GetSelections('{Id}');
     if(ids.length == 0){{
@@ -807,9 +720,9 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
     tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }}
 ");
-                            break;
-                        case GridActionParameterTypesEnum.MultiIds:
-                            script.Append($@"
+                        break;
+                    case GridActionParameterTypesEnum.MultiIds:
+                        script.Append($@"
 isPost = true;
 var ids = ff.GetSelections('{Id}');
 if(ids.length == 0){{
@@ -817,9 +730,9 @@ if(ids.length == 0){{
     return;
 }}
 ");
-                            break;
-                        case GridActionParameterTypesEnum.SingleIdWithNull:
-                            script.Append($@"
+                        break;
+                    case GridActionParameterTypesEnum.SingleIdWithNull:
+                        script.Append($@"
 var ids = [];
 if(data != null && data.ID != null){{
     ids.push(data.ID);
@@ -838,15 +751,14 @@ if(ids.length > 1){{
     tempUrl = tempUrl + '&id=' + ids[0];
 }}
 ");
-                            break;
-                        case GridActionParameterTypesEnum.MultiIdWithNull:
-                            script.Append($@"
+                        break;
+                    case GridActionParameterTypesEnum.MultiIdWithNull:
+                        script.Append($@"
 var ids = ff.GetSelections('{Id}');
 {(item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ? "if(ids.length>0) tempUrl = tempUrl + '&Ids=' + ids.join('&Ids=');" : "isPost = true;")}
 ");
-                            break;
-                        default: break;
-                    }
+                        break;
+                    default: break;
                 }
 
                 gridBtnEventStrBuilder.Append($@"
@@ -856,10 +768,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null)});
 ");
                 }
-                else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow)
-                {
-
-                }
+                else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow) { }
                 else
                 {
                     gridBtnEventStrBuilder.Append($@"
