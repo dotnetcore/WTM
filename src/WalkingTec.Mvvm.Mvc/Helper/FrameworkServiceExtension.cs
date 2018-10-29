@@ -40,7 +40,6 @@ namespace WalkingTec.Mvvm.Mvc
             WebHostBuilderContext webHostBuilderContext = null
         )
         {
-            IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
             IConfigurationRoot config = null;
 
             var configBuilder = 
@@ -50,6 +49,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             if (webHostBuilderContext != null)
             {
+                IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
                 configBuilder
                     .AddJsonFile(
                         $"appsettings.{env.EnvironmentName}.json", 
