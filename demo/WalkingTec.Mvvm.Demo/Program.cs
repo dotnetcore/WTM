@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo
                         new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
                         new DataPrivilegeInfo<Major>("专业", y => y.MajorName)
                     };
-                    x.AddFrameworkService(dataPrivilegeSettings: pris);
+                    x.AddFrameworkService(dataPrivilegeSettings: pris,webHostBuilderContext:hostingCtx);
                     x.AddLayui();
                 })
                 .Configure(x =>
