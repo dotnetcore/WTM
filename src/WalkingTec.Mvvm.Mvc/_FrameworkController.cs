@@ -14,6 +14,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.Mvc
 {
     [AllRights]
+    [CrossDomain]
     [ActionDescription("框架")]
     public class _FrameworkController : BaseController
     {
@@ -454,10 +455,6 @@ namespace WalkingTec.Mvvm.Mvc
                     .ToList();
                 rv.FunctionPrivileges = pris;
             LoginUserInfo = rv;
-            Response.Headers.Add("Access-Control-Allow-Origin", Request.Headers["Origin"]);
-            Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-            Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-            Response.Headers.Add("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
             return Ok("Success");
         }
 
@@ -465,10 +462,6 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            Response.Headers.Add("Access-Control-Allow-Origin", Request.Headers["Origin"]);
-            Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-            Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-            Response.Headers.Add("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
             if (LoginUserInfo == null)
             {
                 return Unauthorized();
