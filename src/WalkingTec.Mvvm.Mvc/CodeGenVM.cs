@@ -255,7 +255,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public string GenerateController()
         {
-            var rv = GetResource("Controller.txt").Replace("$vmnamespace$",VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName);
+            var rv = GetResource("Controller.txt","Mvc").Replace("$vmnamespace$",VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName);
             if (string.IsNullOrEmpty(Area))
             {
                 rv = rv.Replace("$area$", "");
@@ -453,7 +453,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public string GenerateView(string name)
         {
-            var rv = GetResource($"{name}.txt").Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName);
+            var rv = GetResource($"{name}.txt","Mvc").Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName);
             if (name == "CreateView" || name == "EditView" || name == "DeleteView" || name == "DetailsView" || name == "BatchEditView")
             {
                 StringBuilder fieldstr = new StringBuilder();
@@ -576,11 +576,20 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
 
-        private string GetResource(string fileName)
+        private string GetResource(string fileName,string subdir="")
         {
             //获取编译在程序中的Controller原始代码文本
             Assembly assembly = Assembly.GetExecutingAssembly();
-            var textStreamReader = new StreamReader(assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.GeneratorFiles.{fileName}"));
+            string loc = "";
+            if (string.IsNullOrEmpty(subdir))
+            {
+                loc = $"WalkingTec.Mvvm.Mvc.GeneratorFiles.{fileName}";
+            }
+            else
+            {
+                loc = $"WalkingTec.Mvvm.Mvc.GeneratorFiles.{subdir}.{fileName}";
+            }
+            var textStreamReader = new StreamReader(assembly.GetManifestResourceStream(loc));
             string content = textStreamReader.ReadToEnd();
             textStreamReader.Close();
             return content;

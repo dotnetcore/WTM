@@ -4,7 +4,7 @@ using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
-namespace $vmns$.HomeVMs
+namespace WebApplication1.ViewModels.HomeVMs
 {
     public class IndexVM : BaseVM
     {
