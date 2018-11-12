@@ -151,29 +151,29 @@ namespace WalkingTec.Mvvm.Mvc
                 .Replace("$uploaddir$", UploadDir ?? ""), Encoding.UTF8
                 );
             File.WriteAllText($"{datadir}\\DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("HomeController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Controllers\\LoginController.cs", GetResource("LoginController.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\_ViewStart.cshtml", GetResource("ViewStart.txt"), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Index.cshtml", GetResource("home.Index.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Login\\ChangePassword.cshtml", GetResource("home.ChangePassword.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Header.cshtml", GetResource("home.Header.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{MainDir}\\Views\\Home\\FrontPage.cshtml", GetResource("home.FrontPage.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("HomeController.txt","Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Controllers\\LoginController.cs", GetResource("LoginController.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\_ViewStart.cshtml", GetResource("ViewStart.txt", "Mvc"), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Index.cshtml", GetResource("home.Index.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Login\\ChangePassword.cshtml", GetResource("home.ChangePassword.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Header.cshtml", GetResource("home.Header.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Login\\Login.cshtml", GetResource("home.Login.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\Menu.cshtml", GetResource("home.Menu.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\PIndex.cshtml", GetResource("home.PIndex.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{MainDir}\\Views\\Home\\FrontPage.cshtml", GetResource("home.FrontPage.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
             File.WriteAllText($"{vmdir}\\HomeVMs\\LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
 
             if (UI == UIEnum.LayUI)
             {
-                File.WriteAllText($"{MainDir}\\Views\\Shared\\_Layout.cshtml", GetResource("layui.Layout.txt").Replace("$ns$", MainNs), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\Views\\Shared\\_PLayout.cshtml", GetResource("layui.PLayout.txt").Replace("$ns$", MainNs), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt").Replace("$ns$", MainNs), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt"), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_Layout.cshtml", GetResource("layui.Layout.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Views\\Shared\\_PLayout.cshtml", GetResource("layui.PLayout.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 Assembly assembly = Assembly.GetExecutingAssembly();
-                var sr = assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.layui.layui.zip");
+                var sr = assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip");
                 System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
                 foreach (var entry in zip.Entries)
                 {
@@ -318,11 +318,20 @@ EndProject
             return rv;
         }
 
-        private string GetResource(string fileName)
+        private string GetResource(string fileName,string subdir = "")
         {
             //获取编译在程序中的Controller原始代码文本
             Assembly assembly = Assembly.GetExecutingAssembly();
-            var textStreamReader = new StreamReader(assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.{fileName}"));
+            string loc = "";
+            if (string.IsNullOrEmpty(subdir))
+            {
+                loc = $"WalkingTec.Mvvm.Mvc.SetupFiles.{fileName}";
+            }
+            else
+            {
+                loc = $"WalkingTec.Mvvm.Mvc.SetupFiles.{subdir}.{fileName}";
+            }
+            var textStreamReader = new StreamReader(assembly.GetManifestResourceStream(loc));
             string content = textStreamReader.ReadToEnd();
             textStreamReader.Close();
             return content;

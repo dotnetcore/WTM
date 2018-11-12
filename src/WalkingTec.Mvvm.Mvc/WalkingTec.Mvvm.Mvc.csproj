@@ -19,24 +19,21 @@
     <None Remove="GeneratorFiles\CrudVM.txt" />
     <None Remove="GeneratorFiles\DeleteView.txt" />
     <None Remove="GeneratorFiles\EditView.txt" />
-    <None Remove="GeneratorFiles\HeaderFormat.txt" />
     <None Remove="GeneratorFiles\ImportView.txt" />
     <None Remove="GeneratorFiles\ImportVM.txt" />
     <None Remove="GeneratorFiles\ListView.txt" />
-    <None Remove="GeneratorFiles\ListVM.txt" />
     <None Remove="GeneratorFiles\Searcher.txt" />
-    <None Remove="SetupFiles\home\ChangePassword.txt" />
-    <None Remove="SetupFiles\home\FrontPage.txt" />
-    <None Remove="SetupFiles\home\Header.txt" />
-    <None Remove="SetupFiles\home\Index.txt" />
-    <None Remove="SetupFiles\home\Login.txt" />
-    <None Remove="SetupFiles\home\Menu.txt" />
-    <None Remove="SetupFiles\home\PIndex.txt" />
-    <None Remove="SetupFiles\layui\Layout.txt" />
-    <None Remove="SetupFiles\layui\PLayout.txt" />
-    <None Remove="SetupFiles\layui\Program.txt" />
-    <None Remove="SetupFiles\layui\ViewImports.txt" />
-    <None Remove="SetupFiles\Proj.txt" />
+    <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
+    <None Remove="SetupFiles\Mvc\home\Header.txt" />
+    <None Remove="SetupFiles\Mvc\home\Index.txt" />
+    <None Remove="SetupFiles\Mvc\home\Login.txt" />
+    <None Remove="SetupFiles\Mvc\home\Menu.txt" />
+    <None Remove="SetupFiles\Mvc\home\PIndex.txt" />
+    <None Remove="SetupFiles\Mvc\layui\Layout.txt" />
+    <None Remove="SetupFiles\Mvc\layui\PLayout.txt" />
+    <None Remove="SetupFiles\Mvc\layui\Program.txt" />
+    <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
@@ -54,21 +51,21 @@
 
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\HeaderFormat.txt" />
-    <EmbeddedResource Include="GeneratorFiles\BatchDeleteView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\BatchEditView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\BatchDeleteView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\BatchEditView.txt" />
     <EmbeddedResource Include="GeneratorFiles\BatchVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Controller.txt" />
-    <EmbeddedResource Include="GeneratorFiles\CreateView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\Controller.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\CreateView.txt" />
     <EmbeddedResource Include="GeneratorFiles\CrudVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\DeleteView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\DetailsView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\EditView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ImportView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\DeleteView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\DetailsView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\EditView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\ImportView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ImportVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ListView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
-    <EmbeddedResource Include="SetupFiles\home\FrontPage.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
     <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
@@ -78,20 +75,20 @@
     <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
-    <EmbeddedResource Include="SetupFiles\HomeController.txt" />
-    <EmbeddedResource Include="SetupFiles\home\ChangePassword.txt" />
-    <EmbeddedResource Include="SetupFiles\home\Header.txt" />
-    <EmbeddedResource Include="SetupFiles\home\Index.txt" />
-    <EmbeddedResource Include="SetupFiles\home\Login.txt" />
-    <EmbeddedResource Include="SetupFiles\home\Menu.txt" />
-    <EmbeddedResource Include="SetupFiles\home\PIndex.txt" />
-    <EmbeddedResource Include="SetupFiles\layui\layui.zip" />
-    <EmbeddedResource Include="SetupFiles\layui\Layout.txt" />
-    <EmbeddedResource Include="SetupFiles\layui\PLayout.txt" />
-    <EmbeddedResource Include="SetupFiles\layui\Program.txt" />
-    <EmbeddedResource Include="SetupFiles\layui\ViewImports.txt" />
-    <EmbeddedResource Include="SetupFiles\LoginController.txt" />
-    <EmbeddedResource Include="SetupFiles\ViewStart.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Header.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Menu.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\PIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\layui.zip" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\Layout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\PLayout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\ViewStart.txt" />
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
@@ -111,6 +108,11 @@
       <LastGenOutput>ValidationMsg.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GeneratorFiles\Spa\React\" />
+    <Folder Include="SetupFiles\Spa\React\" />
   </ItemGroup>
 
 </Project>
