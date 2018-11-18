@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -11,6 +8,7 @@ namespace WalkingTec.Mvvm.Mvc
         public static void Set<T>(this ISession session, string key, T value)
         {
             session.SetString(key, JsonConvert.SerializeObject(value));
+            session.CommitAsync().Wait();
         }
 
         public static T Get<T>(this ISession session, string key)
