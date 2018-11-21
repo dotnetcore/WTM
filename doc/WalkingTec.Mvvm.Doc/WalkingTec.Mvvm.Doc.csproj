@@ -10,7 +10,7 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.6" />
   </ItemGroup>
 
   <ItemGroup>
