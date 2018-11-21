@@ -210,7 +210,12 @@ namespace WalkingTec.Mvvm.Core
                 case ColumnDataType.ComboBox:
                 case ColumnDataType.Enum:
                     int count = this.ListItems.Count() == 0 ? 1 : this.ListItems.Count();
-                    string cloIndex = Convert.ToChar(Convert.ToInt16("A".ToCharArray()[0]) + porpetyIndex).ToString();
+                    string cloIndex = "";
+                    if(porpetyIndex > 25)
+                    {
+                        cloIndex += Convert.ToChar((int)(Math.Floor(porpetyIndex / 26d)) -1 + 65);
+                    }
+                    cloIndex += Convert.ToChar(65 + porpetyIndex % 26).ToString();
                     //定义名称
                     IName range = sheet.Workbook.CreateName();
                     range.RefersToFormula = "Sheet2!$" + cloIndex + "$1:$" + cloIndex + "$" + count;

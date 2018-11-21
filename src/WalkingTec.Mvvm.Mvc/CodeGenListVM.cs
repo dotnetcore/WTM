@@ -11,6 +11,12 @@ namespace WalkingTec.Mvvm.Mvc
     {
 
         public string ModelFullName { get; set; }
+
+        public CodeGenListVM()
+        {
+            NeedPage = false;
+        }
+
         protected override IEnumerable<IGridColumn<CodeGenListView>> InitGridHeader()
         {
             return new List<IGridColumn<CodeGenListView>>
