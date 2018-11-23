@@ -531,9 +531,9 @@ namespace WalkingTec.Mvvm.Core
         /// 通过密钥将内容加密
         /// </summary>
         /// <param name="stringToEncrypt">要加密的字符串</param>
-        /// <param name="config">配置信息</param>
+        /// <param name="encryptKey">加密密钥</param>
         /// <returns></returns>
-        public static string EncryptString(string stringToEncrypt, Configs config)
+        public static string EncryptString(string stringToEncrypt, string encryptKey)
         {
             if (string.IsNullOrEmpty(stringToEncrypt))
             {
@@ -541,9 +541,9 @@ namespace WalkingTec.Mvvm.Core
             }
 
             string stringEncrypted = string.Empty;
-            byte[] bytIn = System.Text.ASCIIEncoding.ASCII.GetBytes(stringToEncrypt);
+            byte[] bytIn = UTF8Encoding.UTF8.GetBytes(stringToEncrypt);
             MemoryStream encryptStream = new System.IO.MemoryStream();
-            CryptoStream encStream = new CryptoStream(encryptStream, GenerateDESCryptoServiceProvider(config.EncryptKey).CreateEncryptor(), CryptoStreamMode.Write);
+            CryptoStream encStream = new CryptoStream(encryptStream, GenerateDESCryptoServiceProvider(encryptKey).CreateEncryptor(), CryptoStreamMode.Write);
 
             try
             {
@@ -568,9 +568,9 @@ namespace WalkingTec.Mvvm.Core
         /// 通过密钥讲内容解密
         /// </summary>
         /// <param name="stringToDecrypt">要解密的字符串</param>
-        /// <param name="config">配置信息</param>
+        /// <param name="encryptKey">密钥</param>
         /// <returns></returns>
-        public static string DecryptString(string stringToDecrypt, Configs config)
+        public static string DecryptString(string stringToDecrypt, string encryptKey)
         {
             if (String.IsNullOrEmpty(stringToDecrypt))
             {
@@ -580,7 +580,7 @@ namespace WalkingTec.Mvvm.Core
             string stringDecrypted = string.Empty;
             byte[] bytIn = Convert.FromBase64String(stringToDecrypt.Replace(" ", "+"));
             MemoryStream decryptStream = new MemoryStream();
-            CryptoStream encStream = new CryptoStream(decryptStream, GenerateDESCryptoServiceProvider(config.EncryptKey).CreateDecryptor(), CryptoStreamMode.Write);
+            CryptoStream encStream = new CryptoStream(decryptStream, GenerateDESCryptoServiceProvider(encryptKey).CreateDecryptor(), CryptoStreamMode.Write);
 
             try
             {
@@ -619,7 +619,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 sTemp = key;
             }
-            byte[] bytKey = ASCIIEncoding.ASCII.GetBytes(sTemp);
+            byte[] bytKey = UTF8Encoding.UTF8.GetBytes(sTemp);
 
             dCrypter.Key = bytKey;
             dCrypter.IV = bytKey;
