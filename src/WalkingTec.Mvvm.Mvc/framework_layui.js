@@ -342,7 +342,7 @@ window.ff = {
                 alert("加载失败");
             },
             success: function (str) {
-                var regGridId = /<\s{0,}table\s+id\s{0,}=\s{0,}"(.*)"\s+lay-filter/im;
+                var regGridId = /<\s{0,}table\s+.*\s+id\s{0,}=\s{0,}"(.*)"\s+lay-filter="\1"\s{0,}>\s{0,}<\s{0,}\/\s{0,}table\s{0,}>/im;
                 var regGridVar = /wtVar_(.*)\s{0,}=\s{0,}table.render\([a-zA-Z0-9_]{1,}option\)/im;
                 if ($(tempId).length > 0 && regGridId.test(str) && regGridVar.test(str)) {
                     // 获取gridId
