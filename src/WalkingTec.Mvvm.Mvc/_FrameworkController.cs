@@ -118,10 +118,11 @@ namespace WalkingTec.Mvvm.Mvc
         /// 获取分页数据
         /// </summary>
         /// <param name="_DONOT_USE_VMNAME"></param>
+        /// <param name="_DONOT_USE_CS"></param>
         /// <returns></returns>
         [HttpPost]
         [ActionDescription("获取分页数据")]
-        public IActionResult GetPagingData(string _DONOT_USE_VMNAME)
+        public IActionResult GetPagingData(string _DONOT_USE_VMNAME,string _DONOT_USE_CS)
         {
             var qs = new Dictionary<string, object>();
             foreach (var item in Request.Form.Keys)
@@ -132,7 +133,7 @@ namespace WalkingTec.Mvvm.Mvc
             //var vmType = Type.GetType(_DONOT_USE_VMNAME);
             //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
             //var listVM = vmCreater.Invoke(null) as BaseVM;
-
+            CurrentCS = _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -179,10 +180,11 @@ namespace WalkingTec.Mvvm.Mvc
         /// Download Excel
         /// </summary>
         /// <param name="_DONOT_USE_VMNAME"></param>
+        /// <param name="_DONOT_USE_CS"></param>
         /// <returns></returns>
         [HttpPost]
         [ActionDescription("导出")]
-        public IActionResult GetExportExcel(string _DONOT_USE_VMNAME)
+        public IActionResult GetExportExcel(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
             var qs = new Dictionary<string, object>();
             foreach (var item in Request.Query.Keys)
@@ -198,6 +200,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
+            CurrentCS = _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
@@ -224,8 +227,9 @@ namespace WalkingTec.Mvvm.Mvc
         /// <returns></returns>
         [HttpGet]
         [ActionDescription("获取模板")]
-        public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME)
+        public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
+            CurrentCS = _DONOT_USE_CS;
             var importVM = CreateVM(_DONOT_USE_VMNAME) as IBaseImport<BaseTemplateVM>;
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -290,8 +294,9 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true)
+        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS="default")
         {
+            CurrentCS = _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -310,15 +315,17 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("获取文件名")]
-        public IActionResult GetFileName(Guid id)
+        public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {
+            CurrentCS = _DONOT_USE_CS;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             return Ok(vm.Entity.FileName);
         }
 
         [ActionDescription("获取文件")]
-        public IActionResult GetFile(Guid id, bool stream = false)
+        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default")
         {
+            CurrentCS = _DONOT_USE_CS;
             if (id == Guid.Empty)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
@@ -351,8 +358,9 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("查看文件")]
-        public IActionResult ViewFile(Guid id)
+        public IActionResult ViewFile(Guid id, string _DONOT_USE_CS = "default")
         {
+            CurrentCS = _DONOT_USE_CS;
             string html = string.Empty;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             if (vm.Entity.FileExt.ToLower() == "pdf")
@@ -371,7 +379,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                html = $@"<img id='FileObject' width='100%' height='100%' border=0 src='/_Framework/GetFile?id={id}&stream=true&DONOTUSECSName={CurrentCS}'/>";
+                html = $@"<img id='FileObject' width='100%' height='100%' border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
             }
             return Content(html);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -55,6 +56,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 ext = CustomType;
             }
+            var vm = context.Items["model"] as BaseVM;
+            var url = "/_Framework/Upload";
+            if (vm != null)
+            {
+                url += $"?_DONOT_USE_CS={vm.CurrentCS}";
+            }
+
             output.PreElement.SetHtmlContent($@"
 <label id='{Id}label'></label>
 ");
@@ -71,7 +79,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     //普通图片上传
     var uploadInst = layui.upload.render({{
         elem: '#{Id}button'
-        ,url: '/_Framework/Upload/'
+        ,url: '{url}'
         ,size: {FileSize}
         ,accept: 'file'
         ,exts: '{ext}'
@@ -100,12 +108,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             if (Field.Model != null && Field.Model.ToString() != Guid.Empty.ToString())
             {
+                var geturl = $"/_Framework/GetFileName/{Field.Model}";
+                if(vm != null)
+                {
+                    geturl += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                }
                 output.PostElement.AppendHtml($@"
 <script>
     $.ajax({{
         cache: false,
         type: 'GET',
-        url: '/_Framework/GetFileName/{Field.Model}',
+        url: '{geturl}',
         async: false,
         success: function(data) {{
             var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"";
