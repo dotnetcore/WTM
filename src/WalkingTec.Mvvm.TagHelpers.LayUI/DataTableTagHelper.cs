@@ -364,6 +364,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 if (Filter == null) Filter = new Dictionary<string, object>();
                 Filter.Add("_DONOT_USE_VMNAME", vmQualifiedName);
+                Filter.Add("_DONOT_USE_CS", ListVM.CurrentCS);
                 Filter.Add("SearcherMode", ListVM.SearcherMode);
                 if (ListVM.Ids != null && ListVM.Ids.Count > 0)
                 {

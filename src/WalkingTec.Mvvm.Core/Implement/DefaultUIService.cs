@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core.Implement
             return "";
         }
 
-        public string MakeDownloadButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null)
+        public string MakeDownloadButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, string _DONOT_USE_CS = "default")
         {
             return "";
         }
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Core.Implement
             return "";
         }
 
-        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true)
+        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default")
         {
             return "";
         }

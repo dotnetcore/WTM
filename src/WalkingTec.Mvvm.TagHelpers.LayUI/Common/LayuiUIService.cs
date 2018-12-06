@@ -38,16 +38,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return rv;
         }
 
-        public string MakeDownloadButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null)
+        public string MakeDownloadButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, string _DONOT_USE_CS = "default")
         {
             string rv = "";
             if (buttonType == ButtonTypesEnum.Link)
             {
-                rv = $"<a style='color:blue;cursor:pointer' href='/_Framework/GetFile/{fileID}'>{buttonText}</a>";
+                rv = $"<a style='color:blue;cursor:pointer' href='/_Framework/GetFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}'>{buttonText}</a>";
             }
             if (buttonType == ButtonTypesEnum.Button)
             {
-                rv = $"<a class='layui-btn layui-btn-primary layui-btn-xs' href='/_Framework/GetFile/{fileID}'>{buttonText}</a>";
+                rv = $"<a class='layui-btn layui-btn-primary layui-btn-xs' href='/_Framework/GetFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}'>{buttonText}</a>";
             }
             return rv;
         }
@@ -109,9 +109,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return "";
         }
 
-        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null,  bool resizable = true)
+        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID,  string buttonText = null, int? width = null, int? height = null, string title = null,  bool resizable = true, string _DONOT_USE_CS = "default")
         {
-            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}", buttonText, width, height, title, null, true, resizable);
+            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}", buttonText, width, height, title, null, true, resizable);
         }
 
         public string MakeScriptButton(ButtonTypesEnum buttonType, string url, int? width, int? height, string windowID, string buttonText, string title = null, string buttonID = null, string script = "")

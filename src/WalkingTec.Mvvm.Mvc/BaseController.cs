@@ -400,9 +400,16 @@ namespace WalkingTec.Mvvm.Mvc
         public virtual IDataContext CreateDC(bool isLog = false)
         {
             string cs = CurrentCS;
-            if (isLog == true && ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
+            if (isLog == true)
             {
-                cs = "defaultlog";
+                if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
+                {
+                    cs = "defaultlog";
+                }
+                else
+                {
+                    cs = "default";
+                }
             }
             return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
         }

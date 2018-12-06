@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string Format { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
+        {            
             bool isFile = false;
             if (Field?.Name?.ToLower().EndsWith("id") == true)
             {
@@ -32,7 +32,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.TagMode = TagMode.StartTagAndEndTag;
                     output.Attributes.Add("class", "layui-btn layui-btn-primary layui-btn-xs");
                     output.Attributes.Add("style", "margin:9px 0;width:unset");
-                    output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}");
+                    var vm = context.Items["model"] as BaseVM;
+                    if (vm != null)
+                    {
+                        output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}?_DONOT_USE_CS={vm.CurrentCS}");
+                    }
+                    else
+                    {
+                        output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}");
+                    }
                     output.Content.AppendHtml("下载");
                 }
                 else

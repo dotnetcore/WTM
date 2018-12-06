@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -13,9 +14,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            var vm = context.Items["model"] as BaseVM;
             if (string.IsNullOrEmpty(Url) && Field.Model != null)
             {
                 Url = $"/_Framework/GetFile/{Field.Model}";
+                if (vm != null)
+                {
+                    Url += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                }
             }
             output.TagName = "img";
             output.TagMode = TagMode.SelfClosing;
