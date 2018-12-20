@@ -1,0 +1,44 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>WTM框架本身为你配置了标准的路由，如果需要自定义，可以修改Program.cs文件配置自己的路由</p>
+
+<wt:fieldset field-set-style="Simple" title="定义数据路由">
+    <wt:code title="Program.cs">
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        BuildWebHost(args).Run();
+    }
+
+    public static IWebHost BuildWebHost(string[] args) =>            
+        WebHost.CreateDefaultBuilder(args)
+            .ConfigureServices(x =>
+            {
+                x.AddFrameworkService(dataPrivilegeSettings: pris);
+                x.AddLayui();
+            })
+            .Configure(x =>
+            {
+                    x.UseFrameworkService(routes =>
+                    {
+                        routes.MapRoute(
+                            name: "areaRoute",
+                            template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                        routes.MapRoute(
+                            name: "default",
+                            template: "{controller=Home}/{action=Index}/{id?}");
+                    });
+            })
+            .Build();
+
+}
+    </wt:code>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+

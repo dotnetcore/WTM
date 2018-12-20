@@ -10,6 +10,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
     public class RichTextBoxTagHelper : BaseFieldTag
     {
         public string EmptyText { get; set; }
+        public string UploadUrl { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -26,7 +27,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             {
                 output.Content.SetContent(Field?.Model?.ToString());
             }
-            string url = "/_framework/UploadForLayUIRichTextBox";
+            string url = UploadUrl;
+            if (string.IsNullOrEmpty(url))
+            {
+                url = "/_framework/UploadForLayUIRichTextBox";
+            }
             if (context.Items.ContainsKey("model") == true)
             {
                 var bvm = context.Items["model"] as BaseVM;
