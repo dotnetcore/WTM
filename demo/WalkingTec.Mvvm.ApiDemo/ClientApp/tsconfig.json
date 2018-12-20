@@ -24,7 +24,7 @@
     "allowUnreachableCode": true
   },
   "include": [
-    "src"
+    "src", "../../../doc/WalkingTec.Mvvm.Doc/Views/UI/Rich.cshtml", "../../../doc/WalkingTec.Mvvm.Doc/Views/Global/Route.cshtml"
   ],
   "exclude": [
     "src/index.js"
