@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -133,7 +134,7 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
-        public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app)
+        public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
         {
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
@@ -172,16 +173,22 @@ namespace WalkingTec.Mvvm.Mvc
             });
             app.UseSession();
 
-            app.UseMvc(routes =>
+            if (customRoutes != null)
             {
-                routes.MapRoute(
-                    name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
+                app.UseMvc(customRoutes);
+            }
+            else
+            {
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                        name: "areaRoute",
+                        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}");
+                });
+            }
             var cs = configs.ConnectionStrings.Select(x => x.Value);
             foreach (var item in cs)
             {

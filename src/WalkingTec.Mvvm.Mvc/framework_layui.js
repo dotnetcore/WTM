@@ -187,6 +187,16 @@ window.ff = {
     },
 
     GetPostData: function (formid) {
+        var richtextbox = $("#" + formid+" textarea");
+        for (var i = 0; i < richtextbox.length; i++) {
+                var ra = richtextbox[i].attributes['layeditindex'];
+                if (ra !== undefined && ra != null) {
+                        var rindex = ra.value;
+                    layui.layedit.sync(rindex);
+                }
+        }
+
+
         var datastr = $('#' + formid).serialize();
         var checkboxes = $('#' + formid + ' :checkbox');
         for (var i = 0; i < checkboxes.length; i++) {
