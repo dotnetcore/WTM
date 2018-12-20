@@ -5,6 +5,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.ApiDemo</AssemblyName>
     <Title>$(AssemblyName)</Title>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

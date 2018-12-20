@@ -314,6 +314,29 @@ namespace WalkingTec.Mvvm.Mvc
             return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
         }
 
+        [HttpPost]
+        [ActionDescription("UploadForLayUIRichTextBox")]
+        public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
+        {
+            CurrentCS = _DONOT_USE_CS;
+            var FileData = Request.Form.Files[0];
+            var sm = ConfigInfo.SaveFileMode;
+            var vm = CreateVM<FileAttachmentVM>();
+            vm.Entity.FileName = FileData.FileName;
+            vm.Entity.Length = FileData.Length;
+            vm.Entity.UploadTime = DateTime.Now;
+            vm.Entity.SaveFileMode = sm;
+            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
+            vm.Entity.IsTemprory = false;
+            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            {
+                vm.DoAdd();
+                string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
+                return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
+            }
+            return Content($"{{\"code\": 1 , \"msg\": \"上传失败\", \"data\": {{\"src\": \"\"}}}}");
+        }
+
         [ActionDescription("获取文件名")]
         public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {

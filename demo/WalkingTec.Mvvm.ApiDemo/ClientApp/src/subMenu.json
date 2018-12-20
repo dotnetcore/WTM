@@ -1,0 +1,50 @@
+{
+    "subMenu": [
+        {
+            "Key": "6dcff383-fae8-4e61-a72a-3e2abf816d71",
+            "Name": "测试",
+            "Icon": "menu-unfold",
+            "Path": "/404",
+            "Component": "",
+            "Action": [],
+            "Children": [
+                {
+                    "Key": "401f84d3-5a77-4b30-92c4-9c723ed29356",
+                    "Name": "404",
+                    "Icon": "menu-fold",
+                    "Path": "/null",
+                    "Component": "test",
+                    "Action": [],
+                    "Children": []
+                },
+                {
+                    "Key": "044267b5-60de-41d8-b697-161a2ddd33e2",
+                    "Name": "富文本",
+                    "Icon": "menu-fold",
+                    "Path": "/editer",
+                    "Component": "editer",
+                    "Action": [],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "Key": "301f84d3-5a77-4b30-92c4-9c723ed29356",
+            "Name": "测试",
+            "Icon": "menu-fold",
+            "Path": "/test",
+            "Component": "test",
+            "Action": [],
+            "Children": []
+        },
+        {
+            "Key": "101f84d3-5a77-4b30-92c4-9c723ed29356",
+            "Name": ".net 控制器数据",
+            "Icon": "menu-fold",
+            "Path": "/test2",
+            "Component": "test2",
+            "Action": [],
+            "Children": []
+        }
+    ]
+}

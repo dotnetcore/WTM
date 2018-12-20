@@ -4,6 +4,7 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.Mvc.Binders;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -62,6 +63,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("修改")]
         [HttpPost]
+        [StringNeedLTGT]
         public ActionResult Edit(SchoolVM vm)
         {
             if (!ModelState.IsValid)
