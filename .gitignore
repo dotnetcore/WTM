@@ -4,6 +4,9 @@
 *.tar.gz
 *.ppk
 NuPack*
+package.json
+package-lock.json
+node_modules/
 
 Migrations/
 *.pubxml
