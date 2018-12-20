@@ -96,6 +96,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
   </ItemGroup>
 
@@ -109,10 +113,6 @@
   <ItemGroup>
     <Folder Include="GeneratorFiles\Spa\React\" />
     <Folder Include="SetupFiles\Spa\React\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
