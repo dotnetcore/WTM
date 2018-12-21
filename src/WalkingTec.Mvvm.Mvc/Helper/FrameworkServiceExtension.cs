@@ -209,6 +209,11 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 gd.AllAssembly.Add(admin);
             }
+            var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
+            if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
+            {
+                gd.AllAssembly.Add(mvc);
+            }
             gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
             gd.AllModels = GetAllModels(gd.DataContextCI);
 
