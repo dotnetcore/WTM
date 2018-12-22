@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             IConfigurationRoot config = null;
 
-            var configBuilder = 
+            var configBuilder =
                     new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
@@ -53,8 +53,8 @@ namespace WalkingTec.Mvvm.Mvc
                 IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
                 configBuilder
                     .AddJsonFile(
-                        $"appsettings.{env.EnvironmentName}.json", 
-                        optional: true, 
+                        $"appsettings.{env.EnvironmentName}.json",
+                        optional: true,
                         reloadOnChange: true
                     );
             }
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.Configure<FormOptions>(y =>
             {
                 y.ValueLengthLimit = int.MaxValue;
-                y.MultipartBodyLengthLimit = 20 * 1024 * 1024;
+                y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
             });
 
             services.AddSingleton<IUIService, DefaultUIService>();
