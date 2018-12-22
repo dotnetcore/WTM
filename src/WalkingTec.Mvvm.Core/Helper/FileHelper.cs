@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NPOI.HSSF.UserModel;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using NPOI.HSSF.UserModel;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 
@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Core
         public static byte[] GetFileByteForDownLoadByVM(FileAttachmentVM vm, Configs con)
         {
             byte[] data = null;
-            SaveFileModeEnum saveMode = vm.Entity.SaveFileMode == null ? con.SaveFileMode : vm.Entity.SaveFileMode.Value;
+            SaveFileModeEnum saveMode = vm.Entity.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : vm.Entity.SaveFileMode.Value;
             data = GetBytes(saveMode, vm.Entity, vm.DC);
             return data;
         }
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Core
             FileAttachment fi = dc.Set<FileAttachment>().Where(x => x.ID == fileid).FirstOrDefault();
             if (fi != null)
             {
-                SaveFileModeEnum saveMode = fi.SaveFileMode == null ? con.SaveFileMode : fi.SaveFileMode.Value;
+                SaveFileModeEnum saveMode = fi.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : fi.SaveFileMode.Value;
                 data = GetBytes(saveMode, fi, dc);
             }
             return data;
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Core
             byte[] data = null;
             if (fi != null)
             {
-                SaveFileModeEnum saveMode = fi.SaveFileMode == null ? con.SaveFileMode : fi.SaveFileMode.Value;
+                SaveFileModeEnum saveMode = fi.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : fi.SaveFileMode.Value;
                 data = GetBytes(saveMode, fi, null);
             }
             return data;
@@ -70,9 +70,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="savePlace"></param>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con,string FileName = null, SaveFileModeEnum? savePlace = null, string groupName = null)
+        public static FileAttachmentVM GetFileByteForUpload(FileAttachmentVM vm, Stream FileData, Configs con, string FileName = null, SaveFileModeEnum? savePlace = null, string groupName = null)
         {
-            savePlace = savePlace == null ? con.SaveFileMode : savePlace;
+            savePlace = savePlace == null ? con.FileUploadOptions.SaveFileMode : savePlace;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(FileName) == false)
             {
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Core
 
             if (savePlace == SaveFileModeEnum.Database)
             {
-                using (var dataStream = new System.IO.MemoryStream())
+                using (var dataStream = new MemoryStream())
                 {
                     FileData.CopyTo(dataStream);
                     vm.Entity.FileData = new FileAttachmentData
@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (savePlace == SaveFileModeEnum.Local)
             {
-                string pathHeader = con.UploadDir;
+                string pathHeader = con.FileUploadOptions.UploadDir;
                 if (!Directory.Exists(pathHeader))
                 {
                     Directory.CreateDirectory(pathHeader);
@@ -111,7 +111,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (savePlace == SaveFileModeEnum.DFS)
             {
-                using (var dataStream = new System.IO.MemoryStream())
+                using (var dataStream = new MemoryStream())
                 {
                     StorageNode node = null;
                     FileData.CopyTo(dataStream);
@@ -147,7 +147,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns></returns>
         public static HSSFWorkbook GetHSSWorkbook(HSSFWorkbook hssfworkbook, FileAttachment fa, Configs con)
         {
-            var saveMode = fa.SaveFileMode == null ? con.SaveFileMode : fa.SaveFileMode;
+            var saveMode = fa.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : fa.SaveFileMode;
             if (saveMode == SaveFileModeEnum.Database)
             {
                 using (MemoryStream ms = new MemoryStream(fa.FileData.FileData))

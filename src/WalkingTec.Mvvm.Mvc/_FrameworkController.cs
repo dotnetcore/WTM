@@ -298,7 +298,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             CurrentCS = _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
-            sm = sm == null ? ConfigInfo.SaveFileMode : sm;
+            sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
             vm.Entity.FileName = FileData.FileName;
             vm.Entity.Length = FileData.Length;
@@ -320,7 +320,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             CurrentCS = _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
-            var sm = ConfigInfo.SaveFileMode;
+            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
             var vm = CreateVM<FileAttachmentVM>();
             vm.Entity.FileName = FileData.FileName;
             vm.Entity.Length = FileData.Length;

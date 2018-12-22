@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
 namespace WalkingTec.Mvvm.Core
@@ -83,15 +83,12 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 文件存储方式
         /// </summary>
-        public SaveFileModeEnum SaveFileMode
+        [Obsolete("该属性已过时，将在以后的版本中删除。推荐的替代方法是使用Configs.FileUploadOptions 配置上传设置。")]
+        public SaveFileModeEnum? SaveFileMode
         {
             get
             {
-                if (_saveFileMode == null)
-                {
-                    _saveFileMode = SaveFileModeEnum.Database;
-                }
-                return _saveFileMode.Value;
+                return _saveFileMode;
             }
             set
             {
@@ -107,18 +104,11 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 上传文件路径
         /// </summary>
+        [Obsolete("该属性已过时，将在以后的版本中删除。推荐的替代方法是使用Configs.FileUploadOptions 配置上传设置。")]
         public string UploadDir
         {
             get
             {
-                if (_uploadDir == null)
-                {
-                    _uploadDir = DefaultConfigConsts.DEFAULT_UPLOAD_DIR;
-                    if (!string.IsNullOrEmpty(_uploadDir))
-                    {
-                        Directory.CreateDirectory(_uploadDir);
-                    }
-                }
                 return _uploadDir;
             }
             set
@@ -378,8 +368,22 @@ namespace WalkingTec.Mvvm.Core
                 {
                     _fileUploadOptions = new FileUploadOptions()
                     {
-                        UploadLimit = DefaultConfigConsts.DEFAULT_UPLOAD_LIMIT
+                        UploadLimit = DefaultConfigConsts.DEFAULT_UPLOAD_LIMIT,
+                        SaveFileMode = SaveFileModeEnum.Database,
+                        UploadDir = DefaultConfigConsts.DEFAULT_UPLOAD_DIR
                     };
+                }
+                // TODO下个版本中删除 else里面的逻辑
+                else
+                {
+                    if (!string.IsNullOrEmpty(_uploadDir))
+                    {
+                        _fileUploadOptions.UploadDir = _uploadDir;
+                    }
+                    if (_saveFileMode.HasValue)
+                    {
+                        _fileUploadOptions.SaveFileMode = _saveFileMode.Value;
+                    }
                 }
                 return _fileUploadOptions;
             }
