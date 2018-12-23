@@ -120,16 +120,17 @@ window.ff = {
                     eval(data);
                 }
                 else {
+                    data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
                     if ($.cookie("pagemode") === 'Tab') {
                         $('#DONOTUSE_MAINPANEL').css('overflow', 'hidden');
                         if ($('#DONOTUSE_MAINTAB').length === 0) {
                             $('#DONOTUSE_MAINPANEL').html('<div class="layui-tab donotuse_pdiv" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
-                            layui.element.on('tab(maintab)', function (data) {
+                            layui.element.on('tab(maintab)', function (xdata) {
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
                                 ff.triggerResize();
-                                if (data.elem.context.attributes !== undefined && data.elem.context.attributes !== null) {
-                                    var surl = data.elem.context.attributes['lay-id'].value;
+                                if (xdata.elem.context.attributes !== undefined && xdata.elem.context.attributes !== null) {
+                                    var surl = xdata.elem.context.attributes['lay-id'].value;
                                     if (surl !== undefined && surl !== null && surl !== '') {
                                         DONOTUSE_IGNOREHASH = true;
                                         window.location.hash = '#' + surl;
@@ -232,6 +233,7 @@ window.ff = {
                     eval(data);
                 }
                 else {
+                    data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
                     $("#" + divid).parent().html(data);
                 }
             }
@@ -297,6 +299,7 @@ window.ff = {
                     eval(str);
                 }
                 else {
+                    str = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + str + "</div>";
                     var area = 'auto';
                     if (width !== undefined && width !== null && height !== undefined && height !== null) {
                         area = [width + 'px', height + 'px'];
