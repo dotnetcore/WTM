@@ -12,10 +12,13 @@
   "IsQuickDebug": true, //是否启用debug模式
   "RPP": $rpp$, //默认列表每页行数
   "SyncDb": true, //是否自动同步数据库
-  "SaveFileMode": "$filemode$", //上传文件的保存方式，可选Database,local,dfs
-  "UploadDir": "$uploaddir$", //当上传文件选择Local时，指定硬盘目录
   "EncryptKey": "", //加密密钥
   "PageMode": "$pagemode$", //页面显示模式，Single或者Tab
+  "FileUploadOptions": {
+    "UploadLimit": 20971520,
+    "SaveFileMode": "$filemode$", //上传文件的保存方式，可选Database,local,dfs
+    "UploadDir": "$uploaddir$"    //当上传文件选择Local时，指定硬盘目录
+  },
   "DFSServer": {
     "StorageMaxConnection": 100,
     "TrackerMaxConnection": 100,
