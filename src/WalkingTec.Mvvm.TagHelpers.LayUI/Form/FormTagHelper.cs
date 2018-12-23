@@ -148,12 +148,12 @@ $(""#{Id}submiterrorholder"").before(""<div class='layui-input-block' style='tex
                     }
                     if (haserror == true)
                     {
-                        output.PostElement.AppendHtml($@"$(""#{key}"").addClass('layui-form-danger');");
+                        output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(key)}"").addClass('layui-form-danger');");
                     }
                 }
                 if (firstkey != null)
                 {
-                    output.PostElement.AppendHtml($@"$(""#{firstkey}"").focus();");
+                    output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(firstkey)}"").focus();");
                 }
             }
             output.PostElement.AppendHtml($@"</script>");

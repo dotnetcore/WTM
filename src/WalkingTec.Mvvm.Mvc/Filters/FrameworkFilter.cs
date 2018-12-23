@@ -9,6 +9,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using System.Collections.Generic;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Implement;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -183,12 +184,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             base.OnActionExecuting(context);
         }
 
-        public override void OnResultExecuting(ResultExecutingContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
             var ctrl = context.Controller as BaseController;
             if (ctrl == null)
             {
-                base.OnResultExecuting(context);
+                base.OnActionExecuted(context);
                 return;
             }
             ctrl.ViewData["DONOTUSE_COOKIEPRE"] = ctrl.ConfigInfo.CookiePre;
@@ -206,13 +207,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     string pagetitle = "";
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path);
-                    if(menu == null)
+                    if (menu == null)
                     {
                         var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                         var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                         if (actDes != null)
                         {
-                            if(ctrlDes != null)
+                            if (ctrlDes != null)
                             {
                                 pagetitle = ctrlDes.Description + " - ";
                             }
@@ -221,21 +222,19 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     else
                     {
-                        if(menu.ParentId != null)
+                        if (menu.ParentId != null)
                         {
                             var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
-                            if(pmenu != null)
+                            if (pmenu != null)
                             {
                                 pagetitle = pmenu.PageName + " - ";
                             }
                         }
                         pagetitle += menu.PageName;
                     }
-                    context.HttpContext.Response.OnStarting(() =>
-                    {
-                        context.HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
-                        return context.HttpContext.Response.WriteAsync($"<div id='{model.ViewDivId}' class='donotuse_pdiv'>");
-                    });
+                    context.HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
+                    context.HttpContext.Response.Cookies.Append("divid", model.ViewDivId);
+
                 }
             }
             if (context.Result is ViewResult)
@@ -247,6 +246,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
             }
+            base.OnActionExecuted(context);
         }
 
         public override void OnResultExecuted(ResultExecutedContext context)
@@ -304,27 +304,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     context.HttpContext.Response.WriteAsync("页面发生错误");
                 }
             }
-            if (context.Result is PartialViewResult pr)
-            {
-                var basevm = pr.Model as BaseVM;
-                var title = basevm?.Log?.ModuleName + "-" + basevm?.Log?.ActionName;
-                context.HttpContext.Response.WriteAsync($@"
-<script>
-    var title = document.title;
-    if (title == null || title == '')
-    {{
-        title = ff.GetCookie(window.location.hash,true);
-        if (title == null || title == '')
-        {{
-            title = '{title}';
-        }}
-        document.title = title;
-        ff.SetCookie(window.location.hash,null,true);
-    }}
-</script>
-");
-                context.HttpContext.Response.WriteAsync("</div>");
-            }
+            base.OnResultExecuted(context);
         }
     }
 }
