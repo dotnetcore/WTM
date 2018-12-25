@@ -120,9 +120,9 @@ export default class App extends React.Component<any, any> {
     return (
       <Layout className="app-layout-body" ref={e => this.body = ReactDOM.findDOMNode(e) as any}>
         <Content className="app-layout-content" >
-          <Affix  target={() => this.body}>
+          {/* <Affix  target={() => this.body}>
             <HistoryTabs {...this.props} target={this.body} />
-          </Affix>
+          </Affix> */}
           {this.renderRoutes}
         </Content>
       </Layout>

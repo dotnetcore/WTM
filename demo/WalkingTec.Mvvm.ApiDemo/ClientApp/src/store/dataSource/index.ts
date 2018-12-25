@@ -222,7 +222,7 @@ export default class Store {
    */
   async onUpdate(params) {
     const method = this.Urls.update.method;
-    const src = this.Urls.update.src + "/" + params.Entity['id'];
+    const src = this.Urls.update.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
       message.success('更新成功')
