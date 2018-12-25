@@ -1,6 +1,7 @@
 body {
     background-color: #f0f2f5;
 }
+
 #root {
     background-image: url(./assets/svg/background.svg);
     background-repeat: no-repeat;
@@ -16,7 +17,7 @@ body {
             height: 200px;
             background-image: url(./assets/svg/loading.svg);
             background-repeat: no-repeat;
-            background-position: center ;
+            background-position: center;
             background-size: 100%;
         }
     }
@@ -100,15 +101,37 @@ body {
         opacity: 0;
     }
 }
+
 .ant-table .react-resizable {
     position: relative;
-  }
-  
- .ant-table .react-resizable-handle {
+}
+
+.ant-table .react-resizable-handle {
     position: absolute;
     width: 10px;
     height: 100%;
     bottom: 0;
     right: -5px;
     cursor: col-resize;
-  }
+}
+
+.app-drawer {
+    .app-drawer-formItem{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 55px;
+        bottom: 65px;
+        overflow: auto;
+        padding: 24px;
+    }
+    .app-drawer-btns {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 20px;
+        left: 0;
+        text-align: right;
+        border-top: 1px solid #e8e8e8;
+    }
+}

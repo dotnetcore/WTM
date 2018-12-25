@@ -30,19 +30,10 @@
         },
         {
             "Key": "301f84d3-5a77-4b30-92c4-9c723ed29356",
-            "Name": "测试",
+            "Name": "用户",
             "Icon": "menu-fold",
             "Path": "/test",
             "Component": "test",
-            "Action": [],
-            "Children": []
-        },
-        {
-            "Key": "101f84d3-5a77-4b30-92c4-9c723ed29356",
-            "Name": ".net 控制器数据",
-            "Icon": "menu-fold",
-            "Path": "/test2",
-            "Component": "test2",
             "Action": [],
             "Children": []
         }

@@ -50,6 +50,15 @@ export class Request {
      */
     get(url: string, body?: { [key: string]: any } | string, headers?: Object) {
         headers = { ...this.headers, ...headers };
+        if (/\/{\S*}/.test(url)) {
+            if (typeof body == "object") {
+                const urlStr = lodash.compact(url.match(/\/{\w[^\/{]*}/g).map(x => {
+                    return body[x.match(/{(\w*)}/)[1]];
+                })).join("/");
+                url = url.replace(/\/{\S*}/, "/") + urlStr;
+                body = {};
+            }
+        }
         body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, body as any);
         return Rx.Observable.ajax.get(

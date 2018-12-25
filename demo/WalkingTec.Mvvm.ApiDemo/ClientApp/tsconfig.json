@@ -5,7 +5,7 @@
       "app": ["app/*"],
       "assets": ["assets/*"],
       "components": ["components/*"],
-      "containers": ["containers/*"],
+      "pages": ["pages/*"],
       "store": ["store/*"],
       "utils": ["utils/*"]
     }, 
@@ -24,7 +24,7 @@
     "allowUnreachableCode": true
   },
   "include": [
-    "src", "../../../doc/WalkingTec.Mvvm.Doc/Views/UI/Rich.cshtml", "../../../doc/WalkingTec.Mvvm.Doc/Views/Global/Route.cshtml"
+    "src"
   ],
   "exclude": [
     "src/index.js"

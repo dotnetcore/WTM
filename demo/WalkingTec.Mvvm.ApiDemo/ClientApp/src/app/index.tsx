@@ -8,9 +8,9 @@
 import Exception from 'ant-design-pro/lib/Exception';
 import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import containers from 'containers/index';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
+import Pages from 'pages/index';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import Loadable from 'react-loadable';
@@ -58,7 +58,7 @@ export default class RootRoutes extends React.Component<any, any> {
      * 初始化路由数据
      */
     initRouters() {
-        return lodash.map(containers, (component, key) => {
+        return lodash.map(Pages, (component, key) => {
             return {
                 "path": "/" + key,
                 "component": this.Loadable(component)

@@ -2,6 +2,7 @@
   "name": "my-test",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:57911",
   "dependencies": {
     "@antv/g2": "^3.3.3",
     "ant-design-pro": "^2.1.0",
