@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="passInit"></param>
         /// <returns>创建的ViewModel</returns>
         [NonAction]
-        private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = true)
         {
             //通过反射创建ViewModel并赋值
             var ctor = VMType.GetConstructor(Type.EmptyTypes);

@@ -162,20 +162,23 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             ctrl.ModelState.Remove(v);
                         }
                     }
-                    var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
-                    model.Validate();
-                    if (ctrl.ModelState.IsValid)
+                    if (ctrl is BaseController)
                     {
-                        if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                        var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
+                        model.Validate();
+                        if (ctrl.ModelState.IsValid)
                         {
-                            model.DoReInit();
+                            if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                            {
+                                model.DoReInit();
+                            }
                         }
-                    }
-                    else
-                    {                        
-                        if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                        else
                         {
-                            model.DoReInit();
+                            if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                            {
+                                model.DoReInit();
+                            }
                         }
                     }
                 }
