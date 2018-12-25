@@ -275,7 +275,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
         /// <returns></returns>
         [NonAction]
-        public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = true) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
             var dir = p.Parse(values);
@@ -283,7 +283,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [NonAction]
-        public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = false)
+        public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = true)
         {
             return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
         }

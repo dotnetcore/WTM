@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.ApiDemo
         }
 
         // DELETE api/<controller>/5
-        [HttpGet("Delete/{ids}")]
+        [HttpGet("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
