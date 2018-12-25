@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.ApiDemo
 
         // POST api/<controller>
         [HttpPost("Add")]
-        public IActionResult Add([FromBody]FrameworkUserVM vm)
+        public IActionResult Add(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -65,8 +65,8 @@ namespace WalkingTec.Mvvm.ApiDemo
         }
 
         // PUT api/<controller>/5
-        [HttpPut("Edit/{id}")]
-        public IActionResult Edit([FromBody]FrameworkUserVM vm)
+        [HttpPut("Edit")]
+        public IActionResult Edit(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             }
             else
             {
-                vm.DoEdit();
+                vm.DoEdit(true);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
