@@ -20,6 +20,40 @@ module.exports = (config, env) => {
         filename: 'static/css/[name].[contenthash:8].css',
         chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
     }));
+    cssloader = [
+        {
+            loader: require.resolve('css-loader'),
+            options: {
+                importLoaders: 1,
+            },
+        },
+        {
+            loader: require.resolve('postcss-loader'),
+            options: {
+                // https://github.com/facebookincubator/create-react-app/issues/2677
+                ident: 'postcss',
+                plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    require('autoprefixer')({
+                        browsers: [
+                            '>1%',
+                            'last 4 versions',
+                            'Firefox ESR',
+                            'not ie < 9', // React doesn't support IE8 anyway
+                        ],
+                        flexbox: 'no-2009',
+                    }),
+                ],
+            },
+        },
+        {
+            loader: require.resolve('less-loader'),
+            options: {
+                sourceMap: true,
+                javascriptEnabled: true,
+            },
+        }
+    ]
     config.module.rules = [
         {
             oneOf: [
@@ -45,40 +79,18 @@ module.exports = (config, env) => {
                 },
                 {
                     test: /\.(less|css)$/,
+                    include: paths.appSrc,
+                    use: [
+                        require.resolve('style-loader'),
+                        ...cssloader
+                    ],
+                },
+                {
+                    test: /\.(less|css)$/,
+                    exclude: paths.appSrc,
                     use: [
                         MiniCssExtractPlugin.loader,
-                        {
-                            loader: require.resolve('css-loader'),
-                            options: {
-                                importLoaders: 1,
-                            },
-                        },
-                        {
-                            loader: require.resolve('postcss-loader'),
-                            options: {
-                                // https://github.com/facebookincubator/create-react-app/issues/2677
-                                ident: 'postcss',
-                                plugins: () => [
-                                    require('postcss-flexbugs-fixes'),
-                                    require('autoprefixer')({
-                                        browsers: [
-                                            '>1%',
-                                            'last 4 versions',
-                                            'Firefox ESR',
-                                            'not ie < 9', // React doesn't support IE8 anyway
-                                        ],
-                                        flexbox: 'no-2009',
-                                    }),
-                                ],
-                            },
-                        },
-                        {
-                            loader: require.resolve('less-loader'),
-                            options: {
-                                sourceMap: true,
-                                javascriptEnabled: true,
-                            },
-                        }
+                        ...cssloader
                     ],
                 },
                 {

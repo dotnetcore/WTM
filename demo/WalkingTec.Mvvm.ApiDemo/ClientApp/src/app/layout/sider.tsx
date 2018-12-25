@@ -67,7 +67,7 @@ export default class App extends React.Component<any, any> {
     // console.log(selectedKeys, openKeys);
     const width = Store.Meun.collapsed ? 80 : 250
     return (
-      <div className="app-layout-sider" style={{ width }} >
+      <div className="app-layout-sider" style={{ width, minWidth: width }} >
         <div className="app-layout-logo" >Logo</div>
         <Menu
           theme="dark"

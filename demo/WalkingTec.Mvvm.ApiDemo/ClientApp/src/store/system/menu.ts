@@ -43,7 +43,6 @@ class Store {
                 "Children": []
             })
             
-            console.log(lodash.flattenDeep(menu));
         }
         this.setSubMenu(menu);
     }
