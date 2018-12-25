@@ -146,12 +146,12 @@ export default class RootRoutes extends React.Component<any, any> {
                 // 认证通过
                 if (Store.Authorize.onPassageway(this.props)) {
                     return (
-                        <Animate transitionName={classNames}
-                            transitionAppear={true} component="" key={Component.name} >
+                        // <Animate transitionName={classNames}
+                        //     transitionAppear={true} component="" key={Component.name} >
                             <div className="app-animate-content" key="app-animate-content" >
                                 <Component  {...this.props} />
                             </div>
-                        </Animate  >
+                        // </Animate  >
                     );
                 }
                 return <Animate transitionName={classNames}
