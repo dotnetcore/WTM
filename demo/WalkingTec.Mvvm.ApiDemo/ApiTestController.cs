@@ -19,6 +19,7 @@ namespace WalkingTec.Mvvm.ApiDemo
     /// </summary>
     [ApiController]
     [Route("api/user")]
+    [Public]
     public class UserController : BaseApiController
     {
 
