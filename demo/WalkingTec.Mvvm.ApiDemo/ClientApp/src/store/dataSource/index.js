@@ -330,7 +330,7 @@ var Store = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         method = this.Urls.update.method;
-                        src = this.Urls.update.src + "/" + params.Entity['id'];
+                        src = this.Urls.update.src;
                         return [4 /*yield*/, this.Request[method](src, params).toPromise()];
                     case 1:
                         res = _a.sent();

@@ -207,9 +207,13 @@ var RootRoutes = /** @class */ (function (_super) {
                 }
                 // 认证通过
                 if (Store.Authorize.onPassageway(this.props)) {
-                    return (React.createElement(Animate, { transitionName: classNames, transitionAppear: true, component: "", key: Component.name },
-                        React.createElement("div", { className: "app-animate-content", key: "app-animate-content" },
-                            React.createElement(Component, __assign({}, this.props)))));
+                    return (
+                    // <Animate transitionName={classNames}
+                    //     transitionAppear={true} component="" key={Component.name} >
+                    React.createElement("div", { className: "app-animate-content", key: "app-animate-content" },
+                        React.createElement(Component, __assign({}, this.props)))
+                    // </Animate  >
+                    );
                 }
                 return React.createElement(Animate, { transitionName: classNames, transitionAppear: true, component: "", key: Component.name },
                     React.createElement(Exception, { type: "404", desc: React.createElement("h3", null,

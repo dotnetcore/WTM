@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
             services.Configure<RazorViewEngineOptions>(options =>

@@ -162,10 +162,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             ctrl.ModelState.Remove(v);
                         }
                     }
+                    model.Validate();
                     if (ctrl is BaseController)
                     {
                         var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
-                        model.Validate();
                         if (ctrl.ModelState.IsValid)
                         {
                             if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
