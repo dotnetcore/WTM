@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             {
                 SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
             }
-            base.DoEdit();
+            base.DoEdit(updateAllFields);
         }
 
         public void ChangePassword()
