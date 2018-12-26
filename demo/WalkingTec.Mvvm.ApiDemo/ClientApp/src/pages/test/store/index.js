@@ -16,6 +16,14 @@ var Store = /** @class */ (function (_super) {
     __extends(Store, _super);
     function Store() {
         var _this = _super.call(this) || this;
+        // 动作权限  可在路由进入的时候注入
+        _this.Actions = {
+            insert: true,
+            update: true,
+            delete: false,
+            import: true,
+            export: true,
+        };
         /** 数据 ID 索引 */
         _this.IdKey = 'ID';
         _this.Urls = {
