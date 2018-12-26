@@ -3,6 +3,14 @@ export class Store extends DataSource {
     constructor() {
         super();
     }
+    // 动作权限  可在路由进入的时候注入
+    Actions = {
+        insert: true,
+        update: true,
+        delete: false,
+        import: true,
+        export: true,
+    }
     /** 数据 ID 索引 */
     IdKey = 'ID';
     Urls = {

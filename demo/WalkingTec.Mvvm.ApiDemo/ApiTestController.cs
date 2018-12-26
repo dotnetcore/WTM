@@ -103,24 +103,24 @@ namespace WalkingTec.Mvvm.ApiDemo
 
         }
 
-        [HttpPost("ExportExcel")]
-        [ActionDescription("导出")]
-        public IActionResult ExportExcel(List<Guid> ids, FrameworkUserSearcher searcher)
-        {
-            var vm = CreateVM<FrameworkUserListVM>();
-            if (ids != null && ids.Count > 0)
-            {
-                vm.Ids = ids;
-                vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
-            }
-            else
-            {
-                vm.Searcher = searcher;
-                vm.SearcherMode = ListVMSearchModeEnum.Export;
-            }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
-        }
+        //[HttpPost("ExportExcel")]
+        //[ActionDescription("导出")]
+        //public IActionResult ExportExcel(List<Guid> ids, FrameworkUserSearcher searcher)
+        //{
+        //    var vm = CreateVM<FrameworkUserListVM>();
+        //    if (ids != null && ids.Count > 0)
+        //    {
+        //        vm.Ids = ids;
+        //        vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
+        //    }
+        //    else
+        //    {
+        //        vm.Searcher = searcher;
+        //        vm.SearcherMode = ListVMSearchModeEnum.Export;
+        //    }
+        //    var data = vm.GenerateExcel();
+        //    return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        //}
 
     }
 }
