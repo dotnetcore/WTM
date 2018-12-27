@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu, message, Popconfirm, Row } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Popconfirm, Row, Icon } from 'antd';
 import Visible from 'components/dataView/help/visible';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
@@ -15,6 +15,9 @@ export default class IApp extends React.Component<any, any> {
     }
     onExport() {
         this.Store.onExport()
+    }
+    onExportIds() {
+        this.Store.onExportIds()
     }
     /**
    * 多选删除
@@ -37,6 +40,7 @@ export default class IApp extends React.Component<any, any> {
     render() {
         const { selectedRowKeys, Actions } = this.Store;
         const deletelength = selectedRowKeys.length;
+        const disabled = deletelength < 1;
         return (
             <Row>
                 <Visible visible={Actions.insert}>
@@ -44,14 +48,14 @@ export default class IApp extends React.Component<any, any> {
                 </Visible>
                 <Visible visible={Actions.update}>
                     <Divider type="vertical" />
-                    <Button icon="edit" onClick={this.onUpdate.bind(this)} disabled={deletelength < 1}>修改</Button>
+                    <Button icon="edit" onClick={this.onUpdate.bind(this)} disabled={disabled}>修改</Button>
                 </Visible>
                 <Visible visible={Actions.delete}>
                     <Divider type="vertical" />
                     <Popconfirm placement="right" title={`确定删除 ${deletelength}条 数据？`}
                         onConfirm={this.onDelete.bind(this)}
                         okText="确定" cancelText="取消">
-                        <Button icon="delete" disabled={deletelength < 1}> 删除  </Button>
+                        <Button icon="delete" disabled={disabled}> 删除  </Button>
                     </Popconfirm>
                 </Visible>
                 <Visible visible={Actions.import}>
@@ -59,7 +63,17 @@ export default class IApp extends React.Component<any, any> {
                     <Button icon="folder-add" onClick={this.onImport.bind(this)}>导入</Button>
                 </Visible>
                 <Divider type="vertical" />
-                <Button icon="download" onClick={this.onExport.bind(this)}>导出</Button>
+                {/* <Button icon="download" onClick={this.onExport.bind(this)}>导出</Button> */}
+                <Dropdown trigger={["click"]} overlay={<Menu>
+                    <Menu.Item>
+                        <a onClick={this.onExport.bind(this)}>导出全部</a>
+                    </Menu.Item>
+                    <Menu.Item disabled={disabled}>
+                        <a onClick={this.onExportIds.bind(this)}>导出勾选</a>
+                    </Menu.Item>
+                </Menu>}>
+                    <Button icon="download" >导出</Button>
+                </Dropdown>
                 <Divider type="vertical" />
                 <Dropdown overlay={<Menu>
                     <Menu.Item>

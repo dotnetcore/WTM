@@ -23,87 +23,24 @@ const formItemLayout = {
     Store,
     FormItems: ({ getFieldDecorator }) => {
         return [
-            <Col {...colLayout} key="test">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test', {
-                        initialValue: Store.searchParams['test'],
+            <Col {...colLayout} key="ITCode">
+                <FormItem label="ITCode" {...formItemLayout}>
+                    {getFieldDecorator('ITCode', {
+                        initialValue: Store.searchParams['ITCode'],
                     })(
-                        <Input placeholder="请输入" />
+                        <Input placeholder="请输入 ITCode" />
                     )}
                 </FormItem>
             </Col>,
-            <Col {...colLayout} key="test1">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test1', {
-                        initialValue: '',
+            <Col {...colLayout} key="Name">
+                <FormItem label="Name" {...formItemLayout}>
+                    {getFieldDecorator('Name', {
+                        initialValue: Store.searchParams['Name'],
                     })(
-                        <Input placeholder="请输入" />
+                        <Input placeholder="请输入 Name" />
                     )}
                 </FormItem>
             </Col>,
-            <Col {...colLayout} key="test2">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test2', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test3">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test3', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test4">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test4', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test5">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test5', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test6">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test6', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test7">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test7', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>,
-            <Col {...colLayout} key="test8">
-                <FormItem label="测试" {...formItemLayout}>
-                    {getFieldDecorator('test8', {
-                        initialValue: '',
-                    })(
-                        <Input placeholder="请输入" />
-                    )}
-                </FormItem>
-            </Col>
         ]
     }
 })
