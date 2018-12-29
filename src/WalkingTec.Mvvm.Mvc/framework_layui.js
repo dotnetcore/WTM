@@ -481,7 +481,7 @@ window.ff = {
         return data;
     },
 
-    DownloadExcelOrPdf: function (url, formId, defaultcondition) {
+    DownloadExcelOrPdf: function (url, formId, defaultcondition,ids) {
         var formData = ff.GetSearchFormData(formId);
         $.extend(defaultcondition, formData);
         $.cookie("DONOTUSEDOWNLOADING", "1", { path: '/' });
@@ -489,6 +489,11 @@ window.ff = {
         for (var attr in defaultcondition) {
             if (defaultcondition[attr] != null) {
                 form.append($('<input type="hidden" name="' + attr + '" value="' + defaultcondition[attr] + '">'));
+            }
+        }
+        if (ids !== undefined && ids !== null) {
+            for (var i = 0; i < ids.length;i++) {
+                form.append($('<input type="hidden" name="Ids" value="' +  ids[i] + '">'));
             }
         }
         $('body').append(form);

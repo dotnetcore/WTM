@@ -756,7 +756,7 @@ if(ids.length > 1){{
                     case GridActionParameterTypesEnum.MultiIdWithNull:
                         script.Append($@"
 var ids = ff.GetSelections('{Id}');
-{(item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ? "if(ids.length>0) tempUrl = tempUrl + '&Ids=' + ids.join('&Ids=');" : "isPost = true;")}
+isPost = true;
 ");
                         break;
                     default: break;
@@ -779,7 +779,7 @@ var isPost = false;
 (item.ShowDialog ?
     $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
     : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
-        $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)});"
+        $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)},ids);"
         : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
         )
 )
