@@ -301,33 +301,56 @@ export class Request {
         if (this.newResponseMap && typeof this.newResponseMap == "function") {
             return this.newResponseMap(x);
         }
-        if (x.status == 200) {
-            // 判断是否统一数据格式，是走状态判断，否直接返回 response
-            if (x.response && x.response.status) {
-                switch (x.response.status) {
-                    case 200:
-                        return x.response.data;
-                        break;
-                    case 204:
-                        return false;
-                        break;
-                    default:
-                        notification['error']({
-                            message: x.response.message,
-                            description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-                        });
-                        return false
-                        break;
-                }
-            }
-            return x.response
+        // if (x.status == 200) {
+        //     // 判断是否统一数据格式，是走状态判断，否直接返回 response
+        //     if (x.response && x.response.status) {
+        //         switch (x.response.status) {
+        //             case 200:
+        //                 return x.response.data;
+        //                 break;
+        //             case 204:
+        //                 return false;
+        //                 break;
+        //             default:
+        //                 notification['error']({
+        //                     message: x.response.message,
+        //                     description: `Url: ${x.request.url} \n method: ${x.request.method}`,
+        //                 });
+        //                 return false
+        //                 break;
+        //         }
+        //     }
+        //     return x.response
+        // }
+        switch (x.status) {
+            case 200:
+                return x.response;
+                break;
+            case 204:
+                return false;
+                break;
+            case 400:
+                notification['error']({
+                    duration:10,
+                    message: JSON.stringify(x.response),
+                    description: `Url: ${x.request.url} \n method: ${x.request.method}`,
+                });
+                return false;
+                break;
+            default:
+                notification['error']({
+                    message: x.response.message,
+                    description: `Url: ${x.request.url} \n method: ${x.request.method}`,
+                });
+                return false
+                break;
         }
-        notification['error']({
-            key: 'notificationKey',
-            message: x.message,
-            description: x.request ? `Url: ${x.request.url} \n method: ${x.request.method}` : '',
-        });
-        console.error(x);
+        // notification['error']({
+        //     key: 'notificationKey',
+        //     message: x.message,
+        //     description: x.request ? `Url: ${x.request.url} \n method: ${x.request.method}` : '',
+        // });
+        // console.error(x);
         // throw x;
         return false
     }
