@@ -43,6 +43,10 @@ export class Store extends DataSource {
             src: "/user/ExportExcel",
             method: "post"
         },
+        exportIds: {
+            src: "/user/ExportExcelByIds",
+            method: "post"
+        },
         template: {
             src: "/user/template",
             method: "post"

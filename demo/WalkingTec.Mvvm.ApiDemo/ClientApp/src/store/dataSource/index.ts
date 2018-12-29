@@ -53,6 +53,10 @@ export default class Store {
       src: "/test/export",
       method: "post"
     },
+    exportIds: {
+      src: "/test/export",
+      method: "post"
+    },
     template: {
       src: "/test/template",
       method: "post"
@@ -150,7 +154,7 @@ export default class Store {
       Page,
       Limit,
       sort,
-      search: this.searchParams
+      searcher: this.searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
@@ -158,7 +162,7 @@ export default class Store {
       if (data.Data) {
         data.Data = data.Data.map((x, i) => {
           // antd table 列表属性需要一个唯一key
-          return { key: i, ...x }
+          return { key: x[this.IdKey], ...x }
         })
       }
       return data
@@ -211,7 +215,6 @@ export default class Store {
       this.onSearch()
       this.onPageState("visibleEdit", false)
     } else {
-      message.error('添加失败')
     }
     this.onPageState("loadingEdit", false)
     return res
@@ -223,14 +226,14 @@ export default class Store {
   async onUpdate(params) {
     const method = this.Urls.update.method;
     const src = this.Urls.update.src;
-    const res = await this.Request[method](src, params).toPromise()
+    const res = await this.Request[method](src, params).toPromise();
+    console.log(res);
     if (res) {
       message.success('更新成功')
       // 刷新数据
       this.onSearch()
       this.onPageState("visibleEdit", false)
     } else {
-      message.error('更新失败')
     }
     this.onPageState("loadingEdit", false)
     return res
@@ -265,7 +268,6 @@ export default class Store {
       // 刷新数据
       this.onSearch();
     } else {
-      message.success('删除失败')
     }
     return res
   }
@@ -311,6 +313,20 @@ export default class Store {
       url: this.Request.address + this.Urls.export.src,
       body: params
     })
+  }
+  /**
+   * 导出
+   * @param params 筛选参数
+   */
+  async onExportIds() {
+    if (this.selectedRowKeys.length>0) {
+      await this.Request.download({
+        url: this.Request.address + this.Urls.exportIds.src,
+        body: {
+          ids: [...this.selectedRowKeys]
+        }
+      })
+    }
   }
   /**
   * 数据模板

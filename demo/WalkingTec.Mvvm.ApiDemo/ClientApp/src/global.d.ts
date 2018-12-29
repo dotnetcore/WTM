@@ -36,6 +36,7 @@ declare namespace WTM {
         delete: IUrl;
         import: IUrl;
         export: IUrl;
+        exportIds: IUrl;
         template: IUrl;
         [key: string]: IUrl;
     }
