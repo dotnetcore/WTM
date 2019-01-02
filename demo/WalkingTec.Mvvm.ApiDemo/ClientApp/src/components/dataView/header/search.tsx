@@ -75,6 +75,7 @@ export default class SearchComponent extends React.Component<any, any> {
                 items = [...FormItems].splice(0, 4);
             }
         }
+        const toggleShow = FormItems.length >= 4;
         return (
             <Form className="data-view-search" onSubmit={this.onSubmit.bind(this)}>
                 <Row type="flex" gutter={16}>
@@ -89,9 +90,12 @@ export default class SearchComponent extends React.Component<any, any> {
                         <Divider type="vertical" />
                         <Button icon="search" htmlType="submit" loading={this.Store.pageState.loading}>搜索</Button>
                         <Divider type="vertical" />
-                        <a onClick={this.onToggle}>
-                            {this.toggle ? <>收起 <Icon type='down' /></> : <>展开 <Icon type='up' /></>}
-                        </a>
+                        {
+                            toggleShow ? <a onClick={this.onToggle}>
+                                {this.toggle ? <>收起 <Icon type='down' /></> : <>展开 <Icon type='up' /></>}
+                            </a> : null
+                        }
+
                     </Col>
                 </Row>
             </Form>

@@ -154,7 +154,8 @@ export default class Store {
       Page,
       Limit,
       sort,
-      searcher: this.searchParams
+      // searcher: this.searchParams
+      ...this.searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
@@ -319,7 +320,7 @@ export default class Store {
    * @param params 筛选参数
    */
   async onExportIds() {
-    if (this.selectedRowKeys.length>0) {
+    if (this.selectedRowKeys.length > 0) {
       await this.Request.download({
         url: this.Request.address + this.Urls.exportIds.src,
         body: {
