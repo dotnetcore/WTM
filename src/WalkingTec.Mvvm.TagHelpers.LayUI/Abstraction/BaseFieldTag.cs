@@ -82,7 +82,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (!_excludeType.Contains(output.Attributes["type"]?.Value?.ToString()))
                     {
-                        output.Attributes.Add("lay-verify", "required");
+                        //richtextbox不需要进行必填验证
+                        if (output.Attributes["isrich"] == null)
+                        {
+                            output.Attributes.Add("lay-verify", "required");
+                        }
                     }
                 }
             }
