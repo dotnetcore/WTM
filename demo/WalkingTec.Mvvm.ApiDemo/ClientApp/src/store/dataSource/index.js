@@ -50,6 +50,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 /**
  * @author 冷 (https://github.com/LengYXin)
  * @email lengyingxin8966@gmail.com
@@ -99,6 +119,10 @@ var Store = /** @class */ (function () {
                 method: "post"
             },
             export: {
+                src: "/test/export",
+                method: "post"
+            },
+            exportIds: {
                 src: "/test/export",
                 method: "post"
             },
@@ -219,7 +243,7 @@ var Store = /** @class */ (function () {
                             Page: Page,
                             Limit: Limit,
                             sort: sort,
-                            search: this.searchParams
+                            searcher: this.searchParams
                         };
                         method = this.Urls.search.method;
                         src = this.Urls.search.src;
@@ -227,7 +251,7 @@ var Store = /** @class */ (function () {
                                 if (data.Data) {
                                     data.Data = data.Data.map(function (x, i) {
                                         // antd table 列表属性需要一个唯一key
-                                        return __assign({ key: i }, x);
+                                        return __assign({ key: x[_this.IdKey] }, x);
                                     });
                                 }
                                 return data;
@@ -311,7 +335,6 @@ var Store = /** @class */ (function () {
                             this.onPageState("visibleEdit", false);
                         }
                         else {
-                            message.error('添加失败');
                         }
                         this.onPageState("loadingEdit", false);
                         return [2 /*return*/, res];
@@ -334,6 +357,7 @@ var Store = /** @class */ (function () {
                         return [4 /*yield*/, this.Request[method](src, params).toPromise()];
                     case 1:
                         res = _a.sent();
+                        console.log(res);
                         if (res) {
                             message.success('更新成功');
                             // 刷新数据
@@ -341,7 +365,6 @@ var Store = /** @class */ (function () {
                             this.onPageState("visibleEdit", false);
                         }
                         else {
-                            message.error('更新失败');
                         }
                         this.onPageState("loadingEdit", false);
                         return [2 /*return*/, res];
@@ -386,7 +409,6 @@ var Store = /** @class */ (function () {
                             this.onSearch();
                         }
                         else {
-                            message.success('删除失败');
                         }
                         return [2 /*return*/, res];
                 }
@@ -448,6 +470,30 @@ var Store = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * 导出
+     * @param params 筛选参数
+     */
+    Store.prototype.onExportIds = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(this.selectedRowKeys.length > 0)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.Request.download({
+                                url: this.Request.address + this.Urls.exportIds.src,
+                                body: {
+                                    ids: __spread(this.selectedRowKeys)
+                                }
+                            })];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
                 }
             });
         });
