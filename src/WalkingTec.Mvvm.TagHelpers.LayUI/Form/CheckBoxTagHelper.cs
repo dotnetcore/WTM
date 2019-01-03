@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Attributes;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -41,6 +43,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var modelType = Field.Metadata.ModelType;
             var listitems = new List<ComboSelectListItem>();
+
+            var middleTable = modelType.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
+            //如果指向多对多中间表
+            if(middleTable != null)
+            {
+
+            }
             if (Items?.Model == null)
             {
                 if (modelType.IsList())
