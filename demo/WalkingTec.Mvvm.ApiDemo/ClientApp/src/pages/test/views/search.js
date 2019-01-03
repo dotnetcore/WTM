@@ -65,42 +65,14 @@ var default_1 = /** @class */ (function (_super) {
             FormItems: function (_a) {
                 var getFieldDecorator = _a.getFieldDecorator;
                 return [
-                    React.createElement(Col, __assign({}, colLayout, { key: "test" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test', {
-                            initialValue: Store.searchParams['test'],
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test1" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test1', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test2" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test2', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test3" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test3', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test4" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test4', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test5" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test5', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test6" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test6', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test7" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test7', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" })))),
-                    React.createElement(Col, __assign({}, colLayout, { key: "test8" }),
-                        React.createElement(FormItem, __assign({ label: "\u6D4B\u8BD5" }, formItemLayout), getFieldDecorator('test8', {
-                            initialValue: '',
-                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165" }))))
+                    React.createElement(Col, __assign({}, colLayout, { key: "ITCode" }),
+                        React.createElement(FormItem, __assign({ label: "ITCode" }, formItemLayout), getFieldDecorator('ITCode', {
+                            initialValue: Store.searchParams['ITCode'],
+                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165 ITCode" })))),
+                    React.createElement(Col, __assign({}, colLayout, { key: "Name" }),
+                        React.createElement(FormItem, __assign({ label: "Name" }, formItemLayout), getFieldDecorator('Name', {
+                            initialValue: Store.searchParams['Name'],
+                        })(React.createElement(Input, { placeholder: "\u8BF7\u8F93\u5165 Name" })))),
                 ];
             }
         })

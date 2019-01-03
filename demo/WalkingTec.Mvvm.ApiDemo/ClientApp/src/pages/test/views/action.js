@@ -74,6 +74,9 @@ var IApp = /** @class */ (function (_super) {
     IApp.prototype.onExport = function () {
         this.Store.onExport();
     };
+    IApp.prototype.onExportIds = function () {
+        this.Store.onExportIds();
+    };
     /**
    * 多选删除
    */
@@ -106,21 +109,27 @@ var IApp = /** @class */ (function (_super) {
     IApp.prototype.render = function () {
         var _a = this.Store, selectedRowKeys = _a.selectedRowKeys, Actions = _a.Actions;
         var deletelength = selectedRowKeys.length;
+        var disabled = deletelength < 1;
         return (React.createElement(Row, null,
             React.createElement(Visible, { visible: Actions.insert },
                 React.createElement(Button, { icon: "plus", onClick: this.onAdd.bind(this) }, "\u65B0\u5EFA")),
             React.createElement(Visible, { visible: Actions.update },
                 React.createElement(Divider, { type: "vertical" }),
-                React.createElement(Button, { icon: "edit", onClick: this.onUpdate.bind(this), disabled: deletelength < 1 }, "\u4FEE\u6539")),
+                React.createElement(Button, { icon: "edit", onClick: this.onUpdate.bind(this), disabled: disabled }, "\u4FEE\u6539")),
             React.createElement(Visible, { visible: Actions.delete },
                 React.createElement(Divider, { type: "vertical" }),
                 React.createElement(Popconfirm, { placement: "right", title: "\u786E\u5B9A\u5220\u9664 " + deletelength + "\u6761 \u6570\u636E\uFF1F", onConfirm: this.onDelete.bind(this), okText: "\u786E\u5B9A", cancelText: "\u53D6\u6D88" },
-                    React.createElement(Button, { icon: "delete", disabled: deletelength < 1 }, " \u5220\u9664  "))),
+                    React.createElement(Button, { icon: "delete", disabled: disabled }, " \u5220\u9664  "))),
             React.createElement(Visible, { visible: Actions.import },
                 React.createElement(Divider, { type: "vertical" }),
                 React.createElement(Button, { icon: "folder-add", onClick: this.onImport.bind(this) }, "\u5BFC\u5165")),
             React.createElement(Divider, { type: "vertical" }),
-            React.createElement(Button, { icon: "download", onClick: this.onExport.bind(this) }, "\u5BFC\u51FA"),
+            React.createElement(Dropdown, { trigger: ["click"], overlay: React.createElement(Menu, null,
+                    React.createElement(Menu.Item, null,
+                        React.createElement("a", { onClick: this.onExport.bind(this) }, "\u5BFC\u51FA\u5168\u90E8")),
+                    React.createElement(Menu.Item, { disabled: disabled },
+                        React.createElement("a", { onClick: this.onExportIds.bind(this) }, "\u5BFC\u51FA\u52FE\u9009"))) },
+                React.createElement(Button, { icon: "download" }, "\u5BFC\u51FA")),
             React.createElement(Divider, { type: "vertical" }),
             React.createElement(Dropdown, { overlay: React.createElement(Menu, null,
                     React.createElement(Menu.Item, null,
