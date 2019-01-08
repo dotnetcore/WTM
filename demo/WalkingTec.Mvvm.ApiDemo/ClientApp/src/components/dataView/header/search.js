@@ -124,6 +124,7 @@ var SearchComponent = /** @class */ (function (_super) {
                 items = __spread(FormItems).splice(0, 4);
             }
         }
+        var toggleShow = FormItems.length >= 4;
         return (React.createElement(Form, { className: "data-view-search", onSubmit: this.onSubmit.bind(this) },
             React.createElement(Row, { type: "flex", gutter: 16 }, items),
             React.createElement(Row, { type: "flex", gutter: 16, justify: "end" },
@@ -133,11 +134,11 @@ var SearchComponent = /** @class */ (function (_super) {
                     React.createElement(Divider, { type: "vertical" }),
                     React.createElement(Button, { icon: "search", htmlType: "submit", loading: this.Store.pageState.loading }, "\u641C\u7D22"),
                     React.createElement(Divider, { type: "vertical" }),
-                    React.createElement("a", { onClick: this.onToggle }, this.toggle ? React.createElement(React.Fragment, null,
+                    toggleShow ? React.createElement("a", { onClick: this.onToggle }, this.toggle ? React.createElement(React.Fragment, null,
                         "\u6536\u8D77 ",
                         React.createElement(Icon, { type: 'down' })) : React.createElement(React.Fragment, null,
                         "\u5C55\u5F00 ",
-                        React.createElement(Icon, { type: 'up' })))))));
+                        React.createElement(Icon, { type: 'up' }))) : null))));
     };
     __decorate([
         observable

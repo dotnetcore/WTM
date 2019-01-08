@@ -108,6 +108,7 @@ window.ff = {
         var layer = layui.layer;
         var index = layer.load(2);
         url = decodeURIComponent(url);
+        furl = url;
         var re = /(\/_framework\/outside\?url=)(.*?)$/ig;
         url = url.replace(re, function (match, p1, p2) {
             return p1 + encodeURIComponent(p2);
@@ -158,9 +159,9 @@ window.ff = {
                 layer.alert('加载失败');
             },
             complete: function () {
-                if (window.location.hash !== "#" + url) {
+                if (window.location.hash !== "#" + furl) {
                     DONOTUSE_IGNOREHASH = true;
-                    window.location.hash = '#' + url;
+                    window.location.hash = '#' + furl;
                 }
 
             }

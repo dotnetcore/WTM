@@ -116,12 +116,12 @@ namespace WalkingTec.Mvvm.ApiDemo
 
         [HttpPost("ExportExcelByIds")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcelByIds(List<Guid> ids)
+        public IActionResult ExportExcelByIds(Guid[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
-            if (ids != null && ids.Count > 0)
+            if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = ids;
+                vm.Ids = new List<Guid>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
