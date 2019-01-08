@@ -239,12 +239,9 @@ var Store = /** @class */ (function () {
                         }
                         this.onPageState("loading", true);
                         this.searchParams = __assign({}, this.searchParams, search);
-                        search = {
-                            Page: Page,
+                        search = __assign({ Page: Page,
                             Limit: Limit,
-                            sort: sort,
-                            searcher: this.searchParams
-                        };
+                            sort: sort }, this.searchParams);
                         method = this.Urls.search.method;
                         src = this.Urls.search.src;
                         return [4 /*yield*/, this.Request[method](src, search).map(function (data) {
