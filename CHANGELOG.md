@@ -3,6 +3,12 @@
 ## v2.2.x (2018-12-20)
 欢迎来到 WTM v2.2。此次更新主要是将 .Net Core 升级到 v2.2.0，并新增 Layui 组件。
 
+### v2.2.3 (2019-01-08)
+
+#### Bug Fixes
+
+* 修改外部地址菜单刷新的bug ([918560f](https://github.com/WalkingTec/WalkingTec.Mvvm/commit/918560f))
+
 ### v2.2.2 (2019-01-04)
 
 #### Bug Fixes
