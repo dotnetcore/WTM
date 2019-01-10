@@ -520,7 +520,7 @@ namespace WalkingTec.Mvvm.Core
             var fileAttachment = dc.Set<FileAttachment>().Where(x => x.ID == fileAttachmentId.Value).FirstOrDefault();
             if (fileAttachment != null)
             {
-                    url = "/_Framework/OutputAttachment/" + fileAttachmentId.ToString();
+                    url = "/_Framework/GetFile/" + fileAttachmentId.ToString();
                 
             }
             return url;
