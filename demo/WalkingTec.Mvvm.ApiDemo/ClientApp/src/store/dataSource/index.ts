@@ -323,9 +323,7 @@ export default class Store {
     if (this.selectedRowKeys.length > 0) {
       await this.Request.download({
         url: this.Request.address + this.Urls.exportIds.src,
-        body: {
-          ids: [...this.selectedRowKeys]
-        }
+        body: [...this.selectedRowKeys]
       })
     }
   }
