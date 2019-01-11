@@ -131,29 +131,31 @@ namespace WalkingTec.Mvvm.ApiDemo
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var importVM = CreateVM<FrameworkUserImportVM>();
+            var vm = CreateVM<FrameworkUserImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
                 qs.Add(item, Request.Query[item]);
             }
-            importVM.SetParms(qs);
-            var data = importVM.GenerateTemplate(out string fileName);
+            vm.SetParms(qs);
+            var data = vm.GenerateTemplate(out string fileName);
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        //[HttpPost("Import")]
-        //[ActionDescription("导入")]
-        //public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
-        //{
-        //    if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
-        //    {
-        //        return PartialView(vm);
-        //    }
-        //    else
-        //    {
-        //        return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
-        //    }
-        //}
+        [HttpPost("Import")]
+        [ActionDescription("导入")]
+        public ActionResult Import()
+        {
+            var vm = CreateVM<FrameworkUserImportVM>();
+
+            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            {
+                return BadRequest(vm.ErrorListVM.GetJson());
+            }
+            else
+            {
+                return Ok(vm.EntityList.Count);
+            }
+        }
     }
 }
