@@ -274,6 +274,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     FileAttachmentVM ofa = new FileAttachmentVM();
                     ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
                     ofa.DoDelete();
                 }
             }
