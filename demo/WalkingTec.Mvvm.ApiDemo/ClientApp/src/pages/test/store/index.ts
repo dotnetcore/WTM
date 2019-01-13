@@ -7,13 +7,14 @@ export class Store extends DataSource {
     Actions = {
         insert: true,
         update: true,
-        delete: false,
+        delete: true,
         import: true,
         export: true,
     }
     /** 数据 ID 索引 */
     IdKey = 'ID';
     Urls = {
+        ...this.Urls,
         search: {
             src: "/user/search",
             method: "post"
@@ -48,8 +49,8 @@ export class Store extends DataSource {
             method: "post"
         },
         template: {
-            src: "/user/template",
-            method: "post"
+            src: "/user/GetExcelTemplate",
+            method: "get"
         }
     }
 }

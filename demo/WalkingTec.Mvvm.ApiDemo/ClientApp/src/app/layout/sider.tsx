@@ -18,7 +18,7 @@ export default class App extends React.Component<any, any> {
   }
   renderMenu(menus, index) {
     return menus.Children.map((x, i) => {
-      return <Menu.Item key={x.Key} _key={x.Key}>
+      return <Menu.Item key={x.Key} >
         {this.renderLink(x)}
       </Menu.Item>
     })
@@ -32,7 +32,7 @@ export default class App extends React.Component<any, any> {
           }
         </SubMenu>
       }
-      return <Menu.Item key={menu.Key} _key={menu.Key}>
+      return <Menu.Item key={menu.Key} >
         {this.renderLink(menu)}
       </Menu.Item>
     })

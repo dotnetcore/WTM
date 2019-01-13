@@ -14,21 +14,21 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = (config, env) => {
     // config.entry.pop();
     // config.entry.push(paths.appIndexJs);
-    config.resolve.extensions = ['.mjs', '.web.ts', '.ts', '.web.tsx', '.tsx', '.web.js', '.js', '.json', '.web.jsx', '.jsx'];
+    config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
     config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
     config.plugins.push(new MiniCssExtractPlugin({
-        filename: 'static/css/[name].[contenthash:8].css',
-        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+        filename: 'static/css/[name].css',
+        chunkFilename: 'static/css/[name].chunk.css',
     }));
     cssloader = [
         {
-            loader: require.resolve('css-loader'),
+            loader: 'css-loader',
             options: {
                 importLoaders: 1,
             },
         },
         {
-            loader: require.resolve('postcss-loader'),
+            loader: 'postcss-loader',
             options: {
                 // https://github.com/facebookincubator/create-react-app/issues/2677
                 ident: 'postcss',
@@ -47,7 +47,7 @@ module.exports = (config, env) => {
             },
         },
         {
-            loader: require.resolve('less-loader'),
+            loader: 'less-loader',
             options: {
                 sourceMap: true,
                 javascriptEnabled: true,
@@ -59,34 +59,49 @@ module.exports = (config, env) => {
             oneOf: [
                 {
                     test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                    loader: require.resolve('url-loader'),
+                    loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        name: 'static/media/[name].[hash:8].[ext]',
+                        name: 'static/media/[name].[ext]',
                     },
+                },
+                {
+                    test: /\.js$/,
+                    include: paths.appNodeModules,
+                    exclude: paths.appSrc,
+                    use: [
+                        'cache-loader',
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                compact: true,
+                                presets: ['@babel/preset-env']
+                            }
+                        }
+                    ],
                 },
                 {
                     test: /\.(tsx|ts|js|jsx)$/,
                     include: paths.appSrc,
-                    use: [
-                        {
-                            loader: require.resolve('awesome-typescript-loader'),
-                            options: {
-
-                            },
-                        },
-                    ],
+                    loader: 'awesome-typescript-loader',
+                    options: {
+                        useCache: true,
+                        // transpileOnly: true,
+                        errorsAsWarnings: true,
+                        usePrecompiledFiles: true,
+                    }
                 },
                 {
                     test: /\.(less|css)$/,
                     include: paths.appSrc,
                     use: [
-                        require.resolve('style-loader'),
+                        'style-loader',
                         ...cssloader
                     ],
                 },
                 {
                     test: /\.(less|css)$/,
+                    include: paths.appNodeModules,
                     exclude: paths.appSrc,
                     use: [
                         MiniCssExtractPlugin.loader,
@@ -95,9 +110,9 @@ module.exports = (config, env) => {
                 },
                 {
                     exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
-                    loader: require.resolve('file-loader'),
+                    loader: 'file-loader',
                     options: {
-                        name: 'static/media/[name].[hash:8].[ext]',
+                        name: 'static/media/[name].[ext]',
                     },
                 },
             ],

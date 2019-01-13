@@ -10,6 +10,20 @@ import { message, notification } from "antd";
 import NProgress from 'nprogress';
 import lodash from 'lodash';
 import moment from 'moment';
+interface Preview {
+    data: any
+    message: string
+    status: number
+}
+/** 缓存 http 请求 */
+const CacheHttp = new Map<string, Promise<any>>();
+/** 缓存数据 */
+const Cache = new Map<string, any>();
+// 每30秒清理一次缓存
+Rx.Observable.interval(30000).subscribe(obs => {
+    CacheHttp.clear();
+    Cache.clear();
+})
 export class Request {
     /**
      * 
@@ -25,46 +39,116 @@ export class Request {
             // }
             this.address = address;
         }
+        this.getHeaders();
     }
     /** 
      * 请求路径前缀
      */
-    address = '/api'
+    address = '/masterdata/'
     /**
      * 请求头
      */
-    headers = {
+    private headers = {
         credentials: 'include',
         accept: "*/*",
         "Content-Type": "application/json",
+        "token": null
     };
+    /**
+     * 获取 认证 token请求头
+     */
+    getHeaders() {
+        this.headers.token = window.localStorage.getItem('__token') || null;
+        return this.headers
+    }
+
     /**
      * 请求超时设置
      */
-    timeout = 3000;
+    private timeout = 10000;
+
+    /**
+     * ajax Observable 管道
+     * @param Observable 
+     */
+    private AjaxObservable(Observable: Rx.Observable<Rx.AjaxResponse>) {
+        return Observable
+            // 超时时间
+            .timeout(this.timeout)
+            // 错误处理
+            .catch(err => Rx.Observable.of(err))
+            // 数据过滤
+            .map(this.responseMap)
+            // 数据筛选
+            .filter(this.filter);
+    }
+    /**
+     * url 参数 注入
+     * @param url url
+     * @param body body
+     * @param emptyBody 清空 body 
+     */
+    parameterTemplate(url, body, emptyBody = false) {
+        if (/{([\s\S]+?)}/g.test(url)) {
+            if (typeof body == "object") {
+                url = lodash.template(url, {
+                    interpolate: /{([\s\S]+?)}/g
+                })(body);
+            }
+        }
+        // 清空body
+        if (emptyBody) {
+            body = {};
+        }
+        return {
+            url,
+            body
+        }
+    }
+    /**
+     *  请求数据 缓存数据
+     * @param params 
+     */
+    async cache(params: {
+        url: string,
+        body?: { [key: string]: any } | string,
+        headers?: Object
+        method?: "get" | "post"
+    }) {
+        params = { url: "", body: {}, method: "get", ...params };
+        this.getHeaders();
+        const key = JSON.stringify({ url: params.url, body: params.body })
+        if (Cache.has(key)) {
+            return Cache.get(key);
+        }
+        let promise: Promise<any>// = Http.get(this.address + parmas.address, parmas.params).toPromise();
+        if (CacheHttp.has(key)) {
+            promise = CacheHttp.get(key);
+        } else {
+            if (params.method == "get") {
+                promise = this.get(params.url, params.body, params.headers).toPromise();
+            } else {
+                promise = this.post(params.url, params.body, params.headers).toPromise();
+            }
+            CacheHttp.set(key, promise);
+        }
+        const data = await promise || [];
+        Cache.set(key, data);
+        return data;
+    }
     /**
      * get
      * @param url 
      * @param body 
      * @param headers 
      */
-    get(url: string, body?: { [key: string]: any } | string, headers?: Object) {
+    get(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<any> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
-        if (/\/{\S*}/.test(url)) {
-            if (typeof body == "object") {
-                const urlStr = lodash.compact(url.match(/\/{\w[^\/{]*}/g).map(x => {
-                    return body[x.match(/{(\w*)}/)[1]];
-                })).join("/");
-                url = url.replace(/\/{\S*}/, "/") + urlStr;
-                body = {};
-            }
-        }
-        body = this.formatBody(body);
-        url = this.compatibleUrl(this.address, url, body as any);
-        return Rx.Observable.ajax.get(
-            url,
-            headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        const newParams = this.parameterTemplate(url, body, true);
+        body = this.formatBody(newParams.body);
+        url = this.compatibleUrl(this.address, newParams.url, body as any);
+        return this.AjaxObservable(Rx.Observable.ajax.get(url, headers))
     }
     /**
      * post
@@ -72,16 +156,13 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    post(url: string, body?: any, headers?: Object) {
+    post(url: string, body?: any, headers?: Object): Rx.Observable<any> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
-        body = this.formatBody(body, "body", headers);
-        url = this.compatibleUrl(this.address, url);
-
-        return Rx.Observable.ajax.post(
-            url,
-            body,
-            headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        const newParams = this.parameterTemplate(url, body);
+        body = this.formatBody(newParams.body, "body", headers);
+        url = this.compatibleUrl(this.address, newParams.url);
+        return this.AjaxObservable(Rx.Observable.ajax.post(url, body, headers))
     }
     /**
      * put
@@ -89,15 +170,13 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    put(url: string, body?: any, headers?: Object) {
+    put(url: string, body?: any, headers?: Object): Rx.Observable<any> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
-        body = this.formatBody(body, "body", headers);
-        url = this.compatibleUrl(this.address, url);
-        return Rx.Observable.ajax.put(
-            url,
-            body,
-            headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        const newParams = this.parameterTemplate(url, body);
+        body = this.formatBody(newParams.body, "body", headers);
+        url = this.compatibleUrl(this.address, newParams.url);
+        return this.AjaxObservable(Rx.Observable.ajax.put(url, body, headers))
     }
     /**
      * delete
@@ -105,17 +184,16 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    delete(url: string, body?: { [key: string]: any } | string, headers?: Object) {
+    delete(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<any> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
-        body = this.formatBody(body);
-        url = this.compatibleUrl(this.address, url, body as any);
-        return Rx.Observable.ajax.delete(
-            url,
-            headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        const newParams = this.parameterTemplate(url, body, true);
+        body = this.formatBody(newParams.body);
+        url = this.compatibleUrl(this.address, newParams.url, body as any);
+        return this.AjaxObservable(Rx.Observable.ajax.delete(url, headers))
     }
     /** 文件获取状态 */
-    downloadLoading = false
+    private downloadLoading = false
     /**
      * 下载文件
      * @param AjaxRequest 
@@ -123,11 +201,13 @@ export class Request {
      * @param fileName 
      */
     async download(AjaxRequest: Rx.AjaxRequest, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
+        this.getHeaders();
         if (this.downloadLoading) {
             return message.warn('文件获取中，请勿重复操作~')
         }
         this.downloadLoading = true;
-        NProgress.start();
+        this.NProgress()
+        AjaxRequest.url = this.compatibleUrl(this.address, AjaxRequest.url);
         AjaxRequest = {
             // url: url,
             method: "post",
@@ -140,28 +220,19 @@ export class Request {
             AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
         }
         const result = await Rx.Observable.ajax(AjaxRequest).catch(err => Rx.Observable.of(err)).toPromise();
-        NProgress.done();
+        this.NProgress("done")
+
         this.downloadLoading = false;
         try {
             if (result.status == 200) {
-                const blob = result.response;
-                const a = document.createElement('a');
-                const downUrl = window.URL.createObjectURL(blob);
-                a.href = downUrl;
-                switch (blob.type) {
-                    case 'application/vnd.ms-excel':
-                        a.download = fileName + '.xls';
-                        break;
-                    default:
-                        a.download = fileName + fileType;
-                        break;
-                }
-                a.click();
-                window.URL.revokeObjectURL(downUrl);
-                message.success(`文件下载成功`)
+                this.onCreateBlob(result.response, fileType, fileName).click();
+                notification.success({
+                    message: `文件下载成功`,
+                    description: ''
+                })
             } else {
                 notification['error']({
-                    key: 'notificationKey',
+                    key: this.notificationKey,
                     message: '文件下载失败',
                     description: result.message,
                 });
@@ -169,18 +240,118 @@ export class Request {
 
         } catch (error) {
             notification['error']({
-                key: 'notificationKey',
+                key: this.notificationKey,
                 message: '文件下载失败',
                 description: error.message,
             });
         }
     }
+    /**
+     * 创建二进制文件
+     * @param response 
+     */
+    onCreateBlob(response, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
+        const blob = response;
+        const a = document.createElement('a');
+        const downUrl = window.URL.createObjectURL(blob);
+        a.href = downUrl;
+        switch (blob.type) {
+            case 'application/vnd.ms-excel':
+                a.download = fileName + '.xls';
+                break;
+            default:
+                a.download = fileName + fileType;
+                break;
+        }
+        a.addEventListener("click", () => {
+            setTimeout(() => {
+                window.URL.revokeObjectURL(downUrl);
+            });
+        }, false);
+        return a;
+    }
+    /**
+     * 重写 Upload 默认请求  https://ant.design/components/upload-cn/#onChange
+     * @param option 
+     * @param responseType 
+     */
+    customRequest(option, responseType: XMLHttpRequestResponseType = "") {
+        function getError(option, xhr) {
+            const msg = `cannot post ${option.action} ${xhr.status}'`;
+            const err = new Error(msg) as any;
+            err.status = xhr.status;
+            err.method = 'post';
+            err.url = option.action;
+            return err;
+        }
+        function getBody(xhr) {
+            if (xhr.responseType == "blob") {
+                return xhr.response
+            }
+            const text = xhr.responseText || xhr.response;
+            if (!text) {
+                return text;
+            }
+
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                return text;
+            }
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = responseType;
+        if (option.onProgress && xhr.upload) {
+            xhr.upload.onprogress = function progress(e: any) {
+                if (e.total > 0) {
+                    e.percent = e.loaded / e.total * 100;
+                }
+                option.onProgress(e);
+            };
+        }
+        const formData = new FormData();
+        if (option.data) {
+            Object.keys(option.data).map(key => {
+                formData.append(key, option.data[key]);
+            });
+        }
+        formData.append(option.filename, option.file);
+        xhr.onerror = function error(e) {
+            option.onError(e);
+        };
+        xhr.onload = function onload() {
+            if (xhr.status < 200 || xhr.status >= 300) {
+                return option.onError(getError(option, xhr), getBody(xhr));
+            }
+            option.onSuccess(getBody(xhr), xhr);
+        };
+        xhr.open('post', option.action, true);
+        if (option.withCredentials && 'withCredentials' in xhr) {
+            xhr.withCredentials = true;
+        }
+        const headers = option.headers || {};
+        if (headers['X-Requested-With'] !== null) {
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        }
+        for (const h in headers) {
+            if (headers.hasOwnProperty(h) && headers[h] !== null) {
+                xhr.setRequestHeader(h, headers[h]);
+            }
+        }
+        xhr.send(formData);
+        return {
+            abort() {
+                xhr.abort();
+            },
+        };
+    }
     /** jsonp 回调 计数 */
-    jsonpCounter = 0;
+    private jsonpCounter = 0;
     /**
      * jsonP
      */
     jsonp(url, body?: { [key: string]: any } | string, callbackKey = 'callback') {
+        this.getHeaders();
         body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
         return new Rx.Observable(observer => {
@@ -215,6 +386,7 @@ export class Request {
             // address  / 结尾  url / 开头
             const isAddressWith = lodash.endsWith(address, "/")
             const isUrlWith = lodash.startsWith(url, "/")
+            // debugger
             if (isAddressWith) {
                 if (isUrlWith) {
                     url = lodash.trimStart(url, "/")
@@ -241,10 +413,7 @@ export class Request {
         headers?: Object
     ): any {
         // 加载进度条
-        NProgress.start();
-        // if (typeof body === 'undefined') {
-        //     return '';
-        // }
+        this.NProgress()
         if (type === "url") {
             let param = "";
             if (typeof body != 'string') {
@@ -290,72 +459,85 @@ export class Request {
             return body;
         }
     }
+    private notificationKey = "notificationKey"
     /**
      * ajax过滤
      */
-    responseMap = (x) => {
+    private responseMap = (res) => {
         // 关闭加载进度条
         setTimeout(() => {
-            NProgress.done();
+            this.NProgress("done")
         });
-        if (this.newResponseMap && typeof this.newResponseMap == "function") {
-            return this.newResponseMap(x);
+        try {
+            // 使用传入得 过滤函数
+            if (this.newResponseMap && typeof this.newResponseMap == "function") {
+                return this.newResponseMap(res);
+            }
+            if (res.status == 200) {
+                // 判断是否统一数据格式，是走状态判断，否直接返回 response
+                if (res.response && res.response.status) {
+                    switch (res.response.status) {
+                        case 200:
+                            return res.response.data;
+                            break;
+                        case 204:
+                            return false;
+                            break;
+                        default:
+                            throw {
+                                url: res.request.url,
+                                request: res,
+                                message: res.response.message,
+                                response: res.response
+                            }
+                            return false
+                            break;
+                    }
+                }
+                return res.response
+            }
+            throw {
+                url: res.request.url,
+                request: res,
+                message: res.message,
+                response: false
+            }
+
+        } catch (error) {
+            // console.error(error);
+            if (lodash.includes(error.url, "/test/")) {
+                error.message = "请检查接口配置是否正确"
+            }
+            notification['error']({
+                key: 'ajaxError',
+                message: error.message,
+                duration: 10,
+                description: `Url: ${error.url}`,
+            });
+            return false
         }
-        // if (x.status == 200) {
-        //     // 判断是否统一数据格式，是走状态判断，否直接返回 response
-        //     if (x.response && x.response.status) {
-        //         switch (x.response.status) {
-        //             case 200:
-        //                 return x.response.data;
-        //                 break;
-        //             case 204:
-        //                 return false;
-        //                 break;
-        //             default:
-        //                 notification['error']({
-        //                     message: x.response.message,
-        //                     description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-        //                 });
-        //                 return false
-        //                 break;
-        //         }
-        //     }
-        //     return x.response
-        // }
-        switch (x.status) {
-            case 200:
-                return x.response;
-                break;
-            case 204:
-                return false;
-                break;
-            case 400:
-                notification['error']({
-                    duration:10,
-                    message: JSON.stringify(x.response),
-                    description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-                });
-                return false;
-                break;
-            default:
-                notification['error']({
-                    message: x.response.message,
-                    description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-                });
-                return false
-                break;
-        }
-        // notification['error']({
-        //     key: 'notificationKey',
-        //     message: x.message,
-        //     description: x.request ? `Url: ${x.request.url} \n method: ${x.request.method}` : '',
-        // });
-        // console.error(x);
-        // throw x;
-        return false
+    }
+
+    /**
+     * 过滤 map 返回的 假值  
+     */
+    private filter = (data) => {
+        return data;
     }
     /** 日志 */
-    log(url, body, headers) {
+    private log(url, body, headers) {
+
+    }
+    /**
+     *  加载进度条
+     * @param type 
+     */
+    protected NProgress(type: 'start' | 'done' = 'start') {
+        if (type == "start") {
+            NProgress.start();
+        } else {
+            NProgress.done();
+        }
     }
 }
 export default new Request();

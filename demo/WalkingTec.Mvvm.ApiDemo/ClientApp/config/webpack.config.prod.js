@@ -9,67 +9,67 @@ const paths = require("./paths");
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 /**
  * 重写 react-scripts 默认配置
  */
 module.exports = (config, env) => {
     // config.entry.pop();
     // config.entry.push(paths.appIndexJs);
+    // config.mode = 'development';
     config.devtool = false;
-    config.resolve.extensions = ['.mjs', '.web.ts', '.ts', '.web.tsx', '.tsx', '.web.js', '.js', '.json', '.web.jsx', '.jsx'];
+    config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
     config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
     config.module.rules = [
         {
             oneOf: [
                 {
                     test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                    loader: require.resolve('url-loader'),
+                    loader: 'url-loader',
                     options: {
                         limit: 10000,
                         name: 'static/media/[name].[hash:8].[ext]',
                     },
                 },
                 {
+                    test: /\.js$/,
+                    include: paths.appNodeModules,
+                    exclude: paths.appSrc,
+                    use: [
+                        'cache-loader',
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                compact: true,
+                                presets: ['@babel/preset-env']
+                            }
+                        }
+                    ],
+
+                },
+                {
                     test: /\.(tsx|ts|js|jsx)$/,
                     include: paths.appSrc,
-                    use: [
-                        {
-                            loader: require.resolve('awesome-typescript-loader'),
-                            options: {
-                                getCustomTransformers: () => ({
-                                    before: [tsImportPluginFactory([
-                                        { libraryName: 'antd', style: false },
-                                        {
-                                            style: false,
-                                            libraryName: 'lodash',
-                                            libraryDirectory: null,
-                                            camel2DashComponentName: false
-                                        },
-                                        {
-                                            libraryDirectory: '../_esm2015/operators',
-                                            libraryName: 'rxjs/operators',
-                                            style: false,
-                                            camel2DashComponentName: false,
-                                            transformToDefaultImport: false
-                                        },
-                                    ])]
-                                })
-                            },
-                        },
-                    ],
+                    loader: 'awesome-typescript-loader',
+                    options: {
+                        useCache: true,
+                        // transpileOnly: true,
+                        errorsAsWarnings: true,
+                        usePrecompiledFiles: true,
+                    }
                 },
                 {
                     test: /\.(less|css)$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
-                            loader: require.resolve('css-loader'),
+                            loader: 'css-loader',
                             options: {
                                 importLoaders: 1,
                             },
                         },
                         {
-                            loader: require.resolve('postcss-loader'),
+                            loader: 'postcss-loader',
                             options: {
                                 // https://github.com/facebookincubator/create-react-app/issues/2677
                                 ident: 'postcss',
@@ -88,7 +88,7 @@ module.exports = (config, env) => {
                             },
                         },
                         {
-                            loader: require.resolve('less-loader'),
+                            loader: 'less-loader',
                             options: {
                                 sourceMap: true,
                                 javascriptEnabled: true,
@@ -98,7 +98,7 @@ module.exports = (config, env) => {
                 },
                 {
                     exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
-                    loader: require.resolve('file-loader'),
+                    loader: 'file-loader',
                     options: {
                         name: 'static/media/[name].[hash:8].[ext]',
                     },
