@@ -5,7 +5,7 @@ import Animate from 'rc-animate';
 import * as React from 'react';
 import store from 'store/index';
 import './style.less';
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { Tab, UserName, Password, Mobile, Captcha, Submit }: any = Login;
 export default class LoginDemo extends React.Component {
   state = {
     notice: '',

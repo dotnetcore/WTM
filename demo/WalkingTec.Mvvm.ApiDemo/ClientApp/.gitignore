@@ -4,13 +4,15 @@
 /node_modules
 /.pnp
 .pnp.js
-
+.vscode
+.awcache
+.cache-loader
 # testing
 /coverage
 
 # production
 /build
-
+/wtmfront/swagger
 # misc
 .DS_Store
 .env.local

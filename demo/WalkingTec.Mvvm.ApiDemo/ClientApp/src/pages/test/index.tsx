@@ -1,6 +1,6 @@
 import { Divider } from 'antd';
 import * as React from 'react';
-import Edit from './views/edit';
+import Details from './views/details';
 import Search from './views/search';
 import Action from './views/action';
 import Table from './views/table';
@@ -15,7 +15,7 @@ export default class App extends React.Component<any, any> {
         </Search>
         <Divider />
         <Table {...this.props} />
-        <Edit {...this.props} />
+        <Details {...this.props} />
       </div>
     );
   }

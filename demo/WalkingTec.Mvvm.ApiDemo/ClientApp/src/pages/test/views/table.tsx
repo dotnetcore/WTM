@@ -4,12 +4,14 @@ import React from 'react';
 import Store from '../store';
 import { Divider, Popconfirm } from 'antd';
 export default class extends React.Component<any, any> {
-    Store = Store;
     async onDelete(data) {
-        this.Store.onDelete(data.ID)
+        Store.onDelete(data.ID)
     }
     async onUpdate(data) {
-        this.Store.onModalShow(data)
+        Store.onModalShow(data, "Update")
+    }
+    async onInfo(data) {
+        Store.onModalShow(data, "Info")
     }
     render() {
         return <Table Store={Store} columns={
@@ -38,10 +40,12 @@ export default class extends React.Component<any, any> {
                     dataIndex: 'Action',
                     render: (text, record) => {
                         return <div>
-                            <Visible visible={this.Store.Actions.update}>
+                            <a onClick={this.onInfo.bind(this, record)} >详情</a>
+                            <Visible visible={Store.Actions.update}>
+                                <Divider type="vertical" />
                                 <a onClick={this.onUpdate.bind(this, record)} >修改</a>
                             </Visible>
-                            <Visible visible={this.Store.Actions.delete}>
+                            <Visible visible={Store.Actions.delete}>
                                 <Divider type="vertical" />
                                 <Popconfirm title="确定删除?" onConfirm={this.onDelete.bind(this, record)} >
                                     <a >删除</a>

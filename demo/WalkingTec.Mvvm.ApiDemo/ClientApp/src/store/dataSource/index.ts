@@ -60,6 +60,10 @@ export default class Store {
     template: {
       src: "/test/template",
       method: "post"
+    },
+    fileUpload: {
+      src: "/file/upload",
+      method: "post"
     }
   };
   /** 格式化数据参数 */
@@ -87,11 +91,11 @@ export default class Store {
   @observable details: any = {};
   /** 页面动作 */
   @observable pageState = {
-    visibleEdit: false,//编辑显示
-    visiblePort: false,//导入显示
+    visibleEdit: false,//编辑窗口
+    visiblePort: false,//导入窗口
     loading: false,//数据加载
     loadingEdit: false,//数据提交
-    isUpdate: false//编辑状态
+    detailsType: 'Insert'//详情类型 Insert/添加 Update/修改 Info/详情信息
   }
   /**
    *  修改页面动作状态
@@ -99,7 +103,7 @@ export default class Store {
    * @param value 
    */
   @action.bound
-  onPageState(key: "visibleEdit" | "visiblePort" | "loading" | "loadingEdit" | "isUpdate", value?: boolean) {
+  onPageState(key: "visibleEdit" | "visiblePort" | "loading" | "loadingEdit" | "detailsType", value?: boolean | string) {
     const prevVal = this.pageState[key];
     if (prevVal == value) {
       return
@@ -118,16 +122,13 @@ export default class Store {
     this.selectedRowKeys = selectedRowKeys
   }
   /**
-   * 编辑
-   * 需要重写的方法 使用 runInAction 实现 修改Store
-   * 使用 @action.bound 装饰器的方法不可重写
-   * @param details 详情 有唯一 key 判定为修改
+   * 详情 窗口
+   * @param details 
+   * @param detailsType 
    */
-  async onModalShow(details = {}) {
-    if (details[this.IdKey] == null) {
-      this.onPageState("isUpdate", false)
-    } else {
-      this.onPageState("isUpdate", true)
+  async onModalShow(details = {}, detailsType: 'Insert' | 'Update' | 'Info' = 'Insert') {
+    this.onPageState("detailsType", detailsType)
+    if (detailsType != "Insert") {
       details = await this.onDetails(details)
     }
     runInAction(() => {
@@ -197,7 +198,7 @@ export default class Store {
     const details = { Entity: { ...this.details, ...params } }
     this.onPageState("loadingEdit", true)
     // 添加 | 修改
-    if (this.pageState.isUpdate) {
+    if (this.pageState.detailsType) {
       return await this.onUpdate(details)
     }
     return await this.onInsert(details)
@@ -240,24 +241,9 @@ export default class Store {
     return res
   }
   /**
-   * 删除数据
-   * @param params 需要删除的数据集合 取 所有的 id
+   * 删除
+   * @param Id 
    */
-  // async onDelete(params: any[]) {
-  //   params = params.map(x => x[this.IdKey])
-  //   const method = this.Urls.delete.method;
-  //   const src = this.Urls.delete.src;
-  //   const res = await this.Request[method](src, params).toPromise()
-  //   if (res) {
-  //     message.success('删除成功')
-  //     this.onSelectChange([]);
-  //     // 刷新数据
-  //     this.onSearch();
-  //   } else {
-  //     message.success('删除失败')
-  //   }
-  //   return res
-  // }
   async onDelete(Id: string) {
     // params = params.map(x => x[this.IdKey])
     const method = this.Urls.delete.method;
@@ -278,7 +264,7 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.address + this.Urls.import.src
+    const action = this.Request.address + this.Urls.fileUpload.src
     return {
       name: 'file',
       multiple: true,
@@ -287,23 +273,37 @@ export default class Store {
         const status = info.file.status
         // NProgress.start();
         if (status !== 'uploading') {
-          console.log(info.file, info.fileList)
         }
         if (status === 'done') {
           const response = info.file.response
-          // NProgress.done();
-          if (response.status == 200) {
-            // 刷新数据
-            this.onSearch();
-            message.success(`${info.file.name} file uploaded successfully.`)
+          if (typeof response.id === "string") {
+            // message.success(`${info.file.name} 上传成功`);
+            this.onImport(response.id)
           } else {
             message.error(`${info.file.name} ${response.message}`)
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`)
+          message.error(`${info.file.name} 上传失败`)
         }
       }
     }
+  }
+  /**
+   * 导入
+   * @param UpdateFileId 
+   */
+  async onImport(UpdateFileId) {
+    const method = this.Urls.import.method;
+    const src = this.Urls.import.src;
+    const res = await this.Request[method](src, { UpdateFileId }, { "Content-Type": "application/x-www-form-urlencoded" }).toPromise();
+    console.log(res);
+    if (res) {
+      message.success('导入成功')
+      // 刷新数据
+      this.onSearch()
+      this.onPageState("visiblePort", false)
+    }
+    return res
   }
   /**
    * 导出
@@ -311,7 +311,8 @@ export default class Store {
    */
   async onExport(params = this.searchParams) {
     await this.Request.download({
-      url: this.Request.address + this.Urls.export.src,
+      url: this.Urls.export.src,
+      method: this.Urls.export.method,
       body: params
     })
   }
@@ -322,7 +323,8 @@ export default class Store {
   async onExportIds() {
     if (this.selectedRowKeys.length > 0) {
       await this.Request.download({
-        url: this.Request.address + this.Urls.exportIds.src,
+        url: this.Urls.exportIds.src,
+        method: this.Urls.exportIds.method,
         body: [...this.selectedRowKeys]
       })
     }
@@ -332,7 +334,8 @@ export default class Store {
   */
   async onTemplate() {
     await this.Request.download({
-      url: this.Request.address + this.Urls.template.src,
+      url: this.Urls.template.src,
+      method: this.Urls.template.method
     })
   }
 }

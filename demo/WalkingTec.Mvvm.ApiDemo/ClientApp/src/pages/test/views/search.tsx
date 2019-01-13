@@ -1,7 +1,6 @@
 import { Col, Form, Input, Button } from 'antd';
 import { DecoratorsSearch } from 'components/dataView/header/search';
 import * as React from 'react';
-import Insert from './edit';
 import Store from '../store';
 const FormItem = Form.Item;
 const colLayout = {

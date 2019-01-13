@@ -1,3 +1,18 @@
 {
-    "npm-scripts.showStartNotification": false
+    "liveServer.settings.root": "./build/",
+    "liveServer.settings.proxy": {
+        "enable": true,
+        "baseUri": "/api",
+        "proxyUri": "http://localhost:57911/"
+    },
+    "npm-scripts.showStartNotification": false,
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "files.exclude": {
+        "**/.awcache": true,
+        "**/.cache-loader": true
+    },
+    "files.watcherExclude": {
+        "**/.awcache": true,
+        "**/.cache-loader": true
+    }
 }
