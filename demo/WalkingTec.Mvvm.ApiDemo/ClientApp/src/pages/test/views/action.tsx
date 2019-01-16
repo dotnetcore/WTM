@@ -1,10 +1,13 @@
-import { Button, Divider, Dropdown, Menu, message, Popconfirm, Row, Icon, Modal } from 'antd';
+import { Button, Divider, Dropdown, Icon, Menu, message, Modal, Popconfirm, Row } from 'antd';
+import Dragger from 'antd/lib/upload/Dragger';
 import Visible from 'components/dataView/help/visible';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
-import Dragger from 'antd/lib/upload/Dragger';
+/**
+ * 表格 所有 动作
+ */
 @observer
 export default class IApp extends React.Component<any, any> {
     onAdd() {

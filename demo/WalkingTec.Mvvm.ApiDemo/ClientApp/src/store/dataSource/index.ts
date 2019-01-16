@@ -64,6 +64,10 @@ export default class Store {
     fileUpload: {
       src: "/file/upload",
       method: "post"
+    },
+    fileDelete: {
+      src: "/file/deleteFile",
+      method: "get"
     }
   };
   /** 格式化数据参数 */
@@ -264,13 +268,15 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.address + this.Urls.fileUpload.src
+    const action = this.Request.address + this.Urls.fileUpload.src;
     return {
       name: 'file',
       multiple: true,
+      accept: ".xlsx,.xls",
       action: action,
       onChange: info => {
         const status = info.file.status
+        console.log(status);
         // NProgress.start();
         if (status !== 'uploading') {
         }
@@ -285,8 +291,27 @@ export default class Store {
         } else if (status === 'error') {
           message.error(`${info.file.name} 上传失败`)
         }
-      }
+      },
+      onRemove: (file) => {
+        console.log(file);
+        const response = file.response
+        if (typeof response.id === "string") {
+          this.onFileDelete(response.id)
+        }
+      },
     }
+  }
+  /**
+   * 导入
+   * @param id 
+   */
+  async onFileDelete(id) {
+    const method = this.Urls.fileDelete.method;
+    const src = this.Urls.fileDelete.src;
+    const res = await this.Request[method](src, { id }).toPromise();
+    if (res) {
+    }
+    return res
   }
   /**
    * 导入

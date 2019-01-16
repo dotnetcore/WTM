@@ -27,6 +27,88 @@ interface ITablePorps {
     columns: ColumnProps<any>[];
     // columnsMap?: (column: any, index: any, width: any) => any;
 }
+
+const TableUtils = {
+    clientWidth: 0,
+    /**
+     * 设置列宽度
+     * @param tableBody 
+     * @param columns 
+     */
+    onSetColumnsWidth(tableBody, columns) {
+        // 获取页面宽度
+        if (tableBody) {
+            // 表头
+            const { clientWidth } = tableBody.querySelector(".ant-table-thead");
+            this.clientWidth = clientWidth;
+            // 选择框
+            // const { clientWidth: selectionWidth } = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
+            const columnsLenght = columns.length;
+            //计算表格设置的总宽度
+            const columnWidth = this.onGetcolumnsWidth(columns);
+            // 总宽度差值
+            const width = clientWidth - columnWidth - 100;
+            if (width > 0) {
+                const average = width / columnsLenght
+                // 平均分配
+                columns = columns.map(x => {
+                    return {
+                        ...x,
+                        width: Math.ceil((x.width || 0) + average)
+                    }
+                })
+            } else {
+                const average = clientWidth / columnsLenght
+                columns = columns.map(x => {
+                    return {
+                        ...x,
+                        width: Math.ceil(average)
+                    }
+                })
+            }
+            return columns
+        }
+    },
+    /**
+     * 获取列总宽度
+     * @param columns 
+     */
+    onGetcolumnsWidth(columns) {
+        //计算表格设置的总宽度
+        return columns.reduce((accumulator, currentValue) => {
+            return Math.ceil(accumulator + (currentValue.width || 0))
+        }, 0);
+    },
+    /**
+    * 动态设置列宽
+    */
+    onGetScroll(columns) {
+        let scrollX = this.onGetcolumnsWidth(columns);
+        // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth;
+        return {
+            x: scrollX
+        }
+    },
+    /**
+     * 覆盖默认的 table 元素
+     */
+    components: {
+        header: {
+            cell: (props) => {
+                const { onResize, width, ...restProps } = props;
+                if (!width) {
+                    return <th {...restProps} />;
+                }
+
+                return (
+                    <Resizable width={width} height={0} onResize={onResize}>
+                        <th {...restProps} />
+                    </Resizable>
+                );
+            },
+        },
+    }
+}
 /**
  * 表格渲染组件 
  * 
@@ -41,65 +123,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
      */
     @action.bound
     initColumns() {
-        if (this.rowDom && this.rowDom.clientWidth) {
-            const width = Math.floor(this.rowDom.clientWidth / (this.columns.length + 1))
-            this.columns = this.columns.map((col, index) => {
-                return this.columnsMap(col, index, width)
-            })
-        }
-    }
-    /**
-    *  处理 表格类型输出
-    * @param column 
-    * @param index 
-    */
-    columnsMap(column, index, width) {
-        // if (this.props.columnsMap) {
-        //     return this.props.columnsMap(column, index, width);
-        // }
-        // switch (column.format) {
-        //     // 转换时间类型 输出
-        //     case 'date-time':
-        //         column.render = (record) => {
-        //             try {
-        //                 if (record == null || record == undefined) {
-        //                     return "";
-        //                 }
-        //                 return moment(record).format(this.Store.Format.dateTime)
-        //             } catch (error) {
-        //                 return error.toString()
-        //             }
-        //         }
-        //         break;
-        //     default:
-
-        // }
-        if (!column.render) {
-            column.render = (record) => {
-                try {
-                    record = record && record.toString() || record
-                } catch (error) {
-                    record = error.toString()
-                }
-                return (
-                    <Popover placement="topLeft" overlayClassName="app-table-column-popover" content={record} trigger="click">
-                        <div className="app-table-column-render">
-                            {record}
-                        </div>
-                    </Popover>
-                )
-            }
-        }
-        return {
-            ...column,
-            sorter: true,
-            width: width,
-            // 列拖拽
-            onHeaderCell: col => ({
-                width: col.width,
-                onResize: this.handleResize(index),
-            }),
-        }
+        this.columns = TableUtils.onSetColumnsWidth(this.rowDom, toJS(this.columns))
     }
     /**
      * 分页、排序、筛选变化时触发
@@ -118,27 +142,6 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
         }
         this.Store.onSearch({}, sort, page.current, page.pageSize)
     }
-
-    /**
-     * 覆盖默认的 table 元素
-     */
-    private components = {
-        header: {
-            cell: (props) => {
-                const { onResize, width, ...restProps } = props;
-
-                if (!width) {
-                    return <th {...restProps} />;
-                }
-
-                return (
-                    <Resizable width={width} height={0} onResize={onResize}>
-                        <th {...restProps} />
-                    </Resizable>
-                );
-            },
-        },
-    };
     /**
      * 拖拽
      */
@@ -157,40 +160,64 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
             })
         }
     }
-    resize: Subscription;
+    /**
+     * 列配置
+     */
+    onGetColumns() {
+        return this.columns.map((column, index) => {
+            if (column.dataIndex === "Action") {
+                // let width = 150;
+                // try {
+                //     const fixed = this.rowDom.querySelector('.ant-table-fixed-columns-in-body');
+                //     width = fixed.clientWidth
+                //     console.log(width);
+                // } catch (error) {
+
+                // }
+                return { ...column };
+            }
+            return {
+                ...column,
+                sorter: true,
+                onHeaderCell: col => ({
+                    width: col.width,
+                    onResize: this.handleResize(index),
+                }),
+            }
+        });
+    }
+    /**
+     * 行选择
+     */
+    onRowSelection() {
+        return {
+            selectedRowKeys: this.Store.selectedRowKeys,
+            onChange: e => this.Store.onSelectChange(e),
+        };
+    }
+
     private rowDom: HTMLDivElement;
     componentDidMount() {
         this.Store.onSearch({}, "", this.Store.dataSource.Page, this.Store.dataSource.Limit);
         this.initColumns();
-        // 窗口变化重新计算列宽度
-        this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(800).subscribe(e => {
-            this.initColumns();
-            // this.forceUpdate();
-        });
     }
     componentWillUnmount() {
-        this.resize.unsubscribe();
     }
+
     render() {
         const dataSource = this.Store.dataSource;
-        /**
-        * 行选择
-        */
-        const rowSelection = {
-            selectedRowKeys: this.Store.selectedRowKeys,
-            onChange: e => this.Store.onSelectChange(e),
-        };
-        const columns = this.columns.slice();
         if (dataSource.Data) {
+            const columns = this.onGetColumns();
             return (
                 <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
                     <Table
                         bordered
-                        components={this.components}
-                        dataSource={dataSource.Data.slice()}
+                        components={TableUtils.components}
+                        dataSource={[...dataSource.Data]}
                         onChange={this.onChange.bind(this)}
                         columns={columns}
-                        rowSelection={rowSelection}
+                        scroll={TableUtils.onGetScroll(columns)}
+                        rowSelection={this.onRowSelection()}
                         loading={this.Store.pageState.loading}
                         pagination={
                             {

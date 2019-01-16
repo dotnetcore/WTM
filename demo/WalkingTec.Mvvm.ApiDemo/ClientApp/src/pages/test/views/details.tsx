@@ -1,10 +1,11 @@
-import { Button, Drawer, Form, Input, Divider } from 'antd';
+import { Button, Divider, Drawer, Form } from 'antd';
 import decoForm from 'components/decorators/form';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Store from '../store';
-import { toJS } from 'mobx';
 import Regular from 'utils/Regular';
+import Store from '../store';
+import Models from './models';
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -16,6 +17,10 @@ const formItemLayout = {
         sm: { span: 16 },
     },
 };
+/**
+ *  详情 窗口 
+ *  根据 类型 显示不同的 窗口
+ */
 @observer
 export default class extends React.Component<any, any> {
     /**
@@ -25,12 +30,15 @@ export default class extends React.Component<any, any> {
     renderBody(detailsType) {
         switch (detailsType) {
             case 'Insert':
+                //添加
                 return <InsertForm {...this.props} />
                 break;
             case 'Update':
+                // 修改
                 return <UpdateForm {...this.props} />
                 break;
             default:
+                // 详情
                 return <InfoForm {...this.props} />
                 break;
         }
@@ -50,12 +58,6 @@ export default class extends React.Component<any, any> {
             {this.renderBody(detailsType)}
         </Drawer>
     }
-}
-const formItems = {
-    ITCode: <Input placeholder="请输入 ITCode" />,
-    Password: <Input placeholder="请输入 Password" />,
-    Email: <Input placeholder="请输入 Email" />,
-    Name: <Input placeholder="请输入 Name" />
 }
 /**
  * 添加表单
@@ -80,22 +82,26 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem label="账号" {...formItemLayout}>
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
-                    })(formItems.ITCode)}
+                    })(Models.ITCode)}
                 </FormItem>
                 <FormItem label="密码" {...formItemLayout}>
                     {getFieldDecorator('Password', {
                         rules: [{ "required": true, "message": "密码不能为空" }],
-                    })(formItems.Password)}
+                    })(Models.Password)}
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
                     {getFieldDecorator('Email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }]
-                    })(formItems.Email)}
+                    })(Models.Email)}
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
                     {getFieldDecorator('Name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
-                    })(formItems.Name)}
+                    })(Models.Name)}
+                </FormItem>
+                <FormItem label="照片" {...formItemLayout}>
+                    {getFieldDecorator('PhotoId', {
+                    })(<Models.PhotoId {...this.props} />)}
                 </FormItem>
             </div>
             <div className="app-drawer-btns" >
@@ -132,19 +138,19 @@ class UpdateForm extends React.Component<any, any> {
                     {getFieldDecorator('itCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
                         initialValue: details['itCode']
-                    })(formItems.ITCode)}
+                    })(Models.ITCode)}
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
                     {getFieldDecorator('email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
                         initialValue: details['email']
-                    })(formItems.Email)}
+                    })(Models.Email)}
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
                     {getFieldDecorator('name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
                         initialValue: details['name']
-                    })(formItems.Name)}
+                    })(Models.Name)}
                 </FormItem>
             </div>
             <div className="app-drawer-btns" >

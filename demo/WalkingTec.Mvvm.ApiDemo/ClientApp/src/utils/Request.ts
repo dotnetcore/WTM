@@ -95,10 +95,10 @@ export class Request {
                     interpolate: /{([\s\S]+?)}/g
                 })(body);
             }
-        }
-        // 清空body
-        if (emptyBody) {
-            body = {};
+            // 清空body
+            if (emptyBody) {
+                body = {};
+            }
         }
         return {
             url,
@@ -146,6 +146,7 @@ export class Request {
         this.getHeaders();
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body, true);
+        console.log(body);
         body = this.formatBody(newParams.body);
         url = this.compatibleUrl(this.address, newParams.url, body as any);
         return this.AjaxObservable(Rx.Observable.ajax.get(url, headers))
@@ -483,6 +484,14 @@ export class Request {
                         case 204:
                             return false;
                             break;
+                        case 400:
+                            throw {
+                                url: res.request.url,
+                                request: res,
+                                message: res.response.message,
+                                response: res.response
+                            }
+                            break;
                         default:
                             throw {
                                 url: res.request.url,
@@ -495,6 +504,28 @@ export class Request {
                     }
                 }
                 return res.response
+            }
+            if (res.status == 400) {
+                console.log(res);
+                if (res.response && res.response.Data) {
+                    throw {
+                        url: res.request.url,
+                        request: res,
+                        message: res.message,
+                        description: res.response.Data.map(x => {
+                            return `Index:${x.Index} ${x.Message}`
+                        }).join("\n"),
+                        response: false
+                    }
+                } else {
+                    throw {
+                        url: res.request.url,
+                        request: res,
+                        message: res.message,
+                        description: JSON.stringify(res.response),
+                        response: false
+                    }
+                }
             }
             throw {
                 url: res.request.url,
@@ -512,7 +543,7 @@ export class Request {
                 key: 'ajaxError',
                 message: error.message,
                 duration: 10,
-                description: `Url: ${error.url}`,
+                description: error.description || `Url: ${error.url}`,
             });
             return false
         }
