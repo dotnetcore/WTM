@@ -3,6 +3,9 @@ import Visible from 'components/dataView/help/visible';
 import React from 'react';
 import Store from '../store';
 import { Divider, Popconfirm } from 'antd';
+/**
+ * 表格
+ */
 export default class extends React.Component<any, any> {
     async onDelete(data) {
         Store.onDelete(data.ID)
@@ -38,6 +41,7 @@ export default class extends React.Component<any, any> {
                 {
                     title: 'Action',
                     dataIndex: 'Action',
+                    // fixed: 'right',
                     render: (text, record) => {
                         return <div>
                             <a onClick={this.onInfo.bind(this, record)} >详情</a>

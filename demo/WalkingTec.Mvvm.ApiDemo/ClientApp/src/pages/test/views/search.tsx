@@ -1,6 +1,7 @@
 import { Col, Form, Input, Button } from 'antd';
 import { DecoratorsSearch } from 'components/dataView/header/search';
 import * as React from 'react';
+import Models from './models';
 import Store from '../store';
 const FormItem = Form.Item;
 const colLayout = {
@@ -18,6 +19,9 @@ const formItemLayout = {
         sm: { span: 16 },
     },
 };
+/**
+ * 搜索条件头
+ */
 @DecoratorsSearch({
     Store,
     FormItems: ({ getFieldDecorator }) => {
@@ -26,18 +30,14 @@ const formItemLayout = {
                 <FormItem label="ITCode" {...formItemLayout}>
                     {getFieldDecorator('ITCode', {
                         initialValue: Store.searchParams['ITCode'],
-                    })(
-                        <Input placeholder="请输入 ITCode" />
-                    )}
+                    })(Models.ITCode)}
                 </FormItem>
             </Col>,
             <Col {...colLayout} key="Name">
                 <FormItem label="Name" {...formItemLayout}>
                     {getFieldDecorator('Name', {
                         initialValue: Store.searchParams['Name'],
-                    })(
-                        <Input placeholder="请输入 Name" />
-                    )}
+                    })(Models.Name)}
                 </FormItem>
             </Col>,
         ]
