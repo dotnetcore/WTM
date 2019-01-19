@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/demo/WalkingTec.Mvvm.Demo/bin/Debug/netcoreapp2.1/WalkingTec.Mvvm.Demo.dll",
+            "program": "${workspaceFolder}/demo/WalkingTec.Mvvm.Demo/bin/Debug/netcoreapp2.2/WalkingTec.Mvvm.Demo.dll",
             "args": [],
             "cwd": "${workspaceFolder}/demo/WalkingTec.Mvvm.Demo",
             "stopAtEntry": false,
