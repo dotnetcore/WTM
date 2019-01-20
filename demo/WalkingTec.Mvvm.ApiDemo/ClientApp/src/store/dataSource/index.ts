@@ -202,7 +202,7 @@ export default class Store {
     const details = { Entity: { ...this.details, ...params } }
     this.onPageState("loadingEdit", true)
     // 添加 | 修改
-    if (this.pageState.detailsType) {
+    if (this.pageState.detailsType != "Insert") {
       return await this.onUpdate(details)
     }
     return await this.onInsert(details)
