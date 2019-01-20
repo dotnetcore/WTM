@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
         }
 
-        [HttpGet("getFileName")]
+        [HttpGet("getFileName/{id}")]
         [ActionDescription("获取文件名")]
         public IActionResult GetFileName(Guid id)
         {
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             return Ok(vm.Entity.FileName);
         }
 
-        [HttpGet("getFile")]
+        [HttpGet("getFile/{id}")]
         [ActionDescription("获取文件")]
         public IActionResult GetFile(Guid id)
         {
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             return new EmptyResult();
         }
 
-        [HttpGet("downloadFile")]
+        [HttpGet("downloadFile/{id}")]
         [ActionDescription("下载文件")]
         public IActionResult DownloadFile(Guid id)
         {
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.ApiDemo
             return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
-        [HttpGet("deleteFile")]
+        [HttpGet("deleteFile/{id}")]
         [ActionDescription("下载文件")]
         public IActionResult DeletedFile(Guid id)
         {
