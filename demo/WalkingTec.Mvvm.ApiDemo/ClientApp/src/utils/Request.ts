@@ -44,7 +44,7 @@ export class Request {
     /** 
      * 请求路径前缀
      */
-    address = '/masterdata/'
+    address = '/api/'
     /**
      * 请求头
      */
