@@ -162,23 +162,19 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
                     if (col.EditType == EditTypeEnum.Text || col.EditType == null)
                     {
-
-                        var info = col.GetText(sou);
-
-                        if (info is ColumnFormatInfo)
+                        if (returnColumnObject == true)
                         {
-                            if (returnColumnObject == false)
+                            html = col.GetText(sou, false).ToString();
+                        }
+                        else
+                        {
+                            var info = col.GetText(sou);
+
+                            if (info is ColumnFormatInfo)
                             {
                                 html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
                             }
-                            else
-                            {
-                                html = "";
-                            }
-                        }
-                        else if (info is List<ColumnFormatInfo>)
-                        {
-                            if (returnColumnObject == false)
+                            else if (info is List<ColumnFormatInfo>)
                             {
                                 var temp = string.Empty;
                                 foreach (var item in info as List<ColumnFormatInfo>)
@@ -190,13 +186,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             }
                             else
                             {
-                                html = "";
+                                html = info.ToString();
                             }
                         }
-                        else
-                        {
-                            html = info.ToString();
-                        }
+
                         var ptype = col.FieldType;
                         //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
                         if (ptype == typeof(bool) || ptype == typeof(bool?))

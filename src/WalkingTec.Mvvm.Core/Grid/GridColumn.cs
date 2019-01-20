@@ -334,11 +334,11 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="source">源数据</param>
         /// <returns>Html内容</returns>
-        public virtual object GetText(object source)
+        public virtual object GetText(object source, bool needFormat = true)
         {
             object rv = null;
             var col = CompiledCol?.Invoke(source as T);
-            if (Format == null)
+            if (Format == null || needFormat == false)
             {
                 rv = col?.ToString();
             }

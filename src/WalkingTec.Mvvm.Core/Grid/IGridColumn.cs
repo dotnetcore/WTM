@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="source">源数据</param>
         /// <returns>内容</returns>
-        object GetText(object source);
+        object GetText(object source, bool needFormat = true);
         /// <summary>
         /// 获取前景色
         /// </summary>
