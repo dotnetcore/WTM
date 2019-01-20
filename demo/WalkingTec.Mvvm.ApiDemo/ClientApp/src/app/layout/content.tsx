@@ -1,5 +1,5 @@
 
-import { Affix, Dropdown, Icon, Layout, Menu, Tabs } from 'antd';
+import { Dropdown, Icon, Layout, Menu, Tabs } from 'antd';
 import lodash from 'lodash';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
@@ -7,8 +7,8 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { renderRoutes } from 'react-router-config';
 import { Link } from 'react-router-dom';
+import Rx, { Subscription } from 'rxjs';
 import Store from 'store/index';
-import Rx, { Observable, Subscription } from 'rxjs';
 const { Header, Content, Sider } = Layout;
 const TabPane = Tabs.TabPane;
 /**
@@ -92,28 +92,28 @@ export default class App extends React.Component<any, any> {
 
       }
       if (content) {
-        content.style.minHeight = (this.body.offsetHeight - 80) + "px";
+        content.style.minHeight = (this.body.offsetHeight - 40) + "px";
       }
     }
   }
   resize: Subscription;
   componentDidMount() {
     this.setHeight();
-    HistoryStore.onPush(this.props);
-    this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(800).subscribe(e => {
-      const scrollTop = this.body.scrollTop;
-      this.body.scrollBy(0, -scrollTop)
-      // setTimeout(() => {
-      //   this.body.scrollBy(0, scrollTop) 
-      // },100);
-    });
+    // HistoryStore.onPush(this.props);
+    // this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(800).subscribe(e => {
+    //   const scrollTop = this.body.scrollTop;
+    //   this.body.scrollBy(0, -scrollTop)
+    //   // setTimeout(() => {
+    //   //   this.body.scrollBy(0, scrollTop) 
+    //   // },100);
+    // });
   }
   componentWillUnmount() {
-    this.resize.unsubscribe();
+    // this.resize.unsubscribe();
   }
   componentDidUpdate() {
     this.setHeight();
-    HistoryStore.onPush(this.props);
+    // HistoryStore.onPush(this.props);
   }
   renderRoutes = renderRoutes(this.props.route.routes);
   render() {
