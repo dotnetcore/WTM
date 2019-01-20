@@ -78,15 +78,6 @@ export default class IApp extends React.Component<any, any> {
                 </Menu>}>
                     <Button icon="download" >导出</Button>
                 </Dropdown>
-                {/* <Divider type="vertical" />
-                <Dropdown overlay={<Menu>
-                    <Menu.Item>
-                        <a >按钮</a>
-                    </Menu.Item>
-                </Menu>}
-                    placement="bottomCenter">
-                    <Button icon="ellipsis" />
-                </Dropdown> */}
                 <PortComponent />
             </Row>
         );

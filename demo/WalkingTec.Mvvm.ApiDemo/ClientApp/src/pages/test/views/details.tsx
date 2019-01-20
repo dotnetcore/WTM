@@ -1,6 +1,5 @@
-import { Button, Divider, Drawer, Form } from 'antd';
+import { Button, Divider, Drawer, Form, Spin } from 'antd';
 import decoForm from 'components/decorators/form';
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Regular from 'utils/Regular';
@@ -44,7 +43,7 @@ export default class extends React.Component<any, any> {
         }
     }
     render() {
-        const { detailsType, visibleEdit } = Store.pageState
+        const { detailsType, visibleEdit, loadingEdit } = Store.pageState
         return <Drawer
             title="编辑"
             className="app-drawer"
@@ -78,7 +77,7 @@ class InsertForm extends React.Component<any, any> {
         const { form } = this.props;
         const { getFieldDecorator } = form;
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <div className="app-drawer-formItem">
+            <DrawerFormItem submit>
                 <FormItem label="账号" {...formItemLayout}>
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
@@ -99,16 +98,17 @@ class InsertForm extends React.Component<any, any> {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
                     })(Models.Name)}
                 </FormItem>
+                <FormItem label="性别" {...formItemLayout}>
+                    {getFieldDecorator('Sex', {
+                        rules: [],
+                    })(Models.Sex)}
+                </FormItem>
                 <FormItem label="照片" {...formItemLayout}>
                     {getFieldDecorator('PhotoId', {
                     })(<Models.PhotoId {...this.props} />)}
                 </FormItem>
-            </div>
-            <div className="app-drawer-btns" >
-                <Button onClick={() => Store.onPageState("visibleEdit", false)} >取消 </Button>
-                <Divider type="vertical" />
-                <Button loading={Store.pageState.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
-            </div>
+            </DrawerFormItem>
+
         </Form>
     }
 }
@@ -131,9 +131,9 @@ class UpdateForm extends React.Component<any, any> {
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;
-        const details = toJS(Store.details);
+        const details = { ...Store.details };
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <div className="app-drawer-formItem">
+            <DrawerFormItem submit>
                 <FormItem label="账号" {...formItemLayout}>
                     {getFieldDecorator('itCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
@@ -152,12 +152,13 @@ class UpdateForm extends React.Component<any, any> {
                         initialValue: details['name']
                     })(Models.Name)}
                 </FormItem>
-            </div>
-            <div className="app-drawer-btns" >
-                <Button onClick={() => Store.onPageState("visibleEdit", false)} >取消 </Button>
-                <Divider type="vertical" />
-                <Button loading={Store.pageState.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
-            </div>
+                <FormItem label="性别" {...formItemLayout}>
+                    {getFieldDecorator('sex', {
+                        rules: [],
+                        initialValue: String(details['sex'])
+                    })(Models.Sex)}
+                </FormItem>
+            </DrawerFormItem>
         </Form>
     }
 }
@@ -167,22 +168,42 @@ class UpdateForm extends React.Component<any, any> {
 @observer
 class InfoForm extends React.Component<any, any> {
     render() {
-        const details = toJS(Store.details);
+        const details = { ...Store.details };
         return <Form >
-            <div className="app-drawer-formItem">
+            <DrawerFormItem>
                 <FormItem label="账号" {...formItemLayout}>
                     <span>{details['itCode']}</span>
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
-                    <span>{details['itCode']}</span>
+                    <span>{details['email']}</span>
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
-                    <span>{details['Name']}</span>
+                    <span>{details['name']}</span>
                 </FormItem>
+            </DrawerFormItem>
+        </Form>
+    }
+}
+/**
+ * Items 外壳
+ */
+@observer
+class DrawerFormItem extends React.Component<{ submit?: boolean }, any> {
+    render() {
+        const { loadingEdit } = Store.pageState;
+        return < >
+            <div className="app-drawer-formItem">
+                <Spin tip="Loading..." spinning={loadingEdit}>
+                    {this.props.children}
+                </Spin>
             </div>
             <div className="app-drawer-btns" >
                 <Button onClick={() => Store.onPageState("visibleEdit", false)} >取消 </Button>
+                {this.props.submit && <>
+                    <Divider type="vertical" />
+                    <Button loading={Store.pageState.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
+                </>}
             </div>
-        </Form>
+        </>
     }
 }
