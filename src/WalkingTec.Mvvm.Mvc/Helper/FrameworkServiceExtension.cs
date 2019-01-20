@@ -194,7 +194,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var item in cs)
             {
                 var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
-                dc.DataInit(gd.AllModule);
+                dc.DataInit(gd.AllModule).Wait();
             }
             return app;
         }
