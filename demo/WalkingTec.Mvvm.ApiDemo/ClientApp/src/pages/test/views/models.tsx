@@ -60,7 +60,7 @@ export default {
         onRemove = (file) => {
             console.log(file);
             const response = file.response
-            if (typeof response.id === "string") {
+            if (response && typeof response.id === "string") {
                 Store.onFileDelete(response.id)
             }
             this.setState({ fileList: [], loading: false });
@@ -90,9 +90,9 @@ export default {
                     >
                         {fileList.length == 0 && uploadButton}
                     </Upload>
-                    <Modal visible={previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
+                    {/* <Modal visible={previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
                         <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                    </Modal>
+                    </Modal> */}
                 </>
             );
         }

@@ -1,5 +1,6 @@
 import Table from 'components/dataView/content/table';
 import Visible from 'components/dataView/help/visible';
+import ToImg from 'components/dataView/help/toImg';
 import React from 'react';
 import Store from '../store';
 import { Divider, Popconfirm } from 'antd';
@@ -59,7 +60,13 @@ const columns = [
     },
     {
         dataIndex: "PhotoId",
-        title: "PhotoId"
+        title: "PhotoId",
+        render: (text, record) => {
+            return <div>
+                {/* <img style={{ width: 150 }} src={Store.onGetFile(text)} /> */}
+                <ToImg download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
+            </div>
+        }
     },
     {
         dataIndex: "Roles",

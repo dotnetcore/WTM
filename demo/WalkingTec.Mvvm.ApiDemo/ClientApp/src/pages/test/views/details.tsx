@@ -3,6 +3,7 @@ import decoForm from 'components/decorators/form';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Regular from 'utils/Regular';
+import ToImg from 'components/dataView/help/toImg';
 import Store from '../store';
 import Models from './models';
 const FormItem = Form.Item;
@@ -158,6 +159,11 @@ class UpdateForm extends React.Component<any, any> {
                         initialValue: String(details['sex'])
                     })(Models.Sex)}
                 </FormItem>
+                <FormItem label="照片" {...formItemLayout}>
+                    {getFieldDecorator('PhotoId', {
+                        initialValue: details['photoId']
+                    })(<Models.PhotoId {...this.props} initialValue={Store.onGetFile(details['photoId'])} />)}
+                </FormItem>
             </DrawerFormItem>
         </Form>
     }
@@ -179,6 +185,12 @@ class InfoForm extends React.Component<any, any> {
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
                     <span>{details['name']}</span>
+                </FormItem>
+                <FormItem label="头像" {...formItemLayout}>
+                    <span>
+                        {/* <img style={{ width: 200 }} src={Store.onGetFile(details['photoId'])} /> */}
+                        <ToImg download={Store.onFileDownload(details['photoId'])} url={Store.onGetFile(details['photoId'])} />
+                    </span>
                 </FormItem>
             </DrawerFormItem>
         </Form>

@@ -66,7 +66,15 @@ export default class Store {
       method: "post"
     },
     fileDelete: {
-      src: "/file/deleteFile",
+      src: "/file/deleteFile/{id}",
+      method: "get"
+    },
+    fileGet: {
+      src: "/file/getFile",
+      method: "get"
+    },
+    fileDownload: {
+      src: "/file/downloadFile",
       method: "get"
     }
   };
@@ -268,7 +276,7 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.address + this.Urls.fileUpload.src;
+    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.fileUpload.src)
     return {
       name: 'file',
       multiple: true,
@@ -302,7 +310,7 @@ export default class Store {
     }
   }
   /**
-   * 导入
+   * 删除文件
    * @param id 
    */
   async onFileDelete(id) {
@@ -312,6 +320,26 @@ export default class Store {
     if (res) {
     }
     return res
+  }
+  /**
+   * 获取文件
+   * @param id 
+   */
+  onGetFile(id) {
+    if (id) {
+      const src = this.Urls.fileGet.src;
+      return `${this.Request.address}${src}/${id}`
+    }
+  }
+  /**
+   * 获取文件
+   * @param id 
+   */
+  onFileDownload(id) {
+    if (id) {
+      const src = this.Urls.fileDownload.src;
+      return `${this.Request.address}${src}/${id}`
+    }
   }
   /**
    * 导入
