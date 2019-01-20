@@ -153,11 +153,11 @@ export default class Store {
   /**
    * 加载数据 列表
    * @param search 搜索条件 
-   * @param sort 排序字段
+   * @param SortInfo 排序字段
    * @param Page 页码
    * @param Limit 数据条数
    */
-  async onSearch(search: any = {}, sort: string = "", Page: number = 1, Limit: number = 10) {
+  async onSearch(search: any = {}, SortInfo: any = "", Page: number = 1, Limit: number = 10) {
     if (this.pageState.loading == true) {
       return message.warn('数据正在加载中')
     }
@@ -166,7 +166,7 @@ export default class Store {
     search = {
       Page,
       Limit,
-      sort,
+      SortInfo,
       // searcher: this.searchParams
       ...this.searchParams
     }
