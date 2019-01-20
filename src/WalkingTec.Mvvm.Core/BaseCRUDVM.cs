@@ -142,12 +142,6 @@ namespace WalkingTec.Mvvm.Core
             TModel rv = null;
             //建立基础查询
             var query = DC.Set<TModel>().AsQueryable();
-            //如果TopBasePoco有关联的附件，则自动Include 附件名称
-            var fa = typeof(TModel).GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
-            foreach (var f in fa)
-            {
-                query = query.Include(f.Name);
-            }
             //循环添加其他设定的Include
             if (_toInclude != null)
             {
@@ -162,6 +156,30 @@ namespace WalkingTec.Mvvm.Core
             {
                 throw new Exception("数据不存在");
             }
+            //如果TopBasePoco有关联的附件，则自动Include 附件名称
+            var fa = typeof(TModel).GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+            foreach (var f in fa)
+            {
+                var fname = DC.GetFKName2<TModel>(f.Name);
+                var fid = typeof(TModel).GetProperty(fname).GetValue(rv) as Guid?;
+                var file = DC.Set<FileAttachment>().Where(x => x.ID == fid).Select(x => new FileAttachment {
+                    ID = x.ID,
+                    CreateBy = x.CreateBy,
+                    CreateTime = x.CreateTime,
+                    UpdateBy = x.UpdateBy,
+                    UpdateTime = x.UpdateTime,
+                    UploadTime = x.UploadTime,
+                    FileExt = x.FileExt,
+                    FileName = x.FileName,
+                    Length = x.Length,
+                    GroupName = x.GroupName,
+                    IsTemprory = x.IsTemprory,
+                    Path = x.Path,
+                    SaveFileMode = x.SaveFileMode
+                }).FirstOrDefault();
+                rv.SetPropertyValue(f.Name, file);
+            }
+
             return rv;
         }
 

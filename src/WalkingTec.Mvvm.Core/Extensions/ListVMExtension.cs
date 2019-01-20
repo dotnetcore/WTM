@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// 获取Jason格式的列表数据
         /// </summary>
         /// <param name="self">是否需要对数据进行Json编码</param>
+        /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco,new()
+        public static string GetDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool returnColumnObject = false) where T : TopBasePoco,new()
         {
             var sb = new StringBuilder();
             self.GetHeaders();
@@ -42,7 +44,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 for (int x = 0; x < el.Count; x++)
                 {
                     var sou = el[x];
-                    sb.Append(self.GetSingleDataJson(sou, x));
+                    sb.Append(self.GetSingleDataJson(sou, returnColumnObject, x));
                     if (x < el.Count - 1)
                     {
                         sb.Append(",");
@@ -101,9 +103,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="obj">数据</param>
+        /// <param name="returnColumnObject">不在后台进行ColumnFormatInfo的转化，而是直接输出ColumnFormatInfo的json结构到前端，由前端处理，默认False</param>
         /// <param name="index">index</param>
         /// <returns>Json格式的数据</returns>
-        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj,int index = 0) where T : TopBasePoco
+        public static string GetSingleDataJson<T>(this IBasePagedListVM<T, BaseSearcher> self, object obj, bool returnColumnObject, int index = 0) where T : TopBasePoco
         {
             var sb = new StringBuilder();
             var RowBgColor = string.Empty;
@@ -164,17 +167,31 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
                         if (info is ColumnFormatInfo)
                         {
-                            html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
+                            if (returnColumnObject == false)
+                            {
+                                html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
+                            }
+                            else
+                            {
+                                html = "";
+                            }
                         }
                         else if (info is List<ColumnFormatInfo>)
                         {
-                            var temp = string.Empty;
-                            foreach (var item in info as List<ColumnFormatInfo>)
+                            if (returnColumnObject == false)
                             {
-                                temp += GetFormatResult(self as BaseVM, item);
-                                temp += "&nbsp;&nbsp;";
+                                var temp = string.Empty;
+                                foreach (var item in info as List<ColumnFormatInfo>)
+                                {
+                                    temp += GetFormatResult(self as BaseVM, item);
+                                    temp += "&nbsp;&nbsp;";
+                                }
+                                html = temp;
                             }
-                            html = temp;
+                            else
+                            {
+                                html = "";
+                            }
                         }
                         else
                         {
@@ -273,24 +290,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
                         var info = obj[col.Title];
 
-                        if (info is ColumnFormatInfo)
-                        {
-                            html = GetFormatResult(self as BaseVM, info as ColumnFormatInfo);
-                        }
-                        else if (info is List<ColumnFormatInfo>)
-                        {
-                            var temp = string.Empty;
-                            foreach (var item in info as List<ColumnFormatInfo>)
-                            {
-                                temp += GetFormatResult(self as BaseVM, item);
-                                temp += "&nbsp;&nbsp;";
-                            }
-                            html = temp;
-                        }
-                        else
-                        {
-                            html = info.ToString();
-                        }
+                        html = info.ToString();
                         var ptype = col.FieldType;
                         //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
                         if (ptype == typeof(bool) || ptype == typeof(bool?))
@@ -331,7 +331,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
         {
-            return $@"{{""Data"":{self.GetDataJson()},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount}}}";
+            return $@"{{""Data"":{self.GetDataJson(true)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount}}}";
         }
     }
 }
