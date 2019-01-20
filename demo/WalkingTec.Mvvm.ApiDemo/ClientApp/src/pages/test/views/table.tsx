@@ -18,6 +18,9 @@ export default class extends React.Component<any, any> {
     async onInfo(data) {
         Store.onModalShow(data, "Info")
     }
+    /**
+     * 操作动作
+     */
     renderColumns() {
         return [...columns,
         {
@@ -45,35 +48,53 @@ export default class extends React.Component<any, any> {
         return <Table Store={Store} columns={this.renderColumns()} />
     }
 }
-/** 列 信息配置 */
+/**
+ * 重写 列渲染 函数 
+ * @param text 
+ * @param record 
+ */
+const columnsRender = (text, record) => {
+    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
+        <span>{text}</span>
+    </div>
+}
+/**
+ * 列 信息配置
+ * dataIndex:属性名称 区分大小写
+ * title:表格显示的中文标题
+ */
 const columns = [
     {
         dataIndex: "ID",
-        title: "ID"
+        title: "ID",
+        render: columnsRender
     },
     {
         dataIndex: "ITCode",
-        title: "ITCode"
+        title: "ITCode",
+        render: columnsRender
     }, {
         dataIndex: "Name",
-        title: "Name"
+        title: "Name",
+        render: columnsRender
     },
     {
         dataIndex: "PhotoId",
         title: "PhotoId",
         render: (text, record) => {
             return <div>
-                {/* <img style={{ width: 150 }} src={Store.onGetFile(text)} /> */}
-                <ToImg download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
+                <ToImg style={{ height: 60, width: 100 }} download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
             </div>
         }
     },
     {
         dataIndex: "Roles",
-        title: "Roles"
+        title: "Roles",
+        render: columnsRender
     },
     {
         dataIndex: "Sex",
-        title: "Sex"
+        title: "Sex",
+        render: columnsRender
     }
 ]

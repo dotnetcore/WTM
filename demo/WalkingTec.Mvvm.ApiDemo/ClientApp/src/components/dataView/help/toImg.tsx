@@ -43,6 +43,6 @@ export default class IApp extends React.Component<IAppProps, any> {
                 </div>
             </div>
         }
-        return null
+        return <div className="app-to-img" style={this.props.style} key="app-to-img"></div>
     }
 }
