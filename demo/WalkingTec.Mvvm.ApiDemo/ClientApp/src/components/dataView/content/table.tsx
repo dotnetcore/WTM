@@ -212,6 +212,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                 <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
                     <Table
                         bordered
+                        size="middle" 
                         components={TableUtils.components}
                         dataSource={[...dataSource.Data]}
                         onChange={this.onChange.bind(this)}

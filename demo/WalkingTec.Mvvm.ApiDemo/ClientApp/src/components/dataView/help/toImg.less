@@ -1,14 +1,19 @@
 .app-to-img {
     position: relative;
-    width: 150px;
+    width: 200px;
+    margin: auto;
+    height: 150px;
     display: flex;
     justify-items: center;
     justify-content: center;
     align-items: center;
     text-align: center;
     flex-direction: column;
+    overflow: hidden;
     .app-to-image {
-        width: 100%;
+        // width: 100%;
+        max-height: 100%;
+        object-fit: cover;
     }
     .app-to-img-hove {
         position: absolute;
@@ -24,10 +29,10 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        >a{
-            font-size: 35px;
+        >a {
+            font-size: 30px;
             color: #fff;
-            &:nth-child(2){
+            &:nth-child(2) {
                 margin-left: 15px;
             }
         }
