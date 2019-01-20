@@ -44,9 +44,14 @@ export default class extends React.Component<any, any> {
         }
     }
     render() {
+        const enums = {
+            Insert: "新建",
+            Update: "修改",
+            Info: "详情"
+        };
         const { detailsType, visibleEdit, loadingEdit } = Store.pageState
         return <Drawer
-            title="编辑"
+            title={enums[detailsType]}
             className="app-drawer"
             width={500}
             placement="right"
