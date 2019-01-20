@@ -677,16 +677,30 @@ where S : struct
             return self.Model.FindEntityType(typeof(T)).SqlServer().TableName;
         }
 
+        /// <summary>
+        /// 通过模型和模型的某个List属性的名称来判断List的字表中关联到主表的主键名称
+        /// </summary>
+        /// <typeparam name="T">主表Model</typeparam>
+        /// <param name="self">DataContext</param>
+        /// <param name="listFieldName">主表中的子表List属性名称</param>
+        /// <returns>主键名称</returns>
         public static string GetFKName<T>(this IDataContext self, string listFieldName) where T : class
         {
             return GetFKName(self, typeof(T), listFieldName);
         }
 
-        public static string GetFKName(this IDataContext self, Type source, string listFieldName)
+        /// <summary>
+        /// 通过模型和模型的某个List属性的名称来判断List的字表中关联到主表的主键名称
+        /// </summary>
+        /// <param name="self">DataContext</param>
+        /// <param name="sourceType">主表model类型</param>
+        /// <param name="listFieldName">主表中的子表List属性名称</param>
+        /// <returns>主键名称</returns>
+        public static string GetFKName(this IDataContext self, Type sourceType, string listFieldName)
         {
             try
             {
-                var test = self.Model.FindEntityType(source).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent?.Name == listFieldName).FirstOrDefault();
+                var test = self.Model.FindEntityType(sourceType).GetReferencingForeignKeys().Where(x => x.PrincipalToDependent?.Name == listFieldName).FirstOrDefault();
                 if (test != null && test.Properties.Count > 0)
                 {
                     return test.Properties[0].Name;
@@ -702,5 +716,44 @@ where S : struct
             }
         }
 
+
+        /// <summary>
+        /// 通过子表模型和模型关联到主表的属性名称来判断该属性对应的主键名称
+        /// </summary>
+        /// <typeparam name="T">子表Model</typeparam>
+        /// <param name="self">DataContext</param>
+        /// <param name="FieldName">关联主表的属性名称</param>
+        /// <returns>主键名称</returns>
+        public static string GetFKName2<T>(this IDataContext self, string FieldName) where T : class
+        {
+            return GetFKName2(self, typeof(T), FieldName);
+        }
+
+        /// <summary>
+        /// 通过模型和模型关联到主表的属性名称来判断该属性对应的主键名称
+        /// </summary>
+        /// <param name="self">DataContext</param>
+        /// <param name="sourceType">子表model类型</param>
+        /// <param name="FieldName">关联主表的属性名称</param>
+        /// <returns>主键名称</returns>
+        public static string GetFKName2(this IDataContext self, Type sourceType, string FieldName)
+        {
+            try
+            {
+                var test = self.Model.FindEntityType(sourceType).GetForeignKeys().Where(x => x.DependentToPrincipal?.Name == FieldName).FirstOrDefault();
+                if (test != null && test.Properties.Count > 0)
+                {
+                    return test.Properties[0].Name;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
     }
 }

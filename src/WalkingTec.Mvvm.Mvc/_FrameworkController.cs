@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
         {
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
-            string data = listVM.GetSingleDataJson(null);
+            string data = listVM.GetSingleDataJson(null,false);
             var rv = new ContentResult
             {
                 ContentType = "application/json",

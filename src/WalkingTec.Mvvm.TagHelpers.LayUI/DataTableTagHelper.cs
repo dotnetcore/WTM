@@ -766,7 +766,7 @@ isPost = true;
 case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
                 if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
                 {
-                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null)});
+                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null,false)});
 ");
                 }
                 else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow) { }
