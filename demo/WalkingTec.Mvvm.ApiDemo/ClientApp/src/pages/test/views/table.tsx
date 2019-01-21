@@ -28,7 +28,7 @@ export default class extends React.Component<any, any> {
             dataIndex: 'Action',
             // fixed: 'right',
             render: (text, record) => {
-                return <div>
+                return <div style={{ whiteSpace: "nowrap", width: 155, textAlign: "center" }}>
                     <a onClick={this.onInfo.bind(this, record)} >详情</a>
                     <Visible visible={Store.Actions.update}>
                         <Divider type="vertical" />

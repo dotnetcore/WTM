@@ -5,10 +5,11 @@
  * @modify date 2018-09-12 18:52:27
  * @desc [description] .
  */
-import { message } from 'antd';
+import * as React from 'react';
+import { message, notification, List, Row, Col } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
-import NProgress from 'nprogress';
 import { Request } from 'utils/Request';
+import lodash from 'lodash';
 export default class Store {
   constructor() {
 
@@ -153,11 +154,11 @@ export default class Store {
   /**
    * 加载数据 列表
    * @param search 搜索条件 
-   * @param sort 排序字段
+   * @param SortInfo 排序字段
    * @param Page 页码
    * @param Limit 数据条数
    */
-  async onSearch(search: any = {}, sort: string = "", Page: number = 1, Limit: number = 10) {
+  async onSearch(search: any = {}, SortInfo: any = "", Page: number = 1, Limit: number = 10) {
     if (this.pageState.loading == true) {
       return message.warn('数据正在加载中')
     }
@@ -166,26 +167,31 @@ export default class Store {
     search = {
       Page,
       Limit,
-      sort,
+      SortInfo,
       // searcher: this.searchParams
       ...this.searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
-    const res = await this.Request[method](src, search).map(data => {
-      if (data.Data) {
-        data.Data = data.Data.map((x, i) => {
-          // antd table 列表属性需要一个唯一key
-          return { key: x[this.IdKey], ...x }
-        })
-      }
-      return data
-    }).toPromise()
-    runInAction(() => {
-      this.dataSource = res || this.dataSource
+    try {
+      const res = await this.Request[method](src, search).map(data => {
+        if (data.Data) {
+          data.Data = data.Data.map((x, i) => {
+            // antd table 列表属性需要一个唯一key
+            return { key: x[this.IdKey], ...x }
+          })
+        }
+        return data
+      }).toPromise()
+      runInAction(() => {
+        this.dataSource = res || this.dataSource
+      })
+      return res
+    } catch (error) {
+      console.log(error);
+    } finally {
       this.onPageState("loading", false)
-    })
-    return res
+    }
   }
   /**
    * 详情
@@ -204,16 +210,28 @@ export default class Store {
    * @param params 数据实体
    */
   async onEdit(params) {
-    if (this.pageState.loadingEdit) {
-      return
+    const Update = this.pageState.detailsType == "Update"
+    try {
+      if (this.pageState.loadingEdit) {
+        return
+      }
+      const details = { Entity: { ...this.details, ...params } }
+      this.onPageState("loadingEdit", true);
+      let res = null;
+      // 添加 | 修改
+      if (Update) {
+        res = await this.onUpdate(details)
+      } else {
+        res = await this.onInsert(details)
+      }
+      this.onSearch()
+      return res
+    } catch (error) {
+      this.onErrorMessage(Update ? "修改失败" : "添加失败", lodash.map(error, (value, key) => ({ value, key })))
     }
-    const details = { Entity: { ...this.details, ...params } }
-    this.onPageState("loadingEdit", true)
-    // 添加 | 修改
-    if (this.pageState.detailsType != "Insert") {
-      return await this.onUpdate(details)
+    finally {
+      this.onPageState("loadingEdit", false)
     }
-    return await this.onInsert(details)
   }
   /**
    * 添加数据
@@ -223,14 +241,7 @@ export default class Store {
     const method = this.Urls.insert.method;
     const src = this.Urls.insert.src;
     const res = await this.Request[method](src, params).toPromise()
-    if (res) {
-      message.success('添加成功')
-      // 刷新数据
-      this.onSearch()
-      this.onPageState("visibleEdit", false)
-    } else {
-    }
-    this.onPageState("loadingEdit", false)
+    notification.success({ message: "添加成功" })
     return res
   }
   /**
@@ -241,34 +252,27 @@ export default class Store {
     const method = this.Urls.update.method;
     const src = this.Urls.update.src;
     const res = await this.Request[method](src, params).toPromise();
-    console.log(res);
-    if (res) {
-      message.success('更新成功')
-      // 刷新数据
-      this.onSearch()
-      this.onPageState("visibleEdit", false)
-    } else {
-    }
-    this.onPageState("loadingEdit", false)
     return res
+    notification.success({ message: "修改成功" })
   }
   /**
    * 删除
    * @param Id 
    */
   async onDelete(Id: string) {
-    // params = params.map(x => x[this.IdKey])
-    const method = this.Urls.delete.method;
-    const src = this.Urls.delete.src + "/" + Id;
-    const res = await this.Request[method](src).toPromise()
-    if (res) {
+    try {
+      // params = params.map(x => x[this.IdKey])
+      const method = this.Urls.delete.method;
+      const src = this.Urls.delete.src + "/" + Id;
+      const res = await this.Request[method](src).toPromise()
       message.success('删除成功')
       this.onSelectChange([]);
       // 刷新数据
       this.onSearch();
-    } else {
+      return res
+    } catch (error) {
+      message.error('删除失败')
     }
-    return res
   }
   /**
    * 导入 配置 参数
@@ -348,15 +352,16 @@ export default class Store {
   async onImport(UpdateFileId) {
     const method = this.Urls.import.method;
     const src = this.Urls.import.src;
-    const res = await this.Request[method](src, { UpdateFileId }, { "Content-Type": "application/x-www-form-urlencoded" }).toPromise();
-    console.log(res);
-    if (res) {
+    try {
+      const res = await this.Request[method](src, { UpdateFileId }, { "Content-Type": "application/x-www-form-urlencoded" }).toPromise();
       message.success('导入成功')
       // 刷新数据
       this.onSearch()
       this.onPageState("visiblePort", false)
+      return res
+    } catch (error) {
+      this.onErrorMessage("导入失败", error.Data.map(x => ({ key: x.ID, value: x.Message })))
     }
-    return res
   }
   /**
    * 导出
@@ -389,6 +394,29 @@ export default class Store {
     await this.Request.download({
       url: this.Urls.template.src,
       method: this.Urls.template.method
+    })
+  }
+  /**
+   * 错误提示
+   * @param message 
+   * @param dataSource 
+   */
+  onErrorMessage(message, dataSource: { key: string, value: string }[]) {
+    notification.error({
+      duration: 5,
+      message: message,
+      description: <List
+        itemLayout="horizontal"
+        dataSource={dataSource}
+        renderItem={item => (
+          <List.Item>
+            <Row style={{ width: "100%" }}>
+              <Col span={10}>{item.key}</Col>
+              <Col span={14}>{item.value}</Col>
+            </Row>
+          </List.Item>
+        )}
+      />
     })
   }
 }
