@@ -9,16 +9,7 @@
 .cache-loader
 # testing
 /coverage
-src/app/**.js
-src/app/**.js.map
-src/components/**.js
-src/components/**.js.map
-src/pages/**.js
-src/pages/**.js.map
-src/store/**.js
-src/store/**.js.map
-src/utils/**.js
-src/utils/**.js.map
+
 # production
 /build
 /wtmfront/swagger
