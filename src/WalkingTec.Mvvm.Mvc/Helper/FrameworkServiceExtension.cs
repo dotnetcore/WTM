@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.Mvc
                 // custom ContractResolver
                 options.SerializerSettings.ContractResolver = new WTMContractResolver()
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy()
+                    //NamingStrategy = new CamelCaseNamingStrategy()
                 };
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
