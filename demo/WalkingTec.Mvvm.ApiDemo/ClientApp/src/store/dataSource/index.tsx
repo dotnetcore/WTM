@@ -226,7 +226,7 @@ export default class Store {
       this.onSearch()
       return res
     } catch (error) {
-      this.onErrorMessage("导入失败", lodash.map(error, (value, key) => ({ value, key })))
+      this.onErrorMessage(this.pageState.detailsType != "Insert" ? "添加失败" : "修改失败", lodash.map(error, (value, key) => ({ value, key })))
     }
     finally {
       this.onPageState("loadingEdit", false)
