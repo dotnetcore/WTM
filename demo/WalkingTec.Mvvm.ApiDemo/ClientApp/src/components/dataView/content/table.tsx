@@ -132,12 +132,14 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
      * @param sorter 
      */
     onChange(page, filters, sorter) {
-        let sort = "";
+        let sort: any = "";
         if (sorter.columnKey) {
             if (sorter.order == 'descend') {
-                sort = `${sorter.columnKey} desc`
+                sort = { Direction: "Desc", Property: sorter.columnKey }
+                // sort = `${sorter.columnKey} desc`
             } else {
-                sort = `${sorter.columnKey} asc`
+                sort = { Direction: "Asc", Property: sorter.columnKey }
+                // sort = `${sorter.columnKey} asc`
             }
         }
         this.Store.onSearch({}, sort, page.current, page.pageSize)
@@ -212,7 +214,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                 <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
                     <Table
                         bordered
-                        size="middle" 
+                        size="middle"
                         components={TableUtils.components}
                         dataSource={[...dataSource.Data]}
                         onChange={this.onChange.bind(this)}

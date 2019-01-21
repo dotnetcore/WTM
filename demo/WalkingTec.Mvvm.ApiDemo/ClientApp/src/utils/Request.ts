@@ -28,15 +28,10 @@ export class Request {
     /**
      * 
      * @param address 替换默认地址前缀
-     * @param newResponseMap 替换默认过滤函数
+     * @param newMap 替换默认过滤函数
      */
-    constructor(address?, public newResponseMap?) {
-        if (typeof address == "string") {
-            // if (/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(address)) {
-            //     this.address = address;
-            // } else {
-            //     this.address += address;
-            // }
+    constructor(address?, public newMap?) {
+        if (typeof address === "string") {
             this.address = address;
         }
         this.getHeaders();
@@ -66,21 +61,68 @@ export class Request {
      * 请求超时设置
      */
     private timeout = 10000;
-
+    /**
+     * 抛出 状态 
+     */
+    private catchStatus = [400]
     /**
      * ajax Observable 管道
      * @param Observable 
      */
     private AjaxObservable(Observable: Rx.Observable<Rx.AjaxResponse>) {
-        return Observable
-            // 超时时间
-            .timeout(this.timeout)
-            // 错误处理
-            .catch(err => Rx.Observable.of(err))
-            // 数据过滤
-            .map(this.responseMap)
-            // 数据筛选
-            .filter(this.filter);
+        // 加载进度条
+        this.NProgress();
+        return new Rx.Observable(sub => {
+            Observable
+                // 超时时间
+                .timeout(this.timeout)
+                // 错误处理
+                .catch((err: Rx.AjaxError) => Rx.Observable.of(err))
+                // 过滤请求
+                .filter((ajax) => {
+                    this.NProgress("done");
+                    if (ajax instanceof Rx.AjaxResponse) {
+                        return true
+                    }
+                    if (ajax instanceof Rx.AjaxError) {
+                        // 返回 业务处理错误
+                        if (lodash.includes(this.catchStatus, ajax.status)) {
+                            sub.error(ajax.response)
+                            if (ajax.response) {
+                                return false
+                            }
+                        }
+                        notification['error']({
+                            key: ajax.request.url,
+                            message: ajax.status,
+                            duration: 5,
+                            description: `${ajax.request.method}: ${ajax.request.url}`,
+                        });
+                        return false
+                    }
+                })
+                // 数据过滤
+                .map((res: Rx.AjaxResponse) => {
+                    // 使用传入得 过滤函数
+                    if (this.newMap && typeof this.newMap == "function") {
+                        return this.newMap(res);
+                    }
+                    switch (res.status) {
+                        case 200:
+                            return res.response
+                        default:
+                            notification.warn({
+                                message: res.status,
+                                duration: 5,
+                                description: `请配置 处理逻辑`,
+                            });
+                            break;
+                    }
+                }).subscribe(obs => {
+                    sub.next(obs)
+                    sub.complete()
+                })
+        })
     }
     /**
      * url 参数 注入
@@ -146,7 +188,6 @@ export class Request {
         this.getHeaders();
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body, true);
-        console.log(body);
         body = this.formatBody(newParams.body);
         url = this.compatibleUrl(this.address, newParams.url, body as any);
         return this.AjaxObservable(Rx.Observable.ajax.get(url, headers))
@@ -220,31 +261,24 @@ export class Request {
         if (AjaxRequest.body) {
             AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
         }
-        const result = await Rx.Observable.ajax(AjaxRequest).catch(err => Rx.Observable.of(err)).toPromise();
-        this.NProgress("done")
-
-        this.downloadLoading = false;
         try {
-            if (result.status == 200) {
-                this.onCreateBlob(result.response, fileType, fileName).click();
-                notification.success({
-                    message: `文件下载成功`,
-                    description: ''
-                })
-            } else {
-                notification['error']({
-                    key: this.notificationKey,
-                    message: '文件下载失败',
-                    description: result.message,
-                });
-            }
-
+            const result = await Rx.Observable.ajax(AjaxRequest).toPromise();
+            this.onCreateBlob(result.response, fileType, fileName).click();
+            notification.success({
+                key: "download",
+                message: `文件下载成功`,
+                description: ''
+            })
         } catch (error) {
-            notification['error']({
-                key: this.notificationKey,
+            notification.error({
+                key: "download",
                 message: '文件下载失败',
                 description: error.message,
             });
+        }
+        finally {
+            this.NProgress("done")
+            this.downloadLoading = false;
         }
     }
     /**
@@ -267,7 +301,7 @@ export class Request {
         a.addEventListener("click", () => {
             setTimeout(() => {
                 window.URL.revokeObjectURL(downUrl);
-            });
+            }, 1000);
         }, false);
         return a;
     }
@@ -413,8 +447,7 @@ export class Request {
         type: "url" | "body" = "url",
         headers?: Object
     ): any {
-        // 加载进度条
-        this.NProgress()
+
         if (type === "url") {
             let param = "";
             if (typeof body != 'string') {
@@ -459,101 +492,6 @@ export class Request {
             }
             return body;
         }
-    }
-    private notificationKey = "notificationKey"
-    /**
-     * ajax过滤
-     */
-    private responseMap = (res) => {
-        // 关闭加载进度条
-        setTimeout(() => {
-            this.NProgress("done")
-        });
-        try {
-            // 使用传入得 过滤函数
-            if (this.newResponseMap && typeof this.newResponseMap == "function") {
-                return this.newResponseMap(res);
-            }
-            if (res.status == 200) {
-                // 判断是否统一数据格式，是走状态判断，否直接返回 response
-                if (res.response && res.response.status) {
-                    switch (res.response.status) {
-                        case 200:
-                            return res.response.data;
-                            break;
-                        case 204:
-                            return false;
-                            break;
-                        case 400:
-                            throw {
-                                url: res.request.url,
-                                request: res,
-                                message: res.response.message,
-                                response: res.response
-                            }
-                            break;
-                        default:
-                            throw {
-                                url: res.request.url,
-                                request: res,
-                                message: res.response.message,
-                                response: res.response
-                            }
-                            return false
-                            break;
-                    }
-                }
-                return res.response
-            }
-            if (res.status == 400) {
-                console.log(res);
-                if (res.response && res.response.Data) {
-                    throw {
-                        url: res.request.url,
-                        request: res,
-                        message: res.message,
-                        description: res.response.Data.map(x => {
-                            return `Index:${x.Index} ${x.Message}`
-                        }).join("\n"),
-                        response: false
-                    }
-                } else {
-                    throw {
-                        url: res.request.url,
-                        request: res,
-                        message: res.message,
-                        description: JSON.stringify(res.response),
-                        response: false
-                    }
-                }
-            }
-            throw {
-                url: res.request.url,
-                request: res,
-                message: res.message,
-                response: false
-            }
-
-        } catch (error) {
-            // console.error(error);
-            if (lodash.includes(error.url, "/test/")) {
-                error.message = "请检查接口配置是否正确"
-            }
-            notification['error']({
-                key: 'ajaxError',
-                message: error.message,
-                duration: 10,
-                description: error.description || `Url: ${error.url}`,
-            });
-            return false
-        }
-    }
-
-    /**
-     * 过滤 map 返回的 假值  
-     */
-    private filter = (data) => {
-        return data;
     }
     /** 日志 */
     private log(url, body, headers) {

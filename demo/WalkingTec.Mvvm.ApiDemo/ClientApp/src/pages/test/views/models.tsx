@@ -42,7 +42,6 @@ export default {
             this.props.onChange(data);
         }
         handleChange = (info) => {
-            console.log(info.file.status);
             if (info.file.status === 'uploading') {
                 this.setState({ fileList: info.fileList, loading: true });
                 //  this.setState({ loading: true });
@@ -66,7 +65,6 @@ export default {
             this.setState({ fileList: [], loading: false });
         }
         render() {
-            console.log(this.props);
             const { previewVisible, previewImage, fileList, loading } = this.state;
             const uploadButton = (
                 <div>
