@@ -210,6 +210,7 @@ export default class Store {
    * @param params 数据实体
    */
   async onEdit(params) {
+    const Update = this.pageState.detailsType == "Update"
     try {
       if (this.pageState.loadingEdit) {
         return
@@ -218,7 +219,7 @@ export default class Store {
       this.onPageState("loadingEdit", true);
       let res = null;
       // 添加 | 修改
-      if (this.pageState.detailsType != "Insert") {
+      if (Update) {
         res = await this.onUpdate(details)
       } else {
         res = await this.onInsert(details)
@@ -226,7 +227,7 @@ export default class Store {
       this.onSearch()
       return res
     } catch (error) {
-      this.onErrorMessage(this.pageState.detailsType != "Insert" ? "添加失败" : "修改失败", lodash.map(error, (value, key) => ({ value, key })))
+      this.onErrorMessage(Update ? "修改失败" : "添加失败", lodash.map(error, (value, key) => ({ value, key })))
     }
     finally {
       this.onPageState("loadingEdit", false)
