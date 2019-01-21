@@ -132,7 +132,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
      * @param sorter 
      */
     onChange(page, filters, sorter) {
-        let sort = { Direction: "", Property: "" };
+        let sort: any = "";
         if (sorter.columnKey) {
             if (sorter.order == 'descend') {
                 sort = { Direction: "Desc", Property: sorter.columnKey }
