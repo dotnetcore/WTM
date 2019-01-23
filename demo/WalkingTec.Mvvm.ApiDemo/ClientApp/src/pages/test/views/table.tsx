@@ -59,6 +59,16 @@ const columnsRender = (text, record) => {
     </div>
 }
 /**
+ * 重写 列渲染 函数 
+ * @param text 
+ * @param record 
+ */
+const columnsRenderImg = (text, record) => {
+    return <div>
+        <ToImg style={{ height: 60, width: 100 }} download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
+    </div>
+}
+/**
  * 列 信息配置
  * dataIndex:属性名称 区分大小写
  * title:表格显示的中文标题
@@ -81,11 +91,7 @@ const columns = [
     {
         dataIndex: "PhotoId",
         title: "PhotoId",
-        render: (text, record) => {
-            return <div>
-                <ToImg style={{ height: 60, width: 100 }} download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
-            </div>
-        }
+        render: columnsRenderImg
     },
     {
         dataIndex: "Roles",
