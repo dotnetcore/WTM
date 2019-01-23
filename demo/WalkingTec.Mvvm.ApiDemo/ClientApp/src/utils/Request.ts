@@ -81,18 +81,30 @@ export class Request {
                 // 过滤请求
                 .filter((ajax) => {
                     this.NProgress("done");
+                    // 数据 Response 
                     if (ajax instanceof Rx.AjaxResponse) {
                         return true
                     }
+                    // 错误
                     if (ajax instanceof Rx.AjaxError) {
+                        const { response } = ajax;
                         // 返回 业务处理错误
-                        if (lodash.includes(this.catchStatus, ajax.status)) {
-                            sub.error(ajax.response)
-                            if (ajax.response) {
-                                return false
+                        if (response && lodash.includes(this.catchStatus, ajax.status)) {
+                            if (response.errors) {
+                                sub.error(null)
+                                notification.error({
+                                    key: ajax.request.url,
+                                    message: response.traceId,
+                                    duration: 5,
+                                    description: response.title,
+                                });
+                            } else {
+                                sub.error(response)
                             }
+                            return false
                         }
-                        notification['error']({
+                        sub.error(null)
+                        notification.error({
                             key: ajax.request.url,
                             message: ajax.status,
                             duration: 5,

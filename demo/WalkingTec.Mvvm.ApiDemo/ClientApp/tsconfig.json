@@ -1,14 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": {
-      "app": ["app/*"],
-      "assets": ["assets/*"],
-      "components": ["components/*"],
-      "pages": ["pages/*"],
-      "store": ["store/*"],
-      "utils": ["utils/*"]
-    }, 
     "module": "esnext",
     "target": "es5",
     "lib": ["es6","esnext", "dom"],
