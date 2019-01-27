@@ -579,8 +579,7 @@ namespace WalkingTec.Mvvm.Core
         {
             try
             {
-                DC.DeleteEntity(Entity);
-                DC.SaveChanges();
+                List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
@@ -588,11 +587,18 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (f.GetValue(Entity) is FileAttachment file)
                     {
-                        FileAttachmentVM ofa = new FileAttachmentVM();
-                        ofa.CopyContext(this);
-                        ofa.SetEntityById(file.ID);
-                        ofa.DoDelete();
+                        fileids.Add(file.ID);
+                        f.SetValue(Entity, null);
                     }
+                }
+                DC.DeleteEntity(Entity);
+                DC.SaveChanges();
+                foreach (var item in fileids)
+                {
+                    FileAttachmentVM ofa = new FileAttachmentVM();
+                    ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
+                    ofa.DoDelete();
                 }
             }
             catch (Exception)

@@ -87,10 +87,7 @@ namespace WalkingTec.Mvvm.Core
                 using (var dataStream = new MemoryStream())
                 {
                     FileData.CopyTo(dataStream);
-                    vm.Entity.FileData = new FileAttachmentData
-                    {
-                        FileData = dataStream.ToArray()
-                    };
+                    vm.Entity.FileData = dataStream.ToArray();
                 }
             }
             else if (savePlace == SaveFileModeEnum.Local)
@@ -106,7 +103,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     FileData.CopyTo(fileStream);
                     vm.Entity.Path = fullPath;
-                    vm.Entity.FileData = new FileAttachmentData();
+                    vm.Entity.FileData = null;
                 }
             }
             else if (savePlace == SaveFileModeEnum.DFS)
@@ -130,7 +127,7 @@ namespace WalkingTec.Mvvm.Core
                         vm.Entity.Path = "/" + FDFSClient.UploadFile(node, dataStream.ToArray(), vm.Entity.FileExt);
                         vm.Entity.GroupName = node.GroupName;
                     }
-                    vm.Entity.FileData = new FileAttachmentData();
+                    vm.Entity.FileData = null;
 
                 }
                 FileData.Dispose();
@@ -150,7 +147,7 @@ namespace WalkingTec.Mvvm.Core
             var saveMode = fa.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : fa.SaveFileMode;
             if (saveMode == SaveFileModeEnum.Database)
             {
-                using (MemoryStream ms = new MemoryStream(fa.FileData.FileData))
+                using (MemoryStream ms = new MemoryStream(fa.FileData))
                 {
                     hssfworkbook = new HSSFWorkbook(ms);
                 }
@@ -191,7 +188,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     break;
                 case SaveFileModeEnum.Database:
-                    data = DC.Set<FileAttachment>().Include(x => x.FileData).Where(x => x.ID == fa.ID).Select(x => x.FileData.FileData).FirstOrDefault();
+                    data = DC.Set<FileAttachment>().Where(x => x.ID == fa.ID).Select(x => x.FileData).FirstOrDefault();
                     break;
                 case SaveFileModeEnum.DFS:
                     try

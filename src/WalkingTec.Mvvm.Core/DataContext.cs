@@ -212,14 +212,6 @@ namespace WalkingTec.Mvvm.Core
             //用户和用户搜索条件级联删除
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            //附件表合并
-            modelBuilder.Entity<FileAttachment>().OwnsOne(
-            o => o.FileData,
-            sa =>
-            {
-                sa.Property(p => p.FileData).HasColumnName("FileData");
-            });
-
             var modelAsms = Utils.GetAllAssembly();
 
             var allTypes = new List<Type>();// 所有 DbSet<> 的泛型类型

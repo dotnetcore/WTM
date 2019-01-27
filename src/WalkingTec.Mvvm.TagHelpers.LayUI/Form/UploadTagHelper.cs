@@ -88,15 +88,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }}
         ,done: function(res){{
             layui.layer.close(index);
-            if(res.data.id == ''){{
+            if(res.Data.Id == ''){{
                 layui.layer.msg('上传失败');
             }}
             else{{
-                $('#{Id}').val(res.data.id);
-                var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.data.name+""  删除</button>"";
+                $('#{Id}').val(res.Data.Id);
+                var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name+""  删除</button>"";
                 $('#{Id}label').html(del);
                 $('#{Id}del').on('click',function(){{
-                    {Id}DoDelete(res.data.id);
+                    {Id}DoDelete(res.Data.Id);
                 }});
             }}
         }}
