@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,13 @@ namespace WalkingTec.Mvvm.ApiDemo
              : base(cs, dbtype)
         {
         }
+#if DEBUG
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()));
 
+        }
+
+#endif
     }
 }

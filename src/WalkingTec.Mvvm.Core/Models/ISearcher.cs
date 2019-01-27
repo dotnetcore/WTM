@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 排序信息
         /// </summary>
-        string SortInfo { get; set; }
+        SortInfo SortInfo { get; set; }
         /// <summary>
         /// 是否搜索树形结构数据
         /// </summary>
