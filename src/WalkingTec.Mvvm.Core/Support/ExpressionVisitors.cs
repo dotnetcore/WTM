@@ -52,13 +52,13 @@ namespace WalkingTec.Mvvm.Core
     public class OrderReplaceModifier : ExpressionVisitor
     {
         private bool _addMode = false;
-        private string _sortinfo;
+        private SortInfo _sortinfo;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="sortinfo">sortinfo</param>
-        public OrderReplaceModifier(string sortinfo)
+        public OrderReplaceModifier(SortInfo sortinfo)
         {
             _sortinfo = sortinfo;
         }
@@ -144,17 +144,13 @@ namespace WalkingTec.Mvvm.Core
             else
             {
                 var modelType = node.Type.GenericTypeArguments[0];
-                List<SortInfo> info = new List<SortInfo>();
-                var temp = APIHelper.JsonDeserialize<List<SortInfo>>(_sortinfo);
-                info.AddRange(temp);
+                List<SortInfo> info = new List<SortInfo>() { _sortinfo };
                 Expression rv = null;
                 foreach (var item in info)
                 {
-                    ParameterExpression pe = Expression.Parameter(modelType);
+                    ParameterExpression pe = Expression.Parameter(modelType,"x");
                     Expression pro = Expression.PropertyOrField(pe, item.Property);
                     Type proType = modelType.GetProperty(item.Property).PropertyType;
-                    ChangePara cp = new ChangePara();
-                    cp.Change(pro, pe);
                     if (item.Direction == SortDir.Asc)
                     {
                         if (rv == null)
