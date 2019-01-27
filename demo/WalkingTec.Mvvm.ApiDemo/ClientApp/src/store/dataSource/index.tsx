@@ -224,6 +224,7 @@ export default class Store {
       } else {
         res = await this.onInsert(details)
       }
+      this.onPageState("visibleEdit", false)
       this.onSearch()
       return res
     } catch (error) {
@@ -252,8 +253,8 @@ export default class Store {
     const method = this.Urls.update.method;
     const src = this.Urls.update.src;
     const res = await this.Request[method](src, params).toPromise();
-    return res
     notification.success({ message: "修改成功" })
+    return res
   }
   /**
    * 删除
@@ -332,7 +333,7 @@ export default class Store {
   onGetFile(id) {
     if (id) {
       const src = this.Urls.fileGet.src;
-      return `${this.Request.address}${src}/${id}`
+      return `${this.Request.compatibleUrl(this.Request.address, src)}/${id}`
     }
   }
   /**
@@ -342,7 +343,7 @@ export default class Store {
   onFileDownload(id) {
     if (id) {
       const src = this.Urls.fileDownload.src;
-      return `${this.Request.address}${src}/${id}`
+      return `${this.Request.compatibleUrl(this.Request.address, src)}/${id}`
     }
   }
   /**
@@ -401,11 +402,11 @@ export default class Store {
    * @param message 
    * @param dataSource 
    */
-  onErrorMessage(message, dataSource: { key: string, value: string }[]) {
+  onErrorMessage(message, dataSource?: { key: string, value: string }[]) {
     notification.error({
       duration: 5,
       message: message,
-      description: <List
+      description: dataSource && dataSource.length > 0 && <List
         itemLayout="horizontal"
         dataSource={dataSource}
         renderItem={item => (

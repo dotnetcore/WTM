@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import Regular from 'utils/Regular';
 import ToImg from 'components/dataView/help/toImg';
+import decError from 'components/decorators/error';
 import Store from '../store';
 import Models from './models';
 const FormItem = Form.Item;
@@ -17,6 +18,7 @@ const formItemLayout = {
         sm: { span: 16 },
     },
 };
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -67,6 +69,7 @@ export default class extends React.Component<any, any> {
 /**
  * 添加表单
  */
+@decError
 @decoForm
 @observer
 class InsertForm extends React.Component<any, any> {
@@ -111,7 +114,11 @@ class InsertForm extends React.Component<any, any> {
                 </FormItem>
                 <FormItem label="照片" {...formItemLayout}>
                     {getFieldDecorator('PhotoId', {
-                    })(<Models.PhotoId {...this.props} />)}
+                    })(
+                        <Models.PhotoId {...this.props}
+                        action={Store.Request.address + Store.Urls.fileUpload.src}
+                        onRemove={id => Store.onFileDelete(id)}
+                    />)}
                 </FormItem>
             </DrawerFormItem>
 
@@ -121,6 +128,7 @@ class InsertForm extends React.Component<any, any> {
 /**
  * 修改表单
  */
+@decError
 @decoForm
 @observer
 class UpdateForm extends React.Component<any, any> {
@@ -141,33 +149,37 @@ class UpdateForm extends React.Component<any, any> {
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <DrawerFormItem submit>
                 <FormItem label="账号" {...formItemLayout}>
-                    {getFieldDecorator('itCode', {
+                    {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
-                        initialValue: details['itCode']
+                        initialValue: details['ITCode']
                     })(Models.ITCode)}
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
-                    {getFieldDecorator('email', {
+                    {getFieldDecorator('Email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
-                        initialValue: details['email']
+                        initialValue: details['Email']
                     })(Models.Email)}
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
-                    {getFieldDecorator('name', {
+                    {getFieldDecorator('Name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
-                        initialValue: details['name']
+                        initialValue: details['Name']
                     })(Models.Name)}
                 </FormItem>
                 <FormItem label="性别" {...formItemLayout}>
-                    {getFieldDecorator('sex', {
+                    {getFieldDecorator('Sex', {
                         rules: [],
-                        initialValue: String(details['sex'])
+                        initialValue: String(details['Sex'])
                     })(Models.Sex)}
                 </FormItem>
                 <FormItem label="照片" {...formItemLayout}>
                     {getFieldDecorator('PhotoId', {
-                        initialValue: details['photoId']
-                    })(<Models.PhotoId {...this.props} initialValue={Store.onGetFile(details['photoId'])} />)}
+                        initialValue: details['PhotoId']
+                    })(<Models.PhotoId {...this.props}
+                        initialValue={Store.onGetFile(details['PhotoId'])}
+                        action={Store.Request.address + Store.Urls.fileUpload.src}
+                        onRemove={id => Store.onFileDelete(id)}
+                    />)}
                 </FormItem>
             </DrawerFormItem>
         </Form>
@@ -176,6 +188,7 @@ class UpdateForm extends React.Component<any, any> {
 /**
  * 详情
  */
+@decError
 @observer
 class InfoForm extends React.Component<any, any> {
     render() {
@@ -183,18 +196,18 @@ class InfoForm extends React.Component<any, any> {
         return <Form >
             <DrawerFormItem>
                 <FormItem label="账号" {...formItemLayout}>
-                    <span>{details['itCode']}</span>
+                    <span>{details['ITCode']}</span>
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
-                    <span>{details['email']}</span>
+                    <span>{details['Email']}</span>
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
-                    <span>{details['name']}</span>
+                    <span>{details['Name']}</span>
                 </FormItem>
                 <FormItem label="头像" {...formItemLayout}>
                     <span>
                         {/* <img style={{ width: 200 }} src={Store.onGetFile(details['photoId'])} /> */}
-                        <ToImg download={Store.onFileDownload(details['photoId'])} url={Store.onGetFile(details['photoId'])} />
+                        <ToImg download={Store.onFileDownload(details['PhotoId'])} url={Store.onGetFile(details['PhotoId'])} />
                     </span>
                 </FormItem>
             </DrawerFormItem>
@@ -204,6 +217,7 @@ class InfoForm extends React.Component<any, any> {
 /**
  * Items 外壳
  */
+
 @observer
 class DrawerFormItem extends React.Component<{ submit?: boolean }, any> {
     render() {

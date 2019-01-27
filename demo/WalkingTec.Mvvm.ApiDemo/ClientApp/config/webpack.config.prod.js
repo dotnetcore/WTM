@@ -8,8 +8,6 @@
 const paths = require("./paths");
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const tsImportPluginFactory = require('ts-import-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 /**
  * 重写 react-scripts 默认配置
  */
@@ -33,14 +31,16 @@ module.exports = (config, env) => {
                 },
                 {
                     test: /\.js$/,
-                    include: paths.appNodeModules,
-                    exclude: paths.appSrc,
+                    include: paths.jsInclude,
+                    exclude: paths.jsExclude,
                     use: [
                         'cache-loader',
                         {
                             loader: "babel-loader",
                             options: {
-                                compact: true,
+                                inputSourceMap: false,
+                                sourceMap: false,
+                                // compact: true,
                                 presets: ['@babel/preset-env']
                             }
                         }
@@ -53,9 +53,10 @@ module.exports = (config, env) => {
                     loader: 'awesome-typescript-loader',
                     options: {
                         useCache: true,
-                        // transpileOnly: true,
+                        transpileOnly: true,
                         errorsAsWarnings: true,
-                        usePrecompiledFiles: true,
+                        // usePrecompiledFiles: true,
+                        sourceMap: false,
                     }
                 },
                 {
@@ -66,6 +67,7 @@ module.exports = (config, env) => {
                             loader: 'css-loader',
                             options: {
                                 importLoaders: 1,
+                                sourceMap: false,
                             },
                         },
                         {
@@ -73,6 +75,7 @@ module.exports = (config, env) => {
                             options: {
                                 // https://github.com/facebookincubator/create-react-app/issues/2677
                                 ident: 'postcss',
+                                sourceMap: false,
                                 plugins: () => [
                                     require('postcss-flexbugs-fixes'),
                                     require('autoprefixer')({
@@ -90,7 +93,7 @@ module.exports = (config, env) => {
                         {
                             loader: 'less-loader',
                             options: {
-                                sourceMap: true,
+                                sourceMap: false,
                                 javascriptEnabled: true,
                             },
                         }
