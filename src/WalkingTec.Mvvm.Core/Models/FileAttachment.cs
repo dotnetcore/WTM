@@ -24,7 +24,6 @@ namespace WalkingTec.Mvvm.Core
         public long Length { get; set; }
         public DateTime UploadTime { get; set; }
         public bool IsTemprory { get; set; }
-        public FileAttachmentData FileData { get; set; }
 
         #region 组名，FastDFS服务器用
         [Display(Name = "保存方式" )]
@@ -33,15 +32,6 @@ namespace WalkingTec.Mvvm.Core
         [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
         public string GroupName { get; set; }
         #endregion
-    }
-
-    /// <summary>
-    /// FileAttachmentData
-    /// </summary>
-    [Table("FileAttachments")]
-    [Owned()]
-    public class FileAttachmentData : TopBasePoco
-    {
         public byte[] FileData { get; set; }
     }
 }
