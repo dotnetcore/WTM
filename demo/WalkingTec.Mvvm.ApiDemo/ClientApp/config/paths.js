@@ -1,8 +1,9 @@
-'use strict';
+// 'use strict';
 
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const package = require('../package.json');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -55,4 +56,13 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+  jsExclude: [resolveApp('src'), ...[
+    '@ant-design', '@antv', 'viser',
+    ...Object.keys(package.dependencies)
+  ].map(x => {
+    if (x=="react") {
+      x="react/index.js"
+    }
+    return path.resolve(appDirectory, "node_modules", x)
+  })]
 };

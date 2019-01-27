@@ -68,13 +68,13 @@ module.exports = (config, env) => {
                 {
                     test: /\.js$/,
                     include: paths.appNodeModules,
-                    exclude: paths.appSrc,
+                    exclude: paths.jsExclude,
                     use: [
                         'cache-loader',
                         {
                             loader: "babel-loader",
                             options: {
-                                compact: true,
+                                // compact: true,
                                 presets: ['@babel/preset-env']
                             }
                         }
@@ -87,7 +87,7 @@ module.exports = (config, env) => {
                     options: {
                         useCache: true,
                         // transpileOnly: true,
-                        errorsAsWarnings: true,
+                        // errorsAsWarnings: true,
                         usePrecompiledFiles: true,
                     }
                 },
