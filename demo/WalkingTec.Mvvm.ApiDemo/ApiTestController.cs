@@ -29,7 +29,6 @@ namespace WalkingTec.Mvvm.ApiDemo
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
-            vm.DoSearch();
             return vm.GetJson();
         }
 

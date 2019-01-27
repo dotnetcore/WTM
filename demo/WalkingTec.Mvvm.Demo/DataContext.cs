@@ -21,11 +21,10 @@ namespace WalkingTec.Mvvm.Demo
 #if DEBUG
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder.UseLoggerFactory(WTMLoggerFactory));
+            base.OnConfiguring(optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()));
 
         }
 
-        public static readonly LoggerFactory WTMLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
 #endif
 
     }

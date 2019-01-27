@@ -338,7 +338,7 @@ namespace WalkingTec.Mvvm.Core
         {
             object rv = null;
             var col = CompiledCol?.Invoke(source as T);
-            if (Format == null || needFormat == false)
+            if (Format == null || (needFormat == false && Format.Method.ReturnType != typeof(string)))
             {
                 rv = col?.ToString();
             }
