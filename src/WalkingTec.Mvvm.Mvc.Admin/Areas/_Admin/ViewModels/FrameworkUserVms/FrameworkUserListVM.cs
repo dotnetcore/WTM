@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -59,8 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             {
                 return "";
             }
-            var roleids = entity.UserRoles.Select(x => x.RoleId).ToList();
-            return AllRoles.Where(x => roleids.Contains(x.ID)).Select(x => x.RoleName).ToList().ToSpratedString();
+            return AllRoles.Where(x => entity.Roles.Contains(x.ID)).Select(x => x.RoleName).ToList().ToSpratedString();
         }
 
         private string GroupFormat(FrameworkUser_View entity, object val)
@@ -69,8 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             {
                 return "";
             }
-            var groupids = entity.UserGroups.Select(x => x.GroupId).ToList();
-            return AllGroups.Where(x => groupids.Contains(x.ID)).Select(x => x.GroupName).ToList().ToSpratedString();
+            return AllGroups.Where(x => entity.Groups.Contains(x.ID)).Select(x => x.GroupName).ToList().ToSpratedString();
         }
 
         public override IOrderedQueryable<FrameworkUser_View> GetSearchQuery()
@@ -90,8 +89,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     CellPhone = x.CellPhone,
                     HomePhone = x.HomePhone,
                     IsValid = x.IsValid,
-                    UserRoles = x.UserRoles,
-                    UserGroups = x.UserGroups,
+                    Roles = x.UserRoles.Select(y=>y.RoleId).ToList(),
+                    Groups = x.UserGroups.Select(y=>y.GroupId).ToList(),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
@@ -103,9 +102,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     public class FrameworkUser_View : FrameworkUserBase
     {
         [Display(Name = "角色")]
-        public string Roles { get; set; }
+        public List<Guid> Roles { get; set; }
 
         [Display(Name = "用户组")]
-        public string Groups { get; set; }
+        public List<Guid> Groups { get; set; }
     }
 }

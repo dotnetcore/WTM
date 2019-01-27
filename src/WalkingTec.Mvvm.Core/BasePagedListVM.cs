@@ -690,7 +690,7 @@ namespace WalkingTec.Mvvm.Core
                     var newExp = mod.Modify(query.Expression);
                     query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 }
-                if (string.IsNullOrEmpty(Searcher.SortInfo) == false)
+                if (Searcher.SortInfo != null)
                 {
                     var mod = new OrderReplaceModifier(Searcher.SortInfo);
                     var newExp = mod.Modify(query.Expression);
@@ -728,6 +728,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             Searcher.Page = Searcher.PageCount;
                         }
+                        var test = query.ToList();
                         EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                     }
                     else //如果不需要分页则直接获取数据

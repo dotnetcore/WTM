@@ -19,7 +19,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var sb = new StringBuilder();
             self.GetHeaders();
-            self.DoSearch();
+            if (self.IsSearched == false)
+            {
+                self.DoSearch();
+            }
             if (self.EntityDataTable != null)
             {
                 for(int i = 0; i < self.EntityDataTable.Rows.Count; i++)
