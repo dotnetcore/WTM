@@ -17,7 +17,7 @@ export default {
     PhotoId: UploadImg,
     /** 性别 */
     Sex: <Select placeholder="性别" >
-        <Select.Option value="0">男</Select.Option>
-        <Select.Option value="1">女</Select.Option>
+        <Select.Option value={0}>男</Select.Option>
+        <Select.Option value={1}>女</Select.Option>
     </Select>
 }

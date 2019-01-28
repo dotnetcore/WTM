@@ -1,13 +1,15 @@
+import { Divider, Popconfirm } from 'antd';
 import Table from 'components/dataView/content/table';
-import Visible from 'components/dataView/help/visible';
 import ToImg from 'components/dataView/help/toImg';
+import Visible from 'components/dataView/help/visible';
+import decError from 'components/decorators/error';
 import React from 'react';
 import Store from '../store';
-import { Divider, Popconfirm } from 'antd';
 
 /**
  * 表格
  */
+@decError
 export default class extends React.Component<any, any> {
     async onDelete(data) {
         Store.onDelete(data.ID)

@@ -1,6 +1,7 @@
 import { Button, Divider, Dropdown, Icon, Menu, message, Modal, Popconfirm, Row } from 'antd';
 import Dragger from 'antd/lib/upload/Dragger';
 import Visible from 'components/dataView/help/visible';
+import decError from 'components/decorators/error';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -8,6 +9,7 @@ import Store from '../store';
 /**
  * 表格 所有 动作
  */
+@decError
 @observer
 export default class IApp extends React.Component<any, any> {
     onAdd() {
@@ -86,6 +88,7 @@ export default class IApp extends React.Component<any, any> {
 /**
  * 导入导出
  */
+@decError
 @observer
 class PortComponent extends React.Component<any, any> {
     render() {
