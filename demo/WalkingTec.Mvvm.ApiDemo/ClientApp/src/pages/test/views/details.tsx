@@ -1,10 +1,11 @@
 import { Button, Divider, Drawer, Form, Spin } from 'antd';
+import ToImg from 'components/dataView/help/toImg';
+import decError from 'components/decorators/error';
 import decoForm from 'components/decorators/form';
+import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Regular from 'utils/Regular';
-import ToImg from 'components/dataView/help/toImg';
-import decError from 'components/decorators/error';
 import Store from '../store';
 import Models from './models';
 const FormItem = Form.Item;
@@ -23,6 +24,7 @@ const formItemLayout = {
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
  */
+@decError
 @observer
 export default class extends React.Component<any, any> {
     /**
@@ -116,9 +118,9 @@ class InsertForm extends React.Component<any, any> {
                     {getFieldDecorator('PhotoId', {
                     })(
                         <Models.PhotoId {...this.props}
-                        action={Store.Request.address + Store.Urls.fileUpload.src}
-                        onRemove={id => Store.onFileDelete(id)}
-                    />)}
+                            action={Store.Request.address + Store.Urls.fileUpload.src}
+                            onRemove={id => Store.onFileDelete(id)}
+                        />)}
                 </FormItem>
             </DrawerFormItem>
 
@@ -151,25 +153,25 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem label="账号" {...formItemLayout}>
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
-                        initialValue: details['ITCode']
+                        initialValue: toValues(details['ITCode'])
                     })(Models.ITCode)}
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
                     {getFieldDecorator('Email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
-                        initialValue: details['Email']
+                        initialValue: toValues(details['Email'])
                     })(Models.Email)}
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
                     {getFieldDecorator('Name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
-                        initialValue: details['Name']
+                        initialValue: toValues(details['Name'])
                     })(Models.Name)}
                 </FormItem>
                 <FormItem label="性别" {...formItemLayout}>
                     {getFieldDecorator('Sex', {
                         rules: [],
-                        initialValue: String(details['Sex'])
+                        initialValue: toValues(details['Sex'])
                     })(Models.Sex)}
                 </FormItem>
                 <FormItem label="照片" {...formItemLayout}>
@@ -196,13 +198,13 @@ class InfoForm extends React.Component<any, any> {
         return <Form >
             <DrawerFormItem>
                 <FormItem label="账号" {...formItemLayout}>
-                    <span>{details['ITCode']}</span>
+                    <span>{toValues(details['ITCode'], "span")}</span>
                 </FormItem>
                 <FormItem label="邮箱" {...formItemLayout}>
-                    <span>{details['Email']}</span>
+                    <span>{toValues(details['Email'], "span")}</span>
                 </FormItem>
                 <FormItem label="姓名" {...formItemLayout}>
-                    <span>{details['Name']}</span>
+                    <span>{toValues(details['Name'], "span")}</span>
                 </FormItem>
                 <FormItem label="头像" {...formItemLayout}>
                     <span>
@@ -217,7 +219,7 @@ class InfoForm extends React.Component<any, any> {
 /**
  * Items 外壳
  */
-
+@decError
 @observer
 class DrawerFormItem extends React.Component<{ submit?: boolean }, any> {
     render() {
@@ -237,4 +239,24 @@ class DrawerFormItem extends React.Component<{ submit?: boolean }, any> {
             </div>
         </>
     }
+}
+/**
+ * 转换 value 值
+ * @param value value 值
+ * @param showType 转换类型 span 情况下 非基础类型。需要格式为字符串。不然 react 会报错
+ */
+function toValues(value: any, showType: "value" | "span" = "value") {
+    // 检查 value 是否是 null 或者 undefined。
+    if (lodash.isNil(value)) {
+        return
+    }
+    // 检查数字类型 
+    // if (lodash.isNumber(value)) {
+    //     return lodash.toString(value)
+    // }
+    // 检查其他
+    if (lodash.isArray(value) || lodash.isObject(value)) {
+        return lodash.toString(value)
+    }
+    return value
 }

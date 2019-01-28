@@ -1,8 +1,9 @@
-import { Col, Form, Input, Button } from 'antd';
+import { Col, Form } from 'antd';
 import { DecoratorsSearch } from 'components/dataView/header/search';
+import decError from 'components/decorators/error';
 import * as React from 'react';
-import Models from './models';
 import Store from '../store';
+import Models from './models';
 const FormItem = Form.Item;
 const colLayout = {
     xl: 6,
@@ -22,6 +23,7 @@ const formItemLayout = {
 /**
  * 搜索条件头
  */
+@decError
 @DecoratorsSearch({
     Store,
     FormItems: ({ getFieldDecorator }) => {
