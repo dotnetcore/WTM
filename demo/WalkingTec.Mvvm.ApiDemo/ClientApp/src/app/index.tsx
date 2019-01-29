@@ -58,7 +58,13 @@ export default class RootRoutes extends React.Component<any, any> {
      * 初始化路由数据
      */
     initRouters() {
-        return lodash.map(Pages, (component, key) => {
+        return lodash.map(Pages, (component: any, key) => {
+            if (typeof component === "object") {
+                return {
+                    "path": component.path,
+                    "component": this.Loadable(component.component)
+                };
+            }
             return {
                 "path": "/" + key,
                 "component": this.Loadable(component)

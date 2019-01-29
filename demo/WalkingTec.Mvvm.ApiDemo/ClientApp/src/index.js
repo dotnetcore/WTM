@@ -7,18 +7,13 @@
  * 
  *  react-scripts 有 index.js 入口文件检查机制，所以使用 .js 作为入口 不使用 .ts
  */
-import 'antd/dist/antd.less'
-import 'ant-design-pro/dist/ant-design-pro.css'
-import 'nprogress/nprogress.css'
 import "@babel/polyfill";
-import { notification } from 'antd';
+import 'ant-design-pro/dist/ant-design-pro.css';
+import 'antd/dist/antd.less';
 import App from "app/index";
+import 'nprogress/nprogress.css';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import "./style.less";
-notification.config({
-  duration: 3,
-  top: 60
-}); 
+import './global.config';
 ReactDOM.render(<App />,
   document.getElementById('root'));

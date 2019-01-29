@@ -23,6 +23,20 @@ body {
     }
 }
 
+#nprogress {
+    .bar {
+        // background: red;
+        background-image: -webkit-linear-gradient(top left, red, blue 25%, yellow 90%);
+    }
+    .spinner-icon {
+        width: 30px;
+        height: 30px;
+        border-top-color: red;
+        border-bottom-color: blue;
+        border-left-color: yellow;
+    }
+}
+
 ::-webkit-scrollbar-track-piece {
     width: 6px;
     background-color: #bfbfbf;
@@ -99,39 +113,5 @@ body {
     }
     100% {
         opacity: 0;
-    }
-}
-
-.ant-table .react-resizable {
-    position: relative;
-}
-
-.ant-table .react-resizable-handle {
-    position: absolute;
-    width: 10px;
-    height: 100%;
-    bottom: 0;
-    right: -5px;
-    cursor: col-resize;
-}
-
-.app-drawer {
-    .app-drawer-formItem{
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 55px;
-        bottom: 65px;
-        overflow: auto;
-        padding: 24px;
-    }
-    .app-drawer-btns {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        padding: 15px 20px;
-        left: 0;
-        text-align: right;
-        border-top: 1px solid #e8e8e8;
     }
 }
