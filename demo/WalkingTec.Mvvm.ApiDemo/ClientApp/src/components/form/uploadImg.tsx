@@ -1,4 +1,5 @@
 import { message, Icon, Upload, Modal } from "antd";
+import RequestFiles from 'utils/RequestFiles';
 import React from "react";
 
 function beforeUpload(file) {
@@ -12,23 +13,17 @@ function beforeUpload(file) {
     // }
     return isJPG //&& isLt2M;
 }
-export default class UploadImg extends React.Component<{
-    /** 接口提交地址 */
-    action: any;
-    initialValue?: any;
-    onChange?: any;
-    onRemove?: any;
-}, any> {
+export default class UploadImg extends React.Component<any, any> {
     state = {
         loading: false,
         previewVisible: false,
         previewImage: '',
-        fileList: this.props.initialValue != null && this.props.initialValue != "" ? [
+        fileList: this.props.value != null && this.props.value != "" ? [
             {
                 uid: '-1',
                 name: 'xxx.png',
                 status: 'done',
-                url: this.props.initialValue,
+                url: RequestFiles.onFileUrl(this.props.value),
             }
         ] : [],
     };
@@ -57,12 +52,14 @@ export default class UploadImg extends React.Component<{
         });
     }
     onRemove = (file) => {
-        console.log(file);
+        console.log(file, this.props);
         const response = file.response
         this.setState({ fileList: [], loading: false });
-        if (response && typeof response.Id === "string") {
+        const fileId = response && response.Id || this.props.value
+        if (typeof fileId === "string") {
             setTimeout(() => {
-                this.props.onRemove && this.props.onRemove(response.Id)
+                this.onChange(null);
+                RequestFiles.onFileDelete(fileId)
             });
         }
     }
@@ -80,7 +77,7 @@ export default class UploadImg extends React.Component<{
                     accept='image/jpeg'
                     listType="picture-card"
                     fileList={fileList as any}
-                    action={this.props.action}
+                    action={RequestFiles.FileTarget}
                     beforeUpload={beforeUpload}
                     onChange={this.handleChange}
                     onPreview={this.handlePreview}

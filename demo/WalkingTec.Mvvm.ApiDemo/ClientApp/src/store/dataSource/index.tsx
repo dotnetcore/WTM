@@ -9,6 +9,7 @@ import * as React from 'react';
 import { message, notification, List, Row, Col } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import { Request } from 'utils/Request';
+import RequestFiles from 'utils/RequestFiles';
 import lodash from 'lodash';
 export default class Store {
   constructor() {
@@ -61,22 +62,6 @@ export default class Store {
     template: {
       src: "/test/template",
       method: "post"
-    },
-    fileUpload: {
-      src: "/file/upload",
-      method: "post"
-    },
-    fileDelete: {
-      src: "/file/deleteFile/{id}",
-      method: "get"
-    },
-    fileGet: {
-      src: "/file/getFile",
-      method: "get"
-    },
-    fileDownload: {
-      src: "/file/downloadFile",
-      method: "get"
     }
   };
   /** 格式化数据参数 */
@@ -85,7 +70,7 @@ export default class Store {
     dateTime: "YYYY-MM-DD HH:mm:ss",
   }
   /** Ajax   */
-  Request = new Request("/api");
+  Request = new Request();
   /** 搜索数据参数 */
   searchParams: any = {
 
@@ -258,13 +243,13 @@ export default class Store {
   }
   /**
    * 删除
-   * @param Id 
+   * @param 
    */
-  async onDelete(Id: string) {
+  async onDelete(data: Object) {
     try {
       // params = params.map(x => x[this.IdKey])
       const method = this.Urls.delete.method;
-      const src = this.Urls.delete.src + "/" + Id;
+      const src = this.Urls.delete.src + "/" + data[this.IdKey];
       const res = await this.Request[method](src).toPromise()
       message.success('删除成功')
       this.onSelectChange([]);
@@ -273,77 +258,6 @@ export default class Store {
       return res
     } catch (error) {
       message.error('删除失败')
-    }
-  }
-  /**
-   * 导入 配置 参数
-   * https://ant.design/components/upload-cn/#components-upload-demo-picture-style
-   */
-  @computed
-  get importConfig() {
-    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.fileUpload.src)
-    return {
-      name: 'file',
-      multiple: true,
-      accept: ".xlsx,.xls",
-      action: action,
-      onChange: info => {
-        const status = info.file.status
-        console.log(status);
-        // NProgress.start();
-        if (status !== 'uploading') {
-        }
-        if (status === 'done') {
-          const response = info.file.response
-          if (typeof response.id === "string") {
-            // message.success(`${info.file.name} 上传成功`);
-            this.onImport(response.id)
-          } else {
-            message.error(`${info.file.name} ${response.message}`)
-          }
-        } else if (status === 'error') {
-          message.error(`${info.file.name} 上传失败`)
-        }
-      },
-      onRemove: (file) => {
-        console.log(file);
-        const response = file.response
-        if (typeof response.id === "string") {
-          this.onFileDelete(response.id)
-        }
-      },
-    }
-  }
-  /**
-   * 删除文件
-   * @param id 
-   */
-  async onFileDelete(id) {
-    const method = this.Urls.fileDelete.method;
-    const src = this.Urls.fileDelete.src;
-    const res = await this.Request[method](src, { id }).toPromise();
-    if (res) {
-    }
-    return res
-  }
-  /**
-   * 获取文件
-   * @param id 
-   */
-  onGetFile(id) {
-    if (id) {
-      const src = this.Urls.fileGet.src;
-      return `${this.Request.compatibleUrl(this.Request.address, src)}/${id}`
-    }
-  }
-  /**
-   * 获取文件
-   * @param id 
-   */
-  onFileDownload(id) {
-    if (id) {
-      const src = this.Urls.fileDownload.src;
-      return `${this.Request.compatibleUrl(this.Request.address, src)}/${id}`
     }
   }
   /**
@@ -369,7 +283,7 @@ export default class Store {
    * @param params 筛选参数
    */
   async onExport(params = this.searchParams) {
-    await this.Request.download({
+    await RequestFiles.download({
       url: this.Urls.export.src,
       method: this.Urls.export.method,
       body: params
@@ -381,7 +295,7 @@ export default class Store {
    */
   async onExportIds() {
     if (this.selectedRowKeys.length > 0) {
-      await this.Request.download({
+      await RequestFiles.download({
         url: this.Urls.exportIds.src,
         method: this.Urls.exportIds.method,
         body: [...this.selectedRowKeys]
@@ -392,7 +306,7 @@ export default class Store {
   * 数据模板
   */
   async onTemplate() {
-    await this.Request.download({
+    await RequestFiles.download({
       url: this.Urls.template.src,
       method: this.Urls.template.method
     })
@@ -412,7 +326,7 @@ export default class Store {
         renderItem={item => (
           <List.Item>
             <Row style={{ width: "100%" }}>
-              <Col span={10}>{item.key}</Col>
+              {/* <Col span={10}>{item.key}</Col> */}
               <Col span={14}>{item.value}</Col>
             </Row>
           </List.Item>

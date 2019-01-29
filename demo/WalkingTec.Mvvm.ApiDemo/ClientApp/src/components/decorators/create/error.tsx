@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function (Component: any) {
+export function DesError(Component: any) {
     return class extends React.Component<any, any> {
         state = {
             error: null,

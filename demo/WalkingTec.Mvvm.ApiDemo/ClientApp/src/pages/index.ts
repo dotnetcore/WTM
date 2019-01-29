@@ -1,5 +1,9 @@
 export default {
     /**WTM**/
-    test: () => import('./test').then(x => x.default),
+    test: {
+        name: 'test',
+        path: '/test',
+        component: () => import('./test').then(x => x.default) 
+    }
     /**WTM**/
 }

@@ -92,7 +92,7 @@ export default class App extends React.Component<any, any> {
 
       }
       if (content) {
-        content.style.minHeight = (this.body.offsetHeight - 40) + "px";
+        content.style.minHeight = (this.body.offsetHeight - 20) + "px";
       }
     }
   }

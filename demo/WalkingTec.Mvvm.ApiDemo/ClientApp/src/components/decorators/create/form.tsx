@@ -1,5 +1,5 @@
 import * as React from 'react';
 import { Form } from 'antd';
-export default function (Component: any) {
+export function DesForm(Component: any) {
     return Form.create()(Component) as any
 }

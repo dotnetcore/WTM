@@ -5,17 +5,15 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Divider, Popconfirm, Row, Table, Alert, Popover } from 'antd';
-import Store from 'store/dataSource';
-import { observer } from 'mobx-react';
-import moment from 'moment';
-import * as React from 'react';
-import lodash from 'lodash';
-import { Resizable } from 'react-resizable';
-import ReactDOM from 'react-dom';
-import Rx, { Observable, Subscription } from 'rxjs';
+import { Alert, Divider, Row, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
-import { observable, toJS, action, runInAction } from 'mobx';
+import { action, observable, runInAction, toJS } from 'mobx';
+import { observer } from 'mobx-react';
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import { Resizable } from 'react-resizable';
+import Store from 'store/dataSource';
+import './style.less';
 interface ITablePorps {
     /** 状态 */
     Store: Store,
@@ -115,7 +113,7 @@ const TableUtils = {
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */
 @observer
-export default class TableComponent extends React.Component<ITablePorps, any> {
+export class DataViewTable extends React.Component<ITablePorps, any> {
     @observable columns = this.props.columns;
     Store = this.props.Store;
     /**
@@ -215,6 +213,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                     <Table
                         bordered
                         size="middle"
+                        className="data-view-table"
                         components={TableUtils.components}
                         dataSource={[...dataSource.Data]}
                         onChange={this.onChange.bind(this)}
@@ -227,7 +226,9 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                                 // hideOnSinglePage: true,//只有一页时是否隐藏分页器
                                 position: "bottom",
                                 showSizeChanger: true,//是否可以改变 pageSize
+                                showQuickJumper: true,
                                 pageSize: dataSource.Limit,
+                                size: "default",
                                 current: dataSource.Page,
                                 defaultPageSize: dataSource.Limit,
                                 defaultCurrent: dataSource.Page,
