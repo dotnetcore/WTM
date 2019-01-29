@@ -62,6 +62,7 @@ class InsertForm extends React.Component<any, any> {
         e.stopPropagation();
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log("数据", values);
             if (!err) {
                 Store.onEdit(values);
             }
@@ -75,6 +76,7 @@ class InsertForm extends React.Component<any, any> {
                 <InfoShellFormItem label="账号" hasFeedback {...formItemLayout} >
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
+                        props: this.props
                     })(Models.ITCode)}
                 </InfoShellFormItem>
                 <InfoShellFormItem label="密码" hasFeedback {...formItemLayout}>
@@ -99,8 +101,8 @@ class InsertForm extends React.Component<any, any> {
                 </InfoShellFormItem>
                 <InfoShellFormItem label="照片"  {...formItemLayout}>
                     {getFieldDecorator('PhotoId', {
-                    })(
-                        <Models.PhotoId {...this.props} />)}
+
+                    })(Models.PhotoId)}
                 </InfoShellFormItem>
             </FooterFormItem>
 
@@ -118,6 +120,7 @@ class UpdateForm extends React.Component<any, any> {
         e.stopPropagation();
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log("数据", values);
             if (!err) {
                 // values = mapValues(values, "YYYY-MM-DD")
                 Store.onEdit(values);
@@ -157,7 +160,7 @@ class UpdateForm extends React.Component<any, any> {
                 <InfoShellFormItem label="照片"  {...formItemLayout}>
                     {getFieldDecorator('PhotoId', {
                         initialValue: details['PhotoId']
-                    })(<Models.PhotoId {...this.props} />)}
+                    })(Models.PhotoId)}
                 </InfoShellFormItem>
             </FooterFormItem>
         </Form>
