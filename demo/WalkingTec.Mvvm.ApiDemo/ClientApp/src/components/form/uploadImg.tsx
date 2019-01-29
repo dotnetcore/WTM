@@ -54,11 +54,12 @@ export default class UploadImg extends React.Component<any, any> {
     onRemove = (file) => {
         console.log(file, this.props);
         const response = file.response
-        this.setState({ fileList: [], loading: false });
-        const fileId = response && response.Id || this.props.value
+        this.setState({ fileList: [], loading: false }, () => {
+            this.onChange(null);
+        });
+        const fileId = response && response.Id //|| this.props.value
         if (typeof fileId === "string") {
             setTimeout(() => {
-                this.onChange(null);
                 RequestFiles.onFileDelete(fileId)
             });
         }

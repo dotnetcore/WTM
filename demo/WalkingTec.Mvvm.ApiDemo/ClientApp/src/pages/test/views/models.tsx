@@ -4,13 +4,13 @@ import UploadImg from 'components/form/uploadImg';
 import Store from '../store';
 export default {
     /** ITCode */
-    ITCode: <Input placeholder="请输入 ITCode" allowClear/>,
+    ITCode: <Input placeholder="请输入 ITCode" />,
     /** Password */
-    Password: <Input placeholder="请输入 Password" allowClear/>,
+    Password: <Input placeholder="请输入 Password" />,
     /** Email */
-    Email: <Input placeholder="请输入 Email" allowClear/>,
+    Email: <Input placeholder="请输入 Email" />,
     /** Name */
-    Name: <Input placeholder="请输入 Name" allowClear />,
+    Name: <Input placeholder="请输入 Name"  />,
     /** IsValid */
     IsValid: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />,
     /** 照片 */
