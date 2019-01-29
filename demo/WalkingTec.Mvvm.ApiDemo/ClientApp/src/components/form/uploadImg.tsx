@@ -52,7 +52,6 @@ export default class UploadImg extends React.Component<any, any> {
         });
     }
     onRemove = (file) => {
-        console.log(file, this.props);
         const response = file.response
         this.setState({ fileList: [], loading: false }, () => {
             this.onChange(null);

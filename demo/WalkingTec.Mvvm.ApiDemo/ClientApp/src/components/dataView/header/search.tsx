@@ -3,6 +3,7 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { DesForm, DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { action, observable } from 'mobx';
+import GlobalConfig from 'global.config';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/dataSource';
@@ -60,6 +61,7 @@ export function DecoratorsSearch(params: IAppProps) {
 export class DataViewSearch extends React.Component<IAppProps, any> {
     Store: Store = this.props.Store;
     @observable toggle = false;
+    columnCount = GlobalConfig.searchColumnCount || 3;
     onSubmit(e) {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -84,7 +86,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
     }
     render() {
         let items = [],
-            columnCount = this.props.columnCount || 4,
+            columnCount = this.props.columnCount || this.columnCount,
             FormItems = this.props.FormItems(this.props.form),
             toggleShow = FormItems.length >= columnCount,
             colSpan = 24 / columnCount,//每列 值

@@ -11,6 +11,7 @@ import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import lodash from 'lodash';
 import { Resizable } from 'react-resizable';
 import Store from 'store/dataSource';
 import './style.less';
@@ -84,7 +85,8 @@ const TableUtils = {
         let scrollX = this.onGetcolumnsWidth(columns);
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth;
         return {
-            x: scrollX
+            x: scrollX,
+            y: 550
         }
     },
     /**
@@ -147,16 +149,19 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      */
     handleResize(index) {
         return (e, { size }) => {
-            let column = {
-                ...this.columns[index],
-                width: size.width,
-            }
+            // let column = {
+            //     ...this.columns[index],
+            //     width: size.width,
+            // }
             runInAction(() => {
-                this.columns = [
-                    ...this.columns.slice(0, index),
-                    column,
-                    ...this.columns.slice(index + 1, this.columns.length),
-                ]
+                // this.columns = [
+                //     ...this.columns.slice(0, index),
+                //     column,
+                //     ...this.columns.slice(index + 1, this.columns.length),
+                // ]
+                lodash.update(this.columns, `[${index}].width`, () => {
+                    return size.width
+                })
             })
         }
     }

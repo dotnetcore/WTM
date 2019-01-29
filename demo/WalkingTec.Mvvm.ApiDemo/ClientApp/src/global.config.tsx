@@ -31,11 +31,15 @@ export default {
             return window.localStorage.getItem('__token') || null;
         },
     },
-   
+
     /** 
      * 详情信息 展示类型 
      */
     infoType: "Drawer",//Drawer || Modal
+    /** 
+    * 详情信息 展示 宽度
+    */
+    infoTypeWidth: 700,
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
@@ -49,6 +53,13 @@ export default {
             xs: { span: 24 },
             sm: { span: 16 },
         },
-    }
-
+    },
+    /**
+     * 详情信息 列 数
+     */
+    infoColumnCount: 2,
+    /**
+    * 搜索 列 数
+    */
+    searchColumnCount: 3,
 }
