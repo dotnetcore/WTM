@@ -12161,6 +12161,11 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+viewerjs@^1.3.2:
+  version "1.3.2"
+  resolved "http://registry.npm.taobao.org/viewerjs/download/viewerjs-1.3.2.tgz#67781aff6d019a0960c4c2bf74d6756b548aebf8"
+  integrity sha1-Z3ga/20BmglgxMK/dNZ1a1SK6/g=
+
 viser-react@^2.4.1:
   version "2.4.1"
   resolved "http://registry.npm.taobao.org/viser-react/download/viser-react-2.4.1.tgz#011807b4eb91bbdd7ab773c3b99c98afb7a2781f"

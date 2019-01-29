@@ -35,7 +35,7 @@ export default {
     /** 
      * 详情信息 展示类型 
      */
-    infoType: "Drawer",//Drawer || Modal
+    infoType: "Modal",//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */
@@ -55,11 +55,11 @@ export default {
         },
     },
     /**
-     * 详情信息 列 数
+     * 详情信息 列 数 24 的除数
      */
     infoColumnCount: 2,
     /**
-    * 搜索 列 数
+    * 搜索 列 数 24 的除数
     */
     searchColumnCount: 3,
 }

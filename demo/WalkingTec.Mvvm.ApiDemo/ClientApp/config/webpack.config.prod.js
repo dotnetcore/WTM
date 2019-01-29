@@ -31,7 +31,7 @@ module.exports = (config, env) => {
                 },
                 {
                     test: /\.js$/,
-                    include: paths.jsInclude,
+                    include: paths.appNodeModules,
                     exclude: paths.jsExclude,
                     use: [
                         'cache-loader',
