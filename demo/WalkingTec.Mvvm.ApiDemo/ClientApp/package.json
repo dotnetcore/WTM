@@ -21,6 +21,7 @@
     "react-router-config": "^4.4.0-beta.6",
     "react-router-dom": "^4.3.1",
     "rxjs": "5.5.12",
+    "viewerjs": "^1.3.2",
     "viser-react": "^2.4.1"
   },
   "scripts": {

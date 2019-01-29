@@ -1,6 +1,7 @@
-import { message, Icon, Upload, Modal } from "antd";
-import RequestFiles from 'utils/RequestFiles';
+import { Icon, message, Modal, Upload } from "antd";
 import React from "react";
+import RequestFiles from 'utils/RequestFiles';
+import Viewer from 'viewerjs';
 
 function beforeUpload(file) {
     const isJPG = file.type === 'image/jpeg';
@@ -14,6 +15,8 @@ function beforeUpload(file) {
     return isJPG //&& isLt2M;
 }
 export default class UploadImg extends React.Component<any, any> {
+    img = new Image();
+    viewer: Viewer = new Viewer(this.img);
     state = {
         loading: false,
         previewVisible: false,
@@ -27,6 +30,17 @@ export default class UploadImg extends React.Component<any, any> {
             }
         ] : [],
     };
+    createViewer(fileId) {
+        if (fileId) {
+            this.img.src = RequestFiles.onFileUrl(fileId);
+        }
+    }
+    componentDidMount() {
+        this.createViewer(this.props.value)
+    }
+    componentWillUnmount() {
+        this.viewer && this.viewer.destroy();
+    }
     onChange(data) {
         this.props.onChange(data);
     }
@@ -38,6 +52,7 @@ export default class UploadImg extends React.Component<any, any> {
         if (info.file.status === 'done') {
             const response = info.file.response
             if (typeof response.Id === "string") {
+                this.createViewer(response.Id);
                 this.onChange(response.Id);
             } else {
                 message.error(`${info.file.name} ${response.message}`)
@@ -46,10 +61,11 @@ export default class UploadImg extends React.Component<any, any> {
         }
     }
     handlePreview = (file) => {
-        this.setState({
-            previewImage: file.url || file.thumbUrl,
-            previewVisible: true,
-        });
+        this.viewer.show()
+        // this.setState({
+        //     previewImage: file.url || file.thumbUrl,
+        //     previewVisible: true,
+        // });
     }
     onRemove = (file) => {
         const response = file.response
@@ -85,9 +101,6 @@ export default class UploadImg extends React.Component<any, any> {
                 >
                     {fileList.length == 0 && uploadButton}
                 </Upload>
-                <Modal visible={previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                </Modal>
             </>
         );
     }
