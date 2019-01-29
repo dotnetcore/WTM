@@ -1,19 +1,13 @@
 import { Form } from 'antd';
 import { DecoratorsSearch } from 'components/dataView/header/search';
 import { DesError } from 'components/decorators';
+import GlobalConfig from 'global.config'; //全局配置
 import * as React from 'react';
 import Store from '../store';
 import Models from './models';
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-    },
+    ...GlobalConfig.formItemLayout
 };
 /**
  * 搜索条件头

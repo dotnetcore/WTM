@@ -1,5 +1,6 @@
-import { Button, Divider, Drawer, Modal, Spin } from 'antd';
+import { Button, Col, Divider, Drawer, Form, Modal, Row, Spin } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
+import { FormItemProps } from 'antd/lib/form';
 import { ModalProps } from 'antd/lib/modal';
 import { DesError } from 'components/decorators';
 import GlobalConfig from 'global.config';
@@ -18,7 +19,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
             const onClose = (this.props as DrawerProps).onClose
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal
-                width={500}
+                width={GlobalConfig.infoTypeWidth}
                 destroyOnClose
                 onCancel={onCancel}
                 {...this.props as any}
@@ -28,7 +29,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
             </Modal>
         }
         return <Drawer
-            width={500}
+            width={GlobalConfig.infoTypeWidth}
             destroyOnClose
             {...this.props as any}
             className={`data-view-drawer ${this.props.className}`}>
@@ -47,7 +48,9 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
         return < >
             <div className="data-view-form-item">
                 <Spin tip="Loading..." spinning={this.props.loadingEdit}>
-                    {this.props.children}
+                    <Row type="flex">
+                        {this.props.children}
+                    </Row>
                 </Spin>
             </div>
             <div className="data-view-form-btns" >
@@ -60,23 +63,39 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
         </>
     }
 }
- /**
+/**
+ * Items 外壳
+ */
+@DesError
+export class InfoShellFormItem extends React.Component<FormItemProps, any> {
+    columnCount = GlobalConfig.infoColumnCount || 1;
+    render() {
+        const colSpan = 24 / this.columnCount;//每列 值
+        return <Col span={colSpan}>
+            <Form.Item {...this.props}>
+                {this.props.children}
+            </Form.Item>
+        </Col>
+    }
+}
+
+/**
 * 转换 value 值
 * @param value value 值
 * @param showType 转换类型 span 情况下 非基础类型。需要格式为字符串。不然 react 会报错
 */
 export function toValues(value: any, showType: "value" | "span" = "value") {
-   // 检查 value 是否是 null 或者 undefined。
-   if (lodash.isNil(value)) {
-       return
-   }
-   // 检查数字类型 
-   // if (lodash.isNumber(value)) {
-   //     return lodash.toString(value)
-   // }
-   // 检查其他
-   if (lodash.isArray(value) || lodash.isObject(value)) {
-       return lodash.toString(value)
-   }
-   return value
+    // 检查 value 是否是 null 或者 undefined。
+    if (lodash.isNil(value)) {
+        return
+    }
+    // 检查数字类型 
+    // if (lodash.isNumber(value)) {
+    //     return lodash.toString(value)
+    // }
+    // 检查其他
+    if (lodash.isArray(value) || lodash.isObject(value)) {
+        return lodash.toString(value)
+    }
+    return value
 }
