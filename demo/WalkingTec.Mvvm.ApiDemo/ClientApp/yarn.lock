@@ -1523,6 +1523,11 @@
   resolved "http://registry.npm.taobao.org/@types/d3-format/download/@types/d3-format-1.3.0.tgz#c5e115fac8e6861ce656fe9861892b22f6b0cfcb"
   integrity sha1-xeEV+sjmhhzmVv6YYYkrIvawz8s=
 
+"@types/hammerjs@^2.0.36":
+  version "2.0.36"
+  resolved "http://registry.npm.taobao.org/@types/hammerjs/download/@types/hammerjs-2.0.36.tgz#17ce0a235e9ffbcdcdf5095646b374c2bf615a4c"
+  integrity sha1-F84KI16f+83N9QlWRrN0wr9hWkw=
+
 "@types/jest@^23.3.8":
   version "23.3.8"
   resolved "http://registry.npm.taobao.org/@types/jest/download/@types/jest-23.3.8.tgz#56b07c0c3d7c8a6c47abb4f785cab648c6eafd01"
