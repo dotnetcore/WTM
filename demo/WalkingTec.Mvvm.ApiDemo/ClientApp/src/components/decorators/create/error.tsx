@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export function DesError(Component: any) {
-    return class extends React.Component<any, any> {
+    return class AppError extends React.Component<any, any> {
         state = {
             error: null,
             errorInfo: null

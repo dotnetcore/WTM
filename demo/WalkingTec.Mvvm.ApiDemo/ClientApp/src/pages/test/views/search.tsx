@@ -16,6 +16,8 @@ export default class extends React.Component<any, any> {
         const { getFieldDecorator } = this.props.form;
         return <DataViewSearch
             // columnCount={4} 默认全局
+            // onReset={() => { }} 覆盖默认方法
+            // onSubmit={() => { }} 覆盖默认方法
             Store={Store}
             form={this.props.form}
         >
