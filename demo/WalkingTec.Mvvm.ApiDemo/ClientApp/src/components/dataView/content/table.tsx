@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, Row, Table } from 'antd';
+import { Alert, Divider, Row, Table, notification } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
@@ -13,6 +13,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import lodash from 'lodash';
 import { Resizable } from 'react-resizable';
+import Rx from 'rxjs';
 import Store from 'store/dataSource';
 import './style.less';
 interface ITablePorps {
@@ -28,40 +29,59 @@ interface ITablePorps {
 }
 
 const TableUtils = {
+    // 页面宽度
     clientWidth: 0,
+    // 左边选择框 宽度
+    selectionColumnWidth: 0,
     /**
      * 设置列宽度
      * @param tableBody 
      * @param columns 
      */
-    onSetColumnsWidth(tableBody, columns) {
+    onSetColumnsWidth(tableBody, columns: ColumnProps<any>[]) {
         // 获取页面宽度
         if (tableBody) {
             // 表头
-            const { clientWidth } = tableBody.querySelector(".ant-table-thead");
-            this.clientWidth = clientWidth;
+            const { clientWidth } = tableBody.querySelector(".ant-table-thead ");
             // 选择框
-            // const { clientWidth: selectionWidth } = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
-            const columnsLenght = columns.length;
+            const { clientWidth: selectionWidth = 0 } = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
+            TableUtils.selectionColumnWidth = selectionWidth;
+            let exclude = 0;
+            const notFixed = columns.filter(x => {
+                if (typeof x.fixed === "string") {
+                    if (typeof x.width === "number") {
+                        exclude += x.width
+                    }
+                    return false
+                }
+                return true
+            })
+            const columnsLenght = notFixed.length;
             //计算表格设置的总宽度
-            const columnWidth = this.onGetcolumnsWidth(columns);
+            const columnWidth = this.onGetcolumnsWidth(notFixed);
             // 总宽度差值
-            const width = clientWidth - columnWidth - 100;
+            const width = clientWidth - columnWidth - exclude - selectionWidth;
             if (width > 0) {
-                const average = width / columnsLenght
+                const average = Math.ceil(width / columnsLenght)
                 // 平均分配
                 columns = columns.map(x => {
+                    if (typeof x.fixed === "string") {
+                        return x;
+                    }
                     return {
                         ...x,
-                        width: Math.ceil((x.width || 0) + average)
+                        width: ((x.width as any || 0) + average)
                     }
                 })
             } else {
-                const average = clientWidth / columnsLenght
+                const average = Math.ceil(TableUtils.clientWidth / columnsLenght);
                 columns = columns.map(x => {
+                    if (typeof x.fixed === "string") {
+                        return x;
+                    }
                     return {
                         ...x,
-                        width: Math.ceil(average)
+                        width: average
                     }
                 })
             }
@@ -82,11 +102,19 @@ const TableUtils = {
     * 动态设置列宽
     */
     onGetScroll(columns) {
-        let scrollX = this.onGetcolumnsWidth(columns);
-        // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth;
+        let scrollX = this.onGetcolumnsWidth(columns) + TableUtils.selectionColumnWidth - 5;
+        // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
             x: scrollX,
-            y: 550
+            // y: 550
+        }
+    },
+    /**
+     * 高度
+     */
+    onGetScrollY(tableBody) {
+        return {
+            y: 0
         }
     },
     /**
@@ -116,14 +144,30 @@ const TableUtils = {
  */
 @observer
 export class DataViewTable extends React.Component<ITablePorps, any> {
-    @observable columns = this.props.columns;
+    @observable columns = this.props.columns.map(x => {
+        if (typeof x.fixed === "string") {
+            if (!x.width) {
+                notification.warn({
+                    message: "fixed 列 需要设置固定宽度",
+                    description: `Title ${x.title}`
+                })
+                x.width = 150;
+            }
+            return x;
+        }
+        x.width = x.width || 100;
+        return x;
+    });
     Store = this.props.Store;
+    tableRef = React.createRef<any>();
+    tableDom: HTMLDivElement;
+    // clientWidth = 0;
     /**
      * 初始化列参数配置
      */
     @action.bound
     initColumns() {
-        this.columns = TableUtils.onSetColumnsWidth(this.rowDom, toJS(this.columns))
+        this.columns = this.onGetColumns(TableUtils.onSetColumnsWidth(this.tableDom, toJS(this.columns)));
     }
     /**
      * 分页、排序、筛选变化时触发
@@ -148,19 +192,16 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      * 拖拽
      */
     handleResize(index) {
+        const path = `[${index}].width`;
         return (e, { size }) => {
-            // let column = {
-            //     ...this.columns[index],
-            //     width: size.width,
-            // }
+            let width = lodash.get(this.columns, path);
+            let scrollw = TableUtils.onGetScroll(this.columns).x - width + size.width;
+            if (TableUtils.clientWidth - scrollw > 5) {
+                return
+            }
             runInAction(() => {
-                // this.columns = [
-                //     ...this.columns.slice(0, index),
-                //     column,
-                //     ...this.columns.slice(index + 1, this.columns.length),
-                // ]
-                lodash.update(this.columns, `[${index}].width`, () => {
-                    return size.width
+                lodash.update(this.columns, path, () => {
+                    return lodash.max([size.width, 100])
                 })
             })
         }
@@ -168,18 +209,10 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     /**
      * 列配置
      */
-    onGetColumns() {
-        return this.columns.map((column, index) => {
-            if (column.dataIndex === "Action") {
-                // let width = 150;
-                // try {
-                //     const fixed = this.rowDom.querySelector('.ant-table-fixed-columns-in-body');
-                //     width = fixed.clientWidth
-                //     console.log(width);
-                // } catch (error) {
-
-                // }
-                return { ...column };
+    onGetColumns(columns) {
+        return columns.map((column, index) => {
+            if (typeof column.fixed === "string") {
+                return column;
             }
             return {
                 ...column,
@@ -200,24 +233,40 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             onChange: e => this.Store.onSelectChange(e),
         };
     }
-
-    private rowDom: HTMLDivElement;
+    /**
+     * 
+     */
+    resize: Rx.Subscription
     componentDidMount() {
-        this.Store.onSearch({}, "", this.Store.dataSource.Page, this.Store.dataSource.Limit);
-        this.initColumns();
+        try {
+            this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
+            TableUtils.clientWidth = this.tableDom.clientWidth;
+            this.Store.onSearch({}, "", this.Store.dataSource.Page, this.Store.dataSource.Limit);
+            this.initColumns();
+            this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
+                if (this.tableDom.clientWidth > TableUtils.clientWidth) {
+                    TableUtils.clientWidth = this.tableDom.clientWidth;
+                    this.initColumns();
+                }
+            });
+        } catch (error) {
+
+        }
     }
     componentWillUnmount() {
+        this.resize && this.resize.unsubscribe()
     }
-
     render() {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
-            const columns = this.onGetColumns();
+            const columns = [...this.columns];
+            console.log(TableUtils.clientWidth, TableUtils.onGetScroll(columns).x);
             return (
-                <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
+                <Row >
                     <Table
+                        ref={this.tableRef}
                         bordered
-                        size="middle"
+                        size="default"
                         className="data-view-table"
                         components={TableUtils.components}
                         dataSource={[...dataSource.Data]}

@@ -275,7 +275,7 @@ export default class Store {
       this.onPageState("visiblePort", false)
       return res
     } catch (error) {
-      this.onErrorMessage("导入失败", error.Data.map(x => ({ key: x.ID, value: x.Message })))
+      this.onErrorMessage("导入失败", [{ value: error.Error, key: null }])
     }
   }
   /**
