@@ -4,27 +4,86 @@ import { DrawerProps } from 'antd/lib/drawer';
 import { ModalProps } from 'antd/lib/modal';
 import { DesError } from 'components/decorators';
 import GlobalConfig from 'global.config';
+import Hammer from 'hammerjs';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import './style.less';
+
+
+class DndTitle extends React.Component<{ styleState: { left: number, top: number }, onUpdate?: (style: React.CSSProperties) => void }, any> {
+    deltaX = 0;
+    deltaY = 0;
+    panstart = false;
+    div = React.createRef<any>();
+    onUpdate(x, y) {
+        this.props.onUpdate({
+            // transform: `translate(${x}px,${y}px)`
+            left: x,
+            top: y
+        })
+    }
+    hammer;
+    componentDidMount() {
+        const hammer = this.hammer = new Hammer(this.div.current)
+        hammer.on('panstart', (event) => {
+            if (this.props.styleState.left && this.props.styleState.top) {
+                this.deltaX = this.props.styleState.left;
+                this.deltaY = this.props.styleState.top;
+            }
+            this.panstart = true;
+        });
+        hammer.on('panmove', (event) => {
+            this.onUpdate(event.deltaX + this.deltaX, event.deltaY + this.deltaY)
+        });
+        hammer.on('panend', (event) => {
+            this.panstart = false
+        });
+    }
+    componentWillUnmount() {
+        this.hammer && this.hammer.destroy()
+    }
+    shouldComponentUpdate() {
+        return !this.panstart
+    }
+    render() {
+        return (
+            <div className="modal-dnd-title" ref={this.div}>
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
  */
 @DesError
 export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
+    state = {
+        style: {}
+    }
     render() {
         if (GlobalConfig.infoType === "Modal") {
             const onClose = (this.props as DrawerProps).onClose
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal
                 width={GlobalConfig.infoTypeWidth}
+                maskClosable={false}
                 destroyOnClose
                 onCancel={onCancel}
                 {...this.props as any}
+                style={this.state.style}
+                title={
+                    <DndTitle styleState={this.state.style as any} onUpdate={style => this.setState({ style })}>
+                        {this.props.title}
+                    </DndTitle>
+                }
                 footer={<div className="data-view-modal-footer"></div>}
-                className={`data-view-modal ${this.props.className}`}>
+                className={` ${this.props.className}`}
+                wrapClassName="data-view-modal"
+            >
                 {this.props.children}
             </Modal>
         }

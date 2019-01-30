@@ -260,7 +260,6 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
             const columns = [...this.columns];
-            console.log(TableUtils.clientWidth, TableUtils.onGetScroll(columns).x);
             return (
                 <Row >
                     <Table
