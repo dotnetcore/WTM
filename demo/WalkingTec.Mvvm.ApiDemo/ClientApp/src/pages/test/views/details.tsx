@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import { InfoShell, InfoShellFooter, InfoShellFormItem, ToImg, toValues } from 'components/dataView';
+import { InfoShell, InfoShellFooter, InfoShellCol, ToImg, toValues } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import GlobalConfig from 'global.config'; //全局配置
 import { observer } from 'mobx-react';
@@ -8,6 +8,7 @@ import Regular from 'utils/Regular'; //正则
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
 const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
+const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow }
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -73,37 +74,39 @@ class InsertForm extends React.Component<any, any> {
         const { getFieldDecorator } = form;
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                <InfoShellFormItem label="账号" hasFeedback {...formItemLayout} >
+                <Form.Item label="账号" hasFeedback {...formItemLayout} >
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
                         props: this.props
                     })(Models.ITCode)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="密码" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="密码" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Password', {
                         rules: [{ "required": true, "message": "密码不能为空" }],
                     })(Models.Password)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="邮箱" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="邮箱" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }]
                     })(Models.Email)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="姓名" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="姓名" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
                     })(Models.Name)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="性别" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="性别" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Sex', {
                         rules: [],
                     })(Models.Sex)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="照片"  {...formItemLayout}>
-                    {getFieldDecorator('PhotoId', {
+                </Form.Item >
+                <InfoShellCol span={24}>
+                    <Form.Item label="照片"  {...formItemLayoutRow}>
+                        {getFieldDecorator('PhotoId', {
 
-                    })(Models.PhotoId)}
-                </InfoShellFormItem>
+                        })(Models.PhotoId)}
+                    </Form.Item >
+                </InfoShellCol>
             </FooterFormItem>
 
         </Form>
@@ -133,35 +136,37 @@ class UpdateForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                <InfoShellFormItem label="账号" hasFeedback {...formItemLayout}>
+                <Form.Item label="账号" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('ITCode', {
                         rules: [{ "required": true, "message": "账号不能为空" }],
                         initialValue: toValues(details['ITCode'])
                     })(Models.ITCode)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="邮箱" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="邮箱" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Email', {
                         rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
                         initialValue: toValues(details['Email'])
                     })(Models.Email)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="姓名" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="姓名" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Name', {
                         rules: [{ "required": true, "message": "姓名不能为空" }],
                         initialValue: toValues(details['Name'])
                     })(Models.Name)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="性别" hasFeedback {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="性别" hasFeedback {...formItemLayout}>
                     {getFieldDecorator('Sex', {
                         rules: [],
                         initialValue: toValues(details['Sex'])
                     })(Models.Sex)}
-                </InfoShellFormItem>
-                <InfoShellFormItem label="照片"  {...formItemLayout}>
-                    {getFieldDecorator('PhotoId', {
-                        initialValue: details['PhotoId']
-                    })(Models.PhotoId)}
-                </InfoShellFormItem>
+                </Form.Item >
+                <InfoShellCol span={24}>
+                    <Form.Item label="照片"  {...formItemLayoutRow}>
+                        {getFieldDecorator('PhotoId', {
+                            initialValue: details['PhotoId']
+                        })(Models.PhotoId)}
+                    </Form.Item >
+                </InfoShellCol>
             </FooterFormItem>
         </Form>
     }
@@ -176,20 +181,22 @@ class InfoForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form >
             <FooterFormItem>
-                <InfoShellFormItem label="账号" {...formItemLayout}>
+                <Form.Item label="账号" {...formItemLayout}>
                     <span>{toValues(details['ITCode'], "span")}</span>
-                </InfoShellFormItem>
-                <InfoShellFormItem label="邮箱" {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="邮箱" {...formItemLayout}>
                     <span>{toValues(details['Email'], "span")}</span>
-                </InfoShellFormItem>
-                <InfoShellFormItem label="姓名" {...formItemLayout}>
+                </Form.Item >
+                <Form.Item label="姓名" {...formItemLayout}>
                     <span>{toValues(details['Name'], "span")}</span>
-                </InfoShellFormItem>
-                <InfoShellFormItem label="头像" {...formItemLayout}>
-                    <span>
-                        <ToImg fileID={details['PhotoId']} />
-                    </span>
-                </InfoShellFormItem>
+                </Form.Item >
+                <InfoShellCol span={24}>
+                    <Form.Item label="头像" {...formItemLayoutRow}>
+                        <span>
+                            <ToImg fileID={details['PhotoId']} />
+                        </span>
+                    </Form.Item >
+                </InfoShellCol>
             </FooterFormItem>
         </Form>
     }

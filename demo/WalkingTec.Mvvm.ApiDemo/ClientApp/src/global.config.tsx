@@ -55,6 +55,19 @@ export default {
         },
     },
     /**
+     * 占用 一整行 时的配置
+     */
+    formItemLayoutRow: {
+        labelCol: {
+            xs: { span: 24 },
+            sm: { span: 3 },
+        },
+        wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 16 },
+        },
+    },
+    /**
      * 详情信息 列 数 24 的除数
      */
     infoColumnCount: 2,
