@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.ApiDemo
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
-                return BadRequest(vm.ErrorListVM.GetJson());
+                return BadRequest(vm.GetErrorJson());
             }
             else
             {

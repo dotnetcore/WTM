@@ -68,6 +68,7 @@ namespace WalkingTec.Mvvm.Core
         //Model数据是否已被赋值
         protected bool isEntityListSet = false;
 
+        protected HSSFWorkbook hssfworkbook;
         #endregion
 
         #region 构造函数
@@ -641,7 +642,7 @@ namespace WalkingTec.Mvvm.Core
                 Template.InitExcelData();
                 Template.InitCustomFormat();
                 TemplateData = new List<T>();
-                HSSFWorkbook hssfworkbook = new HSSFWorkbook();
+                hssfworkbook = new HSSFWorkbook();
                 if (UploadFileId == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请上传模板文件" });
@@ -982,6 +983,16 @@ namespace WalkingTec.Mvvm.Core
         {
             return new ComplexDuplicatedField<T, V>(MiddleExp, FieldExps);
         }
+
+        public string GetErrorJson()
+        {
+            var err = ErrorListVM?.EntityList?.Where(x => x.ExcelIndex == 0).FirstOrDefault()?.Message;
+            if (string.IsNullOrEmpty(err))
+            {
+                err = "导入时发生错误";
+            }
+            return $"{{Error:\"{err}\",FileId:\"\"}}";
+        }
     }
 
     #region 辅助类
@@ -989,6 +1000,9 @@ namespace WalkingTec.Mvvm.Core
     {
         [Display(Name = "行号")]
         public long Index { get; set; }
+
+        [Display(Name = "列号")]
+        public long Cell { get; set; }
         [Display(Name = "错误信息")]
         public string Message { get; set; }
     }
