@@ -1,6 +1,6 @@
-import { Button, Col, Divider, Drawer, Form, Modal, Row, Spin } from 'antd';
+import { Button, Col, Divider, Drawer, Modal, Row, Spin } from 'antd';
+import { ColProps } from 'antd/lib/col';
 import { DrawerProps } from 'antd/lib/drawer';
-import { FormItemProps } from 'antd/lib/form';
 import { ModalProps } from 'antd/lib/modal';
 import { DesError } from 'components/decorators';
 import GlobalConfig from 'global.config';
@@ -45,11 +45,24 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
 @observer
 export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onCancel?: () => void, submit?: boolean }, any> {
     render() {
-        return < >
+        const childrens = React.Children.toArray(this.props.children).map((node: any) => {
+            try {
+                // 没有嵌套 col 的自动添加 嵌套的 解除
+                if (lodash.isEqual(lodash.toLower(node.type.name), lodash.toLower("FormItem"))) {
+                    return <InfoShellCol key={node.key}>
+                        {node}
+                    </InfoShellCol>
+                }
+                return node
+            } catch (error) {
+                return node
+            }
+        });
+        return <>
             <div className="data-view-form-item">
                 <Spin tip="Loading..." spinning={this.props.loadingEdit}>
                     <Row type="flex">
-                        {this.props.children}
+                        {childrens}
                     </Row>
                 </Spin>
             </div>
@@ -66,15 +79,12 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
 /**
  * Items 外壳
  */
-@DesError
-export class InfoShellFormItem extends React.Component<FormItemProps, any> {
+export class InfoShellCol extends React.Component<ColProps, any> {
     columnCount = GlobalConfig.infoColumnCount || 1;
     render() {
         const colSpan = 24 / this.columnCount;//每列 值
-        return <Col span={colSpan}>
-            <Form.Item {...this.props}>
-                {this.props.children}
-            </Form.Item>
+        return <Col span={colSpan} {...this.props}>
+            {this.props.children}
         </Col>
     }
 }

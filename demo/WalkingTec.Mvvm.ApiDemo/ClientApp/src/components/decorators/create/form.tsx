@@ -1,16 +1,29 @@
 import * as React from 'react';
 import { Form } from 'antd';
 export function DesForm(Component: any) {
-    return Form.create()(class extends React.PureComponent<any, any> {
+    return Form.create()(class AppForm extends React.PureComponent<any, any> {
         render() {
             // 扩展 默认 的 函数 传递 form 对象
             const getFieldDecorator = this.props.form.getFieldDecorator;
             this.props.form.getFieldDecorator = (id, options) => {
                 return (node) => {
-                    const reactNode = getFieldDecorator(id, options)(node)
-                    return React.cloneElement(reactNode, {
-                        form: this.props.form
-                    })
+                    // 执行 表单创建的 装饰器
+                    const reactNode = getFieldDecorator(id, options)(node);
+                    let props: any = {
+                        form: this.props.form,
+                    }
+                    try {
+                        props = {
+                            form: this.props.form,
+                            history: this.props.history,
+                            location: this.props.location,
+                            match: this.props.match,
+                            route: this.props.route,
+                        }
+                    } catch (error) {
+
+                    }
+                    return React.cloneElement(reactNode, props)
                 }
             }
             return (
