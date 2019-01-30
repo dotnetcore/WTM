@@ -98,7 +98,7 @@ export class Request {
                             }
                             return false
                         }
-                        sub.error(null)
+                        sub.error({})
                         notification.error({
                             key: ajax.request.url,
                             message: ajax.status,
