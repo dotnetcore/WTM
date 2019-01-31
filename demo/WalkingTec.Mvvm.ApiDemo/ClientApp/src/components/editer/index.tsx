@@ -8,7 +8,6 @@
 import { message } from 'antd';
 import BraftEditor, { EditorState } from 'braft-editor';
 import * as React from 'react';
-require('braft-editor/dist/index.css');
 /**
  * https://github.com/margox/braft-editor
  * 富文本编辑
