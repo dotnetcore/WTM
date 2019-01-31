@@ -58,10 +58,10 @@ export class RequestFiles extends Request {
      * 获取文件
      * @param id 
      */
-    onFileUrl(id) {
+    onFileUrl(id, target = this.target) {
         if (id) {
             const src = files.fileGet.src;
-            return `${this.compatibleUrl(this.target, src)}/${id}`
+            return `${this.compatibleUrl(target, src)}/${id}`
         }
     }
     /**

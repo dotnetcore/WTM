@@ -6,7 +6,7 @@
  * @desc [description] .
  */
 import * as React from 'react';
-import { message, notification, List, Row, Col } from 'antd';
+import { message, notification, List, Row, Col, Button } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
@@ -275,7 +275,8 @@ export default class Store {
       this.onPageState("visiblePort", false)
       return res
     } catch (error) {
-      this.onErrorMessage("导入失败", [{ value: error.Error, key: null }])
+      console.log(error);
+      this.onErrorMessage("导入失败", [{ value: error.Error, key: null, FileId: error.FileId }])
     }
   }
   /**
@@ -316,7 +317,7 @@ export default class Store {
    * @param message 
    * @param dataSource 
    */
-  onErrorMessage(message, dataSource?: { key: string, value: string }[]) {
+  onErrorMessage(message, dataSource?: { key: string, value: string, FileId?: string }[]) {
     notification.error({
       duration: 5,
       message: message,
@@ -328,6 +329,11 @@ export default class Store {
             <Row style={{ width: "100%" }}>
               {/* <Col span={10}>{item.key}</Col> */}
               <Col span={14}>{item.value}</Col>
+              {item.FileId && <Col span={10}>
+                <Button type="primary" onClick={e => {
+                  RequestFiles.download({ url: RequestFiles.onFileUrl(item.FileId, "/") })
+                }}>下载错误文件</Button>
+              </Col>}
             </Row>
           </List.Item>
         )}

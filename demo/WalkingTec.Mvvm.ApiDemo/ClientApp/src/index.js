@@ -11,6 +11,7 @@ import "@babel/polyfill";
 import 'ant-design-pro/dist/ant-design-pro.css';
 import 'antd/dist/antd.less';
 import 'viewerjs/dist/viewer.css';
+import 'braft-editor/dist/index.css';
 import App from "app/index";
 import 'nprogress/nprogress.css';
 import * as React from 'react';
