@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Mvc
             var vm = CreateVM<CodeGenVM>();
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
             vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
-            return PartialView(vm);
+            return View(vm);
         }
 
         [HttpPost]
@@ -24,13 +24,13 @@ namespace WalkingTec.Mvvm.Mvc
             if (!ModelState.IsValid)
             {
                 vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
-                return PartialView("Index", vm);
+                return View("Index", vm);
 
             }
             else
             {
                 vm.FieldList.ModelFullName = vm.SelectedModel;
-                return PartialView(vm);
+                return View(vm);
             }
         }
 
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult Gen(CodeGenVM vm)
         {
             
-            return PartialView(vm);
+            return View(vm);
         }
 
         [HttpPost]

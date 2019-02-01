@@ -26,7 +26,7 @@
     "viser-react": "^2.4.1"
   },
   "scripts": {
-    "start": " react-app-rewired start",
+    "start": "rimraf ./build && react-app-rewired start",
     "build": "rimraf ./build && react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
