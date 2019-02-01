@@ -143,9 +143,8 @@ namespace WalkingTec.Mvvm.ApiDemo
 
         [HttpPost("Import")]
         [ActionDescription("导入")]
-        public ActionResult Import()
+        public ActionResult Import(FrameworkUserImportVM vm)
         {
-            var vm = CreateVM<FrameworkUserImportVM>();
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
