@@ -268,7 +268,7 @@ export default class Store {
     const method = this.Urls.import.method;
     const src = this.Urls.import.src;
     try {
-      const res = await this.Request[method](src, { UploadFileId }, { "Content-Type": "application/x-www-form-urlencoded" }).toPromise();
+      const res = await this.Request[method](src, { UploadFileId }).toPromise();
       message.success('导入成功')
       // 刷新数据
       this.onSearch()
