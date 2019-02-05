@@ -135,6 +135,7 @@
                 <td>
                     <select name="UI">
                         <option value="LayUI">LayUI</option>
+                        <option value="React">React(前后端分离)</option>
                     </select>
                 </td>
             </tr>

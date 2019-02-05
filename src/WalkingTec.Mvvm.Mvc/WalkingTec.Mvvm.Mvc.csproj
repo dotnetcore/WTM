@@ -35,11 +35,20 @@
     <None Remove="SetupFiles\Mvc\layui\Program.txt" />
     <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
+    <None Remove="SetupFiles\Spa\FileApiController.txt" />
+    <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
+    <None Remove="SetupFiles\Spa\React\Program.txt" />
+    <None Remove="SetupFiles\Spa\UserController.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
     <None Remove="SetupFiles\vms\LoginVM.txt" />
     <None Remove="Views\_CodeGen\SetField.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\UserController.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +77,8 @@
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\FileApiController.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program.txt" />
     <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
@@ -96,7 +107,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.App" version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -112,7 +123,6 @@
 
   <ItemGroup>
     <Folder Include="GeneratorFiles\Spa\React\" />
-    <Folder Include="SetupFiles\Spa\React\" />
   </ItemGroup>
 
 </Project>

@@ -13,13 +13,5 @@ namespace WalkingTec.Mvvm.ApiDemo
              : base(cs, dbtype)
         {
         }
-#if DEBUG
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()));
-
-        }
-
-#endif
     }
 }
