@@ -2,31 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Description>WalkingTec.Mvvm</Description>
-    <AssemblyName>WalkingTec.Mvvm.ApiDemo</AssemblyName>
-    <Title>$(AssemblyName)</Title>
-    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
   </PropertyGroup>
 
-  <Import Project="..\..\common.props" />
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
-    <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc.Admin\WalkingTec.Mvvm.Mvc.Admin.csproj" />
-    <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
-    <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+    <PackageReference Include="WalkingTec.Mvvm.TagHelpers.LayUI" Version="$version$" />
+    <PackageReference Include="WalkingTec.Mvvm.Mvc.Admin" Version="$version$"" />
+ </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->

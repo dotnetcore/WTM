@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class SetupVM : BaseVM
     {
-        private string version = "2.2.5-pre1-insider003";
+        private string version = "2.2.4";
 
         public bool EnableLog { get; set; }
 
@@ -181,39 +181,56 @@ namespace WalkingTec.Mvvm.Mvc
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}\\ClientApp");
                 File.WriteAllText($"{MainDir}\\Controllers\\UserController.cs", GetResource("UserController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("FileApiController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
 
             }
             if (ProjectType == ProjectTypeEnum.Single)
             {
-                var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
-                if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                if (UI == UIEnum.LayUI)
                 {
-                    proj = proj.Replace("</Project>", $@"
+                    var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
+                    if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                    {
+                        proj = proj.Replace("</Project>", $@"
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
-  </ItemGroup >
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
+ </ ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
+                    }
+                }
+                if(UI == UIEnum.React)
+                {
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", GetResource("Proj.txt","Spa.React").Replace("$version$", version), Encoding.UTF8);
                 }
             }
             if (ProjectType == ProjectTypeEnum.Multi)
             {
-                var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
-                if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                if (UI == UIEnum.LayUI)
                 {
-                    proj = proj.Replace("</Project>", $@"
+                    var proj = File.ReadAllText($"{MainDir}\\{MainNs}.csproj");
+                    if (proj.IndexOf("WalkingTec.Mvvm.TagHelpers.LayUI") < 0)
+                    {
+                        proj = proj.Replace("</Project>", $@"
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
-    <ProjectReference Include=""..\{modelns}\{modelns}.csproj"" />
+     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
+   <ProjectReference Include=""..\{modelns}\{modelns}.csproj"" />
     <ProjectReference Include=""..\{datans}\{datans}.csproj"" />
     <ProjectReference Include=""..\{vmns}\{vmns}.csproj"" />
  </ItemGroup >
 </Project>
 ");
-                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}\\{MainNs}.csproj", proj, Encoding.UTF8);
+                    }
+                }
+                if (UI == UIEnum.React)
+                {
+                    File.WriteAllText($"{MainDir}\\{MainNs}.csproj", GetResource("Proj.txt", "Spa.React"), Encoding.UTF8);
                 }
                 //修改modelproject
                 var modelproj = File.ReadAllText($"{modeldir}\\{modelns}.csproj");
