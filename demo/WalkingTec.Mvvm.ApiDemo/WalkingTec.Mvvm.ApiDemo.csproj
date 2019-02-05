@@ -5,11 +5,13 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.ApiDemo</AssemblyName>
     <Title>$(AssemblyName)</Title>
-    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
   </PropertyGroup>
 
-  <Import Project="..\..\common.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
@@ -21,11 +23,6 @@
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc.Admin\WalkingTec.Mvvm.Mvc.Admin.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
