@@ -21,6 +21,8 @@ namespace WalkingTec.Mvvm.Mvc
 
         public string PreviewFile { get; set; }
 
+        public UIEnum UI { get; set; }
+
         public string ModelName
         {
             get
@@ -242,20 +244,31 @@ namespace WalkingTec.Mvvm.Mvc
             File.WriteAllText($"{VmDir}\\{ModelName}ImportVM.cs", GenerateVM("ImportVM"), Encoding.UTF8);
             File.WriteAllText($"{VmDir}\\{ModelName}Searcher.cs", GenerateVM("Searcher"), Encoding.UTF8);
 
-            File.WriteAllText($"{ViewDir}\\Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\Create.cshtml", GenerateView("CreateView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\Edit.cshtml", GenerateView("EditView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\Delete.cshtml", GenerateView("DeleteView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\Details.cshtml", GenerateView("DetailsView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\Import.cshtml", GenerateView("ImportView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
-            File.WriteAllText($"{ViewDir}\\BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
-
+            if (UI == UIEnum.LayUI)
+            {
+                File.WriteAllText($"{ViewDir}\\Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\Create.cshtml", GenerateView("CreateView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\Edit.cshtml", GenerateView("EditView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\Delete.cshtml", GenerateView("DeleteView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\Details.cshtml", GenerateView("DetailsView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\Import.cshtml", GenerateView("ImportView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
+                File.WriteAllText($"{ViewDir}\\BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
+            }
         }
 
         public string GenerateController()
         {
-            var rv = GetResource("Controller.txt","Mvc").Replace("$vmnamespace$",VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName);
+            string dir = "";
+            if(UI == UIEnum.LayUI)
+            {
+                dir = "Mvc";
+            }
+            if(UI == UIEnum.React)
+            {
+                dir = "Spa";
+            }
+            var rv = GetResource("Controller.txt", dir).Replace("$vmnamespace$",VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName);
             if (string.IsNullOrEmpty(Area))
             {
                 rv = rv.Replace("$area$", "");

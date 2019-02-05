@@ -9,9 +9,10 @@ namespace WalkingTec.Mvvm.Mvc
     public class _CodeGenController : BaseController
     {
         [ActionDescription("代码生成器")]
-        public IActionResult Index()
+        public IActionResult Index(UIEnum ui)
         {
             var vm = CreateVM<CodeGenVM>();
+            vm.UI = ui;
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
             vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
             return View(vm);

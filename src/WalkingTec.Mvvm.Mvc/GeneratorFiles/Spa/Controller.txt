@@ -1,0 +1,152 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc;
+using $vmnamespace$;
+
+namespace $namespace$
+{
+    $area$
+    [ActionDescription("$des$")]
+    [ApiController]
+    [Route("api/$modelname$")]
+	public class $modelname$Controller : BaseApiController
+    {
+        [ActionDescription("搜索")]
+        [HttpPost("Search")]
+		public string Search($modelname$Searcher searcher)
+        {
+            var vm = CreateVM<$modelname$ListVM>();
+            vm.Searcher = searcher;
+            return vm.GetJson();
+        }
+
+        [ActionDescription("获取")]
+        [HttpGet("{id}")]
+        public $modelname$ Get(Guid id)
+        {
+            var vm = CreateVM<$modelname$VM>(id);
+            return vm.Entity;
+        }
+
+        [ActionDescription("新建")]
+        [HttpPost("Add")]
+        public IActionResult Add($modelname$VM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                vm.DoAdd();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+
+        }
+
+        [ActionDescription("修改")]
+        [HttpPut("Edit")]
+        public IActionResult Edit($modelname$VM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                vm.DoEdit(true);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
+        [ActionDescription("删除")]
+        [HttpGet("Delete/{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            var vm = CreateVM<$modelname$VM>(id);
+            vm.DoDelete();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(vm.Entity);
+            }
+
+        }
+
+        [ActionDescription("导出")]
+        [HttpPost("ExportExcel")]
+        public IActionResult ExportExcel($modelname$Searcher searcher)
+        {
+            var vm = CreateVM<$modelname$ListVM>();
+            vm.Searcher = searcher;
+            vm.SearcherMode = ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
+        [ActionDescription("勾选导出")]
+        [HttpPost("ExportExcelByIds")]
+        public IActionResult ExportExcelByIds(Guid[] ids)
+        {
+            var vm = CreateVM<$modelname$ListVM>();
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = new List<Guid>(ids);
+                vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
+            }
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
+        [ActionDescription("下载导入模板")]
+        [HttpGet("GetExcelTemplate")]
+        public IActionResult GetExcelTemplate()
+        {
+            var vm = CreateVM<$modelname$ImportVM>();
+            var qs = new Dictionary<string, string>();
+            foreach (var item in Request.Query.Keys)
+            {
+                qs.Add(item, Request.Query[item]);
+            }
+            vm.SetParms(qs);
+            var data = vm.GenerateTemplate(out string fileName);
+            return File(data, "application/vnd.ms-excel", fileName);
+        }
+
+        [ActionDescription("导入")]
+        [HttpPost("Import")]
+        public ActionResult Import($modelname$ImportVM vm)
+        {
+
+            if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
+            {
+                return BadRequest(vm.GetErrorJson());
+            }
+            else
+            {
+                return Ok(vm.EntityList.Count);
+            }
+        }
+    }
+}
