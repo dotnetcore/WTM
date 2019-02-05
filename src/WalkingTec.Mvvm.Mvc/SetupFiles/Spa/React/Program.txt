@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
 
-namespace WalkingTec.Mvvm.ApiDemo
+namespace $ns$
 {
     public class Program
     {

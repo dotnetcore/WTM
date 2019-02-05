@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace WalkingTec.Mvvm.Mvc
 {
-    public enum UIEnum { LayUI}
+    public enum UIEnum { LayUI,React}
     public enum ProjectTypeEnum { Single, Multi}
 
     public class SetupVM : BaseVM
@@ -172,31 +172,16 @@ namespace WalkingTec.Mvvm.Mvc
                 File.WriteAllText($"{MainDir}\\Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Views\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Areas\\_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                var sr = assembly.GetManifestResourceStream($"WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip");
-                System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
-                foreach (var entry in zip.Entries)
-                {
-                    int index = entry.FullName.LastIndexOf("/");
-                    if (index >= 0)
-                    {
-                        string dir = $"{MainDir}\\wwwroot\\{entry.FullName.Substring(0, index)}";
-                        if (Directory.Exists(dir) == false)
-                        {
-                            Directory.CreateDirectory(dir);
-                        }
-                    }
-                    if(entry.FullName.EndsWith("/") == false)
-                    {
-                        var f = File.OpenWrite($"{MainDir}\\wwwroot\\{entry.FullName}");
-                        var z = entry.Open();
-                        z.CopyTo(f);
-                        f.Flush();
-                        f.Dispose();
-                        z.Dispose();
-                    }
-                }
-                sr.Dispose();
+                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}\\wwwroot");
+            }
+            if(UI == UIEnum.React)
+            {
+                Directory.CreateDirectory($"{MainDir}\\ClientApp");
+                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}\\wwwroot");
+                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}\\ClientApp");
+                File.WriteAllText($"{MainDir}\\Controllers\\UserController.cs", GetResource("UserController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("FileApiController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+
             }
             if (ProjectType == ProjectTypeEnum.Single)
             {
@@ -337,5 +322,34 @@ EndProject
             return content;
         }
 
+        private void UnZip(string fileName,string basedir)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            var sr = assembly.GetManifestResourceStream(fileName);
+            System.IO.Compression.ZipArchive zip = new System.IO.Compression.ZipArchive(sr);
+            foreach (var entry in zip.Entries)
+            {
+                int index = entry.FullName.LastIndexOf("/");
+                if (index >= 0)
+                {
+                    string dir = $"{basedir}\\{entry.FullName.Substring(0, index)}";
+                    if (Directory.Exists(dir) == false)
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                }
+                if (entry.FullName.EndsWith("/") == false)
+                {
+                    var f = File.OpenWrite($"{basedir}\\{entry.FullName}");
+                    var z = entry.Open();
+                    z.CopyTo(f);
+                    f.Flush();
+                    f.Dispose();
+                    z.Dispose();
+                }
+            }
+            sr.Dispose();
+
+        }
     }
 }
