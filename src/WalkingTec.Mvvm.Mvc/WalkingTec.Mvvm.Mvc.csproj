@@ -23,6 +23,7 @@
     <None Remove="GeneratorFiles\ImportVM.txt" />
     <None Remove="GeneratorFiles\ListView.txt" />
     <None Remove="GeneratorFiles\Searcher.txt" />
+    <None Remove="GeneratorFiles\Spa\Controller.txt" />
     <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
     <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
     <None Remove="SetupFiles\Mvc\home\Header.txt" />
@@ -49,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
     <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
