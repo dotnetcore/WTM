@@ -36,8 +36,10 @@
     <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
     <None Remove="SetupFiles\Spa\FileApiController.txt" />
+    <None Remove="SetupFiles\Spa\Program.txt" />
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
+    <None Remove="SetupFiles\Spa\React\Proj.txt" />
     <None Remove="SetupFiles\Spa\UserController.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
@@ -47,7 +49,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\UserController.txt" />
   </ItemGroup>
 
@@ -78,7 +82,6 @@
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\FileApiController.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Program.txt" />
     <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
