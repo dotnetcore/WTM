@@ -32,17 +32,17 @@ class Store {
     async getMenu() {
         let menu = [];
         if (User.User.role == "administrator") {
-            const res = await import("../../subMenu.json");
-            menu = res.subMenu;
-            menu.push({
-                "Key": "system",
-                "Name": "系统设置",
-                "Icon": "setting",
-                "Path": "/system",
-                "Component": "",
-                "Children": []
-            })
-            
+            const res = await import("../../subMenu.json").then(x => x.default);
+            menu = res;
+            // menu.push({
+            //     "Key": "system",
+            //     "Name": "系统设置",
+            //     "Icon": "setting",
+            //     "Path": "/system",
+            //     "Component": "",
+            //     "Children": []
+            // })
+
         }
         this.setSubMenu(menu);
     }

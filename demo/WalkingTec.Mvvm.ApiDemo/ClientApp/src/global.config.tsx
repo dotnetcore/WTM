@@ -1,10 +1,20 @@
 import "./global.less";
 import { notification } from 'antd';
+import ImgLogo from 'assets/img/logo.png';
+import ImgUser from 'assets/img/user.png';
 notification.config({
     duration: 3,
     top: 60
 });
 export default {
+    /**
+     * 默认配置
+     */
+    default: {
+        title: "WTM",
+        logo: ImgLogo,
+        avatar: ImgUser,
+    },
     /**
      * 服务器地址 前缀
      * process.env.NODE_ENV === "development" 根据 环境替换

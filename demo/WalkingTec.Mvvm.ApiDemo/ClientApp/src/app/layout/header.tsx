@@ -1,14 +1,12 @@
 
-import { Layout, Menu, Avatar, Row, Col, Dropdown, Button, Icon } from 'antd';
 import NoticeIcon from 'ant-design-pro/lib/NoticeIcon';
-import { Link } from 'react-router-dom';
+import { Avatar, Col, Dropdown, Icon, Layout, Menu, Row, Tag } from 'antd';
+import groupBy from 'lodash/groupBy';
+import moment from 'moment';
 import * as React from 'react';
 import Store from 'store/index';
+import GlobalConfig from 'global.config';
 const { Header } = Layout;
-import moment from 'moment';
-import groupBy from 'lodash/groupBy';
-import { Tag } from 'antd';
-
 export default class App extends React.Component<any, any> {
     shouldComponentUpdate() {
         return false;
@@ -27,8 +25,8 @@ export default class App extends React.Component<any, any> {
                 </Menu> */}
                 <Row>
                     <Col span={4}><Icon onClick={() => { Store.Meun.toggleCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
-                    <Col span={20} style={{ textAlign: "right", padding: "0 20px" }}>
-                        <NoticeIconComponent />
+                    <Col span={20} style={{ textAlign: "right" }}>
+                        {/* <NoticeIconComponent /> */}
                         <UserMenu {...this.props} />
                     </Col>
                 </Row>
@@ -42,16 +40,16 @@ class UserMenu extends React.Component<any, any> {
             <Dropdown overlay={
                 <Menu>
                     <Menu.Item>
-                        <a onClick={()=>{
+                        <a onClick={() => {
                             this.props.history.push("/user")
                             console.log(this.props)
-                        } }>  <Icon type={'appstore'} />个人中心</a>
+                        }}>  <Icon type={'appstore'} />个人中心</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a onClick={() => {  Store.User.outLogin() }}>  <Icon type={'appstore'} />设置</a>
+                        <a onClick={() => { Store.User.outLogin() }}>  <Icon type={'appstore'} />设置</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a onClick={() => {  Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
+                        <a onClick={() => { Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
                     </Menu.Item>
                     {/* <Menu.Item>
                     <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>
@@ -61,7 +59,12 @@ class UserMenu extends React.Component<any, any> {
                 </Menu.Item> */}
                 </Menu>
             } placement="bottomCenter">
-                <div style={{ display: "inline-block" }}> <Avatar size="large" icon="user" src="https://avatars0.githubusercontent.com/u/19631404?s=460&v=4" /> &nbsp;<span>冷</span></div>
+                <div className="app-user-menu" >
+                    <div>
+                        <Avatar size="large" icon="user" src={GlobalConfig.default.avatar} />
+                        &nbsp;<span>UserName</span>
+                    </div>
+                </div>
             </Dropdown>
         );
     }
