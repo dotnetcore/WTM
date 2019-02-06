@@ -3,7 +3,7 @@ import { Icon, Layout, Menu } from 'antd';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-// import routersConfig from '../routersConfig';
+import GlobalConfig from 'global.config';
 import Store from 'store/index';
 import lodash from 'lodash';
 const { SubMenu } = Menu;
@@ -68,7 +68,9 @@ export default class App extends React.Component<any, any> {
     const width = Store.Meun.collapsed ? 80 : 250
     return (
       <div className="app-layout-sider" style={{ width, minWidth: width }} >
-        <div className="app-layout-logo" >Logo</div>
+        <div className="app-layout-logo" >
+          <img src={GlobalConfig.default.logo} />{GlobalConfig.default.title}
+        </div>
         <Menu
           theme="dark"
           mode="inline"
