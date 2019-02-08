@@ -18,14 +18,6 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<Student> Students { get; set; }
 
 
-#if DEBUG
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()));
-
-        }
-
-#endif
 
     }
 }
