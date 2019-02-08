@@ -17,16 +17,18 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
     }
     onCancel() {
         this.Store.onPageState("visiblePort", false);
-        if (this.success) {
-            this.Store.onSearch();
-        }
-        this.success = false;
+        // if (this.success) {
+        //     this.Store.onSearch();
+        // }
+        // this.success = false;
     }
     async onImport(id) {
         // 导入
         const res = await this.props.Store.onImport(id);
         if (res) {
-            this.success = true;
+            this.Store.onSearch();
+            this.onCancel();
+            // this.success = true;
         }
     }
     render() {
