@@ -271,8 +271,8 @@ export default class Store {
       const res = await this.Request[method](src, { UploadFileId }).toPromise();
       message.success('导入成功')
       // 刷新数据
-      this.onSearch()
-      this.onPageState("visiblePort", false)
+      // this.onSearch()
+      // this.onPageState("visiblePort", false)
       return res
     } catch (error) {
       console.log(error);
