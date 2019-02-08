@@ -26,6 +26,9 @@ class UserMenu extends React.Component<any, any> {
         return (
             <Dropdown overlay={
                 <Menu>
+                     <Menu.Item>
+                        <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />代码生成器</a>
+                    </Menu.Item>
                     <Menu.Item>
                         <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />设置</a>
                     </Menu.Item>

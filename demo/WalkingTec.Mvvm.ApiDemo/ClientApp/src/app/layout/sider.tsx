@@ -70,7 +70,7 @@ export default class App extends React.Component<any, any> {
     return (
       <div className="app-layout-sider" style={{ width, minWidth: width }} >
         <div className="app-layout-logo" >
-          <img src={GlobalConfig.default.logo} /><samp>{title}</samp>
+          <img src={GlobalConfig.default.logo} /><span>{title}</span>
         </div>
         <Menu
           theme="dark"
