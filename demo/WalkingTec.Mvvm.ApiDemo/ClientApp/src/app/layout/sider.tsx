@@ -61,15 +61,16 @@ export default class App extends React.Component<any, any> {
       selectedKeys: [selectedKeys],
       defaultOpenKeys: [openKeys]
     }
-    // if (openKeys == "") {
-    //   delete config.openKeys;
-    // }
-    // console.log(selectedKeys, openKeys);
-    const width = Store.Meun.collapsed ? 80 : 250
+    let width = 250;
+    let title = GlobalConfig.default.title;
+    if (Store.Meun.collapsed) {
+      width = 80;
+      title = "";
+    }
     return (
       <div className="app-layout-sider" style={{ width, minWidth: width }} >
         <div className="app-layout-logo" >
-          <img src={GlobalConfig.default.logo} />{GlobalConfig.default.title}
+          <img src={GlobalConfig.default.logo} /><samp>{title}</samp>
         </div>
         <Menu
           theme="dark"
@@ -84,13 +85,7 @@ export default class App extends React.Component<any, any> {
               <Icon type="home" /><span>首页</span>
             </Link>
           </Menu.Item>
-          {/* <Menu.Item key="/user">
-            <Link to="/user">
-              <Icon type="home" /><span>个人中心</span>
-            </Link>
-          </Menu.Item> */}
           {this.runderSubMenu()}
-
         </Menu>
       </div>
     );
