@@ -600,7 +600,7 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(BasePoco).IsAssignableFrom(item.GetType()))
                     {
                         (item as BasePoco).CreateTime = DateTime.Now;
-                        (item as BasePoco).CreateBy = LoginUserInfo.ITCode;
+                        (item as BasePoco).CreateBy = LoginUserInfo?.ITCode;
                     }
                     DC.Set<P>().Add(item);
                 }
@@ -648,7 +648,7 @@ namespace WalkingTec.Mvvm.Core
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请上传模板文件" });
                     return;
                 }
-                var fa = DC.Set<FileAttachment>().Include(x => x.FileData).Where(x => x.ID == UploadFileId).SingleOrDefault();
+                var fa = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).SingleOrDefault();
                 hssfworkbook = FileHelper.GetHSSWorkbook(hssfworkbook, (FileAttachment)fa, ConfigInfo);
 
                 if (ValidityTemplateType && hssfworkbook.GetSheetAt(1).GetRow(0).Cells[2].ToString() != typeof(T).Name)
