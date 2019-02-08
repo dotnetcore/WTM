@@ -11,16 +11,29 @@ import RequestFiles from 'utils/RequestFiles';
 @observer
 export class ImportModal extends React.Component<{ Store: Store }, any> {
     Store = this.props.Store;
+    success = false;
     onTemplate() {
         this.Store.onTemplate()
     }
     onCancel() {
-        this.Store.onPageState("visiblePort", false)
+        this.Store.onPageState("visiblePort", false);
+        if (this.success) {
+            this.Store.onSearch();
+        }
+        this.success = false;
+    }
+    async onImport(id) {
+        // 导入
+        const res = await this.props.Store.onImport(id);
+        if (res) {
+            this.success = true;
+        }
     }
     render() {
         const DraggerProps = {
             name: 'file',
-            multiple: true,
+            // multiple: true,
+            showUploadList: false,
             accept: ".xlsx,.xls",
             action: RequestFiles.FileTarget,
             onChange: info => {
@@ -30,8 +43,7 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
                 if (status === 'done') {
                     const response = info.file.response
                     if (typeof response.Id === "string") {
-                        // 导入
-                        this.props.Store.onImport(response.Id)
+                        this.onImport(response.Id)
                     } else {
                         message.error(`${info.file.name} ${response.message}`)
                     }
