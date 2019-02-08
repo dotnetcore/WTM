@@ -333,6 +333,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取单元格要输出的内容
         /// </summary>
         /// <param name="source">源数据</param>
+        /// <param name="needFormat">是否使用format</param>
         /// <returns>Html内容</returns>
         public virtual object GetText(object source, bool needFormat = true)
         {

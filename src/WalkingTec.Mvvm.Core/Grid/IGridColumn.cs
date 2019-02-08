@@ -182,6 +182,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取内容
         /// </summary>
         /// <param name="source">源数据</param>
+        /// <param name="needFormat">是否适用format</param>
         /// <returns>内容</returns>
         object GetText(object source, bool needFormat = true);
         /// <summary>
