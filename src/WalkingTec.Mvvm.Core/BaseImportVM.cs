@@ -986,7 +986,7 @@ namespace WalkingTec.Mvvm.Core
 
         public string GetErrorJson()
         {
-            var err = ErrorListVM?.EntityList?.Where(x => x.ExcelIndex == 0).FirstOrDefault()?.Message;
+            var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
                 err = "导入时发生错误";
