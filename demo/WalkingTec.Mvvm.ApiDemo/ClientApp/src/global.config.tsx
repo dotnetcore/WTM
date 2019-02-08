@@ -11,7 +11,7 @@ export default {
      * 默认配置
      */
     default: {
-        title: "WTM",
+        title: "WalkingTec MVVM",
         logo: ImgLogo,
         avatar: ImgUser,
     },
