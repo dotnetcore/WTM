@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="WalkingTec.Mvvm.TagHelpers.LayUI" Version="$version$" />
-    <PackageReference Include="WalkingTec.Mvvm.Mvc.Admin" Version="$version$"" />
+    <PackageReference Include="WalkingTec.Mvvm.Mvc.Admin" Version="$version$" />
  </ItemGroup>
 
   <ItemGroup>
