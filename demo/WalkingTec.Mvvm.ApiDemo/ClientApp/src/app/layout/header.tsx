@@ -30,10 +30,10 @@ class UserMenu extends React.Component<any, any> {
                         <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />代码生成器</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />设置</a>
+                        <a >  <Icon type={'appstore'} />设置</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a onClick={() => { Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
+                        <a >  <Icon type={'appstore'} />退出</a>
                     </Menu.Item>
                 </Menu>
             } placement="bottomCenter">
