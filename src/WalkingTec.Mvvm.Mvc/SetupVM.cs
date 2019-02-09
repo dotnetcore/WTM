@@ -324,11 +324,10 @@ EndProject
             if (UI == UIEnum.React)
             {
                 Directory.CreateDirectory($"{MainDir}\\ClientApp");
-                File.WriteAllText($"{MainDir}\\ClientApp\\tsconfig.json", GetResource("tsconfig.json", "Spa.React"), Encoding.UTF8);
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}\\wwwroot");
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}\\ClientApp");
                 File.WriteAllText($"{MainDir}\\Controllers\\UserController.cs", GetResource("UserController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\Controllers\\HomeController.cs", GetResource("FileApiController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Controllers\\FileController.cs", GetResource("FileApiController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
 
             }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.TagHelpers.LayUI;
 
 namespace WalkingTec.Mvvm.ApiDemo
 {
@@ -20,6 +21,7 @@ namespace WalkingTec.Mvvm.ApiDemo
                 .ConfigureServices(x =>
                 {
                     x.AddFrameworkService();
+                    x.AddLayui();
                     x.AddSwaggerGen(c =>
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });

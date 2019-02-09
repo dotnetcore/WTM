@@ -9,31 +9,7 @@ import Action from './action';
  * dataIndex:属性名称 区分大小写
  * title:表格显示的中文标题
  */
-const columns = [
-    {
-        dataIndex: "ITCode",
-        title: "账号",
-        render: columnsRender
-    }, {
-        dataIndex: "Name",
-        title: "姓名",
-        render: columnsRender
-    },
-    {
-        dataIndex: "PhotoId",
-        title: "照片",
-        render: columnsRenderImg // 图片文件 渲染
-    },
-    {
-        dataIndex: "Roles",
-        title: "角色",
-        render: columnsRender
-    },
-    {
-        dataIndex: "Sex",
-        title: "性别",
-        render: columnsRender
-    }
+const columns = [$columns$
 ]
 
 /**
@@ -50,7 +26,7 @@ export default class extends React.Component<any, any> {
         if (true) {
             tableColumns.push(
                 {
-                    title: 'Action',
+                    title: '动作',
                     dataIndex: 'Action',
                     fixed: 'right',//固定 列
                     width: 160,

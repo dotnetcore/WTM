@@ -21,16 +21,7 @@ export default class extends React.Component<any, any> {
             Store={Store}
             form={this.props.form}
         >
-            <Form.Item label="账号" {...formItemLayout}>
-                {getFieldDecorator('ITCode', {
-                    initialValue: Store.searchParams['ITCode'],
-                })(Models.ITCode)}
-            </Form.Item>
-            <Form.Item label="姓名"  {...formItemLayout}>
-                {getFieldDecorator('Name', {
-                    initialValue: Store.searchParams['Name'],
-                })(Models.Name)}
-            </Form.Item>
+            $fields$
         </DataViewSearch>
     }
 }

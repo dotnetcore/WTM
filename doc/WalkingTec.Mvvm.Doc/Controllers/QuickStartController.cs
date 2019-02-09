@@ -30,5 +30,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [ActionDescription("前后端分离项目")]
+        public IActionResult React()
+        {
+            return PartialView();
+        }
     }
 }

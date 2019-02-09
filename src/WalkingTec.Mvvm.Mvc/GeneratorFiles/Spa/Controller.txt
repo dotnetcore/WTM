@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using $vmnamespace$;
+using $modelnamespace$;
 
 namespace $namespace$
 {
@@ -13,6 +14,7 @@ namespace $namespace$
     [ActionDescription("$des$")]
     [ApiController]
     [Route("api/$modelname$")]
+	[Public]
 	public class $modelname$Controller : BaseApiController
     {
         [ActionDescription("搜索")]
