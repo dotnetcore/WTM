@@ -1,0 +1,7 @@
+import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
+import * as React from 'react';
+import UploadImg from 'components/form/uploadImg';
+import Store from '../store';
+export default {
+    $fields$
+}

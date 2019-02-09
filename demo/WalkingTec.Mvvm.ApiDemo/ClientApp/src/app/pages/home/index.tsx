@@ -17,7 +17,7 @@ export default class IApp extends React.Component<any, any> {
                                 textAlign:"center",
                                 fontSize:60
                             }}>
-                                <a href="https://wtm-front.github.io/wtm-cli/" target="_block">WTM文档地址</a>
+                                <a href="http://wtmdoc.walkingtec.cn" target="_block">WTM文档地址</a>
                             </div>
                         </Card>
                     </Col>

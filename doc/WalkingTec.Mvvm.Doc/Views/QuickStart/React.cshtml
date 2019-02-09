@@ -1,0 +1,46 @@
+﻿<style>
+    fieldset img {
+        width: 800px;
+        border: 1px solid black
+    }
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="使用React编写前后端分离的项目">
+    <wt:quote>
+        <p>使用WTM框架同样可以编写微服务模式的项目，并且比传统方式简便的多</p>
+        <p>**目前前后端分离的模式只能算是预览版，很多功能还没有，感兴趣的朋友可以先体验并提出宝贵意见</p>
+    </wt:quote>
+    <ul class="doc">
+        <li>
+            建立前后端分离模式的项目和建立普通框架项目流程基本一致<br />
+            关于如何创建WTM项目，请参考<a href="/#/QuickStart/FirstProject">第一个项目</a><br /><br />
+        </li>
+        <li>
+            只是在运行_setup的时候，选择React模式，如图<br /><br />
+            <img src="~/imgs/react1.png" /><br /><br />
+        </li>
+        <li>
+            需要注意在创建完毕后，因为框架生成了TypeScript文件，VisualStudio尝试使用默认项目模板覆盖，这时请选择放弃，如图<br /><br />
+            <img src="~/imgs/react2.png" /><br /><br />
+        </li>
+        <li>
+            生成完项目之后，按F5运行，第一次运行会下载很多javascrip的依赖包，时间较长请耐心等待，运行结果如图<br /><br />
+            <img src="~/imgs/react3.png" /><br /><br />
+        </li>
+        <li>
+            通过右上角的菜单，我们可以启动代码生成器来根据model生成代码，同时可以访问接口的swagger文档<br />
+            关于如何使用代码生成器，请参考<a href="/#/QuickStart/FirstModule">第一个模块</a><br />
+            生成代码的步骤是相同的，只不过在前后端分离的模式下，会生成后台api和前台react页面
+        </li>
+        <li>
+            前台代码会在ClientApp目录中，当我们在VisualStudio中调试的时候，它会自动启动后台和前台，非常方便<br />
+            ClientApp目录是一个完整的React项目，纯前端人员可以使用Code之类的编译器直接打开ClientApp目录，和其他React项目没有区别<br />
+        </li>
+        <li>
+            框架生成的前端代码会在ClientApp/pages下面，生成之后可以自由修改<br />
+            在ClientApp/global.config.tsx中有一些全局设置可以修改，比如列表默认行数，使用居中弹出窗口还是右侧抽屉式窗口，是否使用Tab页，表单每行控件个数等等<br /><br />
+        </li>
+    </ul>
+</wt:fieldset>

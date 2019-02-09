@@ -25,6 +25,15 @@
     <None Remove="GeneratorFiles\ListView.txt" />
     <None Remove="GeneratorFiles\Searcher.txt" />
     <None Remove="GeneratorFiles\Spa\Controller.txt" />
+    <None Remove="GeneratorFiles\Spa\React\index.txt" />
+    <None Remove="GeneratorFiles\Spa\React\store\index.txt" />
+    <None Remove="GeneratorFiles\Spa\React\style.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\action.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\details.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\models.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
     <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
     <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
     <None Remove="SetupFiles\Mvc\home\Header.txt" />
@@ -42,7 +51,6 @@
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
     <None Remove="SetupFiles\Spa\React\Proj.txt" />
-    <None Remove="SetupFiles\Spa\React\tsconfig.json" />
     <None Remove="SetupFiles\Spa\UserController.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
@@ -53,10 +61,18 @@
 
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\store\index.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\style.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\action.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\details.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\models.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
     <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\tsconfig.json" />
     <EmbeddedResource Include="SetupFiles\Spa\UserController.txt" />
   </ItemGroup>
 
@@ -127,10 +143,6 @@
       <LastGenOutput>ValidationMsg.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="GeneratorFiles\Spa\React\" />
   </ItemGroup>
 
 </Project>
