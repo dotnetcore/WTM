@@ -30,6 +30,9 @@ class UserMenu extends React.Component<any, any> {
                         <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />代码生成器</a>
                     </Menu.Item>
                     <Menu.Item>
+                        <a href="/swagger" target="_blank">  <Icon type={'appstore'} />API文档</a>
+                    </Menu.Item>
+                    <Menu.Item>
                         <a >  <Icon type={'appstore'} />设置</a>
                     </Menu.Item>
                     <Menu.Item>
