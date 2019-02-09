@@ -1,4 +1,4 @@
-import DataSource from 'store/dataSource';
+ import DataSource from 'store/dataSource';
 export class Store extends DataSource {
     constructor() {
         super();

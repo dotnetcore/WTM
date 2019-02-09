@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>@ViewData["title"]</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/jquery.min.js"></script>
+    <script src="/jquery.haschange.js"></script>
+    <script src="/jquery.cookie.js"></script>
+    <script src="/layui/layui.all.js"></script>
+    <script src="/layui/formSelects.js"></script>
+    <script src="/layui/autocomplete.js"></script>
+    <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
+    <script src="/_js/echarts.common.min.js"></script>
+    <script>
+        var DONOTUSE_IGNOREHASH = false;
+        var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
+        var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
+        $(function () {
+            $(window).hashchange(function () {
+                if (DONOTUSE_IGNOREHASH == true) {
+                    DONOTUSE_IGNOREHASH = false;
+                    return;
+                }
+                var hash = window.location.hash;
+                if (hash == null || hash == '') {
+                    hash = '/Home/FrontPage';
+                }
+                hash = hash.replace('#', '');
+                ff.CloseAllDialog();
+                ff.LoadPage(encodeURIComponent(hash));
+            });
+            $(window).hashchange();
+        });
+    </script>
+    <style>
+        .donotuse_pdiv {
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -moz-box-orient: vertical;
+            -moz-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .donotuse_fill {
+            -webkit-box-flex: 1;
+            -webkit-flex: auto;
+            -moz-box-flex: 1;
+            -ms-flex: auto;
+            flex: auto;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    @RenderBody()
+    <script>
+        layui.element.init();
+    </script>
+</body></html>
