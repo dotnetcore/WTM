@@ -1,48 +1,41 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
-    /// <summary>
-    /// 用户
-    /// </summary>
+    
+    [ActionDescription("角色管理")]
     [ApiController]
-    [Route("api/user")]
-    [Public]
-    public class UserController : BaseApiController
+    [Route("api/FrameworkRole")]
+	[Public]
+	public class FrameworkRoleController : BaseApiController
     {
-
-        // GET: api/<controller>
+        [ActionDescription("搜索")]
         [HttpPost("Search")]
-        public string Search(FrameworkUserSearcher searcher)
+		public string Search(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
-        // GET api/<controller>/5
+        [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public FrameworkUserBase Get(Guid id)
+        public FrameworkRole Get(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = CreateVM<FrameworkRoleVM>(id);
             return vm.Entity;
         }
 
-        // POST api/<controller>
+        [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add(FrameworkUserVM vm)
+        public IActionResult Add(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -63,9 +56,9 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
-        // PUT api/<controller>/5
+        [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkUserVM vm)
+        public IActionResult Edit(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -85,11 +78,11 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             }
         }
 
-        // DELETE api/<controller>/5
+        [ActionDescription("删除")]
         [HttpGet("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = CreateVM<FrameworkRoleVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -102,35 +95,36 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
-        [HttpPost("ExportExcel")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        [HttpPost("ExportExcel")]
+        public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
-                vm.Searcher = searcher;
-                vm.SearcherMode = ListVMSearchModeEnum.Export;
+            var vm = CreateVM<FrameworkRoleListVM>();
+            vm.Searcher = searcher;
+            vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
+        [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        [ActionDescription("导出")]
         public IActionResult ExportExcelByIds(Guid[] ids)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkRoleListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<Guid>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
+        [ActionDescription("下载导入模板")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkUserImportVM>();
+            var vm = CreateVM<FrameworkRoleImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -141,9 +135,9 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [HttpPost("Import")]
         [ActionDescription("导入")]
-        public ActionResult Import(FrameworkUserImportVM vm)
+        [HttpPost("Import")]
+        public ActionResult Import(FrameworkRoleImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())

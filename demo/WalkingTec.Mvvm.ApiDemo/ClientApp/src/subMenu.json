@@ -1,11 +1,31 @@
-[
+﻿[
     {
         "Key": "301f84d3-5a77-4b30-92c4-9c723ed29356",
         "Name": "用户",
         "Icon": "menu-fold",
-        "Path": "/user",
+        "Path": "/frameworkuser",
         "Component": "user",
         "Action": [],
         "Children": []
     }
+,{
+        "Key": "0efde0b0-817a-494a-b5dd-72c22fb0e8fc",
+        "Name": "角色管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkrole",
+        "Component": "frameworkrole",
+        "Action": [],
+        "Children": []
+    }
+,{
+        "Key": "ccb68fa8-4acf-491a-b6d3-75a05385bfac",
+        "Name": "用户组管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkgroup",
+        "Component": "frameworkgroup",
+        "Action": [],
+        "Children": []
+    }
+
+
 ]
