@@ -1,4 +1,4 @@
- import DataSource from 'store/dataSource';
+﻿ import DataSource from 'store/dataSource';
 export class Store extends DataSource {
     constructor() {
         super();
@@ -16,40 +16,40 @@ export class Store extends DataSource {
     Urls = {
         ...this.Urls,
         search: {
-            src: "/user/search",
+            src: "/frameworkrole/search",
             method: "post"
         },
         details: {
             // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-            src: "/user/{ID}",
+            src: "/frameworkrole/{ID}",
             method: "get"
         },
         insert: {
-            src: "/user/add",
+            src: "/frameworkrole/add",
             method: "post"
         },
         update: {
-            src: "/user/edit",
+            src: "/frameworkrole/edit",
             method: "put"
         },
         delete: {
-            src: "/user/delete",
+            src: "/frameworkrole/delete",
             method: "get"
         },
         import: {
-            src: "/user/import",
+            src: "/frameworkrole/import",
             method: "post"
         },
         export: {
-            src: "/user/ExportExcel",
+            src: "/frameworkrole/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/user/ExportExcelByIds",
+            src: "/frameworkrole/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/user/GetExcelTemplate",
+            src: "/frameworkrole/GetExcelTemplate",
             method: "get"
         }
     }
