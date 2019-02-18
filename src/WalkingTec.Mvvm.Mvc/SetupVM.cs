@@ -326,7 +326,9 @@ EndProject
                 Directory.CreateDirectory($"{MainDir}\\ClientApp");
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}\\wwwroot");
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}\\ClientApp");
-                File.WriteAllText($"{MainDir}\\Controllers\\UserController.cs", GetResource("UserController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Controllers\\FrameworkUserController.cs", GetResource("FrameworkUserController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Controllers\\FrameworkRoleController.cs", GetResource("FrameworkRoleController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\Controllers\\FrameworkGroupController.cs", GetResource("FrameworkGroupController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Controllers\\FileController.cs", GetResource("FileApiController.txt", "Spa").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
 
