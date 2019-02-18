@@ -47,16 +47,24 @@
     <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
     <None Remove="SetupFiles\Spa\FileApiController.txt" />
+    <None Remove="SetupFiles\Spa\FrameworkGroupController.txt" />
+    <None Remove="SetupFiles\Spa\FrameworkRoleController.txt" />
+    <None Remove="SetupFiles\Spa\FrameworkUserController.txt" />
     <None Remove="SetupFiles\Spa\Program.txt" />
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
     <None Remove="SetupFiles\Spa\React\Proj.txt" />
-    <None Remove="SetupFiles\Spa\UserController.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
     <None Remove="SetupFiles\vms\LoginVM.txt" />
     <None Remove="Views\_CodeGen\SetField.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SetupFiles\Spa\FrameworkGroupController.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\FrameworkRoleController.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\FrameworkUserController.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,7 +81,6 @@
     <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
     <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\UserController.txt" />
   </ItemGroup>
 
   <ItemGroup>
