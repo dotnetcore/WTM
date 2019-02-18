@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Drawer, Modal, Row, Spin } from 'antd';
+import { Button, Col, Divider, Drawer, Modal, Row, Spin, Form } from 'antd';
 import { ColProps } from 'antd/lib/col';
 import { DrawerProps } from 'antd/lib/drawer';
 import { ModalProps } from 'antd/lib/modal';
@@ -106,8 +106,11 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
     render() {
         const childrens = React.Children.toArray(this.props.children).map((node: any) => {
             try {
+                // console.log(lodash.has(node.props, "label"), node.props)
+
                 // 没有嵌套 col 的自动添加 嵌套的 解除
-                if (lodash.isEqual(lodash.toLower(node.type.name), lodash.toLower("FormItem"))) {
+                if (["labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
+                    // if (lodash.isEqual(lodash.toLower(node.type.name), lodash.toLower("FormItem"))) {
                     return <InfoShellCol key={node.key}>
                         {node}
                     </InfoShellCol>
