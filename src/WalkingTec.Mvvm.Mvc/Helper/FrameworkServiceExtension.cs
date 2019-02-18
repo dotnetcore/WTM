@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
@@ -81,6 +83,10 @@ namespace WalkingTec.Mvvm.Mvc
                 options.IdleTimeout = TimeSpan.FromSeconds(3600);
             });
             SetupDFS(con);
+
+
+            var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
+            var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
             services.AddMvc(options =>
             {
                 // ModelBinderProviders
@@ -101,6 +107,13 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     //NamingStrategy = new CamelCaseNamingStrategy()
                 };
+            })
+            .ConfigureApplicationPartManager(m => {
+                var feature = new ControllerFeature();
+                m.ApplicationParts.Add(new AssemblyPart(mvc));
+                m.ApplicationParts.Add(new AssemblyPart(admin));
+                m.PopulateFeature(feature);
+                services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
@@ -108,11 +121,10 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 options.FileProviders.Add(
                     new EmbeddedFileProvider(
-                        typeof(_CodeGenController).GetTypeInfo().Assembly,
+                        mvc,
                         "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
                     )
                 );
-                var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
                 if (admin != null)
                 {
                     options.FileProviders.Add(
