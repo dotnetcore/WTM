@@ -72,7 +72,7 @@ export default class Store {
   /** Ajax   */
   Request = new Request();
   /** 搜索数据参数 */
-  searchParams: any = {
+  @observable searchParams: any = {
 
   }
   /** 数据列表 */
@@ -148,13 +148,12 @@ export default class Store {
       return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
-    this.searchParams = { ...this.searchParams, ...search };
+    const searchParams = { ...this.searchParams, ...search };
     search = {
       Page,
       Limit,
       SortInfo,
-      // searcher: this.searchParams
-      ...this.searchParams
+      ...searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
@@ -169,7 +168,8 @@ export default class Store {
         return data
       }).toPromise()
       runInAction(() => {
-        this.dataSource = res || this.dataSource
+        this.dataSource = res || this.dataSource;
+        this.searchParams = searchParams;
       })
       return res
     } catch (error) {
