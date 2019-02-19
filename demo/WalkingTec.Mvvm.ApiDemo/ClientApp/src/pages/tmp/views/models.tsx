@@ -1,5 +1,4 @@
 import { Input, Select } from 'antd';
-import { ColProps } from 'antd/lib/col';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItemProps } from 'antd/lib/form/FormItem';
 import UploadImg from 'components/form/uploadImg';
@@ -67,23 +66,31 @@ interface IFormItemProps {
     defaultValue?: boolean;
     /** Form.Item 的 props */
     formItemProps?: FormItemProps;
+    /** 装饰器参数  */
     decoratorOptions?: GetFieldDecoratorOptions;
+    /** 类型 */
+    type?: "details" | "searchParams";
     [key: string]: any;
 }
 @observer
 export class FormItem extends React.Component<IFormItemProps, any> {
     Models = CreateModels(this.props);
     render() {
-        const { form, fieId, defaultValue, decoratorOptions, formItemProps } = this.props;
+        const { form, fieId, defaultValue, decoratorOptions, formItemProps, type } = this.props;
         const { getFieldDecorator }: WrappedFormUtils = form;
         const model = lodash.get(this.Models, fieId);
         let options: GetFieldDecoratorOptions = {
             rules: model.rules,
             ...decoratorOptions
         };
-        // 获取默认值
-        if (defaultValue && typeof defaultValue === "boolean") {
-            options.initialValue = lodash.get(Store.details, fieId);
+        if (type === "searchParams") {
+            options.initialValue = lodash.get(Store.searchParams, fieId);
+            delete options.rules;
+        } else {
+            // 获取默认值
+            if (defaultValue && typeof defaultValue === "boolean") {
+                options.initialValue = lodash.get(Store.details, fieId);
+            }
         }
         return <Form.Item label={model.label} {...formItemLayout}  {...formItemProps}>
             {getFieldDecorator(this.props.fieId, options)(model.formItem)}
