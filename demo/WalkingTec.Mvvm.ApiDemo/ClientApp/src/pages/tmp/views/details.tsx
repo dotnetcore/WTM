@@ -85,9 +85,9 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
-                <InfoShellCol span={24}>
+                <Col span={24}>
                     <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
-                </InfoShellCol>
+                </Col>
             </FooterFormItem>
 
         </Form>
