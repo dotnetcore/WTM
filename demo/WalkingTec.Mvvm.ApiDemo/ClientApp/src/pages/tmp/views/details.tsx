@@ -130,7 +130,7 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Password" disabled/>
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" />
+                <FormItem {...props} fieId="Sex" disabled/>
                 <Col span={24}>
                     <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
                 </Col>
@@ -153,7 +153,7 @@ class InfoForm extends React.Component<any, any> {
             // 模型
             models: this.models,
             // 禁用
-            disabled: true,
+            display: true,
             // 详情数据来源
             details: toJS(Store.details),
             // 获取默认值
