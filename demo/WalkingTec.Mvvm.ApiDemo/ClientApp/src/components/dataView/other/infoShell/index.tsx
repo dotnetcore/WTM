@@ -109,7 +109,7 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
                 // console.log(lodash.has(node.props, "label"), node.props)
 
                 // 没有嵌套 col 的自动添加 嵌套的 解除
-                if (["fieId", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
+                if (["fieId", "models", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
                     // if (lodash.isEqual(lodash.toLower(node.type.name), lodash.toLower("FormItem"))) {
                     return <InfoShellCol key={node.key}>
                         {node}
