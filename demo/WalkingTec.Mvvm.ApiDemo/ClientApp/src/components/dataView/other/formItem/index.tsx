@@ -24,10 +24,8 @@ interface IFormItemProps {
     disabled?: boolean;
     /** 禁用 组件 显示 span */
     display?: boolean;
-    /** 获取默认值 */
-    defaultValue?: boolean;
-    /** 详情数据 和 defaultValue 共同使用 */
-    details?: Object;
+    /** 默认值 */
+    defaultValues?: Object;
     /** Form.Item 的 props */
     formItemProps?: FormItemProps;
     /** 装饰器参数  */
@@ -39,7 +37,7 @@ interface IFormItemProps {
 @observer
 export class FormItem extends React.Component<IFormItemProps, any> {
     render() {
-        const { form = {}, fieId, models, defaultValue, decoratorOptions, formItemProps, details, disabled, display, render } = this.props;
+        const { form = {}, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render } = this.props;
         const { getFieldDecorator }: WrappedFormUtils = form;
         // 获取模型 item
         const model = lodash.get(models, fieId) || { rules: [], label: `未获取到模型(${fieId})`, formItem: <Input placeholder={`未获取到模型(${fieId})`} /> };
@@ -48,8 +46,8 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             ...decoratorOptions
         };
         // 获取默认值 默认值，禁用，显示 span 
-        if (typeof defaultValue === "boolean" || typeof disabled === "boolean" || typeof display === "boolean") {
-            options.initialValue = lodash.get(details, fieId);
+        if (typeof defaultValues === "object") {
+            options.initialValue = lodash.get(defaultValues, fieId);
         }
         let renderItem = null;
         // 重写渲染

@@ -1,12 +1,12 @@
 import { Col, Form } from 'antd';
-import { FormItem, InfoShell, InfoShellCol, InfoShellFooter, ToImg } from 'components/dataView';
+import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import GlobalConfig from 'global.config'; //全局配置
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
-import CreateModels from './models'; //模型
+import Models from './models'; //模型
 const formItemLayout = { ...GlobalConfig.formItemLayout };//布局ß
 const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
 /**
@@ -70,7 +70,7 @@ class InsertForm extends React.Component<any, any> {
         });
     }
     // 创建模型
-    models = CreateModels(this.props);
+    models = Models.editModels(this.props);
     render() {
         // item 的 props
         const props = {
@@ -112,17 +112,15 @@ class UpdateForm extends React.Component<any, any> {
         });
     }
     // 创建模型
-    models = CreateModels(this.props);
+    models = Models.editModels(this.props);
     render() {
         // item 的 props
         const props = {
             ...this.props,
             // 模型
             models: this.models,
-            // 详情数据来源
-            details: toJS(Store.details),
-            // 获取默认值
-            defaultValue: true,
+            // 默认值
+            defaultValues: toJS(Store.details),
         }
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
@@ -145,7 +143,7 @@ class UpdateForm extends React.Component<any, any> {
 @observer
 class InfoForm extends React.Component<any, any> {
     // 创建模型
-    models = CreateModels(this.props);
+    models = Models.editModels(this.props);
     render() {
         // item 的 props
         const props = {
@@ -154,10 +152,8 @@ class InfoForm extends React.Component<any, any> {
             models: this.models,
             // 禁用
             display: true,
-            // 详情数据来源
-            details: toJS(Store.details),
-            // 获取默认值
-            defaultValue: true,
+            // 默认值
+            defaultValues: toJS(Store.details),
         }
         return <Form >
             <FooterFormItem>
