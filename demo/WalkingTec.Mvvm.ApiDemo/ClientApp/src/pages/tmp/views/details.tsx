@@ -1,12 +1,13 @@
-import { Form, Col } from 'antd';
-import { InfoShell, InfoShellCol, InfoShellFooter, ToImg, toValues } from 'components/dataView';
+import { Col, Form } from 'antd';
+import { FormItem, InfoShell, InfoShellCol, InfoShellFooter, ToImg } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import GlobalConfig from 'global.config'; //全局配置
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
-import { FormItem } from './models'; //模型
-const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
+import CreateModels from './models'; //模型
+const formItemLayout = { ...GlobalConfig.formItemLayout };//布局ß
 const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
 /**
  *  详情 窗口 
@@ -68,16 +69,24 @@ class InsertForm extends React.Component<any, any> {
             }
         });
     }
+    // 创建模型
+    models = CreateModels(this.props);
     render() {
+        // item 的 props
+        const props = {
+            ...this.props,
+            // 模型
+            models: this.models,
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                <FormItem {...this.props} fieId="ITCode" />
-                <FormItem {...this.props} fieId="Password" />
-                <FormItem {...this.props} fieId="Email" />
-                <FormItem {...this.props} fieId="Name" />
-                <FormItem {...this.props} fieId="Sex" />
+                <FormItem {...props} fieId="ITCode" />
+                <FormItem {...props} fieId="Password" />
+                <FormItem {...props} fieId="Email" />
+                <FormItem {...props} fieId="Name" />
+                <FormItem {...props} fieId="Sex" />
                 <InfoShellCol span={24}>
-                    <FormItem {...this.props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
+                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
                 </InfoShellCol>
             </FooterFormItem>
 
@@ -102,16 +111,28 @@ class UpdateForm extends React.Component<any, any> {
             }
         });
     }
+    // 创建模型
+    models = CreateModels(this.props);
     render() {
+        // item 的 props
+        const props = {
+            ...this.props,
+            // 模型
+            models: this.models,
+            // 详情数据来源
+            details: toJS(Store.details),
+            // 获取默认值
+            defaultValue: true,
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                <FormItem {...this.props} fieId="ITCode" defaultValue />
-                <FormItem {...this.props} fieId="Password" defaultValue />
-                <FormItem {...this.props} fieId="Email" defaultValue />
-                <FormItem {...this.props} fieId="Name" defaultValue />
-                <FormItem {...this.props} fieId="Sex" defaultValue />
+                <FormItem {...props} fieId="ITCode" />
+                <FormItem {...props} fieId="Password" disabled/>
+                <FormItem {...props} fieId="Email" />
+                <FormItem {...props} fieId="Name" />
+                <FormItem {...props} fieId="Sex" />
                 <Col span={24}>
-                    <FormItem {...this.props} fieId="PhotoId" defaultValue formItemProps={{ ...formItemLayoutRow }} />
+                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
                 </Col>
             </FooterFormItem>
         </Form>
@@ -123,25 +144,33 @@ class UpdateForm extends React.Component<any, any> {
 @DesError
 @observer
 class InfoForm extends React.Component<any, any> {
+    // 创建模型
+    models = CreateModels(this.props);
     render() {
-        const details = { ...Store.details };
+        // item 的 props
+        const props = {
+            ...this.props,
+            // 模型
+            models: this.models,
+            // 禁用
+            disabled: true,
+            // 详情数据来源
+            details: toJS(Store.details),
+            // 获取默认值
+            defaultValue: true,
+        }
         return <Form >
             <FooterFormItem>
-                <Form.Item label="账号" {...formItemLayout}>
-                    <span>{toValues(details['ITCode'], "span")}</span>
-                </Form.Item >
-                <Form.Item label="邮箱" {...formItemLayout}>
-                    <span>{toValues(details['Email'], "span")}</span>
-                </Form.Item >
-                <Form.Item label="姓名" {...formItemLayout}>
-                    <span>{toValues(details['Name'], "span")}</span>
-                </Form.Item >
+                <FormItem {...props} fieId="ITCode" />
+                <FormItem {...props} fieId="Password" />
+                <FormItem {...props} fieId="Email" />
+                <FormItem {...props} fieId="Name" />
+                <FormItem {...props} fieId="Sex" />
                 <Col span={24}>
-                    <Form.Item label="头像" {...formItemLayoutRow}>
-                        <span>
-                            <ToImg fileID={details['PhotoId']} />
-                        </span>
-                    </Form.Item >
+                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} render={(data)=>{
+                        // 这里 显示值比较特殊，重写 默认渲染 render
+                        return <ToImg fileID={data} />
+                    }} />
                 </Col>
             </FooterFormItem>
         </Form>
