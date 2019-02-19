@@ -1,4 +1,9 @@
 ﻿export default {
+    tmp: {
+        name: '测试',
+        path: '/tmp',
+        component: () => import('./tmp').then(x => x.default) 
+    },
     user: {
         name: '用户列表',
         path: '/frameworkuser',
