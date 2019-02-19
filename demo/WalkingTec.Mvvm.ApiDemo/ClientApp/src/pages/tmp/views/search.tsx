@@ -5,22 +5,20 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
-import CreateModels from './models'; //模型
+import Models from './models'; //模型
 @DesForm
 @observer
 export default class extends React.Component<any, any> {
     // 创建模型
-    models = CreateModels(this.props);
+    models = Models.searchModels(this.props);
     render() {
         // item 的 props
         const props = {
             ...this.props,
             // 模型
             models: this.models,
-            // 获取默认值
-            defaultValue: true,
-            // 详情 数据来源
-            details: toJS(Store.searchParams)
+            // 默认值  
+            defaultValues: toJS(Store.searchParams)
         }
         return <DataViewSearch
             // columnCount={4} 默认全局
@@ -29,8 +27,9 @@ export default class extends React.Component<any, any> {
             Store={Store}
             form={this.props.form}
         >
-            <FormItem {...props} fieId="ITCode" />
-            <FormItem {...props} fieId="Name" />
+            {/* <FormItem {...props} fieId="ITCode" />
+            <FormItem {...props} fieId="Name" /> */}
+            {Models.renderModels(props)}
         </DataViewSearch>
     }
 }
