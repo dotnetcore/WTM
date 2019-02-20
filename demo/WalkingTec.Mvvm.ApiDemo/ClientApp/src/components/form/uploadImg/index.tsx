@@ -109,4 +109,4 @@ export default class UploadImg extends React.Component<any, any> {
             </div>
         );
     }
-}
+}  
