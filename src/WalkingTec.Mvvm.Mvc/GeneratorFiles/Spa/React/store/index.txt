@@ -41,15 +41,15 @@ export class Store extends DataSource {
             method: "post"
         },
         export: {
-            src: "/$modelname$/ExportExcel",
+            src: "/$modelname$/exportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/$modelname$/ExportExcelByIds",
+            src: "/$modelname$/exportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/$modelname$/GetExcelTemplate",
+            src: "/$modelname$/getExcelTemplate",
             method: "get"
         }
     }

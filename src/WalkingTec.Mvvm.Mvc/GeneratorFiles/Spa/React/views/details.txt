@@ -1,14 +1,15 @@
-import { Form } from 'antd';
-import { InfoShell, InfoShellFooter, InfoShellCol, ToImg, toValues } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators'; //错误
-import GlobalConfig from 'global.config'; //全局配置
+import { Col, Form } from 'antd';
+import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
+import { DesError, DesForm } from 'components/decorators'; 
+import GlobalConfig from 'global.config'; 
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Regular from 'utils/Regular'; //正则
-import Store from '../store'; //页面状态
-import Models from './models'; //模型
-const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow }
+import Store from '../store'; 
+import Models from './models'; 
+const formItemLayout = { ...GlobalConfig.formItemLayout };
+const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -69,12 +70,17 @@ class InsertForm extends React.Component<any, any> {
             }
         });
     }
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const { form } = this.props;
-        const { getFieldDecorator } = form;
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <FooterFormItem submit>
-                $addfields$
+            <FooterFormItem submit>				
+$fields$
             </FooterFormItem>
 
         </Form>
@@ -93,18 +99,22 @@ class UpdateForm extends React.Component<any, any> {
         this.props.form.validateFields((err, values) => {
             console.log("数据", values);
             if (!err) {
-                // values = mapValues(values, "YYYY-MM-DD")
                 Store.onEdit(values);
             }
         });
     }
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const { form } = this.props;
-        const { getFieldDecorator } = form;
-        const details = { ...Store.details };
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+            defaultValues: toJS(Store.details),
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                $editfields$
+$fields$
             </FooterFormItem>
         </Form>
     }
@@ -115,11 +125,19 @@ class UpdateForm extends React.Component<any, any> {
 @DesError
 @observer
 class InfoForm extends React.Component<any, any> {
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const details = { ...Store.details };
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+            display: true,
+            defaultValues: toJS(Store.details),
+        }
         return <Form >
             <FooterFormItem>
-                $detailfields$
+$fields$
             </FooterFormItem>
         </Form>
     }

@@ -668,7 +668,8 @@ namespace WalkingTec.Mvvm.Mvc
                             render = "columnsRenderImg";
                         }
                     }
-                    fieldstr.Append($@"{{
+                    fieldstr.Append($@"
+    {{
         dataIndex: ""{item.FieldName}"",
         title: ""{label}"",
         render: {render} 
@@ -684,23 +685,36 @@ namespace WalkingTec.Mvvm.Mvc
             if (name == "models")
             {
                 StringBuilder fieldstr = new StringBuilder();
+                StringBuilder fieldstr2 = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
+                var pros2 = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
 
+                //生成表单model
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    string label = modelType.GetProperty(item.FieldName).GetPropertyDisplayName();
+                    var property = modelType.GetProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    bool isrequired = property.IsPropertyRequired();
+                    string rules = "rules: []";
+                    if (isrequired == true)
+                    {
+                        rules = $@"rules: [{{ ""required"": true, ""message"": ""{label}不能为空"" }}]";
+                    }
+                    fieldstr.AppendLine($@"            {item.FieldName}:{{");
+                    fieldstr.AppendLine($@"                label: ""{label}"",");
+                    fieldstr.AppendLine($@"                {rules},");
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            fieldstr.Append($@"{item.FieldName}: <UploadImg />");
+                            fieldstr.AppendLine($@"                formItem: <UploadImg />");
                         }
                         else
                         {
 
-                            fieldstr.Append($@"{item.FieldName}: <Select placeholder=""{label}"" showArrow allowClear></Select>");
+                            fieldstr.AppendLine($@"                formItem: <Select placeholder=""{label}"" showArrow allowClear></Select>");
                         }
                     }
                     else
@@ -713,128 +727,88 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool) || checktype.IsEnum())
                         {
-                            fieldstr.Append($@"{item.FieldName}: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
+                            fieldstr.AppendLine($@"                formItem: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
                         }
                         else if (checktype.IsPrimitive || checktype == typeof(string))
                         {
-                            fieldstr.Append($@"{item.FieldName}: <Input placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            fieldstr.Append($@"{item.FieldName}: <Input placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
                         }
                     }
+                    fieldstr.Append("            }");
                     if (i < pros.Count - 1)
                     {
                         fieldstr.Append(",");
                     }
                     fieldstr.Append(Environment.NewLine);
                 }
-                return rv.Replace("$fields$", fieldstr.ToString());
+
+                //生成searchmodel
+                for (int i = 0; i < pros2.Count; i++)
+                {
+                    var item = pros2[i];
+                    var property = modelType.GetProperty(item.FieldName);
+                    string label = property.GetPropertyDisplayName();
+                    string rules = "rules: []";
+
+                    fieldstr2.AppendLine($@"            {item.FieldName}:{{");
+                    fieldstr2.AppendLine($@"                label: ""{label}"",");
+                    fieldstr2.AppendLine($@"                {rules},");
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
+                    {
+                        var subtype = Type.GetType(item.RelatedField);
+                        fieldstr2.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear></Select>");
+                    }
+                    else
+                    {
+                        var proType = modelType.GetProperty(item.FieldName).PropertyType;
+                        Type checktype = proType;
+                        if (proType.IsNullable())
+                        {
+                            checktype = proType.GetGenericArguments()[0];
+                        }
+                        if (checktype == typeof(bool) || checktype.IsEnum())
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
+                        }
+                        else if (checktype.IsPrimitive || checktype == typeof(string))
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
+                        }
+                        else if (checktype == typeof(DateTime))
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
+                        }
+                    }
+                    fieldstr2.Append("            }");
+                    if (i < pros.Count - 1)
+                    {
+                        fieldstr2.Append(",");
+                    }
+                    fieldstr2.Append(Environment.NewLine);
+                }
+
+                return rv.Replace("$fields$", fieldstr.ToString()).Replace("$fields2$", fieldstr2.ToString());
             }
 
             if (name == "search")
             {
-                StringBuilder fieldstr = new StringBuilder();
-                var pros = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
-
-                for (int i = 0; i < pros.Count; i++)
-                {
-                    var item = pros[i];
-                    string label = modelType.GetProperty(item.FieldName).GetPropertyDisplayName();
-
-                    fieldstr.Append($@"
-<Form.Item label=""{label}"" {{...formItemLayout}}>
-    {{getFieldDecorator('{item.FieldName}', {{
-        initialValue: Store.searchParams['{item.FieldName}']
-    }})(Models.{item.FieldName})}}
-</Form.Item>
-");
-                    fieldstr.Append(Environment.NewLine);
-                }
-                return rv.Replace("$fields$", fieldstr.ToString());
+                return rv;
             }
             if (name == "details")
             {
-                StringBuilder addfield = new StringBuilder();
-                StringBuilder editfield = new StringBuilder();
-                StringBuilder detailfield = new StringBuilder();
+                StringBuilder fieldstr = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
 
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    var property = modelType.GetProperty(item.FieldName);
-                    string label = property.GetPropertyDisplayName();
-                    bool isrequired = property.IsPropertyRequired();
-                    string rules = "rules: []";
-                    if (isrequired == true)
-                    {
-                        rules = $@"rules: [{{ ""required"": true, ""message"": ""{label}不能为空"" }}]";
-                    }
-
-                    if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField == "`file")
-                    {
-                        addfield.Append($@"
-<InfoShellCol span={{24}}>
-    <Form.Item label=""{label}""  {{...formItemLayoutRow}}>
-        {{getFieldDecorator('{item.FieldName}', {{
-
-        }})(Models.{item.FieldName})}}
-    </Form.Item >
-</InfoShellCol>
-");
-                        editfield.Append($@"
-<InfoShellCol span={{24}}>
-    <Form.Item label=""{label}""  {{...formItemLayoutRow}}>
-        {{getFieldDecorator('{item.FieldName}', {{
-            initialValue: details['{item.FieldName}']
-        }})(Models.{item.FieldName})}}
-    </Form.Item >
-</InfoShellCol>
-");
-                        detailfield.Append($@"
-<InfoShellCol span={{24}}>
-    <Form.Item label=""{label}""  {{...formItemLayoutRow}}>
-        <span>
-            <ToImg fileID={{details['{item.FieldName}']}} />
-        </span>
-    </Form.Item >
-</InfoShellCol>
-");
-                    }
-                    else
-                    {
-
-                        addfield.Append($@"
-<Form.Item label=""{label}"" {{...formItemLayout}}>
-    {{getFieldDecorator('{item.FieldName}', {{
-        {rules}
-    }})(Models.{item.FieldName})}}
-</Form.Item>
-");
-
-                        editfield.Append($@"
-<Form.Item label=""{label}"" {{...formItemLayout}}>
-    {{getFieldDecorator('{item.FieldName}', {{
-        {rules},
-        initialValue: toValues(details['{item.FieldName}'])
-    }})(Models.{item.FieldName})}}
-</Form.Item>
-");
-
-                        detailfield.Append($@"
-<Form.Item label=""{label}"" {{...formItemLayout}}>
-    <span>{{toValues(details['{item.FieldName}'], ""span"")}}</span>
-</Form.Item>
-");
-                    }
-                    addfield.Append(Environment.NewLine);
-                    editfield.Append(Environment.NewLine);
-                    detailfield.Append(Environment.NewLine);
-
+                    fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""{item.FieldName}"" />");
                 }
-                return rv.Replace("$addfields$", addfield.ToString()).Replace("$editfields$", editfield.ToString()).Replace("$detailfields$", detailfield.ToString());
+                return rv.Replace("$fields$", fieldstr.ToString());
             }
 
             return rv;
