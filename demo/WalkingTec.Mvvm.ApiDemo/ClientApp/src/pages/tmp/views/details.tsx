@@ -1,14 +1,11 @@
 import { Col, Form } from 'antd';
-import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
+import { FormItem, InfoShell, InfoShellFooter } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
-import GlobalConfig from 'global.config'; //全局配置
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
-const formItemLayout = { ...GlobalConfig.formItemLayout };//布局ß
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -78,6 +75,7 @@ class InsertForm extends React.Component<any, any> {
             // 模型
             models: this.models,
         }
+        console.log(this.models)
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />
@@ -86,7 +84,7 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
                 <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
+                    <FormItem {...props} fieId="PhotoId" layout="row" />
                 </Col>
             </FooterFormItem>
 
@@ -125,12 +123,12 @@ class UpdateForm extends React.Component<any, any> {
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" disabled/>
+                <FormItem {...props} fieId="Password" disabled />
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" disabled/>
+                <FormItem {...props} fieId="Sex" disabled />
                 <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} />
+                    <FormItem {...props} fieId="PhotoId" layout="row" disabled/>
                 </Col>
             </FooterFormItem>
         </Form>
@@ -163,10 +161,7 @@ class InfoForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
                 <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" formItemProps={{ ...formItemLayoutRow }} render={(data)=>{
-                        // 这里 显示值比较特殊，重写 默认渲染 render
-                        return <ToImg fileID={data} />
-                    }} />
+                    <FormItem {...props} fieId="PhotoId" layout="row" />
                 </Col>
             </FooterFormItem>
         </Form>

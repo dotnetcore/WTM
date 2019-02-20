@@ -23,17 +23,21 @@ export class ToImg extends React.Component<IAppProps, any> {
     render() {
         if (this.props.fileID) {
             const src = RequestFiles.onFileUrl(this.props.fileID)
-            return <div className="app-to-img" style={this.props.style} >
-                <img className="app-to-image" src={src} />
-                <div className="app-to-img-hove">
-                    <a key='url' target="_blank" onClick={e => {
-                        img.src = src
-                        viewer.show()
-                    }} ><Icon type="eye" /></a>
-                    {this.props.hideDownload ? null : <a key='download' href={RequestFiles.onFileDownload(this.props.fileID)}><Icon type="cloud-download" /></a>}
+            return <div className="ant-upload-list ant-upload-list-picture-card app-to-img" >
+                <div className="ant-upload-list-item ant-upload-list-item-done">
+                    <div className="ant-upload-list-item-thumbnail">
+                        <img className="app-to-image" src={src} />
+                    </div>
+                    <div className="app-img-hove">
+                        <a key='url' target="_blank" onClick={e => {
+                            img.src = src
+                            viewer.show()
+                        }} ><Icon type="eye" /></a>
+                        {this.props.hideDownload ? null : <a key='download' href={RequestFiles.onFileDownload(this.props.fileID)}><Icon type="cloud-download" /></a>}
+                    </div>
                 </div>
             </div>
         }
-        return <div className="app-to-img" style={this.props.style} key="app-to-img"></div>
+        return <div className="ant-upload-list ant-upload-list-picture-card app-to-img"  key="app-to-img"></div>
     }
 }
