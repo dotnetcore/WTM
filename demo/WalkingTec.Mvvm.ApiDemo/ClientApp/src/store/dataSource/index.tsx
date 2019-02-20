@@ -243,14 +243,13 @@ export default class Store {
   }
   /**
    * 删除
-   * @param 
+   * @param ids 
    */
-  async onDelete(data: Object) {
+  async onDelete(ids: string[]) {
     try {
-      // params = params.map(x => x[this.IdKey])
       const method = this.Urls.delete.method;
-      const src = this.Urls.delete.src + "/" + data[this.IdKey];
-      const res = await this.Request[method](src).toPromise()
+      const src = this.Urls.delete.src;// + "/" + data[this.IdKey];
+      const res = await this.Request[method](src, ids).toPromise()
       message.success('删除成功')
       this.onSelectChange([]);
       // 刷新数据

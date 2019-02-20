@@ -33,8 +33,8 @@ export class Store extends DataSource {
             method: "put"
         },
         delete: {
-            src: "/frameworkuser/delete",
-            method: "get"
+            src: "/frameworkuser/BatchDelete",
+            method: "post"
         },
         import: {
             src: "/frameworkuser/import",
