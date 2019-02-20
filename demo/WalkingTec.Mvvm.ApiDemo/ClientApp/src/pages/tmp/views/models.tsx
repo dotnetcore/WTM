@@ -56,6 +56,7 @@ export default {
                     <Select.Option value={1}>女</Select.Option>
                 </Select>
             },
+            
         }
     },
     /**
