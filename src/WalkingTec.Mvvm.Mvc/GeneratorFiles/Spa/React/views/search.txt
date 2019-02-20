@@ -1,19 +1,24 @@
-import { Form } from 'antd';
+import { FormItem } from 'components/dataView';
 import { DataViewSearch } from 'components/dataView/header/search';
 import { DesForm } from 'components/decorators';
-import GlobalConfig from 'global.config'; //全局配置
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
-import Models from './models';
-const formItemLayout = {
-    ...GlobalConfig.formItemLayout
-};
+import Models from './models'; 
+
 @DesForm
 @observer
 export default class extends React.Component<any, any> {
+    // 创建模型
+    models = Models.searchModels(this.props);
     render() {
-        const { getFieldDecorator } = this.props.form;
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+            defaultValues: toJS(Store.searchParams)
+        }
         return <DataViewSearch
             // columnCount={4} 默认全局
             // onReset={() => { }} 覆盖默认方法
@@ -21,7 +26,7 @@ export default class extends React.Component<any, any> {
             Store={Store}
             form={this.props.form}
         >
-            $fields$
+            {Models.renderModels(props)}
         </DataViewSearch>
     }
 }
