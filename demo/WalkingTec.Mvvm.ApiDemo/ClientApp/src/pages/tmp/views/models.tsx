@@ -1,10 +1,12 @@
 import { Input, Select } from 'antd';
 import UploadImg from 'components/form/uploadImg';
+import Transfer from 'components/form/transfer';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 
 import Regular from 'utils/Regular'; //正则
+import Store from '../store';
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -56,7 +58,25 @@ export default {
                     <Select.Option value={1}>女</Select.Option>
                 </Select>
             },
-            
+            /** 用户组 */
+            UserGroups: {
+                label: "用户组",
+                rules: [],
+                formItem: <Select placeholder="性别" showArrow allowClear>
+                    <Select.Option value={0}>男</Select.Option>
+                    <Select.Option value={1}>女</Select.Option>
+                </Select>
+            },
+            /** 角色 */
+            UserRoles: {
+                label: "角色",
+                rules: [],
+                formItem: <Transfer
+                    dataSource={Store.Request.get("/frameworkuser/GetUserRoles")}
+                    dataKey="RoleId"
+                // dataTo={data => data.map(x => ({ RoleId: x }))}
+                />
+            }
         }
     },
     /**

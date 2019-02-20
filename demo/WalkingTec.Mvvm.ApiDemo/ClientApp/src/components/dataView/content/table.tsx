@@ -102,7 +102,7 @@ const TableUtils = {
     * 动态设置列宽
     */
     onGetScroll(columns) {
-        let scrollX = this.onGetcolumnsWidth(columns) + TableUtils.selectionColumnWidth - 5;
+        let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
             x: scrollX,

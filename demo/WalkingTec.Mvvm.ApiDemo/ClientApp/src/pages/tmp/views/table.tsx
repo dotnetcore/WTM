@@ -81,6 +81,6 @@ function columnsRender(text, record) {
  */
 function columnsRenderImg(text, record) {
     return <div>
-        <ToImg fileID={text} style={{ height: 60, width: 100 }} />
+        <ToImg fileID={text} />
     </div>
 }

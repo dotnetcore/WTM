@@ -65,17 +65,16 @@ export class Request {
      * @param Observable 
      */
     protected AjaxObservable(Observable: Rx.Observable<Rx.AjaxResponse>) {
-        // 加载进度条
-        this.NProgress();
         return new Rx.Observable(sub => {
+            // 加载进度条
+            this.NProgress();
             Observable
                 // 超时时间
                 .timeout(this.timeout)
                 // 错误处理
-                .catch((err: Rx.AjaxError) => Rx.Observable.of(err))
+                .catch((err) => Rx.Observable.of(err))
                 // 过滤请求
                 .filter((ajax) => {
-                    this.NProgress("done");
                     // 数据 Response 
                     if (ajax instanceof Rx.AjaxResponse) {
                         return true
@@ -107,6 +106,15 @@ export class Request {
                         });
                         return false
                     }
+                    if (ajax instanceof Rx.TimeoutError) {
+                        sub.error({})
+                        notification.error({
+                            key: ajax.name,
+                            message: ajax.message,
+                            duration: 5,
+                        });
+                        return false
+                    }
                 })
                 // 数据过滤
                 .map((res: Rx.AjaxResponse) => {
@@ -126,6 +134,7 @@ export class Request {
                             break;
                     }
                 }).subscribe(obs => {
+                    this.NProgress("done");
                     sub.next(obs)
                     sub.complete()
                 })
