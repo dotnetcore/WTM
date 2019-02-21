@@ -157,6 +157,9 @@ export default class Store {
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
+    runInAction(() => {
+      this.searchParams = searchParams;
+    })
     try {
       const res = await this.Request[method](src, search).map(data => {
         if (data.Data) {
@@ -169,7 +172,6 @@ export default class Store {
       }).toPromise()
       runInAction(() => {
         this.dataSource = res || this.dataSource;
-        this.searchParams = searchParams;
       })
       return res
     } catch (error) {
