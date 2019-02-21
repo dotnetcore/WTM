@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Attributes;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -45,6 +46,7 @@ namespace WalkingTec.Mvvm.Mvc
         private string subField(string fieldname, CodeGenListView entity)
         {
             string rv = $"<input type=\"hidden\" name=\"{fieldname}.RelatedField\" value=\"{entity.LinkedType}\" />";
+            rv += $"<input type=\"hidden\" name=\"{fieldname}.SubIdField\" value=\"{entity.SubIdField}\" />";
             if (string.IsNullOrEmpty(entity.LinkedType) == false)
             {
                 var linktype = Type.GetType(entity.LinkedType);
@@ -73,6 +75,7 @@ namespace WalkingTec.Mvvm.Mvc
             List<CodeGenListView> lv = new List<CodeGenListView>();
             int count = 0;
             Type[] basetype = new Type[] { typeof(BasePoco), typeof(TopBasePoco), typeof(PersistPoco) };
+            List<string> ignoreField = new List<string>();
             foreach (var pro in pros)
             {
                 if (basetype.Contains(pro.DeclaringType) == false)
@@ -81,12 +84,17 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         FieldName = pro.Name,
                         FieldDes = pro.GetPropertyDisplayName(),
+                        SubIdField = "",
                         Index = count
                     };
                     Type checktype = pro.PropertyType;
                     if (pro.PropertyType.IsNullable())
                     {
                         checktype = pro.PropertyType.GetGenericArguments()[0];
+                    }
+                    if (ignoreField.Contains(checktype.Name))
+                    {
+                        continue;
                     }
                     bool show = false;
                     view.IsFormField = true;
@@ -96,20 +104,57 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         show = true;
                     }
-                    if(checktype == typeof(Guid))
-                    {
-                        if (pro.Name.ToLower().EndsWith("id"))
+                    if (typeof(TopBasePoco).IsAssignableFrom(checktype)){
+                        var fk = DC.GetFKName2(modeltype, pro.Name);
+                        if(fk != null)
                         {
-                            var linkedtype = pros.Where(x => x.Name.ToLower() + "id" == pro.Name.ToLower()).FirstOrDefault();
-                            if (linkedtype?.PropertyType == typeof(FileAttachment))
-                            {
-                                view.IsImportField = false;
-                            }
-                            view.LinkedType = linkedtype?.PropertyType.AssemblyQualifiedName;
+                            ignoreField.Add(fk);
                         }
+                        if(checktype == typeof(FileAttachment))
+                        {
+                            view.IsImportField = false;
+                            view.FieldDes += "(附件)";
+                        }
+                        else
+                        {
+                            view.FieldDes += "(一对多)";
+                        }
+                        view.LinkedType = checktype.AssemblyQualifiedName;
                         show = true;
                     }
-                    if(show == true)
+                    if (checktype.IsList())
+                    {
+                        checktype = pro.PropertyType.GetGenericArguments()[0];
+                        if (checktype.IsNullable())
+                        {
+                            checktype = checktype.GetGenericArguments()[0];
+                        }
+                        var middletable = checktype.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
+                        if (middletable != null)
+                        {
+                            view.FieldDes += "(多对多)";
+                            var subpros = checktype.GetProperties();
+                            foreach (var spro in subpros)
+                            {
+                                if (basetype.Contains(spro.DeclaringType) == false)
+                                {
+                                    Type subchecktype = spro.PropertyType;
+                                    if (spro.PropertyType.IsNullable())
+                                    {
+                                        subchecktype = spro.PropertyType.GetGenericArguments()[0];
+                                    }
+                                    if (typeof(TopBasePoco).IsAssignableFrom(subchecktype) && subchecktype != modeltype)
+                                    {
+                                        view.LinkedType = subchecktype.AssemblyQualifiedName;
+                                        var fk = DC.GetFKName2(checktype, spro.Name);
+                                        view.SubIdField = fk;
+                                        show = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (show == true)
                     {
                         lv.Add(view);
                         count++;
@@ -142,6 +187,8 @@ namespace WalkingTec.Mvvm.Mvc
         [Display(Name = "关联表显示字段")]
         public string SubField { get; set; }
 
+        public string SubIdField { get; set; }
+
         [Display(Name = "导入字段")]
         public bool IsImportField { get; set; }
 
@@ -152,5 +199,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Display(Name = "关联类型")]
         public string LinkedType { get; set; }
+
     }
 }

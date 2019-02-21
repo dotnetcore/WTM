@@ -363,7 +363,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             continue;
                         }
-                        var fname = "All" + pro.FieldName.Substring(0, pro.FieldName.Length - 2) + "s";
+                        var fname = "All" + pro.FieldName + "s";
                         prostring += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
                         initstr += $@"
@@ -395,6 +395,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string subprostring = "";
                 string formatstring = "";
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
+                Type modelType = Type.GetType(SelectedModel);
                 foreach (var pro in pros)
                 {
                     if (string.IsNullOrEmpty(pro.RelatedField))
@@ -409,11 +410,12 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(pro.RelatedField);
                         if (subtype == typeof(FileAttachment))
                         {
+                            var filefk = DC.GetFKName2(modelType, pro.FieldName);
                             headerstring += $@"
-                this.MakeGridHeader(x => x.{pro.FieldName}).SetFormat({pro.FieldName}Format),";
+                this.MakeGridHeader(x => x.{filefk}).SetFormat({filefk}Format),";
                             selectstring += $@"
-                    {pro.FieldName} = x.{pro.FieldName},";
-                            formatstring += GetResource("HeaderFormat.txt").Replace("$modelname$", ModelName).Replace("$field$", pro.FieldName);
+                    {filefk} = x.{filefk},";
+                            formatstring += GetResource("HeaderFormat.txt").Replace("$modelname$", ModelName).Replace("$field$", filefk);
                         }
                         else
                         {
@@ -427,8 +429,16 @@ namespace WalkingTec.Mvvm.Mvc
                             var subdisplay = subpro.GetCustomAttribute<DisplayAttribute>();
                             headerstring += $@"
                 this.MakeGridHeader(x => x.{pro.SubField + "_view"}),";
-                            selectstring += $@"
-                    {pro.SubField + "_view"} = x.{pro.FieldName.Substring(0, pro.FieldName.Length - 2)}.{pro.SubField},";
+                            if (string.IsNullOrEmpty(pro.SubIdField) == true)
+                            {
+                                selectstring += $@"
+                    {pro.SubField + "_view"} = x.{pro.FieldName}.{pro.SubField},";
+                            }
+                            else
+                            {
+                                selectstring += $@"
+                    {pro.SubField + "_view"} = DC.Set<{subtype.Name}>().Where(y => x.{pro.FieldName}.Select(z => z.{pro.SubIdField}).Contains(y.ID)).Select(y => y.{pro.SubField}).ToSpratedString(null,"",""),";
+                            }
                             if (subdisplay?.Name != null)
                             {
                                 subprostring += $@"
@@ -441,7 +451,6 @@ namespace WalkingTec.Mvvm.Mvc
 
                 }
                 var wherepros = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
-                Type modelType = Type.GetType(SelectedModel);
                 foreach (var pro in wherepros)
                 {
                     var proType = modelType.GetProperty(pro.FieldName).PropertyType;
@@ -465,6 +474,8 @@ namespace WalkingTec.Mvvm.Mvc
                 string prostr = "";
                 string initstr = "";
                 string includestr = "";
+                string addstr = "";
+                string editstr = "";
                 var pros = FieldInfos.Where(x => x.IsFormField == true && string.IsNullOrEmpty(x.RelatedField) == false).ToList();
                 foreach (var pro in pros)
                 {
@@ -473,16 +484,53 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         continue;
                     }
-                    var fname = "All" + pro.FieldName.Substring(0, pro.FieldName.Length - 2) + "s";
+                    var fname = "All" + pro.FieldName + "s";
                     prostr += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
                     initstr += $@"
             {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.{pro.SubField});";
                     includestr += $@"
-            SetInclude(x => x.{pro.FieldName.Substring(0, pro.FieldName.Length - 2)});";
+            SetInclude(x => x.{pro.FieldName});";
 
+                    if(string.IsNullOrEmpty(pro.SubIdField) == false)
+                    {
+                        Type modelType = Type.GetType(SelectedModel);
+                        var protype = modelType.GetProperty(pro.FieldName);
+                        prostr += $@"
+        [Display(Name = ""{protype.GetPropertyDisplayName()}"")]
+        public List<Guid> Selected{pro.FieldName}IDs {{ get; set; }}";
+                        initstr += $@"
+            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}.Select(x => x.{pro.SubIdField}).ToList();";
+                        addstr += $@"
+            if (Selected{pro.FieldName}IDs != null)
+            {{
+                foreach (var id in Selected{pro.FieldName}IDs)
+                {{
+                    Entity.{pro.FieldName}.Add(new {protype.Name} {{ {pro.SubIdField} = id }});
+                }}
+            }}
+";
+                        editstr += $@"
+            if(Selected{pro.FieldName}IDs == null || Selected{pro.FieldName}IDs.Count == 0)
+            {{
+                FC.Add(""Entity.Selected{pro.FieldName}IDs.DONOTUSECLEAR"", ""true"");
+            }}
+            else
+            {{
+                Entity.{pro.FieldName} = new List<{protype.Name}>();
+                Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.Name} {{ ID = Guid.NewGuid(), {pro.SubIdField} = x }}));
+            }}
+";
+                    }
                 }
-                rv = rv.Replace("$pros$", prostr).Replace("$init$", initstr).Replace("$include$", includestr);
+                if (UI == UIEnum.LayUI)
+                {
+                    rv = rv.Replace("$pros$", prostr).Replace("$init$", initstr).Replace("$include$", includestr).Replace("$add$", addstr).Replace("$edit$", editstr);
+                }
+                if(UI == UIEnum.React)
+                {
+                    rv = rv.Replace("$pros$", "").Replace("$init$", "").Replace("$include$", includestr).Replace("$add$", "").Replace("$edit$", "");
+                }
                 rv = GetRelatedNamespace(pros, rv);
             }
             if (name == "ImportVM")
@@ -547,13 +595,22 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (name == "DeleteView" || name == "DetailsView")
                     {
-                        if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField != "`file")
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
-                            fieldstr.Append($@"<wt:display field=""{pre}.{item.FieldName.Substring(0, item.FieldName.Length - 2)}.{item.SubField}"" />");
-                        }
-                        else
-                        {
-                            fieldstr.Append($@"<wt:display field=""{pre}.{item.FieldName}"" />");
+                            if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField != "`file")
+                            {
+                                fieldstr.Append($@"<wt:display field=""{pre}.{item.FieldName}.{item.SubField}"" />");
+                            }
+                            else
+                            {
+                                string idname = item.FieldName;
+                                if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField == "`file")
+                                {
+                                    var filefk = DC.GetFKName2(modelType, item.FieldName);
+                                    idname = filefk;
+                                }
+                                fieldstr.Append($@"<wt:display field=""{pre}.{idname}"" />");
+                            }
                         }
                     }
                     else
@@ -562,16 +619,24 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             if (item.SubField == "`file")
                             {
-                                fieldstr.Append($@"<wt:upload field=""{pre}.{item.FieldName}"" />");
+                                var filefk = DC.GetFKName2(modelType, item.FieldName);
+                                fieldstr.Append($@"<wt:upload field=""{pre}.{filefk}"" />");
                             }
                             else
                             {
-                                var fname = "All" + item.FieldName.Substring(0, item.FieldName.Length - 2) + "s";
+                                var fname = "All" + item.FieldName + "s";
                                 if (name == "BatchEditView")
                                 {
                                     fname = "LinkedVM." + fname;
                                 }
-                                fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" items=""{fname}""/>");
+                                if (string.IsNullOrEmpty(item.SubIdField))
+                                {
+                                    fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" items=""{fname}""/>");
+                                }
+                                else
+                                {
+                                    fieldstr.Append($@"<wt:checkbox field=""Selected{item.FieldName}IDs"" items=""{fname}""/>");
+                                }
                             }
                         }
                         else
@@ -613,7 +678,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        var fname = "All" + item.FieldName.Substring(0, item.FieldName.Length - 2) + "s";
+                        var fname = "All" + item.FieldName + "s";
                         fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" items=""Searcher.{fname}"" empty-text=""全部"" />");
                     }
                     else
@@ -882,6 +947,7 @@ namespace WalkingTec.Mvvm.Mvc
         public bool IsBatchField { get; set; }
 
         public string SubField { get; set; }
+        public string SubIdField { get; set; }
 
     }
 }
