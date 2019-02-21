@@ -152,10 +152,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         elem: $('#{item.Id}')[0],
         url: '{item.SearchUrl}',
         cache: false,
-        template_val: '{{{{d.value}}}}',
-        template_txt: '{{{{d.text}}}}',
+        template_val: '{{{{d.Value}}}}',
+        template_txt: '{{{{d.Text}}}}',
         onselect: function (resp) {{
-            $('#{item.Id}').val(resp.value);
+            $('#{item.Id}').val(resp.Value);
         }}
     }});</script>
 ");

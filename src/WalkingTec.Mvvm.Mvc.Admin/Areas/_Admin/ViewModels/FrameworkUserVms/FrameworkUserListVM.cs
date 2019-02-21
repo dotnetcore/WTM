@@ -10,10 +10,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserListVM : BasePagedListVM<FrameworkUser_View, FrameworkUserSearcher>
     {
-
-        public List<FrameworkRole> AllRoles { get; set; }
-        public List<FrameworkGroup> AllGroups { get; set; }
-
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
@@ -38,8 +34,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x => x.IsValid).SetHeader("启用").SetWidth(80),
                 this.MakeGridHeader(x => x.CellPhone),
                 this.MakeGridHeader(x => x.HomePhone),
-                this.MakeGridHeader(x => x.Roles).SetFormat(RoleFormat),
-                this.MakeGridHeader(x => x.Groups).SetFormat(GroupFormat),
+                this.MakeGridHeader(x => x.Roles),
+                this.MakeGridHeader(x => x.Groups),
                 this.MakeGridHeader(x=> x.PhotoId).SetFormat(PhotoIdFormat),                
                 this.MakeGridHeaderAction(width: 300)
             };
@@ -54,29 +50,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             };
         }
 
-        private string RoleFormat(FrameworkUser_View entity, object val)
-        {
-            if (AllRoles == null)
-            {
-                return "";
-            }
-            return AllRoles.Where(x => entity.Roles.Contains(x.ID)).Select(x => x.RoleName).ToList().ToSpratedString();
-        }
-
-        private string GroupFormat(FrameworkUser_View entity, object val)
-        {
-            if (AllGroups == null)
-            {
-                return "";
-            }
-            return AllGroups.Where(x => entity.Groups.Contains(x.ID)).Select(x => x.GroupName).ToList().ToSpratedString();
-        }
-
         public override IOrderedQueryable<FrameworkUser_View> GetSearchQuery()
         {
-            AllRoles = DC.Set<FrameworkRole>().ToList();
-            AllGroups = DC.Set<FrameworkGroup>().ToList();
-            var query = DC.Set<FrameworkUserBase>().Include(x => x.UserRoles).Include(x=>x.UserGroups)
+            var query = DC.Set<FrameworkUserBase>()
                 .CheckContain(Searcher.ITCode,x=>x.ITCode)
                 .CheckContain(Searcher.Name, x=>x.Name)
                 .CheckEqual(Searcher.IsValid, x=>x.IsValid)
@@ -89,8 +65,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     CellPhone = x.CellPhone,
                     HomePhone = x.HomePhone,
                     IsValid = x.IsValid,
-                    Roles = x.UserRoles.Select(y=>y.RoleId).ToList(),
-                    Groups = x.UserGroups.Select(y=>y.GroupId).ToList(),
+                    Roles = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
+                    Groups = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
@@ -102,9 +78,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     public class FrameworkUser_View : FrameworkUserBase
     {
         [Display(Name = "角色")]
-        public List<Guid> Roles { get; set; }
+        public string Roles { get; set; }
 
         [Display(Name = "用户组")]
-        public List<Guid> Groups { get; set; }
+        public string Groups { get; set; }
     }
 }
