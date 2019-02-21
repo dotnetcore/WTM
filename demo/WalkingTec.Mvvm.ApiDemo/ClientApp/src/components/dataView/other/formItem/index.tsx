@@ -80,7 +80,7 @@ function itemToRender(value, formItem) {
     let render = null;
     // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
     if (typeof value === "object") {
-        value = JSON.stringify(value);
+        value = value && JSON.stringify(value);
     }
     switch (lodash.get(formItem, "type.wtmType")) {
         case "UploadImg":
