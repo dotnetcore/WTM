@@ -96,6 +96,30 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
+		[HttpPost("BatchDelete")]
+        [ActionDescription("批量删除")]
+        public IActionResult BatchDelete(Guid[] ids)
+        {
+            var vm = CreateVM<FrameworkUserBaseBatchVM>();
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
+            {
+                return Ok();
+            }
+            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(ids.Count());
+            }
+        }
+
+
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkUserBaseSearcher searcher)

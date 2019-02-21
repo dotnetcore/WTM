@@ -1,14 +1,15 @@
-﻿import { Form } from 'antd';
-import { InfoShell, InfoShellFooter, InfoShellCol, ToImg, toValues } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators'; //错误
-import GlobalConfig from 'global.config'; //全局配置
+﻿import { Col, Form } from 'antd';
+import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
+import { DesError, DesForm } from 'components/decorators'; 
+import GlobalConfig from 'global.config'; 
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Regular from 'utils/Regular'; //正则
-import Store from '../store'; //页面状态
-import Models from './models'; //模型
-const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow }
+import Store from '../store'; 
+import Models from './models'; 
+const formItemLayout = { ...GlobalConfig.formItemLayout };
+const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -69,31 +70,19 @@ class InsertForm extends React.Component<any, any> {
             }
         });
     }
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const { form } = this.props;
-        const { getFieldDecorator } = form;
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <FooterFormItem submit>
-                
-<Form.Item label="角色编号" {...formItemLayout}>
-    {getFieldDecorator('RoleCode', {
-        rules: [{ "required": true, "message": "角色编号不能为空" }]
-    })(Models.RoleCode)}
-</Form.Item>
-
-
-<Form.Item label="角色名称" {...formItemLayout}>
-    {getFieldDecorator('RoleName', {
-        rules: [{ "required": true, "message": "角色名称不能为空" }]
-    })(Models.RoleName)}
-</Form.Item>
-
-
-<Form.Item label="备注" {...formItemLayout}>
-    {getFieldDecorator('RoleRemark', {
-        rules: []
-    })(Models.RoleRemark)}
-</Form.Item>
+            <FooterFormItem submit>				
+                <FormItem {...props} fieId="RoleCode" />
+                <FormItem {...props} fieId="RoleName" />
+                <FormItem {...props} fieId="RoleRemark" />
 
             </FooterFormItem>
 
@@ -113,40 +102,24 @@ class UpdateForm extends React.Component<any, any> {
         this.props.form.validateFields((err, values) => {
             console.log("数据", values);
             if (!err) {
-                // values = mapValues(values, "YYYY-MM-DD")
                 Store.onEdit(values);
             }
         });
     }
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const { form } = this.props;
-        const { getFieldDecorator } = form;
-        const details = { ...Store.details };
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+            defaultValues: toJS(Store.details),
+        }
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                
-<Form.Item label="角色编号" {...formItemLayout}>
-    {getFieldDecorator('RoleCode', {
-        rules: [{ "required": true, "message": "角色编号不能为空" }],
-        initialValue: toValues(details['RoleCode'])
-    })(Models.RoleCode)}
-</Form.Item>
-
-
-<Form.Item label="角色名称" {...formItemLayout}>
-    {getFieldDecorator('RoleName', {
-        rules: [{ "required": true, "message": "角色名称不能为空" }],
-        initialValue: toValues(details['RoleName'])
-    })(Models.RoleName)}
-</Form.Item>
-
-
-<Form.Item label="备注" {...formItemLayout}>
-    {getFieldDecorator('RoleRemark', {
-        rules: [],
-        initialValue: toValues(details['RoleRemark'])
-    })(Models.RoleRemark)}
-</Form.Item>
+                <FormItem {...props} fieId="RoleCode" />
+                <FormItem {...props} fieId="RoleName" />
+                <FormItem {...props} fieId="RoleRemark" />
 
             </FooterFormItem>
         </Form>
@@ -158,30 +131,21 @@ class UpdateForm extends React.Component<any, any> {
 @DesError
 @observer
 class InfoForm extends React.Component<any, any> {
+    // 创建模型
+    models = Models.editModels(this.props);
     render() {
-        const details = { ...Store.details };
+        // item 的 props
+        const props = {
+            ...this.props,
+            models: this.models,
+            display: true,
+            defaultValues: toJS(Store.details),
+        }
         return <Form >
             <FooterFormItem>
-                
-<Form.Item label="角色编号" {...formItemLayout}>
-    <span>{toValues(details['RoleCode'], "span")}</span>
-</Form.Item>
-
-
-<Form.Item label="角色名称" {...formItemLayout}>
-    <span>{toValues(details['RoleName'], "span")}</span>
-</Form.Item>
-
-
-<Form.Item label="备注" {...formItemLayout}>
-    <span>{toValues(details['RoleRemark'], "span")}</span>
-</Form.Item>
-
-
-<Form.Item label="包含用户数" {...formItemLayout}>
-    <span>{toValues(details['UserCount'], "span")}</span>
-</Form.Item>
-
+                <FormItem {...props} fieId="RoleCode" />
+                <FormItem {...props} fieId="RoleName" />
+                <FormItem {...props} fieId="RoleRemark" />
 
             </FooterFormItem>
         </Form>

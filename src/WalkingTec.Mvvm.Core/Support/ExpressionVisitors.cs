@@ -336,6 +336,10 @@ namespace WalkingTec.Mvvm.Core
             //如果不是添加模式，那么删除所有的where条件
             if (_addMode == false)
             {
+                if(node.Arguments.Count == 0)
+                {
+                    return base.VisitMethodCall(node);
+                }
                 var aType = node.Arguments[0].Type;
                 //如果节点的上一个节点是where
                 if (node.Arguments[0] is MethodCallExpression parentNode && parentNode.Method.Name.ToLower() == "where" && aType.GetTypeInfo().IsGenericType)

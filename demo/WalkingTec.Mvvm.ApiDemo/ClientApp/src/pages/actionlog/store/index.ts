@@ -33,23 +33,23 @@ export class Store extends DataSource {
             method: "put"
         },
         delete: {
-            src: "/actionlog/delete",
-            method: "get"
+            src: "/actionlog/BatchDelete",
+            method: "post"
         },
         import: {
             src: "/actionlog/import",
             method: "post"
         },
         export: {
-            src: "/actionlog/exportExcel",
+            src: "/actionlog/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/actionlog/exportExcelByIds",
+            src: "/actionlog/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/actionlog/getExcelTemplate",
+            src: "/actionlog/GetExcelTemplate",
             method: "get"
         }
     }

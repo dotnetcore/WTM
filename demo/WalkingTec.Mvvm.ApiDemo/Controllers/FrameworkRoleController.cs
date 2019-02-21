@@ -5,7 +5,8 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
+using WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkRoleVMs;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
@@ -95,6 +96,30 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
+		[HttpPost("BatchDelete")]
+        [ActionDescription("批量删除")]
+        public IActionResult BatchDelete(Guid[] ids)
+        {
+            var vm = CreateVM<FrameworkRoleBatchVM>();
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
+            {
+                return Ok();
+            }
+            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(ids.Count());
+            }
+        }
+
+
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
@@ -149,5 +174,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
                 return Ok(vm.EntityList.Count);
             }
         }
+
+
     }
 }

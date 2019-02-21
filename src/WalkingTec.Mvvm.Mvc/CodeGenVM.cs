@@ -401,6 +401,10 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         typename = proType.PropertyType.GetGenericArguments()[0].Name + "?";
                     }
+                    else if(proType.PropertyType != typeof(string))
+                    {
+                        typename = proType.PropertyType.Name + "?";
+                    }
                     prostring += $@"
         public {typename} {proType.Name} {{ get; set; }}";
                 }
@@ -843,15 +847,12 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            fieldstr.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear>
-                    <Select.Option value={{0}}>是</Select.Option>
-                    <Select.Option value={{1}}>否</Select.Option>
-                </Select>");
+                            fieldstr.AppendLine($@"                formItem: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
                         }
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear>");
+                            fieldstr.AppendLine($@"                formItem: <Select placeholder=""{label}"" showArrow allowClear>");
                             foreach (var e in es)
                             {
                                 fieldstr.AppendLine($@"                    <Select.Option value={{{e.Value}}}>{e.Text}</Select.Option>");
@@ -916,7 +917,10 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <Switch checkedChildren={{<Icon type=""check"" />}} unCheckedChildren={{<Icon type=""close"" />}} />");
+                            fieldstr2.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear>
+                    <Select.Option value={{1}}>是</Select.Option>
+                    <Select.Option value={{0}}>否</Select.Option>
+                </Select>");
                         }
                         else if (checktype.IsEnum())
                         {

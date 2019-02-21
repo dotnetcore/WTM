@@ -49,6 +49,7 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.ActionLogVMs
             var query = DC.Set<ActionLog>()
                 .CheckContain(Searcher.ITCode, x=>x.ITCode)
                 .CheckContain(Searcher.ActionUrl, x=>x.ActionUrl)
+                .CheckContain(Searcher.IP, x=>x.IP)
                 .CheckEqual(Searcher.LogType, x=>x.LogType)
                 .Select(x => new ActionLog_View
                 {

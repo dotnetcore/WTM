@@ -10,17 +10,20 @@ import Action from './action';
  * title:表格显示的中文标题
  */
 const columns = [
-{
+
+    {
         dataIndex: "GroupCode",
         title: "用户组编码",
         render: columnsRender 
     },
-{
+
+    {
         dataIndex: "GroupName",
         title: "用户组名称",
         render: columnsRender 
     },
-{
+
+    {
         dataIndex: "GroupRemark",
         title: "备注",
         render: columnsRender 

@@ -1,9 +1,12 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
 import UploadImg from 'components/form/uploadImg';
+import Transfer from 'components/form/transfer';
+import Selects from 'components/form/select';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
-import Regular from 'utils/Regular'; 
+import Regular from 'utils/Regular';
+import Store from '../store';
 
 /**
  * label  标识
@@ -60,7 +63,11 @@ export default {
             LogType:{
                 label: "类型",
                 rules: [{ "required": true, "message": "类型不能为空" }],
-                formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
+                formItem: <Select placeholder="全部" showArrow allowClear>
+                    <Select.Option value={0}>普通</Select.Option>
+                    <Select.Option value={1}>异常</Select.Option>
+                    <Select.Option value={2}>调试</Select.Option>
+                </Select>
             }
 
         }
@@ -72,7 +79,7 @@ export default {
     searchModels(props?) {
         return {
             ITCode:{
-                label: "ITCode",
+                label: "账号",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
@@ -81,12 +88,20 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            IP: {
+            IP:{
                 label: "IP",
                 rules: [],
-                formItem: <Input placeholder="请输入 IP" />
-            }
-
+                formItem: <Input placeholder="" />
+            },
+            LogType:{
+                label: "类型",
+                rules: [],
+                formItem: <Select placeholder="全部" showArrow allowClear>
+                    <Select.Option value={0}>普通</Select.Option>
+                    <Select.Option value={1}>异常</Select.Option>
+                    <Select.Option value={2}>调试</Select.Option>
+                </Select>
+            },
 
         }
     },

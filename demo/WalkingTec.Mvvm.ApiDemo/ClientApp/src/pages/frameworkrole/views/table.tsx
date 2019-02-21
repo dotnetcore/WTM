@@ -10,17 +10,20 @@ import Action from './action';
  * title:表格显示的中文标题
  */
 const columns = [
-{
+
+    {
         dataIndex: "RoleCode",
         title: "角色编号",
         render: columnsRender 
     },
-{
+
+    {
         dataIndex: "RoleName",
         title: "角色名称",
         render: columnsRender 
     },
-{
+
+    {
         dataIndex: "RoleRemark",
         title: "备注",
         render: columnsRender 

@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs
         [Display(Name = "性别")]
         public SexEnum? Sex { get; set; }
         [Display(Name = "是否有效")]
-        public Boolean IsValid { get; set; }
+        public Boolean? IsValid { get; set; }
 
         protected override void InitVM()
         {

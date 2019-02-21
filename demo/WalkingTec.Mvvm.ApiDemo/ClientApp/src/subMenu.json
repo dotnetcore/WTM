@@ -7,36 +7,9 @@
         "Component": "tmp",
         "Action": [],
         "Children": []
-    },
-    {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed29356",
-        "Name": "用户",
-        "Icon": "menu-fold",
-        "Path": "/frameworkuser",
-        "Component": "user",
-        "Action": [],
-        "Children": []
     }
 ,{
-        "Key": "0efde0b0-817a-494a-b5dd-72c22fb0e8fc",
-        "Name": "角色管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkrole",
-        "Component": "frameworkrole",
-        "Action": [],
-        "Children": []
-    }
-,{
-        "Key": "ccb68fa8-4acf-491a-b6d3-75a05385bfac",
-        "Name": "用户组管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkgroup",
-        "Component": "frameworkgroup",
-        "Action": [],
-        "Children": []
-    }
-,{
-        "Key": "62310f91-0607-493f-b57a-9c4b7a718f3e",
+        "Key": "8b982671-cf11-4be8-b745-8903bd1df431",
         "Name": "日志管理",
         "Icon": "menu-fold",
         "Path": "/actionlog",
@@ -45,7 +18,25 @@
         "Children": []
     }
 ,{
-        "Key": "5ff6a0b5-6646-4492-a3da-be99d8442c33",
+        "Key": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
+        "Name": "用户组管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkgroup",
+        "Component": "frameworkgroup",
+        "Action": [],
+        "Children": []
+    }
+,{
+        "Key": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+        "Name": "角色管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkrole",
+        "Component": "frameworkrole",
+        "Action": [],
+        "Children": []
+    }
+,{
+        "Key": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
         "Name": "用户管理",
         "Icon": "menu-fold",
         "Path": "/frameworkuserbase",
@@ -53,6 +44,7 @@
         "Action": [],
         "Children": []
     }
+
 
 
 

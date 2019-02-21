@@ -32,11 +32,8 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs
         {
             return new List<GridColumn<FrameworkUserBase_View>>{
                 this.MakeGridHeader(x => x.ITCode),
-                this.MakeGridHeader(x => x.Password),
-                this.MakeGridHeader(x => x.Email),
                 this.MakeGridHeader(x => x.Name),
                 this.MakeGridHeader(x => x.Sex),
-                this.MakeGridHeader(x => x.CellPhone),
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid),
                 this.MakeGridHeader(x => x.RoleName_view),
@@ -64,11 +61,8 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs
                 {
 				    ID = x.ID,
                     ITCode = x.ITCode,
-                    Password = x.Password,
-                    Email = x.Email,
                     Name = x.Name,
                     Sex = x.Sex,
-                    CellPhone = x.CellPhone,
                     PhotoId = x.PhotoId,
                     IsValid = x.IsValid,
                     RoleName_view = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
