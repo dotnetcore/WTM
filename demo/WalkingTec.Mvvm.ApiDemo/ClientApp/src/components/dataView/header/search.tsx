@@ -78,6 +78,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
             toggleShow = childrens.length >= columnCount,
             colSpan = 24 / columnCount,//每列 值
             colSpanSearch = colSpan;
+        // debugger
         // 展开收起
         if (this.toggle) {
             items = childrens;
@@ -86,7 +87,9 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         }
         const itemslength = items.length
         // 列行数
-        if (itemslength > columnCount) {
+        if (itemslength === columnCount) {
+            colSpanSearch = 24;
+        } else if (itemslength > columnCount) {
             colSpanSearch = (columnCount - (itemslength % columnCount)) * colSpan
         } else {
             colSpanSearch = (columnCount - itemslength) * colSpan
