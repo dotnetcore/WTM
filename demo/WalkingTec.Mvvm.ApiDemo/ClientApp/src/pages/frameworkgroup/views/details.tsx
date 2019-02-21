@@ -44,6 +44,7 @@ export default class extends React.Component<any, any> {
         };
         const { detailsType, visibleEdit, loadingEdit } = Store.pageState
         return <InfoShell
+            width={1000}
             title={enums[detailsType]}
             onClose={() => { Store.onPageState("visibleEdit", false) }}
             visible={visibleEdit}
@@ -74,26 +75,26 @@ class InsertForm extends React.Component<any, any> {
         const { getFieldDecorator } = form;
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                
-<Form.Item label="用户组编码" {...formItemLayout}>
-    {getFieldDecorator('GroupCode', {
-        rules: [{ "required": true, "message": "用户组编码不能为空" }]
-    })(Models.GroupCode)}
-</Form.Item>
+
+                <Form.Item label="用户组编码" {...formItemLayout}>
+                    {getFieldDecorator('GroupCode', {
+                        rules: [{ "required": true, "message": "用户组编码不能为空" }]
+                    })(Models.GroupCode)}
+                </Form.Item>
 
 
-<Form.Item label="用户组名称" {...formItemLayout}>
-    {getFieldDecorator('GroupName', {
-        rules: [{ "required": true, "message": "用户组名称不能为空" }]
-    })(Models.GroupName)}
-</Form.Item>
+                <Form.Item label="用户组名称" {...formItemLayout}>
+                    {getFieldDecorator('GroupName', {
+                        rules: [{ "required": true, "message": "用户组名称不能为空" }]
+                    })(Models.GroupName)}
+                </Form.Item>
 
 
-<Form.Item label="备注" {...formItemLayout}>
-    {getFieldDecorator('GroupRemark', {
-        rules: []
-    })(Models.GroupRemark)}
-</Form.Item>
+                <Form.Item label="备注" {...formItemLayout}>
+                    {getFieldDecorator('GroupRemark', {
+                        rules: []
+                    })(Models.GroupRemark)}
+                </Form.Item>
 
             </FooterFormItem>
 
@@ -124,29 +125,29 @@ class UpdateForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
-                
-<Form.Item label="用户组编码" {...formItemLayout}>
-    {getFieldDecorator('GroupCode', {
-        rules: [{ "required": true, "message": "用户组编码不能为空" }],
-        initialValue: toValues(details['GroupCode'])
-    })(Models.GroupCode)}
-</Form.Item>
+
+                <Form.Item label="用户组编码" {...formItemLayout}>
+                    {getFieldDecorator('GroupCode', {
+                        rules: [{ "required": true, "message": "用户组编码不能为空" }],
+                        initialValue: toValues(details['GroupCode'])
+                    })(Models.GroupCode)}
+                </Form.Item>
 
 
-<Form.Item label="用户组名称" {...formItemLayout}>
-    {getFieldDecorator('GroupName', {
-        rules: [{ "required": true, "message": "用户组名称不能为空" }],
-        initialValue: toValues(details['GroupName'])
-    })(Models.GroupName)}
-</Form.Item>
+                <Form.Item label="用户组名称" {...formItemLayout}>
+                    {getFieldDecorator('GroupName', {
+                        rules: [{ "required": true, "message": "用户组名称不能为空" }],
+                        initialValue: toValues(details['GroupName'])
+                    })(Models.GroupName)}
+                </Form.Item>
 
 
-<Form.Item label="备注" {...formItemLayout}>
-    {getFieldDecorator('GroupRemark', {
-        rules: [],
-        initialValue: toValues(details['GroupRemark'])
-    })(Models.GroupRemark)}
-</Form.Item>
+                <Form.Item label="备注" {...formItemLayout}>
+                    {getFieldDecorator('GroupRemark', {
+                        rules: [],
+                        initialValue: toValues(details['GroupRemark'])
+                    })(Models.GroupRemark)}
+                </Form.Item>
 
 
             </FooterFormItem>
@@ -163,25 +164,25 @@ class InfoForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form >
             <FooterFormItem>
-                
-<Form.Item label="用户组编码" {...formItemLayout}>
-    <span>{toValues(details['GroupCode'], "span")}</span>
-</Form.Item>
+
+                <Form.Item label="用户组编码" {...formItemLayout}>
+                    <span>{toValues(details['GroupCode'], "span")}</span>
+                </Form.Item>
 
 
-<Form.Item label="用户组名称" {...formItemLayout}>
-    <span>{toValues(details['GroupName'], "span")}</span>
-</Form.Item>
+                <Form.Item label="用户组名称" {...formItemLayout}>
+                    <span>{toValues(details['GroupName'], "span")}</span>
+                </Form.Item>
 
 
-<Form.Item label="备注" {...formItemLayout}>
-    <span>{toValues(details['GroupRemark'], "span")}</span>
-</Form.Item>
+                <Form.Item label="备注" {...formItemLayout}>
+                    <span>{toValues(details['GroupRemark'], "span")}</span>
+                </Form.Item>
 
 
-<Form.Item label="包含用户" {...formItemLayout}>
-    <span>{toValues(details['UsersCount'], "span")}</span>
-</Form.Item>
+                <Form.Item label="包含用户" {...formItemLayout}>
+                    <span>{toValues(details['UsersCount'], "span")}</span>
+                </Form.Item>
 
 
             </FooterFormItem>

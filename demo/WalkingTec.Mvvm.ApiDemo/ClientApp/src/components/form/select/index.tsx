@@ -1,22 +1,28 @@
-import { Select, Spin } from 'antd';
+import { Select } from 'antd';
+import { SelectProps } from 'antd/lib/select';
+import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
-import lodash from 'lodash';
-import { SelectProps } from 'antd/lib/select';
 interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
     value?: any;
+    /** 多选 */
+    multiple?: boolean;
     disabled?: boolean;
     placeholder?: React.ReactNode;
     SelectProps?: SelectProps;
     [key: string]: any;
 }
 export default class extends React.Component<IAppProps, any> {
+    static wtmType = "Select";
     state = {
         loading: true,
         mockData: [],
         targetKeys: [],
+    }
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return !(lodash.isEqual(this.props.value, nextProps.value) && lodash.isEqual(this.state, nextState))
     }
     async  componentDidMount() {
         const { dataSource } = this.props;
@@ -54,10 +60,9 @@ export default class extends React.Component<IAppProps, any> {
             loading: false
         })
     }
-    filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
+    // filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
     handleChange = (targetKeys) => {
-        console.log(targetKeys)
-        // this.setState({ targetKeys });
+        // 多选 返回 值 为数组 的情况下 有 dataKey 重组 数据
         if (this.props.dataKey && lodash.isArray(targetKeys)) {
             return this.props.onChange(
                 targetKeys.map(x => (
@@ -67,17 +72,51 @@ export default class extends React.Component<IAppProps, any> {
         }
         this.props.onChange(targetKeys);
     }
-    handleSearch = (dir, value) => {
-        console.log('search:', dir, value);
-    };
+    getDefaultValue(config) {
+        const { value, dataKey } = this.props;
+        // 默认值
+        if (value) {
+            let newValue = null;
+            // 默认值 多选
+            if (config.mode == "multiple" && lodash.isArray(value)) {
+                newValue = value.map(x => {
+                    if (lodash.isString(x)) {
+                        return x;
+                    }
+                    if (dataKey) {
+                        return lodash.get(x, dataKey)
+                    }
+                    // 没有找到 dataKey
+                    return lodash.toString(x);
+                })
+            }
+            // 单选
+            else if (lodash.isString(this.props.value)) {
+                newValue = value;
+            }
+            config.defaultValue = newValue
+        }
+        return config;
+    }
     render() {
+        let config: SelectProps = {
+            allowClear: true,
+            showArrow: true,
+            loading: this.state.loading,
+            // mode: "multiple",
+            placeholder: this.props.placeholder,
+            disabled: this.props.disabled,
+            onChange: this.handleChange
+        }
+        // 多选
+        if (this.props.multiple) {
+            config.mode = "multiple"
+        }
+        config = this.getDefaultValue(config);
         return (
             // <Spin spinning={this.state.loading}>
             <Select
-                loading={this.state.loading}
-                placeholder={this.props.placeholder}
-                disabled={this.props.disabled}
-                onChange={this.handleChange}
+                {...config}
             >
                 {this.renderOption()}
             </Select>
@@ -86,7 +125,7 @@ export default class extends React.Component<IAppProps, any> {
     }
     renderOption() {
         return this.state.mockData.map(x => {
-            return <Select.Option key={x.key} value={x.key}>={x.title}</Select.Option>
+            return <Select.Option key={x.key} value={x.key}>{x.title}</Select.Option>
         })
     }
 }
