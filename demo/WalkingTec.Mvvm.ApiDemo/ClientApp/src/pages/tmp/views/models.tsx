@@ -112,8 +112,8 @@ export default {
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
-            },
-        }
+            }
+       }
     },
     /**
      * 渲染 模型

@@ -1,46 +1,42 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
-    /// <summary>
-    /// 用户
-    /// </summary>
+    
+    [ActionDescription("用户管理")]
     [ApiController]
-    [Route("api/FrameworkUser")]
-    [Public]
-    public class UserController : BaseApiController
+    [Route("api/FrameworkUserBase")]
+	[Public]
+	public class FrameworkUserBaseController : BaseApiController
     {
-
-        // GET: api/<controller>
+        [ActionDescription("搜索")]
         [HttpPost("Search")]
-        public string Search(FrameworkUserSearcher searcher)
+		public string Search(FrameworkUserBaseSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkUserBaseListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
-        // GET api/<controller>/5
+        [ActionDescription("获取")]
         [HttpGet("{id}")]
         public FrameworkUserBase Get(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = CreateVM<FrameworkUserBaseVM>(id);
             return vm.Entity;
         }
 
-        // POST api/<controller>
+        [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add(FrameworkUserVM vm)
+        public IActionResult Add(FrameworkUserBaseVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -61,9 +57,9 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
-        // PUT api/<controller>/5
+        [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkUserVM vm)
+        public IActionResult Edit(FrameworkUserBaseVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -83,11 +79,11 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             }
         }
 
-        // DELETE api/<controller>/5
+        [ActionDescription("删除")]
         [HttpGet("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = CreateVM<FrameworkUserBaseVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -100,59 +96,36 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
-        [HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
-        public IActionResult BatchDelete(Guid[] ids)
-        {
-            var vm = CreateVM<FrameworkUserBatchVM>();
-            if (ids != null && ids.Count() > 0)
-            {
-                vm.Ids = ids;
-            }
-            else
-            {
-                return Ok();
-            }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
-            {
-                return BadRequest(ModelState);
-            }
-            else
-            {
-                return Ok(ids.Count());
-            }
-        }
-
-
+        [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
-        [ActionDescription("导出")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        public IActionResult ExportExcel(FrameworkUserBaseSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
-                vm.Searcher = searcher;
-                vm.SearcherMode = ListVMSearchModeEnum.Export;
+            var vm = CreateVM<FrameworkUserBaseListVM>();
+            vm.Searcher = searcher;
+            vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUserBase_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
+        [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        [ActionDescription("导出")]
         public IActionResult ExportExcelByIds(Guid[] ids)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkUserBaseListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<Guid>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUserBase_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
+        [ActionDescription("下载导入模板")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkUserImportVM>();
+            var vm = CreateVM<FrameworkUserBaseImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -163,9 +136,9 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [HttpPost("Import")]
         [ActionDescription("导入")]
-        public ActionResult Import(FrameworkUserImportVM vm)
+        [HttpPost("Import")]
+        public ActionResult Import(FrameworkUserBaseImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -178,27 +151,17 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             }
         }
 
-        [HttpGet("GetUserRoles")]
-        [ActionDescription("获取角色")]
-        public ActionResult GetUserRoles()
+
+        [HttpGet("GetFrameworkRoles")]
+        public ActionResult GetFrameworkRoles()
         {
-            var test = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName);
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
         }
 
-        [HttpGet("GetUserGroups")]
-        [ActionDescription("获取角色")]
-        public ActionResult GetUserGroups()
+        [HttpGet("GetFrameworkGroups")]
+        public ActionResult GetFrameworkGroups()
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
-        }
-
-        [HttpGet("GetSex")]
-        [ActionDescription("获取性别")]
-        public ActionResult GetSex()
-        {
-            var test = typeof(SexEnum).ToListItems();
-            return Ok(test);
         }
 
     }

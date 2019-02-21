@@ -35,5 +35,25 @@
         "Action": [],
         "Children": []
     }
+,{
+        "Key": "62310f91-0607-493f-b57a-9c4b7a718f3e",
+        "Name": "日志管理",
+        "Icon": "menu-fold",
+        "Path": "/actionlog",
+        "Component": "actionlog",
+        "Action": [],
+        "Children": []
+    }
+,{
+        "Key": "5ff6a0b5-6646-4492-a3da-be99d8442c33",
+        "Name": "用户管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkuserbase",
+        "Component": "frameworkuserbase",
+        "Action": [],
+        "Children": []
+    }
+
+
 
 ]
