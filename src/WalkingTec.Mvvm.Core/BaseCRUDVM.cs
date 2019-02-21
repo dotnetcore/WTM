@@ -378,7 +378,7 @@ namespace WalkingTec.Mvvm.Core
                                     }
                                     if (string.IsNullOrEmpty(ent.UpdateBy))
                                     {
-                                        ent.UpdateBy = LoginUserInfo.ITCode;
+                                        ent.UpdateBy = LoginUserInfo?.ITCode;
                                     }
                                 }
                                 foreach (var itempro in itemPros)

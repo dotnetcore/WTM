@@ -188,7 +188,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
-                valueField = x => x.ID.ToString();
+                valueField = x => x.ID.ToString().ToLower();
             }
             //如果没有指定忽略权限，则拼接权限过滤的where条件
             if (ignorDataPrivilege == false)
