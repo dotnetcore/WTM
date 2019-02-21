@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel;
-
+using WalkingTec.Mvvm.Core.Extensions;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
@@ -184,6 +184,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [ActionDescription("获取角色")]
         public ActionResult GetUserRoles()
         {
+            var test = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName);
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
         }
 
@@ -193,5 +194,14 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
         }
+
+        [HttpGet("GetSex")]
+        [ActionDescription("获取性别")]
+        public ActionResult GetSex()
+        {
+            var test = typeof(SexEnum).ToListItems();
+            return Ok(test);
+        }
+
     }
 }
