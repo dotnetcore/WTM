@@ -91,11 +91,11 @@ export default {
     searchModels(props?) {
         return {
             /** ITCode */
-            // ITCode: {
-            //     label: "账号",
-            //     rules: [],
-            //     formItem: <Input placeholder="请输入 ITCode" />
-            // },
+            ITCode: {
+                label: "账号",
+                rules: [],
+                formItem: <Input placeholder="请输入 ITCode" />
+            },
             /** Name */
             Name: {
                 label: "名称",
