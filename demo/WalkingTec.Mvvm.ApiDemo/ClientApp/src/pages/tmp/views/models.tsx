@@ -1,6 +1,7 @@
 import { Input, Select } from 'antd';
 import UploadImg from 'components/form/uploadImg';
 import Transfer from 'components/form/transfer';
+import Selects from 'components/form/select';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
@@ -62,10 +63,12 @@ export default {
             UserGroups: {
                 label: "用户组",
                 rules: [],
-                formItem: <Select placeholder="性别" showArrow allowClear>
-                    <Select.Option value={0}>男</Select.Option>
-                    <Select.Option value={1}>女</Select.Option>
-                </Select>
+                formItem: <Selects
+                    placeholder="用户组"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataKey="GroupId"
+                />
             },
             /** 角色 */
             UserRoles: {
@@ -73,9 +76,8 @@ export default {
                 rules: [],
                 formItem: <Transfer
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({url:"/frameworkuser/GetUserRoles"})}
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
-                // dataTo={data => data.map(x => ({ RoleId: x }))}
                 />
             }
         }
@@ -87,16 +89,27 @@ export default {
     searchModels(props?) {
         return {
             /** ITCode */
-            ITCode: {
-                label: "账号",
-                rules: [],
-                formItem: <Input placeholder="请输入 ITCode" />
-            },
+            // ITCode: {
+            //     label: "账号",
+            //     rules: [],
+            //     formItem: <Input placeholder="请输入 ITCode" />
+            // },
             /** Name */
             Name: {
                 label: "名称",
                 rules: [],
                 formItem: <Input placeholder="请输入 Name" />
+            },
+            /** 用户组 */
+            UserGroups: {
+                label: "用户组",
+                rules: [],
+                formItem: <Selects
+                    placeholder="用户组"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataKey="GroupId"
+                />
             },
         }
     },
