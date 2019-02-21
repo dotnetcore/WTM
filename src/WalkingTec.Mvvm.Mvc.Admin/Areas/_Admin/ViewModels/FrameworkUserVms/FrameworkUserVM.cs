@@ -88,6 +88,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             base.DoEdit(updateAllFields);
         }
 
+        public override void DoDelete()
+        {
+            base.DoDelete();
+        }
+
         public void ChangePassword()
         {
             Entity.Password = Utils.GetMD5String(Entity.Password);

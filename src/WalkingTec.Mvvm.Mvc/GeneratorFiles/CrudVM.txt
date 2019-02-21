@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using $modelnamespace$;
@@ -20,5 +21,19 @@ namespace $vmnamespace$
         {$init$
         }
 
+        public override void DoAdd()
+        {$add$           
+            base.DoAdd();
+        }
+
+        public override void DoEdit(bool updateAllFields = false)
+        {$edit$
+            base.DoEdit(updateAllFields);
+        }
+
+        public override void DoDelete()
+        {
+            base.DoDelete();
+        }
     }
 }
