@@ -54,10 +54,11 @@ export default {
             Sex: {
                 label: "性别",
                 rules: [],
-                formItem: <Select placeholder="性别" showArrow allowClear>
-                    <Select.Option value={0}>男</Select.Option>
-                    <Select.Option value={1}>女</Select.Option>
-                </Select>
+                formItem: <Selects
+                    placeholder="性别"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                />
             },
             /** 用户组 */
             UserGroups: {
@@ -65,6 +66,7 @@ export default {
                 rules: [],
                 formItem: <Selects
                     placeholder="用户组"
+                    multiple // 多选标记
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
