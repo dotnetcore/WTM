@@ -130,7 +130,7 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Password" disabled />
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" disabled />
+                <FormItem {...props} fieId="Sex"  />
                 <FormItem {...props} fieId="UserGroups" />
                 <Col span={24}>
                     <FormItem {...props} fieId="UserRoles" layout="row" disabled/>
