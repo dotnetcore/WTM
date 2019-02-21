@@ -12,56 +12,49 @@ import Action from './action';
 const columns = [
 
     {
+        dataIndex: "ITCode",
+        title: "账号",
+        render: columnsRender
+    },
+    {
         dataIndex: "ModuleName",
         title: "模块",
         render: columnsRender 
     },
-
     {
         dataIndex: "ActionName",
         title: "动作",
         render: columnsRender 
     },
-
     {
-        dataIndex: "ITCode",
-        title: "ITCode",
-        render: columnsRender 
-    },
-
+        dataIndex: "LogType",
+        title: "类型",
+        render: columnsRender
+    }
+    ,
     {
         dataIndex: "ActionUrl",
         title: "Url",
         render: columnsRender 
     },
-
+    {
+        dataIndex: "IP",
+        title: "IP",
+        render: columnsRender
+    },
     {
         dataIndex: "ActionTime",
         title: "操作时间",
         render: columnsRender 
     },
-
     {
         dataIndex: "Duration",
         title: "时长",
         render: columnsRender 
     },
-
     {
         dataIndex: "Remark",
         title: "备注",
-        render: columnsRender 
-    },
-
-    {
-        dataIndex: "IP",
-        title: "IP",
-        render: columnsRender 
-    },
-
-    {
-        dataIndex: "LogType",
-        title: "类型",
         render: columnsRender 
     }
 

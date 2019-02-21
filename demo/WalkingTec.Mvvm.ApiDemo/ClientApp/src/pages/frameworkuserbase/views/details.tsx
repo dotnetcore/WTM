@@ -97,7 +97,6 @@ class InsertForm extends React.Component<any, any> {
                 <Col span={24}>
                     <FormItem {...props} fieId="UserGroups" layout="row" />
                 </Col>
-
             </FooterFormItem>
 
         </Form>

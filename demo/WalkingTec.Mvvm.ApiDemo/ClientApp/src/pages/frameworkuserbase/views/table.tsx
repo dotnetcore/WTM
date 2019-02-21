@@ -18,18 +18,6 @@ const columns = [
     },
 
     {
-        dataIndex: "Password",
-        title: "密码",
-        render: columnsRender 
-    },
-
-    {
-        dataIndex: "Email",
-        title: "邮箱",
-        render: columnsRender 
-    },
-
-    {
         dataIndex: "Name",
         title: "姓名",
         render: columnsRender 
@@ -38,12 +26,6 @@ const columns = [
     {
         dataIndex: "Sex",
         title: "性别",
-        render: columnsRender 
-    },
-
-    {
-        dataIndex: "CellPhone",
-        title: "手机",
         render: columnsRender 
     },
 

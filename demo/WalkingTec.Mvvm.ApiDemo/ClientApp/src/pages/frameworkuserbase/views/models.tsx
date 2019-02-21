@@ -43,7 +43,7 @@ export default {
             Sex:{
                 label: "性别",
                 rules: [],
-                formItem: <Select placeholder="全部" showArrow allowClear>
+                formItem: <Select placeholder="性别" showArrow allowClear>
                     <Select.Option value={0}>男</Select.Option>
                     <Select.Option value={1}>女</Select.Option>
                 </Select>
@@ -124,7 +124,10 @@ export default {
             IsValid:{
                 label: "是否有效",
                 rules: [],
-                formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
+                formItem: <Select placeholder="全部" showArrow allowClear>
+                    <Select.Option value={1}>是</Select.Option>
+                    <Select.Option value={0}>否</Select.Option>
+                </Select>
             },
 
         }

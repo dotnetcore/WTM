@@ -32,17 +32,10 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs
         public ExcelPropety ZipCode_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.ZipCode);
         [Display(Name = "是否有效")]
         public ExcelPropety IsValid_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.IsValid);
-        [Display(Name = "角色")]
-        public ExcelPropety UserRoles_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.UserRoles);
-        [Display(Name = "用户组")]
-        public ExcelPropety UserGroups_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.UserGroups);
+        public ExcelPropety CodeAndName_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.CodeAndName);
 
 	    protected override void InitVM()
         {
-            UserRoles_Excel.DataType = ColumnDataType.ComboBox;
-            UserRoles_Excel.ListItems = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.RoleName);
-            UserGroups_Excel.DataType = ColumnDataType.ComboBox;
-            UserGroups_Excel.ListItems = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.GroupName);
         }
 
     }

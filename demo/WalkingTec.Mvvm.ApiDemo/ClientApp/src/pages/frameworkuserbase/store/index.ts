@@ -33,23 +33,23 @@ export class Store extends DataSource {
             method: "put"
         },
         delete: {
-            src: "/frameworkuserbase/delete",
-            method: "get"
+            src: "/frameworkuserbase/BatchDelete",
+            method: "post"
         },
         import: {
             src: "/frameworkuserbase/import",
             method: "post"
         },
         export: {
-            src: "/frameworkuserbase/exportExcel",
+            src: "/frameworkuserbase/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/frameworkuserbase/exportExcelByIds",
+            src: "/frameworkuserbase/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/frameworkuserbase/getExcelTemplate",
+            src: "/frameworkuserbase/GetExcelTemplate",
             method: "get"
         }
     }

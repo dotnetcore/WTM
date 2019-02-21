@@ -16,6 +16,8 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.ActionLogVMs
         public String ITCode { get; set; }
         [Display(Name = "Url")]
         public String ActionUrl { get; set; }
+        [Display(Name = "IP")]
+        public String IP { get; set; }
         [Display(Name = "类型")]
         public ActionLogTypesEnum LogType { get; set; }
 

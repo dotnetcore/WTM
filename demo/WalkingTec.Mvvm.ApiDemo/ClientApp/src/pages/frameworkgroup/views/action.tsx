@@ -1,6 +1,6 @@
 ﻿import { Button, Divider, Dropdown, Menu, message, Modal, Popconfirm, Row } from 'antd';
 import { Visible } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators';
+import { DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -56,7 +56,7 @@ export const ActionEvents = {
      * @param data 
      */
     onDelete(data) {
-        Store.onDelete(data)
+        Store.onDelete([lodash.get(data, Store.IdKey)])
     },
     /**
     * 删除
@@ -67,9 +67,7 @@ export const ActionEvents = {
             Modal.confirm({
                 title: `确定删除 ${length} 条数据?`,
                 onOk: async () => {
-                    const params = Store.dataSource.Data.filter(x => Store.selectedRowKeys.some(y => y == x.key));
-                    // await Store.onDelete(params)
-                    message.warn("没有多选删除接口")
+                    Store.onDelete([...Store.selectedRowKeys])
                 },
                 onCancel() { },
             });
