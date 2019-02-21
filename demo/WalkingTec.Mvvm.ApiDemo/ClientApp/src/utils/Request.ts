@@ -75,6 +75,7 @@ export class Request {
                 .catch((err) => Rx.Observable.of(err))
                 // 过滤请求
                 .filter((ajax) => {
+                    this.NProgress("done");
                     // 数据 Response 
                     if (ajax instanceof Rx.AjaxResponse) {
                         return true
@@ -134,7 +135,6 @@ export class Request {
                             break;
                     }
                 }).subscribe(obs => {
-                    this.NProgress("done");
                     sub.next(obs)
                     sub.complete()
                 })
