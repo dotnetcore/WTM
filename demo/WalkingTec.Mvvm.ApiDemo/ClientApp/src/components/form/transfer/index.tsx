@@ -1,19 +1,23 @@
-import { Transfer, Spin } from 'antd';
+import { Spin, Transfer } from 'antd';
+import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
-import lodash from 'lodash';
-
-export default class extends React.Component<{
+interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
     value?: any;
     disabled?: boolean;
     [key: string]: any;
-}, any> {
+}
+export default class extends React.Component<IAppProps, any> {
+    static wtmType = "Transfer";
     state = {
         loading: true,
         mockData: [],
         targetKeys: [],
+    }
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return !(lodash.isEqual(this.props.value, nextProps.value) && lodash.isEqual(this.state, nextState))
     }
     async  componentDidMount() {
         const { dataSource } = this.props;

@@ -91,7 +91,6 @@ export default class UploadImg extends React.Component<any, any> {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
-        console.log(this.props)
         return (
             <div style={{ minWidth: 105, minHeight: 105 }}>
                 <Upload
