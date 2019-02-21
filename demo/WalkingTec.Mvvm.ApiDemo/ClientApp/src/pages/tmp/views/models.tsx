@@ -72,7 +72,8 @@ export default {
                 label: "角色",
                 rules: [],
                 formItem: <Transfer
-                    dataSource={Store.Request.get("/frameworkuser/GetUserRoles")}
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({url:"/frameworkuser/GetUserRoles"})}
                     dataKey="RoleId"
                 // dataTo={data => data.map(x => ({ RoleId: x }))}
                 />

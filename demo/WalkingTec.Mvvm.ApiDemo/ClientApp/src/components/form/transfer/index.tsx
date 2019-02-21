@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import lodash from 'lodash';
 
 export default class extends React.Component<{
-    dataSource: Observable<any[]> | any[];
+    dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
     value?: any;
+    disabled?: boolean;
     [key: string]: any;
 }, any> {
     state = {
@@ -15,26 +16,40 @@ export default class extends React.Component<{
         targetKeys: [],
     }
     async  componentDidMount() {
-        // this.getMock();
-        if (this.props.dataSource instanceof Observable) {
-            const res = await this.props.dataSource.toPromise();
-            let targetKeys = [];
-            if (lodash.isArray(this.props.value) && lodash.isString(this.props.dataKey)) {
-                targetKeys = this.props.value.map(x => (lodash.get(x, this.props.dataKey)))
-            }
-            this.setState({
-                mockData: res.map(item => {
-                    return {
-                        ...item,
-                        key: item.Value,
-                        title: item.Text,
-                        description: item.Text,
-                    }
-                }),
-                targetKeys: targetKeys,
-                loading: false
-            })
+        const { dataSource } = this.props;
+        let mockData = [],
+            targetKeys = [],
+            res = [];
+        // 值为 数组 
+        if (lodash.isArray(dataSource)) {
+            res = dataSource;
         }
+        // 值为 Promise
+        else if (dataSource instanceof Promise) {
+            res = await dataSource;
+        }
+        // 值为 Observable 
+        else if (dataSource instanceof Observable) {
+            res = await dataSource.toPromise();
+        }
+        // 转换 数据 为 渲染 格式
+        mockData = res.map(item => {
+            return {
+                ...item,
+                key: item.Value,
+                title: item.Text,
+                description: item.Text,
+            }
+        })
+        // 回填 已选择数据
+        if (lodash.isArray(this.props.value) && lodash.isString(this.props.dataKey)) {
+            targetKeys = this.props.value.map(x => (lodash.get(x, this.props.dataKey)))
+        }
+        this.setState({
+            mockData,
+            targetKeys,
+            loading: false
+        })
     }
     filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
     handleChange = (targetKeys) => {
@@ -62,6 +77,7 @@ export default class extends React.Component<{
                     onChange={this.handleChange}
                     onSearch={this.handleSearch}
                     render={item => item.title}
+                    disabled={this.props.disabled}
                 />
             </Spin>
         );
