@@ -1,7 +1,9 @@
 ﻿using System;
+using WalkingTec.Mvvm.Core.Attributes;
 
 namespace WalkingTec.Mvvm.Core
 {
+    [MiddleTable]
     public class FrameworkUserGroup : BasePoco
     {
         public FrameworkUserBase User { get; set; }

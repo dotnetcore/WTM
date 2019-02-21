@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Serialization;
+using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
-namespace WalkingTec.Mvvm.Core
+namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class FrameworkUserBaseListVM : BasePagedListVM<FrameworkUserBase, FrameworkUserBaseSearcher>
     {

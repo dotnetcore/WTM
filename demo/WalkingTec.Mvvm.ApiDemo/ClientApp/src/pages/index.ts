@@ -22,7 +22,21 @@
         component: () => import('./frameworkgroup').then(x => x.default) 
     }
 
+
+, actionlog: {
+        name: '日志管理',
+        path: '/actionlog',
+        component: () => import('./actionlog').then(x => x.default) 
+    }
+
+, frameworkuserbase: {
+        name: '用户管理',
+        path: '/frameworkuserbase',
+        component: () => import('./frameworkuserbase').then(x => x.default) 
+    }
 /**WTM**/
+ 
+ 
  
  
  
