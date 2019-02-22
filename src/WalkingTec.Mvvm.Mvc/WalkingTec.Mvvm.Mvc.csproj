@@ -138,7 +138,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" version="2.2.0"/>
   </ItemGroup>
 
   <ItemGroup>
