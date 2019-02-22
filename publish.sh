@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 切换到当前目录
+basepath=$(cd `dirname $0`; pwd)
+cd $basepath
+
 # arrProjs=("./doc/WalkingTec.Mvvm.Doc/WalkingTec.Mvvm.Doc" "./demo/WalkingTec.Mvvm.ApiDemo/WalkingTec.Mvvm.ApiDemo" "./demo/WalkingTec.Mvvm.Demo/WalkingTec.Mvvm.Demo")
 arrProjs=("WalkingTec.Mvvm.ApiDemo" "WalkingTec.Mvvm.Demo")
 configuration="Release"
