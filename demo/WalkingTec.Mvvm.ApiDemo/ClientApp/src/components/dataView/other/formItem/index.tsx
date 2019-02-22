@@ -34,7 +34,7 @@ interface IFormItemProps {
     /** 布局类型 row 整行 span 24 */
     layout?: "row";
     /** 覆盖默认渲染 */
-    render?: (data: any, fieId: string) => React.ReactNode;
+    render?: (props) => React.ReactNode;
     [key: string]: any;
 }
 @observer
@@ -42,7 +42,6 @@ export class FormItem extends React.Component<IFormItemProps, any> {
     static wtmType = "FormItem";
     render() {
         const { form = {}, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render, layout } = this.props;
-        const { getFieldDecorator }: WrappedFormUtils = form;
         // 获取模型 item
         const model = lodash.get(models, fieId) || { rules: [], label: `未获取到模型(${fieId})`, formItem: <Input placeholder={`未获取到模型(${fieId})`} /> };
         let options: GetFieldDecoratorOptions = {
@@ -56,18 +55,9 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         let renderItem = null;
         // 重写渲染
         if (typeof render === "function") {
-            renderItem = render(options.initialValue, fieId);
+            renderItem = render(this.props);
         } else {
-            // 禁用显示 span
-            if (typeof display === "boolean") {
-                renderItem = itemToRender(options.initialValue, model.formItem)
-            } else {
-                renderItem = getFieldDecorator && getFieldDecorator(this.props.fieId, options)(model.formItem);
-                // 禁用 输入控件
-                if (typeof disabled === "boolean") {
-                    renderItem = React.cloneElement(renderItem, { disabled: true })
-                }
-            }
+            renderItem = itemRender(this.props, { options, model })
         }
         // 布局
         let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
@@ -76,15 +66,55 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         </Form.Item >
     }
 }
-function itemToRender(value, formItem) {
+/**
+ * 重写 渲染 组件
+ * @param props 
+ * @param config 
+ */
+function itemRender(props, config) {
+    const { form = {}, disabled, display, fieId } = props;
+    const { options, model } = config;
+    const { getFieldDecorator }: WrappedFormUtils = form;
+    let renderItem, propsNew: any = {};
+    // 禁用显示 span
+    if (lodash.isEqual(display, true)) {
+        propsNew.display = "true";
+        propsNew.value = options.initialValue;
+        renderItem = itemToDisplay(props, config)
+    } else {
+        renderItem = getFieldDecorator && getFieldDecorator(fieId as never, options)(model.formItem);
+    }
+    // 禁用 输入控件
+    if (lodash.isEqual(disabled, true)) {
+        propsNew.disabled = true
+    }
+    // 布尔类型 Swatch
+    if (lodash.isEqual(options.initialValue, true)) {
+        propsNew.defaultChecked = true;
+    }
+    return React.cloneElement(renderItem, propsNew);
+}
+/**
+ * 重写渲染 禁用 组件
+ * @param props 
+ * @param config 
+ */
+function itemToDisplay(props, config) {
+    const { disabled, display, fieId } = props;
+    const { options, model } = config;
+    let value = options.initialValue;
     let render = null;
     // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
     if (typeof value === "object") {
         value = value && JSON.stringify(value);
     }
-    switch (lodash.get(formItem, "type.wtmType")) {
+    switch (lodash.get(model.formItem, "type.wtmType")) {
         case "UploadImg":
             render = <ToImg fileID={value} />
+            break;
+        case "Select":
+        case "Transfer":
+            render = model.formItem;// React.cloneElement(model.formItem, {});
             break;
         default:
             render = <span>{value}</span>
