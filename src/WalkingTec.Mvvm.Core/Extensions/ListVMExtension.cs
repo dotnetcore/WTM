@@ -197,13 +197,23 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
                         if (ptype == typeof(bool) || ptype == typeof(bool?))
                         {
-                            if (html.ToLower() == "true")
+                            if (returnColumnObject == false)
                             {
-                                html = (self as BaseVM).UIService.MakeCheckBox(true, isReadOnly: true);
+                                if (html.ToLower() == "true")
+                                {
+                                    html = (self as BaseVM).UIService.MakeCheckBox(true, isReadOnly: true);
+                                }
+                                if (html.ToLower() == "false" || html == string.Empty)
+                                {
+                                    html = (self as BaseVM).UIService.MakeCheckBox(false, isReadOnly: true);
+                                }
                             }
-                            if (html.ToLower() == "false" || html == string.Empty)
+                            else
                             {
-                                html = (self as BaseVM).UIService.MakeCheckBox(false, isReadOnly: true);
+                                if(html != null && html != string.Empty)
+                                {
+                                    html = html.ToLower();
+                                }
                             }
                         }
                         //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
