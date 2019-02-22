@@ -1,8 +1,10 @@
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
+import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
+
 interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
@@ -12,6 +14,7 @@ interface IAppProps {
     disabled?: boolean;
     placeholder?: React.ReactNode;
     SelectProps?: SelectProps;
+    display?: boolean;
     [key: string]: any;
 }
 export default class extends React.Component<IAppProps, any> {
@@ -21,9 +24,12 @@ export default class extends React.Component<IAppProps, any> {
         mockData: [],
         targetKeys: [],
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return !(lodash.isEqual(this.props.value, nextProps.value) && lodash.isEqual(this.state, nextState))
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     if (lodash.isEqual(this.state, nextState)) {
+    //         return true
+    //     }
+    //     return !lodash.isEqual(this.props.value, nextProps.value)
+    // }
     async  componentDidMount() {
         const { dataSource } = this.props;
         let mockData = [],
@@ -45,7 +51,7 @@ export default class extends React.Component<IAppProps, any> {
         mockData = res.map(item => {
             return {
                 ...item,
-                key: item.Value,
+                key: lodash.toString(item.Value),
                 title: item.Text,
                 description: item.Text,
             }
@@ -75,7 +81,7 @@ export default class extends React.Component<IAppProps, any> {
     getDefaultValue(config) {
         const { value, dataKey } = this.props;
         // 默认值
-        if (value) {
+        if (!lodash.isNil(value)) {
             let newValue = null;
             // 默认值 多选
             if (config.mode == "multiple" && lodash.isArray(value)) {
@@ -91,8 +97,8 @@ export default class extends React.Component<IAppProps, any> {
                 })
             }
             // 单选
-            else if (lodash.isString(this.props.value)) {
-                newValue = value;
+            else {
+                newValue = lodash.toString(value);
             }
             config.defaultValue = newValue
         }
@@ -113,14 +119,22 @@ export default class extends React.Component<IAppProps, any> {
             config.mode = "multiple"
         }
         config = this.getDefaultValue(config);
+        if (this.props.display) {
+            if (!this.state.loading) {
+                // 多选的
+                if (lodash.isArray(config.defaultValue)) {
+                    return lodash.intersectionBy(this.state.mockData, (config.defaultValue as string[]).map(x => ({ key: x })), "key").map(x => x.title).join(",")
+                }
+                return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.defaultValue)]), "title")}</span>
+            }
+            return <span></span>
+        }
         return (
-            // <Spin spinning={this.state.loading}>
             <Select
                 {...config}
             >
                 {this.renderOption()}
             </Select>
-            // </Spin>
         );
     }
     renderOption() {

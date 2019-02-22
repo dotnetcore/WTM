@@ -1,12 +1,15 @@
 import { Spin, Transfer } from 'antd';
+import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
+
 interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
     value?: any;
     disabled?: boolean;
+    display?: boolean;
     [key: string]: any;
 }
 export default class extends React.Component<IAppProps, any> {
@@ -16,9 +19,12 @@ export default class extends React.Component<IAppProps, any> {
         mockData: [],
         targetKeys: [],
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return !(lodash.isEqual(this.props.value, nextProps.value) && lodash.isEqual(this.state, nextState))
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     if (lodash.isEqual(this.state, nextState)) {
+    //         return true
+    //     }
+    //     return !lodash.isEqual(this.props.value, nextProps.value)
+    // }
     async  componentDidMount() {
         const { dataSource } = this.props;
         let mockData = [],
@@ -40,7 +46,7 @@ export default class extends React.Component<IAppProps, any> {
         mockData = res.map(item => {
             return {
                 ...item,
-                key: item.Value,
+                key: lodash.toString(item.Value),
                 title: item.Text,
                 description: item.Text,
             }
@@ -71,6 +77,9 @@ export default class extends React.Component<IAppProps, any> {
         console.log('search:', dir, value);
     };
     render() {
+        if (this.props.display) {
+            return lodash.intersectionBy(this.state.mockData, this.state.targetKeys.map(x => ({ key: x })), "key").map(x => x.title).join(",")
+        }
         return (
             <Spin spinning={this.state.loading}>
                 <Transfer

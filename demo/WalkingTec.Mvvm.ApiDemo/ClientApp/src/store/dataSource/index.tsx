@@ -171,7 +171,11 @@ export default class Store {
         return data
       }).toPromise()
       runInAction(() => {
-        this.dataSource = res || this.dataSource;
+        this.dataSource = {
+          ...this.dataSource,
+          ...res,
+          Limit
+        } // res || this.dataSource;
       })
       return res
     } catch (error) {
