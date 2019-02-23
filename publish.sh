@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 切换到当前目录
+basepath=$(cd `dirname $0`; pwd)
+cd $basepath
+
 # arrProjs=("./doc/WalkingTec.Mvvm.Doc/WalkingTec.Mvvm.Doc" "./demo/WalkingTec.Mvvm.ApiDemo/WalkingTec.Mvvm.ApiDemo" "./demo/WalkingTec.Mvvm.Demo/WalkingTec.Mvvm.Demo")
 arrProjs=("WalkingTec.Mvvm.ApiDemo" "WalkingTec.Mvvm.Demo")
 configuration="Release"
@@ -22,8 +26,7 @@ do
 projPath="./demo/$proj/$proj"
 outputDir="$outputRoot/$proj"
 echo "发布 $proj"
-publishCMD="\"$projPath.csproj\" -c $configuration -r $runtime -f $framework --self-contained $selfContained -o \"$outputDir\""
-dotnet publish $publishCMD
+dotnet publish "$projPath.csproj" -c $configuration -r $runtime -f $framework --self-contained $selfContained -o "$outputDir"
 echo "$proj 发布完成"
 done
 echo "全部发布完成"
