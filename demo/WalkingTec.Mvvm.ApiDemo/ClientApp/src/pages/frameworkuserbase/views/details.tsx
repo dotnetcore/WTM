@@ -1,11 +1,13 @@
 ﻿import { Col, Form } from 'antd';
 import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators';
+import { DesError, DesForm } from 'components/decorators'; 
+import GlobalConfig from 'global.config'; 
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Store from '../store';
-import Models from './models';
+import Store from '../store'; 
+import Models from './models'; 
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -75,7 +77,7 @@ class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <FooterFormItem submit>
+            <FooterFormItem submit>				
                 <FormItem {...props} fieId="ITCode" />
                 <FormItem {...props} fieId="Password" />
                 <FormItem {...props} fieId="Email" />
@@ -87,8 +89,13 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="ZipCode" />
                 <FormItem {...props} fieId="PhotoId" />
                 <FormItem {...props} fieId="IsValid" />
-                <FormItem {...props} fieId="UserRoles" layout="row" />
-                <FormItem {...props} fieId="UserGroups" layout="row" />
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                </Col>
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                </Col>
+
             </FooterFormItem>
 
         </Form>
@@ -133,8 +140,13 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="ZipCode" />
                 <FormItem {...props} fieId="PhotoId" />
                 <FormItem {...props} fieId="IsValid" />
-                <FormItem {...props} fieId="UserRoles" layout="row" />
-                <FormItem {...props} fieId="UserGroups" layout="row" />
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                </Col>
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                </Col>
+
             </FooterFormItem>
         </Form>
     }
@@ -168,8 +180,13 @@ class InfoForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="ZipCode" />
                 <FormItem {...props} fieId="PhotoId" />
                 <FormItem {...props} fieId="IsValid" />
-                <FormItem {...props} fieId="UserRoles" layout="row" />
-                <FormItem {...props} fieId="UserGroups" layout="row" />
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                </Col>
+                <Col span={24}>
+                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                </Col>
+
             </FooterFormItem>
         </Form>
     }

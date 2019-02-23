@@ -65,7 +65,7 @@ export default {
     /**
      * 详情信息 列 数 24 的除数
      */
-    infoColumnCount: 3,
+    infoColumnCount: 2,
     /**
     * 搜索 列 数 24 的除数
     */

@@ -7,8 +7,6 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; 
 import Models from './models'; 
-const formItemLayout = { ...GlobalConfig.formItemLayout };
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
 
 /**
  *  详情 窗口 
