@@ -89,10 +89,6 @@ namespace WalkingTec.Mvvm.Mvc
                         Index = count
                     };
                     var notmapped = pro.GetCustomAttributes(typeof(NotMappedAttribute), false).FirstOrDefault();
-                    if(notmapped != null)
-                    {
-                        view.FieldDes += "(NotMapped)";
-                    }
                     Type checktype = pro.PropertyType;
                     if (pro.PropertyType.IsNullable())
                     {
@@ -160,6 +156,15 @@ namespace WalkingTec.Mvvm.Mvc
                                 }
                             }
                         }
+                    }
+                    if (notmapped != null)
+                    {
+                        view.FieldDes += "(NotMapped)";
+                        view.IsFormField = false;
+                        view.IsSearcherField = false;
+                        view.IsBatchField = false;
+                        view.IsImportField = false;
+                        view.IsListField = false;
                     }
                     if (show == true)
                     {
