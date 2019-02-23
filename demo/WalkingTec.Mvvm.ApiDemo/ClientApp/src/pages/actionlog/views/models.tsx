@@ -60,14 +60,14 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="请输入 IP" />
             },
-            LogType:{
+            LogType: {
                 label: "类型",
                 rules: [{ "required": true, "message": "类型不能为空" }],
-                formItem: <Select placeholder="全部" showArrow allowClear>
-                    <Select.Option value={0}>普通</Select.Option>
-                    <Select.Option value={1}>异常</Select.Option>
-                    <Select.Option value={2}>调试</Select.Option>
-                </Select>
+                formItem: <Selects placeholder="类型" dataSource={[
+                    { Text: "普通", Value: 0 },
+                    { Text: "异常", Value: 1 },
+                    { Text: "调试", Value: 2 }
+                ]} />
             }
 
         }
