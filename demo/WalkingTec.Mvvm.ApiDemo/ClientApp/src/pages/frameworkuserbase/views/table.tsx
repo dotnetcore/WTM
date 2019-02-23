@@ -1,4 +1,4 @@
-﻿import { DataViewTable, ToImg } from 'components/dataView';
+﻿import { columnsRender, columnsRenderImg, DataViewTable } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
@@ -14,43 +14,43 @@ const columns = [
     {
         dataIndex: "ITCode",
         title: "账号",
-        render: columnsRender 
+        render: columnsRender
     },
 
     {
         dataIndex: "Name",
         title: "姓名",
-        render: columnsRender 
+        render: columnsRender
     },
 
     {
         dataIndex: "Sex",
         title: "性别",
-        render: columnsRender 
+        render: columnsRender
     },
 
     {
         dataIndex: "PhotoId",
         title: "照片",
-        render: columnsRenderImg 
+        render: columnsRenderImg
     },
 
     {
         dataIndex: "IsValid",
         title: "是否有效",
-        render: columnsRender 
+        render: columnsRender
     },
 
     {
         dataIndex: "RoleName_view",
         title: "角色",
-        render: columnsRender 
+        render: columnsRender
     },
 
     {
         dataIndex: "GroupName_view",
         title: "用户组",
-        render: columnsRender 
+        render: columnsRender
     }
 
 ]
@@ -82,24 +82,4 @@ export default class extends React.Component<any, any> {
     render() {
         return <DataViewTable Store={Store} columns={this.renderColumns()} />
     }
-}
-/**
- * 重写 列渲染 函数 
- * @param text 
- * @param record 
- */
-function columnsRender(text, record) {
-    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
-        <span>{text}</span>
-    </div>
-}
-/**
- * 重写 图片 函数 
- * @param text 
- * @param record 
- */
-function columnsRenderImg(text, record) {
-    return <div>
-        <ToImg fileID={text} style={{ height: 60, width: 100 }} />
-    </div>
 }

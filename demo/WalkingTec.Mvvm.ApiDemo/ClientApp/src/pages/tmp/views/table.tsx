@@ -1,4 +1,4 @@
-import { DataViewTable, ToImg } from 'components/dataView';
+import { columnsRender, columnsRenderImg, DataViewTable } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
@@ -63,24 +63,4 @@ export default class extends React.Component<any, any> {
     render() {
         return <DataViewTable Store={Store} columns={this.renderColumns()} />
     }
-}
-/**
- * 重写 列渲染 函数 
- * @param text 
- * @param record 
- */
-function columnsRender(text, record) {
-    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
-        <span>{text}</span>
-    </div>
-}
-/**
- * 重写 图片 函数 
- * @param text 
- * @param record 
- */
-function columnsRenderImg(text, record) {
-    return <div>
-        <ToImg fileID={text} />
-    </div>
 }

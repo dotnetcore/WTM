@@ -111,7 +111,11 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
                 // 没有嵌套 col 的自动添加 嵌套的 解除
                 // if (["fieId", "models", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
                 if (lodash.isEqual(node.type.wtmType, 'FormItem') || ["labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
-                    return <InfoShellCol key={node.key}>
+                    const layout = lodash.get(node, "props.layout");
+                    return <InfoShellCol
+                        key={node.key}
+                        layout={layout}
+                    >
                         {node}
                     </InfoShellCol>
                 }
@@ -141,10 +145,13 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
 /**
  * Items 外壳
  */
-export class InfoShellCol extends React.Component<ColProps, any> {
+export class InfoShellCol extends React.Component<{ layout?: string }, any> {
     columnCount = GlobalConfig.infoColumnCount || 1;
     render() {
-        const colSpan = 24 / this.columnCount;//每列 值
+        let colSpan = 24;
+        if (this.props.layout != "row") {
+            colSpan = 24 / this.columnCount;//每列 值
+        }
         return <Col span={colSpan} {...this.props}>
             {this.props.children}
         </Col>

@@ -84,12 +84,8 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
                 <FormItem {...props} fieId="UserGroups" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" />
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" layout="row" />
-                </Col>
+                <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="PhotoId" layout="row" />
             </FooterFormItem>
 
         </Form>
@@ -130,14 +126,10 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Password" disabled />
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex"  />
+                <FormItem {...props} fieId="Sex" />
                 <FormItem {...props} fieId="UserGroups" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" disabled/>
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" layout="row" disabled />
-                </Col>
+                <FormItem {...props} fieId="UserRoles" layout="row" disabled />
+                <FormItem {...props} fieId="PhotoId" layout="row" disabled />
             </FooterFormItem>
         </Form>
     }
@@ -169,12 +161,8 @@ class InfoForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
                 <FormItem {...props} fieId="UserGroups" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" />
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="PhotoId" layout="row" />
-                </Col>
+                <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="PhotoId" layout="row" />
             </FooterFormItem>
         </Form>
     }
