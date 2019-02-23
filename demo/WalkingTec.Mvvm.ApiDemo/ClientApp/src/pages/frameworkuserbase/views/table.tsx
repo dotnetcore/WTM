@@ -14,43 +14,43 @@ const columns = [
     {
         dataIndex: "ITCode",
         title: "账号",
-        render: columnsRender
+        render: columnsRender 
     },
 
     {
         dataIndex: "Name",
         title: "姓名",
-        render: columnsRender
+        render: columnsRender 
     },
 
     {
         dataIndex: "Sex",
         title: "性别",
-        render: columnsRender
+        render: columnsRender 
     },
 
     {
         dataIndex: "PhotoId",
         title: "照片",
-        render: columnsRenderImg
+        render: columnsRenderImg 
     },
 
     {
         dataIndex: "IsValid",
         title: "是否有效",
-        render: columnsRender
+        render: columnsRender 
     },
 
     {
         dataIndex: "RoleName_view",
         title: "角色",
-        render: columnsRender
+        render: columnsRender 
     },
 
     {
         dataIndex: "GroupName_view",
         title: "用户组",
-        render: columnsRender
+        render: columnsRender 
     }
 
 ]

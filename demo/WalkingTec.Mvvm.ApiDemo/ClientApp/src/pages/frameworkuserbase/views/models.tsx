@@ -116,7 +116,7 @@ export default {
             Sex:{
                 label: "性别",
                 rules: [],
-                formItem: <Selects placeholder="性别" dataSource={[  
+                formItem: <Selects placeholder="全部" dataSource={[  
                     { Text: "男", Value: 0 },
                     { Text: "女", Value: 1 }
                 ]}/>
