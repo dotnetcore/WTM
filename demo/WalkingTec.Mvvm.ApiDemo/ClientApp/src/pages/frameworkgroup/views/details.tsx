@@ -1,14 +1,11 @@
-﻿import { Col, Form } from 'antd';
-import { FormItem, InfoShell, InfoShellFooter, ToImg } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators'; 
-import GlobalConfig from 'global.config'; 
+﻿import { Form } from 'antd';
+import { FormItem, InfoShell, InfoShellFooter } from 'components/dataView';
+import { DesError, DesForm } from 'components/decorators';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Store from '../store'; 
-import Models from './models'; 
-const formItemLayout = { ...GlobalConfig.formItemLayout };
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
+import Store from '../store';
+import Models from './models';
 
 /**
  *  详情 窗口 

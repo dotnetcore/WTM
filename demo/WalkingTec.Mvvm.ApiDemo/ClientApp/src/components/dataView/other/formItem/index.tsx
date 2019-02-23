@@ -6,8 +6,7 @@ import GlobalConfig from 'global.config'; //全局配置
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
-const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow };
+const formItemLayout = lodash.cloneDeep(GlobalConfig.formItemLayout);//布局
 /**
  * 表单item
  */
@@ -60,7 +59,20 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             renderItem = itemRender(this.props, { options, model })
         }
         // 布局
-        let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
+        // let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
+        let itemlayout = formItemLayout;
+        if (layout == "row") {
+            let labelSpan = itemlayout.labelCol.span / GlobalConfig.infoColumnCount;
+            let warppSpan = 24 - labelSpan - 2;
+            itemlayout = {
+                labelCol: {
+                    span: labelSpan
+                },
+                wrapperCol: {
+                    span: warppSpan
+                },
+            }
+        }
         return <Form.Item label={model.label} {...itemlayout}  {...formItemProps}>
             {renderItem}
         </Form.Item >
@@ -104,10 +116,7 @@ function itemToDisplay(props, config) {
     const { options, model } = config;
     let value = options.initialValue;
     let render = null;
-    // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
-    if (typeof value === "object") {
-        value = value && JSON.stringify(value);
-    }
+
     switch (lodash.get(model.formItem, "type.wtmType")) {
         case "UploadImg":
             render = <ToImg fileID={value} />
@@ -117,6 +126,13 @@ function itemToDisplay(props, config) {
             render = model.formItem;// React.cloneElement(model.formItem, {});
             break;
         default:
+            // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
+            if (lodash.isObject(value)) {
+                value = value && JSON.stringify(value);
+            }
+            if (lodash.isBoolean(value)) {
+                value = value ? "是" : "否"
+            }
             render = <span>{value}</span>
             break;
     }

@@ -5,16 +5,17 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, Row, Table, notification } from 'antd';
+import { Alert, Divider, notification, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
+import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import lodash from 'lodash';
 import { Resizable } from 'react-resizable';
 import Rx from 'rxjs';
 import Store from 'store/dataSource';
+import { ToImg } from '../help/toImg';
 import './style.less';
 interface ITablePorps {
     /** 状态 */
@@ -261,33 +262,33 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         if (dataSource.Data) {
             const columns = [...this.columns];
             return (
-                    <Table
-                        ref={this.tableRef}
-                        bordered
-                        size="default"
-                        className="data-view-table"
-                        components={TableUtils.components}
-                        dataSource={[...dataSource.Data]}
-                        onChange={this.onChange.bind(this)}
-                        columns={columns}
-                        scroll={TableUtils.onGetScroll(columns)}
-                        rowSelection={this.onRowSelection()}
-                        loading={this.Store.pageState.loading}
-                        pagination={
-                            {
-                                // hideOnSinglePage: true,//只有一页时是否隐藏分页器
-                                position: "bottom",
-                                showSizeChanger: true,//是否可以改变 pageSize
-                                showQuickJumper: true,
-                                pageSize: dataSource.Limit,
-                                size: "default",
-                                current: dataSource.Page,
-                                defaultPageSize: dataSource.Limit,
-                                defaultCurrent: dataSource.Page,
-                                total: dataSource.Count
-                            }
+                <Table
+                    ref={this.tableRef}
+                    bordered
+                    size="default"
+                    className="data-view-table"
+                    components={TableUtils.components}
+                    dataSource={[...dataSource.Data]}
+                    onChange={this.onChange.bind(this)}
+                    columns={columns}
+                    scroll={TableUtils.onGetScroll(columns)}
+                    rowSelection={this.onRowSelection()}
+                    loading={this.Store.pageState.loading}
+                    pagination={
+                        {
+                            // hideOnSinglePage: true,//只有一页时是否隐藏分页器
+                            position: "bottom",
+                            showSizeChanger: true,//是否可以改变 pageSize
+                            showQuickJumper: true,
+                            pageSize: dataSource.Limit,
+                            size: "default",
+                            current: dataSource.Page,
+                            defaultPageSize: dataSource.Limit,
+                            defaultCurrent: dataSource.Page,
+                            total: dataSource.Count
                         }
-                    />
+                    }
+                />
             );
         } else {
             return <div>
@@ -301,4 +302,27 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         }
 
     }
+}
+/**
+ * 重写 列渲染 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRender(text, record) {
+    if (lodash.isBoolean(text) || text === "true" || text === "false") {
+        text = (text || text === "true") ? "是" : "否";
+    }
+    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
+        <span>{text}</span>
+    </div>
+}
+/**
+ * 重写 图片 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRenderImg(text, record) {
+    return <div>
+        <ToImg fileID={text} />
+    </div>
 }
