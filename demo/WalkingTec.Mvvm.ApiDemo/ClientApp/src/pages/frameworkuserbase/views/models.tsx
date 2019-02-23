@@ -43,10 +43,10 @@ export default {
             Sex:{
                 label: "性别",
                 rules: [],
-                formItem: <Select placeholder="性别" showArrow allowClear>
-                    <Select.Option value={0}>男</Select.Option>
-                    <Select.Option value={1}>女</Select.Option>
-                </Select>
+                formItem: <Selects placeholder="性别" dataSource={[  
+                    { Text: "男", Value: 0 },
+                    { Text: "女", Value: 1 }
+                ]}/>
             },
             CellPhone:{
                 label: "手机",
@@ -116,10 +116,10 @@ export default {
             Sex:{
                 label: "性别",
                 rules: [],
-                formItem: <Select placeholder="全部" showArrow allowClear>
-                    <Select.Option value={0}>男</Select.Option>
-                    <Select.Option value={1}>女</Select.Option>
-                </Select>
+                formItem: <Selects placeholder="性别" dataSource={[  
+                    { Text: "男", Value: 0 },
+                    { Text: "女", Value: 1 }
+                ]}/>
             },
             IsValid:{
                 label: "是否有效",

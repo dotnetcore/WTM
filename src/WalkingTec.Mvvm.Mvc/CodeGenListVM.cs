@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Attributes;
@@ -87,6 +88,11 @@ namespace WalkingTec.Mvvm.Mvc
                         SubIdField = "",
                         Index = count
                     };
+                    var notmapped = pro.GetCustomAttributes(typeof(NotMappedAttribute), false).FirstOrDefault();
+                    if(notmapped != null)
+                    {
+                        view.FieldDes += "(NotMapped)";
+                    }
                     Type checktype = pro.PropertyType;
                     if (pro.PropertyType.IsNullable())
                     {
@@ -133,6 +139,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (middletable != null)
                         {
                             view.FieldDes += "(多对多)";
+                            view.IsImportField = false;
                             var subpros = checktype.GetProperties();
                             foreach (var spro in subpros)
                             {
