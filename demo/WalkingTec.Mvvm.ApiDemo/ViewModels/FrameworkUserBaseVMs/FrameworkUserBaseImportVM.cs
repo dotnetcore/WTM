@@ -32,7 +32,6 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkUserBaseVMs
         public ExcelPropety ZipCode_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.ZipCode);
         [Display(Name = "是否有效")]
         public ExcelPropety IsValid_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.IsValid);
-        public ExcelPropety CodeAndName_Excel = ExcelPropety.CreateProperty<FrameworkUserBase>(x => x.CodeAndName);
 
 	    protected override void InitVM()
         {

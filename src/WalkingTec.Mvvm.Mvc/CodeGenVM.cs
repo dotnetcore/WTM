@@ -852,12 +852,18 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr.AppendLine($@"                formItem: <Select placeholder=""{label}"" showArrow allowClear>");
-                            foreach (var e in es)
+                            fieldstr.AppendLine($@"                formItem: <Selects placeholder=""{label}"" dataSource={{[  ");
+                            for(int a=0;a<es.Count;a++)
                             {
-                                fieldstr.AppendLine($@"                    <Select.Option value={{{e.Value}}}>{e.Text}</Select.Option>");
+                                var e = es[a];
+                                fieldstr.Append($@"                    {{ Text: ""{e.Text}"", Value: {e.Value} }}");
+                                if(a < es.Count - 1)
+                                {
+                                    fieldstr.Append(",");
+                                }
+                                fieldstr.AppendLine();
                             }
-                            fieldstr.AppendLine($@"                </Select>");
+                            fieldstr.AppendLine($@"                ]}}/>");
                         }
 
                         else if (checktype.IsPrimitive || checktype == typeof(string))
@@ -925,12 +931,18 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr2.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear>");
-                            foreach (var e in es)
+                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部"" dataSource={{[  ");
+                            for (int a = 0; a < es.Count; a++)
                             {
-                                fieldstr2.AppendLine($@"                    <Select.Option value={{{e.Value}}}>{e.Text}</Select.Option>");
+                                var e = es[a];
+                                fieldstr2.Append($@"                    {{ Text: ""{e.Text}"", Value: {e.Value} }}");
+                                if (a < es.Count - 1)
+                                {
+                                    fieldstr2.Append(",");
+                                }
+                                fieldstr2.AppendLine();
                             }
-                            fieldstr2.AppendLine($@"                </Select>");
+                            fieldstr2.AppendLine($@"                ]}}/>");
                         }
                         else if (checktype.IsPrimitive || checktype == typeof(string))
                         {
