@@ -30,6 +30,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             if (self.IsGenericType && self.GenericTypeArguments[0].IsEnum)
             {
                 names = Enum.GetNames(self.GenericTypeArguments[0]);
+                values = Enum.GetValues(self.GenericTypeArguments[0]);
             }
             //生成下拉菜单数据
             List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
