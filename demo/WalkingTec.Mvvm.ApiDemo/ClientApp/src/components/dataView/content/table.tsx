@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, notification, Table } from 'antd';
+import { Alert, Divider, notification, Table, Switch, Icon } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
@@ -310,7 +310,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
  */
 export function columnsRender(text, record) {
     if (lodash.isBoolean(text) || text === "true" || text === "false") {
-        text = (text || text === "true") ? "是" : "否";
+        text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
     }
     return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
         <span>{text}</span>

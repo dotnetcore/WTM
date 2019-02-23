@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Input, Switch, Icon } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItemProps } from 'antd/lib/form/FormItem';
 import { ToImg } from 'components/dataView';
@@ -129,9 +129,8 @@ function itemToDisplay(props, config) {
             // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
             if (lodash.isObject(value)) {
                 value = value && JSON.stringify(value);
-            }
-            if (lodash.isBoolean(value)) {
-                value = value ? "是" : "否"
+            } else if (lodash.isBoolean(value) || value === "true" || value === "false") {
+                value = (value || value === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
             }
             render = <span>{value}</span>
             break;
