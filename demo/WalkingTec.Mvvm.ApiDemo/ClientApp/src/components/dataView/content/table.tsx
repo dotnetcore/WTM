@@ -261,7 +261,6 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         if (dataSource.Data) {
             const columns = [...this.columns];
             return (
-                <Row >
                     <Table
                         ref={this.tableRef}
                         bordered
@@ -289,7 +288,6 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                             }
                         }
                     />
-                </Row>
             );
         } else {
             return <div>
