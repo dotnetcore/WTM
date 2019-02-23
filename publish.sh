@@ -22,8 +22,7 @@ do
 projPath="./demo/$proj/$proj"
 outputDir="$outputRoot/$proj"
 echo "发布 $proj"
-publishCMD="\"$projPath.csproj\" -c $configuration -r $runtime -f $framework --self-contained $selfContained -o \"$outputDir\""
-dotnet publish $publishCMD
+dotnet publish "$projPath.csproj" -c $configuration -r $runtime -f $framework --self-contained $selfContained -o "$outputDir"
 echo "$proj 发布完成"
 done
 echo "全部发布完成"
