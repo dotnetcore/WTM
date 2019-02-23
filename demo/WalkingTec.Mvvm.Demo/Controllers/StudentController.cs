@@ -54,14 +54,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    if (vm.Entity.IsValid == true)
-                    {
-                        return FFResult().CloseDialog().RefreshGrid(index:0);
-                    }
-                    else
-                    {
-                        return FFResult().CloseDialog().RefreshGrid(index: 1);
-                    }
+                    return FFResult().CloseDialog().RefreshGrid(index: 0).CloseDialog().RefreshGrid(index: 1);
                 }
             }
         }
