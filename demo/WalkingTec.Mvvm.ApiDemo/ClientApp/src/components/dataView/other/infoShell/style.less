@@ -14,6 +14,19 @@
     }
     .ant-modal {
         top: 0;
+        max-height: 100vh;
+    }
+    .ant-modal-content{
+        max-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        .ant-modal-body{
+            overflow: auto;
+            padding-bottom: 65px;
+        }
+    }
+    .ant-modal-footer{
+        display: none;
     }
     .data-view-modal-footer {
         height: 40px;
