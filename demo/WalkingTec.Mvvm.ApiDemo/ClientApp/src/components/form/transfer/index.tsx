@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:47
+ * @modify date 2019-02-24 17:06:47
+ * @desc [description]
+ */
 import { Spin, Transfer } from 'antd';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -12,6 +19,7 @@ interface IAppProps {
     display?: boolean;
     [key: string]: any;
 }
+@DesError
 export default class extends React.Component<IAppProps, any> {
     static wtmType = "Transfer";
     state = {

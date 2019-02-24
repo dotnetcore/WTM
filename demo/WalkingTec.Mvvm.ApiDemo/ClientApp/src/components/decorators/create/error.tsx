@@ -1,8 +1,16 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:55
+ * @modify date 2019-02-24 17:06:55
+ * @desc [description]
+ */
 import * as React from 'react';
 
 export function DesError(Component: any) {
-    return class AppError extends React.Component<any, any> {
+    return class AppError extends Component {
         state = {
+            ...this.state,
             error: null,
             errorInfo: null
         };
@@ -19,14 +27,15 @@ export function DesError(Component: any) {
                     <div>
                         <h2>组件出错~</h2>
                         <details >
-                            {this.state.error && this.state.error.toString()}
-                            <br />
-                            {this.state.errorInfo.componentStack}
+                            <pre style={{ height: 300, background: "#f3f3f3" }}>
+                                <code>{this.state.error && this.state.error.toString()}</code>
+                                <code>{this.state.errorInfo.componentStack}</code>
+                            </pre>
                         </details>
                     </div>
                 );
             }
-            return <Component {...this.props} />;
+            return super.render();
         }
     } as any
 
