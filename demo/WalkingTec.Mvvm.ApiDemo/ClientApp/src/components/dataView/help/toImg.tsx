@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:10
+ * @modify date 2019-02-24 17:06:10
+ * @desc [description]
+ */
 import { Icon, Modal } from 'antd';
 import * as React from 'react';
 import RequestFiles from 'utils/RequestFiles';

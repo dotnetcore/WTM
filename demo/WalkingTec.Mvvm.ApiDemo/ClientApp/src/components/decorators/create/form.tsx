@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:07:00
+ * @modify date 2019-02-24 17:07:00
+ * @desc [description]
+ */
 import * as React from 'react';
 import { Form } from 'antd';
 export function DesForm(Component: any) {

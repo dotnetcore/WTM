@@ -1,5 +1,11 @@
-import { Button, Col, Divider, Drawer, Modal, Row, Spin, Form } from 'antd';
-import { ColProps } from 'antd/lib/col';
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:31
+ * @modify date 2019-02-24 17:06:31
+ * @desc [description]
+ */
+import { Button, Col, Divider, Drawer, Modal, Row, Spin } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
 import { ModalProps } from 'antd/lib/modal';
 import { DesError } from 'components/decorators';

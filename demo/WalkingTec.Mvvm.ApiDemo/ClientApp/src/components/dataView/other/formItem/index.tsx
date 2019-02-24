@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:20
+ * @modify date 2019-02-24 17:06:20
+ * @desc [description]
+ */
 import { Input, Switch, Icon } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItemProps } from 'antd/lib/form/FormItem';

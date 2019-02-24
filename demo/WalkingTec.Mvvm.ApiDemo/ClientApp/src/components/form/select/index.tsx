@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:42
+ * @modify date 2019-02-24 17:06:42
+ * @desc [description]
+ */
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesError } from 'components/decorators'; //错误
@@ -17,6 +24,7 @@ interface IAppProps {
     display?: boolean;
     [key: string]: any;
 }
+@DesError
 export default class extends React.Component<IAppProps, any> {
     static wtmType = "Select";
     state = {
@@ -129,6 +137,7 @@ export default class extends React.Component<IAppProps, any> {
             }
             return <span></span>
         }
+        // throw "aaaaa"
         return (
             <Select
                 {...config}

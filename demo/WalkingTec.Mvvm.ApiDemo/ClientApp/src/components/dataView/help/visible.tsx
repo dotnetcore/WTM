@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:15
+ * @modify date 2019-02-24 17:06:15
+ * @desc [description]
+ */
 import * as React from 'react';
 
  interface IAppProps {

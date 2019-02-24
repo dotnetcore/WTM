@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:25
+ * @modify date 2019-02-24 17:06:25
+ * @desc [description]
+ */
 import { Button, Divider, Icon, Modal, Upload, message } from 'antd';
 import { DesError } from 'components/decorators';
 import { observer } from 'mobx-react';
