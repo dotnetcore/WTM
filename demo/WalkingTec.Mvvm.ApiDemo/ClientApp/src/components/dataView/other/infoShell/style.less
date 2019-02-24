@@ -13,11 +13,13 @@
         }
     }
     .ant-modal {
-        top: 0;
+        // top: 0;
+        top: 50px;
         max-height: 100vh;
+        overflow: hidden;
     }
     .ant-modal-content{
-        max-height: 100vh;
+        max-height: calc(100vh - 100px);
         display: flex;
         flex-direction: column;
         .ant-modal-body{
