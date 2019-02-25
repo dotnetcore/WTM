@@ -75,7 +75,7 @@ class InsertForm extends React.Component<any, any> {
             // 模型
             models: this.models,
         }
-        console.log(this.models)
+        console.log(props.models)
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />
@@ -86,6 +86,9 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="UserGroups" />
                 <FormItem {...props} fieId="UserRoles" layout="row" />
                 <FormItem {...props} fieId="PhotoId" layout="row" />
+                <FormItem {...props} fieId="Date" layout="row" />
+                <FormItem {...props} fieId="Date2" layout="row" />
+
             </FooterFormItem>
 
         </Form>

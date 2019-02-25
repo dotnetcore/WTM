@@ -1,13 +1,16 @@
-import { Input, Select } from 'antd';
-import UploadImg from 'components/form/uploadImg';
-import Transfer from 'components/form/transfer';
-import Selects from 'components/form/select';
+import { Input } from 'antd';
+import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItem } from 'components/dataView';
-import * as React from 'react';
+import { WtmDatePicker } from 'components/form/datePicker';
+import Selects from 'components/form/select';
+import Transfer from 'components/form/transfer';
+import UploadImg from 'components/form/uploadImg';
 import lodash from 'lodash';
-
+import moment from 'moment';
+import * as React from 'react';
 import Regular from 'utils/Regular'; //正则
 import Store from '../store';
+
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -19,6 +22,8 @@ export default {
      * @param props 
      */
     editModels(props?) {
+        const { form } = props;
+        const { getFieldDecorator }: WrappedFormUtils = form;
         return {
             /** ITCode */
             ITCode: {
@@ -81,6 +86,16 @@ export default {
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
                 />
+            },
+            Date: {
+                label: "时间测试",
+                rules: [],
+                formItem: <WtmDatePicker />
+            },
+            Date2: {
+                label: "时间测试2",//显示 时间，禁用 小于当前天数
+                rules: [],
+                formItem: <WtmDatePicker showTime disabledDate={(current) => current < moment().subtract(1, "day").endOf('day')} />
             }
         }
     },
@@ -113,7 +128,7 @@ export default {
                     dataKey="GroupId"
                 />
             }
-       }
+        }
     },
     /**
      * 渲染 模型

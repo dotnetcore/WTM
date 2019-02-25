@@ -22,10 +22,10 @@ export function DesForm(Component: any) {
                     try {
                         props = {
                             form: this.props.form,
-                            history: this.props.history,
-                            location: this.props.location,
-                            match: this.props.match,
-                            route: this.props.route,
+                            // history: this.props.history,
+                            // location: this.props.location,
+                            // match: this.props.match,
+                            // route: this.props.route,
                         }
                     } catch (error) {
 
