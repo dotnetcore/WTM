@@ -22,8 +22,6 @@ export default {
      * @param props 
      */
     editModels(props?) {
-        const { form } = props;
-        const { getFieldDecorator }: WrappedFormUtils = form;
         return {
             /** ITCode */
             ITCode: {
