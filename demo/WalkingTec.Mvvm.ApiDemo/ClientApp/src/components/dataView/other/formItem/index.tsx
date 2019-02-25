@@ -101,7 +101,12 @@ function itemRender(props, config) {
         propsNew.value = options.initialValue;
         renderItem = itemToDisplay(props, config)
     } else {
-        renderItem = getFieldDecorator && getFieldDecorator(fieId as never, options)(model.formItem);
+        //  判断 组件 是否 已经 是 getFieldDecorator组件
+        if (lodash.get(model.formItem, "props.data-__field")) {
+            renderItem = model.formItem;
+        } else {
+            renderItem = getFieldDecorator && getFieldDecorator(fieId as never, options)(model.formItem);
+        }
     }
     // 禁用 输入控件
     if (lodash.isEqual(disabled, true)) {
