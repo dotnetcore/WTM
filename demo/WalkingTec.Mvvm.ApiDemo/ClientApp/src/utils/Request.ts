@@ -130,7 +130,7 @@ export class Request {
                             notification.warn({
                                 message: res.status,
                                 duration: 5,
-                                description: `请配置 处理逻辑`,
+                                description: `请配置 状态 ${res.status} 处理逻辑`,
                             });
                             break;
                     }
