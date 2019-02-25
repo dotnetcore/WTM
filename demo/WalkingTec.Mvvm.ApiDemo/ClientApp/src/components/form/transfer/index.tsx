@@ -38,27 +38,31 @@ export default class extends React.Component<IAppProps, any> {
         let mockData = [],
             targetKeys = [],
             res = [];
-        // 值为 数组 
-        if (lodash.isArray(dataSource)) {
-            res = dataSource;
-        }
-        // 值为 Promise
-        else if (dataSource instanceof Promise) {
-            res = await dataSource;
-        }
-        // 值为 Observable 
-        else if (dataSource instanceof Observable) {
-            res = await dataSource.toPromise();
-        }
-        // 转换 数据 为 渲染 格式
-        mockData = res.map(item => {
-            return {
-                ...item,
-                key: lodash.toString(item.Value),
-                title: item.Text,
-                description: item.Text,
+        try {
+            // 值为 数组 
+            if (lodash.isArray(dataSource)) {
+                res = dataSource;
             }
-        })
+            // 值为 Promise
+            else if (dataSource instanceof Promise) {
+                res = await dataSource;
+            }
+            // 值为 Observable 
+            else if (dataSource instanceof Observable) {
+                res = await dataSource.toPromise();
+            }
+            // 转换 数据 为 渲染 格式
+            mockData = res.map(item => {
+                return {
+                    ...item,
+                    key: lodash.toString(item.Value),
+                    title: item.Text,
+                    description: item.Text,
+                }
+            })
+        } catch (error) {
+            console.error("Transfer 获取数据出错", error)
+        }
         // 回填 已选择数据
         if (lodash.isArray(this.props.value) && lodash.isString(this.props.dataKey)) {
             targetKeys = this.props.value.map(x => (lodash.get(x, this.props.dataKey)))
