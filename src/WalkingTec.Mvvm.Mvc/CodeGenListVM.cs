@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc
                     view.IsFormField = true;
                     view.IsListField = true;
                     view.IsImportField = true;
-                    if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(DateTime) || checktype.IsEnum())
+                    if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(DateTime) || checktype.IsEnum() || checktype == typeof(decimal))
                     {
                         show = true;
                     }

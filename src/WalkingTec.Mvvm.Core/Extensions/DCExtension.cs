@@ -672,6 +672,7 @@ where S : struct
             }
         }
 
+
         public static string GetTableName<T>(this IDataContext self)
         {
             return self.Model.FindEntityType(typeof(T)).SqlServer().TableName;
