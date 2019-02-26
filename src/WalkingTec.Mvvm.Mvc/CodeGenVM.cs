@@ -397,16 +397,34 @@ namespace WalkingTec.Mvvm.Mvc
         [Display(Name = ""{display.Name}"")]";
                     }
                     string typename = proType.PropertyType.Name;
-                    if (proType.PropertyType.IsNullable())
+                    string proname = proType.Name;
+                    if (string.IsNullOrEmpty(pro.RelatedField) == false)
                     {
-                        typename = proType.PropertyType.GetGenericArguments()[0].Name + "?";
+                        if (string.IsNullOrEmpty(pro.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, pro.FieldName);
+                            proname = fk;
+                            typename = "Guid?";
+                        }
+                        else
+                        {
+                            proname = $@"Selected{pro.FieldName}IDs";
+                            typename = "List<Guid>";
+                        }
                     }
-                    else if(proType.PropertyType != typeof(string))
+                    else
                     {
-                        typename = proType.PropertyType.Name + "?";
+                        if (proType.PropertyType.IsNullable())
+                        {
+                            typename = proType.PropertyType.GetGenericArguments()[0].Name + "?";
+                        }
+                        else if (proType.PropertyType != typeof(string))
+                        {
+                            typename = proType.PropertyType.Name + "?";
+                        }
                     }
                     prostring += $@"
-        public {typename} {proType.Name} {{ get; set; }}";
+        public {typename} {proname} {{ get; set; }}";
                 }
                 rv = rv.Replace("$pros$", prostring).Replace("$init$", initstr);
                 rv = GetRelatedNamespace(pros, rv);
@@ -477,20 +495,39 @@ namespace WalkingTec.Mvvm.Mvc
                 var wherepros = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
                 foreach (var pro in wherepros)
                 {
-                    if(string.IsNullOrEmpty(pro.SubIdField) == false || pro.SubField == "`file")
+                    if(pro.SubField == "`file")
                     {
                         continue;
                     }
                     var proType = modelType.GetProperty(pro.FieldName).PropertyType;
-                    if (proType == typeof(string))
+                    if (string.IsNullOrEmpty(pro.RelatedField) == false)
                     {
-                        wherestring += $@"
-                .CheckContain(Searcher.{pro.FieldName}, x=>x.{pro.FieldName})";
+                        if (string.IsNullOrEmpty(pro.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, pro.FieldName);
+                            wherestring += $@"
+                .CheckEqual(Searcher.{fk}, x=>x.{fk})";
+                        }
+                        else
+                        {
+                            var subtype = Type.GetType(pro.RelatedField);
+                            var fk2 = DC.GetFKName(modelType, pro.FieldName);
+                            wherestring += $@"
+                .Where(x=> Searcher.Selected{pro.FieldName}IDs.Count==0 || DC.Set<{proType.GetGenericArguments()[0].Name}>().Where(y=>Searcher.Selected{pro.FieldName}IDs.Contains(y.{pro.SubIdField})).Select(z=>z.{fk2}).Contains(x.ID))";
+                        }
                     }
                     else
                     {
-                        wherestring += $@"
+                        if (proType == typeof(string))
+                        {
+                            wherestring += $@"
+                .CheckContain(Searcher.{pro.FieldName}, x=>x.{pro.FieldName})";
+                        }
+                        else
+                        {
+                            wherestring += $@"
                 .CheckEqual(Searcher.{pro.FieldName}, x=>x.{pro.FieldName})";
+                        }
 
                     }
                 }
@@ -646,9 +683,12 @@ namespace WalkingTec.Mvvm.Mvc
                         if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
                             var filefk = DC.GetFKName2(modelType, item.FieldName);
-                            if (item.SubField == "`file")
+                            if (item.SubField == "`file" )
                             {
-                                fieldstr.Append($@"<wt:upload field=""{pre}.{filefk}"" />");
+                                if (name != "BatchEditView")
+                                {
+                                    fieldstr.Append($@"<wt:upload field=""{pre}.{filefk}"" />");
+                                }
                             }
                             else
                             {
@@ -663,7 +703,14 @@ namespace WalkingTec.Mvvm.Mvc
                                 }
                                 else
                                 {
-                                    fieldstr.Append($@"<wt:checkbox field=""Selected{item.FieldName}IDs"" items=""{fname}""/>");
+                                    if (name == "BatchEditView")
+                                    {
+                                        fieldstr.Append($@"<wt:checkbox field=""LinkedVM.Selected{item.FieldName}IDs"" items=""{fname}""/>");
+                                    }
+                                    else
+                                    {
+                                        fieldstr.Append($@"<wt:checkbox field=""Selected{item.FieldName}IDs"" items=""{fname}""/>");
+                                    }
                                 }
                             }
                         }
@@ -679,7 +726,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" />");
                             }
-                            else if (checktype.IsPrimitive || checktype == typeof(string))
+                            else if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
                             {
                                 fieldstr.Append($@"<wt:textbox field=""{pre}.{item.FieldName}"" />");
                             }
@@ -706,8 +753,21 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
+                        if(item.SubField == "`file")
+                        {
+                            continue;
+                        }
                         var fname = "All" + item.FieldName + "s";
-                        fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" items=""Searcher.{fname}"" empty-text=""全部"" />");
+                        var fk = "";
+                        if (string.IsNullOrEmpty(item.SubIdField))
+                        {
+                            fk = DC.GetFKName2(modelType, item.FieldName); ;
+                        }
+                        else
+                        {
+                            fk = $@"Selected{item.FieldName}IDs";
+                        }
+                        fieldstr.Append($@"<wt:combobox field=""Searcher.{fk}"" items=""Searcher.{fname}"" empty-text=""全部"" />");
                     }
                     else
                     {
@@ -717,7 +777,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             checktype = proType.GetGenericArguments()[0];
                         }
-                        if (checktype.IsPrimitive || checktype == typeof(string))
+                        if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
                         {
                             fieldstr.Append($@"<wt:textbox field=""Searcher.{item.FieldName}"" />");
                         }
@@ -891,10 +951,17 @@ namespace WalkingTec.Mvvm.Mvc
                     string label = property.GetPropertyDisplayName();
                     string rules = "rules: []";
 
-                    if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
+                    if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        var fk = DC.GetFKName2(modelType, item.FieldName);
-                        fieldstr2.AppendLine($@"            {fk}:{{");
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            var fk = DC.GetFKName2(modelType, item.FieldName);
+                            fieldstr2.AppendLine($@"            {fk}:{{");
+                        }
+                        else
+                        {
+                            fieldstr2.AppendLine($@"            {item.FieldName}:{{");
+                        }
                     }
                     else
                     {
@@ -904,14 +971,24 @@ namespace WalkingTec.Mvvm.Mvc
                     fieldstr2.AppendLine($@"                {rules},");
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        if (item.SubField == "`file" || string.IsNullOrEmpty(item.SubIdField) == false)
+                        if (item.SubField == "`file")
                         {
                             continue;
                         }
                         var subtype = Type.GetType(item.RelatedField);
-                        fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部"" 
+                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部"" 
                     dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} 
                 /> ");
+                        }
+                        else
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部""  multiple
+                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} dataKey=""{item.SubIdField}"" 
+                /> ");
+
+                        }
                     }
                     else
                     {
@@ -944,7 +1021,7 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             fieldstr2.AppendLine($@"                ]}}/>");
                         }
-                        else if (checktype.IsPrimitive || checktype == typeof(string))
+                        else if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
                         {
                             fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
                         }
