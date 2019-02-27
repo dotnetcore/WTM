@@ -9,10 +9,10 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
-    
+
     [ActionDescription("用户组管理")]
     [ApiController]
-    [Route("api/FrameworkGroup")]
+    [Route("api/_FrameworkGroup")]
 	[Public]
 	public class FrameworkGroupController : BaseApiController
     {
@@ -95,6 +95,30 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         }
 
+		[HttpPost("BatchDelete")]
+        [ActionDescription("批量删除")]
+        public IActionResult BatchDelete(Guid[] ids)
+        {
+            var vm = CreateVM<FrameworkGroupBatchVM>();
+            if (ids != null && ids.Count() > 0)
+            {
+                vm.Ids = ids;
+            }
+            else
+            {
+                return Ok();
+            }
+            if (!ModelState.IsValid || !vm.DoBatchDelete())
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                return Ok(ids.Count());
+            }
+        }
+
+
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
@@ -149,5 +173,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
                 return Ok(vm.EntityList.Count);
             }
         }
+
+
     }
 }

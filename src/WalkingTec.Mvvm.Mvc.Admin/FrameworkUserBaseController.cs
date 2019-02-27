@@ -5,38 +5,37 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.ApiDemo.ViewModels.FrameworkGroupVMs;
-using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
-    
-    [ActionDescription("用户组管理")]
+
+    [ActionDescription("用户管理")]
     [ApiController]
-    [Route("api/FrameworkGroup")]
+    [Route("api/_FrameworkUserBase")]
 	[Public]
-	public class FrameworkGroupController : BaseApiController
+	public class FrameworkUseController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
-		public string Search(FrameworkGroupSearcher searcher)
+		public string Search(FrameworkUserSearcher searcher)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public FrameworkGroup Get(Guid id)
+        public FrameworkUserBase Get(Guid id)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = CreateVM<FrameworkUserVM>(id);
             return vm.Entity;
         }
 
         [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add(FrameworkGroupVM vm)
+        public IActionResult Add(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +58,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkGroupVM vm)
+        public IActionResult Edit(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +82,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [HttpGet("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = CreateVM<FrameworkUserVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -100,7 +99,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [ActionDescription("批量删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
-            var vm = CreateVM<FrameworkGroupBatchVM>();
+            var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -122,34 +121,34 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
+        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(Guid[] ids)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = CreateVM<FrameworkUserListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<Guid>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [ActionDescription("下载导入模板")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkGroupImportVM>();
+            var vm = CreateVM<FrameworkUserImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -162,7 +161,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         [ActionDescription("导入")]
         [HttpPost("Import")]
-        public ActionResult Import(FrameworkGroupImportVM vm)
+        public ActionResult Import(FrameworkUserImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -175,6 +174,18 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             }
         }
 
+
+        [HttpGet("GetFrameworkRoles")]
+        public ActionResult GetFrameworkRoles()
+        {
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
+        }
+
+        [HttpGet("GetFrameworkGroups")]
+        public ActionResult GetFrameworkGroups()
+        {
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
+        }
 
     }
 }
