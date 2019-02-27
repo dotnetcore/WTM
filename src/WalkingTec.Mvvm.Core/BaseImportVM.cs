@@ -468,7 +468,7 @@ namespace WalkingTec.Mvvm.Core
             }
             //进行Model层面的验证
             //找到对应的BaseCRUDVM，并初始化
-            var vms = Assembly.GetCallingAssembly().GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<P>))).ToList();
+            var vms = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<P>))).ToList();
 
             var vmtype = vms.Where(x => x.Name.ToLower() == typeof(P).Name.ToLower() + "vm").FirstOrDefault();
             if(vmtype == null)
