@@ -1,4 +1,4 @@
-﻿
+
 /*eslint eqeqeq: ["error", "smart"]*/
 DONOTUSE_TABLAYID = undefined;
 if (typeof String.prototype.startsWith != 'function') {
@@ -455,8 +455,18 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            if (item.value !== null && item.value !== "")
-                filter[item.name] = item.value;
+            if (item.value !== null && item.value !== ""){
+                if (filter.hasOwnProperty(item.name)){
+                    var temp = filter[item.name]
+                    if(!(temp instanceof Array))
+                        temp = [temp]
+                    temp.push(item.value)
+                    filter[item.name] = temp;
+                }
+                else{
+                    filter[item.name] = item.value;
+                }
+            }
         });
         return filter;
     },
@@ -466,7 +476,16 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            filter[item.name] = item.value;
+            if (filter.hasOwnProperty(item.name)){
+                var temp = filter[item.name]
+                if(!(temp instanceof Array))
+                    temp = [temp]
+                temp.push(item.value)
+                filter[item.name] = temp;
+            }
+            else{
+                filter[item.name] = item.value;
+            }
         });
         return filter;
     },
