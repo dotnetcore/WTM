@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -535,6 +536,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
+                if (typeof(IList).IsAssignableFrom(val.GetType()))
+                {
+                    if( ((IList)val).Count == 0)
+                    {
+                        return baseQuery;
+                    }
+                }
                 return baseQuery.Where(where);
             }
         }
