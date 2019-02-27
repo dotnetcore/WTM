@@ -86,7 +86,7 @@ class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="UserGroups" />
                 <FormItem {...props} fieId="UserRoles" layout="row" />
                 <FormItem {...props} fieId="PhotoId" layout="row" />
-                <FormItem {...props} fieId="Date" layout="row" />
+                <FormItem {...props} fieId="CreateTime" layout="row" />
                 <FormItem {...props} fieId="Date2" layout="row" />
 
             </FooterFormItem>
@@ -133,6 +133,7 @@ class UpdateForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="UserGroups" />
                 <FormItem {...props} fieId="UserRoles" layout="row" disabled />
                 <FormItem {...props} fieId="PhotoId" layout="row" disabled />
+                <FormItem {...props} fieId="CreateTime" layout="row" />
             </FooterFormItem>
         </Form>
     }

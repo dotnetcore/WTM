@@ -85,7 +85,7 @@ export default {
                     dataKey="RoleId"
                 />
             },
-            Date: {
+            CreateTime: {
                 label: "时间测试",
                 rules: [],
                 formItem: <WtmDatePicker />
