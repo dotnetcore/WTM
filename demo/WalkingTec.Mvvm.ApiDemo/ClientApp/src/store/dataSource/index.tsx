@@ -148,7 +148,7 @@ export default class Store {
       return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
-    const searchParams = { ...this.searchParams, ...search };
+    const searchParams = {  ...search };
     search = {
       Page,
       Limit,
@@ -157,9 +157,9 @@ export default class Store {
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
-    runInAction(() => {
-      this.searchParams = searchParams;
-    })
+    // runInAction(() => {
+    //   this.searchParams = searchParams;
+    // })
     try {
       const res = await this.Request[method](src, search).map(data => {
         if (data.Data) {
