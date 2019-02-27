@@ -148,7 +148,7 @@ export default class Store {
       return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
-    const searchParams = {  ...search };
+    const searchParams = { ...search };
     search = {
       Page,
       Limit,
@@ -219,7 +219,7 @@ export default class Store {
       this.onSearch()
       return res
     } catch (error) {
-      this.onErrorMessage(Update ? "修改失败" : "添加失败", lodash.map(error, (value, key) => ({ value, key })))
+      this.onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
     }
     finally {
       this.onPageState("loadingEdit", false)
