@@ -81,6 +81,10 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (basetype.Contains(pro.DeclaringType) == false)
                 {
+                    if(pro.CanWrite == false)
+                    {
+                        continue;
+                    }
                     CodeGenListView view = new CodeGenListView()
                     {
                         FieldName = pro.Name,

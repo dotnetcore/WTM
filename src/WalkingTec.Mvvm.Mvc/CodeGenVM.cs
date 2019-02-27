@@ -485,9 +485,9 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 subprostring += $@"
         [Display(Name = ""{subdisplay.Name}"")]";
-                                subprostring += $@"
-        public {subtypename} {pro.SubField + "_view"} {{ get; set; }}";
                             }
+                            subprostring += $@"
+        public {subtypename} {pro.SubField + "_view"} {{ get; set; }}";
                         }
                     }
 
@@ -513,7 +513,7 @@ namespace WalkingTec.Mvvm.Mvc
                             var subtype = Type.GetType(pro.RelatedField);
                             var fk2 = DC.GetFKName(modelType, pro.FieldName);
                             wherestring += $@"
-                .Where(x=> Searcher.Selected{pro.FieldName}IDs.Count==0 || DC.Set<{proType.GetGenericArguments()[0].Name}>().Where(y=>Searcher.Selected{pro.FieldName}IDs.Contains(y.{pro.SubIdField})).Select(z=>z.{fk2}).Contains(x.ID))";
+                .CheckWhere(Searcher.Selected{pro.FieldName}IDs,x=>DC.Set<{proType.GetGenericArguments()[0].Name}>().Where(y=>Searcher.Selected{pro.FieldName}IDs.Contains(y.{pro.SubIdField})).Select(z=>z.{fk2}).Contains(x.ID))";
                         }
                     }
                     else
@@ -947,6 +947,10 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros2.Count; i++)
                 {
                     var item = pros2[i];
+                    if(item.SubField == "`file")
+                    {
+                        continue;
+                    }
                     var property = modelType.GetProperty(item.FieldName);
                     string label = property.GetPropertyDisplayName();
                     string rules = "rules: []";
@@ -960,7 +964,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            fieldstr2.AppendLine($@"            {item.FieldName}:{{");
+                            fieldstr2.AppendLine($@"            Selected{item.FieldName}IDs:{{");
                         }
                     }
                     else
@@ -971,10 +975,6 @@ namespace WalkingTec.Mvvm.Mvc
                     fieldstr2.AppendLine($@"                {rules},");
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        if (item.SubField == "`file")
-                        {
-                            continue;
-                        }
                         var subtype = Type.GetType(item.RelatedField);
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
@@ -985,7 +985,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else
                         {
                             fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部""  multiple
-                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} dataKey=""{item.SubIdField}"" 
+                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
 
                         }
