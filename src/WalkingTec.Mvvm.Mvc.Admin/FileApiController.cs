@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
@@ -11,7 +9,7 @@ using WalkingTec.Mvvm.Mvc;
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
     [ApiController]
-    [Route("api/file")]
+    [Route("api/_file")]
     [Public]
     public class FileApiController : BaseApiController
     {

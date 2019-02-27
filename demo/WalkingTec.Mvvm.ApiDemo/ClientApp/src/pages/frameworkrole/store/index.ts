@@ -16,40 +16,40 @@ export class Store extends DataSource {
     Urls = {
         ...this.Urls,
         search: {
-            src: "/frameworkrole/search",
+            src: "/_frameworkrole/search",
             method: "post"
         },
         details: {
             // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-            src: "/frameworkrole/{ID}",
+            src: "/_frameworkrole/{ID}",
             method: "get"
         },
         insert: {
-            src: "/frameworkrole/add",
+            src: "/_frameworkrole/add",
             method: "post"
         },
         update: {
-            src: "/frameworkrole/edit",
+            src: "/_frameworkrole/edit",
             method: "put"
         },
         delete: {
-            src: "/frameworkrole/BatchDelete",
+            src: "/_frameworkrole/BatchDelete",
             method: "post"
         },
         import: {
-            src: "/frameworkrole/import",
+            src: "/_frameworkrole/import",
             method: "post"
         },
         export: {
-            src: "/frameworkrole/ExportExcel",
+            src: "/_frameworkrole/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/frameworkrole/ExportExcelByIds",
+            src: "/_frameworkrole/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/frameworkrole/GetExcelTemplate",
+            src: "/_frameworkrole/GetExcelTemplate",
             method: "get"
         }
     }

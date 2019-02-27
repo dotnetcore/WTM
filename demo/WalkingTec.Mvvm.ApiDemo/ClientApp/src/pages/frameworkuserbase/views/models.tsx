@@ -112,24 +112,7 @@ export default {
                 label: "姓名",
                 rules: [],
                 formItem: <Input placeholder="" />
-            },
-            Sex:{
-                label: "性别",
-                rules: [],
-                formItem: <Selects placeholder="全部" dataSource={[  
-                    { Text: "男", Value: 0 },
-                    { Text: "女", Value: 1 }
-                ]}/>
-            },
-            IsValid:{
-                label: "是否有效",
-                rules: [],
-                formItem: <Select placeholder="全部" showArrow allowClear>
-                    <Select.Option value={1}>是</Select.Option>
-                    <Select.Option value={0}>否</Select.Option>
-                </Select>
-            },
-
+            }
         }
     },
     /**

@@ -16,40 +16,40 @@ export class Store extends DataSource {
     Urls = {
         ...this.Urls,
         search: {
-            src: "/actionlog/search",
+            src: "/_actionlog/search",
             method: "post"
         },
         details: {
             // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-            src: "/actionlog/{ID}",
+            src: "/_actionlog/{ID}",
             method: "get"
         },
         insert: {
-            src: "/actionlog/add",
+            src: "/_actionlog/add",
             method: "post"
         },
         update: {
-            src: "/actionlog/edit",
+            src: "/_actionlog/edit",
             method: "put"
         },
         delete: {
-            src: "/actionlog/BatchDelete",
+            src: "/_actionlog/BatchDelete",
             method: "post"
         },
         import: {
-            src: "/actionlog/import",
+            src: "/_actionlog/import",
             method: "post"
         },
         export: {
-            src: "/actionlog/ExportExcel",
+            src: "/_actionlog/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/actionlog/ExportExcelByIds",
+            src: "/_actionlog/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/actionlog/GetExcelTemplate",
+            src: "/_actionlog/GetExcelTemplate",
             method: "get"
         }
     }

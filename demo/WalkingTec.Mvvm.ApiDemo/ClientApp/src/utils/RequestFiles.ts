@@ -13,19 +13,19 @@ import { Request } from './Request';
 /** 文件服务器 */
 const files = {
     fileUpload: {
-        src: "/file/upload",
+        src: "/_file/upload",
         method: "post"
     },
     fileDelete: {
-        src: "/file/deleteFile/{id}",
+        src: "/_file/deleteFile/{id}",
         method: "get"
     },
     fileGet: {
-        src: "/file/getFile",
+        src: "/_file/getFile",
         method: "get"
     },
     fileDownload: {
-        src: "/file/downloadFile",
+        src: "/_file/downloadFile",
         method: "get"
     }
 };
