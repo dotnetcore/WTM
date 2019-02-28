@@ -159,7 +159,8 @@
                 </td>
             </tr>
         </table>
-
+		<input type="hidden" name="ExtraDir" value="$extradir$" />
+		<input type="hidden" name="ExtraNs" value="$extrans$" />
         <button class="submitColor" type="submit" onclick="return confirm('该操作将重置框架相关的代码及配置，请提前做好备份，是否继续？');">开始配置</button>
     </form>
 </div>

@@ -42,7 +42,9 @@ namespace WalkingTec.Mvvm.Mvc
         [ValidateNever()]
         public string EntryDir { get; set; }
 
-
+        public string ExtraDir { get; set; }
+        public string ExtraNS { get; set; }
+        public bool IsNew { get; set; }
         public string _mainDir;
         [ValidateNever()]
         public string MainDir
@@ -352,6 +354,12 @@ EndProject
             return rv;
         }
 
+        public string GetIndex1()
+        {
+            var rv = GetResource("SetupIndex1.txt");
+            return rv;
+        }
+
         private string GetResource(string fileName, string subdir = "")
         {
             //获取编译在程序中的Controller原始代码文本
@@ -398,6 +406,14 @@ EndProject
                 }
             }
             sr.Dispose();
+
+        }
+
+
+        public void WriteDefaultFiles()
+        {
+            File.WriteAllText($"{MainDir}\\{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
+            File.WriteAllText($"{ExtraDir}\\{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
 
         }
     }
