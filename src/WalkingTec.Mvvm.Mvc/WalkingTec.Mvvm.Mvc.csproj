@@ -34,6 +34,8 @@
     <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
+    <None Remove="SetupFiles\DefaultProj.txt" />
+    <None Remove="SetupFiles\DefaultSolution.txt" />
     <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
     <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
     <None Remove="SetupFiles\Mvc\home\Header.txt" />
@@ -46,6 +48,7 @@
     <None Remove="SetupFiles\Mvc\layui\Program.txt" />
     <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
+    <None Remove="SetupFiles\SetupIndex1.txt" />
     <None Remove="SetupFiles\Spa\Program.txt" />
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
@@ -68,6 +71,9 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
     <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
