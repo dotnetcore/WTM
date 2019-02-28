@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
 
             byte[] rv = System.IO.File.ReadAllBytes(zipfile);
             System.IO.File.Delete(zipfile);
-            return File(rv, "application/zip");
+            return File(rv, "application/zip", vm.ExtraNS + ".zip");
         }
     }
 }
