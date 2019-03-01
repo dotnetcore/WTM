@@ -7,45 +7,51 @@
         "Component": "tmp",
         "Action": [],
         "Children": []
-    }
-,{
-        "Key": "8b982671-cf11-4be8-b745-8903bd1df431",
-        "Name": "日志管理",
+    },
+    {
+        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Name": "系统管理",
         "Icon": "menu-fold",
-        "Path": "/actionlog",
-        "Component": "actionlog",
+        "Path": "/",
+        "Component": "",
         "Action": [],
-        "Children": []
+        "Children": [
+            {
+                "Key": "8b982671-cf11-4be8-b745-8903bd1df431",
+                "Name": "日志管理",
+                "Icon": "menu-fold",
+                "Path": "/actionlog",
+                "Component": "actionlog",
+                "Action": [],
+                "Children": []
+            },
+            {
+                "Key": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
+                "Name": "用户组管理",
+                "Icon": "menu-fold",
+                "Path": "/frameworkgroup",
+                "Component": "frameworkgroup",
+                "Action": [],
+                "Children": []
+            },
+            {
+                "Key": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+                "Name": "角色管理",
+                "Icon": "menu-fold",
+                "Path": "/frameworkrole",
+                "Component": "frameworkrole",
+                "Action": [],
+                "Children": []
+            },
+            {
+                "Key": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
+                "Name": "用户管理",
+                "Icon": "menu-fold",
+                "Path": "/frameworkuserbase",
+                "Component": "frameworkuserbase",
+                "Action": [],
+                "Children": []
+            }
+        ]
     }
-,{
-        "Key": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
-        "Name": "用户组管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkgroup",
-        "Component": "frameworkgroup",
-        "Action": [],
-        "Children": []
-    }
-,{
-        "Key": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
-        "Name": "角色管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkrole",
-        "Component": "frameworkrole",
-        "Action": [],
-        "Children": []
-    }
-,{
-        "Key": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
-        "Name": "用户管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkuserbase",
-        "Component": "frameworkuserbase",
-        "Action": [],
-        "Children": []
-    }
-
-
-
-
 ]

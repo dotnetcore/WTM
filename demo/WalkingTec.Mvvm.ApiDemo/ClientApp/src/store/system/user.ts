@@ -5,15 +5,15 @@
  * @modify date 2018-09-12 18:52:54
  * @desc [description]
 */
-import { Request } from 'utils/Request';
+import Request from 'utils/Request';
 import { action, observable, runInAction } from "mobx";
-const Http = new Request('/user/');
+// const Http = new Request('/user/');
 class Store {
     constructor() {
 
     }
     @observable loding = true;
-    @observable isLogin = true;
+    @observable isLogin = false;
     // 用户信息
     @observable User = {
         role: "administrator",//administrator ordinary
@@ -23,10 +23,13 @@ class Store {
     };
     @action.bound
     async Login(params) {
-        this.User = params;
-        // const result = await Http.post("doLogin", params).toPromise();
+        const res = await Request.post("/_login/login", params, { 'Content-Type': 'multipart/form-data' }).toPromise();
+        console.log(res)
         runInAction(() => {
-            // this.User = result;
+            this.User = {
+                ...this.User,
+                ...res
+            };
             this.isLogin = true;
 
         });
