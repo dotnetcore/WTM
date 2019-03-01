@@ -42,13 +42,14 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             rv.Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList();
             rv.Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList();
             rv.DataPrivileges = dpris;
+            rv.PhotoId = user.PhotoId;
             //查找登录用户的页面权限
             var pris = DC.Set<FunctionPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                 .ToList();
             rv.FunctionPrivileges = pris;
             LoginUserInfo = rv;
-            return Ok($"{this.HttpContext.Session.Id}");
+            return Ok(LoginUserInfo);
         }
     }
 }

@@ -21,6 +21,8 @@ namespace WalkingTec.Mvvm.Core
 
         public string Memo { get; set; }
 
+        public Guid? PhotoId { get; set; }
+
         public List<FrameworkRole> Roles { get; set; }
 
         public List<FrameworkGroup> Groups { get; set; }

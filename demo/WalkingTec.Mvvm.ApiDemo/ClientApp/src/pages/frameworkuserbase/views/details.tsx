@@ -120,7 +120,7 @@ class UpdateForm extends React.Component<any, any> {
     }
     // 创建模型
     models = Models.editModels(this.props);
-    render() {
+   render() {
         // item 的 props
         const props = {
             ...this.props,
@@ -130,7 +130,7 @@ class UpdateForm extends React.Component<any, any> {
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" />
+                <Form.Item {...GlobalConfig.formItemLayout}><span></span></Form.Item>
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
