@@ -51,5 +51,17 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             LoginUserInfo = rv;
             return Ok(LoginUserInfo);
         }
+
+        public IActionResult CheckLogin([FromBody] string userid)
+        {
+            if(LoginUserInfo == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(LoginUserInfo);
+            }
+        }
     }
 }
