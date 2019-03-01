@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     else if (controller is ControllerBase c2)
                     {
-                        context.Result = c2.Unauthorized();
+                        context.Result = c2.Forbid();
                     }
                     return;
                 }
@@ -90,7 +90,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     bool canAccess = controller.LoginUserInfo.IsAccessable(controller.BaseUrl);
                     if (canAccess == false && controller.ConfigInfo.IsQuickDebug == false)
                     {
-                        throw new Exception("您没有访问该页面的权限");
+                        if (controller is BaseController c)
+                        {
+                            throw new Exception("您没有访问该页面的权限");
+                        }
+                        else if (controller is ControllerBase c2)
+                        {
+                            context.Result = c2.Unauthorized();
+                        }
                     }
                 }
             }
