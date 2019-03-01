@@ -216,6 +216,7 @@ export class Request {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
+        console.log(body)
         url = this.compatibleUrl(this.target, newParams.url);
         return this.AjaxObservable(Rx.Observable.ajax.post(url, body, headers))
     }
@@ -346,6 +347,7 @@ export class Request {
                 case 'application/x-www-form-urlencoded':
 
                     break;
+                case 'form-data':
                 case 'multipart/form-data':
 
                     break;
