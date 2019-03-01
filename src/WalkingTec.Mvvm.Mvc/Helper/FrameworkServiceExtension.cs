@@ -108,13 +108,22 @@ namespace WalkingTec.Mvvm.Mvc
                     //NamingStrategy = new CamelCaseNamingStrategy()
                 };
             })
-            .ConfigureApplicationPartManager(m => {
+            .ConfigureApplicationPartManager(m =>
+            {
                 var feature = new ControllerFeature();
                 m.ApplicationParts.Add(new AssemblyPart(mvc));
                 m.ApplicationParts.Add(new AssemblyPart(admin));
                 m.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = (a) =>
+                {
+                    return new BadRequestObjectResult(a.ModelState);
+                };
+            });
 
 
             services.Configure<RazorViewEngineOptions>(options =>
