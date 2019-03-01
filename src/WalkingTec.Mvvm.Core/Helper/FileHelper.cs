@@ -97,8 +97,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Directory.CreateDirectory(pathHeader);
                 }
-
-                var fullPath = $"{pathHeader}/{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}";
+                var fullPath = $"{pathHeader}\\{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}";
                 using (var fileStream = File.Create(fullPath))
                 {
                     FileData.CopyTo(fileStream);

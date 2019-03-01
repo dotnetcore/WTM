@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             {
                 return BadRequest("DFS上传失败");
             }
-            if (vm.Entity.FileData == null)
+            if (vm.Entity.FileData == null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database)
             {
                 return BadRequest("上传失败");
             }
