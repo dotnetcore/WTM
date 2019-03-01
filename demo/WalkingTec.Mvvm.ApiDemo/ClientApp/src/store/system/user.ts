@@ -23,7 +23,7 @@ class Store {
     };
     @action.bound
     async Login(params) {
-        const res = await Request.post("/_login/login", params, { 'Content-Type': 'multipart/form-data' }).toPromise();
+        const res = await Request.post("/_login/login", params).toPromise();
         console.log(res)
         runInAction(() => {
             this.User = {
