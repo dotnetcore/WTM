@@ -6,7 +6,7 @@ using WalkingTec.Mvvm.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace WalkingTec.Mvvm.ApiDemo.Controllers
+namespace WalkingTec.Mvvm.Admin.Controllers
 {
     [ApiController]
     [Route("api/_file")]
