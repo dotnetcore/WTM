@@ -2,11 +2,12 @@ import { Icon, message, Modal, Upload } from "antd";
 import React from "react";
 import RequestFiles from 'utils/RequestFiles';
 import Viewer from 'viewerjs';
-
+import lodash from 'lodash'
 function beforeUpload(file) {
-    const isJPG = file.type === 'image/jpeg';
+    console.log(file.type)
+    const isJPG = lodash.includes(file.type, 'image/');
     if (!isJPG) {
-        message.error('You can only upload JPG file!');
+        message.error('You can only upload image file!');
     }
     // const isLt2M = file.size / 1024 / 1024 < 2;
     // if (!isLt2M) {
@@ -70,7 +71,7 @@ export default class UploadImg extends React.Component<any, any> {
     }
     onRemove = (file) => {
         if (this.props.disabled) {
-            return 
+            return
         }
         const response = file.response
         this.setState({ fileList: [], loading: false }, () => {
@@ -94,7 +95,7 @@ export default class UploadImg extends React.Component<any, any> {
         return (
             <div style={{ minWidth: 105, minHeight: 105 }}>
                 <Upload
-                    accept='image/jpeg'
+                    accept='image/*'
                     listType="picture-card"
                     fileList={fileList as any}
                     action={RequestFiles.FileTarget}

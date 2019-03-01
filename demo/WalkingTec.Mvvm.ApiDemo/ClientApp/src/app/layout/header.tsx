@@ -3,6 +3,8 @@ import { Avatar, Col, Dropdown, Icon, Layout, Menu, Row } from 'antd';
 import GlobalConfig from 'global.config';
 import * as React from 'react';
 import Store from 'store/index';
+import { observer } from 'mobx-react';
+import RequestFiles from 'utils/RequestFiles';
 const { Header } = Layout;
 export default class App extends React.Component<any, any> {
     shouldComponentUpdate() {
@@ -21,6 +23,7 @@ export default class App extends React.Component<any, any> {
         );
     }
 }
+@observer
 class UserMenu extends React.Component<any, any> {
     render() {
         return (
@@ -42,8 +45,9 @@ class UserMenu extends React.Component<any, any> {
             } placement="bottomCenter">
                 <div className="app-user-menu" >
                     <div>
-                        <Avatar size="large" icon="user" src={GlobalConfig.default.avatar} />
-                        &nbsp;<span>UserName</span>
+                        {/* PhotoId */}
+                        <Avatar size="large" icon="user" src={Store.User.User.PhotoId ? RequestFiles.onFileUrl(Store.User.User.PhotoId) : GlobalConfig.default.avatar} />
+                        &nbsp;<span>{Store.User.User.Name}</span>
                     </div>
                 </div>
             </Dropdown>
