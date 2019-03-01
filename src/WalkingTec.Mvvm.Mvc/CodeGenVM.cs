@@ -338,18 +338,25 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 StringBuilder other = new StringBuilder();
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsSearcherField == true || x.IsFormField == true).ToList();
+                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
                     if (string.IsNullOrEmpty(item.RelatedField) == false && item.SubField != "`file")
                     {
                         var subtype = Type.GetType(item.RelatedField);
-                        other.AppendLine($@"
+                        var subpro = subtype.GetProperty(item.SubField);
+                        int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                        if (count == 1)
+                        {
+
+                            other.AppendLine($@"
         [HttpGet(""Get{subtype.Name}s"")]
         public ActionResult Get{subtype.Name}s()
         {{
             return Ok(DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.{item.SubField}));
         }}");
+                        }
                     }
                 }
                 rv = rv.Replace("$other$", other.ToString());
@@ -438,6 +445,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string formatstring = "";
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 Type modelType = Type.GetType(SelectedModel);
+                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
                 foreach (var pro in pros)
                 {
                     if (string.IsNullOrEmpty(pro.RelatedField))
@@ -462,6 +470,13 @@ namespace WalkingTec.Mvvm.Mvc
                         else
                         {
                             var subpro = subtype.GetProperty(pro.SubField);
+                            existSubPro.Add(subpro);
+                            string prefix = "";
+                            int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                            if(count > 1)
+                            {
+                                prefix = count + "";
+                            }
                             string subtypename = subpro.PropertyType.Name;
                             if (subpro.PropertyType.IsNullable())
                             {
@@ -470,16 +485,16 @@ namespace WalkingTec.Mvvm.Mvc
 
                             var subdisplay = subpro.GetCustomAttribute<DisplayAttribute>();
                             headerstring += $@"
-                this.MakeGridHeader(x => x.{pro.SubField + "_view"}),";
+                this.MakeGridHeader(x => x.{pro.SubField + "_view"+ prefix}),";
                             if (string.IsNullOrEmpty(pro.SubIdField) == true)
                             {
                                 selectstring += $@"
-                    {pro.SubField + "_view"} = x.{pro.FieldName}.{pro.SubField},";
+                    {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.{pro.SubField},";
                             }
                             else
                             {
                                 selectstring += $@"
-                    {pro.SubField + "_view"} = DC.Set<{subtype.Name}>().Where(y => x.{pro.FieldName}.Select(z => z.{pro.SubIdField}).Contains(y.ID)).Select(y => y.{pro.SubField}).ToSpratedString(null,"",""),";
+                    {pro.SubField + "_view" + prefix} = DC.Set<{subtype.Name}>().Where(y => x.{pro.FieldName}.Select(z => z.{pro.SubIdField}).Contains(y.ID)).Select(y => y.{pro.SubField}).ToSpratedString(null,"",""),";
                             }
                             if (subdisplay?.Name != null)
                             {
@@ -487,7 +502,7 @@ namespace WalkingTec.Mvvm.Mvc
         [Display(Name = ""{subdisplay.Name}"")]";
                             }
                             subprostring += $@"
-        public {subtypename} {pro.SubField + "_view"} {{ get; set; }}";
+        public {subtypename} {pro.SubField + "_view" + prefix} {{ get; set; }}";
                         }
                     }
 
