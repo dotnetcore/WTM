@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
     {
         [HttpPost("login")]
         [ActionDescription("登录")]
-        public IActionResult Login(string userid, string password)
+        public IActionResult Login([FromForm] string userid, [FromForm]string password)
         {
             var user = DC.Set<FrameworkUserBase>()
     .Include(x => x.UserRoles).Include(x => x.UserGroups)
