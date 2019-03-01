@@ -68,6 +68,7 @@ class Store {
     @action.bound
     async outLogin() {
         this.isLogin = false;
+        window.sessionStorage.clear()
     }
 
 }
