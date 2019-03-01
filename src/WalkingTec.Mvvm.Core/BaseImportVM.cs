@@ -991,7 +991,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 err = "导入时发生错误";
             }
-            return $"{{\"Error\":\"{err}\",\"FileId\":\"\"}}";
+            return $"{{\"Error\":\"{err}\",\"FileId\":\"{UploadFileId}\"}}";
         }
     }
 
