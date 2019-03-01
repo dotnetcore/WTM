@@ -926,7 +926,7 @@ namespace WalkingTec.Mvvm.Mvc
                             fieldstr.AppendLine($@"                ]}}/>");
                         }
 
-                        else if (checktype.IsPrimitive || checktype == typeof(string))
+                        else if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
                         {
                             fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
                         }
