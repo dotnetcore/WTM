@@ -336,7 +336,7 @@ export default class Store {
               <Col span={14}>{item.value}</Col>
               {item.FileId && <Col span={10}>
                 <Button type="primary" onClick={e => {
-                  RequestFiles.download({ url: RequestFiles.onFileUrl(item.FileId, "/") })
+                  RequestFiles.download({ url: RequestFiles.onFileDownload(item.FileId, "/"), method: "get" })
                 }}>下载错误文件</Button>
               </Col>}
             </Row>

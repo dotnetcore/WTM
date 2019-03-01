@@ -52,7 +52,7 @@ export default class LoginDemo extends React.Component {
                   this.state.notice &&
                   <Alert style={{ marginBottom: 24 }} message={this.state.notice} type="error" showIcon closable />
                 }
-                <UserName name="username" />
+                <UserName name="userid" />
                 <Password name="password" />
               </Tab>
               <Tab key="tab2" tab="Mobile">

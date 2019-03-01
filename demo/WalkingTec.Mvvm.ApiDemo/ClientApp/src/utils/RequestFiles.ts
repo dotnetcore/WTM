@@ -7,6 +7,7 @@
 */
 import { message, notification } from "antd";
 import { UploadProps } from "antd/lib/upload";
+import lodash from "lodash";
 import moment from 'moment';
 import Rx from "rxjs";
 import { Request } from './Request';
@@ -68,10 +69,10 @@ export class RequestFiles extends Request {
      * 获取 下周 文件
      * @param id 
      */
-    onFileDownload(id) {
+    onFileDownload(id, target = this.target) {
         if (id) {
             const src = files.fileDownload.src;
-            return `${this.compatibleUrl(this.target, src)}/${id}`
+            return `${this.compatibleUrl(target, src)}/${id}`
         }
     }
     /** 文件获取状态 */
@@ -98,28 +99,34 @@ export class RequestFiles extends Request {
             headers: this.getHeaders(),
             ...AjaxRequest
         }
-        if (AjaxRequest.body) {
-            AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
-        }
-        try {
-            const result = await Rx.Observable.ajax(AjaxRequest).toPromise();
-            this.onCreateBlob(result.response, fileType, fileName).click();
-            notification.success({
-                key: "download",
-                message: `文件下载成功`,
-                description: ''
-            })
-        } catch (error) {
-            notification.error({
-                key: "download",
-                message: '文件下载失败',
-                description: error.message,
-            });
-        }
-        finally {
-            this.NProgress("done")
-            this.downloadLoading = false;
-        }
+        /**
+         * get 方式 直接打开窗口
+         */
+        // if (lodash.isEqual(lodash.toLower('get'), AjaxRequest.method)) {
+        //     window.open(AjaxRequest.url)
+        // } else {
+            // post
+            if (AjaxRequest.body) {
+                AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
+            }
+            try {
+                const result = await Rx.Observable.ajax(AjaxRequest).toPromise();
+                this.onCreateBlob(result.response, fileType, fileName).click();
+                notification.success({
+                    key: "download",
+                    message: `文件下载成功`,
+                    description: ''
+                })
+            } catch (error) {
+                notification.error({
+                    key: "download",
+                    message: '文件下载失败',
+                    description: error.message,
+                });
+            }
+        // }
+        this.NProgress("done")
+        this.downloadLoading = false;
     }
     /**
      * 创建二进制文件

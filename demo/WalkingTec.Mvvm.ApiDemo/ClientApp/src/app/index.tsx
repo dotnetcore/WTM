@@ -17,23 +17,33 @@ import Loadable from 'react-loadable';
 import { renderRoutes } from 'react-router-config';
 import { BrowserRouter } from 'react-router-dom';
 import Store from 'store/index';
-import layout from "./layout/index";
+import Layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
+@observer
+class Entrance extends React.Component<any, any> {
+    render() {
+        // 用户登陆菜单加载完成进入主界面
+        if (Store.User.isLogin) {
+            return <Layout {...this.props} />
+        }
+        return <Login {...this.props} />
 
+    }
+}
 @observer
 export default class RootRoutes extends React.Component<any, any> {
     /**
      * 路由列表
      */
-   public routes: any[] = [
+    public routes: any[] = [
         {
             /**
              * 主页布局 
              */
             path: "/",
-            component: layout,
+            component: Entrance,
             //  业务路由
             routes: [
                 {
@@ -154,9 +164,9 @@ export default class RootRoutes extends React.Component<any, any> {
                     return (
                         // <Animate transitionName={classNames}
                         //     transitionAppear={true} component="" key={Component.name} >
-                            <div className="app-animate-content" key="app-animate-content" >
-                                <Component  {...this.props} />
-                            </div>
+                        <div className="app-animate-content" key="app-animate-content" >
+                            <Component  {...this.props} />
+                        </div>
                         // </Animate  >
                     );
                 }
@@ -170,31 +180,14 @@ export default class RootRoutes extends React.Component<any, any> {
             }
         }
     };
-    /**
-     * 根据用户是否登陆渲染主页面或者 登陆界面
-     */
-    renderApp() {
-        if (Store.User.isLogin) {
-            console.log("-----------路由列表-----------", lodash.find(this.routes, x => x.path == "/").routes);
-            return <LocaleProvider locale={zhCN}>
-                <>
-                    {renderRoutes(this.routes)}
-                    {/* <Entrance /> */}
-                </>
-            </LocaleProvider>
-        }
-        return <Login />
-    }
     render() {
         // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
-            // <Provider
-            //     {...store}
-            // >
-            <BrowserRouter >
-                {this.renderApp()}
-            </BrowserRouter>
-            // </Provider>
+            <LocaleProvider locale={zhCN}>
+                <BrowserRouter >
+                    {renderRoutes(this.routes)}
+                </BrowserRouter>
+            </LocaleProvider>
         );
     }
 
