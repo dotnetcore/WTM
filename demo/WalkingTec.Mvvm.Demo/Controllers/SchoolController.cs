@@ -31,6 +31,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [HttpPost]
         [ActionDescription("新建")]
+        [StringNeedLTGT]
         public ActionResult Create(SchoolVM vm)
         {
             if (!ModelState.IsValid)

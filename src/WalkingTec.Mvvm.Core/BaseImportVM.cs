@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NPOI.HSSF.UserModel;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -989,9 +991,62 @@ namespace WalkingTec.Mvvm.Core
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
+                var fa = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).SingleOrDefault();
+                hssfworkbook = FileHelper.GetHSSWorkbook(hssfworkbook, (FileAttachment)fa, ConfigInfo);
+
+                var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
+                List<ExcelPropety> excelPropetys = new List<ExcelPropety>();
+                for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
+                {
+                    ExcelPropety ep = (ExcelPropety)propetys[porpetyIndex].GetValue(Template);
+                    excelPropetys.Add(ep);
+                }
+                int columnCount = excelPropetys.Count;
+                //int excelPropetyCount = excelPropetys.Count;
+                var dynamicColumn = excelPropetys.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
+                if (dynamicColumn != null)
+                {
+                    columnCount = columnCount + dynamicColumn.DynamicColumns.Count - 1;
+                }
+                ISheet sheet = hssfworkbook.GetSheetAt(0);
+                var errorStyle = hssfworkbook.CreateCellStyle();
+                IFont f = hssfworkbook.CreateFont();
+                f.Color = HSSFColor.Red.Index;
+                errorStyle.SetFont(f);
+                errorStyle.IsLocked = true;
+                foreach (var e in ErrorListVM?.EntityList)
+                {
+                    if(e.Index > 0)
+                    {
+                        var c = sheet.GetRow((int)(e.Index - 1)).CreateCell(columnCount);
+                        c.CellStyle = errorStyle;
+                        c.SetCellValue(e.Message);
+                    }
+                }
+                MemoryStream ms = new MemoryStream();
+                hssfworkbook.Write(ms);
+                ms.Position = 0;
+                FileAttachmentVM vm = new FileAttachmentVM();
+                vm.CopyContext(this);
+                vm.Entity.FileName = "Error-"+ fa.FileName;
+                vm.Entity.Length = ms.Length;
+                vm.Entity.UploadTime = DateTime.Now;
+                vm.Entity.SaveFileMode = ConfigInfo.FileUploadOptions.SaveFileMode;
+                vm = FileHelper.GetFileByteForUpload(vm, ms, ConfigInfo, vm.Entity.FileName, null, null);
+                vm.Entity.IsTemprory = true;
+                if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+                {
+                    vm.DoAdd();
+                }
+                ms.Close();
+                ms.Dispose();
                 err = "导入时发生错误";
+                return $"{{\"Error\":\"{err}\",\"FileId\":\"{vm.Entity.ID}\"}}";
             }
-            return $"{{\"Error\":\"{err}\",\"FileId\":\"{UploadFileId}\"}}";
+            else
+            {
+                return $"{{\"Error\":\"{err}\",\"FileId\":\"\"}}";
+            }
         }
     }
 

@@ -255,7 +255,7 @@ namespace WalkingTec.Mvvm.Core
             switch (backgroudColor)
             {
                 case BackgroudColorEnum.Grey:
-                    headerbg = HSSFColor.Grey40Percent.Index;
+                    headerbg = HSSFColor.LightBlue.Index;
                     break;
                 case BackgroudColorEnum.Yellow:
                     headerbg = HSSFColor.LightYellow.Index;
