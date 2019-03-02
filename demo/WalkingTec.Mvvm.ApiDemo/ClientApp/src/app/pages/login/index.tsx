@@ -1,77 +1,73 @@
 
-import Login from 'ant-design-pro/lib/Login';
-import { Alert, Checkbox } from 'antd';
+import { Button, Form, Icon, Input, Row } from 'antd';
+import { DesForm } from 'components/decorators';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import store from 'store/index';
 import './style.less';
-const { Tab, UserName, Password, Mobile, Captcha, Submit }: any = Login;
-export default class LoginDemo extends React.Component {
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+@DesForm
+export default class LoginDemo extends React.Component<any, any>{
   state = {
-    notice: '',
-    type: 'tab1',
-    autoLogin: true,
     loading: false
   }
-  onSubmit = (err, values) => {
-    console.log('value collected ->', { ...values, autoLogin: this.state.autoLogin });
-    if (this.state.type === 'tab1') {
-      this.setState({
-        notice: '',
-        loading: true
-      }, () => {
-        store.User.Login(values);
-      });
+  onSubmit(e) {
+    e.preventDefault();
+    if (this.state.loading) {
+      return
     }
-  }
-  onTabChange = (key) => {
-    this.setState({
-      type: key,
+    this.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        this.setState({ loading: true })
+        await store.User.Login(values);
+        this.setState({ loading: false })
+      }
     });
   }
-  changeAutoLogin = (e) => {
-    this.setState({
-      autoLogin: e.target.checked,
-    });
+  componentDidMount() {
+    // To disabled submit button at the beginning.
+    this.props.form.validateFields();
   }
   render() {
+    const { getFieldDecorator, getFieldsError, isFieldTouched, getFieldError } = this.props.form;
+    const userNameError = isFieldTouched('userid') && getFieldError('userid');
+    const passwordError = isFieldTouched('password') && getFieldError('password');
     return (
       <Animate transitionName="fade"
         transitionAppear={true} component="">
-        <div className="app-login">
-          <div className="app-login-form">
-            <Login
-              defaultActiveKey={this.state.type}
-              onTabChange={this.onTabChange}
-              onSubmit={this.onSubmit}
+        <Row type="flex" justify="center" align="middle" className='app-login' >
+          <Form onSubmit={this.onSubmit.bind(this)} className="app-login-form">
+            <h1>WTM</h1>
+            <Form.Item
+              validateStatus={userNameError ? 'error' : ''}
+              help={userNameError || ''}
             >
-              <Tab key="tab1" tab="WTM">
-                {/* {
-                  this.state.notice &&
-                  <Alert style={{ marginBottom: 24 }} message={this.state.notice} type="error" showIcon closable />
-                } */}
-                <UserName name="userid" placeholder="账号：leng" />
-                <Password name="password" placeholder="密码：leng" />
-              </Tab>
-              {/* <Tab key="tab2" tab="Mobile">
-                <Mobile name="mobile" />
-                <Captcha onGetCaptcha={() => console.log('Get captcha!')} name="captcha" />
-              </Tab>
-              <div>
-                <Checkbox checked={this.state.autoLogin} onChange={this.changeAutoLogin}>Keep me logged in</Checkbox>
-                <a style={{ float: 'right' }} href="">Forgot password</a>
-              </div> */}
-              <Submit loading={this.state.loading}>Login</Submit>
-              {/* <div>
-                Other login methods
-             <span className="icon icon-alipay" />
-                <span className="icon icon-taobao" />
-                <span className="icon icon-weibo" />
-                <a style={{ float: 'right' }} href="">Register</a>
-              </div> */}
-            </Login>
-          </div>
-        </div>
+              {getFieldDecorator('userid', {
+                rules: [{ required: true, message: '请输入 用户名!' }],
+              })(
+                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+              )}
+            </Form.Item>
+            <Form.Item
+              validateStatus={passwordError ? 'error' : ''}
+              help={passwordError || ''}
+            >
+              {getFieldDecorator('password', {
+                rules: [{ required: true, message: '请输入 密码!' }],
+              })(
+                <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+              )}
+            </Form.Item>
+            <Form.Item>
+              <Button disabled={hasErrors(getFieldsError())} type="primary" htmlType="submit" block loading={this.state.loading}>
+                <span> Log in</span>
+              </Button>
+            </Form.Item>
+          </Form>
+        </Row>
+
       </Animate  >
 
     );
