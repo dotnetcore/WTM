@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
         [HttpGet("CheckLogin/{id}")]
         public IActionResult CheckLogin(Guid id)
         {
-            if(LoginUserInfo == null)
+            if(LoginUserInfo?.Id != id)
             {
                 return BadRequest();
             }
@@ -64,5 +64,17 @@ namespace WalkingTec.Mvvm.Admin.Controllers
                 return Ok(LoginUserInfo);
             }
         }
+
+        [HttpGet("Logout/{id}")]
+        public ActionResult Logout(Guid id)
+        {
+            if (LoginUserInfo?.Id == id)
+            {
+                LoginUserInfo = null;
+                HttpContext.Session.Clear();
+            }
+            return Ok();
+        }
+
     }
 }
