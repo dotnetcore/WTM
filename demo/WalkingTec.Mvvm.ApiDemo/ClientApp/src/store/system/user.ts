@@ -28,7 +28,7 @@ class Store {
         try {
             const userid = lodash.get(JSON.parse(window.sessionStorage.getItem('User')), 'Id');
             if (userid) {
-                const res = await Request.get("/_login/CheckLogin/"+userid).toPromise();
+                const res = await Request.get("/_login/CheckLogin/" + userid).toPromise();
                 runInAction(() => {
                     this.User = {
                         ...this.User,
@@ -66,7 +66,11 @@ class Store {
     @action.bound
     async outLogin() {
         this.isLogin = false;
-        window.sessionStorage.clear()
+        const userid = lodash.get(JSON.parse(window.sessionStorage.getItem('User')), 'Id');
+        if (userid) {
+            Request.get("/_login/Logout/" + userid).toPromise();
+        }
+        window.sessionStorage.clear();
     }
 
 }
