@@ -52,7 +52,8 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             return Ok(LoginUserInfo);
         }
 
-        public IActionResult CheckLogin([FromBody] string userid)
+        [HttpGet("CheckLogin/{id}")]
+        public IActionResult CheckLogin(Guid id)
         {
             if(LoginUserInfo == null)
             {
