@@ -13,7 +13,6 @@ namespace WalkingTec.Mvvm.Admin.Controllers
     [ActionDescription("角色管理")]
     [ApiController]
     [Route("api/_FrameworkRole")]
-	[Public]
 	public class FrameworkRoleController : BaseApiController
     {
         [ActionDescription("搜索")]
