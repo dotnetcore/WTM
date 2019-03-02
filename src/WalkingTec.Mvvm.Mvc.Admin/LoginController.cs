@@ -26,7 +26,8 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("登录失败");
+                ModelState.AddModelError("login", "登录失败");
+                return BadRequest(ModelState);
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
