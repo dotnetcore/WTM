@@ -28,9 +28,7 @@ class Store {
         try {
             const userid = lodash.get(JSON.parse(window.sessionStorage.getItem('User')), 'Id');
             if (userid) {
-                const res = await Request.post("/_login/CheckLogin", {
-                    userid
-                }).toPromise();
+                const res = await Request.get("/_login/CheckLogin/"+userid).toPromise();
                 runInAction(() => {
                     this.User = {
                         ...this.User,
