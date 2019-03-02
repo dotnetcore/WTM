@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
 {
     [ApiController]
     [Route("api/_file")]
-    [Public]
+    [AllRights]
     public class FileApiController : BaseApiController
     {
         [HttpPost("upload")]

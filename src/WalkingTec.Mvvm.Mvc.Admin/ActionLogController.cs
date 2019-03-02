@@ -13,7 +13,6 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
     [ActionDescription("日志管理")]
     [ApiController]
     [Route("api/_ActionLog")]
-	[Public]
 	public class ActionLogController : BaseApiController
     {
         [ActionDescription("搜索")]
