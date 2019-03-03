@@ -19,7 +19,6 @@
     "src"
   ],
   "exclude": [
-    "src/index.js",
-    "src/setupProxy.js"
+    "src/**/**.js"
   ]
 }
