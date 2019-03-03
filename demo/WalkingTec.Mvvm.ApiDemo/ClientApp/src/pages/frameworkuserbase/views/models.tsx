@@ -82,7 +82,7 @@ export default {
                 label: "角色",
                 rules: [],
                 formItem: <Transfer
-                    dataSource={Store.Request.cache({ url: "/FrameworkUserBase/GetFrameworkRoles" })}
+                    dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkRoles" })}
                     dataKey="RoleId"
                 /> 
             },
@@ -90,7 +90,7 @@ export default {
                 label: "用户组",
                 rules: [],
                 formItem: <Transfer
-                    dataSource={Store.Request.cache({ url: "/FrameworkUserBase/GetFrameworkGroups" })}
+                    dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkGroups" })}
                     dataKey="GroupId"
                 /> 
             }
