@@ -312,7 +312,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (string.IsNullOrEmpty(csName))
             {
-                csName = CurrentCS;
+                csName = CurrentCS??"default";
             }
             return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
         }
