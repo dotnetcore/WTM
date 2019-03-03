@@ -46,22 +46,15 @@ class Store {
     }
     @action.bound
     async Login(params) {
-        try {
-            const res = await Request.post("/_login/login", params, { 'Content-Type': null }).toPromise();
-            runInAction(() => {
-                this.User = {
-                    ...this.User,
-                    ...res
-                };
-                window.sessionStorage.setItem("User", JSON.stringify(res));
-                this.isLogin = true;
-            });
-            return true
-        } catch (error) {
-            console.log(error);
-            return false
-        }
-        return false
+        const res = await Request.post("/_login/login", params, { 'Content-Type': null }).toPromise();
+        runInAction(() => {
+            this.User = {
+                ...this.User,
+                ...res
+            };
+            window.sessionStorage.setItem("User", JSON.stringify(res));
+            this.isLogin = true;
+        });
     }
     @action.bound
     async outLogin() {

@@ -1,7 +1,9 @@
 
-import { Button, Form, Icon, Input, Row } from 'antd';
+import { Button, Form, Icon, Input, Row, message } from 'antd';
 import { DesForm } from 'components/decorators';
 import Animate from 'rc-animate';
+import lodash from 'lodash';
+
 import * as React from 'react';
 import store from 'store/index';
 import './style.less';
@@ -20,9 +22,13 @@ export default class LoginDemo extends React.Component<any, any>{
     }
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        this.setState({ loading: true })
-        await store.User.Login(values);
-        this.setState({ loading: false })
+        try {
+          await store.User.Login(values);
+        } catch (error) {
+          message.destroy();
+          message.error(lodash.get(error, 'login[0]'))
+          this.setState({ loading: false })
+        }
       }
     });
   }
