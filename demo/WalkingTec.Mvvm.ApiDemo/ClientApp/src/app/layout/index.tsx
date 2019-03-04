@@ -11,9 +11,9 @@ export default class App extends React.Component<any, any> {
     return (
       <Animate transitionName='fade'
         transitionAppear={true} component=""  >
-        <Layout className="app-layout-root">
+        <Layout tagName="main" className="app-layout-root">
           <SiderComponent {...this.props} />
-          <Layout style={{ overflow: "hidden" }}>
+          <Layout tagName="main" style={{ overflow: "hidden" }}>
             <HeaderComponent {...this.props} />
             <ContentComponent {...this.props} />
           </Layout>
