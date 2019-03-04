@@ -13,7 +13,7 @@ namespace $ns$.Controllers
         [AllRights]
         public IActionResult Index()
         {
-            ViewData["title"] = "WalkingTec MVVM Framework";
+            ViewData["title"] = ""$ns$";
             var vm = CreateVM<IndexVM>();
             vm.AllMenu = FFMenus;
             return View(vm);
