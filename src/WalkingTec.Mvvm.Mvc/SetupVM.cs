@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class SetupVM : BaseVM
     {
-        private string version = "2.2.12";
+        private string version = "2.2.14";
 
         public bool EnableLog { get; set; }
 
@@ -331,8 +331,8 @@ EndProject
                 File.WriteAllText($"{MainDir}\\Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
                 var index = File.ReadAllText($"{MainDir}\\ClientApp\\public\\index.html");
                 var login = File.ReadAllText($"{MainDir}\\ClientApp\\src\\app\\pages\\login\\index.tsx");
-                File.WriteAllText($"{MainDir}\\ClientApp\\public\\index.html", index.Replace("$ns$", datans), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\ClientApp\\src\\app\\pages\\login\\index.tsx", login.Replace("$ns$", datans), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\ClientApp\\public\\index.html", index.Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\ClientApp\\src\\app\\pages\\login\\index.tsx", login.Replace("$ns$", MainNs), Encoding.UTF8);
 
             }
 
