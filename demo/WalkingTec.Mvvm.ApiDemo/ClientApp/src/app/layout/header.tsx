@@ -12,7 +12,7 @@ export default class App extends React.Component<any, any> {
     }
     render() {
         return (
-            <Header className="app-layout-header">
+            <Header tagName="header" className="app-layout-header">
                 <Row>
                     <Col span={4}><Icon onClick={() => { Store.Meun.toggleCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
                     <Col span={20} style={{ textAlign: "right" }}>
