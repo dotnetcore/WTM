@@ -108,7 +108,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
  */
 @DesError
 @observer
-export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onCancel?: () => void, submit?: boolean }, any> {
+export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, loadingEdit?: boolean, onCancel?: () => void, submit?: boolean }, any> {
     render() {
         const childrens = React.Children.toArray(this.props.children).map((node: any) => {
             try {
@@ -138,13 +138,14 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
                     </Row>
                 </Spin>
             </div>
-            <div className="data-view-form-btns" >
+            {this.props.btns ? this.props.btns : <div className="data-view-form-btns" >
                 <Button onClick={() => this.props.onCancel && this.props.onCancel()} >取消 </Button>
                 {this.props.submit && <>
                     <Divider type="vertical" />
                     <Button loading={this.props.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
                 </>}
-            </div>
+            </div>}
+
         </>
     }
 }
