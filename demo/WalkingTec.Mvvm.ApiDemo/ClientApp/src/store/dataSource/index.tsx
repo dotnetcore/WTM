@@ -124,7 +124,7 @@ export default class Store {
    * @param details 
    * @param detailsType 
    */
-  async onModalShow(details = {}, detailsType: 'Insert' | 'Update' | 'Info' = 'Insert') {
+  async onModalShow(details = {}, detailsType: 'Insert' | 'Update' | 'Info' | string = 'Insert') {
     this.onPageState("detailsType", detailsType)
     if (detailsType != "Insert") {
       details = await this.onDetails(details)
