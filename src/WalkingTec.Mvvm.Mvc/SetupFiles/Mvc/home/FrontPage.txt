@@ -11,4 +11,7 @@
             </wt:row>
         </wt:panel>
     </wt:row>
+	<wt:row>
+		<a href="http://wtmdoc.walkingtec.cn" target="_blank"><h2>WTM框架文档<h2></a>
+	</wt:row>
 </div>
