@@ -23,6 +23,9 @@ import Login from "./pages/login";
 import System from "./pages/system";
 @observer
 class Entrance extends React.Component<any, any> {
+    componentDidMount() {
+        console.clear()
+    }
     render() {
         // 用户登陆菜单加载完成进入主界面
         if (Store.User.isLogin) {

@@ -1,10 +1,12 @@
-import { Col, Form } from 'antd';
+import { Button, Form, Row, Divider } from 'antd';
 import { FormItem, InfoShell, InfoShellFooter } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
+import myModel from '../store/myModel'; //页面状态
+
 import Models from './models'; //模型
 /**
  *  详情 窗口 
@@ -45,6 +47,10 @@ export default class extends React.Component<any, any> {
             onClose={() => { Store.onPageState("visibleEdit", false) }}
             visible={visibleEdit}
         >
+            <Row>
+                <Button onClick={e => { myModel.visible = true }}>弹个框</Button>
+            </Row>
+            <Divider />
             {this.renderBody(detailsType)}
         </InfoShell>
     }
