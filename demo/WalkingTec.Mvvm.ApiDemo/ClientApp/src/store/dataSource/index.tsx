@@ -189,11 +189,11 @@ export default class Store {
    * @param params 数据实体
    */
   async onDetails(params) {
-    // this.onPageState("loadingEdit", true)
+    this.onPageState("loadingEdit", true)
     const method = this.Urls.details.method;
     const src = this.Urls.details.src;
     const res = await this.Request[method](src, params).toPromise()
-    // this.onPageState("loadingEdit", false)
+    this.onPageState("loadingEdit", false)
     return res || {}
   }
   /**
