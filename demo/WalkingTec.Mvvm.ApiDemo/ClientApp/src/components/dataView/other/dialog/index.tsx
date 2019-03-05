@@ -1,55 +1,90 @@
-import { Button } from 'antd';
-import { ButtonProps } from 'antd/lib/button';
+import { Button, Divider } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
+import Form from 'antd/lib/form/Form';
 import { ModalProps } from 'antd/lib/modal';
+import lodash from 'lodash';
 import * as React from 'react';
 import { DesError, DesForm } from '../../../decorators'; //错误
-import { InfoShell, InfoShellFooter } from '../infoShell';
-import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
-import lodash from 'lodash';
+import { InfoShell } from '../infoShell';
 declare type Props = {
-    form?: WrappedFormUtils;
+    // form?: WrappedFormUtils;
     InfoShell?: DrawerProps | ModalProps;
+    /** 标题 */
     title?: React.ReactNode;
-    visible?: boolean;
+    /** 按钮可用状态 */
+    disabled?: boolean;
+    /** 显示 提交按钮 */
+    showSubmit?: boolean;
+    /** 关闭按钮 文案 */
+    closeText?:string;
+    /** 提交按钮 文案 */
+    submitText?:string;
     /**
-     *  提交 事件， 返回 true promise 关闭窗口
-     */
-    onFormSubmit: (err, values, callBack) => void
-} & ButtonProps;
+     * 表单提交 方法     */
+    onFormSubmit?: (err, values, onClose) => void;
+    [key: string]: any
+};
 @DesError
 @DesForm
 export class DialogForm extends React.Component<Props, any> {
+
     state = {
-        visible: false
+        visible: false,
+        loading: false
     }
+
     onSubmit(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.props.form.validateFields(async (err, values) => {
-            this.props.onFormSubmit(err, values, () => {
-                this.setState({ visible: false })
+        // 加载中 返回。
+        if (this.state.loading) return;
+        // 提交数据
+        this.setState({ loading: true }, () => {
+            this.props.form.validateFields(async (err, values) => {
+                this.props.onFormSubmit(err, values, () => {
+                    this.setState({ visible: false })
+                });
             });
-        });
+        })
+    }
+    onVisible(visible = !this.state.visible) {
+        this.setState(state => {
+            if (state.loading) {
+                state.loading = false;
+            }
+            state.visible = visible;
+            return state
+        })
     }
     render() {
-        const title = lodash.get(this.props, 'title', '未设置标题')
+        const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
+        const option = {
+            title: lodash.get(this.props, 'title', '未设置标题'),
+            disabled: lodash.get(this.props, "disabled", false),
+            showSubmit: lodash.get(this.props, 'showSubmit', true),
+            closeText: lodash.get(this.props, 'closeText', '关闭'),
+            submitText: lodash.get(this.props, 'submitText', '提交'),
+        }
         return (
             <>
-                <Button onClick={e => {
-                    this.setState({ visible: true })
-                }}>{title}</Button>
+                <Button
+                    disabled={option.disabled}
+                    onClick={this.onVisible.bind(this, true)}>{option.title}</Button>
                 <InfoShell
-                    title={title}
-                    visible={lodash.get(this.props, 'visible', this.state.visible)}
-                    onCancel={e => this.setState({ visible: false })}
+                    title={option.title}
+                    visible={this.state.visible}
+                    onCancel={this.onVisible.bind(this, false)}
                     {...this.props.InfoShell}
                 >
                     <Form onSubmit={this.onSubmit.bind(this)}>
-                        {React.cloneElement(this.props.children as any, { form: this.props.form })}
-                        <InfoShellFooter
-                            onCancel={() => this.setState({ visible: false })}
-                            submit />
+                        {children}
+                        <div className="data-view-form-btns" >
+                            <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
+                            {option.showSubmit && <>
+                                <Divider type="vertical" />
+                                <Button loading={this.state.loading} type="primary" htmlType="submit"  >{option.submitText} </Button>
+                            </>}
+                        </div>
                     </Form>
                 </InfoShell>
             </>

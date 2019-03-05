@@ -40,13 +40,15 @@ const TableUtils = {
      * @param columns 
      */
     onSetColumnsWidth(tableBody, columns: ColumnProps<any>[]) {
+        console.log(tableBody, columns)
         // 获取页面宽度
         if (tableBody) {
+            // debugger
             // 表头
             const { clientWidth } = tableBody.querySelector(".ant-table-thead ");
             // 选择框
-            const { clientWidth: selectionWidth = 0 } = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
-            TableUtils.selectionColumnWidth = selectionWidth;
+            const selectionColumn: HTMLDivElement = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
+            TableUtils.selectionColumnWidth = lodash.get(selectionColumn, 'clientWidth', 0);
             let exclude = 0;
             const notFixed = columns.filter(x => {
                 if (typeof x.fixed === "string") {
@@ -61,7 +63,7 @@ const TableUtils = {
             //计算表格设置的总宽度
             const columnWidth = this.onGetcolumnsWidth(notFixed);
             // 总宽度差值
-            const width = clientWidth - columnWidth - exclude - selectionWidth;
+            const width = clientWidth - columnWidth - exclude - TableUtils.selectionColumnWidth;
             if (width > 0) {
                 const average = Math.ceil(width / columnsLenght)
                 // 平均分配
@@ -261,6 +263,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
             const columns = [...this.columns];
+            const scroll = TableUtils.onGetScroll(columns)
             return (
                 <Table
                     ref={this.tableRef}
@@ -271,8 +274,8 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     dataSource={[...dataSource.Data]}
                     onChange={this.onChange.bind(this)}
                     columns={columns}
-                    scroll={TableUtils.onGetScroll(columns)}
-                    rowSelection={this.onRowSelection()}
+                    scroll={scroll}
+                    // rowSelection={this.onRowSelection()}
                     loading={this.Store.pageState.loading}
                     pagination={
                         {
