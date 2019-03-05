@@ -986,8 +986,10 @@ namespace WalkingTec.Mvvm.Core
             return new ComplexDuplicatedField<T, V>(MiddleExp, FieldExps);
         }
 
-        public string GetErrorJson()
+        public ErrorObj GetErrorJson()
         {
+            var mse = new ErrorObj();
+            mse.Entity = new Dictionary<string, string>();
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
@@ -1041,12 +1043,14 @@ namespace WalkingTec.Mvvm.Core
                 ms.Close();
                 ms.Dispose();
                 err = "导入时发生错误";
-                return $"{{\"Error\":\"{err}\",\"FileId\":\"{vm.Entity.ID}\"}}";
+                mse.Entity.Add("Import", err);
+                mse.Entity.Add("ErrorFileId", vm.Entity.ID.ToString());
             }
             else
             {
-                return $"{{\"Error\":\"{err}\",\"FileId\":\"\"}}";
+                mse.Entity.Add("Import", err);
             }
+            return mse;
         }
     }
 

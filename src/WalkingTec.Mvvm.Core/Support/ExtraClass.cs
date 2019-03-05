@@ -1,4 +1,6 @@
-﻿namespace WalkingTec.Mvvm.Core
+﻿using System.Collections.Generic;
+
+namespace WalkingTec.Mvvm.Core
 {
     /// <summary>
     /// 简单属性结构类
@@ -28,4 +30,10 @@
         public string Property { get; set; }
         public SortDir Direction { get; set; }
     }
+
+    public class ErrorObj
+    {
+        public Dictionary<string, string> Entity { get; set; }
+    }
+
 }
