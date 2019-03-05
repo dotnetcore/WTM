@@ -110,7 +110,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
  */
 @DesError
 @observer
-export class InfoShellLayout extends React.Component<{ loadingEdit?: boolean }, any> {
+export class InfoShellLayout extends React.Component<{ loading?: boolean }, any> {
     render() {
         const childrens = React.Children.toArray(this.props.children).map((node: any) => {
             try {
@@ -131,8 +131,9 @@ export class InfoShellLayout extends React.Component<{ loadingEdit?: boolean }, 
                 return node
             }
         });
+        const spinning = lodash.get(this.props, 'loading', false);
         return <div className="data-view-form-item">
-            <Spin tip="Loading..." spinning={lodash.get(this.props, 'loadingEdit', false)}>
+            <Spin tip="Loading..." spinning={lodash.get(this.props, 'loading', false)} key={lodash.toString(spinning)}>
                 <Row type="flex">
                     {childrens}
                 </Row>
@@ -148,7 +149,7 @@ export class InfoShellLayout extends React.Component<{ loadingEdit?: boolean }, 
 export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, loadingEdit?: boolean, onCancel?: () => void, submit?: boolean }, any> {
     render() {
         return <>
-            <InfoShellLayout loadingEdit={this.props.loadingEdit}>
+            <InfoShellLayout loading={this.props.loadingEdit}>
                 {this.props.children}
             </InfoShellLayout>
             {this.props.btns ? this.props.btns : <div className="data-view-form-btns" >

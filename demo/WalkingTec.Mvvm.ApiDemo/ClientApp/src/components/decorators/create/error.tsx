@@ -6,9 +6,9 @@
  * @desc [description]
  */
 import * as React from 'react';
-
-export function DesError(Component: any) {
-    return class AppError extends Component {
+import lodash from "lodash";
+export function DesError(Component: React.ComponentClass) {
+    class AppError extends Component {
         state = {
             ...this.state,
             error: null,
@@ -37,6 +37,11 @@ export function DesError(Component: any) {
             }
             return super.render();
         }
-    } as any
+    }
+    // 静态属性
+    lodash.map(Component, (value, key) => {
+        AppError[key] = value;
+    })
+    return AppError as any
 
 }

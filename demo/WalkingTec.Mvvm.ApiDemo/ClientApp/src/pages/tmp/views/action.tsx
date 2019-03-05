@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { EnumAuthorizeActions, onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InsertForm, UpdateForm } from './details';
+import { InsertForm, UpdateForm, InfoForm } from './details';
 /**
  * 动作事件
  */
@@ -79,11 +79,10 @@ export const ActionEvents = {
      * 多选修改
      */
     onUpdateList() {
-        if (Store.selectedRowKeys.length == 1) {
-            Store.onModalShow(lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)]), "Update")
-        } else {
-            message.warn("请选择一条数据")
-        }
+        return lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)])
+    },
+    onGetId() {
+        return lodash.get(lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)]), Store.IdKey);
     }
 }
 /**
@@ -102,7 +101,8 @@ class PageAction extends React.Component<any, any> {
                     <DialogForm
                         title="新建"
                         icon="plus"
-                        onFormSubmit={InsertForm.onFormSubmit}>
+                    // onFormSubmit={InsertForm.onFormSubmit}
+                    >
                         <InsertForm />
                     </DialogForm>
                 </Visible>
@@ -111,10 +111,9 @@ class PageAction extends React.Component<any, any> {
                     <DialogForm
                         title="修改"
                         icon="edit"
-                        // loading={}
-                        disabled={disabled}
-                        onFormSubmit={InsertForm.onFormSubmit}>
-                        <UpdateForm />
+                        disabled={deletelength != 1}
+                    >
+                        <UpdateForm Details={ActionEvents.onUpdateList} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
@@ -158,10 +157,21 @@ class RowAction extends React.Component<{
         const { data } = this.props
         return (
             <Row className="data-view-row-action">
-                <a onClick={() => { ActionEvents.onInfo(data) }} >详情</a>
+                <DialogForm
+                    title="详情"
+                    showSubmit={false}
+                    type="a"
+                >
+                    <InfoForm Details={data} />
+                </DialogForm>
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
                     <Divider type="vertical" />
-                    <a onClick={() => { ActionEvents.onUpdate(data) }} >修改</a>
+                    <DialogForm
+                        title="修改"
+                        type="a"
+                    >
+                        <UpdateForm Details={data} />
+                    </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
                     <Divider type="vertical" />
