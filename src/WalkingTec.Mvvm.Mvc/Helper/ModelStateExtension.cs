@@ -3,30 +3,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc
 {
     public static class ModelStateExtension
     {
-        public static string GetErrorJson(this ModelStateDictionary self)
+        public static ErrorObj GetErrorJson(this ModelStateDictionary self)
         {
-            string rv = "{Entity:{";
-            for(int i=0;i<self.ErrorCount;i++)
+            var mse = new ErrorObj();
+            mse.Entity = new Dictionary<string, string>();
+            foreach (var item in self)
             {
-                var item = self.ElementAt(i);
                 var name = item.Key;
                 if (name.ToLower().StartsWith("entity."))
                 {
                     name = name.Substring(7);
                 }
-                rv += $@"""{name}"":""{item.Value.Errors.FirstOrDefault()?.ErrorMessage}""";
-                if(i <self.ErrorCount - 1)
-                {
-                    rv += ",";
-                }
+                mse.Entity.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
             }
-            rv += "}}";
-            return rv;
+            return mse;
         }
+
     }
 }
