@@ -93,8 +93,11 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
                 {this.props.children}
             </Modal>
         }
+        const onCancel = (this.props as ModalProps).onCancel
+        const onClose = (e) => { onCancel && onCancel(e) }
         return <Drawer
             width={GlobalConfig.infoTypeWidth}
+            onClose={onClose}
             destroyOnClose
             {...this.props as any}
             className={`data-view-drawer ${this.props.className}`}>
@@ -150,7 +153,7 @@ export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, l
                 {this.props.children}
             </InfoShellLayout>
             {this.props.btns ? this.props.btns : <div className="data-view-form-btns" >
-                <Button onClick={() => this.props.onCancel && this.props.onCancel()} >取消 </Button>
+                <Button onClick={() => this.props.onCancel && this.props.onCancel()} > 关闭 </Button>
                 {this.props.submit && <>
                     <Divider type="vertical" />
                     <Button loading={this.props.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
