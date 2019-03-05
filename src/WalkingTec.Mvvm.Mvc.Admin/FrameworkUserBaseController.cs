@@ -38,14 +38,14 @@ namespace WalkingTec.Mvvm.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
                 vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(ModelState.GetErrorJson());
                 }
                 else
                 {
@@ -61,14 +61,14 @@ namespace WalkingTec.Mvvm.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
                 vm.DoEdit(true);
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(ModelState.GetErrorJson());
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             }
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {

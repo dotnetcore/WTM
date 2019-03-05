@@ -121,7 +121,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 options.InvalidModelStateResponseFactory = (a) =>
                 {
-                    return new BadRequestObjectResult(a.ModelState);
+                    return new BadRequestObjectResult(a.ModelState.GetErrorJson());
                 };
             });
 
