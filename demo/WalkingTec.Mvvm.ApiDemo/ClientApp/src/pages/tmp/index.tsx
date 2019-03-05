@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { AuthorizeDecorator } from 'store/system/authorize';
+import Store from './store';
 import Action from './views/action';
 import Details from './views/details';
 import Other from './views/other';
 import Search from './views/search';
 import Table from './views/table';
-
 /**
  * 页面入口
  *  Action：页面动作
@@ -13,10 +14,8 @@ import Table from './views/table';
  *  Search：搜索参数
  *  Table：表格
  */
+@AuthorizeDecorator({ PageStore: Store })
 export default class App extends React.Component<any, any> {
-  componentWillMount() {
-    // 权限
-  }
   render() {
     return (
       <div className="app-page-test" key="app-page-test">

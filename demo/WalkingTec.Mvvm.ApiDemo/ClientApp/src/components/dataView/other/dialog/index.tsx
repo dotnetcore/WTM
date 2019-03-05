@@ -16,12 +16,12 @@ declare type Props = {
     /** 显示 提交按钮 */
     showSubmit?: boolean;
     /** 关闭按钮 文案 */
-    closeText?:string;
+    closeText?: string;
     /** 提交按钮 文案 */
-    submitText?:string;
+    submitText?: string;
     /**
      * 表单提交 方法     */
-    onFormSubmit?: (err, values, onClose) => void;
+    onFormSubmit?: (err, values, onClose?) => Promise<boolean> | void | boolean;
     [key: string]: any
 };
 @DesError
@@ -38,14 +38,27 @@ export class DialogForm extends React.Component<Props, any> {
         e.preventDefault();
         // 加载中 返回。
         if (this.state.loading) return;
-        // 提交数据
-        this.setState({ loading: true }, () => {
-            this.props.form.validateFields(async (err, values) => {
-                this.props.onFormSubmit(err, values, () => {
-                    this.setState({ visible: false })
-                });
-            });
-        })
+        this.props.form.validateFields(async (err, values) => {
+            const callbackValue = this.props.onFormSubmit(err, values, this.onVisible.bind(this, false));
+            if (!err) {
+                let res = false;
+                // 提交数据
+                this.setState({ loading: true });
+                if (lodash.isBoolean(callbackValue)) {
+                    res = callbackValue;
+                } else if (callbackValue) {
+                    res = await callbackValue;
+                }
+                console.log("返回值", res, callbackValue)
+                if (res) {
+                    this.onVisible(false)
+                }
+            } else {
+                this.setState({ loading: false })
+            }
+
+        });
+
     }
     onVisible(visible = !this.state.visible) {
         this.setState(state => {

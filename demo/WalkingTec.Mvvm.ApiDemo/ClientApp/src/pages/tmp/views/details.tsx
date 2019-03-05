@@ -97,8 +97,15 @@ class InsertForm extends React.Component<any, any> {
                 }}>弹个框</Button>
                 <Divider type="vertical" />
                 <DialogForm onFormSubmit={(err, values) => {
-                    console.log(err, values)
-                }}>
+                    // 没有错误 提交 数据
+                    if (!err) {
+                        // return Store.Request.post("", values).toPromise()
+                        return new Promise((resolve, reject) => {
+                            // 2秒后 返回 treu 关闭窗口
+                            lodash.delay(resolve, 2000, true)
+                        })
+                    }
+                }}>>
                     <TestForm />
                 </DialogForm>
             </Row>
@@ -138,12 +145,20 @@ export class TestForm extends React.Component<any, any> {
         return (
             <InfoShellLayout>
                 <Col span={24}>
-                    <DialogForm
-                        title="弹个框"
-                        onFormSubmit={(err, values, callback) => {
-                            message.info("表单提交 并且 2秒后 关闭 窗口")
-                            lodash.delay(callback, 2000)
-                        }}>
+                    <DialogForm onFormSubmit={(err, values) => {
+                        // 没有错误 提交 数据
+                        if (!err) {
+                            message.success("模拟提交数据 2 秒 后成功")
+                            // return Store.Request.post("", values).toPromise()
+                            return new Promise((resolve, reject) => {
+                                // 2秒后 返回 treu 关闭窗口
+                                lodash.delay(resolve, 2000, true)
+                            })
+                        } else {
+                            message.error("数据不完整")
+                        }
+                        return false
+                    }}>
                         <TestForm />
                     </DialogForm>
                 </Col>

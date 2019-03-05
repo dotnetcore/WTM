@@ -18,7 +18,7 @@ export default class Store {
   /** 数据 ID 索引 */
   protected IdKey = 'id'
   /** 页面操按钮 */
-  Actions: WTM.IActions = {
+  @observable Actions: WTM.IActions = {
     insert: true,
     update: true,
     delete: true,
