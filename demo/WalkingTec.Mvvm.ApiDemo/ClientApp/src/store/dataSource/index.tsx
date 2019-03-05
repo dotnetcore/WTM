@@ -189,11 +189,11 @@ export default class Store {
    * @param params 数据实体
    */
   async onDetails(params) {
-    this.onPageState("loadingEdit", true)
+    // this.onPageState("loadingEdit", true)
     const method = this.Urls.details.method;
     const src = this.Urls.details.src;
     const res = await this.Request[method](src, params).toPromise()
-    this.onPageState("loadingEdit", false)
+    // this.onPageState("loadingEdit", false)
     return res || {}
   }
   /**
@@ -281,7 +281,7 @@ export default class Store {
       return res
     } catch (error) {
       console.log(error);
-      this.onErrorMessage("导入失败", [{ value: error.Error, key: null, FileId: error.FileId }])
+      this.onErrorMessage("导入失败", [{ value: lodash.get(error, 'Entity.Import'), key: null, FileId: lodash.get(error, 'Entity.ErrorFileId') }])
     }
   }
   /**

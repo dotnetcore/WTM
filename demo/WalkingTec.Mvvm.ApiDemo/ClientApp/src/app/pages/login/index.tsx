@@ -29,7 +29,7 @@ export default class LoginDemo extends React.Component<any, any>{
           await store.User.Login(values);
         } catch (error) {
           message.destroy();
-          message.error(lodash.get(error, 'login[0]'))
+          message.error(lodash.get(error, 'Entity.login'))
           this.setState({ loading: false })
         }
       }

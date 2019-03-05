@@ -13,9 +13,9 @@ import Models from './models'; //模型
 @DesError
 @observer
 export class InsertForm extends React.Component<any, any> {
-    static onFormSubmit = (values) => {
-        return Store.onInsert(values)
-    }
+    // static onFormSubmit = (values) => {
+    //     return Store.onInsert(values)
+    // }
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -28,7 +28,7 @@ export class InsertForm extends React.Component<any, any> {
         return (
             <InfoShellLayout>
                 <Col span={24}>
-                    <DialogForm onFormSubmit={InsertForm.onFormSubmit}>
+                    <DialogForm>
                         <InsertForm />
                     </DialogForm>
                 </Col>
@@ -51,12 +51,21 @@ export class InsertForm extends React.Component<any, any> {
  */
 @DesError
 @observer
-export class UpdateForm extends React.Component<any, any> {
+export class UpdateForm extends React.Component<{ Details: Function | Object }, any> {
     static onFormSubmit = (values) => {
         return Store.onUpdate(values)
     }
-    componentDidMount(){
-        console.log("componentDidMount")
+    state = {
+        loading: true,
+        details: {}
+    }
+    async componentDidMount() {
+        const params = lodash.isFunction(this.props.Details) ? this.props.Details() : this.props.Details;
+        const details = await Store.onDetails(params);
+        this.setState({
+            loading: false,
+            details
+        })
     }
     // 创建模型
     models = Models.editModels(this.props);
@@ -67,9 +76,9 @@ export class UpdateForm extends React.Component<any, any> {
             // 模型
             models: this.models,
             // 默认值
-            defaultValues: toJS(Store.details),
+            defaultValues: this.state.details,
         }
-        return <InfoShellLayout>
+        return <InfoShellLayout loading={this.state.loading}>
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" disabled />
             <FormItem {...props} fieId="Email" />
@@ -77,7 +86,7 @@ export class UpdateForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Sex" />
             <FormItem {...props} fieId="UserGroups" />
             <FormItem {...props} fieId="UserRoles" layout="row" disabled />
-            <FormItem {...props} fieId="PhotoId" layout="row" disabled />
+            <FormItem {...props} fieId="PhotoId" layout="row" />
             <FormItem {...props} fieId="CreateTime" layout="row" />
         </InfoShellLayout>
     }
@@ -87,7 +96,19 @@ export class UpdateForm extends React.Component<any, any> {
  */
 @DesError
 @observer
-export class InfoForm extends React.Component<any, any> {
+export class InfoForm extends React.Component<{ Details: Function | Object }, any> {
+    state = {
+        loading: true,
+        details: {}
+    }
+    async componentDidMount() {
+        const params = lodash.isFunction(this.props.Details) ? this.props.Details() : this.props.Details;
+        const details = await Store.onDetails(params);
+        this.setState({
+            loading: false,
+            details
+        })
+    }
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -99,9 +120,9 @@ export class InfoForm extends React.Component<any, any> {
             // 禁用
             display: true,
             // 默认值
-            defaultValues: toJS(Store.details),
+            defaultValues: this.state.details,
         }
-        return <InfoShellLayout>
+        return <InfoShellLayout loading={this.state.loading}>
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" />
             <FormItem {...props} fieId="Email" />
