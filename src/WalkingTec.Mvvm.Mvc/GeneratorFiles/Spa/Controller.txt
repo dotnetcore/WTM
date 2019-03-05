@@ -39,14 +39,14 @@ namespace $namespace$
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
                 vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(ModelState.GetErrorJson());
                 }
                 else
                 {
@@ -62,14 +62,14 @@ namespace $namespace$
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
                 vm.DoEdit(true);
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(ModelState.GetErrorJson());
                 }
                 else
                 {
@@ -86,7 +86,7 @@ namespace $namespace$
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
@@ -110,7 +110,7 @@ namespace $namespace$
             }
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                return BadRequest(ModelState);
+                return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
