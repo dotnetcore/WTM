@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AuthorizeDecorator } from 'store/system/authorize';
 import Store from './store';
 import Action from './views/action';
-import Details from './views/details';
+// import Details from './views/details';
 import Other from './views/other';
 import Search from './views/search';
 import Table from './views/table';
@@ -22,7 +22,7 @@ export default class App extends React.Component<any, any> {
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />
-        <Details {...this.props} />
+        {/* <Details {...this.props} /> */}
         <Other {...this.props} />
       </div>
     );
