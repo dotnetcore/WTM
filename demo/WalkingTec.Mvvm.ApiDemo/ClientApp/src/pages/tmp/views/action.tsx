@@ -1,10 +1,11 @@
 import { Button, Divider, Dropdown, Menu, message, Modal, Popconfirm, Row } from 'antd';
-import { Visible } from 'components/dataView';
+import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
+import { TestForm } from './details';
 /**
  * 动作事件
  */
@@ -96,6 +97,17 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
+                <Visible visible={Actions.insert}>
+                    <DialogForm
+                        title="弹个框"
+                        onFormSubmit={(err, values) => {
+                            message.info("表单提交 不关闭窗口")
+                            console.log(err, values)
+                        }}>
+                        <TestForm />
+                    </DialogForm>
+                    <Divider type="vertical" />
+                </Visible>
                 <Visible visible={Actions.insert}>
                     <Button icon="plus" type="primary" onClick={ActionEvents.onAdd} >新建</Button>
                 </Visible>

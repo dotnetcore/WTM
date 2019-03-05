@@ -1,13 +1,14 @@
-import { Button, Form, Row, Divider } from 'antd';
-import { FormItem, InfoShell, InfoShellFooter } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators'; //错误
+import { Button, Col, Divider, Form, message, Modal, Row } from 'antd';
+import { DialogForm, FormItem, InfoShell, InfoShellFooter, InfoShellLayout } from 'components/dataView';
+import { DesError, DesForm, DialogModel } from 'components/decorators'; //错误
+import lodash from 'lodash';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
 import myModel from '../store/myModel'; //页面状态
-
 import Models from './models'; //模型
+
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
@@ -35,22 +36,20 @@ export default class extends React.Component<any, any> {
                 break;
         }
     }
+
     render() {
         const enums = {
             Insert: "新建",
             Update: "修改",
             Info: "详情"
         };
-        const { detailsType, visibleEdit, loadingEdit } = Store.pageState
+        const { detailsType, visibleEdit, loadingEdit } = Store.pageState;
         return <InfoShell
             title={enums[detailsType]}
             onClose={() => { Store.onPageState("visibleEdit", false) }}
             visible={visibleEdit}
         >
-            <Row>
-                <Button onClick={e => { myModel.visible = true }}>弹个框</Button>
-            </Row>
-            <Divider />
+
             {this.renderBody(detailsType)}
         </InfoShell>
     }
@@ -72,6 +71,10 @@ class InsertForm extends React.Component<any, any> {
             }
         });
     }
+    /**
+    * 弹个框
+    */
+    myModelTwo = DialogModel({ title: "弹个框" }, InsertForm);
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -83,6 +86,23 @@ class InsertForm extends React.Component<any, any> {
         }
         console.log(props.models)
         return <Form onSubmit={this.onSubmit.bind(this)}>
+            <Row>
+                <Button onClick={e => { myModel.visible = true }}>弹个框</Button>
+                <Divider type="vertical" />
+                <Button onClick={e => {
+                    Modal.confirm({
+                        width: 800,
+                        content: <InsertForm />
+                    })
+                }}>弹个框</Button>
+                <Divider type="vertical" />
+                <DialogForm onFormSubmit={(err, values) => {
+                    console.log(err, values)
+                }}>
+                    <TestForm />
+                </DialogForm>
+            </Row>
+            <Divider />
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />
                 <FormItem {...props} fieId="Password" />
@@ -98,6 +118,47 @@ class InsertForm extends React.Component<any, any> {
             </FooterFormItem>
 
         </Form>
+    }
+}
+/**
+ * 测试
+ */
+@DesError
+@observer
+export class TestForm extends React.Component<any, any> {
+    // 创建模型
+    models = Models.editModels(this.props);
+    render() {
+        // item 的 props
+        const props = {
+            ...this.props,
+            // 模型
+            models: this.models,
+        }
+        return (
+            <InfoShellLayout>
+                <Col span={24}>
+                    <DialogForm
+                        title="弹个框"
+                        onFormSubmit={(err, values, callback) => {
+                            message.info("表单提交 并且 2秒后 关闭 窗口")
+                            lodash.delay(callback, 2000)
+                        }}>
+                        <TestForm />
+                    </DialogForm>
+                </Col>
+                <FormItem {...props} fieId="ITCode" />
+                <FormItem {...props} fieId="Password" />
+                <FormItem {...props} fieId="Email" />
+                <FormItem {...props} fieId="Name" />
+                <FormItem {...props} fieId="Sex" />
+                <FormItem {...props} fieId="UserGroups" />
+                <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="PhotoId" layout="row" />
+                <FormItem {...props} fieId="CreateTime" layout="row" />
+                <FormItem {...props} fieId="Date2" layout="row" />
+            </InfoShellLayout>
+        )
     }
 }
 /**
@@ -182,13 +243,20 @@ class InfoForm extends React.Component<any, any> {
  */
 @DesError
 @observer
-class FooterFormItem extends React.Component<{ submit?: boolean }, any> {
+class FooterFormItem extends React.Component<{ submit?: boolean, onCancel?: () => void }, any> {
+    onCancel() {
+        if (typeof this.props.onCancel === "function") {
+            this.props.onCancel()
+        } else {
+            Store.onPageState("visibleEdit", false)
+        }
+    }
     render() {
         const { loadingEdit } = Store.pageState;
         return <InfoShellFooter
             submit={this.props.submit}
             loadingEdit={loadingEdit}
-            onCancel={() => Store.onPageState("visibleEdit", false)}>
+            onCancel={this.onCancel.bind(this)}>
             {this.props.children}
         </InfoShellFooter>
     }

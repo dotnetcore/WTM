@@ -102,18 +102,16 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
         </Drawer>
     }
 }
-
 /**
- * Items 外壳
+ * Items 外壳 布局
  */
 @DesError
 @observer
-export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, loadingEdit?: boolean, onCancel?: () => void, submit?: boolean }, any> {
+export class InfoShellLayout extends React.Component<{ loadingEdit?: boolean }, any> {
     render() {
         const childrens = React.Children.toArray(this.props.children).map((node: any) => {
             try {
                 // console.log(lodash.has(node.props, "label"), node.props)
-
                 // 没有嵌套 col 的自动添加 嵌套的 解除
                 // if (["fieId", "models", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
                 if (lodash.isEqual(node.type.wtmType, 'FormItem') || ["labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
@@ -130,14 +128,27 @@ export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, l
                 return node
             }
         });
+        console.log(this.props.loadingEdit)
+        return <div className="data-view-form-item">
+            <Spin tip="Loading..." spinning={lodash.get(this.props, 'loadingEdit', false)}>
+                <Row type="flex">
+                    {childrens}
+                </Row>
+            </Spin>
+        </div>
+    }
+}
+/**
+ * Items 外壳 底部按钮
+ */
+@DesError
+@observer
+export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, loadingEdit?: boolean, onCancel?: () => void, submit?: boolean }, any> {
+    render() {
         return <>
-            <div className="data-view-form-item">
-                <Spin tip="Loading..." spinning={this.props.loadingEdit}>
-                    <Row type="flex">
-                        {childrens}
-                    </Row>
-                </Spin>
-            </div>
+            <InfoShellLayout loadingEdit={this.props.loadingEdit}>
+                {this.props.children}
+            </InfoShellLayout>
             {this.props.btns ? this.props.btns : <div className="data-view-form-btns" >
                 <Button onClick={() => this.props.onCancel && this.props.onCancel()} >取消 </Button>
                 {this.props.submit && <>

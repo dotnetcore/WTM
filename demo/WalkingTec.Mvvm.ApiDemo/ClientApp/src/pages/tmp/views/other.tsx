@@ -1,6 +1,6 @@
 import { Form, Modal, Button, Divider, message } from 'antd';
 import { FormItem, ImportModal, InfoShellFooter } from 'components/dataView';
-import { DesError, DesForm } from 'components/decorators'; //错误
+import { DesError, DesForm, DesModel } from 'components/decorators'; //错误
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
