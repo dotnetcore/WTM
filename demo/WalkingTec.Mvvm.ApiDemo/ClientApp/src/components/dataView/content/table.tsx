@@ -49,19 +49,23 @@ const TableUtils = {
             // 选择框
             const selectionColumn: HTMLDivElement = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
             TableUtils.selectionColumnWidth = lodash.get(selectionColumn, 'clientWidth', 0);
+            // lodash.defer(() => {
+            //     console.log(selectionColumn.clientWidth)
+            // })
+            // console.log(TableUtils.selectionColumnWidth)
             let exclude = 0;
-            const notFixed = columns.filter(x => {
-                if (typeof x.fixed === "string") {
-                    if (typeof x.width === "number") {
-                        exclude += x.width
-                    }
-                    return false
-                }
-                return true
-            })
-            const columnsLenght = notFixed.length;
+            // const notFixed = columns.filter(x => {
+            //     if (typeof x.fixed === "string") {
+            //         if (typeof x.width === "number") {
+            //             exclude += x.width
+            //         }
+            //         return false
+            //     }
+            //     return true
+            // })
+            const columnsLenght = columns.length;
             //计算表格设置的总宽度
-            const columnWidth = this.onGetcolumnsWidth(notFixed);
+            const columnWidth = this.onGetcolumnsWidth(columns);
             // 总宽度差值
             const width = clientWidth - columnWidth - exclude - TableUtils.selectionColumnWidth;
             if (width > 0) {
@@ -148,17 +152,17 @@ const TableUtils = {
 @observer
 export class DataViewTable extends React.Component<ITablePorps, any> {
     @observable columns = this.props.columns.map(x => {
-        if (typeof x.fixed === "string") {
-            if (!x.width) {
-                notification.warn({
-                    message: "fixed 列 需要设置固定宽度",
-                    description: `Title ${x.title}`
-                })
-                x.width = 150;
-            }
-            return x;
-        }
-        x.width = x.width || 100;
+        // if (typeof x.fixed === "string") {
+        //     if (!x.width) {
+        //         notification.warn({
+        //             message: "fixed 列 需要设置固定宽度",
+        //             description: `Title ${x.title}`
+        //         })
+        //         x.width = 150;
+        //     }
+        //     return x;
+        // }
+        x.width = lodash.get(x, 'width', 150)
         return x;
     });
     Store = this.props.Store;
@@ -262,7 +266,16 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     render() {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
-            const columns = [...this.columns];
+            const columns = this.columns.map(x => {
+                return {
+                    ...x,
+                    render: (text, record, index) => {
+                        return <div style={{ maxWidth: x.width }}>
+                            {x.render ? x.render(text, record, index) : text}
+                        </div>
+                    }
+                }
+            });
             const scroll = TableUtils.onGetScroll(columns)
             return (
                 <Table
@@ -275,7 +288,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     onChange={this.onChange.bind(this)}
                     columns={columns}
                     scroll={scroll}
-                    // rowSelection={this.onRowSelection()}
+                    rowSelection={this.onRowSelection()}
                     loading={this.Store.pageState.loading}
                     pagination={
                         {
@@ -315,7 +328,7 @@ export function columnsRender(text, record) {
     if (lodash.isBoolean(text) || text === "true" || text === "false") {
         text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
     }
-    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
+    return <div className="data-view-columns-render" title={text}>
         <span>{text}</span>
     </div>
 }

@@ -131,7 +131,6 @@ export class InfoShellLayout extends React.Component<{ loadingEdit?: boolean }, 
                 return node
             }
         });
-        console.log(this.props.loadingEdit)
         return <div className="data-view-form-item">
             <Spin tip="Loading..." spinning={lodash.get(this.props, 'loadingEdit', false)}>
                 <Row type="flex">

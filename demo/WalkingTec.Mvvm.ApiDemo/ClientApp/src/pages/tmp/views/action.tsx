@@ -4,6 +4,7 @@ import { DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { EnumAuthorizeActions, onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
 import { TestForm } from './details';
 /**
@@ -97,43 +98,50 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
-                <Visible visible={Actions.insert}>
-                    <DialogForm
-                        title="弹个框"
-                        onFormSubmit={(err, values) => {
-                            message.info("表单提交 不关闭窗口")
-                            console.log(err, values)
-                        }}>
-                        <TestForm />
-                    </DialogForm>
-                    <Divider type="vertical" />
-                </Visible>
-                <Visible visible={Actions.insert}>
+                <DialogForm
+                    title="弹个框"
+                    onFormSubmit={(err, values) => {
+                        // 没有错误 提交 数据
+                        if (!err) {
+                            // return Store.Request.post("", values).toPromise()
+                            return new Promise((resolve, reject) => {
+                                // 2秒后 返回 treu 关闭窗口
+                                lodash.delay(resolve, 2000, true)
+                            })
+                        }
+                    }}>
+                    <TestForm />
+                </DialogForm>
+                <Divider type="vertical" />
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.insert)}>
                     <Button icon="plus" type="primary" onClick={ActionEvents.onAdd} >新建</Button>
                 </Visible>
-                <Visible visible={Actions.update}>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
                     <Divider type="vertical" />
                     <Button icon="edit" onClick={ActionEvents.onUpdateList} disabled={disabled}>修改</Button>
                 </Visible>
-                <Visible visible={Actions.delete}>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
                     <Divider type="vertical" />
                     <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}> 删除  </Button>
                 </Visible>
-                <Visible visible={Actions.import}>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.import)}>
                     <Divider type="vertical" />
                     <Button icon="folder-add" onClick={ActionEvents.onImport}>导入</Button>
                 </Visible>
-                <Divider type="vertical" />
-                <Dropdown overlay={<Menu>
-                    <Menu.Item>
-                        <a onClick={ActionEvents.onExport}>导出全部</a>
-                    </Menu.Item>
-                    <Menu.Item disabled={disabled}>
-                        <a onClick={ActionEvents.onExportIds}>导出勾选</a>
-                    </Menu.Item>
-                </Menu>}>
-                    <Button icon="download" >导出</Button>
-                </Dropdown>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.export)}>
+                    <Divider type="vertical" />
+                    <Dropdown overlay={<Menu>
+                        <Menu.Item>
+                            <a onClick={ActionEvents.onExport}>导出全部</a>
+                        </Menu.Item>
+                        <Menu.Item disabled={disabled}>
+                            <a onClick={ActionEvents.onExportIds}>导出勾选</a>
+                        </Menu.Item>
+                    </Menu>}>
+                        <Button icon="download" >导出</Button>
+                    </Dropdown>
+                </Visible>
+
             </Row>
         );
     }
@@ -154,11 +162,11 @@ class RowAction extends React.Component<{
         return (
             <Row className="data-view-row-action">
                 <a onClick={() => { ActionEvents.onInfo(data) }} >详情</a>
-                <Visible visible={Actions.update}>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
                     <Divider type="vertical" />
                     <a onClick={() => { ActionEvents.onUpdate(data) }} >修改</a>
                 </Visible>
-                <Visible visible={Actions.delete}>
+                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
                     <Divider type="vertical" />
                     <Popconfirm title="确定删除?" onConfirm={() => { ActionEvents.onDelete(data) }} >
                         <a >删除</a>

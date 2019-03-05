@@ -1,12 +1,19 @@
-import "./global.less";
 import { notification } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
+import lodash from 'lodash';
+import "./global.less";
 notification.config({
     duration: 3,
     top: 60
 });
+const development = process.env.NODE_ENV === "development"
+
 export default {
+    /**
+     * 开发环境
+     */
+    development: development,
     /**
      * 默认配置
      */
