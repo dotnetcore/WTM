@@ -47,8 +47,8 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
                     runInAction(() => {
                         PageParams.PageStore.Actions = {
                             ...PageParams.PageStore.Actions,
-                            insert: false,
-                            update: false,
+                            // insert: false,
+                            // update: false,
                             delete: false,
                             import: false,
                             export: false,
