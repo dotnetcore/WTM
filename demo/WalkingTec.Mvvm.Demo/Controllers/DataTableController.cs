@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    [ActionDescription("DataTable")]
+    [ActionDescription("使用存储过程")]
     public class DataTableController : BaseController
     {
         [ActionDescription("搜索")]

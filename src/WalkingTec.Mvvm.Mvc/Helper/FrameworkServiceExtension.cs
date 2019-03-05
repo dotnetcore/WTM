@@ -336,7 +336,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 catch { }
 
-                controllers.AddRange(types.Where(x => typeof(IBaseController).IsAssignableFrom(x)).ToList());
+                controllers.AddRange(types.Where(x => typeof(BaseController).IsAssignableFrom(x)).ToList());
             }
             return controllers;
         }
