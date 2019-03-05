@@ -206,14 +206,14 @@ export default class Store {
       if (this.pageState.loadingEdit) {
         return
       }
-      const details = { Entity: { ...this.details, ...params } }
+      // const details = { Entity: { ...this.details, ...params } }
       this.onPageState("loadingEdit", true);
       let res = null;
       // 添加 | 修改
       if (Update) {
-        res = await this.onUpdate(details)
+        res = await this.onUpdate(params)
       } else {
-        res = await this.onInsert(details)
+        res = await this.onInsert(params)
       }
       this.onPageState("visibleEdit", false)
       this.onSearch()
@@ -232,7 +232,7 @@ export default class Store {
   async onInsert(params) {
     const method = this.Urls.insert.method;
     const src = this.Urls.insert.src;
-    const res = await this.Request[method](src, params).toPromise()
+    const res = await this.Request[method](src, { Entity: { ...this.details, ...params } }).toPromise()
     notification.success({ message: "添加成功" })
     return res
   }
@@ -243,7 +243,7 @@ export default class Store {
   async onUpdate(params) {
     const method = this.Urls.update.method;
     const src = this.Urls.update.src;
-    const res = await this.Request[method](src, params).toPromise();
+    const res = await this.Request[method](src, { Entity: { ...this.details, ...params } }).toPromise();
     notification.success({ message: "修改成功" })
     return res
   }

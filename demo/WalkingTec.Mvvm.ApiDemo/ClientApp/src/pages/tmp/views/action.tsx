@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { EnumAuthorizeActions, onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { TestForm } from './details';
+import { InsertForm, UpdateForm } from './details';
 /**
  * 动作事件
  */
@@ -98,27 +98,24 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
-                <DialogForm
-                    title="弹个框"
-                    onFormSubmit={(err, values) => {
-                        // 没有错误 提交 数据
-                        if (!err) {
-                            // return Store.Request.post("", values).toPromise()
-                            return new Promise((resolve, reject) => {
-                                // 2秒后 返回 treu 关闭窗口
-                                lodash.delay(resolve, 2000, true)
-                            })
-                        }
-                    }}>
-                    <TestForm />
-                </DialogForm>
-                <Divider type="vertical" />
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.insert)}>
-                    <Button icon="plus" type="primary" onClick={ActionEvents.onAdd} >新建</Button>
+                    <DialogForm
+                        title="新建"
+                        icon="plus"
+                        onFormSubmit={InsertForm.onFormSubmit}>
+                        <InsertForm />
+                    </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
                     <Divider type="vertical" />
-                    <Button icon="edit" onClick={ActionEvents.onUpdateList} disabled={disabled}>修改</Button>
+                    <DialogForm
+                        title="修改"
+                        icon="edit"
+                        // loading={}
+                        disabled={disabled}
+                        onFormSubmit={InsertForm.onFormSubmit}>
+                        <UpdateForm />
+                    </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
                     <Divider type="vertical" />
