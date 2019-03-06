@@ -1,4 +1,4 @@
-import { Button, Divider, message, Spin } from 'antd';
+import { Button, Divider, message, Spin, Alert } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ModalProps } from 'antd/lib/modal';
@@ -182,22 +182,24 @@ class Optimization extends React.Component<{
     }
 }
 export function DialogFormDes(params: {
-    onFormSubmit: (values) => Promise<boolean>,
+    onFormSubmit?: (values) => Promise<boolean>,
     onLoadData?: (values, props) => Promise<boolean>,
 }) {
     return (Component: React.ComponentClass<any, any>) => {
-        const DFC: any = class extends React.PureComponent<any, any> {
+        const DFC: any = class extends React.PureComponent<{ loadData: Object | Function }, any> {
             constructor(props) {
                 super(props)
             }
+            isOnLoadData = lodash.isFunction(params.onLoadData)
+            isLoadData = this.props.loadData && this.isOnLoadData || false;
             state = {
                 ...this.state,
-                __spinning: this.props.LoadData && lodash.isFunction(params.onLoadData) || false,
+                __spinning: this.isLoadData,
                 __details: {},
                 __key: Help.GUID()
             }
             async componentDidMount() {
-                if (lodash.isFunction(params.onLoadData)) {
+                if (this.isOnLoadData && this.props.loadData) {
                     let loadData = lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData;
                     const res = await params.onLoadData.bind(this)(loadData, this.props);
                     this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
@@ -206,7 +208,9 @@ export function DialogFormDes(params: {
             }
             render() {
                 const { __spinning, __details, __key } = this.state;
+                const notLoadData = this.isOnLoadData && !this.props.loadData;
                 return <Spin tip="Loading..." spinning={__spinning} key={__key}>
+                    {notLoadData && <Alert message="请传递 loadData props" type="warning" showIcon />}
                     <Component {...this.props} defaultValues={__details} />
                 </Spin>
             }
