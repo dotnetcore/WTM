@@ -92,12 +92,14 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (savePlace == SaveFileModeEnum.Local)
             {
+                
                 string pathHeader = con.FileUploadOptions.UploadDir;
                 if (!Directory.Exists(pathHeader))
                 {
                     Directory.CreateDirectory(pathHeader);
                 }
-                var fullPath = $"{pathHeader}\\{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}";
+                // var fullPath = $"{pathHeader}{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}";
+                var fullPath = Path.Combine(con.FileUploadOptions.UploadDir,$"{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}");
                 using (var fileStream = File.Create(fullPath))
                 {
                     FileData.CopyTo(fileStream);
