@@ -18,7 +18,7 @@ function createCanvas(width, height) {
 }
 
 function createImg(onload) {
-    const img = new Image()
+    const img: any = new Image()
     img.crossOrigin = "Anonymous"
     img.onload = onload
     img.onerror = () => {
@@ -28,10 +28,10 @@ function createImg(onload) {
     img.setSrc = function (src) {
         if (isIE) { // IE浏览器无法通过img.crossOrigin跨域，使用ajax获取图片blob然后转为dataURL显示
             const xhr = new XMLHttpRequest()
-            xhr.onloadend = function (e) {
+            xhr.onloadend = function (e: any) {
                 const file = new FileReader() // FileReader仅支持IE10+
                 file.readAsDataURL(e.target.response)
-                file.onloadend = function (e) {
+                file.onloadend = function (e: any) {
                     img.src = e.target.result
                 }
             }
@@ -91,6 +91,11 @@ function square(x) {
 }
 
 export default class jigsaw {
+    el: any;
+    onSuccess: any;
+    onFail: any;
+    onRefresh: any;
+
     constructor({ el, onSuccess, onFail, onRefresh }) {
         el.style.position = 'relative'
         el.style.width = w + 'px'
@@ -113,7 +118,7 @@ export default class jigsaw {
 
     initDOM() {
         const canvas = createCanvas(w, h) // 画布
-        const block = canvas.cloneNode(true) // 滑块
+        const block: any = canvas.cloneNode(true) // 滑块
         const sliderContainer = createElement('div', 'sliderContainer')
         const refreshIcon = createElement('div', 'refreshIcon')
         const sliderMask = createElement('div', 'sliderMask')
@@ -147,7 +152,10 @@ export default class jigsaw {
             blockCtx: block.getContext('2d')
         })
     }
-
+    img: any
+    canvasCtx
+    blockCtx
+    block
     initImg() {
         const img = createImg(() => {
             this.draw()
@@ -160,7 +168,8 @@ export default class jigsaw {
         })
         this.img = img
     }
-
+    x;
+    y;
     draw() {
         // 随机创建滑块的位置
         this.x = getRandomNumberByRange(L + 10, w - (L + 10))
@@ -174,7 +183,12 @@ export default class jigsaw {
         this.blockCtx.clearRect(0, 0, w, h)
         this.block.width = w
     }
-
+    refreshIcon
+    slider
+    sliderContainer
+    sliderMask
+    trail
+    text
     bindEvents() {
         this.el.onselectstart = () => false
         this.refreshIcon.onclick = () => {
