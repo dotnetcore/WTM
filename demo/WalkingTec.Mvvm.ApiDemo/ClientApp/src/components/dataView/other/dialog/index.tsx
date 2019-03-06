@@ -1,12 +1,13 @@
-import { Button, Col, Divider, List, notification, Row, Alert } from 'antd';
+import { Button, Divider, message, Spin, Alert } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ModalProps } from 'antd/lib/modal';
+import globalConfig from 'global.config';
 import lodash from 'lodash';
 import * as React from 'react';
-import RequestFiles from 'utils/RequestFiles';
-import { DesError, DesForm } from '../../../decorators'; //错误
+import { DesForm } from '../../../decorators'; //错误
 import { InfoShell } from '../infoShell';
+import { Help } from 'utils/Help';
 declare type Props = {
     form?: WrappedFormUtils;
     InfoShell?: DrawerProps | ModalProps;
@@ -33,16 +34,73 @@ declare type Props = {
     onFormSubmit?: (values, onClose?) => Promise<boolean> | void | boolean;
     [key: string]: any
 };
-@DesError
-@DesForm
 export class DialogForm extends React.Component<Props, any> {
-
-    state = {
-        visible: false,
-        warning: false,
-        loading: false
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return !lodash.eq(this.state, nextState) || !lodash.eq(this.props.disabled, nextProps.disabled)
     }
+    key = Date.now()
+    state = {
+        //显示
+        visible: false,
+        //初始化装载  按钮 第一次 点击 显示 为 已装载 优化性能
+        load: false,
+    }
+    onVisible(visible = !this.state.visible) {
+        this.setState(state => {
+            state.visible = visible;
+            if (!state.load) {
+                state.load = true;
+            }
+            return state
+        })
+    }
+    render() {
+        const option = {
+            title: lodash.get(this.props, 'title', '未设置标题'),
+            disabled: lodash.get(this.props, "disabled", false),
+            showSubmit: lodash.get(this.props, 'showSubmit', true),
+            closeText: lodash.get(this.props, 'closeText', '关闭'),
+            submitText: lodash.get(this.props, 'submitText', '提交'),
+            icon: lodash.get(this.props, 'icon'),
+            type: lodash.get(this.props, 'type', 'button'),
+        }
+        const button = option.type === "button" ? <Button
+            icon={option.icon}
+            disabled={option.disabled}
+            onClick={this.onVisible.bind(this, true)}>{option.title}</Button> :
+            <a onClick={this.onVisible.bind(this, true)} >{option.title}</a>;
+        return (
+            <React.Fragment key={this.key}>
+                {button}
+                {this.state.load && <Optimization option={option} visible={this.state.visible} onVisible={this.onVisible.bind(this)}>
+                    {this.props.children}
+                </Optimization>}
+            </React.Fragment>
+        );
+    }
+}
+@DesForm
+class Optimization extends React.Component<{
+    option: any;
+    visible: any;
+    onVisible: any;
+    onFormSubmit?: any;
+    form?: WrappedFormUtils;
+}, any> {
+    constructor(props) {
+        super(props)
+        if (globalConfig.development && this.props.visible) {
+            console.log('装载成功', this.props.children)
+        }
+    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
 
+    //     return true
+    // }
+    state = { loading: false }
+    onVisible(visible) {
+        this.props.onVisible(visible)
+    }
     onSubmit(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -56,7 +114,7 @@ export class DialogForm extends React.Component<Props, any> {
                     if (!err) {
                         this.setState({ loading: true }, async () => {
                             try {
-                                const callbackValue = this.props.onFormSubmit(values, this.onVisible.bind(this, false));
+                                const callbackValue = onFormSubmit(values, this.onVisible.bind(this, false));
                                 let res = false;
                                 if (lodash.isBoolean(callbackValue)) {
                                     res = callbackValue;
@@ -67,22 +125,24 @@ export class DialogForm extends React.Component<Props, any> {
                                     this.onVisible(false)
                                 }
                             } catch (error) {
-                                this.setState({ loading: false })
                                 this.onSetErrorMsg(error || {})
                                 // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
-
+                                console.error(error)
+                            } finally {
+                                this.setState({ loading: false })
                             }
                         });
                     } else {
-                        console.log(err)
+                        console.error(err)
                         this.setState({ loading: false })
                     }
                 });
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         } else {
-            this.setState({ warning: true })
+            globalConfig.development && message.warning("为配置 onFormSubmit 函数")
+            // console.log("没有")
         }
     }
     onSetErrorMsg(errors = { Entity: { "Name": "姓名是必填项" } }) {
@@ -94,86 +154,99 @@ export class DialogForm extends React.Component<Props, any> {
         }))
         // [fieldName]: { value: any, errors: [Error] }
     }
-    onVisible(visible = !this.state.visible) {
-        this.setState(state => {
-            if (state.loading) {
-                state.loading = false;
-            }
-            state.visible = visible;
-            return state
-        })
-    }
     render() {
+        const { option, visible } = this.props;
+        const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
 
-        const option = {
-            title: lodash.get(this.props, 'title', '未设置标题'),
-            disabled: lodash.get(this.props, "disabled", false),
-            showSubmit: lodash.get(this.props, 'showSubmit', true),
-            closeText: lodash.get(this.props, 'closeText', '关闭'),
-            submitText: lodash.get(this.props, 'submitText', '提交'),
-            icon: lodash.get(this.props, 'icon'),
-            type: lodash.get(this.props, 'type', 'button'),
-        }
-        const children = option.disabled ? <div></div> : React.cloneElement(this.props.children as any, { form: this.props.form }, null);
-        const { warning } = this.state;
-        const button = option.type === "button" ? <Button
-            icon={option.icon}
-            disabled={option.disabled}
-            onClick={this.onVisible.bind(this, true)}>{option.title}</Button> :
-            <a onClick={this.onVisible.bind(this, true)} >{option.title}</a>
         return (
-            <>
-                {button}
-                <InfoShell
-                    title={option.title}
-                    visible={this.state.visible}
-                    onCancel={this.onVisible.bind(this, false)}
-                    {...this.props.InfoShell}
-                >
-                    <Form onSubmit={this.onSubmit.bind(this)}>
-                        {warning && <>
-                            <Alert message="请指定 onFormSubmit 函数 或者 Form 静态 方法" type="warning" showIcon />
-                            <Divider />
-                        </>}
+            <InfoShell
+                title={option.title}
+                visible={visible}
+                onCancel={this.onVisible.bind(this, false)}
+                {...this.props}
+            >
+                <Form onSubmit={this.onSubmit.bind(this)}>
+                    <Spin tip="Loading..." spinning={this.state.loading} >
                         {children}
-                        <div className="data-view-form-btns" >
-                            <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
-                            {option.showSubmit && <>
-                                <Divider type="vertical" />
-                                <Button loading={this.state.loading} type="primary" htmlType="submit"  >{option.submitText} </Button>
-                            </>}
-                        </div>
-                    </Form>
-                </InfoShell>
-            </>
+                    </Spin>
+                    <div className="data-view-form-btns" >
+                        <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
+                        {option.showSubmit && <>
+                            <Divider type="vertical" />
+                            <Button loading={this.state.loading} type="primary" htmlType="submit"  >{option.submitText} </Button>
+                        </>}
+                    </div>
+                </Form>
+            </InfoShell>
         );
     }
 }
-/**
-   * 错误提示
-   * @param message 
-   * @param dataSource 
-   */
-function onErrorMessage(message, dataSource?: { key: string, value: string, FileId?: string }[]) {
-    notification.error({
-        duration: 5,
-        message: message,
-        description: dataSource && dataSource.length > 0 && <List
-            itemLayout="horizontal"
-            dataSource={dataSource}
-            renderItem={item => (
-                <List.Item>
-                    <Row style={{ width: "100%" }}>
-                        {/* <Col span={10}>{item.key}</Col> */}
-                        <Col span={14}>{item.value}</Col>
-                        {item.FileId && <Col span={10}>
-                            <Button type="primary" onClick={e => {
-                                RequestFiles.download({ url: RequestFiles.onFileDownload(item.FileId, "/"), method: "get" })
-                            }}>下载错误文件</Button>
-                        </Col>}
-                    </Row>
-                </List.Item>
-            )}
-        />
-    })
+export function DialogFormDes(params: {
+    onFormSubmit?: (values) => Promise<boolean>,
+    onLoadData?: (values, props) => Promise<boolean>,
+}) {
+    return (Component: React.ComponentClass<any, any>) => {
+        const DFC: any = class extends React.PureComponent<{ loadData: Object | Function }, any> {
+            constructor(props) {
+                super(props)
+            }
+            isOnLoadData = lodash.isFunction(params.onLoadData)
+            isLoadData = this.props.loadData && this.isOnLoadData || false;
+            state = {
+                ...this.state,
+                __spinning: this.isLoadData,
+                __details: {},
+                __key: Help.GUID()
+            }
+            async componentDidMount() {
+                if (this.isOnLoadData && this.props.loadData) {
+                    let loadData = lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData;
+                    const res = await params.onLoadData.bind(this)(loadData, this.props);
+                    this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
+                }
+                super.componentDidMount && super.componentDidMount()
+            }
+            render() {
+                const { __spinning, __details, __key } = this.state;
+                const notLoadData = this.isOnLoadData && !this.props.loadData;
+                return <Spin tip="Loading..." spinning={__spinning} key={__key}>
+                    {notLoadData && <Alert message="请传递 loadData props" type="warning" showIcon />}
+                    <Component {...this.props} defaultValues={__details} />
+                </Spin>
+            }
+        }
+        lodash.set(Component, 'onFormSubmit', params.onFormSubmit)
+        lodash.set(Component, 'onLoadData', params.onLoadData)
+        lodash.set(DFC, 'onFormSubmit', params.onFormSubmit)
+        lodash.set(DFC, 'onLoadData', params.onLoadData)
+        return DFC
+    }
+}
+export function DialogFormSubmit(params?: any) {
+    return function (target: any, propertyKey: string, descriptor) {
+        // const newDes = {
+        //     configurable: true,
+        //     enumerable: false,
+        //     get() {
+        //         return ((params) => {
+        //             descriptor.value.bind(this)(params)(this);
+        //         }) as any;
+        //     },
+        // }
+        // console.log(newDes)
+        /**
+         * 设置原型中的 方法
+         */
+        lodash.set(target.constructor, 'onFormSubmit', descriptor.value.bind(target))
+        return descriptor
+    }
+}
+export function DialogLoadData(params?: any) {
+    return function (target: any, propertyKey: string, descriptor) {
+        /**
+         * 设置原型中的 方法
+         */
+        lodash.set(target.constructor, 'onLoadData', descriptor.value.bind(target))
+        return descriptor
+    }
 }
