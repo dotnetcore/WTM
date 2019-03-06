@@ -24,20 +24,20 @@ declare namespace WTM {
         [key: string]: boolean
     }
     interface IUrl {
-        src: string;
-        method: string;
-        [key: string]: any;
+        url: string;
+        method?: 'get' | 'post' | 'put' | 'delete'
+        // [key: string]: any;
     }
     interface IUrls {
-        search: IUrl;
-        details: IUrl;
-        insert: IUrl;
-        update: IUrl;
-        delete: IUrl;
-        import: IUrl;
-        export: IUrl;
-        exportIds: IUrl;
-        template: IUrl;
+        search?: IUrl;
+        details?: IUrl;
+        insert?: IUrl;
+        update?: IUrl;
+        delete?: IUrl;
+        import?: IUrl;
+        export?: IUrl;
+        exportIds?: IUrl;
+        template?: IUrl;
         [key: string]: IUrl;
     }
 }

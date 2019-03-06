@@ -13,10 +13,12 @@
     "esModuleInterop": true, 
     "experimentalDecorators": true, 
     "skipLibCheck": true,
+    "allowUnusedLabels":true,
+    "extendedDiagnostics":true,
     "allowUnreachableCode": true
   },
   "include": [
-    "src"
+    "src", "src/pages/tmp/views/.tsx"
   ],
   "exclude": [
     "**/*.js"

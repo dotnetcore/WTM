@@ -40,7 +40,6 @@ const TableUtils = {
      * @param columns 
      */
     onSetColumnsWidth(tableBody, columns: ColumnProps<any>[]) {
-        console.log(tableBody, columns)
         // 获取页面宽度
         if (tableBody) {
             // debugger
@@ -193,7 +192,11 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 // sort = `${sorter.columnKey} asc`
             }
         }
-        this.Store.onSearch({}, sort, page.current, page.pageSize)
+        this.Store.onSearch({
+            SortInfo: sort,
+            Page: page.current,
+            Limit: page.pageSize
+        })
     }
     /**
      * 拖拽
@@ -248,7 +251,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
             TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch({}, "", this.Store.dataSource.Page, this.Store.dataSource.Limit);
+            this.Store.onSearch();
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
                 if (this.tableDom.clientWidth > TableUtils.clientWidth) {

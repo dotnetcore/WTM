@@ -42,20 +42,7 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
             componentWillMount() {
                 // console.log(this.props)
                 // 假设 所有 为 false
-                notification.info({ message: "假设有权限 2 秒后" });
-                lodash.delay(() => {
-                    runInAction(() => {
-                        PageParams.PageStore.Actions = {
-                            ...PageParams.PageStore.Actions,
-                            // insert: false,
-                            // update: false,
-                            delete: false,
-                            import: false,
-                            export: false,
-                        }
-                    })
-                }, 2000)
-                PageParams.PageStore.Actions
+                // notification.info({ message: "假设有权限 2 秒后" });
                 super.componentWillMount && super.componentWillMount()
             }
             render(): any {
@@ -64,27 +51,15 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
         }
     }
 }
-
 /**
-* 权限枚举
+* url 类型
 */
-export enum EnumAuthorizeActions {
-    /** 添加 */
-    insert = 'insert',
-    /** 修改 */
-    update = 'update',
-    /** 删除 */
-    delete = 'update',
-    /** 导入 */
-    import = 'import',
-    /** 导出 */
-    export = 'export',
-}
+type UrlKeyType = "search" | "details" | "insert" | "update" | "delete" | "import" | "export" | "exportIds" | "template"
 /**
-     * 认证 动作 权限
-     * @param Actions 页面动作对象。
-     * @param EnumAut 枚举
-     */
-export function onAuthorizeActions(PageStore: PageStore, EnumAut: EnumAuthorizeActions) {
-    return lodash.get(PageStore,`Actions.${EnumAut}`, GlobalConfig.development)// 开发 环境 默认返回 true
+ * 认证动作
+ * @param PageStore 页面 Store
+ * @param UrlsKey 按钮对应 URL 权限
+ */
+export function onAuthorizeActions(PageStore: PageStore, UrlsKey: UrlKeyType) {
+    return lodash.get(PageStore, `Urls.${UrlsKey}.url`, GlobalConfig.development)// 开发 环境 默认返回 true
 }
