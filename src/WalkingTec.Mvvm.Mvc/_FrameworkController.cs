@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -14,7 +15,6 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.Mvc
 {
     [AllRights]
-    [CrossDomain]
     [ActionDescription("框架")]
     public class _FrameworkController : BaseController
     {
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             #region 获取选中的数据
             ViewBag.SelectData = "[]";
-            if(listVM.Ids?.Count > 0)
+            if (listVM.Ids?.Count > 0)
             {
                 var originNeedPage = listVM.NeedPage;
                 listVM.NeedPage = false;
@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
         {
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
-            string data = listVM.GetSingleDataJson(null,false);
+            string data = listVM.GetSingleDataJson(null, false);
             var rv = new ContentResult
             {
                 ContentType = "application/json",
@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <returns></returns>
         [HttpPost]
         [ActionDescription("获取分页数据")]
-        public IActionResult GetPagingData(string _DONOT_USE_VMNAME,string _DONOT_USE_CS)
+        public IActionResult GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
         {
             var qs = new Dictionary<string, object>();
             foreach (var item in Request.Form.Keys)
@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             foreach (var item in Request.Form)
             {
-                if(qs.ContainsKey(item.Key) == false)
+                if (qs.ContainsKey(item.Key) == false)
                 {
                     qs.Add(item.Key, item.Value);
                 }
@@ -294,7 +294,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS="default")
+        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             var FileData = Request.Form.Files[0];
@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.Mvc
             vm.Entity.SaveFileMode = sm;
             vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm, groupName);
             vm.Entity.IsTemprory = IsTemprory;
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local|| vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
             {
                 vm.DoAdd();
                 return Json(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
@@ -355,7 +355,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
-            if(data == null)
+            if (data == null)
             {
                 data = new byte[0];
             }
@@ -454,7 +454,8 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Public]
         [HttpPost]
-        public IActionResult Login(string userid,string password)
+        [CrossDomain]
+        public IActionResult Login(string userid, string password)
         {
             var user = DC.Set<FrameworkUserBase>()
     .Include(x => x.UserRoles).Include(x => x.UserGroups)
@@ -480,16 +481,17 @@ namespace WalkingTec.Mvvm.Mvc
             rv.Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList();
             rv.Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList();
             rv.DataPrivileges = dpris;
-                //查找登录用户的页面权限
-                var pris = DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                    .ToList();
-                rv.FunctionPrivileges = pris;
+            //查找登录用户的页面权限
+            var pris = DC.Set<FunctionPrivilege>()
+                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                .ToList();
+            rv.FunctionPrivileges = pris;
             LoginUserInfo = rv;
             return Ok("Success");
         }
 
         [Public]
+        [CrossDomain]
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -503,5 +505,19 @@ namespace WalkingTec.Mvvm.Mvc
                 return Ok(canAccess);
             }
         }
+
+        [Public]
+        [ResponseCache(Duration = 3600)]
+        public string GetGithubStarts()
+        {
+            var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+            return s.stargazers_count+"";
+        }
+
+        private class github
+        {
+            public int stargazers_count { get; set; }
+        }
+
     }
 }
