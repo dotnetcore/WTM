@@ -80,6 +80,14 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("Selector")]
+        public IActionResult Selector()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
+
         [ActionDescription("Rich")]
         public IActionResult Rich()
         {

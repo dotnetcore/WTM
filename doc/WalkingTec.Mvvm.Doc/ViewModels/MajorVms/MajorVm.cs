@@ -14,5 +14,10 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.MajorVms
         public string SchoolName { get; set; }
 
         public StudentListVm StudentList { get; set; }
+
+        public MajorVm()
+        {
+            StudentList = new StudentListVm();
+        }
     }
 }
