@@ -81,7 +81,6 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             // 模型
             models: this.models,
         }
-        console.log(this)
         return <InfoShellLayout>
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" disabled />
@@ -99,9 +98,6 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
  * 详情
  */
 @DialogFormDes({
-    onFormSubmit(values) {
-        return Store.onUpdate(values)
-    },
     onLoadData(values, props) {
         return Store.onDetails(values)
     }
