@@ -31,7 +31,7 @@ export const ActionEvents = {
      * 批量导出
      */
     onExportIds() {
-        Store.onExportIds()
+        Store.onExportIds([...Store.selectedRowKeys])
     },
     /**
      * 删除
@@ -45,15 +45,13 @@ export const ActionEvents = {
     */
     onDeleteList() {
         const length = Store.selectedRowKeys.length
-        if (length > 0) {
-            Modal.confirm({
-                title: `确定删除 ${length} 条数据?`,
-                onOk: async () => {
-                    Store.onDelete([...Store.selectedRowKeys])
-                },
-                onCancel() { },
-            });
-        }
+        Modal.confirm({
+            title: `确定删除 ${length} 条数据?`,
+            onOk: async () => {
+                Store.onDelete([...Store.selectedRowKeys])
+            },
+            onCancel() { },
+        });
     },
 }
 /**
@@ -72,7 +70,6 @@ class PageAction extends React.Component<any, any> {
                     <DialogForm
                         title="新建"
                         icon="plus"
-                        onFormSubmit={InsertForm.onFormSubmit}
                     >
                         <InsertForm />
                     </DialogForm>
@@ -84,7 +81,7 @@ class PageAction extends React.Component<any, any> {
                         icon="edit"
                         disabled={deletelength != 1}
                     >
-                        <UpdateForm Details={{}} />
+                        <UpdateForm loadData={() => (lodash.find(Store.selectedRowKeys))} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
@@ -132,7 +129,7 @@ class RowAction extends React.Component<{
                     showSubmit={false}
                     type="a"
                 >
-                    <InfoForm Details={data} />
+                    <InfoForm loadData={data} />
                 </DialogForm>
                 <Visible visible={onAuthorizeActions(Store, "update")}>
                     <Divider type="vertical" />
@@ -140,7 +137,7 @@ class RowAction extends React.Component<{
                         title="修改"
                         type="a"
                     >
-                        <UpdateForm Details={data} />
+                        <UpdateForm loadData={data} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>

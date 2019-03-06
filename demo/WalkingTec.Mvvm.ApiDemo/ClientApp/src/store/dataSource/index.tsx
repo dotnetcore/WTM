@@ -49,7 +49,7 @@ export default class Store {
    * 当前页面搜索参数
    */
   searchParams = {};
-  /** 多选行 key */
+  /** 选择的 行 Key  */
   @observable selectedRowKeys = [];
 
   /** 页面动作 */
@@ -76,7 +76,7 @@ export default class Store {
    * @param selectedRowKeys 选中的keys
    */
   @action.bound
-  onSelectChange(selectedRowKeys) {
+  onSelectChange(selectedRowKeys = []) {
     this.selectedRowKeys = selectedRowKeys
   }
   /**
@@ -91,6 +91,7 @@ export default class Store {
       if (this.pageState.loading == true) {
         return //message.warn('数据正在加载中')
       }
+      this.onSelectChange()
       params = {
         // search: {},
         SortInfo: "",
@@ -129,11 +130,15 @@ export default class Store {
   }
   /**
    * 详情
-   * @param params 数据实体
+   * @param params 数据实体 或者 ID
    */
   async onDetails(params) {
     const method = this.Urls.details.method;
     const url = this.Urls.details.url;
+    //  字符串 为 ID 转换成 对象 匹配 /***/{ID} 
+    if (lodash.isString(params)) {
+      params = lodash.set({}, this.IdKey, params);
+    }
     const res = await this.Request[method](url, params).toPromise();
     // 设置详情
     runInAction(() => { this.details = res; })
@@ -173,7 +178,7 @@ export default class Store {
       const url = this.Urls.delete.url;// + "/" + data[this.IdKey];
       const res = await this.Request[method](url, ids).toPromise()
       message.success('删除成功')
-      this.onSelectChange([]);
+      this.onSelectChange();
       // 刷新数据
       this.onSearch();
       return res
@@ -212,14 +217,12 @@ export default class Store {
    * 导出
    * @param params 筛选参数
    */
-  async onExportIds() {
-    if (this.selectedRowKeys.length > 0) {
-      await RequestFiles.download({
-        url: this.Urls.exportIds.url,
-        method: this.Urls.exportIds.method,
-        body: [...this.selectedRowKeys]
-      })
-    }
+  async onExportIds(ids) {
+    await RequestFiles.download({
+      url: this.Urls.exportIds.url,
+      method: this.Urls.exportIds.method,
+      body: ids
+    })
   }
   /**
   * 数据模板

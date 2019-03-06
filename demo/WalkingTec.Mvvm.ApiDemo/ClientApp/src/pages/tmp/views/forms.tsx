@@ -1,5 +1,5 @@
 import { Col } from 'antd';
-import { DialogForm, FormItem, InfoShellLayout } from 'components/dataView';
+import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
@@ -9,13 +9,27 @@ import Models from './models'; //模型
 /**
  * 添加
  */
-@DesError
+@DialogFormDes({
+    onFormSubmit(values) {
+        return Store.onUpdate(values)
+    },
+    // onlogLoadData(props) {
+    //     return Store.onDelete([])
+    // }
+})
 @observer
 export class InsertForm extends React.Component<any, any> {
-    static onFormSubmit = (values) => {
-        return Store.onInsert(values)
-    }
-    // 创建模型
+    /** 装饰 函数 为 DialogFormSubmit submit 函数 */
+    // test = '测试 我是 当前类 属性'
+    // @DialogFormSubmit()
+    // onTest(values) {
+    //     console.log(this, values)
+    //     return Store.onUpdate(values)
+    // }
+    // @DialogLoadData()
+    // onTes2t() {
+    //     return Store.onDetails(Store)
+    // }
     models = Models.editModels(this.props);
     render() {
         // item 的 props
@@ -48,25 +62,16 @@ export class InsertForm extends React.Component<any, any> {
 /**
  * 修改表单
  */
-@DesError
-@observer
-export class UpdateForm extends React.Component<{ Details: Function | Object }, any> {
-    static onFormSubmit = (values) => {
-        console.log(values)
+@DialogFormDes({
+    onFormSubmit(values) {
         return Store.onUpdate(values)
+    },
+    onLoadData(values, props) {
+        return Store.onDetails(values)
     }
-    state = {
-        loading: true,
-        details: {}
-    }
-    async componentDidMount() {
-        const params = lodash.isFunction(this.props.Details) ? this.props.Details() : this.props.Details;
-        const details = await Store.onDetails(params);
-        this.setState({
-            loading: false,
-            details
-        })
-    }
+})
+@observer
+export class UpdateForm extends React.Component<{ loadData: Function | Object }, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -75,11 +80,9 @@ export class UpdateForm extends React.Component<{ Details: Function | Object }, 
             ...this.props,
             // 模型
             models: this.models,
-            // 默认值
-            defaultValues: this.state.details,
         }
-        console.log("组件渲染", props)
-        return <InfoShellLayout loading={this.state.loading}>
+        console.log(this)
+        return <InfoShellLayout>
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" disabled />
             <FormItem {...props} fieId="Email" />
@@ -95,21 +98,16 @@ export class UpdateForm extends React.Component<{ Details: Function | Object }, 
 /**
  * 详情
  */
-@DesError
+@DialogFormDes({
+    onFormSubmit(values) {
+        return Store.onUpdate(values)
+    },
+    onLoadData(values, props) {
+        return Store.onDetails(values)
+    }
+})
 @observer
-export class InfoForm extends React.Component<{ Details: Function | Object }, any> {
-    state = {
-        loading: true,
-        details: {}
-    }
-    async componentDidMount() {
-        const params = lodash.isFunction(this.props.Details) ? this.props.Details() : this.props.Details;
-        const details = await Store.onDetails(params);
-        this.setState({
-            loading: false,
-            details
-        })
-    }
+export class InfoForm extends React.Component<{ loadData: Function | Object }, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -120,10 +118,8 @@ export class InfoForm extends React.Component<{ Details: Function | Object }, an
             models: this.models,
             // 禁用
             display: true,
-            // 默认值
-            defaultValues: this.state.details,
         }
-        return <InfoShellLayout loading={this.state.loading}>
+        return <InfoShellLayout >
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" />
             <FormItem {...props} fieId="Email" />
