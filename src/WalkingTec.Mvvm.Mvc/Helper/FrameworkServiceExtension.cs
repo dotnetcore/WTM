@@ -75,6 +75,7 @@ namespace WalkingTec.Mvvm.Mvc
                 con.DataPrivilegeSettings = new List<IDataPrivilege>();
             }
             services.AddSingleton(con);
+            services.AddResponseCaching();
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
@@ -170,6 +171,7 @@ namespace WalkingTec.Mvvm.Mvc
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
 
+            app.UseResponseCaching();
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path == "/")
@@ -194,7 +196,6 @@ namespace WalkingTec.Mvvm.Mvc
                     "WalkingTec.Mvvm.Mvc")
             });
             app.UseSession();
-
             if (customRoutes != null)
             {
                 app.UseMvc(customRoutes);
