@@ -1,49 +1,50 @@
- import DataSource from 'store/dataSource';
+import DataSource from 'store/dataSource';
 export class Store extends DataSource {
     constructor() {
         super();
     }
     /** 数据 ID 索引 */
     IdKey = 'ID';
-    Urls = {
-        ...this.Urls,
+    /** 地址配置列表 */
+    Urls: WTM.IUrls = {
         search: {
-            src: "/frameworkuser/search",
+            url: "/frameworkuser/search",
             method: "post"
         },
         details: {
             // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-            src: "/frameworkuser/{ID}",
+            url: "/frameworkuser/{ID}",
             method: "get"
         },
         insert: {
-            src: "/frameworkuser/add",
+            url: "/frameworkuser/add",
             method: "post"
         },
         update: {
-            src: "/frameworkuser/edit",
+            url: "/frameworkuser/edit",
             method: "put"
         },
         delete: {
-            src: "/frameworkuser/BatchDelete",
+            url: "/frameworkuser/BatchDelete",
             method: "post"
         },
         import: {
-            src: "/frameworkuser/import",
+            url: "/frameworkuser/import",
             method: "post"
         },
         export: {
-            src: "/frameworkuser/ExportExcel",
+            url: "/frameworkuser/ExportExcel",
             method: "post"
         },
         exportIds: {
-            src: "/frameworkuser/ExportExcelByIds",
+            url: "/frameworkuser/ExportExcelByIds",
             method: "post"
         },
         template: {
-            src: "/frameworkuser/GetExcelTemplate",
+            url: "/frameworkuser/GetExcelTemplate",
             method: "get"
         }
     }
+
 }
 export default new Store();

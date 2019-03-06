@@ -1,4 +1,3 @@
-import { FormItem } from 'components/dataView';
 import { DataViewSearch } from 'components/dataView/header/search';
 import { DesForm } from 'components/decorators';
 import { toJS } from 'mobx';

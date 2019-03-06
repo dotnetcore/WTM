@@ -1,8 +1,7 @@
-import { Col, message } from 'antd';
+import { Col } from 'antd';
 import { DialogForm, FormItem, InfoShellLayout } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
@@ -13,9 +12,9 @@ import Models from './models'; //模型
 @DesError
 @observer
 export class InsertForm extends React.Component<any, any> {
-    // static onFormSubmit = (values) => {
-    //     return Store.onInsert(values)
-    // }
+    static onFormSubmit = (values) => {
+        return Store.onInsert(values)
+    }
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -53,6 +52,7 @@ export class InsertForm extends React.Component<any, any> {
 @observer
 export class UpdateForm extends React.Component<{ Details: Function | Object }, any> {
     static onFormSubmit = (values) => {
+        console.log(values)
         return Store.onUpdate(values)
     }
     state = {
@@ -78,6 +78,7 @@ export class UpdateForm extends React.Component<{ Details: Function | Object }, 
             // 默认值
             defaultValues: this.state.details,
         }
+        console.log("组件渲染", props)
         return <InfoShellLayout loading={this.state.loading}>
             <FormItem {...props} fieId="ITCode" />
             <FormItem {...props} fieId="Password" disabled />

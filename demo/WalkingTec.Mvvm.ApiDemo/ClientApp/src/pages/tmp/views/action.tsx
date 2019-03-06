@@ -1,12 +1,12 @@
-import { Button, Divider, Dropdown, Menu, message, Modal, Popconfirm, Row } from 'antd';
+import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { EnumAuthorizeActions, onAuthorizeActions } from 'store/system/authorize';
+import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InsertForm, UpdateForm, InfoForm } from './details';
+import { InfoForm, InsertForm, UpdateForm } from './forms';
 /**
  * 动作事件
  */
@@ -14,26 +14,6 @@ export const ActionEvents = {
     onTest(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.preventDefault();
         event.stopPropagation();
-    },
-    /**
-     * 添加
-     */
-    onAdd() {
-        Store.onModalShow({}, "Insert")
-    },
-    /**
-     * 详情
-     * @param data 
-     */
-    onInfo(data) {
-        Store.onModalShow(data, "Info")
-    },
-    /**
-     * 修改
-     * @param data 
-     */
-    onUpdate(data) {
-        Store.onModalShow(data, "Update")
     },
     /**
      * 导入
@@ -75,15 +55,6 @@ export const ActionEvents = {
             });
         }
     },
-    /**
-     * 多选修改
-     */
-    onUpdateList() {
-        return lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)])
-    },
-    onGetId() {
-        return lodash.get(lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)]), Store.IdKey);
-    }
 }
 /**
  * 表格 所有 动作
@@ -92,39 +63,39 @@ export const ActionEvents = {
 @observer
 class PageAction extends React.Component<any, any> {
     render() {
-        const { selectedRowKeys, Actions } = Store;
+        const { selectedRowKeys } = Store;
         const deletelength = selectedRowKeys.length;
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.insert)}>
+                <Visible visible={onAuthorizeActions(Store, "insert")}>
                     <DialogForm
                         title="新建"
                         icon="plus"
-                    // onFormSubmit={InsertForm.onFormSubmit}
+                        onFormSubmit={InsertForm.onFormSubmit}
                     >
                         <InsertForm />
                     </DialogForm>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
+                <Visible visible={onAuthorizeActions(Store, "update")}>
                     <Divider type="vertical" />
                     <DialogForm
                         title="修改"
                         icon="edit"
                         disabled={deletelength != 1}
                     >
-                        <UpdateForm Details={ActionEvents.onUpdateList} />
+                        <UpdateForm Details={{}} />
                     </DialogForm>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
+                <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
                     <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}> 删除  </Button>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.import)}>
+                <Visible visible={onAuthorizeActions(Store, "import")}>
                     <Divider type="vertical" />
                     <Button icon="folder-add" onClick={ActionEvents.onImport}>导入</Button>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.export)}>
+                <Visible visible={onAuthorizeActions(Store, "export")}>
                     <Divider type="vertical" />
                     <Dropdown overlay={<Menu>
                         <Menu.Item>
@@ -153,7 +124,6 @@ class RowAction extends React.Component<{
     [key: string]: any;
 }, any> {
     render() {
-        const { Actions } = Store;
         const { data } = this.props
         return (
             <Row className="data-view-row-action">
@@ -164,7 +134,7 @@ class RowAction extends React.Component<{
                 >
                     <InfoForm Details={data} />
                 </DialogForm>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.update)}>
+                <Visible visible={onAuthorizeActions(Store, "update")}>
                     <Divider type="vertical" />
                     <DialogForm
                         title="修改"
@@ -173,7 +143,7 @@ class RowAction extends React.Component<{
                         <UpdateForm Details={data} />
                     </DialogForm>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, EnumAuthorizeActions.delete)}>
+                <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
                     <Popconfirm title="确定删除?" onConfirm={() => { ActionEvents.onDelete(data) }} >
                         <a >删除</a>

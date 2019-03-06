@@ -48,33 +48,39 @@ export class DialogForm extends React.Component<Props, any> {
         e.preventDefault();
         const onFormSubmit = this.props.onFormSubmit || lodash.get(this.props.children, 'type.onFormSubmit');
         if (lodash.isFunction(onFormSubmit)) {
+            // debugger
             // 加载中 返回。
             if (this.state.loading) return;
-            this.props.form.validateFields((err, values) => {
-                if (!err) {
-                    this.setState({ loading: true }, async () => {
-                        try {
-                            const callbackValue = this.props.onFormSubmit(values, this.onVisible.bind(this, false));
-                            let res = false;
-                            if (lodash.isBoolean(callbackValue)) {
-                                res = callbackValue;
-                            } else if (callbackValue) {
-                                res = await callbackValue
-                            }
-                            if (res) {
-                                this.onVisible(false)
-                            }
-                        } catch (error) {
-                            this.setState({ loading: false })
-                            this.onSetErrorMsg(error || {})
-                            // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
+            try {
+                this.props.form.validateFields((err, values) => {
+                    if (!err) {
+                        this.setState({ loading: true }, async () => {
+                            try {
+                                const callbackValue = this.props.onFormSubmit(values, this.onVisible.bind(this, false));
+                                let res = false;
+                                if (lodash.isBoolean(callbackValue)) {
+                                    res = callbackValue;
+                                } else if (callbackValue) {
+                                    res = await callbackValue
+                                }
+                                if (res) {
+                                    this.onVisible(false)
+                                }
+                            } catch (error) {
+                                this.setState({ loading: false })
+                                this.onSetErrorMsg(error || {})
+                                // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
 
-                        }
-                    });
-                } else {
-                    this.setState({ loading: false })
-                }
-            });
+                            }
+                        });
+                    } else {
+                        console.log(err)
+                        this.setState({ loading: false })
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+            }
         } else {
             this.setState({ warning: true })
         }
