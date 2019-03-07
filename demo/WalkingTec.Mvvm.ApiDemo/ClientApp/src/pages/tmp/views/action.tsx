@@ -124,13 +124,15 @@ class RowAction extends React.Component<{
         const { data } = this.props
         return (
             <Row className="data-view-row-action">
-                <DialogForm
-                    title="详情"
-                    showSubmit={false}
-                    type="a"
-                >
-                    <InfoForm loadData={data} />
-                </DialogForm>
+                <Visible visible={onAuthorizeActions(Store, "details")}>
+                    <DialogForm
+                        title="详情"
+                        showSubmit={false}
+                        type="a"
+                    >
+                        <InfoForm loadData={data} />
+                    </DialogForm>
+                </Visible>
                 <Visible visible={onAuthorizeActions(Store, "update")}>
                     <Divider type="vertical" />
                     <DialogForm

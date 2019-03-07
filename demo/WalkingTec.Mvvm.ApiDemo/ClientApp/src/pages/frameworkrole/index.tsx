@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { AuthorizeDecorator } from 'store/system/authorize';
 import Store from './store';
 import Action from './views/action';
@@ -17,7 +17,7 @@ import Table from './views/table';
 export default class App extends React.Component<any, any> {
   render() {
     return (
-        <div className="app-page-$modelname$" key="app-page-$modelname$">
+        <div className="app-page-frameworkrole" key="app-page-frameworkrole">
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />

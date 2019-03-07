@@ -270,7 +270,7 @@ namespace WalkingTec.Mvvm.Mvc
                     Directory.CreateDirectory($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\store");
                 }
                 File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\action.tsx", GenerateReactView("action"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\details.tsx", GenerateReactView("details"), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\forms.tsx", GenerateReactView("forms"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\models.tsx", GenerateReactView("models"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\other.tsx", GenerateReactView("other"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}\\ClientApp\\src\\pages\\{ModelName.ToLower()}\\views\\search.tsx", GenerateReactView("search"), Encoding.UTF8);
@@ -1060,7 +1060,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return rv;
             }
-            if (name == "details")
+            if (name == "forms")
             {
                 StringBuilder fieldstr = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsFormField == true).ToList();
