@@ -385,10 +385,10 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
             }
-            models.Add(typeof(FrameworkUserBase));
-            models.Add(typeof(FrameworkGroup));
-            models.Add(typeof(FrameworkRole));
-            models.Add(typeof(ActionLog));
+            //models.Add(typeof(FrameworkUserBase));
+            //models.Add(typeof(FrameworkGroup));
+            //models.Add(typeof(FrameworkRole));
+            //models.Add(typeof(ActionLog));
             return models;
         }
 
