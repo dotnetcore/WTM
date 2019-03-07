@@ -1,4 +1,4 @@
-import DataSource from 'store/dataSource';
+﻿import DataSource from 'store/dataSource';
 export class Store extends DataSource {
     constructor() {
         super();
@@ -8,39 +8,39 @@ export class Store extends DataSource {
     /** 地址配置列表 */
     Urls: WTM.IUrls = {
         search: {
-            url: "/$modelname$/search",
+            url: "/_frameworkuserbase/search",
             method: "post"
         },
         details: {
-            url: "/$modelname$/{ID}",
+            url: "/_frameworkuserbase/{ID}",
             method: "get"
         },
         insert: {
-            url: "/$modelname$/add",
+            url: "/_frameworkuserbase/add",
             method: "post"
         },
         update: {
-            url: "/$modelname$/edit",
+            url: "/_frameworkuserbase/edit",
             method: "put"
         },
         delete: {
-            url: "/$modelname$/BatchDelete",
+            url: "/_frameworkuserbase/BatchDelete",
             method: "post"
         },
         import: {
-            url: "/$modelname$/import",
+            url: "/_frameworkuserbase/import",
             method: "post"
         },
         export: {
-            url: "/$modelname$/ExportExcel",
+            url: "/_frameworkuserbase/ExportExcel",
             method: "post"
         },
         exportIds: {
-            url: "/$modelname$/ExportExcelByIds",
+            url: "/_frameworkuserbase/ExportExcelByIds",
             method: "post"
         },
         template: {
-            url: "/$modelname$/GetExcelTemplate",
+            url: "/_frameworkuserbase/GetExcelTemplate",
             method: "get"
         }
     }

@@ -482,20 +482,23 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2.Count() == 0))
                         {
-                            PropertyInfo[] itemPros = ftype.GetProperties();
+                            PropertyInfo[] itemPros = ftype.GetProperties();                            
                             var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().Where(x => x.ID == Entity.ID).FirstOrDefault();
-                            IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
-                            foreach (var item in removeData)
+                            if (_entity != null)
                             {
-                                foreach (var itempro in itemPros)
+                                IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
+                                foreach (var item in removeData)
                                 {
-                                    if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                                    foreach (var itempro in itemPros)
                                     {
-                                        itempro.SetValue(item, null);
+                                        if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                                        {
+                                            itempro.SetValue(item, null);
+                                        }
                                     }
+                                    dynamic i = item;
+                                    DC.DeleteEntity(i);
                                 }
-                                dynamic i = item;
-                                DC.DeleteEntity(i);
                             }
                         }
                     }

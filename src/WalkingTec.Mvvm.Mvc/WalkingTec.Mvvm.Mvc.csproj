@@ -29,7 +29,7 @@
     <None Remove="GeneratorFiles\Spa\React\store\index.txt" />
     <None Remove="GeneratorFiles\Spa\React\style.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\action.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\details.txt" />
+    <None Remove="GeneratorFiles\Spa\React\views\forms.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\models.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
     <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
@@ -66,7 +66,7 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\store\index.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\style.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\action.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\details.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\forms.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\models.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
