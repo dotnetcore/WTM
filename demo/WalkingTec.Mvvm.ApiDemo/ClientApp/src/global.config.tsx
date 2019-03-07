@@ -52,7 +52,7 @@ export default {
     /** 
      * 详情信息 展示类型 
      */
-    infoType: "Drawer",//Drawer || Modal
+    infoType: "Modal",//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */

@@ -11,7 +11,7 @@ import Models from './models'; //模型
  */
 @DialogFormDes({
     onFormSubmit(values) {
-        return Store.onUpdate(values)
+        return Store.onInsert(values)
     },
     // onlogLoadData(props) {
     //     return Store.onDelete([])
