@@ -53,7 +53,7 @@ export default class LoginDemo extends React.Component<any, any>{
         transitionAppear={true} component="">
         <Row type="flex" justify="center" align="middle" className='app-login' >
           <Form onSubmit={this.onSubmit.bind(this)} className="app-login-form" >
-            <h1>WTM</h1>
+                    <h1>$ns$</h1>
             <Form.Item
               validateStatus={userNameError ? 'error' : ''}
               help={userNameError || ''}
