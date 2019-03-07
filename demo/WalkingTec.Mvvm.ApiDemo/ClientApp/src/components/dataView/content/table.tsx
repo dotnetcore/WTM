@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, notification, Table, Switch, Icon } from 'antd';
+import { Alert, Divider, notification, Table, Switch, Icon, Popover, Button } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
@@ -16,6 +16,7 @@ import { Resizable } from 'react-resizable';
 import Rx from 'rxjs';
 import Store from 'store/dataSource';
 import { ToImg } from '../help/toImg';
+import Regular from 'utils/Regular';
 import './style.less';
 interface ITablePorps {
     /** 状态 */
@@ -310,7 +311,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 />
             );
         } else {
-            return <div>
+            return <div >
                 <Divider />
                 <Alert
                     showIcon
@@ -330,6 +331,13 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
 export function columnsRender(text, record) {
     if (lodash.isBoolean(text) || text === "true" || text === "false") {
         text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
+    } else if (Regular.isHtml.test(text)) {
+        // text = <Popover content={
+        //     <div dangerouslySetInnerHTML={{ __html: text }}></div>
+        // } trigger="hover">
+        //     <a>查看详情</a>
+        // </Popover>
+        text = <div dangerouslySetInnerHTML={{ __html: text }}></div>
     }
     return <div className="data-view-columns-render" title={text}>
         <span>{text}</span>
