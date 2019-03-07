@@ -80,6 +80,7 @@ export class FormItem extends React.Component<IFormItemProps, any> {
                 },
             }
         }
+        // console.log(models, renderItem)
         return <Form.Item label={model.label} {...itemlayout}  {...formItemProps}>
             {renderItem}
         </Form.Item >
@@ -105,7 +106,12 @@ function itemRender(props, config) {
         if (lodash.get(model.formItem, "props.data-__field")) {
             renderItem = model.formItem;
         } else {
-            renderItem = getFieldDecorator && getFieldDecorator(fieId as never, options)(model.formItem);
+            if (getFieldDecorator) {
+                renderItem = getFieldDecorator(fieId as never, options)(model.formItem);
+            } else {
+                renderItem = model.formItem;
+                console.warn("没有解析到 getFieldDecorator")
+            }
         }
     }
     // 禁用 输入控件

@@ -14,7 +14,7 @@ class Store {
         this.CheckLogin()
     }
     @observable loding = true;
-    @observable isLogin = false;
+    @observable isLogin = true;
     // 用户信息
     @observable User: any = {
         role: "administrator",//administrator ordinary

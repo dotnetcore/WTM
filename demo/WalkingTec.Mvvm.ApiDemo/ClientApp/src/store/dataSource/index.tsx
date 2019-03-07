@@ -116,6 +116,10 @@ export default class Store {
       runInAction(() => {
         this.dataSource = {
           // ...this.dataSource,
+          Count: 0,
+          Data: [],
+          Page: 1,
+          PageCount: 1,
           ...res,
           Limit: params.Limit
         }
