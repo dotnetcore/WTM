@@ -36,7 +36,13 @@ declare type Props = {
 };
 export class DialogForm extends React.Component<Props, any> {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return !lodash.isEqual(this.state, nextState) || !lodash.isEqual(this.props.disabled, nextProps.disabled)
+        if (!lodash.isEqual(this.props.disabled, nextProps.disabled)) {
+            return true;
+        }
+        if (nextState.load) {
+            return !lodash.eq(this.state, nextState);
+        }
+        return false
     }
     key = Date.now()
     state = {
@@ -51,7 +57,7 @@ export class DialogForm extends React.Component<Props, any> {
             if (!state.load) {
                 state.load = true;
             }
-            return state
+            return { ...state }
         })
     }
     render() {
