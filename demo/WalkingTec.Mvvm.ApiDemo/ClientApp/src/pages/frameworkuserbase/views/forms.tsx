@@ -1,4 +1,4 @@
-﻿import { Col } from 'antd';
+﻿import { Form, Col } from 'antd';
 import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -68,7 +68,7 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
         }
         return <InfoShellLayout>
                 <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" />
+                <Form.Item><span></span></Form.Item>
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
