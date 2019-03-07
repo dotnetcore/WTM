@@ -60,6 +60,7 @@ export class DialogForm extends React.Component<Props, any> {
             return { ...state }
         })
     }
+    Optimization = Form.create()(Optimization);
     render() {
         const option = {
             title: lodash.get(this.props, 'title', '未设置标题'),
@@ -78,14 +79,14 @@ export class DialogForm extends React.Component<Props, any> {
         return (
             <React.Fragment key={this.key}>
                 {button}
-                {this.state.load && <Optimization option={option} visible={this.state.visible} onVisible={this.onVisible.bind(this)}>
+                {this.state.load && <this.Optimization option={option} visible={this.state.visible} onVisible={this.onVisible.bind(this)}>
                     {this.props.children}
-                </Optimization>}
+                </this.Optimization>}
             </React.Fragment>
         );
     }
-}
-@DesForm
+};
+// @DesForm
 class Optimization extends React.Component<{
     option: any;
     visible: any;
@@ -95,9 +96,9 @@ class Optimization extends React.Component<{
 }, any> {
     constructor(props) {
         super(props)
-        if (globalConfig.development && this.props.visible) {
-            console.log('装载成功', this.props.children)
-        }
+        // if (globalConfig.development && this.props.visible) {
+        console.log('装载成功', this)
+        // }
     }
     // shouldComponentUpdate(nextProps, nextState, nextContext) {
 
@@ -163,7 +164,7 @@ class Optimization extends React.Component<{
     render() {
         const { option, visible } = this.props;
         const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
-
+        // console.log("Optimization", this)
         return (
             <InfoShell
                 title={option.title}
@@ -186,7 +187,7 @@ class Optimization extends React.Component<{
             </InfoShell>
         );
     }
-}
+};
 export function DialogFormDes(params: {
     onFormSubmit?: (values) => Promise<boolean>,
     onLoadData?: (values, props) => Promise<boolean>,
