@@ -5,7 +5,7 @@
  * @modify date 2019-03-08 02:36:43
  * @desc [description]
  */
-import { Alert, Button, Divider, message, Spin } from 'antd';
+import { notification, Button, Divider, message, Spin } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import { ModalProps } from 'antd/lib/modal';
@@ -149,6 +149,9 @@ class Optimization extends React.Component<{
                         });
                     } else {
                         console.error(err)
+                        // message.destroy()
+                        // message.warn("数据未填写完整~")
+                        notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
                         this.setState({ loading: false })
                     }
                 });
