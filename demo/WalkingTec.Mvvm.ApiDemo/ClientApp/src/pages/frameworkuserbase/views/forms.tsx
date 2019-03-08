@@ -111,7 +111,7 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
         }
         return <InfoShellLayout >
                 <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" />
+                <Form.Item><span></span></Form.Item>
                 <FormItem {...props} fieId="Email" />
                 <FormItem {...props} fieId="Name" />
                 <FormItem {...props} fieId="Sex" />
