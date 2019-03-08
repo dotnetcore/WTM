@@ -182,7 +182,7 @@ export default class Store {
       this.onSearch(this.searchParams)
       return res
     }
-    notification.warn({ message: "没有任何修改" })
+    notification.warn({ key: 'notUpdate', message: "没有任何修改" })
     return false
   }
   /**
