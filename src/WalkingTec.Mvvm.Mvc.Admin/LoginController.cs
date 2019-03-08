@@ -66,6 +66,28 @@ namespace WalkingTec.Mvvm.Admin.Controllers
             }
         }
 
+        [HttpPost("ChangePassword")]
+        public IActionResult ChangePassword(ChangePasswordVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                vm.DoChange();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+
+        }
+
         [HttpGet("Logout/{id}")]
         public ActionResult Logout(Guid id)
         {
