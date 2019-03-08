@@ -501,12 +501,19 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        private T ReadFromCache<T>(string key, Func<T> setFunc)
+        protected T ReadFromCache<T>(string key, Func<T> setFunc,int? timeout = null)
         {
             if (Cache.TryGetValue(key, out T rv) == false)
             {
                 T data = setFunc();
-                Cache.Set(key, data);
+                if (timeout == null)
+                {
+                    Cache.Set(key, data);
+                }
+                else
+                {
+                    Cache.Set(key, data, DateTime.Now.AddSeconds(timeout.Value).Subtract(DateTime.Now));
+                }
                 return data;
             }
             else

@@ -7,6 +7,7 @@ import * as React from 'react';
 import store from 'store/index';
 import ImgCode from './imgCode'
 import './style.less';
+import GlobalConfig from 'global.config';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -53,7 +54,7 @@ export default class LoginDemo extends React.Component<any, any>{
         transitionAppear={true} component="">
         <Row type="flex" justify="center" align="middle" className='app-login' >
           <Form onSubmit={this.onSubmit.bind(this)} className="app-login-form" >
-                    <h1>$ns$</h1>
+                    <h1>{GlobalConfig.default.title}</h1>
             <Form.Item
               validateStatus={userNameError ? 'error' : ''}
               help={userNameError || ''}

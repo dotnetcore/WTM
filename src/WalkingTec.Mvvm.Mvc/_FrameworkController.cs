@@ -510,8 +510,10 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public string GetGithubStarts()
         {
-            var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
-            return s.stargazers_count+"";
+            return ReadFromCache<string>("githubstar", () => {
+                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+                return s.stargazers_count.ToString();
+            }, 1800);
         }
 
         private class github
