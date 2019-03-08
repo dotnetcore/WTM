@@ -1,3 +1,10 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-03-08 02:36:43
+ * @modify date 2019-03-08 02:36:43
+ * @desc [description]
+ */
 import { Alert, Button, Divider, message, Spin } from 'antd';
 import { DrawerProps } from 'antd/lib/drawer';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
@@ -118,6 +125,7 @@ class Optimization extends React.Component<{
             if (this.state.loading) return;
             try {
                 this.props.form.validateFields((err, values) => {
+                    console.info('表单数据', values)
                     if (!err) {
                         this.setState({ loading: true }, async () => {
                             try {
@@ -190,7 +198,7 @@ class Optimization extends React.Component<{
 };
 export function DialogFormDes(params: {
     onFormSubmit?: (values) => Promise<boolean>,
-    onLoadData?: (values, props) => Promise<boolean>,
+    onLoadData?: (values, props) => Promise<boolean> | Object,
 }) {
     return (Component: React.ComponentClass<any, any>) => {
         const DFC: any = class extends React.PureComponent<{ loadData: Object | Function }, any> {
@@ -206,8 +214,9 @@ export function DialogFormDes(params: {
                 __key: Help.GUID()
             }
             async componentDidMount() {
-                if (this.isOnLoadData && this.props.loadData) {
-                    let loadData = lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData;
+                // if (this.isOnLoadData && this.props.loadData) {
+                if (this.isOnLoadData) {
+                    let loadData = this.props.loadData ? lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData : {};
                     const res = await params.onLoadData.bind(this)(loadData, this.props);
                     this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 }
@@ -215,9 +224,9 @@ export function DialogFormDes(params: {
             }
             render() {
                 const { __spinning, __details, __key } = this.state;
-                const notLoadData = this.isOnLoadData && !this.props.loadData;
+                // const notLoadData = this.isOnLoadData && !this.props.loadData;
                 return <Spin tip="Loading..." spinning={__spinning} key={__key}>
-                    {notLoadData && <Alert message="请传递 loadData props" type="warning" showIcon />}
+                    {/* {notLoadData && <Alert message="请传递 loadData props" type="warning" showIcon />} */}
                     <Component {...this.props} defaultValues={__details} />
                 </Spin>
             }

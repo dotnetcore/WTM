@@ -5,8 +5,8 @@
   "dependencies": {
     "@antv/g2": "^3.4.10",
     "ant-design-pro": "^2.1.1",
-    "antd": "^3.14.0",
-    "braft-editor": "2.1.32",
+    "antd": "^3.14.1",
+    "braft-editor": "^2.2.9",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.11",
     "mobx": "^4.9.2",
@@ -26,7 +26,7 @@
     "viser-react": "^2.4.5"
   },
   "scripts": {
-    "start": "rimraf ./build && react-app-rewired start",
+    "start": "react-app-rewired start",
     "build": "rimraf ./build && react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

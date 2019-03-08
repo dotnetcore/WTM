@@ -11,6 +11,12 @@ import Models from './models'; //模型
     onFormSubmit(values) {
         return Store.onInsert(values)
     },
+    onLoadData(values, props) {
+        // return Store.onDetails(values)
+        return {
+            Editer: '<div style="color:#00FF00;">0.0041245</div>'
+        }
+    }
 })
 @observer
 export class InsertForm extends React.Component<any, any> {
@@ -39,6 +45,7 @@ export class InsertForm extends React.Component<any, any> {
                 <FormItem {...props} fieId="PhotoId" layout="row" />
                 <FormItem {...props} fieId="CreateTime" layout="row" />
                 <FormItem {...props} fieId="Date2" layout="row" />
+                <FormItem {...props} fieId="Editer" layout="row" />
             </InfoShellLayout>
         )
     }

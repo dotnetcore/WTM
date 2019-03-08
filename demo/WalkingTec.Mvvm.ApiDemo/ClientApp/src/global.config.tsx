@@ -1,8 +1,10 @@
 import { notification } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
-import lodash from 'lodash';
+import { configure } from 'mobx';
 import "./global.less";
+// mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
+configure({ enforceActions: "observed" });
 notification.config({
     duration: 3,
     top: 60
@@ -56,7 +58,7 @@ export default {
     /** 
     * 详情信息 展示 宽度
     */
-    infoTypeWidth: 700,
+    infoTypeWidth: '60%',
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
