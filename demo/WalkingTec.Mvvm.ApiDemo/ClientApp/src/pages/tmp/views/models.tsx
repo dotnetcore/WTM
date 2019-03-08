@@ -1,5 +1,4 @@
 import { Input } from 'antd';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItem } from 'components/dataView';
 import { WtmDatePicker } from 'components/form/datePicker';
 import Selects from 'components/form/select';

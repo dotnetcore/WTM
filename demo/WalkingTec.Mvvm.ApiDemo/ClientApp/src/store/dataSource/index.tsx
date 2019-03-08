@@ -7,7 +7,7 @@
  */
 import * as React from 'react';
 import { message, notification, List, Row, Col, Button } from 'antd';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction, toJS } from 'mobx';
 import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
 import lodash from 'lodash';
@@ -165,12 +165,25 @@ export default class Store {
    * @param params 数据实体
    */
   async onUpdate(params) {
-    const method = this.Urls.update.method;
-    const url = this.Urls.update.url;
-    const res = await this.Request[method](url, { Entity: { ...this.details, ...params } }).toPromise();
-    notification.success({ message: "修改成功" })
-    this.onSearch(this.searchParams)
-    return res
+    let isUpdate = false;
+    const details = toJS(this.details)
+    lodash.map(params, (value, key) => {
+      if (!isUpdate) {
+        if (!lodash.isEqual(value, lodash.get(details, key))) {
+          isUpdate = true
+        }
+      }
+    })
+    if (isUpdate) {
+      const method = this.Urls.update.method;
+      const url = this.Urls.update.url;
+      const res = await this.Request[method](url, { Entity: { ...details, ...params } }).toPromise();
+      notification.success({ message: "修改成功" })
+      this.onSearch(this.searchParams)
+      return res
+    }
+    notification.warn({ message: "没有任何修改" })
+    return false
   }
   /**
    * 删除

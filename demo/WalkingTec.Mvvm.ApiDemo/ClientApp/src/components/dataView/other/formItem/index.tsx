@@ -95,7 +95,7 @@ function itemRender(props, config) {
     const { form = {}, disabled, display, fieId } = props;
     const { options, model } = config;
     const { getFieldDecorator }: WrappedFormUtils = form;
-    let renderItem, propsNew: any = {};
+    let renderItem, propsNew: any = { form };
     // 禁用显示 span
     if (lodash.isEqual(display, true)) {
         propsNew.display = "true";
