@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class SetupVM : BaseVM
     {
-        private string version = "2.2.16";
+        private string version = "2.2.17";
 
         public bool EnableLog { get; set; }
 
