@@ -12,6 +12,7 @@ import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
 import lodash from 'lodash';
 import { Help } from 'utils/Help';
+import globalConfig from 'global.config';
 /**
  * 搜索 参数
  */
@@ -182,8 +183,9 @@ export default class Store {
       this.onSearch(this.searchParams)
       return res
     }
-    notification.warn({ message: "没有任何修改" })
-    return false
+    notification.success({ message: "修改成功" })
+    globalConfig.development && message.warn(`没有数据变更~ 不调用接口~`)
+    return true
   }
   /**
    * 删除
