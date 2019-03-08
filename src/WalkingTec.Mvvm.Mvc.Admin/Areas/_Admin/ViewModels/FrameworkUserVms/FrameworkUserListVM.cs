@@ -34,8 +34,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x => x.IsValid).SetHeader("启用").SetWidth(80),
                 this.MakeGridHeader(x => x.CellPhone),
                 this.MakeGridHeader(x => x.HomePhone),
-                this.MakeGridHeader(x => x.Roles),
-                this.MakeGridHeader(x => x.Groups),
+                this.MakeGridHeader(x => x.RoleName_view),
+                this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x=> x.PhotoId).SetFormat(PhotoIdFormat),                
                 this.MakeGridHeaderAction(width: 300)
             };
@@ -65,8 +65,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     CellPhone = x.CellPhone,
                     HomePhone = x.HomePhone,
                     IsValid = x.IsValid,
-                    Roles = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
-                    Groups = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
+                    RoleName_view = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
+                    GroupName_view = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
@@ -78,9 +78,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     public class FrameworkUser_View : FrameworkUserBase
     {
         [Display(Name = "角色")]
-        public string Roles { get; set; }
+        public string RoleName_view { get; set; }
 
         [Display(Name = "用户组")]
-        public string Groups { get; set; }
+        public string GroupName_view { get; set; }
     }
 }
