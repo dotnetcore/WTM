@@ -21,10 +21,9 @@ import Layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
-import GlobalConfig from 'global.config';
 import globalConfig from 'global.config';
-
 import { Help } from 'utils/Help';
+
 @observer
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
