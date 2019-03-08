@@ -346,6 +346,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         var subpro = subtype.GetProperty(item.SubField);
+                        existSubPro.Add(subpro);
                         int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                         if (count == 1)
                         {
