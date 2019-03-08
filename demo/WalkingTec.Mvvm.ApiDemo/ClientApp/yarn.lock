@@ -1474,10 +1474,10 @@ ant-design-pro@^2.1.1:
     react-media "^1.8.0"
     react-router-dom "^4.3.1"
 
-antd@^3.14.0:
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-3.14.0.tgz#3e04e90ffbc84b8204576c3c00e00b9762377436"
-  integrity sha512-UxbU35oPZl3BjL69j9oM8O1b9GInXimJTYCwRJ8FpMtBYD1cqnbv3dpeEirq0mJ13yPnAVd7BQ7f68YmEmLDDg==
+antd@^3.14.1:
+  version "3.14.1"
+  resolved "http://registry.npm.taobao.org/antd/download/antd-3.14.1.tgz#95d5a9802836685f0c49518e25ec5e905cd92de0"
+  integrity sha1-ldWpgCg2aF8MSVGOJexekFzZLeA=
   dependencies:
     "@ant-design/icons" "~1.2.0"
     "@ant-design/icons-react" "~1.1.2"
@@ -2217,38 +2217,38 @@ braces@^2.3.1, braces@^2.3.2:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
-braft-convert@^2.1.4:
+braft-convert@^2.1.10:
   version "2.1.12"
-  resolved "https://registry.yarnpkg.com/braft-convert/-/braft-convert-2.1.12.tgz#dc331722feb5fe3fc2392d44db0c02922c19c6b2"
-  integrity sha512-mGqlVfpUIW3HHFmYmTdV7QRI1e2bpMtvHGgIm5/sb0h4alX+kWHgIZ/vZHCHZAxPEp8bbL73+8rVjyp3NZBFtg==
+  resolved "http://registry.npm.taobao.org/braft-convert/download/braft-convert-2.1.12.tgz#dc331722feb5fe3fc2392d44db0c02922c19c6b2"
+  integrity sha1-3DMXIv61/j/COS1E2wwCkiwZxrI=
   dependencies:
     draft-convert "^2.0.0"
     draft-js "^0.10.3"
 
-braft-editor@2.1.32:
-  version "2.1.32"
-  resolved "https://registry.yarnpkg.com/braft-editor/-/braft-editor-2.1.32.tgz#4828758b42aea502c45cccb3f7655ef4c6f480f0"
-  integrity sha512-a4VKzwTGr+5KvaTXhGT1g/fBzUy/PbcNVA7+aEH5jPadmSY++CqXtmBOtucKIC++wkgoFCvgSdjcqJewP8TsQA==
+braft-editor@^2.2.9:
+  version "2.2.9"
+  resolved "http://registry.npm.taobao.org/braft-editor/download/braft-editor-2.2.9.tgz#8990b6b638a69daebfb57e3f1f8e057166abc5be"
+  integrity sha1-iZC2tjimna6/tX4/H44FcWarxb4=
   dependencies:
     "@babel/runtime" "^7.0.0"
-    braft-convert "^2.1.4"
-    braft-finder "^0.0.14"
-    braft-utils "^3.0.6"
+    braft-convert "^2.1.10"
+    braft-finder "^0.0.18"
+    braft-utils "^3.0.8"
     draft-convert "^2.0.0"
     draft-js "^0.10.3"
     draft-js-multidecorators "^1.0.0"
     draftjs-utils "^0.9.4"
     immutable "~3.7.4"
 
-braft-finder@^0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/braft-finder/-/braft-finder-0.0.14.tgz#f5a65548a00dbe3193be58a90fffe5264f0a1184"
-  integrity sha512-Gv4BESpi6O9EAHDmOlkpa1+zVRACkKBi9Htjpab1plNu1W/yyr9rsP2A8Q2Wg+X8Mx7Jh8byB1OQwuLwzV6SKQ==
+braft-finder@^0.0.18:
+  version "0.0.18"
+  resolved "http://registry.npm.taobao.org/braft-finder/download/braft-finder-0.0.18.tgz#5f43659b61290081fb2920cc3ce1f62e31e9da57"
+  integrity sha1-X0Nlm2EpAIH7KSDMPOH2LjHp2lc=
 
-braft-utils@^3.0.6:
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/braft-utils/-/braft-utils-3.0.9.tgz#b0e28d84741921086a85b0fb07c6df2df5ae2878"
-  integrity sha512-S+eUc3iflmNBBOQ9K8tuEGB+FLoTjeoxhPcIsCsFc3tNh8yg4yTnk4RaR4pEeyCst7fPekJFtRQ1gzCWne3TWQ==
+braft-utils@^3.0.8:
+  version "3.0.10"
+  resolved "http://registry.npm.taobao.org/braft-utils/download/braft-utils-3.0.10.tgz#42c73654a0217dfc58fdbeba31eb8a0a089339a4"
+  integrity sha1-Qsc2VKAhffxY/b66MeuKCgiTOaQ=
 
 brorand@^1.0.1:
   version "1.1.0"

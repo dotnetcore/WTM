@@ -78,6 +78,16 @@ export class Request {
                     this.NProgress("done");
                     // 数据 Response 
                     if (ajax instanceof Rx.AjaxResponse) {
+                        // 无 响应 数据
+                        if (lodash.isNil(ajax.response)) {
+                            console.warn("响应体为 NULL", ajax)
+                            GlobalConfig.development && notification.warn({
+                                message: "响应体为 NULL ",
+                                duration: 5,
+                                description: `url:${lodash.get(ajax, "request.url")}`
+                            })
+                            return false
+                        }
                         return true
                     }
                     // 错误
@@ -135,7 +145,7 @@ export class Request {
                             break;
                     }
                 }).subscribe(obs => {
-                    sub.next(obs || {})
+                    sub.next(obs)
                     sub.complete()
                 })
         })

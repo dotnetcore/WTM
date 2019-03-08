@@ -9,7 +9,6 @@ import { configure } from "mobx";
 import User from './system/user';
 import Authorize from './system/authorize';
 import Meun from './system/menu';
-configure({ enforceActions: "observed" });
 class store {
     constructor() {
         this.ready();
