@@ -1,6 +1,7 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
 import { WtmDatePicker } from 'components/form/datePicker';
+import Editer from 'components/form/editer';
 import Selects from 'components/form/select';
 import Transfer from 'components/form/transfer';
 import UploadImg from 'components/form/uploadImg';
@@ -20,7 +21,7 @@ export default {
      * 编辑 模型 
      * @param props 
      */
-    editModels(props?) {
+    editModels(props?): WTM.FormItem {
         return {
             /** ITCode */
             ITCode: {
@@ -93,6 +94,11 @@ export default {
                 label: "时间测试2",//显示 时间，禁用 小于当前天数
                 rules: [],
                 formItem: <WtmDatePicker showTime disabledDate={(current) => current < moment().subtract(1, "day").endOf('day')} />
+            },
+            Editer: {
+                label: "富文本",
+                rules: [{ "required": true, "message": "富文本 不能为空" }],
+                formItem: <Editer />
             }
         }
     },
@@ -100,7 +106,7 @@ export default {
      * 搜索 模型 
      * @param props 
      */
-    searchModels(props?) {
+    searchModels(props?): WTM.FormItem {
         return {
             /** ITCode */
             ITCode: {

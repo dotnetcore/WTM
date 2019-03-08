@@ -8,9 +8,9 @@
 import * as React from 'react';
 import { Form } from 'antd';
 export function DesForm(Component: React.ComponentClass<any, any>) {
-    console.log("创建表单")
-    console.dir(Component)
-    return Form.create()(Component) as any
+    // console.log("创建表单")
+    // console.dir(Component)
+    return Form.create()(Component) as any //:React.ComponentClass<RcBaseFormProps & Omit<P, keyof FormComponentProps>>
     // return Form.create()(class AppForm extends React.PureComponent<any, any> {
     //     render() {
     //         // 扩展 默认 的 函数 传递 form 对象

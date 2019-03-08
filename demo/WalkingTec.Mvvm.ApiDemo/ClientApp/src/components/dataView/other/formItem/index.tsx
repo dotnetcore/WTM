@@ -79,6 +79,17 @@ export class FormItem extends React.Component<IFormItemProps, any> {
                     span: warppSpan
                 },
             }
+            // 富文本 分 2行
+            if (lodash.get(model.formItem, "type.wtmType") === "Editor") {
+                itemlayout = {
+                    labelCol: {
+                        span: labelSpan
+                    },
+                    wrapperCol: {
+                        span: 24
+                    },
+                }
+            }
         }
         // console.log(models, renderItem)
         return <Form.Item label={model.label} {...itemlayout}  {...formItemProps}>
