@@ -158,6 +158,11 @@
                     </select>
                 </td>
             </tr>
+			<tr>
+				<td></td>
+                <td>*框架自动创建的用户名为admin，密码000000</td>
+            </tr>
+
         </table>
 		<input type="hidden" name="ExtraDir" value="$extradir$" />
 		<input type="hidden" name="ExtraNs" value="$extrans$" />

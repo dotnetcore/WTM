@@ -21,6 +21,9 @@ import Layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
+import GlobalConfig from 'global.config';
+import globalConfig from 'global.config';
+
 @observer
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
@@ -184,6 +187,7 @@ export default class RootRoutes extends React.Component<any, any> {
         }
     };
     render() {
+        document.title = globalConfig.default.title;
         // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
             <LocaleProvider locale={zhCN}>
