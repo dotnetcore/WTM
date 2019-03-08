@@ -135,7 +135,7 @@ export class Request {
                             break;
                     }
                 }).subscribe(obs => {
-                    sub.next(obs)
+                    sub.next(obs || {})
                     sub.complete()
                 })
         })
@@ -216,7 +216,6 @@ export class Request {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
-        console.log(body)
         url = this.compatibleUrl(this.target, newParams.url);
         return this.AjaxObservable(Rx.Observable.ajax.post(url, body, headers))
     }

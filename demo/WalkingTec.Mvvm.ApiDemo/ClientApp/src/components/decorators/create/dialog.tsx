@@ -50,8 +50,8 @@ export function DesModel(props?: IAppProps) {
         })
     }
 }
-const DialogModelBody = document.createElement("div");
-document.body.append(DialogModelBody);
+// const DialogModelBody = document.createElement("div");
+// document.body.append(DialogModelBody);
 export function DialogModel(props?: IAppProps, Component?: React.ComponentClass) {
     // const Comp = DesForm(class AppModel extends React.Component<any, any> {
     //     onSubmit(e) {
@@ -108,9 +108,9 @@ export function DialogModel(props?: IAppProps, Component?: React.ComponentClass)
             </InfoShell>
         }
     }
-    ReactDOM.render(<AppModel />, DialogModelBody,()=>{
-        console.log("aaaaa")
-    })
+    // ReactDOM.render(<AppModel />, DialogModelBody,()=>{
+    //     console.log("aaaaa")
+    // })
     return {
         onVisible: (visible = !ModelStore.visible) => {
             ModelStore.visible = visible

@@ -24,10 +24,11 @@ import System from "./pages/system";
 import GlobalConfig from 'global.config';
 import globalConfig from 'global.config';
 
+import { Help } from 'utils/Help';
 @observer
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
-        console.clear()
+        // console.clear()
     }
     render() {
         // 用户登陆菜单加载完成进入主界面
@@ -130,58 +131,13 @@ export default class RootRoutes extends React.Component<any, any> {
      * @param classNames 动画
      */
     createCSSTransition(Component: any, content = true, classNames = "fade") {
-        return class extends React.Component<any, any>{
-            state = {
-                error: null,
-                errorInfo: null
-            };
-            content: HTMLDivElement;
-            componentDidCatch(error, info) {
-                this.setState({
-                    error: error,
-                    errorInfo: info
-                })
-            }
-            componentDidMount() {
-
-            }
+        return class extends React.PureComponent {
             render() {
-                const { location } = this.props;
-                // 组件出错
-                if (this.state.errorInfo) {
-                    return (
-                        <Exception type="500" desc={<div>
-                            <h2>组件出错~</h2>
-                            <details >
-                                {this.state.error && this.state.error.toString()}
-                                <br />
-                                {this.state.errorInfo.componentStack}
-                            </details>
-                        </div>} />
-                    );
-                }
-                if (Component == NoMatch) {
-                    return <Animate transitionName={classNames}
-                        transitionAppear={true} component="" key={Component.name} ><NoMatch {...this.props} />
-                    </Animate>
-                }
-                // 认证通过
-                if (Store.Authorize.onPassageway(this.props)) {
-                    return (
-                        // <Animate transitionName={classNames}
-                        //     transitionAppear={true} component="" key={Component.name} >
-                        <div className="app-animate-content" key="app-animate-content" >
-                            <Component  {...this.props} />
-                        </div>
-                        // </Animate  >
-                    );
-                }
                 return <Animate transitionName={classNames}
-                    transitionAppear={true} component="" key={Component.name} >
-                    <Exception type="404" desc={<h3>无权限访问 {this.props.location.pathname}
-                        <span>认证位置：store/system/authorize.ts</span>
-                        <code>{location.pathname}</code>
-                    </h3>} />
+                    transitionAppear={true} component="" key={lodash.get(this, 'props.location.pathname', Help.GUID())}>
+                    <div className="app-animate-content" key="app-animate-content" >
+                        <Component {...this.props} />
+                    </div>
                 </Animate  >
             }
         }
