@@ -37,12 +37,15 @@ export default class LoginDemo extends React.Component<any, any>{
     });
   }
   onSuccess() {
-    console.log("dsfa")
     this.setState({ notCode: false })
   }
   componentDidMount() {
     // To disabled submit button at the beginning.
-    this.props.form.validateFields();
+    try {
+      this.props.form.validateFields();
+    } catch (error) {
+
+    }
   }
   render() {
     const { getFieldDecorator, getFieldsError, isFieldTouched, getFieldError } = this.props.form;
@@ -54,7 +57,7 @@ export default class LoginDemo extends React.Component<any, any>{
         transitionAppear={true} component="">
         <Row type="flex" justify="center" align="middle" className='app-login' >
           <Form onSubmit={this.onSubmit.bind(this)} className="app-login-form" >
-                    <h1>{GlobalConfig.default.title}</h1>
+            <h1>{GlobalConfig.default.title}</h1>
             <Form.Item
               validateStatus={userNameError ? 'error' : ''}
               help={userNameError || ''}

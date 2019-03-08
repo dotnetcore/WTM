@@ -38,6 +38,10 @@ export default class extends React.Component<IAppProps, any> {
     //     }
     //     return !lodash.isEqual(this.props.value, nextProps.value)
     // }
+    Unmount = false
+    componentWillUnmount() {
+        this.Unmount = true;
+    }
     async  componentDidMount() {
         const { dataSource } = this.props;
         let mockData = [],
@@ -66,12 +70,13 @@ export default class extends React.Component<IAppProps, any> {
                 }
             })
         } catch (error) {
-            console.error("Select 获取数据出错",error)
+            console.error("Select 获取数据出错", error)
         }
         // 回填 已选择数据
         // if (lodash.isArray(this.props.value) && lodash.isString(this.props.dataKey)) {
         //     targetKeys = this.props.value.map(x => (lodash.get(x, this.props.dataKey)))
         // }
+        if (this.Unmount) return
         this.setState({
             mockData,
             targetKeys,
