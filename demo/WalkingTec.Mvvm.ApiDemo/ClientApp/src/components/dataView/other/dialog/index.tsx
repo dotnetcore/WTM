@@ -172,9 +172,33 @@ class Optimization extends React.Component<{
         }))
         // [fieldName]: { value: any, errors: [Error] }
     }
-    render() {
+    renderFrom() {
         const { option, visible } = this.props;
         const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
+        if (option.showSubmit) {
+            return <Form onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
+                <Spin tip="Loading..." spinning={this.state.loading} >
+                    {children}
+                </Spin>
+                <div className="data-view-form-btns" >
+                    <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
+                    <Divider type="vertical" />
+                    <Button loading={this.state.loading} type="primary" htmlType="submit" >{option.submitText} </Button>
+                </div>
+            </Form>
+        }
+        return <div className='app-shell-body'>
+            <Spin tip="Loading..." spinning={this.state.loading} >
+                {children}
+            </Spin>
+            <div className="data-view-form-btns" >
+                <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
+            </div>
+        </div>
+
+    }
+    render() {
+        const { option, visible } = this.props;
         // console.log("Optimization", this)
         return (
             <InfoShell
@@ -183,18 +207,7 @@ class Optimization extends React.Component<{
                 onCancel={this.onVisible.bind(this, false)}
                 {...this.props}
             >
-                <div  className='app-shell-body'>
-                    <Spin tip="Loading..." spinning={this.state.loading} >
-                        {children}
-                    </Spin>
-                    <div className="data-view-form-btns" >
-                        <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
-                        {option.showSubmit && <>
-                            <Divider type="vertical" />
-                            <Button loading={this.state.loading} type="primary" onClick={this.onSubmit.bind(this)} >{option.submitText} </Button>
-                        </>}
-                    </div>
-                </div>
+                {this.renderFrom()}
             </InfoShell>
         );
     }
