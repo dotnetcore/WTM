@@ -36,5 +36,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [ActionDescription("FAQ")]
+        public IActionResult FAQ()
+        {
+            return PartialView();
+        }
     }
 }
