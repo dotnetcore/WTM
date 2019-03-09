@@ -49,11 +49,11 @@ export default class Store {
   /**
    * 默认搜索条件
    */
-  defaultSearchParams = {};
+  defaultSearchParams: any = {};
   /**
   * 当前页面搜索参数
   */
-  searchParams = {};
+  searchParams: any = {};
   /** 选择的 行 Key  */
   @observable selectedRowKeys = [];
 
