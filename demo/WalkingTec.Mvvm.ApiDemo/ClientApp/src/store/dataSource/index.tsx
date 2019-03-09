@@ -47,8 +47,12 @@ export default class Store {
     PageCount: 1
   }
   /**
-   * 当前页面搜索参数
+   * 默认搜索条件
    */
+  defaultSearchParams = {};
+  /**
+  * 当前页面搜索参数
+  */
   searchParams = {};
   /** 选择的 行 Key  */
   @observable selectedRowKeys = [];
@@ -98,6 +102,7 @@ export default class Store {
         SortInfo: "",
         Page: 1,
         Limit: 10,
+        ...this.defaultSearchParams,
         ...params,
       }
       this.searchParams = params;

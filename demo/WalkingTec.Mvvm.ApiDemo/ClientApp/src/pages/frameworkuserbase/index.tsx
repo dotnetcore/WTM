@@ -1,4 +1,6 @@
 ﻿import * as React from 'react';
+import lodash from 'lodash';
+
 import { AuthorizeDecorator } from 'store/system/authorize';
 import Store from './store';
 import Action from './views/action';
@@ -15,9 +17,13 @@ import Table from './views/table';
  */
 @AuthorizeDecorator({ PageStore: Store })
 export default class App extends React.Component<any, any> {
+  constructor(props) {
+    super(props);
+    Store.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
+  }
   render() {
     return (
-        <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
+      <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />
