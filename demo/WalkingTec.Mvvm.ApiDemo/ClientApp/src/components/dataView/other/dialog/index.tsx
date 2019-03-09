@@ -16,7 +16,7 @@ import { Help } from 'utils/Help';
 import { InfoShell } from '../infoShell';
 declare type Props = {
     form?: WrappedFormUtils;
-    InfoShell?: DrawerProps | ModalProps;
+    // InfoShell?: DrawerProps | ModalProps;
     /** 标题 */
     title?: React.ReactNode;
     /** 按钮可用状态 */
@@ -31,6 +31,8 @@ declare type Props = {
     icon?: string;
     /** 加载 */
     loading?: boolean;
+    /** 宽度*/
+    width?: string | number;
     /**ß
      * 按钮类型ß
      */
@@ -77,6 +79,7 @@ export class DialogForm extends React.Component<Props, any> {
             submitText: lodash.get(this.props, 'submitText', '提交'),
             icon: lodash.get(this.props, 'icon'),
             type: lodash.get(this.props, 'type', 'button'),
+            width: lodash.get(this.props, 'width', globalConfig.infoTypeWidth),
         }
         const button = option.type === "button" ? <Button
             icon={option.icon}
@@ -86,7 +89,11 @@ export class DialogForm extends React.Component<Props, any> {
         return (
             <React.Fragment key={this.key}>
                 {button}
-                {this.state.load && <this.Optimization option={option} visible={this.state.visible} onVisible={this.onVisible.bind(this)}>
+                {this.state.load && <this.Optimization
+                    option={option}
+                    visible={this.state.visible}
+                    onVisible={this.onVisible.bind(this)}
+                >
                     {this.props.children}
                 </this.Optimization>}
             </React.Fragment>
@@ -205,6 +212,7 @@ class Optimization extends React.Component<{
                 title={option.title}
                 visible={visible}
                 onCancel={this.onVisible.bind(this, false)}
+                width={option.width}
                 {...this.props}
             >
                 {this.renderFrom()}

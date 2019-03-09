@@ -288,7 +288,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     size="default"
                     className="data-view-table"
                     components={TableUtils.components}
-                    dataSource={[...dataSource.Data]}
+                    dataSource={toJS(dataSource.Data)}
                     onChange={this.onChange.bind(this)}
                     columns={columns}
                     scroll={scroll}

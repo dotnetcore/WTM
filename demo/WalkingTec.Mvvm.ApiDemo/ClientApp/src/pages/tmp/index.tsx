@@ -1,11 +1,12 @@
+import lodash from 'lodash';
 import * as React from 'react';
 import { AuthorizeDecorator } from 'store/system/authorize';
 import Store from './store';
 import Action from './views/action';
-// import Details from './views/details';
 import Other from './views/other';
 import Search from './views/search';
 import Table from './views/table';
+
 /**
  * 页面入口
  *  Action：页面动作
@@ -15,14 +16,13 @@ import Table from './views/table';
  *  Table：表格
  */
 @AuthorizeDecorator({ PageStore: Store })
-export default class App extends React.Component<any, any> {
+export default class App extends React.Component<WTM.PageProps, any> {
   render() {
     return (
-      <div className="app-page-test" key="app-page-test">
+      <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />
-        {/* <Details {...this.props} /> */}
         <Other {...this.props} />
       </div>
     );
