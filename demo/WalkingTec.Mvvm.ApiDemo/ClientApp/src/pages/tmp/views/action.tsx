@@ -7,6 +7,7 @@ import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
 import { InfoForm, InsertForm, UpdateForm } from './forms';
+import Frameworkuserbase from '../../frameworkuserbase';
 /**
  * 动作事件
  */
@@ -124,6 +125,14 @@ class RowAction extends React.Component<{
         const { data } = this.props
         return (
             <Row className="data-view-row-action">
+                <DialogForm
+                    title="测试"
+                    showSubmit={false}
+                    type="a"
+                >
+                    <Frameworkuserbase defaultSearchParams={{ ITCode: "测试" }} />
+                </DialogForm>
+                <Divider type="vertical" />
                 <Visible visible={onAuthorizeActions(Store, "details")}>
                     <DialogForm
                         title="详情"
