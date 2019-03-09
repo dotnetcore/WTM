@@ -5,7 +5,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store';
-import Models from './models'; 
+import Models from './models';
 
 @DesForm
 @observer
@@ -17,8 +17,9 @@ export default class extends React.Component<any, any> {
         const props = {
             ...this.props,
             models: this.models,
-            defaultValues: toJS(Store.searchParams)
+            defaultValues: { ...Store.defaultSearchParams, ...Store.searchParams }
         }
+        this.props.form.getFieldDecorator('aaaa',{initialValue:'值'})
         return <DataViewSearch
             // columnCount={4} 默认全局
             // onReset={() => { }} 覆盖默认方法

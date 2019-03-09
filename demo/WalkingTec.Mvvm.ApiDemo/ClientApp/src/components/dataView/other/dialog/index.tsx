@@ -183,7 +183,7 @@ class Optimization extends React.Component<{
                 onCancel={this.onVisible.bind(this, false)}
                 {...this.props}
             >
-                <Form onSubmit={this.onSubmit.bind(this)}>
+                <div  className='app-shell-body'>
                     <Spin tip="Loading..." spinning={this.state.loading} >
                         {children}
                     </Spin>
@@ -191,10 +191,10 @@ class Optimization extends React.Component<{
                         <Button onClick={this.onVisible.bind(this, false)} > {option.closeText} </Button>
                         {option.showSubmit && <>
                             <Divider type="vertical" />
-                            <Button loading={this.state.loading} type="primary" htmlType="submit"  >{option.submitText} </Button>
+                            <Button loading={this.state.loading} type="primary" onClick={this.onSubmit.bind(this)} >{option.submitText} </Button>
                         </>}
                     </div>
-                </Form>
+                </div>
             </InfoShell>
         );
     }

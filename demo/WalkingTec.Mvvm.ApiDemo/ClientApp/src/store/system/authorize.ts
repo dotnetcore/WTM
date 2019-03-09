@@ -37,7 +37,7 @@ export default new Store();
  * @param PageParams 
  */
 export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
-    return function (Component: React.ComponentClass<any, any>) {
+    return function (Component: React.ComponentClass<any, any>): any {
         return class extends Component {
             componentWillMount() {
                 // console.log(this.props)
