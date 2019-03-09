@@ -19,7 +19,7 @@ export default class extends React.Component<any, any> {
             models: this.models,
             defaultValues: { ...Store.defaultSearchParams, ...Store.searchParams }
         }
-        this.props.form.getFieldDecorator('aaaa',{initialValue:'值'})
+        // this.props.form.getFieldDecorator('aaaa',{initialValue:'值'})
         return <DataViewSearch
             // columnCount={4} 默认全局
             // onReset={() => { }} 覆盖默认方法
