@@ -39,7 +39,12 @@ export default new Store();
 export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
     return function (Component: React.ComponentClass<any, any>): any {
         return class extends Component {
+            constructor(props) {
+                super(props);
+                PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
+            }
             componentWillMount() {
+
                 // console.log(this.props)
                 // 假设 所有 为 false
                 // notification.info({ message: "假设有权限 2 秒后" });

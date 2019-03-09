@@ -1,12 +1,12 @@
-﻿import * as React from 'react';
-import lodash from 'lodash';
-
+﻿import lodash from 'lodash';
+import * as React from 'react';
 import { AuthorizeDecorator } from 'store/system/authorize';
 import Store from './store';
 import Action from './views/action';
 import Other from './views/other';
 import Search from './views/search';
 import Table from './views/table';
+
 /**
  * 页面入口
  *  Action：页面动作
@@ -16,7 +16,7 @@ import Table from './views/table';
  *  Table：表格
  */
 @AuthorizeDecorator({ PageStore: Store })
-export default class App extends React.Component<any, any> {
+export default class App extends React.Component<WTM.PageProps, any> {
   constructor(props) {
     super(props);
     Store.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
