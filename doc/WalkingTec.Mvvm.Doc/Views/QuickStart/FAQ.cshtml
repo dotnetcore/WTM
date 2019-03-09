@@ -1,0 +1,27 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+这里收集了群里大家常问的问题，我们会不断更新
+
+<wt:quote>
+    <p>问：框架默认创建的用户名密码是什么？</p>
+    <p>答：框架默认创建的用户是admin，密码000000</p>
+</wt:quote>
+
+<wt:quote>
+    <p>问：为什么我左侧显示的菜单不是我在菜单管理里配置的菜单？</p>
+    <p>答：appsettings文件中有一个IsQuickDebug属性，默认是true，当IsQuickDebug为true的时候框架处于调试模式，框架会反射你所有controller的方法并列在左边菜单中，并跳过所有权限验证，方便你进行调试。当IsQuickDebug为false的时候，框架才会读取你配置的菜单并进行权限验证。所以当你发布生产环境的时候，请把IsQuickDebug改为false</p>
+</wt:quote>
+
+<wt:quote>
+    <p>问：为什么我配置使用mysql失败？</p>
+    <p>答：一般来说有以下几个原因：</p>
+    <p>mysql版本过低，请至少使用5.7以上的</p>
+    <p>mysql默认字符集不是utf8，不支持中文</p>
+    <p>appsettings中连接字符串写的不对</p>
+    <p>appsettings中的DBType要写成mysql</p>
+</wt:quote>
+
