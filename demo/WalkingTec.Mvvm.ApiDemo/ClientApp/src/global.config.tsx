@@ -54,11 +54,11 @@ export default {
     /** 
      * 详情信息 展示类型 
      */
-    infoType: "Drawer",//Drawer || Modal
+    infoType: "Modal",//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */
-    infoTypeWidth: '60%',
+    infoTypeWidth: '40%',
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/

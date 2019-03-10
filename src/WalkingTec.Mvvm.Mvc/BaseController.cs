@@ -306,6 +306,7 @@ namespace WalkingTec.Mvvm.Mvc
                             self.AddErrorColumn();
                         }
                     };
+                    temp.ListVM.DoInitListVM();
                     if (temp.ListVM.Searcher != null)
                     {
                         var searcher = temp.ListVM.Searcher;
@@ -326,38 +327,10 @@ namespace WalkingTec.Mvvm.Mvc
                 searcher.CopyContext(rv);
                 if (passInit == false)
                 {
-                    //获取保存在Cookie中的搜索条件的值，并自动给Searcher中的对应字段赋值
-                    string namePre = ConfigInfo.CookiePre + "`Searcher" + "`" + rv.VMFullName + "`";
-                    Type searcherType = searcher.GetType();
-                    var pros = searcherType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToList();
-                    pros.Add(searcherType.GetProperty("IsValid"));
-
-                    Dictionary<string, string> cookieDic = HttpContext.Session.Get<Dictionary<string, string>>("SearchCondition" + searcher.VMFullName);
-                    if (cookieDic != null)
-                    {
-                        foreach (var pro in pros)
-                        {
-                            var name = namePre + pro.Name;
-
-                            if (cookieDic.ContainsKey(name) && !string.IsNullOrEmpty(cookieDic[name]))
-                            {
-                                try
-                                {
-                                    if (cookieDic[name] == "`")
-                                    {
-                                        pro.SetValue(searcher, null);
-                                    }
-                                    else
-                                    {
-                                        PropertyHelper.SetPropertyValue(searcher, pro.Name, cookieDic[name], null, true);
-                                    }
-                                }
-                                catch { }
-                            }
-                        }
-                    }
                     searcher.DoInit();
                 }
+                lvm.DoInitListVM();
+
             }
             if (rv is IBaseImport<BaseTemplateVM> tvm)
             {

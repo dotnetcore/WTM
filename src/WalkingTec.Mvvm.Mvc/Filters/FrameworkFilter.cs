@@ -144,6 +144,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 searcher.CopyContext(model);
                                 //searcher.DoReInit();
                             }
+                            temp.ListVM.DoInitListVM();
                         }
                         temp.LinkedVM?.DoInit();
                     }
