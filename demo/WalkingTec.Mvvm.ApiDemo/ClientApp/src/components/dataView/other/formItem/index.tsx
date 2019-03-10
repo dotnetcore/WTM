@@ -118,6 +118,7 @@ function itemRender(props, config) {
             renderItem = model.formItem;
         } else {
             if (getFieldDecorator) {
+                // console.log(fieId, options.initialValue)
                 renderItem = getFieldDecorator(fieId as never, options)(model.formItem);
             } else {
                 renderItem = model.formItem;
@@ -133,6 +134,7 @@ function itemRender(props, config) {
     if (lodash.isEqual(options.initialValue, true)) {
         propsNew.defaultChecked = true;
     }
+    // console.log(propsNew)
     return React.cloneElement(renderItem, propsNew);
 }
 /**
