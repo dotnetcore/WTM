@@ -71,6 +71,7 @@ class PageAction extends React.Component<any, any> {
                     <DialogForm
                         title="新建"
                         icon="plus"
+                        width={500}
                     >
                         <InsertForm />
                     </DialogForm>
