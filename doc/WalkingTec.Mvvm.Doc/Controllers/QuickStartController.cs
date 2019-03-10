@@ -42,5 +42,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [ActionDescription("自定义用户")]
+        public IActionResult CustomUser()
+        {
+            return PartialView();
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
 
-
+        public DbSet<MyUser> MyUsers { get; set; }
 
     }
 }

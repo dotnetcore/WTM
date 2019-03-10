@@ -1,0 +1,80 @@
+﻿<style>
+    fieldset img {
+        width: 800px;
+        border: 1px solid black
+    }
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="自定义用户">
+    <wt:quote>
+        <p>框架自带了用户管理，但是很多人使用框架遇到的第一个问题就是自己的用户结构要多一些字段</p>
+        <p>下面演示了如何通过继承框架用户的方式编写自己的用户管理</p>
+    </wt:quote>
+    <ul class="doc">
+        <li>
+            首先我们在Model中建立一个类，继承FrameworkUserBase,比如叫做MyUser<br /><br />
+
+            <wt:code title="School.cs">
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WalkingTec.Mvvm.Core;
+
+namespace YourNameSpace.Models
+{
+    [Table("FrameworkUsers")]
+    public class MyUser : FrameworkUserBase
+    {
+        [Display(Name = "附加信息1")]
+        public string Extra1 { get; set; }
+
+        [Display(Name = "附加信息2")]
+        public string Extra2 { get; set; }
+    }
+}
+            </wt:code>
+        </li>
+        <li>
+            上面的代码告诉框架同样使用FrameworkUsers表，只是增加两个字段<br />
+            在DataAccess项目中，修改DataContext文件，加入MyUser，因为MyUser继承了FrameworkUserBase，所以其实并不会增加新表，但是会在FrameworkUser表中增加一个叫做Discriminator的列，这是EF的规则<br /><br />
+            <wt:code title="DataContext.cs">
+public class DataContext : FrameworkContext
+{
+    public DbSet&ltMyUser&gt MyUsers { get; set; }
+
+    public DataContext(string cs, DBTypeEnum dbtype)
+    : base(cs, dbtype)
+    {
+    }
+}
+            </wt:code>
+        </li>
+        <li>
+            按F5运行，现在我们有一个MyUser的Model，并且让数据库也生成了相应的表<br /><br />
+            <wt:quote>
+                <p>因为增加了Discriminator字段，你需要更新数据库，或者使用一个新库名让EF自动生成</p>
+            </wt:quote>
+        </li>
+        <li>
+            然后就像我们生成其他模块一样，使用代码生成器来生成MyUser<br /><br />
+        </li>
+        <li>
+            在代码生成器中，选择MyUser，业务模块名称比如叫做自定义用户管理<br /><br />
+        </li>
+        <li>
+            代码生成完毕后，关闭浏览器，重新启动调试，我们可以看到左侧菜单已经有了自定义用户管理，和框架自带的没有什么区别，但是已经有了你需要的字段<br />
+            <wt:quote>
+                <p>唯一需要修改一下的就是框架的登陆是MD5验证的，所以当你添加MyUser之前，记得加上一句Entity.Password = Utils.GetMD5String(Entity.Password);把密码MD5加密一下</p>
+            </wt:quote>
+        </li>
+        <li>
+            去菜单管理，点击同步模块，这样会把你新加的自定义用户管理加到系统模块中<br />
+            然后，把原有的用户管理修改为不在菜单显示，并把这个新的自定义用户管理添加到菜单中<br />
+            在非调试模式下(Appsettings文件中IsQuickDebug=false)，左侧菜单变成你新的用户管理了<br />
+        </li>
+    </ul>
+</wt:fieldset>
+<script>
+    layui.code({ about: false });
+</script>

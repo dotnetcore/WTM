@@ -1,0 +1,11 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs.MyUserBatchVM
+
+<wt:form vm="@Model">
+	<wt:quote>确定要删除以下数据么：</wt:quote>
+    <wt:hidden field="Ids" />
+    <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>
+    <wt:row align=" AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
