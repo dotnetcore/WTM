@@ -98,7 +98,7 @@ export default {
             Editer: {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
-                formItem: <Editer />
+                formItem: <Editer placeholder="输入正文内容" />
             }
         }
     },
