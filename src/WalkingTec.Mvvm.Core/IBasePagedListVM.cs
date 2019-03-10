@@ -149,6 +149,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         string DetailGridPrix { get; set; }
 
+        void DoInitListVM();
         #endregion
 
     }

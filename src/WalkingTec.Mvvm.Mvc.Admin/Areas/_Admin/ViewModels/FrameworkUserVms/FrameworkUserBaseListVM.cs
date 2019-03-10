@@ -9,32 +9,32 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
-    public class FrameworkUserBaseListVM : BasePagedListVM<FrameworkUserBase, FrameworkUserBaseSearcher>
+    public class FrameworkUserBaseListVM : BasePagedListVM<FrameworkUserBase_ListView, FrameworkUserBaseSearcher>
     {
         public List<FrameworkRole> AllRoles { get; set; }
-        protected override IEnumerable<IGridColumn<FrameworkUserBase>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<FrameworkUserBase_ListView>> InitGridHeader()
         {
-            return new List<GridColumn<FrameworkUserBase>>{
+            return new List<GridColumn<FrameworkUserBase_ListView>>{
                 this.MakeGridHeader(x => x.ITCode, 120).SetEditType(),
                 this.MakeGridHeader(x => x.Name, 120).SetEditType(),
-                this.MakeGridHeader(x => x.UserRoles, 240).SetEditType().SetFormat((entity,val)=>{
-                    return entity.UserRoles.Select(x=>x.Role.RoleName).ToList().ToSpratedString();
-                })
+                this.MakeGridHeader(x => x.RoleName_view),
+                this.MakeGridHeader(x => x.GroupName_view),
             };
         }
 
-        public override IOrderedQueryable<FrameworkUserBase> GetSearchQuery()
+        public override IOrderedQueryable<FrameworkUserBase_ListView> GetSearchQuery()
         {
 
             var query = DC.Set<FrameworkUserBase>().Include(x=>x.UserRoles).ThenInclude(r=>r.Role)
                 .CheckContain(Searcher.ITCode, x=>x.ITCode)
                 .CheckContain(Searcher.Name, x=>x.Name)
-                .Select(x => new FrameworkUserBase
+                .Select(x => new FrameworkUserBase_ListView
                 {
                     ID = x.ID,
                     ITCode = x.ITCode,
                     Name = x.Name,
-                    UserRoles = x.UserRoles,
+                    RoleName_view = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null, ","),
+                    GroupName_view = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
                 })
                 .OrderBy(x => x.ITCode);
             return query;
@@ -51,8 +51,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public string Name { get; set; }
 
         [Display(Name = "角色")]
-        [XmlIgnore]
-        public List<FrameworkUserRole> UserRoles { get; set; }
+        public string RoleName_view { get; set; }
+
+        [Display(Name = "用户组")]
+        public string GroupName_view { get; set; }
     }
 
     public class FrameworkUserBaseSearcher : BaseSearcher

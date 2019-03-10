@@ -64,11 +64,8 @@ namespace WalkingTec.Mvvm.Mvc
             }
 
             listVM.SearcherMode = ListVMSearchModeEnum.Selector;
-            listVM.OnAfterInitList += (self) =>
-            {
-                self.RemoveActionColumn();
-                self.RemoveAction();
-            };
+            listVM.RemoveActionColumn();
+            listVM.RemoveAction();
             if (listVM.Searcher != null)
             {
                 var searcher = listVM.Searcher;
