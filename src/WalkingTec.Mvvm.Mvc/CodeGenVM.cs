@@ -587,7 +587,7 @@ namespace WalkingTec.Mvvm.Mvc
             {{
                 foreach (var id in Selected{pro.FieldName}IDs)
                 {{
-                    Entity.{pro.FieldName}.Add(new {protype.Name} {{ {pro.SubIdField} = id }});
+                    Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ {pro.SubIdField} = id }});
                 }}
             }}
 ";
@@ -598,8 +598,8 @@ namespace WalkingTec.Mvvm.Mvc
             }}
             else
             {{
-                Entity.{pro.FieldName} = new List<{protype.Name}>();
-                Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.Name} {{ ID = Guid.NewGuid(), {pro.SubIdField} = x }}));
+                Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
+                Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ ID = Guid.NewGuid(), {pro.SubIdField} = x }}));
             }}
 ";
                     }
@@ -801,7 +801,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             fieldstr.Append($@"<wt:datetime field=""Searcher.{item.FieldName}"" />");
                         }
-                        if (checktype.IsEnum())
+                        if (checktype.IsEnum() || checktype.IsBool())
                         {
                             fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" empty-text=""全部"" />");
                         }

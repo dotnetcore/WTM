@@ -7,13 +7,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
 {
-    public enum SexEnum
-    {
-        [Display(Name = "男")]
-        Male = 0,
-        [Display(Name = "女")]
-        Female = 1
-    }
+
     public class Student : BasePoco
     {
         [Display(Name = "账号")]
