@@ -23,21 +23,23 @@ export default class Editor extends React.Component<BraftEditorProps, any> {
 
   }
   componentDidMount() {
+    // console.log("componentDidMount", this.props)
+
   }
   state = {
-    editorState: BraftEditor.createEditorState(this.props.value), // 设置编辑器初始内容
+    editorState: BraftEditor.createEditorState(lodash.unescape(this.props.value)), // 设置编辑器初始内容
   }
   onChange(editorState: EditorState) {
     if (lodash.isEqual(this.state.editorState.toRAW(), editorState.toRAW())) {
-      return
+      return this.setState({ editorState });
     }
+    this.setState({ editorState });
     const value = editorState.toHTML()
     this.console && console.log(value)
-    this.setState({ editorState });
-    this.props.onChange && this.props.onChange(lodash.eq(value, '<p></p>') ? '' : value)
+    this.props.onChange && this.props.onChange(lodash.escape(lodash.eq(value, '<p></p>') ? '' : value))
   }
   render() {
-    const { editorState } = this.state
+    const { editorState } = this.state;
     const props = { ...this.default, ...this.props }
     delete props.value;
     delete props.onChange;
