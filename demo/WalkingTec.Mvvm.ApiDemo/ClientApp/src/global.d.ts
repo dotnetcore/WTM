@@ -48,6 +48,13 @@ declare namespace WTM {
             formItem: React.ReactNode;
         }
     }
+    interface PageProps {
+        /** 页面默认参数 */
+        defaultSearchParams: {
+            [key: string]: any;
+        };
+        [key: string]: any;
+    }
 }
 // import { ValidationRule } from 'antd/lib/form/Form' 拷贝
 declare type ValidationRule = {
