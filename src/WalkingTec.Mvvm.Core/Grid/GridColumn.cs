@@ -353,6 +353,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     rv = (col as DateTime?).Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
+                else if(col is Enum){
+                    rv = (int)col;
+                }
                 else
                 {
                     rv = col?.ToString();

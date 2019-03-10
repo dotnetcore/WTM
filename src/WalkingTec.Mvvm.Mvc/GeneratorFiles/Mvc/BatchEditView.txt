@@ -3,7 +3,7 @@
 <wt:form vm="@Model">
     <div style="margin-bottom:10px">批量修改以下数据: </div>$fields$
     <wt:hidden field="Ids" />
-    <wt:grid vm="ListVM" use-local-data="true" height="400"  hidden-checkbox="true" hidden-panel="true"/>
+    <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>
     <wt:row align=" AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

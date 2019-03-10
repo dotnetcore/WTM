@@ -55,33 +55,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public int ChildrenDepth { get; set; }
 
-        private IEnumerable<IGridColumn<TModel>> _gridHeaders;
 
         /// <summary>
         /// GridHeaders
         /// </summary>
-        public IEnumerable<IGridColumn<TModel>> GridHeaders
-        {
-            get
-            {
-                if (_gridHeaders == null)
-                {
-                    _gridHeaders = InitGridHeader();
-                    OnAfterInitList?.Invoke(this);
-                }
-                return _gridHeaders;
-            }
-            set
-            {
-                _gridHeaders = value;
-            }
-        }
+        public IEnumerable<IGridColumn<TModel>> GridHeaders { get; set; }
 
         /// <summary>
         /// GetHeaders
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IGridColumn<TModel>> GetHeaders() => GridHeaders;
+        public IEnumerable<IGridColumn<TModel>> GetHeaders(){
+            if(GridHeaders == null)
+            {
+                GridHeaders = InitGridHeader();
+            }
+            return GridHeaders;
+        }
 
         private List<GridAction> _gridActions;
         /// <summary>
@@ -136,9 +126,12 @@ namespace WalkingTec.Mvvm.Core
         public virtual byte[] GenerateExcel()
         {
             NeedPage = false;
-            if (IsSearched == false)
+            if(GridHeaders == null)
             {
                 GetHeaders();
+            }
+            if (IsSearched == false)
+            {
                 DoSearch();
             }
             HSSFWorkbook workbook = new HSSFWorkbook();
@@ -872,11 +865,11 @@ namespace WalkingTec.Mvvm.Core
         {
             if (root == null)
             {
-                if (_gridHeaders == null)
+                if (GridHeaders == null)
                 {
-                    var a = GridHeaders;
+                    GetHeaders();
                 }
-                root = _gridHeaders;
+                root = GridHeaders;
             }
             if (root != null)
             {
@@ -903,11 +896,11 @@ namespace WalkingTec.Mvvm.Core
         {
             if (root == null)
             {
-                if (_gridHeaders == null)
+                if (GridHeaders == null)
                 {
-                    var a = GridHeaders;
+                    GetHeaders();
                 }
-                root = _gridHeaders;
+                root = GridHeaders;
             }
             if (root != null)
             {
@@ -933,6 +926,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public void AddErrorColumn()
         {
+            GetHeaders();
             //寻找所有Header为错误信息的列，如果没有则添加
             if (GridHeaders.Where(x => x.Title == "错误").FirstOrDefault() == null)
             {
@@ -951,6 +945,7 @@ namespace WalkingTec.Mvvm.Core
         public void ProcessListError(List<TModel> Entities)
         {
             EntityList = Entities;
+            IsSearched = true;
             bool haserror = false;
             List<string> keys = new List<string>();
             if (string.IsNullOrEmpty(DetailGridPrix) == false)
