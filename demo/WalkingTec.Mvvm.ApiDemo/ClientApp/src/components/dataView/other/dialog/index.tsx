@@ -254,7 +254,7 @@ export function DialogFormDes(params: {
                 const { __spinning, __details, __key } = this.state;
                 // const notLoadData = this.isOnLoadData && !this.props.loadData;
                 return <Spin tip="Loading..." spinning={__spinning}>
-                    {__spinning ? <Skeleton paragraph={{ rows: 5 }} /> : <Component {...this.props} defaultValues={__details} />}
+                    {__spinning ? <Skeleton paragraph={{ rows: 10 }} /> : <Component {...this.props} defaultValues={__details} />}
                 </Spin>
             }
         }

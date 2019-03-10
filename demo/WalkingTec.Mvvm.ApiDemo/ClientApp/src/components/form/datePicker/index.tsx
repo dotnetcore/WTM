@@ -15,7 +15,8 @@ import * as React from 'react';
 export class WtmDatePicker extends React.Component<DatePickerProps, any> {
   onChange(data, dataString) {
     const onChange: any = this.props.onChange;
-    onChange && onChange(moment(dataString, this.getFormat()).valueOf(), data)
+    // onChange && onChange(moment(dataString, this.getFormat()).valueOf(), data)
+    onChange && onChange(dataString, data)
   }
   getFormat() {
     const { showTime, format } = this.props;
