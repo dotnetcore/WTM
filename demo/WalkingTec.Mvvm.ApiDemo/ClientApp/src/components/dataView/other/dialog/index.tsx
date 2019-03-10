@@ -5,10 +5,8 @@
  * @modify date 2019-03-08 02:36:43
  * @desc [description]
  */
-import { notification, Button, Divider, message, Spin } from 'antd';
-import { DrawerProps } from 'antd/lib/drawer';
+import { Button, Divider, message, notification, Skeleton, Spin } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
-import { ModalProps } from 'antd/lib/modal';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
 import * as React from 'react';
@@ -132,6 +130,10 @@ class Optimization extends React.Component<{
             if (this.state.loading) return;
             try {
                 this.props.form.validateFields((err, values) => {
+                    values = lodash.mapValues(values, (value) => {
+                        // 过滤 富文本
+                        return value
+                    })
                     console.info('表单数据', values)
                     if (!err) {
                         this.setState({ loading: true }, async () => {
@@ -171,12 +173,13 @@ class Optimization extends React.Component<{
         }
     }
     onSetErrorMsg(errors = { Entity: { "Name": "姓名是必填项" } }) {
-        const { setFields } = this.props.form;
+        const { setFields, getFieldsValue } = this.props.form;
         setFields(lodash.mapValues(errors.Entity, data => {
             return {
                 errors: [new Error(data)]
             }
         }))
+        // console.log(getFieldsValue())
         // [fieldName]: { value: any, errors: [Error] }
     }
     renderFrom() {
@@ -233,25 +236,25 @@ export function DialogFormDes(params: {
             isLoadData = this.props.loadData && this.isOnLoadData || false;
             state = {
                 ...this.state,
-                __spinning: this.isLoadData,
+                __spinning: true,
                 __details: {},
                 __key: Help.GUID()
             }
             async componentDidMount() {
                 // if (this.isOnLoadData && this.props.loadData) {
+                let res = {}
                 if (this.isOnLoadData) {
                     let loadData = this.props.loadData ? lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData : {};
-                    const res = await params.onLoadData.bind(this)(loadData, this.props);
-                    this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
+                    res = await params.onLoadData.bind(this)(loadData, this.props);
                 }
+                this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 super.componentDidMount && super.componentDidMount()
             }
             render() {
                 const { __spinning, __details, __key } = this.state;
                 // const notLoadData = this.isOnLoadData && !this.props.loadData;
-                return <Spin tip="Loading..." spinning={__spinning} key={__key}>
-                    {/* {notLoadData && <Alert message="请传递 loadData props" type="warning" showIcon />} */}
-                    <Component {...this.props} defaultValues={__details} />
+                return <Spin tip="Loading..." spinning={__spinning}>
+                    {__spinning ? <Skeleton paragraph={{ rows: 5 }} /> : <Component {...this.props} defaultValues={__details} />}
                 </Spin>
             }
         }
