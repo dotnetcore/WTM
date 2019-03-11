@@ -133,6 +133,73 @@ export default {
             }
         }
     },
+    testModels(props?): WTM.FormItem {
+        return {
+            Input: {
+                label: "文本",
+                rules: [{ "required": true, "message": "账号 不能为空" }],
+                formItem: <Input placeholder="请输入 文本" />
+            },
+            Email: {
+                label: "正则文本",
+                rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
+                formItem: <Input placeholder="请输入 Email" />
+            },
+            /** 照片 */
+            PhotoId: {
+                label: "照片",
+                rules: [],
+                formItem: <UploadImg />
+            },
+            /** 性别 */
+            Sex: {
+                label: "性别",
+                rules: [],
+                formItem: <Selects
+                    placeholder="性别"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                />
+            },
+            /** 用户组 */
+            UserGroups: {
+                label: "用户组",
+                rules: [],
+                formItem: <Selects
+                    placeholder="用户组"
+                    multiple // 多选标记
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataKey="GroupId"
+                />
+            },
+            /** 角色 */
+            UserRoles: {
+                label: "角色",
+                rules: [],
+                formItem: <Transfer
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
+                    dataKey="RoleId"
+                />
+            },
+            CreateTime: {
+                label: "时间测试",
+                rules: [],
+                formItem: <WtmDatePicker />
+            },
+            Date2: {
+                label: "时间测试2",//显示 时间，禁用 小于当前天数
+                rules: [],
+                formItem: <WtmDatePicker showTime disabledDate={(current) => current < moment().subtract(1, "day").endOf('day')} />
+            },
+            Editer: {
+                label: "富文本",
+                rules: [{ "required": true, "message": "富文本 不能为空" }],
+                formItem: <Editer placeholder="输入正文内容" />
+            }
+        }
+    },
     /**
      * 渲染 模型
      */

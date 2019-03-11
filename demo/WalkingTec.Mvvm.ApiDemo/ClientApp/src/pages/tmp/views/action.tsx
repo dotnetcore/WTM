@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
+import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row, message } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InfoForm, InsertForm, UpdateForm } from './forms';
+import { InfoForm, InsertForm, UpdateForm, TestForm } from './forms';
 import Frameworkuserbase from '../../frameworkuserbase';
 /**
  * 动作事件
@@ -67,11 +67,31 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
+                <DialogForm
+                    title="所有表单控件"
+                    icon="plus"
+                    button={props => {
+                        return <>
+                            <Button onClick={props.onSubmit}>提交</Button>
+                            <Divider type="vertical" />
+                            <Button onClick={props.onCancel}>关闭</Button>
+                            <Divider type="vertical" />
+                            <Button onClick={() => { message.warn('点了按钮') }}>按钮3</Button>
+                            <Divider type="vertical" />
+                            <Button>按钮4</Button>
+                        </>
+                    }}
+                // width={500}
+                >
+                    <TestForm />
+                </DialogForm>
+                <Divider type="vertical" />
+
                 <Visible visible={onAuthorizeActions(Store, "insert")}>
                     <DialogForm
                         title="新建"
                         icon="plus"
-                        // width={500}
+                    // width={500}
                     >
                         <InsertForm />
                     </DialogForm>

@@ -31,6 +31,13 @@ declare type Props = {
     loading?: boolean;
     /** 宽度*/
     width?: string | number;
+    /** 自定义按钮 */
+    button?: (props: {
+        /** form 提交 事件 */
+        onSubmit: ()=>void;
+        /** 关闭窗口 事件 */
+        onCancel: ()=>void;
+    }) => React.ReactNode;
     /**ß
      * 按钮类型ß
      */
@@ -77,6 +84,7 @@ export class DialogForm extends React.Component<Props, any> {
             submitText: lodash.get(this.props, 'submitText', '提交'),
             icon: lodash.get(this.props, 'icon'),
             type: lodash.get(this.props, 'type', 'button'),
+            button: lodash.get(this.props, 'button'),
             width: lodash.get(this.props, 'width', globalConfig.infoTypeWidth),
         }
         const button = option.type === "button" ? <Button
@@ -120,9 +128,11 @@ class Optimization extends React.Component<{
     onVisible(visible) {
         this.props.onVisible(visible)
     }
-    onSubmit(e) {
-        e.stopPropagation();
-        e.preventDefault();
+    onSubmit(e?) {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
         const onFormSubmit = this.props.onFormSubmit || lodash.get(this.props.children, 'type.onFormSubmit');
         if (lodash.isFunction(onFormSubmit)) {
             // debugger
@@ -139,15 +149,26 @@ class Optimization extends React.Component<{
                         this.setState({ loading: true }, async () => {
                             try {
                                 const callbackValue = onFormSubmit(values, this.onVisible.bind(this, false));
+                                // console.log(callbackValue)
                                 let res = false;
                                 if (lodash.isBoolean(callbackValue)) {
                                     res = callbackValue;
-                                } else if (callbackValue) {
+                                } else if (callbackValue instanceof Promise) {
                                     res = await callbackValue
+                                } else if (lodash.isFunction(callbackValue)) {
+                                    res = callbackValue()
+                                } else {
+                                    globalConfig.development && notification.warn({
+                                        key: 'validateFields_err',
+                                        message: "onFormSubmit 无返回值  ",
+                                        description: "返回 true | Promise<boolean> 关闭窗口"
+                                    })
                                 }
+                                console.log(res)
                                 if (res) {
                                     this.onVisible(false)
                                 }
+
                             } catch (error) {
                                 this.onSetErrorMsg(error || {})
                                 // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
@@ -185,6 +206,19 @@ class Optimization extends React.Component<{
     renderFrom() {
         const { option, visible } = this.props;
         const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
+        if (option.button) {
+            return <div className='app-shell-body'>
+                <Spin tip="Loading..." spinning={this.state.loading} >
+                    {children}
+                </Spin>
+                <div className="data-view-form-btns" >
+                    {option.button({
+                        onSubmit: (event?) => { this.onSubmit(event) },
+                        onCancel: (event?) => { this.onVisible(false) }
+                    })}
+                </div>
+            </div>
+        }
         if (option.showSubmit) {
             return <Form onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
                 <Spin tip="Loading..." spinning={this.state.loading} >
@@ -224,8 +258,18 @@ class Optimization extends React.Component<{
     }
 };
 export function DialogFormDes(params: {
-    onFormSubmit?: (values) => Promise<boolean>,
+    /**
+     * 表单提交
+     */
+    onFormSubmit?: (values) => Promise<boolean> | Function | void,
+    /**
+     * 表单 默认 数据加载
+     */
     onLoadData?: (values, props) => Promise<boolean> | Object,
+    /**
+     * 加载提示文字 默认 Loading。。。
+     */
+    tip?: string;
 }) {
     return (Component: React.ComponentClass<any, any>) => {
         const DFC: any = class extends React.PureComponent<{ loadData: Object | Function }, any> {
@@ -244,8 +288,21 @@ export function DialogFormDes(params: {
                 // if (this.isOnLoadData && this.props.loadData) {
                 let res = {}
                 if (this.isOnLoadData) {
+                    // 检查 loadData 类型 函数 执行 后获取返回值
                     let loadData = this.props.loadData ? lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData : {};
-                    res = await params.onLoadData.bind(this)(loadData, this.props);
+                    const onLoadData = params.onLoadData.bind(this)(loadData, this.props);
+                    if (onLoadData instanceof Promise) {
+                        const time = Date.now();
+                        res = await onLoadData;
+                        // 强制 执行加载最少 600 毫秒
+                        await new Promise((res, rej) => {
+                            lodash.delay(res, 600 - (Date.now() - time))
+                        });
+                    } else if (lodash.isFunction(onLoadData)) {
+                        res = onLoadData();
+                    } else {
+                        res = onLoadData;
+                    }
                 }
                 this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 super.componentDidMount && super.componentDidMount()
@@ -253,7 +310,7 @@ export function DialogFormDes(params: {
             render() {
                 const { __spinning, __details, __key } = this.state;
                 // const notLoadData = this.isOnLoadData && !this.props.loadData;
-                return <Spin tip="Loading..." spinning={__spinning}>
+                return <Spin tip={params.tip || 'Loading...'} spinning={__spinning}>
                     {__spinning ? <Skeleton paragraph={{ rows: 10 }} /> : <Component {...this.props} defaultValues={__details} />}
                 </Spin>
             }
