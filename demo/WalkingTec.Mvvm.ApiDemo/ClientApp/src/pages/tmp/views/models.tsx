@@ -197,6 +197,13 @@ export default {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
                 formItem: <Editer placeholder="输入正文内容" />
+            },
+            Test: {
+                label: "测试获取数据",
+                rules: [],
+                formItem: () => {
+                    return <Input placeholder="请输入 Email" />
+                }
             }
         }
     },

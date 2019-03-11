@@ -5,6 +5,7 @@ import * as React from 'react';
 import Store from 'store/index';
 import { observer } from 'mobx-react';
 import RequestFiles from 'utils/RequestFiles';
+import globalConfig from 'global.config';
 const { Header } = Layout;
 export default class App extends React.Component<any, any> {
     shouldComponentUpdate() {
@@ -12,7 +13,7 @@ export default class App extends React.Component<any, any> {
     }
     render() {
         return (
-            <Header  className="app-layout-header">
+            <Header className="app-layout-header">
                 <Row>
                     <Col span={4}><Icon onClick={() => { Store.Meun.toggleCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
                     <Col span={20} style={{ textAlign: "right" }}>
@@ -28,7 +29,7 @@ class UserMenu extends React.Component<any, any> {
     render() {
         return (
             <Dropdown overlay={
-                <Menu>
+                globalConfig.development ? <Menu>
                     <Menu.Item>
                         <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} />代码生成器</a>
                     </Menu.Item>
@@ -41,7 +42,15 @@ class UserMenu extends React.Component<any, any> {
                     <Menu.Item>
                         <a onClick={e => { Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
                     </Menu.Item>
-                </Menu>
+                </Menu> : <Menu>
+                        <Menu.Item>
+                            <a >  <Icon type={'appstore'} />设置</a>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <a onClick={e => { Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
+                        </Menu.Item>
+                    </Menu>
+
             } placement="bottomCenter">
                 <div className="app-user-menu" >
                     <div>
