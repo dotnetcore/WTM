@@ -120,3 +120,43 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
         </InfoShellLayout>
     }
 }
+
+
+/**
+ * 测试表单
+ */
+@DialogFormDes({
+    onFormSubmit(values) {
+        console.log("数据", values)
+        // return Store.onInsert(values)
+        return () => {
+            return true
+        }
+    },
+    onLoadData(values, props) {
+        // return Store.onDetails(values)
+        return {
+            CreateTime: "2019-03-10",
+            Date2: "2019-03-10 23:55:16",
+            Editer: "&lt;p style=&quot;text-align:center;&quot;&gt;&lt;strong&gt;&lt;span style=&quot;color:#003ba5&quot;&gt;&lt;span style=&quot;font-size:40px&quot;&gt;阿发达安抚打发打发啊的安抚阿发阿发暗杀啊&lt;/span&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;"//'<div style="color:#00FF00;">0.0041245</div>'
+        }
+    }
+})
+@observer
+export class TestForm extends React.Component<any, any> {
+    models = Models.testModels(this.props);
+    render() {
+        // item 的 props
+        const props = {
+            ...this.props,
+            // 模型
+            models: this.models,
+            layout: "row"
+        }
+        return (
+            <InfoShellLayout>
+                {Models.renderModels(props)}
+            </InfoShellLayout>
+        )
+    }
+}
