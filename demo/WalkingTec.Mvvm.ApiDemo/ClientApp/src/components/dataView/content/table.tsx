@@ -47,8 +47,8 @@ const TableUtils = {
             // 表头
             const { clientWidth } = tableBody.querySelector(".ant-table-thead ");
             // 选择框
-            const selectionColumn: HTMLDivElement = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
-            TableUtils.selectionColumnWidth = lodash.get(selectionColumn, 'clientWidth', 0);
+            // const selectionColumn: HTMLDivElement = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
+            // TableUtils.selectionColumnWidth = lodash.get(selectionColumn, 'clientWidth', 0);
             // lodash.defer(() => {
             //     console.log(selectionColumn.clientWidth)
             // })
@@ -67,7 +67,7 @@ const TableUtils = {
             //计算表格设置的总宽度
             const columnWidth = this.onGetcolumnsWidth(columns);
             // 总宽度差值
-            const width = clientWidth - columnWidth - exclude - TableUtils.selectionColumnWidth;
+            const width = clientWidth - columnWidth - exclude + 300;// TableUtils.selectionColumnWidth;
             if (width > 0) {
                 const average = Math.ceil(width / columnsLenght)
                 // 平均分配
