@@ -5,28 +5,28 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Select } from 'antd';
-import { SelectProps } from 'antd/lib/select';
+import { Checkbox, Spin } from 'antd';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
-
+import { CheckboxGroupProps } from 'antd/lib/checkbox';
+const CheckboxGroup = Checkbox.Group;
 interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     dataKey?: string;
     value?: any;
     /** 多选 */
-    multiple?: boolean;
+    // multiple?: boolean;
     disabled?: boolean;
     placeholder?: React.ReactNode;
-    SelectProps?: SelectProps;
+    CheckboxGroupProps?: CheckboxGroupProps;
     display?: boolean;
     [key: string]: any;
 }
 @DesError
-export class WtmSelect extends React.Component<IAppProps, any> {
-    static wtmType = "Select";
+export class WtmCheckbox extends React.Component<IAppProps, any> {
+    static wtmType = "Checkbox";
     key = "Value";
     title = "Text";
     description = "Text";
@@ -102,41 +102,33 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         const { value, dataKey } = this.props;
         // 默认值
         if (!lodash.isNil(value)) {
-            let newValue = null;
-            // 默认值 多选
-            if (config.mode == "multiple" && lodash.isArray(value)) {
-                newValue = value.map(x => {
-                    if (lodash.isString(x)) {
-                        return x;
-                    }
-                    if (dataKey) {
-                        return lodash.get(x, dataKey)
-                    }
-                    // 没有找到 dataKey
-                    return lodash.toString(x);
-                })
-            }
-            // 单选
-            else {
-                newValue = lodash.toString(value);
-            }
+            let newValue = value.map(x => {
+                if (lodash.isString(x)) {
+                    return x;
+                }
+                if (dataKey) {
+                    return lodash.get(x, dataKey)
+                }
+                // 没有找到 dataKey
+                return lodash.toString(x);
+            })
             config.defaultValue = newValue
         }
         return config;
     }
     render() {
-        let config: SelectProps = {
-            allowClear: true,
-            showArrow: true,
-            loading: this.state.loading,
-            // mode: "multiple",
-            placeholder: this.props.placeholder,
+        // console.log(this.props)
+        let config: CheckboxGroupProps = {
             disabled: this.props.disabled,
-            onChange: this.handleChange
-        }
-        // 多选
-        if (this.props.multiple) {
-            config.mode = "multiple"
+            onChange: this.handleChange,
+            options: this.state.mockData.map(x => {
+                return {
+                    ...x,
+                    label: x.title,
+                    value: x.key
+                }
+            }),
+            defaultValue: this.props.value
         }
         config = this.getDefaultValue(config);
         if (this.props.display) {
@@ -151,18 +143,14 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         }
         // throw "aaaaa"
         return (
-            <Select
-                {...config}
-            >
-                {this.renderOption()}
-            </Select>
+            <Spin spinning={this.state.loading}>
+                <CheckboxGroup
+                    {...config}
+                />
+            </Spin>
+
         );
-    }
-    renderOption() {
-        return this.state.mockData.map(x => {
-            return <Select.Option key={x.key} value={x.key}>{x.title}</Select.Option>
-        })
     }
 }
 
-export default WtmSelect
+export default WtmCheckbox

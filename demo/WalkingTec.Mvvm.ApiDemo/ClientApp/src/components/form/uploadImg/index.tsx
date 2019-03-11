@@ -15,7 +15,7 @@ function beforeUpload(file) {
     // }
     return isJPG //&& isLt2M;
 }
-export default class UploadImg extends React.Component<any, any> {
+export  class WtmUploadImg extends React.Component<any, any> {
     static wtmType = "UploadImg";
     img = new Image();
     viewer: Viewer = new Viewer(this.img);
@@ -110,3 +110,4 @@ export default class UploadImg extends React.Component<any, any> {
         );
     }
 }  
+export default WtmUploadImg

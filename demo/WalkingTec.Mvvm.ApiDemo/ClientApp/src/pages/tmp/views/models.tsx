@@ -1,10 +1,11 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-import { WtmDatePicker } from 'components/form/datePicker';
-import Editer from 'components/form/editer';
-import Selects from 'components/form/select';
-import Transfer from 'components/form/transfer';
-import UploadImg from 'components/form/uploadImg';
+// import { WtmDatePicker } from 'components/form/datePicker';
+// import Editer from 'components/form/editer';
+// import Selects from 'components/form/select';
+// import Transfer from 'components/form/transfer';
+// import UploadImg from 'components/form/uploadImg';
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg,WtmCheckbox } from 'components/form'
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
@@ -51,13 +52,13 @@ export default {
             PhotoId: {
                 label: "照片",
                 rules: [],
-                formItem: <UploadImg />
+                formItem: <WtmUploadImg />
             },
             /** 性别 */
             Sex: {
                 label: "性别",
                 rules: [],
-                formItem: <Selects
+                formItem: <WtmSelect
                     placeholder="性别"
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
@@ -67,7 +68,7 @@ export default {
             UserGroups: {
                 label: "用户组",
                 rules: [],
-                formItem: <Selects
+                formItem: <WtmSelect
                     placeholder="用户组"
                     multiple // 多选标记
                     //请求 数据 Observable 对象，
@@ -79,7 +80,7 @@ export default {
             UserRoles: {
                 label: "角色",
                 rules: [],
-                formItem: <Transfer
+                formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
@@ -98,7 +99,7 @@ export default {
             Editer: {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
-                formItem: <Editer placeholder="输入正文内容" />
+                formItem: <WtmEditor placeholder="输入正文内容" />
             }
         }
     },
@@ -124,7 +125,7 @@ export default {
             UserGroups: {
                 label: "用户组",
                 rules: [],
-                formItem: <Selects
+                formItem: <WtmSelect
                     placeholder="用户组"
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
@@ -149,14 +150,25 @@ export default {
             PhotoId: {
                 label: "照片",
                 rules: [],
-                formItem: <UploadImg />
+                formItem: <WtmUploadImg />
             },
             /** 性别 */
             Sex: {
                 label: "性别",
                 rules: [],
-                formItem: <Selects
+                formItem: <WtmSelect
                     placeholder="性别"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                />
+            },
+             /** 性别 */
+             WtmRadio: {
+                label: "性别",
+                rules: [],
+                formItem: <WtmRadio
+                    placeholder="性别"
+                    // value="1"
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
                 />
@@ -165,9 +177,19 @@ export default {
             UserGroups: {
                 label: "用户组",
                 rules: [],
-                formItem: <Selects
+                formItem: <WtmSelect
                     placeholder="用户组"
                     multiple // 多选标记
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataKey="GroupId"
+                />
+            },
+            WtmCheckbox:{
+                label: "用户组",
+                rules: [],
+                formItem: <WtmCheckbox
+                    placeholder="用户组"
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
@@ -177,7 +199,7 @@ export default {
             UserRoles: {
                 label: "角色",
                 rules: [],
-                formItem: <Transfer
+                formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
@@ -196,7 +218,7 @@ export default {
             Editer: {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
-                formItem: <Editer placeholder="输入正文内容" />
+                formItem: <WtmEditor placeholder="输入正文内容" />
             },
             Test: {
                 label: "测试获取数据",

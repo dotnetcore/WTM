@@ -16,7 +16,7 @@ import './style.less'
  * https://github.com/margox/braft-editor
  * 富文本编辑
  */
-export default class Editor extends React.Component<BraftEditorProps, any> {
+export  class WtmEditor extends React.Component<BraftEditorProps, any> {
   static wtmType = "Editor";
   console = true
   default: BraftEditorProps = {
@@ -52,4 +52,5 @@ export default class Editor extends React.Component<BraftEditorProps, any> {
     </Card>
   }
 }
+export default WtmEditor
 

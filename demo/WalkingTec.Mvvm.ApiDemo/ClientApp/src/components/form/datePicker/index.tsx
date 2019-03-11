@@ -13,6 +13,7 @@ import * as React from 'react';
 
 
 export class WtmDatePicker extends React.Component<DatePickerProps, any> {
+  static wtmType = "DatePicker";
   onChange(data, dataString) {
     const onChange: any = this.props.onChange;
     // onChange && onChange(moment(dataString, this.getFormat()).valueOf(), data)
@@ -40,3 +41,4 @@ export class WtmDatePicker extends React.Component<DatePickerProps, any> {
     return (<DatePicker  {...props} onChange={this.onChange.bind(this)} />);
   }
 }
+export default WtmDatePicker
