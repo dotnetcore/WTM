@@ -105,8 +105,12 @@ export class FormItem extends React.Component<IFormItemProps, any> {
 function itemRender(props, config) {
     const { form = {}, disabled, display, fieId } = props;
     const { options, model } = config;
+    let { formItem } = model;
     const { getFieldDecorator }: WrappedFormUtils = form;
     let renderItem, propsNew: any = { form };
+    if (lodash.isFunction(formItem)) {
+        formItem = formItem()
+    }
     // 禁用显示 span
     if (lodash.isEqual(display, true)) {
         propsNew.display = "true";
@@ -114,14 +118,14 @@ function itemRender(props, config) {
         renderItem = itemToDisplay(props, config)
     } else {
         //  判断 组件 是否 已经 是 getFieldDecorator组件
-        if (lodash.get(model.formItem, "props.data-__field")) {
-            renderItem = model.formItem;
+        if (lodash.get(formItem, "props.data-__field")) {
+            renderItem = formItem;
         } else {
             if (getFieldDecorator) {
                 // console.log(fieId, options.initialValue)
-                renderItem = getFieldDecorator(fieId as never, options)(model.formItem);
+                renderItem = getFieldDecorator(fieId as never, options)(formItem);
             } else {
-                renderItem = model.formItem;
+                renderItem = formItem;
                 console.warn("没有解析到 getFieldDecorator")
             }
         }
@@ -145,16 +149,17 @@ function itemRender(props, config) {
 function itemToDisplay(props, config) {
     const { disabled, display, fieId } = props;
     const { options, model } = config;
+    let { formItem } = model;
     let value = options.initialValue;
     let render = null;
 
-    switch (lodash.get(model.formItem, "type.wtmType")) {
+    switch (lodash.get(formItem, "type.wtmType")) {
         case "UploadImg":
             render = <ToImg fileID={value} />
             break;
         case "Select":
         case "Transfer":
-            render = model.formItem;// React.cloneElement(model.formItem, {});
+            render = formItem;// React.cloneElement(model.formItem, {});
             break;
         default:
             // 数据 是 obj 类型转换 为 json 字符串，防止 react 报错
