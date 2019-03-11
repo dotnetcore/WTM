@@ -58,7 +58,7 @@ export default {
     /** 
     * 详情信息 展示 宽度
     */
-    infoTypeWidth: '40%',
+    infoTypeWidth: '800px',
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
