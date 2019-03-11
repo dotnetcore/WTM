@@ -1,4 +1,6 @@
 import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
+import { WtmDatePicker } from 'components/form/datePicker';
+import Editer from 'components/form/editer';
 import UploadImg from 'components/form/uploadImg';
 import Transfer from 'components/form/transfer';
 import Selects from 'components/form/select';

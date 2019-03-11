@@ -948,7 +948,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <WtmDatePicker placeholder=""请输入 {label}"" />");
                         }
                     }
                     fieldstr.Append("            }");

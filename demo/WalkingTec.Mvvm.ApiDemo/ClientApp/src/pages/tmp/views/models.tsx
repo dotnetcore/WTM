@@ -88,7 +88,7 @@ export default {
             CreateTime: {
                 label: "时间测试",
                 rules: [],
-                formItem: <WtmDatePicker />
+                formItem: <WtmDatePicker placeholder=" 请输入时间测试" />
             },
             Date2: {
                 label: "时间测试2",//显示 时间，禁用 小于当前天数
