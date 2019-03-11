@@ -20,8 +20,11 @@ interface IAppProps {
     [key: string]: any;
 }
 @DesError
-export default class extends React.Component<IAppProps, any> {
+export class WtmTransfer extends React.Component<IAppProps, any> {
     static wtmType = "Transfer";
+    key = "Value";
+    title = "Text";
+    description = "Text";
     state = {
         loading: true,
         mockData: [],
@@ -59,9 +62,9 @@ export default class extends React.Component<IAppProps, any> {
             mockData = res.map(item => {
                 return {
                     ...item,
-                    key: lodash.toString(item.Value),
-                    title: item.Text,
-                    description: item.Text,
+                    key: lodash.toString(lodash.get(item, this.key)),
+                    title: lodash.get(item, this.title),
+                    description: lodash.get(item, this.description),
                 }
             })
         } catch (error) {
@@ -114,3 +117,4 @@ export default class extends React.Component<IAppProps, any> {
     }
 }
 
+export default WtmTransfer
