@@ -157,16 +157,12 @@ export class Request {
      * @param emptyBody 清空 body 
      */
     parameterTemplate(url, body, emptyBody = false) {
-        if (/{([\s\S]+?)}/g.test(url)) {
+        if (lodash.isObject(body) && /{([\s\S]+?)}/g.test(url)) {
             if (typeof body == "object") {
-                url = lodash.template(url, {
-                    interpolate: /{([\s\S]+?)}/g
-                })(body);
+                url = lodash.template(url, { interpolate: /{([\s\S]+?)}/g })(body);
             }
             // 清空body
-            if (emptyBody) {
-                body = {};
-            }
+            emptyBody && (body = {});
         }
         return {
             url,

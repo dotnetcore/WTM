@@ -17,6 +17,8 @@ import Table from './views/table';
  */
 @AuthorizeDecorator({ PageStore: Store })
 export default class App extends React.Component<WTM.PageProps, any> {
+  /** 当前页面状态 */
+  static PageStore = Store
   render() {
     return (
       <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
