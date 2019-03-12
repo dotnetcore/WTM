@@ -488,6 +488,37 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        public static string GetEnumDisplayName(Type enumType, int value)
+        {
+            string rv = "";
+            FieldInfo field = null;
+            string ename = "";
+            if (enumType.IsEnum())
+            {   ename = enumType.GetEnumName(value);
+                field = enumType.GetField(ename);
+            }
+            //如果是nullable的枚举
+            if (enumType.IsGeneric(typeof(Nullable<>)) && enumType.GetGenericArguments()[0].IsEnum())
+            {
+                    ename = enumType.GenericTypeArguments[0].GetEnumName(value);
+                    field = enumType.GenericTypeArguments[0].GetField(ename);
+            }
+
+            if (field != null)
+            {
+
+                var attribs = field.GetCustomAttributes(typeof(DisplayAttribute), true).ToList();
+                if (attribs.Count > 0)
+                {
+                    rv = ((DisplayAttribute)attribs[0]).GetName();
+                }
+                else
+                {
+                    rv = ename;
+                }
+            }
+            return rv;
+        }
 
         /// <summary>
         /// 转化值
