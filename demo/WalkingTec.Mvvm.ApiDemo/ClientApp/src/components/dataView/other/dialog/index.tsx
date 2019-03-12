@@ -205,7 +205,7 @@ class Optimization extends React.Component<{
     }
     renderFrom() {
         const { option, visible } = this.props;
-        const children = this.props.children && React.cloneElement(this.props.children as any, { form: this.props.form }, null);
+        const children = this.props.children && React.cloneElement(this.props.children as any, { form: this.props.form });
         if (option.button) {
             return <div className='app-shell-body'>
                 <Spin tip="Loading..." spinning={this.state.loading} >
