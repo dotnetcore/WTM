@@ -7,6 +7,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -201,5 +202,25 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             return Ok(test);
         }
 
+        [HttpGet("GetMenu")]
+        [ActionDescription("获取菜单")]
+        public ActionResult GetMenu()
+        {
+            var data = DC.Set<FrameworkModule>().Include(x => x.Actions).ToList();
+            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
+            foreach (var item in data)
+            {
+                ComboSelectListItem c = new ComboSelectListItem { Text = item.ModuleName, Value = item.ID.ToString(), Children = new List<ComboSelectListItem>() };
+                if(item.Actions != null)
+                {
+                    foreach (var a in item.Actions)
+                    {
+                        c.Children.Add(new ComboSelectListItem { Text = a.ActionName, Value = a.ID.ToString() });
+                    }
+                }
+                rv.Add(c);
+            }
+            return Ok(rv);
+        }
     }
 }
