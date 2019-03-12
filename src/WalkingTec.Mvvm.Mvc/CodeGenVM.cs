@@ -1019,10 +1019,9 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" showArrow allowClear>
-                    <Select.Option value={{1}}>是</Select.Option>
-                    <Select.Option value={{0}}>否</Select.Option>
-                </Select>");
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""  dataSource={{[
+                    {{ Text: ""是"", Value: true }},{{ Text: ""否"", Value: false }}
+                ]}}/>");
                         }
                         else if (checktype.IsEnum())
                         {
