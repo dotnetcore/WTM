@@ -877,6 +877,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         rules = $@"rules: [{{ ""required"": true, ""message"": ""{label}不能为空"" }}]";
                     }
+                    fieldstr.AppendLine($@"            /** {label} */");
                     if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
                     {
                         var fk = DC.GetFKName2(modelType, item.FieldName);
@@ -974,6 +975,7 @@ namespace WalkingTec.Mvvm.Mvc
                     string label = property.GetPropertyDisplayName();
                     string rules = "rules: []";
 
+                    fieldstr2.AppendLine($@"            /** {label} */");
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
