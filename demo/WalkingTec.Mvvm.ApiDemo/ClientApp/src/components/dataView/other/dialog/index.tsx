@@ -34,9 +34,9 @@ declare type Props = {
     /** 自定义按钮 */
     button?: (props: {
         /** form 提交 事件 */
-        onSubmit: ()=>void;
+        onSubmit: () => void;
         /** 关闭窗口 事件 */
-        onCancel: ()=>void;
+        onCancel: () => void;
     }) => React.ReactNode;
     /**ß
      * 按钮类型ß
@@ -205,7 +205,7 @@ class Optimization extends React.Component<{
     }
     renderFrom() {
         const { option, visible } = this.props;
-        const children = React.cloneElement(this.props.children as any, { form: this.props.form }, null);
+        const children = this.props.children && React.cloneElement(this.props.children as any, { form: this.props.form }, null);
         if (option.button) {
             return <div className='app-shell-body'>
                 <Spin tip="Loading..." spinning={this.state.loading} >
