@@ -219,7 +219,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果列是枚举，直接使用枚举的文本作为多语言的Key查询多语言文字
                         else if (ptype.IsEnumOrNullableEnum())
                         {
-                            html = PropertyHelper.GetEnumDisplayName(ptype, html);
+                            if (int.TryParse(html, out int enumvalue))
+                            {
+                                html = PropertyHelper.GetEnumDisplayName(ptype, enumvalue);
+                            }
                         }
                         if (style != string.Empty)
                         {
