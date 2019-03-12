@@ -893,19 +893,19 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (item.SubField == "`file")
                         {
-                            fieldstr.AppendLine($@"                formItem: <UploadImg />");
+                            fieldstr.AppendLine($@"                formItem: <WtmUploadImg />");
                         }
                         else
                         {
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
-                                fieldstr.AppendLine($@"                formItem: <Selects placeholder=""{label}"" 
+                                fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" 
                     dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} 
                 /> ");
                             }
                             else
                             {
-                                fieldstr.AppendLine($@"                formItem: <Transfer
+                                fieldstr.AppendLine($@"                formItem: <WtmTransfer
                     dataSource={{Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
                     dataKey=""{item.SubIdField}""
                 /> ");
@@ -928,7 +928,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr.AppendLine($@"                formItem: <Selects placeholder=""{label}"" dataSource={{[  ");
+                            fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" dataSource={{[  ");
                             for(int a=0;a<es.Count;a++)
                             {
                                 var e = es[a];
@@ -941,8 +941,11 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             fieldstr.AppendLine($@"                ]}}/>");
                         }
-
-                        else if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
+                        else if (checktype.IsNumber())
+                        {
+                            fieldstr.AppendLine($@"                formItem: <InputNumber placeholder=""请输入 {label}"" />");
+                        }
+                        else if (checktype == typeof(string))
                         {
                             fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
                         }
@@ -994,13 +997,13 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
-                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部"" 
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" 
                     dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} 
                 /> ");
                         }
                         else
                         {
-                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部""  multiple
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""  multiple
                     dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
 
@@ -1016,7 +1019,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <Select placeholder=""全部"" showArrow allowClear>
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" showArrow allowClear>
                     <Select.Option value={{1}}>是</Select.Option>
                     <Select.Option value={{0}}>否</Select.Option>
                 </Select>");
@@ -1024,7 +1027,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr2.AppendLine($@"                formItem: <Selects placeholder=""全部"" dataSource={{[  ");
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" dataSource={{[  ");
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
@@ -1037,13 +1040,17 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             fieldstr2.AppendLine($@"                ]}}/>");
                         }
-                        else if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
+                        else if (checktype.IsNumber())
+                        {
+                            fieldstr2.AppendLine($@"                formItem: <InputNumber placeholder="""" />");
+                        }
+                        else if (checktype == typeof(string))
                         {
                             fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <Input placeholder="""" />");
+                            fieldstr2.AppendLine($@"                formItem: <WtmDatePicker placeholder="""" />");
                         }
                     }
                     fieldstr2.Append("            }");
