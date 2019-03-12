@@ -17,10 +17,7 @@ import Table from './views/table';
  */
 @AuthorizeDecorator({ PageStore: Store })
 export default class App extends React.Component<WTM.PageProps, any> {
-  constructor(props) {
-    super(props);
-    Store.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
-  }
+  static PageStore = Store
   render() {
     return (
       <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
