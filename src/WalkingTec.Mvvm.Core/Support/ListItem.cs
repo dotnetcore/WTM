@@ -11,6 +11,8 @@ namespace WalkingTec.Mvvm.Core
         public string Text { get; set; }
         public string Value { get; set; }
         public bool Selected { get; set; }
+
+        public List<ComboSelectListItem> Children { get; set; }
     }
 
     /// <summary>

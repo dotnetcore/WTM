@@ -99,6 +99,19 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self.GetTypeInfo().IsPrimitive || self == typeof(decimal);
         }
 
+        public static bool IsNumber(this Type self)
+        {
+            if(self == typeof(int) || self == typeof(short) || self == typeof(long) || self == typeof(float) || self == typeof(decimal))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
         #region 判断是否是Bool
 
         public static bool IsBool(this Type self)
