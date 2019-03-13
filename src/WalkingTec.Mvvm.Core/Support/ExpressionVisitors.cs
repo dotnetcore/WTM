@@ -114,6 +114,9 @@ namespace WalkingTec.Mvvm.Core
             var parentNode = exp.Arguments[0] as MethodCallExpression;
             if (parentNode == null || (parentNode.Method.Name.ToLower() != "orderby" && parentNode.Method.Name.ToLower() != "orderbydescending"))
             {
+                if(parentNode == null){
+                    return exp.Arguments[0];
+                }
                 return parentNode;
             }
             else
