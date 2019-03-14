@@ -32,11 +32,9 @@ export default class App extends React.Component<any, any> {
   renderRoutes = renderRoutes(this.props.route.routes);
   render() {
     return (
-      <Layout  className="app-layout-body" ref={e => this.body = ReactDOM.findDOMNode(e) as any}>
-        <Content  className="app-layout-content" >
-          {this.renderRoutes}
-        </Content>
-      </Layout>
+      <Content className="app-layout-content" >
+        {this.renderRoutes}
+      </Content>
     );
 
   }

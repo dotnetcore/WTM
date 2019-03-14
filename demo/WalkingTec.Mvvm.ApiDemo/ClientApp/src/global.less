@@ -1,5 +1,7 @@
 body {
     background-color: #f0f2f5;
+    min-height: 100vh;
+    height: auto;
 }
 
 #root {
@@ -7,20 +9,7 @@ body {
     background-repeat: no-repeat;
     background-position: center 110px;
     background-size: 100%;
-    .app-loadable-loading {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        >div {
-            width: 200px;
-            height: 200px;
-            background-image: url(./assets/svg/loading.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 100%;
-        }
-    }
+    min-height: 100vh;
 }
 
 #nprogress {
@@ -67,10 +56,10 @@ body {
     cursor: pointer;
 }
 
-// ::-webkit-scrollbar-thumb:hover {
-//     background: rgb(123, 123, 123);
-//     cursor: pointer
-// }
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(123, 123, 123);
+    cursor: pointer
+}
 /* 过度动画 */
 
 .fade-enter {
