@@ -1,11 +1,10 @@
 
 import { Icon, Layout, Menu } from 'antd';
+import GlobalConfig from 'global.config';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import GlobalConfig from 'global.config';
 import Store from 'store/index';
-import lodash from 'lodash';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 @observer
@@ -61,33 +60,37 @@ export default class App extends React.Component<any, any> {
       selectedKeys: [selectedKeys],
       defaultOpenKeys: [openKeys]
     }
-    let width = 250;
+    let width = this.props.LayoutStore.collapsedWidth;
     let title = GlobalConfig.default.title;
-    if (Store.Meun.collapsed) {
-      width = 80;
+    if (this.props.LayoutStore.collapsed) {
       title = "";
     }
     return (
-      <div className="app-layout-sider" style={{ width, minWidth: width }} >
-        <div className="app-layout-logo" >
-          <img src={GlobalConfig.default.logo} /><span>{title}</span>
+      <>
+        <div className="app-layout-sider" style={{ width, minWidth: width }} >
+          <div className="app-layout-logo" >
+            <img src={GlobalConfig.default.logo} /><span>{title}</span>
+          </div>
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={[selectedKeys]}
+            {...config}
+            style={{ borderRight: 0, width }}
+            inlineCollapsed={this.props.LayoutStore.collapsed}
+          >
+            <Menu.Item key="/">
+              <Link to="/">
+                <Icon type="home" /><span>首页</span>
+              </Link>
+            </Menu.Item>
+            {this.runderSubMenu()}
+          </Menu>
         </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[selectedKeys]}
-          {...config}
-          style={{ borderRight: 0, width }}
-          inlineCollapsed={Store.Meun.collapsed}
-        >
-          <Menu.Item key="/">
-            <Link to="/">
-              <Icon type="home" /><span>首页</span>
-            </Link>
-          </Menu.Item>
-          {this.runderSubMenu()}
-        </Menu>
-      </div>
+        <div className="app-layout-sider-stance" style={{ width, minWidth: width }}>
+
+        </div>
+      </>
     );
   }
 }

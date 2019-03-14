@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, notification, Table, Switch, Icon, Popover, Button } from 'antd';
+import { Alert, Divider, Affix, Table, Switch, Icon, Popover, Button } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
@@ -18,6 +18,7 @@ import Store from 'store/dataSource';
 import { ToImg } from '../help/toImg';
 import Regular from 'utils/Regular';
 import './style.less';
+import { async } from 'q';
 interface ITablePorps {
     /** 状态 */
     Store: Store,
@@ -113,7 +114,6 @@ const TableUtils = {
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
             x: scrollX,
-            // y: 550
         }
     },
     /**
@@ -152,19 +152,10 @@ const TableUtils = {
 @observer
 export class DataViewTable extends React.Component<ITablePorps, any> {
     @observable columns = this.props.columns.map(x => {
-        // if (typeof x.fixed === "string") {
-        //     if (!x.width) {
-        //         notification.warn({
-        //             message: "fixed 列 需要设置固定宽度",
-        //             description: `Title ${x.title}`
-        //         })
-        //         x.width = 150;
-        //     }
-        //     return x;
-        // }
-        x.width = lodash.get(x, 'width', 150)
+        x.width = lodash.get(x, 'width', 200)
         return x;
     });
+    @observable Height = 500;
     Store = this.props.Store;
     tableRef = React.createRef<any>();
     tableDom: HTMLDivElement;
@@ -244,21 +235,32 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             onChange: e => this.Store.onSelectChange(e),
         };
     }
+    @action
+    getHeight() {
+        if (this.tableDom) {
+            const height = window.innerHeight - this.tableDom.offsetTop - 120;
+            if (this.Height != height) {
+                this.Height = height
+            }
+        }
+    }
     /**
      * 
      */
     resize: Rx.Subscription
-    componentDidMount() {
+    async componentDidMount() {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
             TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch();
+            await this.Store.onSearch();
+            this.getHeight()
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
                 if (this.tableDom.clientWidth > TableUtils.clientWidth) {
                     TableUtils.clientWidth = this.tableDom.clientWidth;
                     this.initColumns();
                 }
+                this.getHeight()
             });
         } catch (error) {
 
@@ -281,17 +283,18 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 }
             });
             const scroll = TableUtils.onGetScroll(columns)
+            console.log(this.Height)
             return (
                 <Table
                     ref={this.tableRef}
                     bordered
-                    size="default"
+                    size="small"
                     className="data-view-table"
                     components={TableUtils.components}
                     dataSource={toJS(dataSource.Data)}
                     onChange={this.onChange.bind(this)}
                     columns={columns}
-                    scroll={scroll}
+                    scroll={{ ...scroll, y: this.Height }}
                     rowSelection={this.onRowSelection()}
                     loading={this.Store.pageState.loading}
                     pagination={
@@ -301,7 +304,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                             showSizeChanger: true,//是否可以改变 pageSize
                             showQuickJumper: true,
                             pageSize: dataSource.Limit,
-                            size: "default",
+                            size: "small",
                             current: dataSource.Page,
                             defaultPageSize: dataSource.Limit,
                             defaultCurrent: dataSource.Page,
