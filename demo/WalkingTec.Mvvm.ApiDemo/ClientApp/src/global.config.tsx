@@ -2,6 +2,8 @@ import { notification, Modal } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
 import { configure } from 'mobx';
+import lodash from 'lodash';
+
 import "./global.less";
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
@@ -10,10 +12,12 @@ notification.config({
     top: 60
 });
 const development = process.env.NODE_ENV === "development"
-if (development && 'ActiveXObject' in window) {
-    Modal.confirm({
-        title: "求求您，别用IE了~"
-    })
+if (development) {
+    if ('ActiveXObject' in window || lodash.includes(lodash.toLower(lodash.get(window, 'navigator.userAgent', '')), "edge")) {
+        Modal.confirm({
+            title: "求求您，别用IE了~"
+        })
+    }
 }
 export default {
     /**
