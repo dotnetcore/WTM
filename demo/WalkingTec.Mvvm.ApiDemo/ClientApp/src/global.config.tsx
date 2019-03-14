@@ -81,6 +81,6 @@ export default {
     searchColumnCount: 3,
     /**
      * 锁定表格滚动
-      */
-    lockingTableRoll: true
+     */
+    lockingTableRoll: false
 }
