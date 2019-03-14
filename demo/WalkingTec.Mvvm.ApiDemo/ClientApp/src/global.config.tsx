@@ -82,5 +82,5 @@ export default {
     /**
      * 锁定表格滚动
      */
-    lockingTableRoll: false
+    lockingTableRoll: true
 }
