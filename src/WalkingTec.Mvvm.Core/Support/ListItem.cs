@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.Core
         public string Value { get; set; }
         public bool Selected { get; set; }
 
+        public string ChildrenUrl { get; set; }
         public List<ComboSelectListItem> Children { get; set; }
     }
 

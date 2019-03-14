@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core.Implement
             return "";
         }
 
-        public string MakeScriptButton(ButtonTypesEnum buttonType, string url, int? width, int? height, string windowID, string buttonText, string title = null, string buttonID = null, string script = "")
+        public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null)
         {
             return "";
         }

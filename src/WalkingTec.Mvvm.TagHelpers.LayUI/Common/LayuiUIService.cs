@@ -114,9 +114,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}", buttonText, width, height, title, null, true, resizable);
         }
 
-        public string MakeScriptButton(ButtonTypesEnum buttonType, string url, int? width, int? height, string windowID, string buttonText, string title = null, string buttonID = null, string script = "")
+        public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null)
         {
-            return "";
+            if (buttonID == null)
+            {
+                buttonID = Guid.NewGuid().ToString();
+            }
+            var innerClick = script;
+            var click = $"<script>$('#{buttonID}').on('click',function(){{{innerClick};return false;}});</script>";
+            string rv = "";
+            if (buttonType == ButtonTypesEnum.Link)
+            {
+                rv = $"<a id='{buttonID}' style='color:blue;cursor:pointer'>{buttonText}</a>";
+            }
+            if (buttonType == ButtonTypesEnum.Button)
+            {
+                rv = $"<a id='{buttonID}' class='layui-btn layui-btn-primary layui-btn-xs'>{buttonText}</a>";
+            }
+            rv += click;
+            return rv;
         }
     }
 }

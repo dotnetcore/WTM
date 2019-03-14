@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Core
 
         string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default");
 
-        string MakeScriptButton(ButtonTypesEnum buttonType, string url, int? width, int? height, string windowID, string buttonText, string title = null, string buttonID = null, string script = "");
+        string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null);
 
         string MakeCheckBox(bool ischeck, string text = null, string name = null, string value = null, bool isReadOnly = false);
 

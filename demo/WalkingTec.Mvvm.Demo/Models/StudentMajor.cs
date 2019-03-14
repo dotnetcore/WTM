@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Attributes;
 
 namespace WalkingTec.Mvvm.Demo.Models
 {
+    [MiddleTable]
     public class StudentMajor : BasePoco
     {
         public Major Major { get; set; }

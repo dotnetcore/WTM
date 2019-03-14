@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     break;
                 case ColumnFormatTypeEnum.Script:
-                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Url, info.Width, info.Height, info.WindowID, info.Text, info.Title, info.ButtonID, info.Script).ToString();
+                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Text,  info.Script, info.ButtonID, info.Url).ToString();
                     break;
                 case ColumnFormatTypeEnum.Html:
                     rv = info.Html;
