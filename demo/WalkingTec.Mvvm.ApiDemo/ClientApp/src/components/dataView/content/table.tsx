@@ -5,8 +5,9 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, Affix, Table, Switch, Icon, Popover, Button } from 'antd';
+import { Alert, Divider, Icon, Switch, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
+import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
@@ -15,10 +16,9 @@ import ReactDOM from 'react-dom';
 import { Resizable } from 'react-resizable';
 import Rx from 'rxjs';
 import Store from 'store/dataSource';
-import { ToImg } from '../help/toImg';
 import Regular from 'utils/Regular';
+import { ToImg } from '../help/toImg';
 import './style.less';
-import { async } from 'q';
 interface ITablePorps {
     /** 状态 */
     Store: Store,
@@ -235,9 +235,17 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             onChange: e => this.Store.onSelectChange(e),
         };
     }
-    @action
     getHeight() {
-        if (this.tableDom) {
+        if (globalConfig.lockingTableRoll) {
+            return {
+                y: this.Height
+            }
+        }
+        return {}
+    }
+    @action
+    onCalculationHeight() {
+        if (globalConfig.lockingTableRoll && this.tableDom) {
             const height = window.innerHeight - this.tableDom.offsetTop - 120;
             if (this.Height != height) {
                 this.Height = height
@@ -252,18 +260,18 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
             TableUtils.clientWidth = this.tableDom.clientWidth;
-            await this.Store.onSearch();
-            this.getHeight()
+            this.Store.onSearch();
+            this.onCalculationHeight()
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
                 if (this.tableDom.clientWidth > TableUtils.clientWidth) {
                     TableUtils.clientWidth = this.tableDom.clientWidth;
                     this.initColumns();
                 }
-                this.getHeight()
+                this.onCalculationHeight()
             });
         } catch (error) {
-
+            console.error(error)
         }
     }
     componentWillUnmount() {
@@ -282,8 +290,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     }
                 }
             });
-            const scroll = TableUtils.onGetScroll(columns)
-            console.log(this.Height)
+            const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
             return (
                 <Table
                     ref={this.tableRef}
@@ -294,7 +301,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     dataSource={toJS(dataSource.Data)}
                     onChange={this.onChange.bind(this)}
                     columns={columns}
-                    scroll={{ ...scroll, y: this.Height }}
+                    scroll={scroll}
                     rowSelection={this.onRowSelection()}
                     loading={this.Store.pageState.loading}
                     pagination={
