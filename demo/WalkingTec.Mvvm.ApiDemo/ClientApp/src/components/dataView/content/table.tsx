@@ -280,16 +280,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     render() {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
-            const columns = this.columns.map(x => {
-                return {
-                    ...x,
-                    render: (text, record, index) => {
-                        return <div style={{ maxWidth: x.width }}>
-                            {x.render ? x.render(text, record, index) : text}
-                        </div>
-                    }
-                }
-            });
+            const columns = toJS(this.columns)
             const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
             return (
                 <Table
