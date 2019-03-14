@@ -8,6 +8,7 @@
 import Exception from 'ant-design-pro/lib/Exception';
 import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import Pages from 'pages/index';
@@ -17,12 +18,11 @@ import Loadable from 'react-loadable';
 import { renderRoutes } from 'react-router-config';
 import { BrowserRouter } from 'react-router-dom';
 import Store from 'store/index';
-import Layout from "./layout/index";
+import { Help } from 'utils/Help';
+import Layout from "./layout/default/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
-import globalConfig from 'global.config';
-import { Help } from 'utils/Help';
 
 @observer
 class Entrance extends React.Component<any, any> {
@@ -113,23 +113,22 @@ export default class RootRoutes extends React.Component<any, any> {
      * @param Loading 组件加载动画
      * @param cssTranParams 路由动画参数
      */
-    Loadable(Component, Animate = true, Loading = this.Loading, cssTranParams = { content: true, classNames: "fade" }) {
+    Loadable(Component, Animate = true, Loading = this.Loading) {
         if (!Loading) {
             Loading = (props) => this.Loading(props);
         }
         const loadable = Loadable({ loader: Component, loading: Loading });
         if (Animate) {
-            return this.createCSSTransition(loadable, cssTranParams.content, cssTranParams.classNames);
+            return this.createCSSTransition(loadable);
         }
         return loadable;
     };
     /**
-     * 过渡动画
-     * @param Component 组件
-     * @param content 
-     * @param classNames 动画
+     *  过渡动画
+     * @param Component 
+     * @param classNames 
      */
-    createCSSTransition(Component: any, content = true, classNames = "fade") {
+    createCSSTransition(Component: any, classNames = "fade") {
         return class extends React.PureComponent {
             render() {
                 return <Animate transitionName={classNames}
