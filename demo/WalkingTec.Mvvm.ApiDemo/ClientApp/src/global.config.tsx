@@ -79,4 +79,8 @@ export default {
     * 搜索 列 数 24 的除数
     */
     searchColumnCount: 3,
+    /**
+     * 锁定表格滚动
+      */
+    lockingTableRoll: true
 }

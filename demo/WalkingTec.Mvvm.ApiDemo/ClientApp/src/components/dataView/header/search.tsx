@@ -78,7 +78,13 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
     }
     @action.bound
     onToggle() {
-        this.toggle = !this.toggle
+        this.toggle = !this.toggle;
+        document.body.style.overflowY = "hidden";
+        lodash.defer(() => {
+            // 主动触发 浏览器 resize 事件
+            dispatchEvent(new CustomEvent('resize'));
+            lodash.delay(() => document.body.style.overflowY = "", 500)
+        })
     }
     render() {
         let items = [],
