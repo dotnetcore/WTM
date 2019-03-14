@@ -285,7 +285,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 return {
                     ...x,
                     render: (text, record, index) => {
-                        return <div style={{ maxWidth: x.width }}>
+                        return <div className="columns-render" style={{ maxWidth: x.width }}>
                             {x.render ? x.render(text, record, index) : text}
                         </div>
                     }
