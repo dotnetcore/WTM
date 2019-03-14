@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, Modal } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
 import { configure } from 'mobx';
@@ -10,7 +10,11 @@ notification.config({
     top: 60
 });
 const development = process.env.NODE_ENV === "development"
-
+if (development && 'ActiveXObject' in window) {
+    Modal.confirm({
+        title: "求求您，别用IE了~"
+    })
+}
 export default {
     /**
      * 开发环境
