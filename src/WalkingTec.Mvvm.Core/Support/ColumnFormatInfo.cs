@@ -46,17 +46,13 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
-        public static ColumnFormatInfo MakeScriptButton(ButtonTypesEnum buttonType, string url, int? width, int? height, string windowID, string buttonText, string title = null, string buttonID = null, string script = "")
+        public static ColumnFormatInfo MakeScriptButton(ButtonTypesEnum buttonType, string url, string buttonText, string buttonID = null, string script = "")
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Script;
             rv.ButtonType = buttonType;
             rv.Url = url;
-            rv.Width = width;
-            rv.Height = height;
-            rv.WindowID = windowID;
             rv.Text = buttonText;
-            rv.Title = title;
             rv.ButtonID = buttonID;
             rv.Script = script;
             return rv;

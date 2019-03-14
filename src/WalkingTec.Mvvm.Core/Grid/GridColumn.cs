@@ -34,6 +34,10 @@ namespace WalkingTec.Mvvm.Core
                 if (_field == null)
                 {
                     _field = PI?.Name;
+                    if(_field == null)
+                    {
+                        _field = (ColumnExp?.Body as ConstantExpression)?.Value?.ToString();
+                    }
                 }
                 return _field;
             }

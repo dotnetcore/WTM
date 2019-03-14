@@ -28,8 +28,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入1","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入2","", dialogWidth: 800),
-                 }),
-
+                 })
             };
         }
 
@@ -39,6 +38,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolCode),
                 this.MakeGridHeader(x => x.SchoolName),
                 this.MakeGridHeader(x => x.SchoolType),
+                this.MakeGridHeader(x => "test").SetFormat((a,b)=>{
+                    return this.UIService.MakeScriptButton(ButtonTypesEnum.Button,"测试","alert('aaa');");
+                }).SetHeader("测试"),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 500)
             };
