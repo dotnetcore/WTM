@@ -113,7 +113,7 @@ const TableUtils = {
         let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
-            x: scrollX,
+            x: scrollX + 100,
         }
     },
     /**
@@ -280,7 +280,17 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     render() {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
-            const columns = toJS(this.columns)
+            const columns = this.columns
+            .map(x => {
+                return {
+                    ...x,
+                    render: (text, record, index) => {
+                        return <div style={{ maxWidth: x.width }}>
+                            {x.render ? x.render(text, record, index) : text}
+                        </div>
+                    }
+                }
+            });
             const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
             return (
                 <Table
