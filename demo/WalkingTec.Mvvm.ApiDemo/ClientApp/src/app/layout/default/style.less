@@ -18,15 +18,17 @@
 }
 
 .app-layout-content {
-    margin: @headerHeight+10px 10px 10px;
+    padding: @headerHeight+10px 10px 10px;
     overflow: hidden;
-    background: @color-fff;
+    background: #e5e9ee;
     border-radius: 5px;
-    // min-height: 92vh;
+    min-height: 100vh;
+    box-sizing: border-box;
     .app-animate-content {
         box-sizing: border-box;
         background: @color-fff;
         padding: @padding;
+        min-height: 100%
     }
 }
 
