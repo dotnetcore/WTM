@@ -110,7 +110,8 @@ export class WtmRadio extends React.Component<IAppProps, any> {
                     value: x.key
                 }
             }),
-            defaultValue: this.props.value
+            value: this.props.value,
+            // defaultValue: this.props.value
         }
         if (this.props.display) {
             if (!this.state.loading) {
