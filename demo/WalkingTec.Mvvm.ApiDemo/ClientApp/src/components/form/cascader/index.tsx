@@ -16,11 +16,12 @@ import Request from 'utils/Request';
 interface IAppProps {
     dataSource: Observable<any[]> | any[] | Promise<any[]>;
     value?: any;
-    loadData?: boolean;
     disabled?: boolean;
     placeholder?: string;
     CascaderProps?: CascaderProps;
     display?: boolean;
+    /** 最后一级数据 */
+    lastData?: boolean;
     [key: string]: any;
 }
 @DesError
@@ -109,14 +110,14 @@ export class WtmCascader extends React.Component<IAppProps, any> {
     // filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
     handleChange = (targetKeys) => {
         // 多选 返回 值 为数组 的情况下 有 dataKey 重组 数据
-        // if (this.props.dataKey && lodash.isArray(targetKeys)) {
-        //     return this.props.onChange(
-        //         targetKeys.map(x => (
-        //             { [this.props.dataKey]: x }
-        //         ))
-        //     );
-        // }
-        console.log(targetKeys)
+        if (this.props.dataKey && lodash.isArray(targetKeys)) {
+            targetKeys = targetKeys.map(x => (
+                { [this.props.dataKey]: x }
+            ))
+        }
+        if (this.props.lastData) {
+            targetKeys = lodash.last(targetKeys);
+        }
         this.props.onChange && this.props.onChange(targetKeys);
     }
     loadData = async (selectedOptions) => {
