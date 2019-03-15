@@ -5,7 +5,7 @@ import { FormItem } from 'components/dataView';
 // import Selects from 'components/form/select';
 // import Transfer from 'components/form/transfer';
 // import UploadImg from 'components/form/uploadImg';
-import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg,WtmCheckbox } from 'components/form'
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
@@ -152,18 +152,72 @@ export default {
                 rules: [],
                 formItem: <WtmUploadImg />
             },
-            /** 性别 */
-            Sex: {
-                label: "性别",
+            WtmCascader: {
+                label: "级联 所有",
                 rules: [],
-                formItem: <WtmSelect
-                    placeholder="性别"
+                formItem: <WtmCascader
+                    placeholder="级联 所有"
+                    // dataKey="GroupId"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu" })}
                 />
             },
-             /** 性别 */
-             WtmRadio: {
+            WtmCascader2: {
+                label: "级联 远程",
+                rules: [],
+                formItem: <WtmCascader
+                    placeholder="级联 远程"
+                    // dataKey="GroupId"
+                    // 只获取最后一级 数据 object 对象 非 数组 默认 所有选择的数组
+                    // lastData
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
+                />
+            },
+            /** 联动模型 */
+            linkageModels: {
+                label: "级联 模型 父",
+                rules: [],
+                formItem: <WtmSelect
+                    placeholder="级联 模型 父"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
+                />
+            },
+            /** 联动模型 */
+            linkageModels2: {
+                label: "级联 模型 子",
+                rules: [{ "required": true, "message": "级联 模型 子 不能为空" }],
+                formItem: <WtmSelect
+                    placeholder="级联 模型 子"
+                    linkageModels="linkageModels"
+                    //请求 数据 Observable 对象，
+                    dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
+                />
+            },
+             /** 联动模型 */
+             linkageModels3: {
+                label: "级联 模型 子 2",
+                rules: [{ "required": true, "message": "级联 模型 子 不能为空" }],
+                formItem: <WtmSelect
+                    placeholder="级联 模型 子 2"
+                    linkageModels="linkageModels2"
+                    //请求 数据 Observable 对象，
+                    dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
+                />
+            },
+            /** 性别 */
+            // Sex: {
+            //     label: "性别",
+            //     rules: [],
+            //     formItem: <WtmSelect
+            //         placeholder="性别"
+            //         //请求 数据 Observable 对象，
+            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+            //     />
+            // },
+            /** 性别 */
+            WtmRadio: {
                 label: "性别",
                 rules: [],
                 formItem: <WtmRadio
@@ -174,18 +228,18 @@ export default {
                 />
             },
             /** 用户组 */
-            UserGroups: {
-                label: "用户组",
-                rules: [],
-                formItem: <WtmSelect
-                    placeholder="用户组"
-                    multiple // 多选标记
-                    //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
-                    dataKey="GroupId"
-                />
-            },
-            WtmCheckbox:{
+            // UserGroups: {
+            //     label: "用户组",
+            //     rules: [],
+            //     formItem: <WtmSelect
+            //         placeholder="用户组"
+            //         multiple // 多选标记
+            //         //请求 数据 Observable 对象，
+            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+            //         dataKey="GroupId"
+            //     />
+            // },
+            WtmCheckbox: {
                 label: "用户组",
                 rules: [],
                 formItem: <WtmCheckbox

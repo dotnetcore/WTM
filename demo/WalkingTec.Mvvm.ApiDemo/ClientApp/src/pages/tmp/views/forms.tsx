@@ -138,7 +138,7 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
         // return Store.onDetails(values)
         return {
             WtmRadio: "1",
-            WtmCheckbox:[{
+            WtmCheckbox: [{
                 GroupId: "0e4cae56-ef1d-4a71-bc0d-5ff48bfdbc2e"
             }],
             CreateTime: "2019-03-10",
@@ -156,7 +156,10 @@ export class TestForm extends React.Component<any, any> {
             ...this.props,
             // 模型
             models: this.models,
-            layout: "row"
+            layout: "row",
+            // disabled: true,
+            // display: true,
+
         }
         return (
             <InfoShellLayout>
