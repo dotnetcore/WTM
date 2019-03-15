@@ -159,6 +159,8 @@ function itemToDisplay(props, config) {
             break;
         case "Select":
         case "Transfer":
+        case "Editor":
+        case "DatePicker":
             render = formItem;// React.cloneElement(model.formItem, {});
             break;
         default:

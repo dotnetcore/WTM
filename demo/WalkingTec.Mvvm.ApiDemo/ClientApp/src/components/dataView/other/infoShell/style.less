@@ -80,14 +80,20 @@
         border-top: 1px solid #e8e8e8;
         background: #fff;
         z-index: 99;
-
     }
 }
-div.app-shell-body{
-    .ant-select{
-        width: 100%;
+
+.app-shell-body {
+    .ant-form-item-children {
+        .ant-select,
+        .ant-calendar-picker,
+        .ant-input-number,
+        .ant-cascader-picker {
+            width: 100%;
+        }
     }
-    .ant-cascader-picker{
-        width: 100%;
+    .bf-container.disabled {
+        opacity: 1; 
+        filter:grayscale(0%);
     }
 }
