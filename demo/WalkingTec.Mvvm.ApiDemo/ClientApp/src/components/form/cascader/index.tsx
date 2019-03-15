@@ -116,8 +116,8 @@ export class WtmCascader extends React.Component<IAppProps, any> {
         //         ))
         //     );
         // }
-        // this.props.onChange(targetKeys);
         console.log(targetKeys)
+        this.props.onChange && this.props.onChange(targetKeys);
     }
     loadData = async (selectedOptions) => {
         const targetOption = lodash.head(selectedOptions) as any;
