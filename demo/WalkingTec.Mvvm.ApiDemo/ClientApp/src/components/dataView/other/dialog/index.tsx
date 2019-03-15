@@ -294,9 +294,9 @@ export function DialogFormDes(params: {
                     if (onLoadData instanceof Promise) {
                         const time = Date.now();
                         res = await onLoadData;
-                        // 强制 执行加载最少 600 毫秒
+                        // 强制 执行加载最少 400 毫秒
                         await new Promise((res, rej) => {
-                            lodash.delay(res, 600 - (Date.now() - time))
+                            lodash.delay(res, 400 - (Date.now() - time))
                         });
                     } else if (lodash.isFunction(onLoadData)) {
                         res = onLoadData();
