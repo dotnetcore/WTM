@@ -12,11 +12,18 @@ import lodash from 'lodash'
 import BraftEditor, { BraftEditorProps, EditorState } from 'braft-editor'
 import { Card } from 'antd';
 import './style.less'
+
+
+interface IAppProps extends BraftEditorProps {
+  display?: boolean;
+  disabled?: boolean;
+  [key: string]: any;
+}
 /**
  * https://github.com/margox/braft-editor
  * 富文本编辑
  */
-export  class WtmEditor extends React.Component<BraftEditorProps, any> {
+export class WtmEditor extends React.Component<IAppProps, any> {
   static wtmType = "Editor";
   console = true
   default: BraftEditorProps = {
@@ -43,6 +50,11 @@ export  class WtmEditor extends React.Component<BraftEditorProps, any> {
     const props = { ...this.default, ...this.props }
     delete props.value;
     delete props.onChange;
+    // 禁用
+    if (this.props.display) {
+      props.controls = [];
+      props.disabled = true;
+    }
     return <Card className="app-editor-card">
       <BraftEditor
         value={editorState}

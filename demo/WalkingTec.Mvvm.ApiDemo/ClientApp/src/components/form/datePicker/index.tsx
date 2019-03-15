@@ -12,7 +12,11 @@ import moment from 'moment';
 import * as React from 'react';
 
 
-export class WtmDatePicker extends React.Component<DatePickerProps, any> {
+interface IAppProps extends DatePickerProps {
+  display?: boolean;
+  [key: string]: any;
+}
+export class WtmDatePicker extends React.Component<IAppProps, any> {
   static wtmType = "DatePicker";
   onChange(data, dataString) {
     const onChange: any = this.props.onChange;
@@ -30,6 +34,9 @@ export class WtmDatePicker extends React.Component<DatePickerProps, any> {
     let props: any = {
       format: this.getFormat(),
       ...this.props
+    }
+    if (this.props.display) {
+      return <span>{moment(props.value, props.format).format(props.format)}</span>
     }
     if (props.value) {
       // 转换 默认值
