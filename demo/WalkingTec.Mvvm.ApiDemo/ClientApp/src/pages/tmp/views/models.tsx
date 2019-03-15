@@ -195,6 +195,17 @@ export default {
                     dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
                 />
             },
+             /** 联动模型 */
+             linkageModels3: {
+                label: "级联 模型 子 2",
+                rules: [{ "required": true, "message": "级联 模型 子 不能为空" }],
+                formItem: <WtmSelect
+                    placeholder="级联 模型 子 2"
+                    linkageModels="linkageModels2"
+                    //请求 数据 Observable 对象，
+                    dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
+                />
+            },
             /** 性别 */
             // Sex: {
             //     label: "性别",
