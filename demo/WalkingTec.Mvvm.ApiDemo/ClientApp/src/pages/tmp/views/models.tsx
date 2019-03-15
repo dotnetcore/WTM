@@ -157,6 +157,7 @@ export default {
                 rules: [],
                 formItem: <WtmCascader
                     placeholder="级联 所有"
+                    dataKey="GroupId"
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu" })}
                 />
@@ -166,6 +167,9 @@ export default {
                 rules: [],
                 formItem: <WtmCascader
                     placeholder="级联 远程"
+                    dataKey="GroupId"
+                    // 只获取最后一级 数据 object 对象 非 数组 默认 所有选择的数组
+                    lastData
                     //请求 数据 Observable 对象，
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
                 />
