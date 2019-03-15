@@ -5,7 +5,7 @@ import { FormItem } from 'components/dataView';
 // import Selects from 'components/form/select';
 // import Transfer from 'components/form/transfer';
 // import UploadImg from 'components/form/uploadImg';
-import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg,WtmCheckbox } from 'components/form'
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
@@ -152,6 +152,24 @@ export default {
                 rules: [],
                 formItem: <WtmUploadImg />
             },
+            WtmCascader: {
+                label: "级联 所有",
+                rules: [],
+                formItem: <WtmCascader
+                    placeholder="级联 所有"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu" })}
+                />
+            },
+            WtmCascader2: {
+                label: "级联 远程",
+                rules: [],
+                formItem: <WtmCascader
+                    placeholder="级联 远程"
+                    //请求 数据 Observable 对象，
+                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
+                />
+            },
             /** 性别 */
             Sex: {
                 label: "性别",
@@ -162,8 +180,8 @@ export default {
                     dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
                 />
             },
-             /** 性别 */
-             WtmRadio: {
+            /** 性别 */
+            WtmRadio: {
                 label: "性别",
                 rules: [],
                 formItem: <WtmRadio
@@ -185,7 +203,7 @@ export default {
                     dataKey="GroupId"
                 />
             },
-            WtmCheckbox:{
+            WtmCheckbox: {
                 label: "用户组",
                 rules: [],
                 formItem: <WtmCheckbox
