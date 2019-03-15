@@ -9,7 +9,7 @@
     "braft-editor": "^2.2.9",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.11",
-    "mobx": "^4.9.2",
+    "mobx": "^4.9.3",
     "mobx-persist": "^0.4.1",
     "mobx-react": "5.4.3",
     "moment": "^2.24.0",

@@ -115,7 +115,7 @@ export class WtmCascader extends React.Component<IAppProps, any> {
                 { [this.props.dataKey]: x }
             ))
         }
-        if (this.props.lastData) {
+        if (lodash.get(this.props, 'lastData', true)) {
             targetKeys = lodash.last(targetKeys);
         }
         this.props.onChange && this.props.onChange(targetKeys);
@@ -161,7 +161,8 @@ export class WtmCascader extends React.Component<IAppProps, any> {
             loadData: this.loadData,
             changeOnSelect: true,
             disabled: this.props.disabled,
-            onChange: this.handleChange
+            onChange: this.handleChange,
+            value: this.props.value
         }
         // if (this.props.display) {
         //     if (!this.state.loading) {

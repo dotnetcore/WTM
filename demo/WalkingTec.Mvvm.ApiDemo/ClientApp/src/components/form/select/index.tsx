@@ -5,15 +5,17 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Select } from 'antd';
+import { Select, notification } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
 import { Observable } from 'rxjs';
-
+import { WrappedFormUtils } from 'antd/lib/form/Form';
+// 联动模型
+declare type linkageModels = (linkageModels?: any) => Observable<any[]> | any[] | Promise<any[]>;
 interface IAppProps {
-    dataSource: Observable<any[]> | any[] | Promise<any[]>;
+    dataSource: Observable<any[]> | any[] | Promise<any[]> | linkageModels;
     dataKey?: string;
     value?: any;
     /** 多选 */
@@ -22,6 +24,8 @@ interface IAppProps {
     placeholder?: React.ReactNode;
     SelectProps?: SelectProps;
     display?: boolean;
+    /** 联动模型 key 值 */
+    linkageModels?: string;
     [key: string]: any;
 }
 @DesError
@@ -30,27 +34,68 @@ export class WtmSelect extends React.Component<IAppProps, any> {
     key = "Value";
     title = "Text";
     description = "Text";
+    // 联动模型的 value
+    linkageModelsValue;
     state = {
-        loading: true,
+        loading: false,
         mockData: [],
-        targetKeys: [],
+        // targetKeys: [],
     }
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     if (lodash.isEqual(this.state, nextState)) {
-    //         return true
-    //     }
-    //     return !lodash.isEqual(this.props.value, nextProps.value)
-    // }
+    /**
+     * 优化渲染
+     * @param nextProps 
+     * @param nextState 
+     * @param nextContext 
+     */
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (!lodash.eq(this.state.loading, nextState.loading)) {
+            return true
+        }
+        if (!lodash.eq(this.state.mockData, nextState.mockData)) {
+            return true
+        }
+        if (!lodash.eq(this.props.value, nextProps.value)) {
+            return true
+        }
+        // 父子联动
+        if (this.props.linkageModels) {
+            const { getFieldValue }: WrappedFormUtils = this.props.form;
+            return !lodash.eq(getFieldValue(this.props.linkageModels), this.linkageModelsValue)
+        }
+        return false
+    }
     Unmount = false
     componentWillUnmount() {
         this.Unmount = true;
     }
+    componentDidUpdate() {
+        this.onlinkageModelsUpdate()
+    }
     async  componentDidMount() {
         const { dataSource } = this.props;
+        // 联动模型 不加载 数据
+        if (this.props.linkageModels) {
+            if (!lodash.isFunction(this.props.dataSource)) {
+                const description = "linkageModels 模式 dataSource 为 函数，返回一个 Observable<any[]> | any[] | Promise<any[]>  对象"
+                notification.warn({ message: "配置错误", description })
+            }
+            return this.setState({ loading: false })
+        }
+        this.onLoadingData(dataSource)
+    }
+    /**
+     * 加载数据
+     * @param dataSource 
+     */
+    async  onLoadingData(dataSource) {
         let mockData = [],
             targetKeys = [],
             res = [];
         try {
+            if (this.state.loading) return
+            this.setState({
+                loading: true
+            })
             // 值为 数组 
             if (lodash.isArray(dataSource)) {
                 res = dataSource;
@@ -86,17 +131,38 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             loading: false
         })
     }
+    /**
+     * 模型数据改变
+     */
+    async onlinkageModelsUpdate() {
+        if (this.props.linkageModels && lodash.isFunction(this.props.dataSource)) {
+            try {
+                const { getFieldValue, resetFields }: WrappedFormUtils = this.props.form;
+                const linkageModelsValue = getFieldValue(this.props.linkageModels);
+                if (!lodash.eq(this.linkageModelsValue, linkageModelsValue)) {
+                    console.log("onlinkageModelsUpdate", this.props)
+                    this.linkageModelsValue = linkageModelsValue;
+                    // 重置选择的值
+                    resetFields([this.props.id])
+                    // 加载数据 联动
+                    if (!lodash.isNil(linkageModelsValue)) {
+                        this.onLoadingData(this.props.dataSource(linkageModelsValue));
+                    }
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+    }
     // filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
     handleChange = (targetKeys) => {
         // 多选 返回 值 为数组 的情况下 有 dataKey 重组 数据
         if (this.props.dataKey && lodash.isArray(targetKeys)) {
-            return this.props.onChange(
-                targetKeys.map(x => (
-                    { [this.props.dataKey]: x }
-                ))
-            );
+            targetKeys = targetKeys.map(x => (
+                { [this.props.dataKey]: x }
+            ))
         }
-        this.props.onChange(targetKeys);
+        this.props.onChange && this.props.onChange(targetKeys);
     }
     getDefaultValue(config) {
         const { value, dataKey } = this.props;
@@ -132,7 +198,8 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             // mode: "multiple",
             placeholder: this.props.placeholder,
             disabled: this.props.disabled,
-            onChange: this.handleChange
+            onChange: this.handleChange,
+            value: this.props.value
         }
         // 多选
         if (this.props.multiple) {
