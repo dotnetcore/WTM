@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
-    <VersionPrefix>2.2.21</VersionPrefix>
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <VersionPrefix>2.2.22</VersionPrefix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">pre2</VersionSuffix>
     <ProductBuildNumber></ProductBuildNumber>
     <PackageSuffix></PackageSuffix>
 
