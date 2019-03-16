@@ -54,4 +54,24 @@
             }
         ]
     }
+,{
+        "Key": "fe01c7b5-49c1-45a8-b363-6a9917ea7630",
+        "Name": "地区管理",
+        "Icon": "menu-fold",
+        "Path": "/city",
+        "Component": "city",
+        "Action": [],
+        "Children": []
+    }
+,{
+        "Key": "b093dca3-867d-466f-b412-57e744eca07a",
+        "Name": "学校管理",
+        "Icon": "menu-fold",
+        "Path": "/school",
+        "Component": "school",
+        "Action": [],
+        "Children": []
+    }
+
+
 ]

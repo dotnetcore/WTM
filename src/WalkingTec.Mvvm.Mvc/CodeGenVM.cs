@@ -824,6 +824,7 @@ namespace WalkingTec.Mvvm.Mvc
                 StringBuilder fieldstr = new StringBuilder();
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 fieldstr.Append(Environment.NewLine);
+                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
@@ -833,6 +834,14 @@ namespace WalkingTec.Mvvm.Mvc
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
+                        var subpro = subtype.GetProperty(item.SubField);
+                        existSubPro.Add(subpro);
+                        string prefix = "";
+                        int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                        if (count > 1)
+                        {
+                            prefix = count + "";
+                        }
                         if (subtype == typeof(FileAttachment))
                         {
                             render = "columnsRenderImg";
@@ -841,7 +850,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            newname = item.SubField + "_view";
+                            newname = item.SubField  + "_view" + prefix;
                         }
                     }
                     fieldstr.Append($@"
