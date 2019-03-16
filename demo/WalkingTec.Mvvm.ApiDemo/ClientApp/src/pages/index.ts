@@ -28,7 +28,21 @@
         path: '/frameworkrole',
         component: () => import('./frameworkrole').then(x => x.default) 
     }
+
+, city: {
+        name: '地区管理',
+        path: '/city',
+        component: () => import('./city').then(x => x.default) 
+    }
+
+, school: {
+        name: '学校管理',
+        path: '/school',
+        component: () => import('./school').then(x => x.default) 
+    }
 /**WTM**/
+ 
+ 
  
  
  
