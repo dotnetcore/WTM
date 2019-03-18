@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [HttpGet("{id}")]
         public City Get(Guid id)
         {
-            var vm = CreateVM<CityVM>(id);
+            var vm = CreateVM<CityVM>(id);            
             return vm.Entity;
         }
 
