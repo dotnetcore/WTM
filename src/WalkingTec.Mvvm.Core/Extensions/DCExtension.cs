@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                parentBind = Expression.Bind(parentMI, Expression.Constant(null));
+                parentBind = Expression.Bind(parentMI, Expression.Constant(string.Empty));
             }
 
             //合并创建新类和绑定字段的表达式，形成类似 new SimpleTextAndValue{ Text = textField, Value = valueField} 的表达式
