@@ -182,7 +182,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         }
 
         [HttpGet("GetSubCities")]
-        public ActionResult GetSubCities(Guid parentid)
+        public ActionResult GetSubCities(Guid? parentid)
         {
             var city = DC.Set<City>().Where(x => x.ParentId == parentid).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.Name);
             return Ok(city);
