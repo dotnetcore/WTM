@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
         {
             SetInclude(x => x.Place);
             SetInclude(x => x.Place2);
+            SetInclude(x => x.Place2.Parent);
         }
 
         protected override void InitVM()
