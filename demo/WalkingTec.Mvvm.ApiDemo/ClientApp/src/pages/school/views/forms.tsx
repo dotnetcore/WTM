@@ -23,14 +23,8 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="SchoolCode" />
-                <FormItem {...props} fieId="SchoolName" />
-                <FormItem {...props} fieId="SchoolType" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="PlaceId" />
-                <FormItem {...props} fieId="Place2Id" />
-
-            </InfoShellLayout>        
+            {Models.renderModels(props)}
+        </InfoShellLayout>
     }
 }
 /**
@@ -56,13 +50,7 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="SchoolCode" />
-                <FormItem {...props} fieId="SchoolName" />
-                <FormItem {...props} fieId="SchoolType" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="PlaceId" />
-                <FormItem {...props} fieId="Place2Id" />
-
+            {Models.renderModels(props)}
         </InfoShellLayout>
     }
 }
@@ -88,12 +76,12 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="SchoolCode" />
-                <FormItem {...props} fieId="SchoolName" />
-                <FormItem {...props} fieId="SchoolType" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="PlaceId" />
-                <FormItem {...props} fieId="Place2Id" />
+            <FormItem {...props} fieId="SchoolCode" />
+            <FormItem {...props} fieId="SchoolName" />
+            <FormItem {...props} fieId="SchoolType" />
+            <FormItem {...props} fieId="Remark" />
+            <FormItem {...props} fieId="PlaceId" />
+            <FormItem {...props} fieId="Place2Id" />
 
         </InfoShellLayout>
     }

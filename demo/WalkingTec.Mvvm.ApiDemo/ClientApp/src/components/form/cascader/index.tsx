@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Cascader } from 'antd';
+import { Cascader, Spin } from 'antd';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
@@ -29,20 +29,33 @@ export class WtmCascader extends React.Component<IAppProps, any> {
     static wtmType = "Cascader";
     key = "Value";
     title = "Text";
+    ParentIdKey = "ParentId";
     children = "Children";
     childrenUrl = "ChildrenUrl";
     // description = "Text";
     state = {
         loading: true,
         mockData: [],
-        targetKeys: [],
+        originalData: [] // 原始数据
     }
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     if (lodash.isEqual(this.state, nextState)) {
-    //         return true
-    //     }
-    //     return !lodash.isEqual(this.props.value, nextProps.value)
-    // }
+    /**
+      * 优化渲染
+      * @param nextProps 
+      * @param nextState 
+      * @param nextContext 
+      */
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (!lodash.eq(this.state.loading, nextState.loading)) {
+            return true
+        }
+        if (!lodash.eq(this.state.originalData, nextState.originalData)) {
+            return true
+        }
+        if (!lodash.eq(this.props.value, nextProps.value)) {
+            return true
+        }
+        return false
+    }
     Unmount = false
     componentWillUnmount() {
         this.Unmount = true;
@@ -50,7 +63,6 @@ export class WtmCascader extends React.Component<IAppProps, any> {
     async  componentDidMount() {
         const { dataSource } = this.props;
         let mockData = [],
-            targetKeys = [],
             res = [];
         try {
             // 值为 数组 
@@ -66,12 +78,35 @@ export class WtmCascader extends React.Component<IAppProps, any> {
                 res = await dataSource.toPromise();
             }
             // 转换 数据 为 渲染 格式
-            mockData = res;
+            mockData = this.recursionTree(res, null);
         } catch (error) {
             console.error("获取数据出错", error)
         }
         if (this.Unmount) return;
-        this.formatDataSource(mockData)
+        this.setState({
+            mockData,
+            originalData: res,
+            loading: false
+        })
+        // this.formatDataSource(mockData)
+    }
+    /**
+     * 递归 格式化 树
+     * @param datalist 
+     * @param ParentId 
+     * @param children 
+     */
+    recursionTree(datalist, ParentId, children = []) {
+        lodash.filter(datalist, [this.ParentIdKey, ParentId]).map(data => {
+            data = {
+                ...data,
+                value: lodash.toString(lodash.get(data, this.key)),
+                label: lodash.get(data, this.title),
+            }
+            children.push(data);
+            data.children = this.recursionTree(datalist, data.Value, data.children || [])
+        });
+        return children;
     }
     /**
      * 格式化 插入 数据
@@ -153,6 +188,38 @@ export class WtmCascader extends React.Component<IAppProps, any> {
         //     });
         // }, 1000);
     }
+    // 查找父级
+    getParent(value, ids = []) {
+        const key = lodash.get(lodash.find(this.state.originalData, [this.key, value]), this.ParentIdKey);
+        if (key) {
+            this.getParent(key, ids)
+            ids.push(key);
+        }
+        return ids;
+    }
+    // 获取默认值
+    getDefaultValue(value) {
+        if (value) {
+            const defaultValue = this.getParent(value);
+            defaultValue.push(value);
+            if (defaultValue.length > 0) {
+                return {
+                    value: defaultValue
+                }
+            }
+        }
+        return {
+        }
+    }
+    renderDisplay(config: CascaderProps) {
+        let str = ''
+        if (!this.state.loading) {
+            str = config.value.map(value => {
+                return lodash.get(lodash.find(this.state.originalData, [this.key, value]), this.title)
+            }).join(" / ")
+        }
+        return <span>{str}</span>
+    }
     render() {
         let config: CascaderProps = {
             placeholder: this.props.placeholder,
@@ -162,20 +229,13 @@ export class WtmCascader extends React.Component<IAppProps, any> {
             changeOnSelect: true,
             disabled: this.props.disabled,
             onChange: this.handleChange,
-            value: this.props.value
+            ...this.getDefaultValue(this.props.value)
+            // defaultValue: this.props.value
         }
-        // if (this.props.display) {
-        //     if (!this.state.loading) {
-        //         // 多选的
-        //         if (lodash.isArray(config.defaultValue)) {
-        //             return lodash.intersectionBy(this.state.mockData, (config.defaultValue as string[]).map(x => ({ key: x })), "key").map(x => x.title).join(",")
-        //         }
-        //         return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.defaultValue)]), "title")}</span>
-        //     }
-        //     return <span></span>
-        // }
         return (
-            <Cascader {...config}></Cascader>
+            <Spin spinning={this.state.loading}>
+                {this.props.display ? this.renderDisplay(config) : <Cascader {...config}></Cascader>}
+            </Spin>
         );
     }
 

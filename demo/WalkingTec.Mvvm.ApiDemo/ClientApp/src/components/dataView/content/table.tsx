@@ -264,10 +264,10 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             this.onCalculationHeight()
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
-                if (this.tableDom.clientWidth > TableUtils.clientWidth) {
-                    TableUtils.clientWidth = this.tableDom.clientWidth;
-                    this.initColumns();
-                }
+                // if (this.tableDom.clientWidth > TableUtils.clientWidth) {
+                //     TableUtils.clientWidth = this.tableDom.clientWidth;
+                //     this.initColumns();
+                // }
                 this.onCalculationHeight()
             });
         } catch (error) {
