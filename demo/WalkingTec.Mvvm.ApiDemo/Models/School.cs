@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -49,6 +50,24 @@ namespace WalkingTec.Mvvm.ApiDemo.Models
 
         [Display(Name = "地点2")]
         public Guid? Place2Id { get; set; }
+
+        [NotMapped]
+        public Guid? Place2_Sheng
+        {
+            get
+            {
+                return Place2?.Parent?.Parent?.ID;
+            }
+        }
+        [NotMapped]
+        public Guid? Place2_Shi
+        {
+            get
+            {
+                return Place2?.Parent?.ID;
+            }
+        }
+
     }
 
 }

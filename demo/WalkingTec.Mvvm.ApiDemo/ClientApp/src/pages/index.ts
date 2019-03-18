@@ -40,7 +40,14 @@
         path: '/school',
         component: () => import('./school').then(x => x.default) 
     }
+
+, dataprivilege: {
+        name: '数据权限',
+        path: '/dataprivilege',
+        component: () => import('./dataprivilege').then(x => x.default) 
+    }
 /**WTM**/
+ 
  
  
  

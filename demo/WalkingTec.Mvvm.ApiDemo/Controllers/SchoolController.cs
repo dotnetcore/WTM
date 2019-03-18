@@ -178,16 +178,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            var city = DC.Set<City>().ToList();
-            var top = city.Where(x => x.ParentId == null);
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            foreach (var item in top)
-            {
-                ComboSelectListItem n = new ComboSelectListItem();
-                MapCity(item, n);
-                rv.Add(n);
-            }
-            return Ok(rv);
+            return Ok(DC.Set<City>().GetSelectListItems(LoginUserInfo.DataPrivileges,null,x=>x.Name));
         }
 
         [HttpGet("GetSubCities")]
@@ -197,20 +188,5 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             return Ok(city);
         }
 
-        private void MapCity(City data, ComboSelectListItem item)
-        {
-            item.Text = data.Name;
-            item.Value = data.ID.ToString();
-            if (data.Children != null) {
-                item.Children = new List<ComboSelectListItem>();
-                foreach (var d in data.Children)
-                {
-                    ComboSelectListItem n = new ComboSelectListItem();
-                    MapCity(d, n);
-                    n.Parent = item;
-                    item.Children.Add(n);
-                }
-            }
-        }
     }
 }

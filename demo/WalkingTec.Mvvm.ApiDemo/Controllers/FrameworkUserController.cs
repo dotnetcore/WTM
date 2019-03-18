@@ -202,59 +202,6 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             return Ok(test);
         }
 
-        [HttpGet("GetMenu")]
-        [ActionDescription("获取菜单")]
-        public ActionResult GetMenu()
-        {
-            var data = DC.Set<FrameworkModule>().Include(x => x.Actions).ToList();
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            foreach (var item in data)
-            {
-                ComboSelectListItem c = new ComboSelectListItem { Text = item.ModuleName, Value = item.ID.ToString(), Children = new List<ComboSelectListItem>() };
-                if(item.Actions != null)
-                {
-                    foreach (var a in item.Actions)
-                    {
-                        c.Children.Add(new ComboSelectListItem { Text = a.ActionName, Value = a.ID.ToString() });
-                    }
-                }
-                rv.Add(c);
-            }
-            return Ok(rv);
-        }
-
-        [HttpGet("GetMenu2")]
-        [ActionDescription("获取菜单")]
-        public ActionResult GetMenu2()
-        {
-            var data = DC.Set<FrameworkModule>().ToList();
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            foreach (var item in data)
-            {
-                ComboSelectListItem c = new ComboSelectListItem {
-                    Text = item.ModuleName,
-                    Value = item.ID.ToString(),
-                    Children = new List<ComboSelectListItem>(),
-                    ChildrenUrl = $"/FrameworkUser/GetSubMenu/{item.ID}"
-                };
-                rv.Add(c);
-            }
-            return Ok(rv);
-        }
-
-        [HttpGet("GetSubMenu/{id}")]
-        [ActionDescription("获取菜单")]
-        public ActionResult GetSubMenu(Guid id)
-        {
-            var data = DC.Set<FrameworkAction>().Where(x=>x.ModuleId == id).ToList();
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            foreach (var item in data)
-            {
-                ComboSelectListItem c = new ComboSelectListItem { Text = item.ActionName, Value = item.ID.ToString(), Children = new List<ComboSelectListItem>() };
-                rv.Add(c);
-            }
-            return Ok(rv);
-        }
 
     }
 }
