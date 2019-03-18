@@ -36,13 +36,10 @@ class Store {
                     };
                     this.isLogin = true;
                 });
-                return true
             }
-            return false
         } catch (error) {
-            return false
         }
-        return false
+        window.sessionStorage.clear()
     }
     @action.bound
     async Login(params) {

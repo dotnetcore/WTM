@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Select, notification } from 'antd';
+import { Select, notification, Spin } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -164,7 +164,7 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         }
         this.props.onChange && this.props.onChange(targetKeys);
     }
-    getDefaultValue(config) {
+    getDefaultValue(config: SelectProps) {
         const { value, dataKey } = this.props;
         // 默认值
         if (!lodash.isNil(value)) {
@@ -186,7 +186,7 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             else {
                 newValue = lodash.toString(value);
             }
-            config.defaultValue = newValue
+            config.value = newValue
         }
         return config;
     }
@@ -218,14 +218,16 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         }
         // throw "aaaaa"
         return (
-            <Select
-                {...config}
-            >
-                {this.renderOption()}
-            </Select>
+            <Spin spinning={this.state.loading}>
+                <Select
+                    {...config}
+                >
+                    {this.renderOption(config)}
+                </Select>
+            </Spin>
         );
     }
-    renderOption() {
+    renderOption(config?: SelectProps) {
         return this.state.mockData.map(x => {
             return <Select.Option key={x.key} value={x.key}>{x.title}</Select.Option>
         })
