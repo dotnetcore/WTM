@@ -11,28 +11,8 @@ namespace WalkingTec.Mvvm.Core
         public string Text { get; set; }
         public string Value { get; set; }
         public bool Selected { get; set; }
+        public string ParentId { get; set; }
 
-        [JsonIgnore]
-        public ComboSelectListItem Parent { get; set; }
-        public string ParentPath
-        {
-            get
-            {
-                var c = this;
-                string rv = "";
-                while((c = c.Parent) != null)
-                {
-                    rv = c.Value + "," + rv;
-                }
-                if (rv.EndsWith(","))
-                {
-                    rv = rv.Remove(rv.Length - 1);
-                }
-                return rv;
-            }
-        }
-        public string ChildrenUrl { get; set; }
-        public List<ComboSelectListItem> Children { get; set; }
     }
 
     /// <summary>

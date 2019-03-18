@@ -72,6 +72,16 @@
         "Action": [],
         "Children": []
     }
+,{
+        "Key": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
+        "Name": "数据权限",
+        "Icon": "menu-fold",
+        "Path": "/dataprivilege",
+        "Component": "dataprivilege",
+        "Action": [],
+        "Children": []
+    }
+
 
 
 ]
