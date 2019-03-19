@@ -152,58 +152,38 @@ export default {
                 rules: [],
                 formItem: <WtmUploadImg />
             },
-            WtmCascader: {
-                label: "级联 所有",
+            /** 地点 */
+            PlaceId: {
+                label: "地点",
                 rules: [],
-                formItem: <WtmCascader
-                    placeholder="级联 所有"
-                    // dataKey="GroupId"
-                    //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu" })}
+                formItem: <WtmCascader placeholder="地点"
+                    dataSource={Store.Request.cache({ url: "/School/GetCitys" })}
                 />
             },
-            WtmCascader2: {
-                label: "级联 远程",
+            /** 地点2 */
+            Place2_Sheng: {
+                label: "省",
                 rules: [],
-                formItem: <WtmCascader
-                    placeholder="级联 远程"
-                    // dataKey="GroupId"
-                    // 只获取最后一级 数据 object 对象 非 数组 默认 所有选择的数组
-                    // lastData
-                    //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
+                formItem: <WtmSelect placeholder="省"
+                    dataSource={Store.Request.cache({ url: "/School/GetSubCities", body: { parentid: null } })}
                 />
             },
-            /** 联动模型 */
-            linkageModels: {
-                label: "级联 模型 父",
+            /** 地点2 */
+            Place2_Shi: {
+                label: "市",
                 rules: [],
-                formItem: <WtmSelect
-                    placeholder="级联 模型 父"
-                    //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetMenu2" })}
+                formItem: <WtmSelect placeholder="市"
+                    linkageModels="Place2_Sheng"
+                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
-            /** 联动模型 */
-            linkageModels2: {
-                label: "级联 模型 子",
-                rules: [{ "required": true, "message": "级联 模型 子 不能为空" }],
-                formItem: <WtmSelect
-                    placeholder="级联 模型 子"
-                    linkageModels="linkageModels"
-                    //请求 数据 Observable 对象，
-                    dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
-                />
-            },
-             /** 联动模型 */
-             linkageModels3: {
-                label: "级联 模型 子 2",
-                rules: [{ "required": true, "message": "级联 模型 子 不能为空" }],
-                formItem: <WtmSelect
-                    placeholder="级联 模型 子 2"
-                    linkageModels="linkageModels2"
-                    //请求 数据 Observable 对象，
-                    dataSource={linkagValue => Store.Request.cache({ url: "/FrameworkUser/GetSubMenu/" + linkagValue })}
+            /** 地点2 */
+            Place2Id: {
+                label: "区",
+                rules: [],
+                formItem: <WtmSelect placeholder="区"
+                    linkageModels="Place2_Shi"
+                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 性别 */
