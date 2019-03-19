@@ -13,14 +13,19 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var mse = new ErrorObj();
             mse.Entity = new Dictionary<string, string>();
+            mse.Message = new List<string>();
             foreach (var item in self)
             {
                 var name = item.Key;
                 if (name.ToLower().StartsWith("entity."))
                 {
                     name = name.Substring(7);
+                    mse.Entity.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
                 }
-                mse.Entity.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                else
+                {
+                    mse.Message.Add(item.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                }
             }
             return mse;
         }

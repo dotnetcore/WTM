@@ -220,7 +220,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
-                parentBind = Expression.Bind(parentMI, p);
+                var p1 = Expression.Call(p, "ToLower", new Type[] { });
+                parentBind = Expression.Bind(parentMI, p1);
             }
             else
             {

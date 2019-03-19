@@ -134,10 +134,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             {
                                 self.RemoveActionColumn();
                                 self.RemoveAction();
-                                if (temp.ErrorMessage.Count > 0)
-                                {
+                                //if (temp.ErrorMessage.Count > 0)
+                                //{
                                     self.AddErrorColumn();
-                                }
+                                //}
                             };
                             if (temp.ListVM.Searcher != null)
                             {
