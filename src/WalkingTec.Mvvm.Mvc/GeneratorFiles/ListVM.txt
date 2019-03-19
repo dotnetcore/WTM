@@ -11,7 +11,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public class $modelname$ListVM : BasePagedListVM<$modelname$_View, $modelname$Searcher>
+    public partial class $modelname$ListVM : BasePagedListVM<$modelname$_View, $modelname$Searcher>
     {
         protected override List<GridAction> InitGridAction()
         {

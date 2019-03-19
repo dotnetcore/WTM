@@ -10,7 +10,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public class $modelname$Searcher : BaseSearcher
+    public partial class $modelname$Searcher : BaseSearcher
     {$pros$
 
         protected override void InitVM()

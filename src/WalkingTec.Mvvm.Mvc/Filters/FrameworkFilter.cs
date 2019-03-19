@@ -78,6 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.CurrentUrl = ctrl.BaseUrl;
                     model.ConfigInfo = (Configs)context.HttpContext.RequestServices.GetService(typeof(Configs));
                     model.DataContextCI = ((GlobalData)context.HttpContext.RequestServices.GetService(typeof(GlobalData))).DataContextCI;
+                    model.ControllerName = ctrl.GetType().FullName;
                     if (ctrl is BaseController c)
                     {
                         model.WindowIds = c.WindowIds;
