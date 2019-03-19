@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
-namespace WalkingTec.Mvvm.Admin.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
 
     [ActionDescription("角色管理")]

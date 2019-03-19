@@ -276,7 +276,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.IsQuickDebug)
             {
                 menus = new List<FrameworkMenu>();
-                foreach (var model in allModule)
+                foreach (var model in allModule.Where(x=>x.NameSpace != "WalkingTec.Mvvm.Admin.Api"))
                 {
                     var modelmenu = new FrameworkMenu
                     {
@@ -339,7 +339,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 catch { }
 
-                controllers.AddRange(types.Where(x => typeof(BaseController).IsAssignableFrom(x)).ToList());
+                controllers.AddRange(types.Where(x => typeof(IBaseController).IsAssignableFrom(x)).ToList());
             }
             return controllers;
         }

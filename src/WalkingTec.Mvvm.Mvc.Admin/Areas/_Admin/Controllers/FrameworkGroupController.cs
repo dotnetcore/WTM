@@ -4,7 +4,7 @@ using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
-namespace WalkingTec.Mvvm.Mvc.Admin.Areas._Admin.Controllers
+namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
 
     [Area("_Admin")]

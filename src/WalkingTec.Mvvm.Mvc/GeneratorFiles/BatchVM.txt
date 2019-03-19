@@ -10,7 +10,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public class $modelname$BatchVM : BaseBatchVM<$modelname$, $modelname$_BatchEdit>
+    public partial class $modelname$BatchVM : BaseBatchVM<$modelname$, $modelname$_BatchEdit>
     {
         public $modelname$BatchVM()
         {
