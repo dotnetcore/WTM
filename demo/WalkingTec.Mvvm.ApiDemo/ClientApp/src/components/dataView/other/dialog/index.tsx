@@ -170,7 +170,7 @@ class Optimization extends React.Component<{
                                 }
 
                             } catch (error) {
-                                this.onSetErrorMsg(error || {})
+                                this.onSetErrorMsg(error)
                                 // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
                                 console.error(error)
                             } finally {
@@ -179,8 +179,6 @@ class Optimization extends React.Component<{
                         });
                     } else {
                         console.error(err)
-                        // message.destroy()
-                        // message.warn("数据未填写完整~")
                         notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
                         this.setState({ loading: false })
                     }
@@ -193,13 +191,18 @@ class Optimization extends React.Component<{
             // console.log("没有")
         }
     }
-    onSetErrorMsg(errors = { Entity: { "Name": "姓名是必填项" } }) {
+    onSetErrorMsg(errors) {
         const { setFields, getFieldsValue } = this.props.form;
-        setFields(lodash.mapValues(errors.Entity, data => {
+        setFields(lodash.mapValues(lodash.get(errors, 'Entity', {}), data => {
             return {
                 errors: [new Error(data)]
             }
         }))
+        lodash.get(errors, 'Message', []).map(message => {
+            notification.error({
+                message
+            })
+        })
         // console.log(getFieldsValue())
         // [fieldName]: { value: any, errors: [Error] }
     }
