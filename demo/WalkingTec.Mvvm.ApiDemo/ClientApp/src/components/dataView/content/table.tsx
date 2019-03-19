@@ -281,16 +281,16 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const dataSource = this.Store.dataSource;
         if (dataSource.Data) {
             const columns = this.columns
-            .map(x => {
-                return {
-                    ...x,
-                    render: (text, record, index) => {
-                        return <div className="columns-render" style={{ maxWidth: x.width }}>
-                            {x.render ? x.render(text, record, index) : text}
-                        </div>
+                .map(x => {
+                    return {
+                        ...x,
+                        render: (text, record, index) => {
+                            return <div className="columns-render" style={{ maxWidth: x.width }}>
+                                {x.render ? x.render(text, record, index) : text}
+                            </div>
+                        }
                     }
-                }
-            });
+                });
             const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
             return (
                 <Table
@@ -312,10 +312,11 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                             showSizeChanger: true,//是否可以改变 pageSize
                             showQuickJumper: true,
                             pageSize: dataSource.Limit,
+                            pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
                             size: "small",
                             current: dataSource.Page,
-                            defaultPageSize: dataSource.Limit,
-                            defaultCurrent: dataSource.Page,
+                            // defaultPageSize: dataSource.Limit,
+                            // defaultCurrent: dataSource.Page,
                             total: dataSource.Count
                         }
                     }

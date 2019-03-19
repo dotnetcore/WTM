@@ -58,7 +58,10 @@ export default {
             return window.localStorage.getItem('__token') || null;
         },
     },
-
+    /** 列表 分页 可选 行数 以下是默认值 */
+    // pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200'],
+    /** 列表 行  */
+    Limit: 20,
     /** 
      * 详情信息 展示类型 
      */
