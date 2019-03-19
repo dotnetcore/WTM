@@ -192,10 +192,11 @@ class Optimization extends React.Component<{
         }
     }
     onSetErrorMsg(errors) {
-        const { setFields, getFieldsValue } = this.props.form;
-        setFields(lodash.mapValues(lodash.get(errors, 'Entity', {}), data => {
+        const { setFields, getFieldValue } = this.props.form;
+        setFields(lodash.mapValues(lodash.get(errors, 'Entity', {}), (error, key) => {
             return {
-                errors: [new Error(data)]
+                value: getFieldValue(key),
+                errors: [new Error(error)]
             }
         }))
         // lodash.get(errors, 'Message', []).map(message => {
