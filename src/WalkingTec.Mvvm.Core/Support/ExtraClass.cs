@@ -34,6 +34,7 @@ namespace WalkingTec.Mvvm.Core
     public class ErrorObj
     {
         public Dictionary<string, string> Entity { get; set; }
+        public List<string> Message { get; set; }
     }
 
 }

@@ -1,7 +1,5 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
-import UploadImg from 'components/form/uploadImg';
-import Transfer from 'components/form/transfer';
-import Selects from 'components/form/select';
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
@@ -63,7 +61,7 @@ export default {
             LogType:{
                 label: "类型",
                 rules: [{ "required": true, "message": "类型不能为空" }],
-                formItem: <Selects placeholder="类型" dataSource={[  
+                formItem: <WtmSelect placeholder="类型" dataSource={[  
                     { Text: "普通", Value: 0 },
                     { Text: "异常", Value: 1 },
                     { Text: "调试", Value: 2 }
@@ -96,7 +94,7 @@ export default {
             LogType:{
                 label: "类型",
                 rules: [],
-                formItem: <Selects placeholder="全部" dataSource={[  
+                formItem: <WtmSelect multiple placeholder="全部" dataSource={[  
                     { Text: "普通", Value: 0 },
                     { Text: "异常", Value: 1 },
                     { Text: "调试", Value: 2 }

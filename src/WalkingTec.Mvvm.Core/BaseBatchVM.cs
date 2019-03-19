@@ -176,6 +176,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     item.BatchError = ErrorMessage.Where(x => x.Key == item.ID).Select(x => x.Value).FirstOrDefault();
                 }
+                MSD.AddModelError("", "数据已被使用，无法删除");
             }
             return rv;
         }
