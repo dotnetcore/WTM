@@ -101,7 +101,7 @@ export default class Store {
         // search: {},
         SortInfo: "",
         Page: 1,
-        Limit: 10,
+        Limit: lodash.get(globalConfig, 'Limit', 10),
         ...this.defaultSearchParams,
         ...params,
       }
