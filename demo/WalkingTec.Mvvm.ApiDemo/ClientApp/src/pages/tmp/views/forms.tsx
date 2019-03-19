@@ -138,9 +138,10 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
         // return Store.onDetails(values)
         return {
             WtmRadio: "1",
-            WtmCheckbox: [{
-                GroupId: "0e4cae56-ef1d-4a71-bc0d-5ff48bfdbc2e"
-            }],
+            Place2Id: "60c8d13c-df41-4675-8525-9beb0be3d53a",
+            Place2_Sheng: "50620689-f74c-4dd6-b106-a1c1cd384f66",
+            Place2_Shi: "567c7cde-e616-40a7-9bef-c4437ddba3ad",
+            PlaceId: "6c77f2b9-8202-45a1-b5c1-eba04723f45b",
             CreateTime: "2019-03-10",
             Date2: "2019-03-10 23:55:16",
             Editer: "&lt;p style=&quot;text-align:center;&quot;&gt;&lt;strong&gt;&lt;span style=&quot;color:#003ba5&quot;&gt;&lt;span style=&quot;font-size:40px&quot;&gt;阿发达安抚打发打发啊的安抚阿发阿发暗杀啊&lt;/span&gt;&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;"//'<div style="color:#00FF00;">0.0041245</div>'
