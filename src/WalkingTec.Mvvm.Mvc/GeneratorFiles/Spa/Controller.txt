@@ -14,7 +14,7 @@ namespace $namespace$
     [ActionDescription("$des$")]
     [ApiController]
     [Route("api/$modelname$")]
-	public class $modelname$Controller : BaseApiController
+	public partial class $modelname$Controller : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]

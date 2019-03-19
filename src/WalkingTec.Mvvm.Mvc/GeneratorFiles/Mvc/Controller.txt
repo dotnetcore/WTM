@@ -9,7 +9,7 @@ namespace $namespace$
 {
     $area$
     [ActionDescription("$des$")]
-    public class $modelname$Controller : BaseController
+    public partial class $modelname$Controller : BaseController
     {
         #region 搜索
         [ActionDescription("搜索")]

@@ -225,6 +225,8 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         public List<Guid> DeletedFileIds { get; set; }
+
+        public string ControllerName { get; set; }
         #endregion
 
         #region Event

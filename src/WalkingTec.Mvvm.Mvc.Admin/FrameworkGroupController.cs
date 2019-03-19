@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
-namespace WalkingTec.Mvvm.Admin.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
 
     [ActionDescription("用户组管理")]

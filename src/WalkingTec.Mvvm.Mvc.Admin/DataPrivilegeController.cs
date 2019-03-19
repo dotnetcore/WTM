@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 
-namespace WalkingTec.Mvvm.ApiDemo.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
     [ActionDescription("数据权限")]
     [ApiController]

@@ -61,7 +61,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     p.Text = p.Text + "(" + m.ModuleName + ")";
                 }
             }
-            AllModules = DC.Set<FrameworkModule>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.ModuleName);
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            {
+                AllModules = DC.Set<FrameworkModule>().Where(x=>x.NameSpace != "WalkingTec.Mvvm.Admin.Api").GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.ModuleName);
+            }
             if (Entity.ModuleId != null)
             {
                 AllActions = DC.Set<FrameworkAction>().GetSelectListItems(LoginUserInfo.DataPrivileges, x => x.ModuleId == Entity.ModuleId, y => y.ActionName);
