@@ -4,6 +4,7 @@ WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 
 
 正式版：
 [![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master-nuget.org)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=4)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM?ref=badge_shield)
 
 测试版：
 [![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-develop-nuget.sundot)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=3)
@@ -42,3 +43,7 @@ Package name                              | Stable (master branch)
 框架QQ交流群：694148336
 
 您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM?ref=badge_large)
