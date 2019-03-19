@@ -38,8 +38,8 @@ class Store {
                 });
             }
         } catch (error) {
+            window.sessionStorage.clear()
         }
-        window.sessionStorage.clear()
     }
     @action.bound
     async Login(params) {
