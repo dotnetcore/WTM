@@ -31,14 +31,14 @@ export default {
                 formItem: <Input placeholder="请输入 学校名称" />
             },
             /** 学校类型 */
-            SchoolType: {
-                label: "学校类型",
-                rules: [{ "required": true, "message": "学校类型不能为空" }],
-                formItem: <WtmSelect placeholder="学校类型" dataSource={[
-                    { Text: "公立学校", Value: 0 },
-                    { Text: "私立学校", Value: 1 }
-                ]} />
-            },
+            // SchoolType: {
+            //     label: "学校类型",
+            //     rules: [{ "required": true, "message": "学校类型不能为空" }],
+            //     formItem: <WtmSelect placeholder="学校类型" dataSource={[
+            //         { Text: "公立学校", Value: 0 },
+            //         { Text: "私立学校", Value: 1 }
+            //     ]} />
+            // },
             /** 备注 */
             Remark: {
                 label: "备注",
@@ -54,7 +54,7 @@ export default {
                 />
             },
             /** 地点2 */
-            Place2_Shi: {
+            Place2_Sheng: {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
@@ -62,11 +62,11 @@ export default {
                 />
             },
             /** 地点2 */
-            Place2_Sheng: {
+            Place2_Shi: {
                 label: "市",
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
-                    linkageModels="Place2_Shi"
+                    linkageModels="Place2_Sheng"
                     dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
@@ -75,7 +75,7 @@ export default {
                 label: "区",
                 rules: [],
                 formItem: <WtmSelect placeholder="区"
-                    linkageModels="Place2_Sheng"
+                    linkageModels="Place2_Shi"
                     dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
