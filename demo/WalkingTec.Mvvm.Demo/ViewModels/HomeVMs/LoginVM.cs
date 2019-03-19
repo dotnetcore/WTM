@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 
         [Display(Name = "账号")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(5)]
+        [StringLength(50)]
         public string ITCode { get; set; }
 
         [Display(Name = "密码")]
