@@ -95,17 +95,20 @@ export class Request {
                         const { response } = ajax;
                         // 返回 业务处理错误
                         if (response && lodash.includes(this.catchStatus, ajax.status)) {
+                            if (response.Message && response.Message.length > 0) {
+                                response.Message.map(message => notification.error({
+                                    message
+                                }))
+                            }
                             if (response.errors) {
-                                sub.error(null)
                                 notification.error({
                                     key: ajax.request.url,
                                     message: response.traceId,
                                     duration: 5,
                                     description: response.title,
                                 });
-                            } else {
-                                sub.error(response)
                             }
+                            sub.error(response)
                             return false
                         }
                         sub.error({})

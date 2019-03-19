@@ -198,11 +198,11 @@ class Optimization extends React.Component<{
                 errors: [new Error(data)]
             }
         }))
-        lodash.get(errors, 'Message', []).map(message => {
-            notification.error({
-                message
-            })
-        })
+        // lodash.get(errors, 'Message', []).map(message => {
+        //     notification.error({
+        //         message
+        //     })
+        // })
         // console.log(getFieldsValue())
         // [fieldName]: { value: any, errors: [Error] }
     }
