@@ -694,6 +694,21 @@ where S : struct
             }
         }
 
+        public static IQueryable<T> CheckContain<T,S>(this IQueryable<T> baseQuery, List<S> val, Expression<Func<T,S>> field)
+        {
+            if (val == null || val.Count == 0)
+            {
+                return baseQuery;
+            }
+            else
+            {
+                Expression exp = null;
+                exp = Expression.Call(Expression.Constant(val), "Contains", null, field.Body);
+
+                var where = Expression.Lambda<Func<T, bool>>(exp, field.Parameters[0]);
+                return baseQuery.Where(where);
+            }
+        }
 
         public static string GetTableName<T>(this IDataContext self)
         {

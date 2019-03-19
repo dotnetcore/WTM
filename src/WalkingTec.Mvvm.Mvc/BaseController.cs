@@ -241,6 +241,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.WindowIds = this.WindowIds;
             rv.UIService = this.UIService;
             rv.Log = this.Log;
+            rv.ControllerName = this.GetType().FullName;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try

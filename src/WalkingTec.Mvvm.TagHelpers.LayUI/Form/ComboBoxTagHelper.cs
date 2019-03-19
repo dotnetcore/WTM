@@ -101,11 +101,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Items?.Model == null) // 添加默认下拉数据源
             {
-                if (modeltype.IsEnumOrNullableEnum())
+                var checktype = modeltype;
+                if ((modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                 {
-                    listItems = modeltype.ToListItems(Field.Model);
+                    checktype = modeltype.GetGenericArguments()[0];
                 }
-                else if (modeltype == typeof(bool) || modeltype == typeof(bool?))
+
+                if (checktype.IsEnumOrNullableEnum())
+                {
+                    listItems = checktype.ToListItems(Field.Model);
+                }
+                else if (checktype == typeof(bool) || checktype == typeof(bool?))
                 {
                     listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, (bool?)Field.Model, YesText, NoText);
                 }
@@ -172,13 +178,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 foreach (var item in listItems)
                 {
-                    if(item.Selected == true)
+                    if (item.Selected == true)
                     {
                         contentBuilder.Append($"<option value='{item.Value}' selected>{item.Text}</option>");
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}' {(Disabled?"disabled=\"\"":string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}' {(Disabled ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
 
                     }
                 }

@@ -40,18 +40,39 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public override IOrderedQueryable<FrameworkAction_ListView> GetSearchQuery()
         {
             var newdc = DC as FrameworkContext;
-            var actions = newdc.Set<FrameworkAction>()
-                .Where(x => newdc.BaseFrameworkMenus.Where(y => y.ActionId != null).Select(y => y.ActionId).Distinct().Contains(x.ID) == false)
-                .Select(x => new FrameworkAction_ListView
-                {
-                    ID = x.ID,
-                    ModuleID = x.ModuleId,
-                    ModuleName = x.Module.ModuleName,
-                    ActionName = x.ActionName,
-                    ClassName = x.Module.ClassName,
-                    MethodName = x.MethodName,
-                    AreaName = x.Module.Area.AreaName
-                }).ToList();
+            List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
+            if (ControllerName == "WalkingTec.Mvvm.Mvc._FrameworkController")
+            {
+                 actions = newdc.Set<FrameworkAction>()
+                    .Where(x => x.Module.NameSpace != "WalkingTec.Mvvm.Admin.Api" &&  newdc.BaseFrameworkMenus.Where(y => y.ActionId != null).Select(y => y.ActionId).Distinct().Contains(x.ID) == false)
+                    .Select(x => new FrameworkAction_ListView
+                    {
+                        ID = x.ID,
+                        ModuleID = x.ModuleId,
+                        ModuleName = x.Module.ModuleName,
+                        ActionName = x.ActionName,
+                        ClassName = x.Module.ClassName,
+                        MethodName = x.MethodName,
+                        AreaName = x.Module.Area.AreaName
+                    }).ToList();
+            }
+            else
+            {
+                 actions = newdc.Set<FrameworkAction>()
+                    .Where(x => newdc.BaseFrameworkMenus.Where(y => y.ActionId != null).Select(y => y.ActionId).Distinct().Contains(x.ID) == false)
+                    .Select(x => new FrameworkAction_ListView
+                    {
+                        ID = x.ID,
+                        ModuleID = x.ModuleId,
+                        ModuleName = x.Module.ModuleName,
+                        ActionName = x.ActionName,
+                        ClassName = x.Module.ClassName,
+                        MethodName = x.MethodName,
+                        AreaName = x.Module.Area.AreaName
+                    }).ToList();
+
+            }
+
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
             List<FrameworkAction_ListView> toremove = new List<FrameworkAction_ListView>();
             foreach (var item in actions)
@@ -83,5 +104,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public string MethodName { get; set; }
 
         public string AreaName { get; set; }
+
     }
 }

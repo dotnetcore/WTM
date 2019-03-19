@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 
-namespace WalkingTec.Mvvm.ApiDemo.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
 
     [ActionDescription("日志管理")]

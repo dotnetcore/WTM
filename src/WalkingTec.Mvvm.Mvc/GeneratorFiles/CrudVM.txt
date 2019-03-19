@@ -10,7 +10,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public class $modelname$VM : BaseCRUDVM<$modelname$>
+    public partial class $modelname$VM : BaseCRUDVM<$modelname$>
     {$pros$
 
         public $modelname$VM()

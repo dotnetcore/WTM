@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
-namespace WalkingTec.Mvvm.Admin.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
 
     [ActionDescription("用户管理")]
