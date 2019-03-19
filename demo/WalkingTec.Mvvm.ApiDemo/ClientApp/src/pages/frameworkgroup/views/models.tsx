@@ -1,7 +1,5 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
-import UploadImg from 'components/form/uploadImg';
-import Transfer from 'components/form/transfer';
-import Selects from 'components/form/select';
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
