@@ -2,22 +2,31 @@
 
 WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework, 当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。 2017年9月，我们将代码移植到了.Net Core上，并进行了深度优化和重构，推出了基于Asp.net Core和EF Core的全新框架，新框架在架构，稳定性，速度上都有长足进步，真正成为一款高效开发的利器。
 
-正式版：
-[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master-nuget.org)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=4)
+[![Coverage Status](https://coveralls.io/repos/github/dotnetcore/WTM/badge.svg?branch=master)](https://coveralls.io/github/dotnetcore/WTM?branch=master)
+[![Member project of .NET Core Community](https://img.shields.io/badge/member%20project%20of-NCC-9e20c9.svg)](https://github.com/dotnetcore)
+[![GitHub license](https://img.shields.io/github/license/dotnetcore/WTM.svg)](https://github.com/dotnetcore/WTM/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdotnetcore%2FWTM?ref=badge_shield)
 
-测试版：
-[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-develop-nuget.sundot)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=3)
+## CI Build Status
 
-Package name                              | Stable (master branch)
--------------------------------------------|-----------------------------
-`WalkingTec.Mvvm.Core` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Core.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Core/)
-`WalkingTec.Mvvm.Mvc` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc/)
-`WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/)
-`WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/)
+| Platform | Build Server | Master Status  | Develop Status  |
+|--------- |------------- |---------|---------|
+| Azure Pipelines |  Linux |[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master-nuget.org)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=4) |[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-develop-nuget.sundot)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=3)|
+| AppVeyor |  Windows/Linux | - | - |
+| Travis   | Linux/OSX | - | - |
+
+## Nuget Packages
+
+Package name                              | Version                     | Downloads
+------------------------------------------|-----------------------------|-------------
+`WalkingTec.Mvvm.Core` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Core.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Core/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Core.svg)
+`WalkingTec.Mvvm.Mvc` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.svg)
+`WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.Admin.svg)
+`WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
 框架主要特点：
 
-框架提供了4类ViewModel，涵盖了主流Web应用程序常见的功能，分别是： 
+框架提供了4类ViewModel，涵盖了主流Web应用程序常见的功能，分别是：
   BaseCRUDVM 提供最常见的数据增删改的功能
   PagedListVM 提供分页列表以及导出的功能
   ImportVM & TemplateVM 提供数据导入的功能
