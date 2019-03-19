@@ -1,7 +1,5 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal } from 'antd';
-import UploadImg from 'components/form/uploadImg';
-import Transfer from 'components/form/transfer';
-import Selects from 'components/form/select';
+import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
@@ -43,7 +41,7 @@ export default {
             Sex:{
                 label: "性别",
                 rules: [],
-                formItem: <Selects placeholder="性别" dataSource={[  
+                formItem: <WtmSelect placeholder="性别" dataSource={[  
                     { Text: "男", Value: 0 },
                     { Text: "女", Value: 1 }
                 ]}/>
@@ -71,7 +69,7 @@ export default {
             PhotoId:{
                 label: "照片",
                 rules: [],
-                formItem: <UploadImg />
+                formItem: <WtmUploadImg />
             },
             IsValid:{
                 label: "是否有效",
@@ -81,7 +79,7 @@ export default {
             UserRoles:{
                 label: "角色",
                 rules: [],
-                formItem: <Transfer
+                formItem: <WtmTransfer
                     dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkRoles" })}
                     dataKey="RoleId"
                 /> 
@@ -89,7 +87,7 @@ export default {
             UserGroups:{
                 label: "用户组",
                 rules: [],
-                formItem: <Transfer
+                formItem: <WtmTransfer
                     dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkGroups" })}
                     dataKey="GroupId"
                 /> 
@@ -116,12 +114,11 @@ export default {
             IsValid:{
                 label: "是否有效",
                 rules: [],
-                formItem: <Select placeholder="全部" showArrow allowClear>
-                    <Select.Option value={1}>是</Select.Option>
-                    <Select.Option value={0}>否</Select.Option>
-                </Select>
-            },
-
+                formItem: <WtmSelect dataSource={[
+                    { Text: "是", Value: 1 },
+                    { Text: "否", Value: 0 }
+                ]}/>
+            }
         }
     },
     /**
