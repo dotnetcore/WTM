@@ -1,11 +1,6 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-// import { WtmDatePicker } from 'components/form/datePicker';
-// import Editer from 'components/form/editer';
-// import Selects from 'components/form/select';
-// import Transfer from 'components/form/transfer';
-// import UploadImg from 'components/form/uploadImg';
-import { WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmCheckbox, WtmCascader } from 'components/form'
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg } from 'components/form';
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';

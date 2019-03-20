@@ -5,13 +5,13 @@
  * @modify date 2018-09-12 18:53:42
  * @desc [description]
 */
-import 'braft-editor/dist/index.css'
-import React from 'react'
-import lodash from 'lodash'
-
-import BraftEditor, { BraftEditorProps, EditorState } from 'braft-editor'
 import { Card } from 'antd';
-import './style.less'
+import BraftEditor, { BraftEditorProps, EditorState } from 'braft-editor';
+import 'braft-editor/dist/index.css';
+import lodash from 'lodash';
+import React from 'react';
+import './style.less';
+
 
 
 interface IAppProps extends BraftEditorProps {

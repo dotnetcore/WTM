@@ -1,12 +1,11 @@
 
-import { Icon, Layout, Menu } from 'antd';
+import { Icon, Menu } from 'antd';
 import GlobalConfig from 'global.config';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Store from 'store/index';
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
 @observer
 export default class App extends React.Component<any, any> {
   renderLink(menu) {

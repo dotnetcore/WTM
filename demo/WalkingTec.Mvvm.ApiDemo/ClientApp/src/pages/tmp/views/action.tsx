@@ -1,13 +1,13 @@
-import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row, message } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Modal, Popconfirm, Row } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
-import Store from '../store';
-import { InfoForm, InsertForm, UpdateForm, TestForm } from './forms';
 import Frameworkuserbase from '../../frameworkuserbase';
+import Store from '../store';
+import { InfoForm, InsertForm, TestForm, UpdateForm } from './forms';
 /**
  * 动作事件
  */

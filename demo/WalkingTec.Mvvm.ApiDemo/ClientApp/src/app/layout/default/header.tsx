@@ -1,11 +1,10 @@
 
 import { Avatar, Col, Dropdown, Icon, Layout, Menu, Row } from 'antd';
-import GlobalConfig from 'global.config';
+import globalConfig from 'global.config';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/index';
-import { observer } from 'mobx-react';
 import RequestFiles from 'utils/RequestFiles';
-import globalConfig from 'global.config';
 const { Header } = Layout;
 @observer
 export default class App extends React.Component<any, any> {
@@ -53,7 +52,7 @@ class UserMenu extends React.Component<any, any> {
                 <div className="app-user-menu" >
                     <div>
                         {/* PhotoId */}
-                        <Avatar size="large" icon="user" src={Store.User.User.PhotoId ? RequestFiles.onFileUrl(Store.User.User.PhotoId) : GlobalConfig.default.avatar} />
+                        <Avatar size="large" icon="user" src={Store.User.User.PhotoId ? RequestFiles.onFileUrl(Store.User.User.PhotoId) : globalConfig.default.avatar} />
                         &nbsp;<span>{Store.User.User.Name}</span>
                     </div>
                 </div>

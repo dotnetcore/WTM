@@ -4,6 +4,8 @@
  */
 const configDev = require("./config/webpack.config.dev");
 const configProd = require("./config/webpack.config.prod");
+const moment = require('moment');
+process.env.REACT_APP_TIME = moment().format('YYYY-MM-DD HH:mm:ss');
 module.exports = function override(config, env) {
   if (env == "development") {
     return configDev(config, env)

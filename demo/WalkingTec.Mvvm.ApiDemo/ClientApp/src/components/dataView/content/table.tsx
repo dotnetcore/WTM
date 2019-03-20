@@ -15,7 +15,9 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { Resizable } from 'react-resizable';
-import Rx from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import Store from 'store/dataSource';
 import Regular from 'utils/Regular';
 import { ToImg } from '../help/toImg';
@@ -255,7 +257,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             }
         }
     }
-    resize: Rx.Subscription
+    resize: Subscription
     async componentDidMount() {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
@@ -263,7 +265,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             this.Store.onSearch();
             this.onCalculationHeight()
             this.initColumns();
-            this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(300).subscribe(e => {
+            this.resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
                 this.onCalculationHeight()
             });
         } catch (error) {

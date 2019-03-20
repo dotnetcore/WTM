@@ -93,5 +93,9 @@ export default {
     /**
      * 锁定表格滚动
      */
-    lockingTableRoll: true
+    lockingTableRoll: true,
+    /**
+     * 菜单默认展开 true=收起
+     */
+    collapsed: true
 }
