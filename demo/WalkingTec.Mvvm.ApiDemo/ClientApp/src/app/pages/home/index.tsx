@@ -1,6 +1,6 @@
 import { Card, Col, Row } from 'antd';
 import * as React from 'react';
-import Github from '../../../components/other/githubStar';
+import Github from 'components/other/githubStar';
 import Antv1 from './antv1';
 import Antv2 from './antv2';
 import Antv3 from './antv3';
