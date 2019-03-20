@@ -20,7 +20,6 @@ export default class LoginDemo extends React.Component<any, any>{
     notCode: true,
     visible: false
   }
-  @Debounce(100)
   onSubmit(e) {
     e.preventDefault();
     if (this.state.loading) {
