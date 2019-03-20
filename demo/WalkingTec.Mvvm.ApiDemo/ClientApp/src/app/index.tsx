@@ -5,9 +5,9 @@
  * @modify date 2018-07-24 05:02:33
  * @desc [description]
  */
-import Exception from 'ant-design-pro/lib/Exception';
 import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+import Exception from 'components/other/Exception';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
