@@ -130,7 +130,6 @@ class Optimization extends React.Component<{
         this.props.onVisible(visible)
     }
 
-    @Debounce(100)
     onSubmit(e?) {
         if (e) {
             e.stopPropagation();
