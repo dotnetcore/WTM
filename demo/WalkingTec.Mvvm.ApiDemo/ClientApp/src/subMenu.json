@@ -9,6 +9,15 @@
         "Children": []
     },
     {
+        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2934",
+        "Name": "外部页面",
+        "Icon": "menu-fold",
+        "Path": "https://www.baidu.com/",
+        "Component": "tmp",
+        "Action": [],
+        "Children": []
+    },
+    {
         "Key": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
         "Name": "系统管理",
         "Icon": "menu-fold",
@@ -53,8 +62,8 @@
                 "Children": []
             }
         ]
-    }
-,{
+    },
+    {
         "Key": "fe01c7b5-49c1-45a8-b363-6a9917ea7630",
         "Name": "地区管理",
         "Icon": "menu-fold",
@@ -62,8 +71,8 @@
         "Component": "city",
         "Action": [],
         "Children": []
-    }
-,{
+    },
+    {
         "Key": "b093dca3-867d-466f-b412-57e744eca07a",
         "Name": "学校管理",
         "Icon": "menu-fold",
@@ -71,8 +80,8 @@
         "Component": "school",
         "Action": [],
         "Children": []
-    }
-,{
+    },
+    {
         "Key": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
         "Name": "数据权限",
         "Icon": "menu-fold",
@@ -81,7 +90,4 @@
         "Action": [],
         "Children": []
     }
-
-
-
 ]
