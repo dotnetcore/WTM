@@ -5,10 +5,11 @@
  * @modify date 2018-09-12 18:52:54
  * @desc [description]
 */
-import { Request } from 'utils/Request';
+import Regular from 'utils/Regular';
 import { action, observable, runInAction } from "mobx";
 import lodash from 'lodash';
 import User from './user';
+import globalConfig from 'global.config';
 interface subMenu {
     Key?: string,
     Name?: string,
@@ -30,21 +31,15 @@ class Store {
      * 获取菜单
      */
     async getMenu() {
-        let menu = [];
-        if (User.User.role == "administrator") {
-            const res = await import("../../subMenu.json").then(x => x.default);
-            menu = res;
-            // menu.push({
-            //     "Key": "system",
-            //     "Name": "系统设置",
-            //     "Icon": "setting",
-            //     "Path": "/system",
-            //     "Component": "",
-            //     "Children": []
-            // })
-
+        if (globalConfig.development) {
+            const res: any[] = await import("../../subMenu.json").then(x => x.default);
+            this.setSubMenu(lodash.map(res, data => {
+                if (Regular.url.test(data.Path)) {
+                    data.Path = "/external/" + encodeURIComponent(data.Path);
+                }
+                return data;
+            }));
         }
-        this.setSubMenu(menu);
     }
 
     /**  设置菜单 */

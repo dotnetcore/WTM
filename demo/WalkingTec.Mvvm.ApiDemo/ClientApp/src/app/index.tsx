@@ -20,6 +20,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Store from 'store/index';
 import { Help } from 'utils/Help';
 import Layout from "./layout/default/index";
+import External from "./pages/external";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
@@ -56,6 +57,12 @@ export default class RootRoutes extends React.Component<any, any> {
                     path: "/",
                     exact: true,
                     component: this.createCSSTransition(Home)
+                },
+                {
+                    // 外部页面
+                    path: "/external/:url",
+                    exact: true,
+                    component: this.createCSSTransition(External)
                 },
                 {
                     path: "/system",
