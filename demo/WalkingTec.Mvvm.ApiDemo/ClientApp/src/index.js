@@ -8,7 +8,6 @@
  *  react-scripts 有 index.js 入口文件检查机制，所以使用 .js 作为入口 不使用 .ts
  */
 import "@babel/polyfill";
-import 'ant-design-pro/dist/ant-design-pro.css';
 import 'antd/dist/antd.less';
 import 'viewerjs/dist/viewer.css';
 import 'braft-editor/dist/index.css';

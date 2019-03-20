@@ -1,6 +1,6 @@
 import { Chart, Tooltip, Axis, Legend, Coord, Guide, Pie } from 'viser-react';
 import * as React from 'react';
-const DataSet = require('@antv/data-set');
+import DataSet from '@antv/data-set';
 
 const sourceData = [
   { item: '事例一', count: 40 },
