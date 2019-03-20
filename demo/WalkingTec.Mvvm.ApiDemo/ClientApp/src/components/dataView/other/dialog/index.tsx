@@ -9,6 +9,7 @@ import { Button, Divider, message, notification, Skeleton, Spin } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
+import { Debounce } from 'lodash-decorators';
 import * as React from 'react';
 import { Help } from 'utils/Help';
 import { InfoShell } from '../infoShell';
@@ -128,6 +129,8 @@ class Optimization extends React.Component<{
     onVisible(visible) {
         this.props.onVisible(visible)
     }
+
+    @Debounce(100)
     onSubmit(e?) {
         if (e) {
             e.stopPropagation();

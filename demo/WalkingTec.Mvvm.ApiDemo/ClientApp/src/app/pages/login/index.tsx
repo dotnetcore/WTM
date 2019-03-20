@@ -1,13 +1,14 @@
 
-import { Button, Form, Icon, Input, message, Row, Popconfirm } from 'antd';
+import { Button, Form, Icon, Input, message, Popconfirm, Row } from 'antd';
 import { DesForm } from 'components/decorators';
+import GlobalConfig from 'global.config';
 import lodash from 'lodash';
+import { Debounce } from 'lodash-decorators';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import store from 'store/index';
-import ImgCode from './imgCode'
+import ImgCode from './imgCode';
 import './style.less';
-import GlobalConfig from 'global.config';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -19,6 +20,7 @@ export default class LoginDemo extends React.Component<any, any>{
     notCode: true,
     visible: false
   }
+  @Debounce(100)
   onSubmit(e) {
     e.preventDefault();
     if (this.state.loading) {

@@ -9,6 +9,7 @@ import { Alert, Divider, Icon, Switch, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
+import { Debounce } from 'lodash-decorators';
 import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -19,6 +20,7 @@ import Store from 'store/dataSource';
 import Regular from 'utils/Regular';
 import { ToImg } from '../help/toImg';
 import './style.less';
+
 interface ITablePorps {
     /** 状态 */
     Store: Store,
@@ -173,6 +175,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      * @param filters 
      * @param sorter 
      */
+    @Debounce(300)
     onChange(page, filters, sorter) {
         let sort: any = "";
         if (sorter.columnKey) {
@@ -252,9 +255,6 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             }
         }
     }
-    /**
-     * 
-     */
     resize: Rx.Subscription
     async componentDidMount() {
         try {
@@ -263,11 +263,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             this.Store.onSearch();
             this.onCalculationHeight()
             this.initColumns();
-            this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
-                // if (this.tableDom.clientWidth > TableUtils.clientWidth) {
-                //     TableUtils.clientWidth = this.tableDom.clientWidth;
-                //     this.initColumns();
-                // }
+            this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(300).subscribe(e => {
                 this.onCalculationHeight()
             });
         } catch (error) {
