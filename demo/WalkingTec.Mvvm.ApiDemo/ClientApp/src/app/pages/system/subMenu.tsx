@@ -5,12 +5,11 @@
  * @modify date 2018-09-10 05:07:36
  * @desc [description]
 */
-import { Alert, Button, Drawer, Icon, message, Tabs, Tree } from 'antd';
+import { Alert, Button, Drawer, Icon, message, Tree } from 'antd';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/index';
-const TabPane = Tabs.TabPane;
 const TreeNode = Tree.TreeNode;
 @observer
 export default class IApp extends React.Component<any, any> {

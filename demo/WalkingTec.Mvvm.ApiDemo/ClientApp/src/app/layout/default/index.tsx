@@ -1,17 +1,19 @@
 
 import { Layout } from 'antd';
-import * as React from 'react';
+import globalConfig from 'global.config';
+import lodash from 'lodash';
+import { action, computed, observable } from 'mobx';
 import Animate from 'rc-animate';
+import * as React from 'react';
 import ContentComponent from './content';
 import HeaderComponent from './header';
 import SiderComponent from './sider';
 import './style.less';
-import { observable, action, computed } from 'mobx';
 class LayoutStoreCLass {
   /**
    * 菜单 展开收起
    */
-  @observable collapsed = true;
+  @observable collapsed = lodash.get(globalConfig, 'collapsed', true);
   @action
   onCollapsed(collapsed = !this.collapsed) {
     this.collapsed = collapsed;

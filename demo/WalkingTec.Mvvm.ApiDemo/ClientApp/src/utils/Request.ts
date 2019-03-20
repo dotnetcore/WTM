@@ -5,13 +5,13 @@
  * @modify date 2018-09-12 18:52:37
  * @desc [description]
 */
-import Rx from "rxjs";
-import { message, notification } from "antd";
-import NProgress from 'nprogress';
-import lodash from 'lodash';
-import moment from 'moment';
+import { notification } from "antd";
 import GlobalConfig from 'global.config';
-
+import lodash from 'lodash';
+import NProgress from 'nprogress';
+import { interval, Observable, of, TimeoutError } from "rxjs";
+import { ajax, AjaxError, AjaxResponse } from "rxjs/ajax";
+import { catchError, filter, map, timeout } from "rxjs/operators";
 interface Preview {
     data: any
     message: string
@@ -22,7 +22,7 @@ const CacheHttp = new Map<string, Promise<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
 // 每30秒清理一次缓存
-Rx.Observable.interval(30000).subscribe(obs => {
+interval(30000).subscribe(obs => {
     CacheHttp.clear();
     Cache.clear();
 })
@@ -64,20 +64,20 @@ export class Request {
      * ajax Observable 管道
      * @param Observable 
      */
-    protected AjaxObservable(Observable: Rx.Observable<Rx.AjaxResponse>) {
-        return new Rx.Observable(sub => {
+    protected AjaxObservable(Obs: Observable<AjaxResponse>) {
+        return new Observable(sub => {
             // 加载进度条
             this.NProgress();
-            Observable
+            Obs.pipe(
                 // 超时时间
-                .timeout(this.timeout)
+                timeout(this.timeout),
                 // 错误处理
-                .catch((err) => Rx.Observable.of(err))
+                catchError((err) => of(err)),
                 // 过滤请求
-                .filter((ajax) => {
+                filter((ajax) => {
                     this.NProgress("done");
                     // 数据 Response 
-                    if (ajax instanceof Rx.AjaxResponse) {
+                    if (ajax instanceof AjaxResponse) {
                         // 无 响应 数据
                         if (lodash.isNil(ajax.response)) {
                             console.warn("响应体为 NULL", ajax)
@@ -91,7 +91,7 @@ export class Request {
                         return true
                     }
                     // 错误
-                    if (ajax instanceof Rx.AjaxError) {
+                    if (ajax instanceof AjaxError) {
                         const { response } = ajax;
                         // 返回 业务处理错误
                         if (response && lodash.includes(this.catchStatus, ajax.status)) {
@@ -120,7 +120,7 @@ export class Request {
                         });
                         return false
                     }
-                    if (ajax instanceof Rx.TimeoutError) {
+                    if (ajax instanceof TimeoutError) {
                         sub.error({})
                         notification.error({
                             key: ajax.name,
@@ -129,9 +129,9 @@ export class Request {
                         });
                         return false
                     }
-                })
+                }),
                 // 数据过滤
-                .map((res: Rx.AjaxResponse) => {
+                map((res: AjaxResponse) => {
                     // 使用传入得 过滤函数
                     if (this.newMap && typeof this.newMap == "function") {
                         return this.newMap(res);
@@ -147,10 +147,11 @@ export class Request {
                             });
                             break;
                     }
-                }).subscribe(obs => {
-                    sub.next(obs)
-                    sub.complete()
                 })
+            ).subscribe(obs => {
+                sub.next(obs)
+                sub.complete()
+            })
         })
     }
     /**
@@ -208,12 +209,12 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    get(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<any> {
+    get(url: string, body?: { [key: string]: any } | string, headers?: Object): Observable<any> {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body, true);
         body = this.formatBody(newParams.body);
         url = this.compatibleUrl(this.target, newParams.url, body as any);
-        return this.AjaxObservable(Rx.Observable.ajax.get(url, headers))
+        return this.AjaxObservable(ajax.get(url, headers))
     }
     /**
      * post
@@ -221,12 +222,12 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    post(url: string, body?: any, headers?: Object): Rx.Observable<any> {
+    post(url: string, body?: any, headers?: Object): Observable<any> {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
         url = this.compatibleUrl(this.target, newParams.url);
-        return this.AjaxObservable(Rx.Observable.ajax.post(url, body, headers))
+        return this.AjaxObservable(ajax.post(url, body, headers))
     }
     /**
      * put
@@ -234,12 +235,12 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    put(url: string, body?: any, headers?: Object): Rx.Observable<any> {
+    put(url: string, body?: any, headers?: Object): Observable<any> {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
         url = this.compatibleUrl(this.target, newParams.url);
-        return this.AjaxObservable(Rx.Observable.ajax.put(url, body, headers))
+        return this.AjaxObservable(ajax.put(url, body, headers))
     }
     /**
      * delete
@@ -247,12 +248,12 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    delete(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<any> {
+    delete(url: string, body?: { [key: string]: any } | string, headers?: Object): Observable<any> {
         headers = { ...this.getHeaders(), ...headers };
         const newParams = this.parameterTemplate(url, body, true);
         body = this.formatBody(newParams.body);
         url = this.compatibleUrl(this.target, newParams.url, body as any);
-        return this.AjaxObservable(Rx.Observable.ajax.delete(url, headers))
+        return this.AjaxObservable(ajax.delete(url, headers))
     }
     /** jsonp 回调 计数 */
     private jsonpCounter = 0;
@@ -263,7 +264,7 @@ export class Request {
         this.getHeaders();
         body = this.formatBody(body);
         url = this.compatibleUrl(this.target, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
-        return new Rx.Observable(observer => {
+        return new Observable(observer => {
             this.jsonpCounter++;
             const key = '_jsonp_callback_' + this.jsonpCounter;
             const script = document.createElement('script');

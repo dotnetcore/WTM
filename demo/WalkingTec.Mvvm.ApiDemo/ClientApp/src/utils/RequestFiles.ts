@@ -6,10 +6,8 @@
  * @desc [description]
 */
 import { message, notification } from "antd";
-import { UploadProps } from "antd/lib/upload";
-import lodash from "lodash";
 import moment from 'moment';
-import Rx from "rxjs";
+import { ajax, AjaxRequest } from "rxjs/ajax";
 import { Request } from './Request';
 /** 文件服务器 */
 const files = {
@@ -83,7 +81,7 @@ export class RequestFiles extends Request {
      * @param fileType 
      * @param fileName 
      */
-    async download(AjaxRequest: Rx.AjaxRequest, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
+    async download(AjaxRequest: AjaxRequest, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
         this.getHeaders();
         if (this.downloadLoading) {
             return message.warn('文件获取中，请勿重复操作~')
@@ -110,7 +108,7 @@ export class RequestFiles extends Request {
                 AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
             }
             try {
-                const result = await Rx.Observable.ajax(AjaxRequest).toPromise();
+                const result = await ajax(AjaxRequest).toPromise();
                 this.onCreateBlob(result.response, fileType, fileName).click();
                 notification.success({
                     key: "download",

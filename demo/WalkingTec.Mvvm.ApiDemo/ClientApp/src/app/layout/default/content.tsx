@@ -1,11 +1,9 @@
 
-import { Layout, Tabs } from 'antd';
+import { Layout } from 'antd';
 import * as React from 'react';
-import ReactDOM from 'react-dom';
 import { renderRoutes } from 'react-router-config';
 import { Subscription } from 'rxjs';
-const { Header, Content, Sider } = Layout;
-const TabPane = Tabs.TabPane;
+const {  Content } = Layout;
 export default class App extends React.Component<any, any> {
   minHeight = 0;
   body: HTMLDivElement;

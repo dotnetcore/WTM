@@ -5,14 +5,15 @@
  * @modify date 2018-09-12 18:52:27
  * @desc [description] .
  */
+import { Button, Col, List, message, notification, Row } from 'antd';
+import globalConfig from 'global.config';
+import lodash from 'lodash';
+import { action, observable, runInAction, toJS } from 'mobx';
 import * as React from 'react';
-import { message, notification, List, Row, Col, Button } from 'antd';
-import { action, computed, observable, runInAction, toJS } from 'mobx';
+import { map } from 'rxjs/operators';
+import { Help } from 'utils/Help';
 import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
-import lodash from 'lodash';
-import { Help } from 'utils/Help';
-import globalConfig from 'global.config';
 /**
  * 搜索 参数
  */
@@ -109,16 +110,18 @@ export default class Store {
       this.onPageState("loading", true);
       const method = this.Urls.search.method;
       const url = this.Urls.search.url;
-      const res = await this.Request[method](url, params).map(data => {
-        if (data.Data) {
-          // 设置 一个 key 默认 去 idkey 中的值，没有则创建 一个 guid
-          data.Data = lodash.map(data.Data, obj => {
-            lodash.set(obj, 'key', lodash.get(obj, this.IdKey, Help.GUID()))
-            return obj
-          })
-        }
-        return data
-      }).toPromise()
+      const res = await this.Request[method](url, params).pipe(
+        map(data => {
+          if (data.Data) {
+            // 设置 一个 key 默认 去 idkey 中的值，没有则创建 一个 guid
+            data.Data = lodash.map(data.Data, obj => {
+              lodash.set(obj, 'key', lodash.get(obj, this.IdKey, Help.GUID()))
+              return obj
+            })
+          }
+          return data
+        })
+      ).toPromise()
       runInAction(() => {
         this.dataSource = {
           // ...this.dataSource,

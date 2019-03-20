@@ -5,10 +5,9 @@
  * @modify date 2018-09-12 18:52:57
  * @desc [description]
 */
-import { configure } from "mobx";
-import User from './system/user';
 import Authorize from './system/authorize';
 import Meun from './system/menu';
+import User from './system/user';
 class store {
     constructor() {
         this.ready();
