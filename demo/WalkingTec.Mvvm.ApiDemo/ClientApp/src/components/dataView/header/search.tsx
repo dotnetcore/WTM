@@ -14,6 +14,8 @@ import { action, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/dataSource';
+import { Debounce, BindAll } from 'lodash-decorators';
+
 import "./style.less";
 interface IAppProps {
     /** 状态 */
@@ -35,6 +37,7 @@ interface IAppProps {
  */
 @DesError
 @observer
+@BindAll()
 export class DataViewSearch extends React.Component<IAppProps, any> {
     Store: Store = this.props.Store;
     @observable toggle = false;
@@ -44,6 +47,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
      * 提交表单
      * @param e 
      */
+    // @Debounce(500)
     onSubmit(e) {
         if (this.props.onSubmit) {
             return this.props.onSubmit(e)
@@ -61,6 +65,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
      * 重置表单
      * @param e 
      */
+    // @Debounce(500)
     onReset(e) {
         if (this.props.onReset) {
             return this.props.onReset(e)
@@ -76,7 +81,8 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
             }
         });
     }
-    @action.bound
+    // @Debounce(500)
+    @action
     onToggle() {
         this.toggle = !this.toggle;
         document.body.style.overflowY = "hidden";
@@ -110,13 +116,13 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
             colSpanSearch = (columnCount - itemslength) * colSpan
         }
         return (
-            <Form className="data-view-search" onSubmit={this.onSubmit.bind(this)}>
+            <Form className="data-view-search" onSubmit={this.onSubmit}>
                 <Row type="flex" >
                     {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
                     <Col span={colSpanSearch} className="data-view-search-right" >
                         <Button icon="search" type="primary" htmlType="submit" loading={this.Store.pageState.loading}>搜索</Button>
                         <Divider type="vertical" />
-                        <Button icon="retweet" onClick={this.onReset.bind(this)} loading={this.Store.pageState.loading}>重置</Button>
+                        <Button icon="retweet" onClick={this.onReset} loading={this.Store.pageState.loading}>重置</Button>
                         {
                             toggleShow && <>
                                 <Divider type="vertical" />
