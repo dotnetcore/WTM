@@ -97,5 +97,9 @@ export default {
     /**
      * 菜单默认展开 true=收起
      */
-    collapsed: true
+    collapsed: true,
+    /**
+     * 静态页面 标记
+     */
+    staticPage: "@StaticPage"
 }
