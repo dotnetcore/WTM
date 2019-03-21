@@ -15,7 +15,7 @@ import Pages from 'pages/index';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import Loadable from 'react-loadable';
-import { renderRoutes } from 'react-router-config';
+import { renderRoutes, RouteConfig } from 'react-router-config';
 import { BrowserRouter } from 'react-router-dom';
 import Store from 'store/index';
 import { Help } from 'utils/Help';
@@ -29,6 +29,7 @@ import System from "./pages/system";
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
         // console.clear()
+        document.title = globalConfig.default.title;
     }
     render() {
         // 用户登陆菜单加载完成进入主界面
@@ -44,7 +45,7 @@ export default class RootRoutes extends React.Component<any, any> {
     /**
      * 路由列表
      */
-    public routes: any[] = [
+    public routes: RouteConfig[] = [
         {
             /**
              * 主页布局 
@@ -109,20 +110,11 @@ export default class RootRoutes extends React.Component<any, any> {
     };
     /**
      * 
-     * @param Component 组件
-     * @param Animate 路由动画
-     * @param Loading 组件加载动画
-     * @param cssTranParams 路由动画参数
+     * @param Component 
      */
-    Loadable(Component, Animate = true, Loading = this.Loading) {
-        if (!Loading) {
-            Loading = (props) => this.Loading(props);
-        }
-        const loadable = Loadable({ loader: Component, loading: Loading });
-        if (Animate) {
-            return this.createCSSTransition(loadable);
-        }
-        return loadable;
+    Loadable(Component) {
+        const loadable = Loadable({ loader: Component, loading: (props) => this.Loading(props) });
+        return this.createCSSTransition(loadable);
     };
     /**
      *  过渡动画
@@ -142,7 +134,6 @@ export default class RootRoutes extends React.Component<any, any> {
         }
     };
     render() {
-        document.title = globalConfig.default.title;
         // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
             <LocaleProvider locale={zhCN}>
