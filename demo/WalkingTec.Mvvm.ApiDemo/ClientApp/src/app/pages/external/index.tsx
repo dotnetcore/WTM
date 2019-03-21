@@ -91,13 +91,14 @@ export default class IApp extends React.Component<any, any> {
         }
     }
     componentDidMount() {
-        
+
     }
     componentWillMount() {
     }
     onLoad(e) {
         // 发送消息
         // e.target.contentWindow.postMessage(this.sendPostMessage(), decodeURIComponent(this.props.match.params.url));
+        console.log(decodeURIComponent(this.props.match.params.url), this.ref.current.contentWindow)
         this.setState({ loding: false })
     }
     render() {
@@ -114,11 +115,7 @@ export default class IApp extends React.Component<any, any> {
                 >
                 </iframe>
                 {this.state.loding ? <div className="app-external-iframe-Skeleton">
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
+                    <Skeleton paragraph={{ rows: 10 }} />
                 </div> : null}
             </>
         );

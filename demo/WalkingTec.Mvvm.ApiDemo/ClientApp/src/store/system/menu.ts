@@ -34,8 +34,13 @@ class Store {
         if (globalConfig.development) {
             const res: any[] = await import("../../subMenu.json").then(x => x.default);
             this.setSubMenu(lodash.map(res, data => {
+                // 跨域页面
                 if (Regular.url.test(data.Path)) {
                     data.Path = "/external/" + encodeURIComponent(data.Path);
+                }
+                // public 下的 pages 页面
+                if (lodash.includes(data.Path, globalConfig.staticPage)) {
+                    data.Path = "/external/" + encodeURIComponent(lodash.replace(data.Path, globalConfig.staticPage, `${window.location.origin}/pages`));
                 }
                 return data;
             }));

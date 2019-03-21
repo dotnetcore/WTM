@@ -9,6 +9,7 @@ import * as React from 'react';
 import store from 'store/index';
 import ImgCode from './imgCode';
 import './style.less';
+import globalConfig from 'global.config';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -17,7 +18,7 @@ function hasErrors(fieldsError) {
 export default class LoginDemo extends React.Component<any, any>{
   state = {
     loading: false,
-    notCode: true,
+    notCode: !globalConfig.development,
     visible: false
   }
   onSubmit(e) {
@@ -65,6 +66,7 @@ export default class LoginDemo extends React.Component<any, any>{
             >
               {getFieldDecorator('userid', {
                 rules: [{ required: true, message: '请输入 用户名!' }],
+                initialValue: globalConfig.development && "admin"
               })(
                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
               )}
@@ -75,6 +77,7 @@ export default class LoginDemo extends React.Component<any, any>{
             >
               {getFieldDecorator('password', {
                 rules: [{ required: true, message: '请输入 密码!' }],
+                initialValue: globalConfig.development && "000000"
               })(
                 <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
               )}

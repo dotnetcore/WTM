@@ -18,6 +18,15 @@
         "Children": []
     },
     {
+        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2933",
+        "Name": "外部页面",
+        "Icon": "menu-fold",
+        "Path": "@StaticPage/test.html",
+        "Component": "tmp",
+        "Action": [],
+        "Children": []
+    },
+    {
         "Key": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
         "Name": "系统管理",
         "Icon": "menu-fold",
