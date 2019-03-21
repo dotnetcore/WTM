@@ -1,7 +1,7 @@
 import { notification, Modal } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
-import { configure } from 'mobx';
+import { configure, observable } from 'mobx';
 import lodash from 'lodash';
 
 import "./global.less";
@@ -19,7 +19,7 @@ if (development) {
         })
     }
 }
-export default {
+export default observable({
     /**
      * 开发环境
      */
@@ -102,4 +102,4 @@ export default {
      * 静态页面 标记
      */
     staticPage: "@StaticPage"
-}
+}) 
