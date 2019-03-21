@@ -12,6 +12,8 @@ import lodash from 'lodash';
 import { Debounce } from 'lodash-decorators';
 import * as React from 'react';
 import { Help } from 'utils/Help';
+import { DesError } from 'components/decorators';
+
 import { InfoShell } from '../infoShell';
 declare type Props = {
     form?: WrappedFormUtils;
@@ -48,6 +50,7 @@ declare type Props = {
     onFormSubmit?: (values, onClose?) => Promise<boolean> | void | boolean;
     [key: string]: any
 };
+@DesError
 export class DialogForm extends React.Component<Props, any> {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (!lodash.isEqual(this.props.disabled, nextProps.disabled)) {
@@ -107,7 +110,7 @@ export class DialogForm extends React.Component<Props, any> {
         );
     }
 };
-// @DesForm
+@DesError
 class Optimization extends React.Component<{
     option: any;
     visible: any;

@@ -91,7 +91,7 @@ export default class IApp extends React.Component<any, any> {
         }
     }
     componentDidMount() {
-        
+
     }
     componentWillMount() {
     }
@@ -114,11 +114,7 @@ export default class IApp extends React.Component<any, any> {
                 >
                 </iframe>
                 {this.state.loding ? <div className="app-external-iframe-Skeleton">
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
-                    <Skeleton active />
+                    <Skeleton paragraph={{ rows: 10 }} />
                 </div> : null}
             </>
         );
