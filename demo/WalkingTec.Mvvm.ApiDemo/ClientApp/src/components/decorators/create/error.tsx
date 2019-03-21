@@ -7,10 +7,9 @@
  */
 import * as React from 'react';
 import lodash from "lodash";
-export function DesError(Component: React.ComponentClass) {
-    class AppError extends Component {
+export function DesError(Component: React.ComponentClass): any {
+    return class AppError extends React.PureComponent<any, any> {
         state = {
-            ...this.state,
             error: null,
             errorInfo: null
         };
@@ -35,13 +34,8 @@ export function DesError(Component: React.ComponentClass) {
                     </div>
                 );
             }
-            return super.render();
+            return <Component {...this.props} />;
         }
     }
-    // 静态属性
-    lodash.map(Component, (value, key) => {
-        AppError[key] = value;
-    })
-    return AppError as any
 
 }
