@@ -96,7 +96,7 @@ export class Request {
                         // 返回 业务处理错误
                         if (response && lodash.includes(this.catchStatus, ajax.status)) {
                             if (response.Message && response.Message.length > 0) {
-                                response.Message.map(message => notification.error({
+                                lodash.compact(response.Message).map(message => notification.error({
                                     message
                                 }))
                             }
