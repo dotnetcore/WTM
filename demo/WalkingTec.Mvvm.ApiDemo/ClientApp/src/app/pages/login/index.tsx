@@ -31,8 +31,6 @@ export default class LoginDemo extends React.Component<any, any>{
         try {
           await store.User.Login(values);
         } catch (error) {
-          message.destroy();
-          message.error(lodash.get(error, 'Entity.login'))
           this.setState({ loading: false })
         }
       }
