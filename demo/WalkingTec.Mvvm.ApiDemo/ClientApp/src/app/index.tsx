@@ -46,6 +46,12 @@ export default class RootRoutes extends React.Component<any, any> {
      * 路由列表
      */
     public routes: RouteConfig[] = [
+        // {
+        //     // 外部页面
+        //     path: "/mainExternal/:url",
+        //     exact: true,
+        //     component: this.createCSSTransition(External)
+        // },
         {
             /**
              * 主页布局 

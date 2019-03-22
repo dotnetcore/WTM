@@ -42,6 +42,10 @@ class Store {
                 if (lodash.includes(data.Path, globalConfig.staticPage)) {
                     data.Path = "/external/" + encodeURIComponent(lodash.replace(data.Path, globalConfig.staticPage, `${window.location.origin}/pages`));
                 }
+                // public 下的 pages 页面
+                if (lodash.includes(data.Path, globalConfig.dynamicPage)) {
+                    data.Path = "/external/" + encodeURIComponent(lodash.replace(data.Path, globalConfig.dynamicPage, `${window.location.origin}`));
+                }
                 return data;
             }));
         }

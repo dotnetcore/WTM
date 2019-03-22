@@ -101,5 +101,9 @@ export default observable({
     /**
      * 静态页面 标记
      */
-    staticPage: "@StaticPage"
+    staticPage: "@StaticPage",
+    /**
+     * 静态页面 标记
+     */
+    dynamicPage: "@DynamicPage"
 }) 
