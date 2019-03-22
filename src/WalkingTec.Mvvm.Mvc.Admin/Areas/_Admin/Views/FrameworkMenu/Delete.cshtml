@@ -1,19 +1,19 @@
 ﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
-<wt:form vm="@Model">
-    <wt:quote>确定要删除这条数据么：</wt:quote>
-    <wt:row items-per-row=" ItemsPerRowEnum.Two">
-        <wt:image field="Entity.ICon" width="200" />
-        <wt:display field="Entity.PageName" />
-        <wt:display field="Entity.ModuleName" />
-        <wt:display field="Entity.ActionName" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Four">
-        <wt:display field="Entity.ShowOnMenu" />
-        <wt:display field="Entity.FolderOnly" />
-        <wt:display field="Entity.IsPublic" />
-    </wt:row>
-    <wt:row align=" AlignEnum.Right">
-        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
-        <wt:closebutton />
-    </wt:row>
-</wt:form>
+    <wt:form vm="@Model" >
+        <wt:quote>确定要删除这条数据么：</wt:quote>
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:display field="Entity.PageName" />
+            <wt:display field="Entity.ModuleName" />
+        </wt:row>
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:display field="Entity.ShowOnMenu" />
+            <wt:display field="Entity.FolderOnly" />
+        </wt:row>
+        <wt:row items-per-row=" ItemsPerRowEnum.One">
+            <wt:checkbox field="SelectedActionIDs" items="AllActions" disabled=true />
+        </wt:row>
+        <wt:row align="AlignEnum.Right">
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
+            <wt:closebutton />
+        </wt:row>
+    </wt:form>

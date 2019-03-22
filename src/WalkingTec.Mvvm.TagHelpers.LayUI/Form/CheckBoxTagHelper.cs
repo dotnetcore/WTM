@@ -87,27 +87,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 SetSelected(listitems, Field.Model as IList);
             }
 
-            if (listitems.Count > 0)
-            {
-                output.Attributes.Add("value", listitems[0].Value);
-                output.Attributes.Add(new TagHelperAttribute("title", listitems[0].Text));
-                if (listitems[0].Selected)
-                {
-                    output.Attributes.Add("checked", null);
-                }
-            }
-            else
-            {
-                output.TagName = "label";
-                output.TagMode = TagMode.StartTagAndEndTag;
-                output.Attributes.Clear();
-            }
-            for (int i = 1; i < listitems.Count; i++)
+            output.TagName = "label";
+            output.TagMode = TagMode.StartTagAndEndTag;
+            output.Attributes.Clear();
+            for (int i = 0; i < listitems.Count; i++)
             {
                 var item = listitems[i];
                 var selected = item.Selected ? " checked" : " ";
                 output.PostElement.AppendHtml($@"
-<input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} />");
+<input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled=\"\"" : string.Empty)}/>");
             }
             base.Process(context, output);
 

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkRole", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
-                this.MakeAction("FrameworkRole","PageFunction","页面权限","页面权限", GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
+                this.MakeAction("FrameworkRole","PageFunction","页面权限","页面权限", GridActionParameterTypesEnum.SingleId,"_Admin",1000).SetShowInRow(),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel)
             };
         }

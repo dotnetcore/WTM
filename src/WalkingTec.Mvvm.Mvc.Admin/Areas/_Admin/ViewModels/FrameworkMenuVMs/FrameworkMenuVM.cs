@@ -16,14 +16,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public List<ComboSelectListItem> AllModules { get; set; }
         public List<ComboSelectListItem> AllActions { get; set; }
 
+        [Display(Name = "动作")]
+        public List<Guid> SelectedActionIDs { get; set; }
+
         [Display(Name = "允许角色")]
         public List<Guid> SelectedRolesIDs { get; set; }
-        [Display(Name = "允许用户")]
-        public List<Guid> SelectedUsersID { get; set; }
-        [Display(Name = "拒绝角色")]
-        public List<Guid> SelectedRolesID2 { get; set; }
-        [Display(Name = "拒绝用户")]
-        public List<Guid> SelectedUsersID2 { get; set; }
 
         public FrameworkUserBaseListVM UserListVM { get; set; }
         public FrameworkRoleListVM RoleListVM { get; set; }
@@ -36,22 +33,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             AllModules = new List<ComboSelectListItem>();
 
             SelectedRolesIDs = new List<Guid>();
-            SelectedUsersID = new List<Guid>();
-            SelectedRolesID2 = new List<Guid>();
-            SelectedUsersID2 = new List<Guid>();
         }
 
         protected override void InitVM()
         {
             SelectedRolesIDs.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == true).Select(x => x.RoleId.Value).ToList());
-            SelectedUsersID.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.UserId != null && x.Allowed == true).Select(x => x.UserId.Value).ToList());
-            SelectedRolesID2.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == false).Select(x => x.RoleId.Value).ToList());
-            SelectedUsersID2.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.UserId != null && x.Allowed == false).Select(x => x.UserId.Value).ToList());
 
             var data = DC.Set<FrameworkMenu>().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x=>x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
-            AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID)).ToList().ToListItems(y => y.PageName, x => x.ID);
+            AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
             foreach (var p in AllParents)
             {
                 Guid temp = Guid.Parse(p.Value);
@@ -61,42 +52,155 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     p.Text = p.Text + "(" + m.ModuleName + ")";
                 }
             }
+            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                AllModules = DC.Set<FrameworkModule>().Where(x=>x.NameSpace != "WalkingTec.Mvvm.Admin.Api").GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.ModuleName);
+                var m = DC.Set<FrameworkModule>().Include(x=>x.Area).Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
+                List<FrameworkModule> toremove = new List<FrameworkModule>();
+                foreach (var item in m)
+                {
+                    var f = modules.Where(x => x.ClassName == item.ClassName && x.Area?.AreaName == item.Area?.AreaName).FirstOrDefault();
+                    if (f?.IgnorePrivillege == true)
+                    {
+                        toremove.Add(item);
+                    }
+                }
+                toremove.ForEach(x => m.Remove(x));
+                AllModules = m.ToListItems(y => y.ModuleName, y=>y.ID);
             }
             if (Entity.ModuleId != null)
             {
-                AllActions = DC.Set<FrameworkAction>().GetSelectListItems(LoginUserInfo.DataPrivileges, x => x.ModuleId == Entity.ModuleId, y => y.ActionName);
+                var m = DC.Set<FrameworkAction>().Include(x=>x.Module.Area).Where(x => x.ModuleId == Entity.ModuleId && x.MethodName != "Index").ToList();
+                List<FrameworkAction> toremove = new List<FrameworkAction>();
+                foreach (var item in m)
+                {
+                    var f = modules.Where(x => x.ClassName == item.Module.ClassName && x.Area?.AreaName == item.Module.Area?.AreaName).FirstOrDefault();
+                    var a = f?.Actions.Where(x => x.MethodName == item.MethodName).FirstOrDefault();
+                    if (a?.IgnorePrivillege == true)
+                    {
+                        toremove.Add(item);
+                    }
+                }
+                toremove.ForEach(x => m.Remove(x));
+                AllActions = m.ToListItems(y => y.ActionName, y => y.ID);
+                SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => x.ModuleId == this.Entity.ModuleId && x.ActionId != null).Select(x => x.ActionId.Value).ToList();
             }
+
+
+        }
+
+
+        public override void DoEdit(bool updateAllFields = false)
+        {
+            if (Entity.IsInside == false)
+            {
+                Entity.ActionId = null;
+                Entity.ModuleId = null;
+                if (Entity.Url != null && Entity.Url != "")
+                {
+                    if (Entity.DomainId == null)
+                    {
+                        if (Entity.Url.ToLower().StartsWith("http://") == false)
+                        {
+                            Entity.Url = "http://" + Entity.Url;
+                        }
+                    }
+                    else
+                    {
+                        if (Entity.Url.StartsWith("/") == false)
+                        {
+                            Entity.Url = "/" + Entity.Url;
+                        }
+                    }
+                }
+            }
+            else
+            {
+
+                if (Entity.ModuleId != null && Entity.FolderOnly == false)
+                {
+                    List<FrameworkAction> otherActions = null;
+                    var mainAction = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.MethodName == "Index").SingleOrDefault();
+                    if (mainAction == null)
+                    {
+                        MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
+                        return;
+                    }
+                    var ndc = DC.ReCreate();
+                    var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
+                    foreach (var oldid in oldIDs)
+                    {
+                        try
+                        {
+                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
+                            ndc.Set<FrameworkMenu>().Attach(fp);
+                            ndc.DeleteEntity(fp);
+                        }
+                        catch { }
+                    }
+                    ndc.SaveChanges();
+
+                    Entity.ActionId = mainAction.ID;
+                    Entity.Url = "/" + mainAction.Module.ClassName + "/" + mainAction.MethodName;
+                    if (mainAction.Module.Area != null)
+                    {
+                        Entity.Url = "/" + mainAction.Module.Area.Prefix + Entity.Url;
+                    }
+
+                    otherActions = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.ID != Entity.ActionId).ToList();
+                    int order = 1;
+                    foreach (var action in otherActions)
+                    {
+                        if (SelectedActionIDs.Contains(action.ID))
+                        {
+                            FrameworkMenu menu = new FrameworkMenu();
+                            menu.ActionId = action.ID;
+                            menu.ModuleId = action.ModuleId;
+                            menu.FolderOnly = false;
+                            menu.IsPublic = false;
+                            menu.Parent = Entity;
+                            menu.ShowOnMenu = false;
+                            menu.DisplayOrder = order++;
+                            menu.Privileges = new List<FunctionPrivilege>();
+                            menu.CreateBy = LoginUserInfo.ITCode;
+                            menu.CreateTime = DateTime.Now;
+                            menu.IsInside = true;
+                            menu.DomainId = Entity.DomainId;
+                            menu.PageName = action.ActionName;
+                            menu.ModuleName = action.Module.ModuleName;
+                            menu.ActionName = action.ActionName;
+                            menu.Url = "/" + action.Module.ClassName + "/" + action.MethodName;
+                            if (action.Module.Area != null)
+                            {
+                                menu.Url = "/" + action.Module.Area.Prefix + menu.Url;
+                            }
+
+                            Entity.Children.Add(menu);
+                        }
+                    }
+                }
+
+                else
+                {
+                    Entity.Children = null;
+                    Entity.ModuleId = null;
+                    Entity.Url = null;
+                }
+            }
+            base.DoEdit();
+            List<Guid> guids = new List<Guid>();
+            guids.Add(Entity.ID);
+            if (Entity.Children != null)
+            {
+                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+            }
+            AddPrivilege(guids);
         }
 
         public override void DoAdd()
         {
-            if (Entity.IsInside == true)
-            {
-                var domain = DC.Set<FrameworkDomain>().Where(x => x.ID == Entity.DomainId).FirstOrDefault();
-                FrameworkAction act = null;
-                if (domain == null)
-                {
-                    act = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ID == Entity.ActionId).FirstOrDefault();
-                }
-                else
-                {
-                    act = APIHelper.CallAPI<FrameworkAction>(domain.Address + "/WebApi/Pub/GetAction?id=" + Entity.ActionId + "&domainid=" + Entity.DomainId + "&eventts=" + DateTime.Now.Ticks).Result;
-                }
-                if (act != null)
-                {
-                    Entity.Url = "/" + act.Module.ClassName + "/" + act.MethodName;
-                    if (act.Module.Area != null)
-                    {
-                        Entity.Url = "/" + act.Module.Area.Prefix + Entity.Url;
-                    }
-                    Entity.ModuleName = act.Module.ModuleName;
-                    Entity.ActionName = act.ActionName;
-                }
-            }
-            else
+            if (Entity.IsInside == false)
             {
                 Entity.ActionId = null;
                 Entity.ModuleId = null;
@@ -118,137 +222,80 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
             }
-            var role = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
-            if (role != null && SelectedRolesIDs.Contains(role.ID) == false && SelectedRolesID2.Contains(role.ID) == false)
-            {
-                Entity.Privileges.Add(new FunctionPrivilege { RoleId = role.ID, Allowed = true });
-            }
-            base.DoAdd();
-            AddPrivilege(Entity.ID);
-        }
-
-        public override void DoEdit(bool updateAllFields = false)
-        {
-            if (Entity.IsInside == true)
-            {
-                var domain = DC.Set<FrameworkDomain>().Where(x => x.ID == Entity.DomainId).FirstOrDefault();
-                FrameworkAction act = null;
-                if (domain == null)
-                {
-                    act = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ID == Entity.ActionId).FirstOrDefault();
-                }
-                else
-                {
-                    act = APIHelper.CallAPI<FrameworkAction>(domain.Address + "/WebApi/Pub/GetAction?id=" + Entity.ActionId + "&domainid=" + Entity.DomainId + "&eventts=" + DateTime.Now.Ticks).Result;
-                }
-                if (act != null)
-                {
-                    Entity.Url = "/" + act.Module.ClassName + "/" + act.MethodName;
-                    if (act.Module.Area != null)
-                    {
-                        Entity.Url = "/" + act.Module.Area.Prefix + Entity.Url;
-                    }
-                    Entity.ModuleName = act.Module.ModuleName;
-                    Entity.ActionName = act.ActionName;
-                }
-            }
             else
             {
-                Entity.ActionId = null;
-                Entity.ModuleId = null;
-                if (Entity.Url != null && Entity.Url != "")
-                {
-                    if (Entity.DomainId == null)
-                    {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false)
-                        {
-                            Entity.Url = "http://" + Entity.Url;
-                        }
-                    }
-                    else
-                    {
-                        if (Entity.Url.StartsWith("/") == false)
-                        {
-                            Entity.Url = "/" + Entity.Url;
-                        }
-                    }
-                }
-            }
-            base.DoEdit(true);
-            AddPrivilege(Entity.ID);
-        }
 
-        public void DoBatchAdd()
-        {
-            var role = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
-            if (role != null && SelectedRolesIDs.Contains(role.ID) == false && SelectedRolesID2.Contains(role.ID) == false)
-            {
-                Entity.Privileges.Add(new FunctionPrivilege { RoleId = role.ID, Allowed = true });
-            }
-            if (Entity.ModuleId != null && Entity.ActionId != null)
-            {
-                var domain = DC.Set<FrameworkDomain>().Where(x => x.ID == Entity.DomainId).FirstOrDefault();
-                List<FrameworkAction> otherActions = null;
-                FrameworkAction act = null;
-                if (domain == null)
+                if (Entity.ModuleId != null && Entity.FolderOnly == false)
                 {
-                    act = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ID == Entity.ActionId).FirstOrDefault();
+                    List<FrameworkAction> otherActions = null;
+                    var mainAction =  DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.MethodName == "Index").SingleOrDefault();
+                    if (mainAction == null)
+                    {
+                        MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
+                        return;
+                    }
+                    Entity.ActionId = mainAction.ID;
+                    Entity.Url = "/" + mainAction.Module.ClassName + "/" + mainAction.MethodName;
+                    if (mainAction.Module.Area != null)
+                    {
+                        Entity.Url = "/" + mainAction.Module.Area.Prefix + Entity.Url;
+                    }
+
                     otherActions = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.ID != Entity.ActionId).ToList();
+                    int order = 1;
+                    foreach (var action in otherActions)
+                    {
+                        if (SelectedActionIDs.Contains(action.ID))
+                        {
+                            FrameworkMenu menu = new FrameworkMenu();
+                            menu.ActionId = action.ID;
+                            menu.ModuleId = action.ModuleId;
+                            menu.FolderOnly = false;
+                            menu.IsPublic = false;
+                            menu.Parent = Entity;
+                            menu.ShowOnMenu = false;
+                            menu.DisplayOrder = order++;
+                            menu.Privileges = new List<FunctionPrivilege>();
+                            menu.CreateBy = LoginUserInfo.ITCode;
+                            menu.CreateTime = DateTime.Now;
+                            menu.IsInside = true;
+                            menu.DomainId = Entity.DomainId;
+                            menu.PageName = action.ActionName;
+                            menu.ModuleName = action.Module.ModuleName;
+                            menu.ActionName = action.ActionName;
+                            menu.Url = "/" + action.Module.ClassName + "/" + action.MethodName;
+                            if (action.Module.Area != null)
+                            {
+                                menu.Url = "/" + action.Module.Area.Prefix + menu.Url;
+                            }
+
+                            Entity.Children.Add(menu);
+                        }
+                    }
                 }
+
                 else
                 {
-                    otherActions = APIHelper.CallAPI<List<FrameworkAction>>(domain.Address + "/WebApi/Pub/GetOtherActions?id=" + Entity.ActionId + "&moduleid=" + Entity.ModuleId + "&eventts=" + DateTime.Now.Ticks).Result;
-                    act = APIHelper.CallAPI<FrameworkAction>(domain.Address + "/WebApi/Pub/GetAction?id=" + Entity.ActionId + "&domainid=" + Entity.DomainId + "&eventts=" + DateTime.Now.Ticks).Result;
+                    Entity.Children = null;
+                    Entity.ModuleId = null;
+                    Entity.Url = null;
                 }
-                if (act != null)
-                {
-                    Entity.Url = "/" + act.Module.ClassName + "/" + act.MethodName;
-                    if (act.Module.Area != null)
-                    {
-                        Entity.Url = "/" + act.Module.Area.Prefix + Entity.Url;
-                    }
-                    Entity.ModuleName = act.Module.ModuleName;
-                    Entity.ActionName = act.ActionName;
-                }
-                int order = 1;
-                foreach (var action in otherActions)
-                {
-                    FrameworkMenu menu = new FrameworkMenu();
-                    menu.ActionId = action.ID;
-                    menu.ModuleId = action.ModuleId;
-                    menu.FolderOnly = false;
-                    menu.IsPublic = false;
-                    menu.Parent = Entity;
-                    menu.ShowOnMenu = false;
-                    menu.DisplayOrder = order++;
-                    menu.Privileges = new List<FunctionPrivilege>();
-                    menu.CreateBy = LoginUserInfo.ITCode;
-                    menu.CreateTime = DateTime.Now;
-                    menu.IsInside = true;
-                    menu.DomainId = Entity.DomainId;
-                    if (role != null)
-                    {
-                        menu.Privileges.Add(new FunctionPrivilege { RoleId = role.ID, Allowed = true });
-                    }
-                    menu.PageName = action.ActionName;
-                    menu.ModuleName = action.Module.ModuleName;
-                    menu.ActionName = action.ActionName;
-                    menu.Url = "/" + action.Module.ClassName + "/" + action.MethodName;
-                    if (action.Module.Area != null)
-                    {
-                        menu.Url = "/" + action.Module.Area.Prefix + menu.Url;
-                    }
 
-                    Entity.Children.Add(menu);
-                }
             }
             base.DoAdd();
-            AddPrivilege(Entity.ID);
+            List<Guid> guids = new List<Guid>();
+            guids.Add(Entity.ID);
+            if (Entity.Children != null)
+            {
+                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+            }
+            AddPrivilege(guids);
         }
 
-        public void AddPrivilege(Guid menuid)
+        public void AddPrivilege(List<Guid> menuids)
         {
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == menuid).Select(x => x.ID).ToList();
+            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
+            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
             foreach (var oldid in oldIDs)
             {
                 try
@@ -259,54 +306,27 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 catch { }
             }
-            if (SelectedRolesIDs != null)
+            if(admin != null && SelectedRolesIDs.Contains(admin.ID) == false)
             {
-                foreach (var id in SelectedRolesIDs)
+                SelectedRolesIDs.Add(admin.ID);
+            }
+            foreach (var menuid in menuids)
+            {
+
+                if (SelectedRolesIDs != null)
                 {
-                    FunctionPrivilege fp = new FunctionPrivilege();
-                    fp.MenuItemId = menuid;
-                    fp.RoleId = id;
-                    fp.UserId = null;
-                    fp.Allowed = true;
-                    DC.Set<FunctionPrivilege>().Add(fp);
+                    foreach (var id in SelectedRolesIDs)
+                    {
+                        FunctionPrivilege fp = new FunctionPrivilege();
+                        fp.MenuItemId = menuid;
+                        fp.RoleId = id;
+                        fp.UserId = null;
+                        fp.Allowed = true;
+                        DC.Set<FunctionPrivilege>().Add(fp);
+                    }
                 }
             }
-            if (SelectedRolesID2 != null)
-            {
-                foreach (var id in SelectedRolesID2)
-                {
-                    FunctionPrivilege fp = new FunctionPrivilege();
-                    fp.MenuItemId = menuid;
-                    fp.RoleId = id;
-                    fp.UserId = null;
-                    fp.Allowed = false;
-                    DC.Set<FunctionPrivilege>().Add(fp);
-                }
-            }
-            if (SelectedUsersID != null)
-            {
-                foreach (var id in SelectedUsersID)
-                {
-                    FunctionPrivilege fp = new FunctionPrivilege();
-                    fp.MenuItemId = menuid;
-                    fp.RoleId = null;
-                    fp.UserId = id;
-                    fp.Allowed = true;
-                    DC.Set<FunctionPrivilege>().Add(fp);
-                }
-            }
-            if (SelectedUsersID2 != null)
-            {
-                foreach (var id in SelectedUsersID2)
-                {
-                    FunctionPrivilege fp = new FunctionPrivilege();
-                    fp.MenuItemId = menuid;
-                    fp.RoleId = null;
-                    fp.UserId = id;
-                    fp.Allowed = false;
-                    DC.Set<FunctionPrivilege>().Add(fp);
-                }
-            }
+
             DC.SaveChanges();
         }
 
