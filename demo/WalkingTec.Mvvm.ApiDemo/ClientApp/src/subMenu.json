@@ -19,9 +19,18 @@
     },
     {
         "Key": "301f84d3-5a77-4b30-92c4-9c723ed2933",
-        "Name": "外部页面",
+        "Name": "静态页面",
         "Icon": "menu-fold",
         "Path": "@StaticPage/test.html",
+        "Component": "tmp",
+        "Action": [],
+        "Children": []
+    },
+    {
+        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2937",
+        "Name": "动态页面",
+        "Icon": "menu-fold",
+        "Path": "@DynamicPage/old/Pindex#/_admin/dataprivilege",
         "Component": "tmp",
         "Action": [],
         "Children": []
