@@ -66,7 +66,7 @@ export default class LoginDemo extends React.Component<any, any>{
             >
               {getFieldDecorator('userid', {
                 rules: [{ required: true, message: '请输入 用户名!' }],
-                initialValue: globalConfig.development && "admin"
+                initialValue: globalConfig.development ? "admin" : ''
               })(
                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
               )}
@@ -77,7 +77,7 @@ export default class LoginDemo extends React.Component<any, any>{
             >
               {getFieldDecorator('password', {
                 rules: [{ required: true, message: '请输入 密码!' }],
-                initialValue: globalConfig.development && "000000"
+                initialValue: globalConfig.development ? "000000" : ""
               })(
                 <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
               )}
