@@ -65,46 +65,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
-        #region 批量新建
-        [ActionDescription("批量新建")]
-        public ActionResult BatchCreate(Guid? id)
-        {
-            var vm = CreateVM<FrameworkMenuVM>();
-            vm.Entity.IsPublic = false;
-            vm.Entity.FolderOnly = false;
-            vm.Entity.ShowOnMenu = true;
-            vm.Entity.IsInside = true;
-            if (id != null)
-            {
-                vm.Entity.ParentId = id;
-            }
-            return PartialView(vm);
-        }
-
-        [HttpPost]
-        [ActionDescription("批量新建")]
-        public ActionResult BatchCreate(FrameworkMenuVM vm, IFormCollection fc)
-        {
-            if (!ModelState.IsValid)
-            {
-                return PartialView("BatchCreate", vm);
-            }
-            else
-            {
-                vm.DoBatchAdd();
-                if (!ModelState.IsValid)
-                {
-                    vm.DoReInit();
-                    return PartialView("BatchCreate", vm);
-                }
-                else
-                {
-                    return FFResult().CloseDialog().RefreshGrid();
-                }
-            }
-        }
-        #endregion
-
         #region 修改
         [ActionDescription("修改")]
         public ActionResult Edit(Guid id)
@@ -171,24 +131,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
-        #region 页面权限
-        [ActionDescription("页面权限")]
-        public ActionResult PageFunction(Guid id)
-        {
-            var vm = CreateVM<PagePrivilegeVM>(id);
-            return PartialView(vm);
-        }
-
-        [ActionDescription("页面权限")]
-        [HttpPost]
-        public ActionResult PageFunction(PagePrivilegeVM vm)
-        {
-            //在这里只需要FrameworkMenu的ID，不需要验证其他项目，因为不会对FrameworkMenu本身作任何修改，所以不用判断ModelState
-            vm.DoAdd();
-            return FFResult().CloseDialog().Alert("操作成功");
-        }
-        #endregion
-
         #region 同步模块
         [ActionDescription("同步模块")]
         [FixConnection(DBOperationEnum.Write)]
@@ -227,10 +169,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
-        [ActionDescription("获取模块下的动作")]
+        [ActionDescription("获取动作")]
         public JsonResult GetActionsByModelId(Guid Id)
         {
-            var actions = DC.Set<FrameworkAction>().Where(x => x.ModuleId == Id).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.ActionName);
+            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var m = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == Id && x.MethodName != "Index").ToList();
+            List<FrameworkAction> toremove = new List<FrameworkAction>();
+            foreach (var item in m)
+            {
+                var f = modules.Where(x => x.ClassName == item.Module.ClassName && x.Area?.AreaName == item.Module.Area?.AreaName).FirstOrDefault();
+                var a = f?.Actions.Where(x => x.MethodName == item.MethodName).FirstOrDefault();
+                if (a?.IgnorePrivillege == true)
+                {
+                    toremove.Add(item);
+                }
+            }
+            toremove.ForEach(x => m.Remove(x));
+            var actions = m.ToListItems(y => y.ActionName, y => y.ID);
+            actions.ForEach(x => x.Selected = true);
             return Json(actions);
         }
 

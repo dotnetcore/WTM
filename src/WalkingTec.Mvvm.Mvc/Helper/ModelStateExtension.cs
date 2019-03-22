@@ -16,15 +16,18 @@ namespace WalkingTec.Mvvm.Mvc
             mse.Message = new List<string>();
             foreach (var item in self)
             {
-                var name = item.Key;
-                if (name.ToLower().StartsWith("entity."))
+                if (item.Value.ValidationState == ModelValidationState.Invalid)
                 {
-                    name = name.Substring(7);
-                    mse.Entity.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
-                }
-                else
-                {
-                    mse.Message.Add(item.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                    var name = item.Key;
+                    if (name.ToLower().StartsWith("entity."))
+                    {
+                        name = name.Substring(7);
+                        mse.Entity.Add(name, item.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                    }
+                    else
+                    {
+                        mse.Message.Add(item.Value.Errors.FirstOrDefault()?.ErrorMessage);
+                    }
                 }
             }
             return mse;

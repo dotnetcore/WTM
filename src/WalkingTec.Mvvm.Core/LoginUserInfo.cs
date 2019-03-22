@@ -124,52 +124,13 @@ namespace WalkingTec.Mvvm.Core
         public bool IsAccessable(FrameworkMenu menu, List<FrameworkMenu> menus)
         {
             //寻找当前菜单的页面权限
-            var find = FunctionPrivileges.Where(x => x.MenuItemId == menu.ID).ToList();
+            var find = FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
             //如果能找到直接对应的页面权限
-            if (find.Count > 0)
+            if (find != null)
             {
-                //检查是否有拒绝访问的设定，如果有则直接返回false
-                var deny = find.Where(x => x.Allowed == false && x.UserId != null).FirstOrDefault();
-                if (deny != null)
-                {
-                    return false;
-                }
-                else
-                {
-                    //检查是否有允许访问的设定，如果有则直接返回true
-                    var allow = find.Where(x => x.Allowed == true && x.UserId != null).FirstOrDefault();
-                    if (allow != null)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        //如果用户没有指定任何页面权限，则检查用户所属角色中是否有拒绝访问的设定，如果有则返回false
-                        var roleDeny = find.Where(x => x.Allowed == false && x.RoleId != null).FirstOrDefault();
-                        if (roleDeny != null)
-                        {
-                            return false;
-                        }
-                        //如果没有则返回true，因为find里面有值，但前三种情况都没有，则肯定是允许角色访问是有的，所以不再做判断了
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                }
+                return true;
             }
-            //如果没有直接对应的，且如果当前menu设定了继承属性，则递归寻找上层菜单是否可以访问
-            else
-            {
-                if (menu.Parent == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return IsAccessable(menu.Parent, menus);
-                }
-            }
+            return false;
         }
 
     }

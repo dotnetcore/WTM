@@ -76,6 +76,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             val = (Field.Model as DateTime?).Value.ToString(Format);
                         }
                     }
+                    else if (Field.Model.GetType().IsBoolOrNullableBool())
+                    {
+                        if((bool?)Field.Model == true)
+                        {
+                            val = "是";
+                        }
+                        else
+                        {
+                            val = "否";
+                        }
+                    }
                     else
                     {
                         val = Field.Model.ToString();

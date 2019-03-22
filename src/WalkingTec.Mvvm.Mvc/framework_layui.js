@@ -189,13 +189,13 @@ window.ff = {
     },
 
     GetPostData: function (formid) {
-        var richtextbox = $("#" + formid+" textarea");
+        var richtextbox = $("#" + formid + " textarea");
         for (var i = 0; i < richtextbox.length; i++) {
-                var ra = richtextbox[i].attributes['layeditindex'];
-                if (ra !== undefined && ra != null) {
-                        var rindex = ra.value;
-                    layui.layedit.sync(rindex);
-                }
+            var ra = richtextbox[i].attributes['layeditindex'];
+            if (ra !== undefined && ra != null) {
+                var rindex = ra.value;
+                layui.layedit.sync(rindex);
+            }
         }
 
 
@@ -418,19 +418,36 @@ window.ff = {
     LinkedChange: function (url, target) {
         $.get(url, {}, function (data, status) {
             if (status === "success") {
-                $('#' + target).html('<option value = "">请选择</option>');
-                //for (var item of data.data) {
-                for (var i = 0; i < data.Data.length; i++) {
-                    var item = data.Data[i];
-                    if (item.Selected === true) {
-                        $('#' + target).append('<option value = "' + item.Value + '" selected>' + item.Text + '</option>');
-                    }
-                    else {
-                        $('#' + target).append('<option value = "' + item.Value + '" >' + item.Text + '</option>');
-                    }
-                }
+                var i = 0;
+                var item = null;
                 var form = layui.form;
-                form.render('select');
+               if ($('#' + target)[0].localName === "select") {
+                    $('#' + target).html('<option value = "">请选择</option>');
+                    for ( i = 0; i < data.Data.length; i++) {
+                         item = data.Data[i];
+                        if (item.Selected === true) {
+                            $('#' + target).append('<option value = "' + item.Value + '" selected>' + item.Text + '</option>');
+                        }
+                        else {
+                            $('#' + target).append('<option value = "' + item.Value + '" >' + item.Text + '</option>');
+                        }
+                    }
+                    form.render('select');
+                }
+               else {
+                   $('#' + target).html('');
+                    for ( i = 0; i < data.Data.length; i++) {
+                         item = data.Data[i];
+                        if (item.Selected === true) {
+                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
+                        }
+                        else {
+                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                        }
+                    }
+                   form.render('checkbox');
+
+                }
             }
             else {
                 layer.alert('获取数据失败');
@@ -455,15 +472,15 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            if (item.value !== null && item.value !== ""){
-                if (filter.hasOwnProperty(item.name)){
+            if (item.value !== null && item.value !== "") {
+                if (filter.hasOwnProperty(item.name)) {
                     var temp = filter[item.name]
-                    if(!(temp instanceof Array))
+                    if (!(temp instanceof Array))
                         temp = [temp]
                     temp.push(item.value)
                     filter[item.name] = temp;
                 }
-                else{
+                else {
                     filter[item.name] = item.value;
                 }
             }
@@ -476,14 +493,14 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            if (filter.hasOwnProperty(item.name)){
+            if (filter.hasOwnProperty(item.name)) {
                 var temp = filter[item.name]
-                if(!(temp instanceof Array))
+                if (!(temp instanceof Array))
                     temp = [temp]
                 temp.push(item.value)
                 filter[item.name] = temp;
             }
-            else{
+            else {
                 filter[item.name] = item.value;
             }
         });
@@ -501,7 +518,7 @@ window.ff = {
         return data;
     },
 
-    DownloadExcelOrPdf: function (url, formId, defaultcondition,ids) {
+    DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
         var formData = ff.GetSearchFormData(formId);
         $.extend(defaultcondition, formData);
         $.cookie("DONOTUSEDOWNLOADING", "1", { path: '/' });
@@ -512,8 +529,8 @@ window.ff = {
             }
         }
         if (ids !== undefined && ids !== null) {
-            for (var i = 0; i < ids.length;i++) {
-                form.append($('<input type="hidden" name="Ids" value="' +  ids[i] + '">'));
+            for (var i = 0; i < ids.length; i++) {
+                form.append($('<input type="hidden" name="Ids" value="' + ids[i] + '">'));
             }
         }
         $('body').append(form);
@@ -637,7 +654,7 @@ window.ff = {
     triggerResize: function () {
         setTimeout(function () {
             {
-                if (typeof(Event) === 'function') {
+                if (typeof (Event) === 'function') {
                     {
                         window.dispatchEvent(new Event('resize'));
                     }

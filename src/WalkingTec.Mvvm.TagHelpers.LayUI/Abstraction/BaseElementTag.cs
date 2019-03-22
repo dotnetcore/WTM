@@ -77,12 +77,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if (!string.IsNullOrEmpty(item.TriggerUrl))
                         {
 
-                            item.ChangeFunc = $"ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.Name)}');";
+                            //item.ChangeFunc =  $"ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.Name)}');";
                             output.PostElement.AppendHtml($@"
 <script>
         var form = layui.form;
         form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
-            {item.ChangeFunc};
+           {FormatFuncName(item.ChangeFunc)};
+           ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.Name)}');
         }});
 </script>
 ");
