@@ -74,15 +74,10 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             models: this.models,
             // 禁用
             display: true,
+            // disabled:true
         }
         return <InfoShellLayout >
-            <FormItem {...props} fieId="SchoolCode" />
-            <FormItem {...props} fieId="SchoolName" />
-            <FormItem {...props} fieId="SchoolType" />
-            <FormItem {...props} fieId="Remark" />
-            <FormItem {...props} fieId="PlaceId" />
-            <FormItem {...props} fieId="Place2Id" />
-
+           {Models.renderModels(props)}
         </InfoShellLayout>
     }
 }

@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:20
  * @desc [description]
  */
-import { Input, Switch, Icon } from 'antd';
+import { Icon, Input, Switch } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItemProps } from 'antd/lib/form/FormItem';
 import { ToImg } from 'components/dataView';
@@ -115,14 +115,15 @@ function itemRender(props, config) {
     if (lodash.isEqual(display, true)) {
         propsNew.display = "true";
         propsNew.value = options.initialValue;
-        renderItem = itemToDisplay(props, config)
+        // 创建一个存储 值得 from 级联使用
+        getFieldDecorator(fieId as never, options);
+        renderItem = itemToDisplay(props, config);
     } else {
         //  判断 组件 是否 已经 是 getFieldDecorator组件
         if (lodash.get(formItem, "props.data-__field")) {
             renderItem = formItem;
         } else {
             if (getFieldDecorator) {
-                // console.log(fieId, options.initialValue)
                 renderItem = getFieldDecorator(fieId as never, options)(formItem);
             } else {
                 renderItem = formItem;
@@ -152,7 +153,6 @@ function itemToDisplay(props, config) {
     let { formItem } = model;
     let value = options.initialValue;
     let render = null;
-
     switch (lodash.get(formItem, "type.wtmType")) {
         case "UploadImg":
             render = <ToImg fileID={value} />

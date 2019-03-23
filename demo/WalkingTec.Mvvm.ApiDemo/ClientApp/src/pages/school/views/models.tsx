@@ -113,7 +113,7 @@ export default {
             PlaceId: {
                 label: "地点",
                 rules: [],
-                formItem: <WtmSelect placeholder="全部"
+                formItem: <WtmSelect placeholder="全部" 
                     dataSource={Store.Request.cache({ url: "/School/GetCitys" })}
                 />
             },

@@ -8,15 +8,16 @@
 import * as React from 'react';
 import lodash from "lodash";
 export function DesError(Component: React.ComponentClass): any {
-    return class AppError extends React.PureComponent<any, any> {
+    return class AppError extends Component {
         state = {
-            error: null,
-            errorInfo: null
+            ...this.state,
+            __error: null,
+            __errorInfo: null
         };
         componentDidCatch(error, info) {
             this.setState({
-                error: error,
-                errorInfo: info
+                __error: error,
+                __errorInfo: info
             })
         }
         render() {
@@ -27,14 +28,14 @@ export function DesError(Component: React.ComponentClass): any {
                         <h2>组件出错~</h2>
                         <details >
                             <pre style={{ height: 300, background: "#f3f3f3" }}>
-                                <code>{this.state.error && this.state.error.toString()}</code>
-                                <code>{this.state.errorInfo.componentStack}</code>
+                                <code>{lodash.toString(this.state.__error)}</code>
+                                <code>{lodash.get(this.state, '__errorInfo.componentStack')}</code>
                             </pre>
                         </details>
                     </div>
                 );
             }
-            return <Component {...this.props} />;
+            return super.render();
         }
     }
 
