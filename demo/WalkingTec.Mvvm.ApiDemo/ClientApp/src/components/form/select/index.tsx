@@ -132,10 +132,10 @@ export class WtmSelect extends React.Component<IAppProps, any> {
     async onlinkageModelsUpdate() {
         if (this.props.linkageModels && lodash.isFunction(this.props.dataSource)) {
             try {
-                const { getFieldValue, resetFields, setFields }: WrappedFormUtils = this.props.form;
+                const { getFieldValue, getFieldsValue, resetFields, setFields }: WrappedFormUtils = this.props.form;
                 const linkageModelsValue = getFieldValue(this.props.linkageModels);
+                // console.log("onlinkageModelsUpdate", this.props.linkageModels, linkageModelsValue)
                 if (!lodash.eq(this.linkageModelsValue, linkageModelsValue)) {
-                    // console.log("onlinkageModelsUpdate", this.props)
                     this.linkageModelsValue = linkageModelsValue;
                     // 重置选择的值
                     // resetFields([this.props.id])

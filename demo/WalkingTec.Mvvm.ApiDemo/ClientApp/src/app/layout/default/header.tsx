@@ -12,9 +12,9 @@ import { runInAction } from 'mobx';
 const { Header } = Layout;
 @observer
 export default class App extends React.Component<any, any> {
-    shouldComponentUpdate() {
-        return false
-    }
+    // shouldComponentUpdate() {
+    //     return false
+    // }
     render() {
         return (
             <Header className="app-layout-header" style={{ marginLeft: this.props.LayoutStore.collapsedWidth }}>
@@ -22,10 +22,10 @@ export default class App extends React.Component<any, any> {
                     <Col span={4}><Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
                     <Col span={20} style={{ textAlign: "right" }}>
                         <Row type="flex" justify="end" style={{ height: "100%" }}>
-                            <Col style={{ height: "100%" }}>
+                            <Col style={{ height: "100%", marginRight: 10 }}>
                                 <SetUp />
                             </Col>
-                            <Col offset={1}>
+                            <Col style={{ height: "100%" }}>
                                 <UserMenu {...this.props} />
                             </Col>
                         </Row>
