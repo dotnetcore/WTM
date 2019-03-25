@@ -103,6 +103,10 @@ export default observable({
      */
     tabsPage: true,
     /**
+     * tabs 页签位置，可选值有 top right bottom left
+     */
+    tabPosition: "top",
+    /**
      * 静态页面 标记
      */
     staticPage: "@StaticPage",
