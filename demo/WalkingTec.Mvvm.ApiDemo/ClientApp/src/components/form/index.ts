@@ -6,4 +6,6 @@ export * from "./radio";
 export * from "./select";
 export * from "./transfer";
 export * from "./uploadImg";
+export * from "./upload";
+
 

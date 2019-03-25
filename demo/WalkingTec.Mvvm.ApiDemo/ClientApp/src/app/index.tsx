@@ -18,7 +18,6 @@ import Loadable from 'react-loadable';
 import { renderRoutes, RouteConfig } from 'react-router-config';
 import { BrowserRouter } from 'react-router-dom';
 import Store from 'store/index';
-import { Help } from 'utils/Help';
 import Layout from "./layout/default/index";
 import External from "./pages/external";
 import Home from "./pages/home";
@@ -128,7 +127,10 @@ export default class RootRoutes extends React.Component<any, any> {
      * @param classNames 
      */
     createCSSTransition(Component: any, classNames = "fade") {
-        return class extends React.PureComponent {
+        return class extends React.Component {
+            shouldComponentUpdate() {
+                return !globalConfig.tabsPage
+            }
             render() {
                 return <Animate transitionName={classNames}
                     transitionAppear={true} component="" >
@@ -140,7 +142,6 @@ export default class RootRoutes extends React.Component<any, any> {
         }
     };
     render() {
-        // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
             <LocaleProvider locale={zhCN}>
                 <BrowserRouter >
