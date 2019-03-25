@@ -25,6 +25,24 @@
     min-height: 100vh;
     box-sizing: border-box;
     position: relative;
+    &.app-layout-content-tabs {
+        padding: 0;
+        padding-top: @headerHeight;
+        >.app-layout-tabs {
+            height: 100%;
+            >.ant-tabs-bar {
+                background: #fff;
+                margin-bottom: 0;
+            }
+            >.ant-tabs-content {
+                >.ant-tabs-tabpane {
+                    padding: @padding;
+                    overflow: auto;
+                    position: relative;
+                }
+            }
+        }
+    }
     .app-animate-content {
         box-sizing: border-box;
         background: @color-fff;

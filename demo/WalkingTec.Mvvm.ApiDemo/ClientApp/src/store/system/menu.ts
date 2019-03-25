@@ -31,7 +31,7 @@ class Store {
      * 获取菜单
      */
     async getMenu() {
-        if (globalConfig.development) {
+        // if (globalConfig.development) {
             const res: any[] = await import("../../subMenu.json").then(x => x.default);
             this.setSubMenu(lodash.map(res, data => {
                 // 跨域页面
@@ -48,7 +48,7 @@ class Store {
                 }
                 return data;
             }));
-        }
+        // }
     }
 
     /**  设置菜单 */

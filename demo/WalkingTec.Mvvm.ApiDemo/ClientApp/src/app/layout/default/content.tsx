@@ -1,31 +1,45 @@
 
-import { Layout } from 'antd';
+import { Layout, Tabs } from 'antd';
+import globalConfig from 'global.config';
+import { observer } from 'mobx-react';
 import * as React from 'react';
-import { renderRoutes } from 'react-router-config';
-import { Subscription } from 'rxjs';
-const {  Content } = Layout;
-export default class App extends React.Component<any, any> {
-  minHeight = 0;
-  body: HTMLDivElement;
-  setHeight() {
-    if (this.body) {
-      let content: HTMLDivElement = this.body.querySelector(".app-animate-content");
-      if (!content) {
-        content = this.body.querySelector(".antd-pro-exception-exception");
-      }
-      if (content) {
-        content.style.minHeight = (this.body.offsetHeight - 20) + "px";
-      }
+import { renderRoutes, matchRoutes } from 'react-router-config';
+import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { observable, runInAction, action } from 'mobx';
+import lodash from 'lodash';
+import subMenu from 'subMenu.json';
+
+const { Content } = Layout;
+@observer
+class Pages extends React.Component<any, any> {
+  render() {
+    if (globalConfig.tabsPage) {
+      return <TabsPages {...this.props} />
     }
+    return <SwitchPages {...this.props} />
   }
-  resize: Subscription;
+}
+export default Pages
+// class App extends React.Component<any, any> {
+//   shouldComponentUpdate() {
+//     return false
+//   }
+//   render() {
+//     return <Pages {...this.props} />
+//   }
+// }
+
+
+/**
+ * 普通 页面 布局
+ */
+class SwitchPages extends React.Component<any, any> {
   componentDidMount() {
-    this.setHeight();
   }
   componentWillUnmount() {
   }
   componentDidUpdate() {
-    this.setHeight();
   }
   renderRoutes = renderRoutes(this.props.route.routes);
   render() {
@@ -34,6 +48,84 @@ export default class App extends React.Component<any, any> {
         {this.renderRoutes}
       </Content>
     );
+  }
+}
+/**
+ * tabs 页面布局
+ */
+@observer
+class TabsPages extends React.Component<any, any> {
+  TabsPagesStore = new TabsPagesStore();
+  componentDidMount() {
+    this.TabsPagesStore.pushTabPane(this.props.location.pathname);
+  }
+  componentWillUnmount() {
+    this.TabsPagesStore.componentWillUnmount();
+  }
+  componentDidUpdate() {
+    this.TabsPagesStore.pushTabPane(this.props.location.pathname);
+  }
+  getRoutes(pathname) {
+    const router = matchRoutes(this.props.route.routes, pathname);
+    return {
+      component: router[0].route.component,
+      match: router[0].match
+    }
+  }
+  onChange(event) {
+    this.props.history.replace(event)
+  }
+  render() {
+    const tabPane = this.TabsPagesStore.tabPane;
+    const height = this.TabsPagesStore.height;
+    return (
+      <Content className="app-layout-content app-layout-content-tabs">
+        <Tabs
+          activeKey={this.props.location.pathname}
+          size="small"
+          className="app-layout-tabs"
+          onChange={this.onChange.bind(this)}
+          animated={false}
+        >
+          {tabPane.map(item => {
+            const router = this.getRoutes(item.pathname);
+            return <Tabs.TabPane tab={item.title} key={item.pathname} style={{ height: height }}>
+              {React.createElement(router.component, { ...this.props, match: router.match } as any)}
+            </Tabs.TabPane>
+          })}
+        </Tabs>
+      </Content>
+    );
+  }
+}
+class TabsPagesStore {
+  constructor() {
 
   }
+  componentWillUnmount() {
+    this.resize.unsubscribe();
+  }
+  @observable height = this.getHeight();
+  @observable tabPane = [{
+    title: "首页",
+    pathname: "/"
+  }];
+  @action
+  pushTabPane(pathname) {
+    if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
+    const title = lodash.get(lodash.find(subMenu, ['Path', pathname]), 'Name', "Null")
+    this.tabPane.push({
+      title: title,
+      pathname
+    });
+  }
+  getHeight() {
+    return window.innerHeight - 89;
+  }
+  resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
+    const height = this.getHeight()
+    if (this.height != height) {
+      runInAction(() => this.height = height)
+    }
+  });
 }

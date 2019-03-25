@@ -1,20 +1,27 @@
 
-import { Avatar, Col, Drawer, Dropdown, Icon, Layout, Menu, Row, Form, Radio } from 'antd';
+import { Avatar, Col, Drawer, Dropdown, Form, Icon, Layout, Menu, Radio, Row } from 'antd';
+import RadioGroup from 'antd/lib/radio/group';
+import { DesForm } from 'components/decorators';
 import globalConfig from 'global.config';
 import { BindAll } from 'lodash-decorators';
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/index';
 import RequestFiles from 'utils/RequestFiles';
-import { DesForm } from 'components/decorators';
-import RadioGroup from 'antd/lib/radio/group';
-import { runInAction } from 'mobx';
 const { Header } = Layout;
-@observer
 export default class App extends React.Component<any, any> {
-    // shouldComponentUpdate() {
-    //     return false
-    // }
+    shouldComponentUpdate() {
+        return false
+    }
+    render() {
+        return (
+            <PageHeader {...this.props} />
+        );
+    }
+}
+@observer
+class PageHeader extends React.Component<any, any> {
     render() {
         return (
             <Header className="app-layout-header" style={{ marginLeft: this.props.LayoutStore.collapsedWidth }}>
@@ -35,6 +42,7 @@ export default class App extends React.Component<any, any> {
         );
     }
 }
+
 @observer
 class UserMenu extends React.Component<any, any> {
     render() {
@@ -113,13 +121,25 @@ class SetUp extends React.Component<any, any> {
                         <Form.Item
                             label="弹框类型"
                         >
-                            {getFieldDecorator('email', {
+                            {getFieldDecorator('infoType', {
                                 rules: [],
                                 initialValue: globalConfig.infoType
                             })(
                                 <RadioGroup onChange={event => { runInAction(() => globalConfig.infoType = event.target.value) }}>
                                     <Radio value='Modal'>Modal</Radio>
                                     <Radio value='Drawer'>Drawer</Radio>
+                                </RadioGroup>
+                            )}</Form.Item>
+                        <Form.Item
+                            label="Tabs页签"
+                        >
+                            {getFieldDecorator('tabsPage', {
+                                rules: [],
+                                initialValue: globalConfig.tabsPage
+                            })(
+                                <RadioGroup onChange={event => { runInAction(() => globalConfig.tabsPage = event.target.value) }}>
+                                    <Radio value={true}>开启</Radio>
+                                    <Radio value={false}>关闭</Radio>
                                 </RadioGroup>
                             )}</Form.Item>
                     </Form>
