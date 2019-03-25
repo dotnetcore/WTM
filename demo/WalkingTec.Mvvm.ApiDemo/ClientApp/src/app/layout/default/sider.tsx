@@ -87,7 +87,6 @@ export default class App extends React.Component<any, any> {
           </Menu>
         </div>
         <div className="app-layout-sider-stance" style={{ width, minWidth: width }}>
-
         </div>
       </>
     );

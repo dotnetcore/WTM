@@ -99,6 +99,10 @@ export default observable({
      */
     collapsed: true,
     /**
+     * tabs 页面
+     */
+    tabsPage: true,
+    /**
      * 静态页面 标记
      */
     staticPage: "@StaticPage",

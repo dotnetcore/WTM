@@ -131,7 +131,7 @@ export default class RootRoutes extends React.Component<any, any> {
         return class extends React.PureComponent {
             render() {
                 return <Animate transitionName={classNames}
-                    transitionAppear={true} component="" key={lodash.get(this, 'props.location.pathname', Help.GUID())}>
+                    transitionAppear={true} component="" >
                     <div className="app-animate-content" key="app-animate-content" >
                         <Component {...this.props} />
                     </div>

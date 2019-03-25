@@ -251,7 +251,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     @action
     onCalculationHeight() {
         if (globalConfig.lockingTableRoll && this.tableDom) {
-            const height = window.innerHeight - this.tableDom.offsetTop - 120;
+            const height = window.innerHeight - this.tableDom.offsetTop - (globalConfig.tabsPage ? 210 : 120);
             if (this.Height != height) {
                 this.Height = height
             }
