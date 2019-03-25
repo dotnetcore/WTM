@@ -84,6 +84,7 @@ class TabsPages extends React.Component<any, any> {
           activeKey={this.props.location.pathname}
           size="small"
           className="app-layout-tabs"
+          tabPosition={lodash.get(globalConfig, "tabPosition", "top") as any}
           onChange={this.onChange.bind(this)}
           animated={false}
         >
@@ -120,7 +121,7 @@ class TabsPagesStore {
     });
   }
   getHeight() {
-    return window.innerHeight - 89;
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 89 : 52);
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
     const height = this.getHeight()

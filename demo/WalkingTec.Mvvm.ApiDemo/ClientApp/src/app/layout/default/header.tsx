@@ -1,5 +1,5 @@
 
-import { Avatar, Col, Drawer, Dropdown, Form, Icon, Layout, Menu, Radio, Row } from 'antd';
+import { Avatar, Col, Drawer, Dropdown, Form, Icon, Layout, Menu, Radio, Row, Select } from 'antd';
 import RadioGroup from 'antd/lib/radio/group';
 import { DesForm } from 'components/decorators';
 import globalConfig from 'global.config';
@@ -129,7 +129,8 @@ class SetUp extends React.Component<any, any> {
                                     <Radio value='Modal'>Modal</Radio>
                                     <Radio value='Drawer'>Drawer</Radio>
                                 </RadioGroup>
-                            )}</Form.Item>
+                            )}
+                        </Form.Item>
                         <Form.Item
                             label="Tabs页签"
                         >
@@ -141,7 +142,27 @@ class SetUp extends React.Component<any, any> {
                                     <Radio value={true}>开启</Radio>
                                     <Radio value={false}>关闭</Radio>
                                 </RadioGroup>
-                            )}</Form.Item>
+                            )}
+                        </Form.Item>
+                        <Form.Item
+                            label="Tabs页签位置"
+                        >
+                            {getFieldDecorator('tabPosition', {
+                                rules: [],
+                                initialValue: globalConfig.tabPosition
+                                // top right bottom left
+                            })(
+                                <Select style={{ width: '100%' }} onChange={(event: any) => {
+                                    dispatchEvent(new CustomEvent('resize'));
+                                    runInAction(() => globalConfig.tabPosition = event)
+                                }}>
+                                    <Select.Option value="top">top</Select.Option>
+                                    <Select.Option value="right">right</Select.Option>
+                                    <Select.Option value="bottom">bottom</Select.Option>
+                                    <Select.Option value="left">left</Select.Option>
+                                </Select>
+                            )}
+                        </Form.Item>
                     </Form>
                 </Drawer>
             </>

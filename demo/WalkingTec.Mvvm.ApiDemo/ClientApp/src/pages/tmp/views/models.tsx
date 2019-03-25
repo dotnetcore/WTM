@@ -1,6 +1,6 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg } from 'components/form';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
@@ -248,6 +248,11 @@ export default {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
                 formItem: <WtmEditor placeholder="输入正文内容" />
+            },
+            WtmUpload: {
+                label: "文件上传",
+                rules: [{ "required": true, "message": "文件 不能为空" }],
+                formItem: <WtmUpload />
             },
             Test: {
                 label: "测试获取数据",
