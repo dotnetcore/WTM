@@ -174,6 +174,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string FormatFuncName(string funcname)
         {
+            if(funcname == null)
+            {
+                return null;
+            }
             var rv = funcname;
             var ind = rv.IndexOf("(");
             if (ind > 0)
