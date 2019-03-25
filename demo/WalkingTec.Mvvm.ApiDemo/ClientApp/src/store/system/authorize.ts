@@ -43,9 +43,9 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
                 super(props);
                 PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
             }
-            shouldComponentUpdate() {
-                return false
-            }
+            // shouldComponentUpdate() {
+            //     return false
+            // }
             componentWillMount() {
 
                 // console.log(this.props)

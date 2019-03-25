@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+import { Col, Tabs } from 'antd';
 import { DialogForm, DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -32,24 +32,39 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return (
-            <InfoShellLayout>
-                <Col span={24}>
-                    <DialogForm>
-                        <InsertForm />
-                    </DialogForm>
-                </Col>
-                <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" />
-                <FormItem {...props} fieId="Email" />
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" />
-                <FormItem {...props} fieId="UserGroups" />
-                <FormItem {...props} fieId="UserRoles" layout="row" />
-                <FormItem {...props} fieId="PhotoId" layout="row" />
-                <FormItem {...props} fieId="CreateTime" layout="row" />
-                <FormItem {...props} fieId="Date2" layout="row" />
-                <FormItem {...props} fieId="Editer" layout="row" />
-            </InfoShellLayout>
+            <Tabs defaultActiveKey="1" >
+                <Tabs.TabPane tab="表单 1" key="1">
+                    <InfoShellLayout>
+                        <Col span={24}>
+                            <DialogForm>
+                                <InsertForm />
+                            </DialogForm>
+                        </Col>
+                        <FormItem {...props} fieId="ITCode" />
+                        <FormItem {...props} fieId="Password" />
+                        <FormItem {...props} fieId="Email" />
+                        <FormItem {...props} fieId="Name" />
+                        <FormItem {...props} fieId="Sex" />
+                        <FormItem {...props} fieId="UserGroups" />
+                        <FormItem {...props} fieId="UserRoles" layout="row" />
+                        <FormItem {...props} fieId="PhotoId" layout="row" />
+                        <FormItem {...props} fieId="CreateTime" layout="row" />
+                        <FormItem {...props} fieId="Date2" layout="row" />
+                        <FormItem {...props} fieId="Editer" layout="row" />
+                    </InfoShellLayout>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="表单 2" key="2">
+                    <InfoShellLayout>
+                        {Models.renderModels({ ...props, layout: "row" })}
+                    </InfoShellLayout>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="表单 3" key="3">
+                    <InfoShellLayout>
+                        {Models.renderModels({ ...props, layout: "row", disabled: true, })}
+                    </InfoShellLayout>
+                </Tabs.TabPane>
+            </Tabs>
+
         )
     }
 }
