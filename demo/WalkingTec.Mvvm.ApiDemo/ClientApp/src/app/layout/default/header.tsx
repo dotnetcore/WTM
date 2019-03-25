@@ -147,7 +147,7 @@ class SetUp extends React.Component<any, any> {
                         <Form.Item
                             label="Tabs页签位置"
                         >
-                            {getFieldDecorator('tabsPage', {
+                            {getFieldDecorator('tabPosition', {
                                 rules: [],
                                 initialValue: globalConfig.tabPosition
                                 // top right bottom left
