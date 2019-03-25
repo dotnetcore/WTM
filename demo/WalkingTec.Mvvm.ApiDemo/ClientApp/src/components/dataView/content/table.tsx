@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, Icon, Switch, Table } from 'antd';
+import { Alert, Button, Divider, Icon, Switch, Table } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -17,11 +17,12 @@ import ReactDOM from 'react-dom';
 import { Resizable } from 'react-resizable';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
 import Store from 'store/dataSource';
 import Regular from 'utils/Regular';
 import { ToImg } from '../help/toImg';
 import './style.less';
+import RequestFiles from 'utils/RequestFiles';
+
 
 interface ITablePorps {
     /** 状态 */
@@ -368,4 +369,19 @@ export function columnsRenderImg(text, record) {
     return <div>
         <ToImg fileID={text} />
     </div>
+}
+/**
+ * 重写 下载 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRenderDownload(text, record) {
+    if (text) {
+        return <div style={{ textAlign: "center" }} >
+            <Button shape="circle" icon="download" onClick={e => {
+                window.open(RequestFiles.onFileDownload(text))
+            }} />
+        </div>
+    }
+    return null
 }

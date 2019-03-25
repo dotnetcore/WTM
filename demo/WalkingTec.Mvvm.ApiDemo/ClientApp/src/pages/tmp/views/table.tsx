@@ -1,4 +1,4 @@
-import { columnsRender, columnsRenderImg, DataViewTable } from 'components/dataView';
+import { columnsRender, columnsRenderImg, columnsRenderDownload, DataViewTable } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
@@ -22,7 +22,8 @@ const columns = [
     {
         dataIndex: "PhotoId",
         title: "照片",
-        render: columnsRenderImg // 图片文件 渲染
+        // render: columnsRenderImg // 图片文件 渲染
+        render: columnsRenderDownload
     },
     {
         dataIndex: "Roles",
