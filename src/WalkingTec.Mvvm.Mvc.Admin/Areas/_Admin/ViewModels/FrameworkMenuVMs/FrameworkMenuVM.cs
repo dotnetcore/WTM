@@ -147,6 +147,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     {
                         Entity.Url = "/" + mainAction.Module.Area.Prefix + Entity.Url;
                     }
+                    Entity.ModuleName = mainAction.Module.ModuleName;
 
                     otherActions = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.ID != Entity.ActionId).ToList();
                     int order = 1;
@@ -236,6 +237,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     Entity.ActionId = mainAction.ID;
                     Entity.Url = "/" + mainAction.Module.ClassName + "/" + mainAction.MethodName;
+                    Entity.ModuleName = mainAction.Module.ModuleName;
                     if (mainAction.Module.Area != null)
                     {
                         Entity.Url = "/" + mainAction.Module.Area.Prefix + Entity.Url;
