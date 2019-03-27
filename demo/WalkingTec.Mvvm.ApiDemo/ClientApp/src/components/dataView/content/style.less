@@ -33,29 +33,20 @@
         text-align: center;
     }
 
-    td.ant-table-column-has-actions.ant-table-column-has-sorters {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        overflow: hidden; // text-overflow: ellipsis;
-        // white-space: nowrap;
-    }
+    td.ant-table-column-has-actions.ant-table-column-has-sorters {}
 
-    .columns-render {
+    .columns-render,
+    .data-view-columns-render {
         max-height: 120px;
         line-height: 30px;
         min-height: 10px;
-        padding: 0 10px;
+        // padding: 0 10px;
         position: relative;
         margin: auto;
         overflow: hidden;
         white-space: normal;
         text-align: justify;
-    }
-
-    .data-view-columns-render {
-        max-height: 120px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: inline-block;
     }
 
     .ant-table-body {
