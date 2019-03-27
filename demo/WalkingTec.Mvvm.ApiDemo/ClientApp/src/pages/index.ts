@@ -46,7 +46,14 @@
         path: '/dataprivilege',
         component: () => import('./dataprivilege').then(x => x.default) 
     }
+
+, frameworkmenu: {
+        name: '菜单管理',
+        path: '/frameworkmenu',
+        component: () => import('./frameworkmenu').then(x => x.default) 
+    }
 /**WTM**/
+ 
  
  
  

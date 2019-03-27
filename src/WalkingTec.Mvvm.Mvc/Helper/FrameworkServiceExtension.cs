@@ -387,6 +387,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
             }
+            models.Add(typeof(FrameworkMenu));
             //models.Add(typeof(FrameworkUserBase));
             //models.Add(typeof(FrameworkGroup));
             //models.Add(typeof(FrameworkRole));
