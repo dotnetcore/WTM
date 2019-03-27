@@ -376,6 +376,11 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+        public virtual object GetObject(object source)
+        {
+            object rv = CompiledCol?.Invoke(source as T);
+            return rv;
+        }
 
         /// <summary>
         /// 获取列头内容

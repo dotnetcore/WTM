@@ -79,6 +79,7 @@ namespace WalkingTec.Mvvm.Core
         /// 表头类型
         /// </summary>
         GridColumnTypeEnum ColumnType { get; set; }
+
         /// <summary>
         /// 设定字段名
         /// </summary>
@@ -185,6 +186,8 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="needFormat">是否适用format</param>
         /// <returns>内容</returns>
         object GetText(object source, bool needFormat = true);
+
+        object GetObject(object source);
         /// <summary>
         /// 获取前景色
         /// </summary>

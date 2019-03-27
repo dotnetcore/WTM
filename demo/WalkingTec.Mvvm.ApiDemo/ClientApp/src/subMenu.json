@@ -108,4 +108,14 @@
         "Action": [],
         "Children": []
     }
+,{
+        "Key": "a975f408-043e-41d6-bbb5-a403ed234acd",
+        "Name": "菜单管理",
+        "Icon": "menu-fold",
+        "Path": "/frameworkmenu",
+        "Component": "frameworkmenu",
+        "Action": [],
+        "Children": []
+    }
+
 ]
