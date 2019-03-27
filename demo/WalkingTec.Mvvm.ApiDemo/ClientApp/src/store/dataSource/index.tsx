@@ -164,7 +164,7 @@ export default class Store {
   async onInsert(params) {
     const method = this.Urls.insert.method;
     const url = this.Urls.insert.url;
-    const res = await this.Request[method](url, { Entity: { ...params } }).toPromise()
+    const res = await this.Request[method](url, { ...params }).toPromise()
     notification.success({ message: "添加成功" });
     this.onSearch()
     return res
@@ -186,7 +186,7 @@ export default class Store {
     if (isUpdate) {
       const method = this.Urls.update.method;
       const url = this.Urls.update.url;
-      const res = await this.Request[method](url, { Entity: { ...details, ...params } }).toPromise();
+      const res = await this.Request[method](url, { ...details, ...params }).toPromise();
       notification.success({ message: "修改成功" })
       this.onSearch(this.searchParams)
       return res
