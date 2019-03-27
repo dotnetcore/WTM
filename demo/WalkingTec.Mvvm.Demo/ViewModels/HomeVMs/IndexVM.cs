@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         {
             for(int i = 0; i < menus.Count; i++)
             {
-                if(menus[i].Children == null || menus[i].Children.Count == 0)
+                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
                 {
                     menus.RemoveAt(i);
                     i--;
