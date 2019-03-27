@@ -121,7 +121,7 @@ class TabsPagesStore {
     });
   }
   getHeight() {
-    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 89 : 52);
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 86 : 52);
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
     const height = this.getHeight()
