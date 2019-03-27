@@ -283,9 +283,13 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     return {
                         ...x,
                         render: (text, record, index) => {
-                            return <div className="columns-render" style={{ maxWidth: x.width }}>
-                                {x.render ? x.render(text, record, index) : text}
-                            </div>
+                            if (x.render) {
+                                return x.render(text, { ...record, __style: { maxWidth: lodash.toNumber(x.width) - 20 } }, index)
+                            }
+                            return text
+                            // return <div className="columns-render" style={{ maxWidth: x.width }}>
+                            //     {x.render ? x.render(text, record, index) : text}
+                            // </div>
                         }
                     }
                 });
@@ -295,6 +299,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 bordered: true,
                 size: "small",
                 className: "data-view-table",
+                rowKey: "ID",
                 pagination: {
                     // hideOnSinglePage: true,//只有一页时是否隐藏分页器
                     position: "bottom",
@@ -352,7 +357,10 @@ export function columnsRender(text, record) {
         // </Popover>
         text = <div dangerouslySetInnerHTML={{ __html: text }}></div>
     }
-    return <div className="data-view-columns-render" title={text}>
+    if (lodash.isString(text) && text.length <= 12) {
+        return text
+    }
+    return <div className="data-view-columns-render" title={text} style={record.__style}>
         <span>{text}</span>
     </div>
 }
