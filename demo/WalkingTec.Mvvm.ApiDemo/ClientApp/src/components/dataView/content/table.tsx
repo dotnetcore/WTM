@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { Alert, Button, Divider, Icon, Switch, Table } from 'antd';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, TableProps } from 'antd/lib/table';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { Debounce } from 'lodash-decorators';
@@ -24,16 +24,9 @@ import './style.less';
 import RequestFiles from 'utils/RequestFiles';
 
 
-interface ITablePorps {
+interface ITablePorps extends TableProps<any> {
     /** 状态 */
     Store: Store,
-    /**
-    *  处理 表格类型输出
-    * @param column 
-    * @param index 
-    */
-    columns: ColumnProps<any>[];
-    // columnsMap?: (column: any, index: any, width: any) => any;
 }
 
 const TableUtils = {
@@ -297,34 +290,37 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     }
                 });
             const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
+            // 分页参数
+            const props: TableProps<any> = {
+                bordered: true,
+                size: "small",
+                className: "data-view-table",
+                pagination: {
+                    // hideOnSinglePage: true,//只有一页时是否隐藏分页器
+                    position: "bottom",
+                    showSizeChanger: true,//是否可以改变 pageSize
+                    showQuickJumper: true,
+                    pageSize: dataSource.Limit,
+                    pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
+                    size: "small",
+                    current: dataSource.Page,
+                    // defaultPageSize: dataSource.Limit,
+                    // defaultCurrent: dataSource.Page,
+                    total: dataSource.Count
+                },
+                ...this.props,
+                components: TableUtils.components,
+                dataSource: toJS(dataSource.Data),
+                onChange: this.onChange.bind(this),
+                columns: columns,
+                scroll: scroll,
+                rowSelection: this.onRowSelection(),
+                loading: this.Store.pageState.loading,
+            }
             return (
                 <Table
                     ref={this.tableRef}
-                    bordered
-                    size="small"
-                    className="data-view-table"
-                    components={TableUtils.components}
-                    dataSource={toJS(dataSource.Data)}
-                    onChange={this.onChange.bind(this)}
-                    columns={columns}
-                    scroll={scroll}
-                    rowSelection={this.onRowSelection()}
-                    loading={this.Store.pageState.loading}
-                    pagination={
-                        {
-                            // hideOnSinglePage: true,//只有一页时是否隐藏分页器
-                            position: "bottom",
-                            showSizeChanger: true,//是否可以改变 pageSize
-                            showQuickJumper: true,
-                            pageSize: dataSource.Limit,
-                            pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
-                            size: "small",
-                            current: dataSource.Page,
-                            // defaultPageSize: dataSource.Limit,
-                            // defaultCurrent: dataSource.Page,
-                            total: dataSource.Count
-                        }
-                    }
+                    {...props}
                 />
             );
         } else {

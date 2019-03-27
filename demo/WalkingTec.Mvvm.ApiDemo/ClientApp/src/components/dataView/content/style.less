@@ -23,19 +23,23 @@
 
 .data-view-table {
     margin-top: 10px; // 排序
+
     .ant-table-thead>tr>th .ant-table-column-sorter {
         right: 20px;
     }
+
     .ant-table-thead>tr>th.ant-table-column-has-sorters {
         // white-space: nowrap;
         text-align: center;
     }
+
     td.ant-table-column-has-actions.ant-table-column-has-sorters {
         padding-left: 0 !important;
         padding-right: 0 !important;
         overflow: hidden; // text-overflow: ellipsis;
         // white-space: nowrap;
     }
+
     .columns-render {
         max-height: 120px;
         line-height: 30px;
@@ -47,15 +51,13 @@
         white-space: normal;
         text-align: justify;
     }
+
     .data-view-columns-render {
-        // max-height: 60px;
-        // line-height: 30px;
-        // padding: 0 10px;
-        // position: relative;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-        // white-space: nowrap;
+        max-height: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+
     .ant-table-body {
         transition: all .1s;
     }
