@@ -26,10 +26,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public DataPrivilege Get(Guid id)
+        public DataPrivilegeVM Get(Guid id)
         {
             var vm = CreateVM<DataPrivilegeVM>(id);
-            return vm.Entity;
+            return vm;
         }
 
         [ActionDescription("新建")]

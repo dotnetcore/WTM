@@ -18,17 +18,17 @@ export default {
      */
     editModels(props?) {
         return {
-            RoleCode:{
+            "Entity.RoleCode":{
                 label: "角色编号",
                 rules: [{ "required": true, "message": "角色编号不能为空" }],
                 formItem: <Input placeholder="请输入 角色编号" />
             },
-            RoleName:{
+            "Entity.RoleName":{
                 label: "角色名称",
                 rules: [{ "required": true, "message": "角色名称不能为空" }],
                 formItem: <Input placeholder="请输入 角色名称" />
             },
-            RoleRemark:{
+            "Entity.RoleRemark":{
                 label: "备注",
                 rules: [],
                 formItem: <Input placeholder="请输入 备注" />
@@ -42,12 +42,12 @@ export default {
      */
     searchModels(props?) {
         return {
-            RoleCode:{
+            "RoleCode":{
                 label: "角色编号",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            RoleName:{
+            "RoleName":{
                 label: "角色名称",
                 rules: [],
                 formItem: <Input placeholder="" />

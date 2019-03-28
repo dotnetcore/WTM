@@ -26,10 +26,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public FrameworkGroup Get(Guid id)
+        public FrameworkGroupVM Get(Guid id)
         {
             var vm = CreateVM<FrameworkGroupVM>(id);
-            return vm.Entity;
+            return vm;
         }
 
         [ActionDescription("新建")]

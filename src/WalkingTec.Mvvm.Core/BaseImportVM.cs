@@ -989,7 +989,7 @@ namespace WalkingTec.Mvvm.Core
         public ErrorObj GetErrorJson()
         {
             var mse = new ErrorObj();
-            mse.Entity = new Dictionary<string, string>();
+            mse.Form = new Dictionary<string, string>();
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
@@ -1043,12 +1043,12 @@ namespace WalkingTec.Mvvm.Core
                 ms.Close();
                 ms.Dispose();
                 err = "导入时发生错误";
-                mse.Entity.Add("Import", err);
-                mse.Entity.Add("ErrorFileId", vm.Entity.ID.ToString());
+                mse.Form.Add("Entity.Import", err);
+                mse.Form.Add("Entity.ErrorFileId", vm.Entity.ID.ToString());
             }
             else
             {
-                mse.Entity.Add("Import", err);
+                mse.Form.Add("Entity.Import", err);
             }
             return mse;
         }

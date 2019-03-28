@@ -18,17 +18,17 @@ export default {
      */
     editModels(props?) {
         return {
-            GroupCode:{
+            "Entity.GroupCode":{
                 label: "用户组编码",
                 rules: [{ "required": true, "message": "用户组编码不能为空" }],
                 formItem: <Input placeholder="请输入 用户组编码" />
             },
-            GroupName:{
+            "Entity.GroupName":{
                 label: "用户组名称",
                 rules: [{ "required": true, "message": "用户组名称不能为空" }],
                 formItem: <Input placeholder="请输入 用户组名称" />
             },
-            GroupRemark:{
+            "Entity.GroupRemark":{
                 label: "备注",
                 rules: [],
                 formItem: <Input placeholder="请输入 备注" />
@@ -42,12 +42,12 @@ export default {
      */
     searchModels(props?) {
         return {
-            GroupCode:{
+            "GroupCode":{
                 label: "用户组编码",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            GroupName:{
+            "GroupName":{
                 label: "用户组名称",
                 rules: [],
                 formItem: <Input placeholder="" />
