@@ -226,7 +226,7 @@ export default class Store {
       return res
     } catch (error) {
       console.log(error);
-      this.onErrorMessage("导入失败", [{ value: lodash.get(error, 'Entity.Import'), key: null, FileId: lodash.get(error, 'Entity.ErrorFileId') }])
+      this.onErrorMessage("导入失败", [{ value: lodash.get(error, 'Form.Import'), key: null, FileId: lodash.get(error, 'Form.ErrorFileId') }])
     }
   }
   /**
