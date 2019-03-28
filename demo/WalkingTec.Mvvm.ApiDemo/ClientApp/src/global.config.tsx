@@ -97,7 +97,7 @@ export default observable({
     /**
      * 菜单默认展开 true=收起
      */
-    collapsed: true,
+    collapsed: false,
     /**
      * tabs 页面
      */

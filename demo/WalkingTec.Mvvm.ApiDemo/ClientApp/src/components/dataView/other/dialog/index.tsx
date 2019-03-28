@@ -143,74 +143,58 @@ class Optimization extends React.Component<{
             // debugger
             // 加载中 返回。
             if (this.state.loading) return;
-            try {
-                this.props.form.validateFields((err, values) => {
-                    values = lodash.mapValues(values, (value) => {
-                        // 过滤 富文本
-                        return value
-                    })
-                    console.info('表单数据', values)
-                    if (!err) {
-                        this.setState({ loading: true }, async () => {
-                            try {
-                                const callbackValue = onFormSubmit(values, this.onVisible.bind(this, false));
-                                // console.log(callbackValue)
-                                let res = false;
-                                if (lodash.isBoolean(callbackValue)) {
-                                    res = callbackValue;
-                                } else if (callbackValue instanceof Promise) {
-                                    res = await callbackValue
-                                } else if (lodash.isFunction(callbackValue)) {
-                                    res = callbackValue()
-                                } else {
-                                    globalConfig.development && notification.warn({
-                                        key: 'validateFields_err',
-                                        message: "onFormSubmit 无返回值  ",
-                                        description: "返回 true | Promise<boolean> 关闭窗口"
-                                    })
-                                }
-                                console.log(res)
-                                if (res) {
-                                    this.onVisible(false)
-                                }
+            this.props.form.validateFields((err, values) => {
+                console.info('表单数据', values)
+                if (err) {
+                    notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
+                    this.state.loading && this.setState({ loading: false })
+                    return
+                }
+                this.setState({ loading: true }, async () => {
+                    try {
+                        const callbackValue = onFormSubmit(values, this.onVisible.bind(this, false));
+                        // console.log(callbackValue)
+                        let res = false;
+                        if (lodash.isBoolean(callbackValue)) {
+                            res = callbackValue;
+                        } else if (callbackValue instanceof Promise) {
+                            res = await callbackValue
+                        } else if (lodash.isFunction(callbackValue)) {
+                            res = callbackValue()
+                        } else {
+                            globalConfig.development && notification.warn({
+                                key: 'validateFields_err',
+                                message: "onFormSubmit 无返回值  ",
+                                description: "返回 true | Promise<boolean> 关闭窗口"
+                            })
+                        }
+                        console.log(res)
+                        if (res) {
+                            this.onVisible(false)
+                        }
 
-                            } catch (error) {
-                                this.onSetErrorMsg(error)
-                                // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
-                                console.error(error)
-                            } finally {
-                                this.setState({ loading: false })
-                            }
-                        });
-                    } else {
-                        console.error(err)
-                        notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
+                    } catch (error) {
+                        this.onSetErrorMsg(error)
+                        // onErrorMessage("操作失败", lodash.map(error, (value, key) => ({ value, key })))
+                        console.error(error)
+                    } finally {
                         this.setState({ loading: false })
                     }
                 });
-            } catch (error) {
-                console.error(error)
-            }
+            });
         } else {
-            globalConfig.development && message.warning("为配置 onFormSubmit 函数")
+            globalConfig.development && message.warning("未 配置 onFormSubmit 函数")
             // console.log("没有")
         }
     }
     onSetErrorMsg(errors) {
         const { setFields, getFieldValue } = this.props.form;
-        setFields(lodash.mapValues(lodash.get(errors, 'Entity', {}), (error, key) => {
+        setFields(lodash.mapValues(lodash.get(errors, 'Form', {}), (error, key) => {
             return {
                 value: getFieldValue(key),
                 errors: [new Error(error)]
             }
         }))
-        // lodash.get(errors, 'Message', []).map(message => {
-        //     notification.error({
-        //         message
-        //     })
-        // })
-        // console.log(getFieldsValue())
-        // [fieldName]: { value: any, errors: [Error] }
     }
     renderFrom() {
         const { option, visible } = this.props;
