@@ -27,10 +27,10 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public City Get(Guid id)
+        public CityVM Get(Guid id)
         {
             var vm = CreateVM<CityVM>(id);            
-            return vm.Entity;
+            return vm;
         }
 
         [ActionDescription("新建")]

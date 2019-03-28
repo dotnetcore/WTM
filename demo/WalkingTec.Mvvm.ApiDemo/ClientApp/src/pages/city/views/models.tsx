@@ -19,13 +19,13 @@ export default {
     editModels(props?) {
         return {
             /** 名称 */
-            Name:{
+            "Entity.Name":{
                 label: "名称",
                 rules: [],
                 formItem: <Input placeholder="请输入 名称" />
             },
             /** Parent */
-            ParentId:{
+            "Entity.ParentId":{
                 label: "Parent",
                 rules: [],
                 formItem: <WtmSelect placeholder="Parent" 
@@ -33,7 +33,7 @@ export default {
                 /> 
             },
             /** Level */
-            Level:{
+            "Entity.Level":{
                 label: "Level",
                 rules: [{ "required": true, "message": "Level不能为空" }],
                 formItem: <InputNumber placeholder="请输入 Level" />
