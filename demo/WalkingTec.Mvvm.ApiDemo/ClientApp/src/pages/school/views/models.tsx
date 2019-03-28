@@ -19,34 +19,34 @@ export default {
     editModels(props?) {
         return {
             /** 学校编码 */
-            SchoolCode: {
+            "Entity.SchoolCode": {
                 label: "学校编码",
                 rules: [{ "required": true, "message": "学校编码不能为空" }],
                 formItem: <Input placeholder="请输入 学校编码" />
             },
             /** 学校名称 */
-            SchoolName: {
+           "Entity.SchoolName": {
                 label: "学校名称",
                 rules: [{ "required": true, "message": "学校名称不能为空" }],
                 formItem: <Input placeholder="请输入 学校名称" />
             },
             /** 学校类型 */
-            // SchoolType: {
-            //     label: "学校类型",
-            //     rules: [{ "required": true, "message": "学校类型不能为空" }],
-            //     formItem: <WtmSelect placeholder="学校类型" dataSource={[
-            //         { Text: "公立学校", Value: 0 },
-            //         { Text: "私立学校", Value: 1 }
-            //     ]} />
-            // },
+            "Entity.SchoolType": {
+                 label: "学校类型",
+                 rules: [{ "required": true, "message": "学校类型不能为空" }],
+                 formItem: <WtmSelect placeholder="学校类型" dataSource={[
+                     { Text: "公立学校", Value: 0 },
+                     { Text: "私立学校", Value: 1 }
+                 ]} />
+             },
             /** 备注 */
-            Remark: {
+            "Entity.Remark": {
                 label: "备注",
                 rules: [{ "required": true, "message": "备注不能为空" }],
                 formItem: <Input placeholder="请输入 备注" />
             },
             /** 地点 */
-            PlaceId: {
+            "Entity.PlaceId": {
                 label: "地点",
                 rules: [],
                 formItem: <WtmCascader placeholder="地点"
@@ -54,7 +54,7 @@ export default {
                 />
             },
             /** 地点2 */
-            Place2_Sheng: {
+            "Entity.Place2_Sheng": {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
@@ -62,20 +62,20 @@ export default {
                 />
             },
             /** 地点2 */
-            Place2_Shi: {
+            "Entity.Place2_Shi": {
                 label: "市",
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
-                    linkageModels="Place2_Sheng"
+                    linkageModels="Entity.Place2_Sheng"
                     dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 地点2 */
-            Place2Id: {
+            "Entity.Place2Id": {
                 label: "区",
                 rules: [],
                 formItem: <WtmSelect placeholder="区"
-                    linkageModels="Place2_Shi"
+                    linkageModels="Entity.Place2_Shi"
                     dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
@@ -89,19 +89,19 @@ export default {
     searchModels(props?) {
         return {
             /** 学校编码 */
-            SchoolCode: {
+            "SchoolCode": {
                 label: "学校编码",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 学校名称 */
-            SchoolName: {
+            "SchoolName": {
                 label: "学校名称",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 学校类型 */
-            SchoolType: {
+            "SchoolType": {
                 label: "学校类型",
                 rules: [],
                 formItem: <WtmSelect placeholder="全部" dataSource={[
@@ -110,7 +110,7 @@ export default {
                 ]} />
             },
             /** 地点 */
-            PlaceId: {
+            "PlaceId": {
                 label: "地点",
                 rules: [],
                 formItem: <WtmSelect placeholder="全部" 

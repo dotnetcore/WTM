@@ -23,9 +23,9 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="UserId" />
-                <FormItem {...props} fieId="GroupId" />
-                <FormItem {...props} fieId="TableName" />
+                <FormItem {...props} fieId="Entity.UserId" />
+            <FormItem {...props} fieId="Entity.GroupId" />
+            <FormItem {...props} fieId="Entity.TableName" />
 
             </InfoShellLayout>        
     }
@@ -53,9 +53,9 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="UserId" />
-                <FormItem {...props} fieId="GroupId" />
-                <FormItem {...props} fieId="TableName" />
+            <FormItem {...props} fieId="Entity.UserId" />
+            <FormItem {...props} fieId="Entity.GroupId" />
+            <FormItem {...props} fieId="Entity.TableName" />
 
         </InfoShellLayout>
     }
@@ -82,9 +82,9 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="UserId" />
-                <FormItem {...props} fieId="GroupId" />
-                <FormItem {...props} fieId="TableName" />
+            <FormItem {...props} fieId="Entity.UserId" />
+            <FormItem {...props} fieId="Entity.GroupId" />
+            <FormItem {...props} fieId="Entity.TableName" />
 
         </InfoShellLayout>
     }

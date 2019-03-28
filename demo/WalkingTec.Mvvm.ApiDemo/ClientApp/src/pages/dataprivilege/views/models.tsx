@@ -19,7 +19,7 @@ export default {
     editModels(props?) {
         return {
             /** 用户 */
-            UserId:{
+            "Entity.UserId":{
                 label: "用户",
                 rules: [],
                 formItem: <WtmSelect placeholder="用户" 
@@ -27,7 +27,7 @@ export default {
                 /> 
             },
             /** 用户组 */
-            GroupId:{
+            "Entity.GroupId":{
                 label: "用户组",
                 rules: [],
                 formItem: <WtmSelect placeholder="用户组" 
@@ -35,7 +35,7 @@ export default {
                 /> 
             },
             /** 数据权限 */
-            TableName:{
+            "Entity.TableName":{
                 label: "数据权限",
                 rules: [{ "required": true, "message": "数据权限不能为空" }],
                 formItem: <Input placeholder="请输入 数据权限" />
@@ -50,7 +50,7 @@ export default {
     searchModels(props?) {
         return {
             /** 用户 */
-            UserId:{
+            "UserId":{
                 label: "用户",
                 rules: [],
                 formItem: <WtmSelect placeholder="全部" 
@@ -58,7 +58,7 @@ export default {
                 /> 
             },
             /** 用户组 */
-            GroupId:{
+            "GroupId":{
                 label: "用户组",
                 rules: [],
                 formItem: <WtmSelect placeholder="全部" 
@@ -66,7 +66,7 @@ export default {
                 /> 
             },
             /** 数据权限 */
-            TableName:{
+            "TableName":{
                 label: "数据权限",
                 rules: [],
                 formItem: <Input placeholder="" />
