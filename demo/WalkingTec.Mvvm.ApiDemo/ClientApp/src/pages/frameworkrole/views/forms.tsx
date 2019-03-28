@@ -23,9 +23,9 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="RoleCode" />
-                <FormItem {...props} fieId="RoleName" />
-                <FormItem {...props} fieId="RoleRemark" />
+                <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
 
             </InfoShellLayout>        
     }
@@ -53,9 +53,9 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="RoleCode" />
-                <FormItem {...props} fieId="RoleName" />
-                <FormItem {...props} fieId="RoleRemark" />
+            <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
 
         </InfoShellLayout>
     }
@@ -82,9 +82,9 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="RoleCode" />
-                <FormItem {...props} fieId="RoleName" />
-                <FormItem {...props} fieId="RoleRemark" />
+            <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
 
         </InfoShellLayout>
     }

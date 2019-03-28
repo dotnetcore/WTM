@@ -18,27 +18,27 @@ export default {
      */
     editModels(props?) {
         return {
-            ITCode:{
+            "Entity.ITCode":{
                 label: "账号",
                 rules: [{ "required": true, "message": "账号不能为空" }],
                 formItem: <Input placeholder="请输入 账号" />
             },
-            Password:{
+            "Entity.Password":{
                 label: "密码",
                 rules: [{ "required": true, "message": "密码不能为空" }],
                 formItem: <Input placeholder="请输入 密码" />
             },
-            Email:{
+            "Entity.Email":{
                 label: "邮箱",
                 rules: [],
                 formItem: <Input placeholder="请输入 邮箱" />
             },
-            Name:{
+            "Entity.Name":{
                 label: "姓名",
                 rules: [{ "required": true, "message": "姓名不能为空" }],
                 formItem: <Input placeholder="请输入 姓名" />
             },
-            Sex:{
+            "Entity.Sex":{
                 label: "性别",
                 rules: [],
                 formItem: <WtmSelect placeholder="性别" dataSource={[  
@@ -46,50 +46,50 @@ export default {
                     { Text: "女", Value: 1 }
                 ]}/>
             },
-            CellPhone:{
+            "Entity.CellPhone":{
                 label: "手机",
                 rules: [],
                 formItem: <Input placeholder="请输入 手机" />
             },
-            HomePhone:{
+            "Entity.HomePhone":{
                 label: "座机",
                 rules: [],
                 formItem: <Input placeholder="请输入 座机" />
             },
-            Address:{
+            "Entity.Address":{
                 label: "住址",
                 rules: [],
                 formItem: <Input placeholder="请输入 住址" />
             },
-            ZipCode:{
+            "Entity.ZipCode":{
                 label: "邮编",
                 rules: [],
                 formItem: <Input placeholder="请输入 邮编" />
             },
-            PhotoId:{
+            "Entity.PhotoId":{
                 label: "照片",
                 rules: [],
                 formItem: <WtmUploadImg />
             },
-            IsValid:{
+            "Entity.IsValid":{
                 label: "是否有效",
                 rules: [{ "required": true, "message": "是否有效不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
-            UserRoles:{
+            "Entity.UserRoles":{
                 label: "角色",
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkRoles" })}
-                    dataKey="RoleId"
+                    dataKey="Entity.RoleId"
                 /> 
             },
-            UserGroups:{
+            "Entity.UserGroups":{
                 label: "用户组",
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Store.Request.cache({ url: "/_FrameworkUserBase/GetFrameworkGroups" })}
-                    dataKey="GroupId"
+                    dataKey="Entity.GroupId"
                 /> 
             }
 

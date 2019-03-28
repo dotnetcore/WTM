@@ -27,10 +27,10 @@ namespace $namespace$
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public $modelname$ Get(Guid id)
+        public $modelname$VM Get(Guid id)
         {
             var vm = CreateVM<$modelname$VM>(id);
-            return vm.Entity;
+            return vm;
         }
 
         [ActionDescription("新建")]

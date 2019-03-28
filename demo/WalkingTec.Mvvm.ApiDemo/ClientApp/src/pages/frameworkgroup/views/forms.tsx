@@ -23,9 +23,9 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="GroupCode" />
-                <FormItem {...props} fieId="GroupName" />
-                <FormItem {...props} fieId="GroupRemark" />
+                <FormItem {...props} fieId="Entity.GroupCode" />
+            <FormItem {...props} fieId="Entity.GroupName" />
+            <FormItem {...props} fieId="Entity.GroupRemark" />
 
             </InfoShellLayout>        
     }
@@ -53,9 +53,9 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="GroupCode" />
-                <FormItem {...props} fieId="GroupName" />
-                <FormItem {...props} fieId="GroupRemark" />
+            <FormItem {...props} fieId="Entity.GroupCode" />
+            <FormItem {...props} fieId="Entity.GroupName" />
+            <FormItem {...props} fieId="Entity.GroupRemark" />
 
         </InfoShellLayout>
     }
@@ -82,9 +82,9 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="GroupCode" />
-                <FormItem {...props} fieId="GroupName" />
-                <FormItem {...props} fieId="GroupRemark" />
+            <FormItem {...props} fieId="Entity.GroupCode" />
+            <FormItem {...props} fieId="Entity.GroupName" />
+            <FormItem {...props} fieId="Entity.GroupRemark" />
 
         </InfoShellLayout>
     }

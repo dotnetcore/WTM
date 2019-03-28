@@ -26,10 +26,10 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public ActionLog Get(Guid id)
+        public ActionLogVM Get(Guid id)
         {
             var vm = CreateVM<ActionLogVM>(id);
-            return vm.Entity;
+            return vm;
         }
 
         [ActionDescription("新建")]
