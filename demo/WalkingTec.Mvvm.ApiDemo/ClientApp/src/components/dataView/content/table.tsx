@@ -42,31 +42,14 @@ const TableUtils = {
     onSetColumnsWidth(tableBody, columns: ColumnProps<any>[]) {
         // 获取页面宽度
         if (tableBody) {
-            // debugger
             // 表头
             const { clientWidth } = tableBody.querySelector(".ant-table-thead ");
-            // 选择框
-            // const selectionColumn: HTMLDivElement = tableBody.querySelector(".ant-table-thead .ant-table-selection-column");
-            // TableUtils.selectionColumnWidth = lodash.get(selectionColumn, 'clientWidth', 0);
-            // lodash.defer(() => {
-            //     console.log(selectionColumn.clientWidth)
-            // })
-            // console.log(TableUtils.selectionColumnWidth)
-            let exclude = 0;
-            // const notFixed = columns.filter(x => {
-            //     if (typeof x.fixed === "string") {
-            //         if (typeof x.width === "number") {
-            //             exclude += x.width
-            //         }
-            //         return false
-            //     }
-            //     return true
-            // })
-            const columnsLenght = columns.length;
+            const columnsLenght = columns.filter(x => typeof x.fixed !== "string").length;
             //计算表格设置的总宽度
             const columnWidth = this.onGetcolumnsWidth(columns);
+            const columnFixedWidth = this.onGetcolumnsWidth(columns.filter(x => typeof x.fixed === "string"));
             // 总宽度差值
-            const width = clientWidth - columnWidth - exclude + 300;// TableUtils.selectionColumnWidth;
+            const width = clientWidth - columnWidth - columnFixedWidth + 60;
             if (width > 0) {
                 const average = Math.ceil(width / columnsLenght)
                 // 平均分配
@@ -80,16 +63,16 @@ const TableUtils = {
                     }
                 })
             } else {
-                const average = Math.ceil(TableUtils.clientWidth / columnsLenght);
-                columns = columns.map(x => {
-                    if (typeof x.fixed === "string") {
-                        return x;
-                    }
-                    return {
-                        ...x,
-                        width: average
-                    }
-                })
+                // const average = Math.ceil(TableUtils.clientWidth / columnsLenght);
+                // columns = columns.map(x => {
+                //     if (typeof x.fixed === "string") {
+                //         return x;
+                //     }
+                //     return {
+                //         ...x,
+                //         width: average
+                //     }
+                // })
             }
             return columns
         }
