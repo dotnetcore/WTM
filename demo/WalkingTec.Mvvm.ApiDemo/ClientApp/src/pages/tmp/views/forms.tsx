@@ -40,17 +40,17 @@ export class InsertForm extends React.Component<any, any> {
                                 <InsertForm />
                             </DialogForm>
                         </Col>
-                        <FormItem {...props} fieId="ITCode" />
-                        <FormItem {...props} fieId="Password" />
-                        <FormItem {...props} fieId="Email" />
-                        <FormItem {...props} fieId="Name" />
-                        <FormItem {...props} fieId="Sex" />
-                        <FormItem {...props} fieId="UserGroups" />
-                        <FormItem {...props} fieId="UserRoles" layout="row" />
-                        <FormItem {...props} fieId="PhotoId" layout="row" />
-                        <FormItem {...props} fieId="CreateTime" layout="row" />
-                        <FormItem {...props} fieId="Date2" layout="row" />
-                        <FormItem {...props} fieId="Editer" layout="row" />
+                        <FormItem {...props} fieId="Entity.ITCode" />
+                        <FormItem {...props} fieId="Entity.Password" />
+                        <FormItem {...props} fieId="Entity.Email" />
+                        <FormItem {...props} fieId="Entity.Name" />
+                        <FormItem {...props} fieId="Entity.Sex" />
+                        <FormItem {...props} fieId="Entity.UserGroups" />
+                        <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
+                        <FormItem {...props} fieId="Entity.PhotoId" layout="row" />
+                        <FormItem {...props} fieId="Entity.CreateTime" layout="row" />
+                        <FormItem {...props} fieId="Entity.Date2" layout="row" />
+                        <FormItem {...props} fieId="Entity.Editer" layout="row" />
                     </InfoShellLayout>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="表单 2" key="2">
@@ -91,15 +91,15 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-            <FormItem {...props} fieId="ITCode" />
-            <FormItem {...props} fieId="Password" disabled />
-            <FormItem {...props} fieId="Email" />
-            <FormItem {...props} fieId="Name" />
-            <FormItem {...props} fieId="Sex" />
-            <FormItem {...props} fieId="UserGroups" />
-            <FormItem {...props} fieId="UserRoles" layout="row" disabled />
-            <FormItem {...props} fieId="PhotoId" layout="row" />
-            <FormItem {...props} fieId="CreateTime" layout="row" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.Password" disabled />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.UserGroups" />
+            <FormItem {...props} fieId="Entity.UserRoles" layout="row" disabled />
+            <FormItem {...props} fieId="Entity.PhotoId" layout="row" />
+            <FormItem {...props} fieId="Entity.CreateTime" layout="row" />
         </InfoShellLayout>
     }
 }

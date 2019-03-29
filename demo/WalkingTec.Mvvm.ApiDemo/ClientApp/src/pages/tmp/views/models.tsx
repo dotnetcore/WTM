@@ -1,11 +1,11 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUpload, WtmUploadImg } from 'components/form';
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
 import Regular from 'utils/Regular'; //正则
-import Store from '../store';
+import Request from 'utils/Request'; //正则
 
 /**
  * label  标识
@@ -20,78 +20,78 @@ export default {
     editModels(props?): WTM.FormItem {
         return {
             /** ITCode */
-            ITCode: {
+            'Entity.ITCode': {
                 label: "账号",
                 rules: [{ "required": true, "message": "账号 不能为空" }],
                 formItem: <Input placeholder="请输入 ITCode" />
             },
             /** Password */
-            Password: {
+            'Entity.Password': {
                 label: "密码",
                 rules: [{ "required": true, "message": "密码 不能为空" }],
                 formItem: <Input placeholder="请输入 Password" />
             },
             /** Email */
-            Email: {
+            'Entity.Email': {
                 label: "邮箱",
                 rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
                 formItem: <Input placeholder="请输入 Email" />
             },
             /** Name */
-            Name: {
+            'Entity.Name': {
                 label: "名称",
                 rules: [],
                 formItem: <Input placeholder="请输入 Name" />
             },
             /** 照片 */
-            PhotoId: {
+            'Entity.PhotoId': {
                 label: "照片",
                 rules: [],
                 formItem: <WtmUploadImg />
             },
             /** 性别 */
-            Sex: {
+            'Entity.Sex': {
                 label: "性别",
                 rules: [],
                 formItem: <WtmSelect
                     placeholder="性别"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetSex" })}
                 />
             },
             /** 用户组 */
-            UserGroups: {
+            'Entity.UserGroups': {
                 label: "用户组",
                 rules: [],
                 formItem: <WtmSelect
                     placeholder="用户组"
                     multiple // 多选标记
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             },
             /** 角色 */
-            UserRoles: {
+            'Entity.UserRoles': {
                 label: "角色",
                 rules: [],
                 formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
                 />
             },
-            CreateTime: {
+            'Entity.CreateTime': {
                 label: "时间测试",
                 rules: [],
                 formItem: <WtmDatePicker placeholder=" 请输入时间测试" />
             },
-            Date2: {
+            'Entity.Date2': {
                 label: "时间测试2",//显示 时间，禁用 小于当前天数
                 rules: [],
                 formItem: <WtmDatePicker showTime disabledDate={(current) => current < moment().subtract(1, "day").endOf('day')} />
             },
-            Editer: {
+            'Entity.Editer': {
                 label: "富文本",
                 rules: [{ "required": true, "message": "富文本 不能为空" }],
                 formItem: <WtmEditor placeholder="输入正文内容" />
@@ -123,7 +123,7 @@ export default {
                 formItem: <WtmSelect
                     placeholder="用户组"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             }
@@ -152,7 +152,7 @@ export default {
                 label: "地点",
                 rules: [],
                 formItem: <WtmCascader placeholder="地点"
-                    dataSource={Store.Request.cache({ url: "/School/GetCitys" })}
+                    dataSource={Request.cache({ url: "/School/GetCitys" })}
                 />
             },
             /** 地点2 */
@@ -160,7 +160,7 @@ export default {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
-                    dataSource={Store.Request.cache({ url: "/School/GetSubCities", body: { parentid: null } })}
+                    dataSource={Request.cache({ url: "/School/GetSubCities", body: { parentid: null } })}
                 />
             },
             /** 地点2 */
@@ -169,7 +169,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
                     linkageModels="Place2_Sheng"
-                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
+                    dataSource={(parentid) => Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 地点2 */
@@ -178,7 +178,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder="区"
                     linkageModels="Place2_Shi"
-                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
+                    dataSource={(parentid) => Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 性别 */
@@ -188,7 +188,7 @@ export default {
             //     formItem: <WtmSelect
             //         placeholder="性别"
             //         //请求 数据 Observable 对象，
-            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+            //         dataSource={Request.cache({ url: "/frameworkuser/GetSex" })}
             //     />
             // },
             /** 性别 */
@@ -199,7 +199,7 @@ export default {
                     placeholder="性别"
                     // value="1"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetSex" })}
                 />
             },
             /** 用户组 */
@@ -210,7 +210,7 @@ export default {
             //         placeholder="用户组"
             //         multiple // 多选标记
             //         //请求 数据 Observable 对象，
-            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+            //         dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
             //         dataKey="GroupId"
             //     />
             // },
@@ -220,7 +220,7 @@ export default {
                 formItem: <WtmCheckbox
                     placeholder="用户组"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             },
@@ -230,7 +230,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
                 />
             },

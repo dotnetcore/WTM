@@ -10,7 +10,7 @@ import GlobalConfig from 'global.config';
 import lodash from 'lodash';
 import NProgress from 'nprogress';
 import { interval, Observable, of, TimeoutError } from "rxjs";
-import { ajax, AjaxError, AjaxResponse } from "rxjs/ajax";
+import { ajax, AjaxError, AjaxResponse, AjaxRequest } from "rxjs/ajax";
 import { catchError, filter, map, timeout } from "rxjs/operators";
 interface Preview {
     data: any
@@ -41,7 +41,7 @@ export class Request {
     /** 
      * 请求路径前缀
      */
-    target = GlobalConfig.target
+    target = "/"//GlobalConfig.target
     /**
      * 获取 认证 token请求头
      */
@@ -65,9 +65,9 @@ export class Request {
      * @param Observable 
      */
     protected AjaxObservable(Obs: Observable<AjaxResponse>) {
-        return new Observable(sub => {
+        return new Observable<any>(sub => {
             // 加载进度条
-            this.NProgress();
+            Request.NProgress();
             Obs.pipe(
                 // 超时时间
                 timeout(this.timeout),
@@ -75,7 +75,7 @@ export class Request {
                 catchError((err) => of(err)),
                 // 过滤请求
                 filter((ajax) => {
-                    this.NProgress("done");
+                    Request.NProgress("done");
                     // 数据 Response 
                     if (ajax instanceof AjaxResponse) {
                         // 无 响应 数据
@@ -160,7 +160,7 @@ export class Request {
      * @param body body
      * @param emptyBody 清空 body 
      */
-    parameterTemplate(url, body, emptyBody = false) {
+    static parameterTemplate(url, body, emptyBody = false) {
         if (lodash.isObject(body) && /{([\s\S]+?)}/g.test(url)) {
             if (typeof body == "object") {
                 url = lodash.template(url, { interpolate: /{([\s\S]+?)}/g })(body);
@@ -192,11 +192,12 @@ export class Request {
         if (CacheHttp.has(key)) {
             promise = CacheHttp.get(key);
         } else {
-            if (params.method == "get") {
-                promise = this.get(params.url, params.body, params.headers).toPromise();
-            } else {
-                promise = this.post(params.url, params.body, params.headers).toPromise();
-            }
+            // if (params.method == "get") {
+            //     promise = this.get(params.url, params.body, params.headers).toPromise();
+            // } else {
+            //     promise = this.post(params.url, params.body, params.headers).toPromise();
+            // }
+            promise = this.ajax(params).toPromise();
             CacheHttp.set(key, promise);
         }
         const data = await promise || [];
@@ -204,17 +205,39 @@ export class Request {
         return data;
     }
     /**
-     * get
-     * @param url 
-     * @param body 
-     * @param headers 
+     * ajax
+     * @param urlOrRequest 
      */
-    get(url: string, body?: { [key: string]: any } | string, headers?: Object): Observable<any> {
-        headers = { ...this.getHeaders(), ...headers };
-        const newParams = this.parameterTemplate(url, body, true);
-        body = this.formatBody(newParams.body);
-        url = this.compatibleUrl(this.target, newParams.url, body as any);
-        return this.AjaxObservable(ajax.get(url, headers))
+    ajax(urlOrRequest: string | AjaxRequest) {
+        if (lodash.isString(urlOrRequest)) {
+            return this.AjaxObservable(ajax(this.get({ url: urlOrRequest })))
+        }
+        urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
+        switch (lodash.toLower(urlOrRequest.method)) {
+            case 'post':
+                urlOrRequest = this.post(urlOrRequest)
+                break;
+            case 'put':
+                urlOrRequest = this.put(urlOrRequest)
+                break;
+            case 'delete':
+                urlOrRequest = this.delete(urlOrRequest)
+                break;
+            default://get
+                urlOrRequest = this.get(urlOrRequest)
+                break;
+        }
+        return this.AjaxObservable(ajax(urlOrRequest))
+    }
+    /**
+     * 
+     * @param urlOrRequest 
+     */
+    private get(urlOrRequest: AjaxRequest): AjaxRequest {
+        const newParams = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body, true);
+        urlOrRequest.body = Request.formatBody(newParams.body);
+        urlOrRequest.url = Request.compatibleUrl(this.target, newParams.url, urlOrRequest.body);
+        return urlOrRequest
     }
     /**
      * post
@@ -222,12 +245,11 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    post(url: string, body?: any, headers?: Object): Observable<any> {
-        headers = { ...this.getHeaders(), ...headers };
-        const newParams = this.parameterTemplate(url, body);
-        body = this.formatBody(newParams.body, "body", headers);
-        url = this.compatibleUrl(this.target, newParams.url);
-        return this.AjaxObservable(ajax.post(url, body, headers))
+    private post(urlOrRequest: AjaxRequest): AjaxRequest {
+        const newParams = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body);
+        urlOrRequest.body = Request.formatBody(newParams.body, "body", urlOrRequest.headers);
+        urlOrRequest.url = Request.compatibleUrl(this.target, newParams.url);
+        return urlOrRequest
     }
     /**
      * put
@@ -235,12 +257,11 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    put(url: string, body?: any, headers?: Object): Observable<any> {
-        headers = { ...this.getHeaders(), ...headers };
-        const newParams = this.parameterTemplate(url, body);
-        body = this.formatBody(newParams.body, "body", headers);
-        url = this.compatibleUrl(this.target, newParams.url);
-        return this.AjaxObservable(ajax.put(url, body, headers))
+    private put(urlOrRequest: AjaxRequest): AjaxRequest {
+        const newParams = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body);
+        urlOrRequest.body = Request.formatBody(newParams.body, "body", urlOrRequest.headers);
+        urlOrRequest.url = Request.compatibleUrl(this.target, newParams.url);
+        return urlOrRequest
     }
     /**
      * delete
@@ -248,12 +269,11 @@ export class Request {
      * @param body 
      * @param headers 
      */
-    delete(url: string, body?: { [key: string]: any } | string, headers?: Object): Observable<any> {
-        headers = { ...this.getHeaders(), ...headers };
-        const newParams = this.parameterTemplate(url, body, true);
-        body = this.formatBody(newParams.body);
-        url = this.compatibleUrl(this.target, newParams.url, body as any);
-        return this.AjaxObservable(ajax.delete(url, headers))
+    delete(urlOrRequest: AjaxRequest): AjaxRequest {
+        const newParams = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body, true);
+        urlOrRequest.body = Request.formatBody(newParams.body);
+        urlOrRequest.url = Request.compatibleUrl(this.target, newParams.url, urlOrRequest.body);
+        return urlOrRequest
     }
     /** jsonp 回调 计数 */
     private jsonpCounter = 0;
@@ -262,8 +282,8 @@ export class Request {
      */
     jsonp(url, body?: { [key: string]: any } | string, callbackKey = 'callback') {
         this.getHeaders();
-        body = this.formatBody(body);
-        url = this.compatibleUrl(this.target, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
+        body = Request.formatBody(body);
+        url = Request.compatibleUrl(this.target, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
         return new Observable(observer => {
             this.jsonpCounter++;
             const key = '_jsonp_callback_' + this.jsonpCounter;
@@ -287,7 +307,7 @@ export class Request {
      * @param url url
      * @param endStr 结尾，参数等
      */
-    compatibleUrl(address: string, url: string, endStr?: string) {
+    static compatibleUrl(address: string, url: string, endStr?: string) {
         endStr = endStr || ''
         if (/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(url)) {
             return `${url}${endStr}`;
@@ -317,7 +337,7 @@ export class Request {
      * @param type  参数传递类型
      * @param headers 请求头 type = body 使用
      */
-    formatBody(
+    static formatBody(
         body?: { [key: string]: any } | any[] | string,
         type: "url" | "body" = "url",
         headers?: Object
@@ -377,7 +397,7 @@ export class Request {
      *  加载进度条
      * @param type 
      */
-    protected NProgress(type: 'start' | 'done' = 'start') {
+    static NProgress(type: 'start' | 'done' = 'start') {
         if (type == "start") {
             NProgress.start();
         } else {

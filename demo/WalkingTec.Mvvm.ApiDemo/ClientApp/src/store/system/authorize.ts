@@ -41,7 +41,7 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
         return class extends Component {
             constructor(props) {
                 super(props);
-                PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
+                // PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
             }
             // shouldComponentUpdate() {
             //     return false
@@ -63,12 +63,12 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
 /**
 * url 类型
 */
-type UrlKeyType = "search" | "details" | "insert" | "update" | "delete" | "import" | "export" | "exportIds" | "template"
+declare type UrlKeyType = "search" | "details" | "insert" | "update" | "delete" | "import" | "export" | "exportIds" | "template"
 /**
  * 认证动作
  * @param PageStore 页面 Store
  * @param UrlsKey 按钮对应 URL 权限
  */
-export function onAuthorizeActions(PageStore: PageStore, UrlsKey: UrlKeyType) {
+export function onAuthorizeActions(PageStore: PageStore, UrlsKey: UrlKeyType | any) {
     return lodash.get(PageStore, `Urls.${UrlsKey}.url`, GlobalConfig.development)// 开发 环境 默认返回 true
 }

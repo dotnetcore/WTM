@@ -12,19 +12,19 @@ import { Request } from './Request';
 /** 文件服务器 */
 const files = {
     fileUpload: {
-        src: "/_file/upload",
+        src: "/api/_file/upload",
         method: "post"
     },
     fileDelete: {
-        src: "/_file/deleteFile/{id}",
+        src: "/api/_file/deleteFile/{id}",
         method: "get"
     },
     fileGet: {
-        src: "/_file/getFile",
+        src: "/api/_file/getFile",
         method: "get"
     },
     fileDownload: {
-        src: "/_file/downloadFile",
+        src: "/api/_file/downloadFile",
         method: "get"
     }
 };
@@ -40,15 +40,13 @@ export class RequestFiles extends Request {
     /**
      * 文件服务器地址
      */
-    FileTarget = this.compatibleUrl(this.target, files.fileUpload.src);
+    FileTarget = Request.compatibleUrl(this.target, files.fileUpload.src);
     /**
      * 删除文件
      * @param id 
      */
     async onFileDelete(id) {
-        const method = files.fileDelete.method;
-        const src = files.fileDelete.src;
-        const res = await this[method](src, { id }).toPromise();
+        const res = await this.ajax({ ...files.fileDelete, body: { id } });
         if (res) {
         }
         return res
@@ -60,7 +58,7 @@ export class RequestFiles extends Request {
     onFileUrl(id, target = this.target) {
         if (id) {
             const src = files.fileGet.src;
-            return `${this.compatibleUrl(target, src)}/${id}`
+            return `${Request.compatibleUrl(target, src)}/${id}`
         }
     }
     /**
@@ -70,7 +68,7 @@ export class RequestFiles extends Request {
     onFileDownload(id, target = this.target) {
         if (id) {
             const src = files.fileDownload.src;
-            return `${this.compatibleUrl(target, src)}/${id}`
+            return `${Request.compatibleUrl(target, src)}/${id}`
         }
     }
     /** 文件获取状态 */
@@ -87,8 +85,8 @@ export class RequestFiles extends Request {
             return message.warn('文件获取中，请勿重复操作~')
         }
         this.downloadLoading = true;
-        this.NProgress()
-        AjaxRequest.url = this.compatibleUrl(this.target, AjaxRequest.url);
+        Request.NProgress()
+        AjaxRequest.url = Request.compatibleUrl(this.target, AjaxRequest.url);
         AjaxRequest = {
             // url: url,
             method: "post",
@@ -103,27 +101,27 @@ export class RequestFiles extends Request {
         // if (lodash.isEqual(lodash.toLower('get'), AjaxRequest.method)) {
         //     window.open(AjaxRequest.url)
         // } else {
-            // post
-            if (AjaxRequest.body) {
-                AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
-            }
-            try {
-                const result = await ajax(AjaxRequest).toPromise();
-                this.onCreateBlob(result.response, fileType, fileName).click();
-                notification.success({
-                    key: "download",
-                    message: `文件下载成功`,
-                    description: ''
-                })
-            } catch (error) {
-                notification.error({
-                    key: "download",
-                    message: '文件下载失败',
-                    description: error.message,
-                });
-            }
+        // post
+        if (AjaxRequest.body) {
+            AjaxRequest.body = Request.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
+        }
+        try {
+            const result = await ajax(AjaxRequest).toPromise();
+            this.onCreateBlob(result.response, fileType, fileName).click();
+            notification.success({
+                key: "download",
+                message: `文件下载成功`,
+                description: ''
+            })
+        } catch (error) {
+            notification.error({
+                key: "download",
+                message: '文件下载失败',
+                description: error.message,
+            });
+        }
         // }
-        this.NProgress("done")
+        Request.NProgress("done")
         this.downloadLoading = false;
     }
     /**

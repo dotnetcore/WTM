@@ -115,14 +115,15 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         } else {
             colSpanSearch = (columnCount - itemslength) * colSpan
         }
+        const { PageState } = this.Store;
         return (
             <Form className="data-view-search" onSubmit={this.onSubmit}>
                 <Row type="flex" >
                     {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
                     <Col span={colSpanSearch} className="data-view-search-right" >
-                        <Button icon="search" type="primary" htmlType="submit" loading={this.Store.pageState.loading}>搜索</Button>
+                        <Button icon="search" type="primary" htmlType="submit" loading={PageState.tableLoading}>搜索</Button>
                         <Divider type="vertical" />
-                        <Button icon="retweet" onClick={this.onReset} loading={this.Store.pageState.loading}>重置</Button>
+                        <Button icon="retweet" onClick={this.onReset} loading={PageState.tableLoading}>重置</Button>
                         {
                             toggleShow && <>
                                 <Divider type="vertical" />
