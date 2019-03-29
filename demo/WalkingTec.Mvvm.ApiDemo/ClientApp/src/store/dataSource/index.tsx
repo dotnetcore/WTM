@@ -54,11 +54,17 @@ export default class PageStore {
   Observable: PageObservable;// = new PageObservable(this, this.options);
   /** 搜索 */
   async onSearch(params?: ISearchParams) {
-    this.PageState.tableLoading = true;
-    const res = await this.Observable.onSearch(params);
-    this.DataSource.tableList = res;
-    this.PageState.tableLoading = false;
-    return res;
+    try {
+      this.PageState.tableLoading = true;
+      const res = await this.Observable.onSearch(params);
+      this.DataSource.tableList = res;
+      return res;
+    } catch (error) {
+      console.warn(error)
+    }
+    finally {
+      this.PageState.tableLoading = false;
+    }
   }
   /** 详情 */
   async onDetails(params) {
