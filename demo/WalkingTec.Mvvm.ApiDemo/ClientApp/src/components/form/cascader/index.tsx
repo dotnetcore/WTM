@@ -213,7 +213,7 @@ export class WtmCascader extends React.Component<IAppProps, any> {
     }
     renderDisplay(config: CascaderProps) {
         let str = ''
-        if (!this.state.loading) {
+        if (!this.state.loading && lodash.isArray(config.value)) {
             str = config.value.map(value => {
                 return lodash.get(lodash.find(this.state.originalData, [this.key, value]), this.title)
             }).join(" / ")
