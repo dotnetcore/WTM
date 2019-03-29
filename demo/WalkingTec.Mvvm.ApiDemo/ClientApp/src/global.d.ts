@@ -55,6 +55,12 @@ declare namespace WTM {
         };
         [key: string]: any;
     }
+    interface FormProps {
+        loadData: Function | Object;
+        defaultValues?: any;
+        form?: any;
+        [key: string]: any;
+    }
 }
 // import { ValidationRule } from 'antd/lib/form/Form' 拷贝
 declare type ValidationRule = {

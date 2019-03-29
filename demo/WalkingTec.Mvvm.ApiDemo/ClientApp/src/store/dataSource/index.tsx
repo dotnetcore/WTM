@@ -5,18 +5,15 @@
  * @modify date 2018-09-12 18:52:27
  * @desc [description] .
  */
-import * as React from 'react';
-import { message, notification, List, Row, Col, Button } from 'antd';
-import { action, computed, observable, runInAction, toJS } from 'mobx';
+import { message, notification } from 'antd';
+import globalConfig from 'global.config';
+import lodash from 'lodash';
+import { BindAll } from 'lodash-decorators';
+import { computed, observable, toJS, runInAction } from 'mobx';
+import { map } from 'rxjs/operators';
+import { Help } from 'utils/Help';
 import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
-import lodash from 'lodash';
-import { Help } from 'utils/Help';
-import globalConfig from 'global.config';
-import { BindAll } from 'lodash-decorators';
-import { map, filter } from 'rxjs/operators';
-import { AjaxRequest } from 'rxjs/ajax';
-import { Observable, Subject } from 'rxjs';
 declare type PageStoreOptions = {
   /** api 列表 */
   Apis: WTM.IUrls,
@@ -88,6 +85,7 @@ export default class PageStore {
    * @param params 
    */
   async onDelete(params: string[]) {
+    this.PageState.tableLoading = true;
     try {
       if (!lodash.isArray(params)) {
         if (lodash.isObject(params)) {
@@ -96,13 +94,14 @@ export default class PageStore {
         params = [params as any];
       }
       const res = await this.Observable.onDelete(params)
-      message.success('删除成功')
+      notification.success({ message: "操作成功" });
       this.DataSource.selectedRowKeys = [];
       // 刷新数据
-      this.onSearch();
+      this.onSearch(this.DataSource.searchParams);
       return res
     } catch (error) {
-      message.error('删除失败')
+      this.PageState.tableLoading = false;
+      notification.error({ message: "操作失败" });
     }
   }
   /**
@@ -112,7 +111,7 @@ export default class PageStore {
   async onImport(UploadFileId) {
     try {
       const res = await this.Observable.onImport(UploadFileId);
-      message.success('导入成功')
+      notification.success({ message: "操作成功" });
       return res
     } catch (error) {
       console.log(error);
@@ -168,9 +167,13 @@ class PageObservable {
     params = {
       SortInfo: "",
       Page: 1,
-      Limit: lodash.get(globalConfig, 'Limit', 10),
+      Limit: this.PageStore.DataSource.tableList.Limit,
       ...params,
     }
+    runInAction(() => {
+      this.PageStore.DataSource.searchParams = params;
+      this.PageStore.DataSource.tableList.Limit = params.Limit;
+    })
     return this.Request.ajax({ ...this.options.Apis.search, body: params }).pipe(
       map(data => {
         if (data.Data) {
@@ -215,18 +218,18 @@ class PageObservable {
    * @param params 
    */
   onUpdate(details, params) {
-    let isUpdate = false;
-    lodash.map(params, (value, key) => {
-      if (!isUpdate) {
-        if (!lodash.isEqual(value, lodash.get(details, key))) {
-          isUpdate = true
-        }
-      }
-    })
-    if (isUpdate) {
-      return this.Request.ajax({ ...this.options.Apis.update, body: params }).toPromise();
-    }
-    return true
+    // let isUpdate = false;
+    // lodash.map(params, (value, key) => {
+    //   if (!isUpdate) {
+    //     if (!lodash.isEqual(value, lodash.get(details, key))) {
+    //       isUpdate = true
+    //     }
+    //   }
+    // })
+    // if (isUpdate) {
+    return this.Request.ajax({ ...this.options.Apis.update, body: params }).toPromise();
+    // }
+    // return true
   }
   /**
    * 删除
