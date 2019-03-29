@@ -164,7 +164,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     var ptype = col.FieldType;
                     if (col.Field.ToLower() == "children" && typeof(IEnumerable<T>).IsAssignableFrom(ptype))
                     {
-                        col.Field = "children";
                         var children = ((IEnumerable<T>)col.GetObject(obj))?.ToList();
                         if(children == null || children.Count() == 0)
                         {

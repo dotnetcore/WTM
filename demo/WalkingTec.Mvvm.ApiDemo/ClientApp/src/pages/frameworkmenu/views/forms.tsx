@@ -23,14 +23,14 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="PageName" />
-                <FormItem {...props} fieId="FolderOnly" />
-                <FormItem {...props} fieId="ShowOnMenu" />
-                <FormItem {...props} fieId="IsPublic" />
-                <FormItem {...props} fieId="DisplayOrder" />
-                <FormItem {...props} fieId="IsInside" />
-                <FormItem {...props} fieId="IConId" />
-                <FormItem {...props} fieId="ParentId" />
+                <FormItem {...props} fieId="Entity.PageName" />
+            <FormItem {...props} fieId="Entity.FolderOnly" />
+            <FormItem {...props} fieId="Entity.ShowOnMenu" />
+            <FormItem {...props} fieId="Entity.IsPublic" />
+            <FormItem {...props} fieId="Entity.DisplayOrder" />
+            <FormItem {...props} fieId="Entity.IsInside" />
+            <FormItem {...props} fieId="Entity.IConId" />
+            <FormItem {...props} fieId="Entity.ParentId" />
 
             </InfoShellLayout>        
     }
@@ -58,14 +58,14 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="PageName" />
-                <FormItem {...props} fieId="FolderOnly" />
-                <FormItem {...props} fieId="ShowOnMenu" />
-                <FormItem {...props} fieId="IsPublic" />
-                <FormItem {...props} fieId="DisplayOrder" />
-                <FormItem {...props} fieId="IsInside" />
-                <FormItem {...props} fieId="IConId" />
-                <FormItem {...props} fieId="ParentId" />
+            <FormItem {...props} fieId="Entity.PageName" />
+            <FormItem {...props} fieId="Entity.FolderOnly" />
+            <FormItem {...props} fieId="Entity.ShowOnMenu" />
+            <FormItem {...props} fieId="Entity.IsPublic" />
+            <FormItem {...props} fieId="Entity.DisplayOrder" />
+            <FormItem {...props} fieId="Entity.IsInside" />
+            <FormItem {...props} fieId="Entity.IConId" />
+            <FormItem {...props} fieId="Entity.ParentId" />
 
         </InfoShellLayout>
     }
@@ -92,14 +92,14 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="PageName" />
-                <FormItem {...props} fieId="FolderOnly" />
-                <FormItem {...props} fieId="ShowOnMenu" />
-                <FormItem {...props} fieId="IsPublic" />
-                <FormItem {...props} fieId="DisplayOrder" />
-                <FormItem {...props} fieId="IsInside" />
-                <FormItem {...props} fieId="IConId" />
-                <FormItem {...props} fieId="ParentId" />
+            <FormItem {...props} fieId="Entity.PageName" />
+            <FormItem {...props} fieId="Entity.FolderOnly" />
+            <FormItem {...props} fieId="Entity.ShowOnMenu" />
+            <FormItem {...props} fieId="Entity.IsPublic" />
+            <FormItem {...props} fieId="Entity.DisplayOrder" />
+            <FormItem {...props} fieId="Entity.IsInside" />
+            <FormItem {...props} fieId="Entity.IConId" />
+            <FormItem {...props} fieId="Entity.ParentId" />
 
         </InfoShellLayout>
     }
