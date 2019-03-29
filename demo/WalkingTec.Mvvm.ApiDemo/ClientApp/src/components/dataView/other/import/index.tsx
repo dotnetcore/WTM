@@ -23,11 +23,8 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
         this.Store.onTemplate()
     }
     onCancel() {
-        this.Store.onPageState("visiblePort", false);
-        // if (this.success) {
-        //     this.Store.onSearch();
-        // }
-        // this.success = false;
+        const { PageState } = this.Store;
+        PageState.visiblePort = false
     }
     async onImport(id) {
         // 导入
@@ -67,11 +64,12 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
                 }
             },
         }
+        const { PageState } = this.Store;
         return (
             <Modal
                 title="导入"
                 centered
-                visible={this.Store.pageState.visiblePort}
+                visible={PageState.visiblePort}
                 destroyOnClose={true}
                 width={600}
                 cancelText="取消"

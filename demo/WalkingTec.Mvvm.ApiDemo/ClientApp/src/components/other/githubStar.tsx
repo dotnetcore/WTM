@@ -1,5 +1,5 @@
 ﻿import * as React from 'react'
-import { Request } from 'utils/Request';
+import Request from 'utils/Request';
 import { DesError } from '../decorators'
 @DesError
 export default class github extends React.Component<any, any> {
@@ -7,7 +7,7 @@ export default class github extends React.Component<any, any> {
         stars: "0"
     }
     async componentDidMount() {
-        const str = await new Request("").get("/_framework/GetGithubStarts").toPromise();
+        const str = await Request.ajax("/_framework/GetGithubStarts").toPromise();
         this.setState({ stars: str });
     }
     render() {
