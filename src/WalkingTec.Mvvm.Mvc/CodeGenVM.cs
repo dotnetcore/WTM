@@ -890,11 +890,11 @@ namespace WalkingTec.Mvvm.Mvc
                     if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
                     {
                         var fk = DC.GetFKName2(modelType, item.FieldName);
-                        fieldstr.AppendLine($@"            {fk}:{{");
+                        fieldstr.AppendLine($@"            ""Entity.{fk}"":{{");
                     }
                     else
                     {
-                        fieldstr.AppendLine($@"            {item.FieldName}:{{");
+                        fieldstr.AppendLine($@"            ""Entity.{item.FieldName}"":{{");
                     }
                     fieldstr.AppendLine($@"                label: ""{label}"",");
                     fieldstr.AppendLine($@"                {rules},");
@@ -917,7 +917,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmTransfer
                     dataSource={{Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
-                    dataKey=""{item.SubIdField}""
+                    dataKey=""Entity.{item.SubIdField}""
                 /> ");
 
                             }
@@ -990,16 +990,16 @@ namespace WalkingTec.Mvvm.Mvc
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
                             var fk = DC.GetFKName2(modelType, item.FieldName);
-                            fieldstr2.AppendLine($@"            {fk}:{{");
+                            fieldstr2.AppendLine($@"            ""{fk}"":{{");
                         }
                         else
                         {
-                            fieldstr2.AppendLine($@"            Selected{item.FieldName}IDs:{{");
+                            fieldstr2.AppendLine($@"            ""Selected{item.FieldName}IDs"":{{");
                         }
                     }
                     else
                     {
-                        fieldstr2.AppendLine($@"            {item.FieldName}:{{");
+                        fieldstr2.AppendLine($@"            ""{item.FieldName}"":{{");
                     }
                     fieldstr2.AppendLine($@"                label: ""{label}"",");
                     fieldstr2.AppendLine($@"                {rules},");
@@ -1091,17 +1091,17 @@ namespace WalkingTec.Mvvm.Mvc
                         if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
                             var fk = DC.GetFKName2(modelType, item.FieldName);
-                            fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""{fk}"" />");
+                            fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{fk}"" />");
                         }
                         else
                         {
-                            fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""{item.FieldName}"" />");
+                            fieldstr.AppendLine($@"                <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" />");
                         }
                     }
                     else
                     {
                         fieldstr.AppendLine($@"                <Col span={{24}}>
-                    <FormItem {{...props}} fieId=""{item.FieldName}"" layout=""row"" />
+                    <FormItem {{...props}} fieId=""Entity.{item.FieldName}"" layout=""row"" />
                 </Col>");
                     }
                 }

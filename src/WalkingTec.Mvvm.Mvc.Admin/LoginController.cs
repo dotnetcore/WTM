@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (user == null)
             {
-                ModelState.AddModelError("login", "登录失败");
+                ModelState.AddModelError(" login", "登录失败");
                 return BadRequest(ModelState.GetErrorJson());
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();

@@ -23,22 +23,22 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="Password" />
-                <FormItem {...props} fieId="Email" />
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" />
-                <FormItem {...props} fieId="CellPhone" />
-                <FormItem {...props} fieId="HomePhone" />
-                <FormItem {...props} fieId="Address" />
-                <FormItem {...props} fieId="ZipCode" />
-                <FormItem {...props} fieId="PhotoId" />
-                <FormItem {...props} fieId="IsValid" />
+                <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.Password" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <FormItem {...props} fieId="Entity.IsValid" />
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
                 </Col>
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
                 </Col>
 
             </InfoShellLayout>        
@@ -67,22 +67,22 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="ITCode" />
+            <FormItem {...props} fieId="Entity.ITCode" />
                 <Form.Item><span></span></Form.Item>
-                <FormItem {...props} fieId="Email" />
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" />
-                <FormItem {...props} fieId="CellPhone" />
-                <FormItem {...props} fieId="HomePhone" />
-                <FormItem {...props} fieId="Address" />
-                <FormItem {...props} fieId="ZipCode" />
-                <FormItem {...props} fieId="PhotoId" />
-                <FormItem {...props} fieId="IsValid" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <FormItem {...props} fieId="Entity.IsValid" />
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
                 </Col>
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
                 </Col>
 
         </InfoShellLayout>
@@ -112,20 +112,20 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
         return <InfoShellLayout >
                 <FormItem {...props} fieId="ITCode" />
                 <Form.Item><span></span></Form.Item>
-                <FormItem {...props} fieId="Email" />
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="Sex" />
-                <FormItem {...props} fieId="CellPhone" />
-                <FormItem {...props} fieId="HomePhone" />
-                <FormItem {...props} fieId="Address" />
-                <FormItem {...props} fieId="ZipCode" />
-                <FormItem {...props} fieId="PhotoId" />
-                <FormItem {...props} fieId="IsValid" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <FormItem {...props} fieId="Entity.IsValid" />
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserRoles" layout="row" />
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
                 </Col>
                 <Col span={24}>
-                    <FormItem {...props} fieId="UserGroups" layout="row" />
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
                 </Col>
 
         </InfoShellLayout>
