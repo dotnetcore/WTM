@@ -910,13 +910,13 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" 
-                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} 
+                    dataSource ={{ Store.Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}} 
                 /> ");
                             }
                             else
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmTransfer
-                    dataSource={{Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
+                    dataSource={{Store.Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                     dataKey=""Entity.{item.SubIdField}""
                 /> ");
 
@@ -1009,13 +1009,13 @@ namespace WalkingTec.Mvvm.Mvc
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
                             fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" 
-                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}} 
+                    dataSource ={{ Store.Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}} 
                 /> ");
                         }
                         else
                         {
                             fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""  multiple
-                    dataSource ={{ Store.Request.cache({{ url: ""/{ModelName}/Get{subtype.Name}s"" }})}}
+                    dataSource ={{ Store.Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
 
                         }

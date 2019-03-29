@@ -4,8 +4,13 @@
         path: '/tmp',
         component: () => import('./tmp').then(x => x.default)
     }
-    
-    /**WTM**/
 
-    /**WTM**/
+, actionlog: {
+        name: '日志管理',
+        path: '/actionlog',
+        component: () => import('./actionlog').then(x => x.default) 
+    }
+/**WTM**/
+ 
+ 
 }

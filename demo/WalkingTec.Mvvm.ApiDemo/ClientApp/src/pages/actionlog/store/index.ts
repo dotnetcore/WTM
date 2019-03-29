@@ -1,4 +1,4 @@
-import { BindAll } from 'lodash-decorators';
+﻿import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
 @BindAll()
 export class Store extends DataSource {
@@ -8,40 +8,40 @@ export class Store extends DataSource {
             // Target: "/api", 默认 /api
             Apis: {
                 search: {
-                    url: "/$modelname$/search",
+                    url: "/_actionlog/search",
                     method: "post"
                 },
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-                    url: "/$modelname$/{ID}",
+                    url: "/_actionlog/{ID}",
                     method: "get"
                 },
                 insert: {
-                    url: "/$modelname$/add",
+                    url: "/_actionlog/add",
                     method: "post"
                 },
                 update: {
-                    url: "/$modelname$/edit",
+                    url: "/_actionlog/edit",
                     method: "put"
                 },
                 delete: {
-                    url: "/$modelname$/BatchDelete",
+                    url: "/_actionlog/BatchDelete",
                     method: "post"
                 },
                 import: {
-                    url: "/$modelname$/import",
+                    url: "/_actionlog/import",
                     method: "post"
                 },
                 export: {
-                    url: "/$modelname$/ExportExcel",
+                    url: "/_actionlog/ExportExcel",
                     method: "post"
                 },
                 exportIds: {
-                    url: "/$modelname$/ExportExcelByIds",
+                    url: "/_actionlog/ExportExcelByIds",
                     method: "post"
                 },
                 template: {
-                    url: "/$modelname$/GetExcelTemplate",
+                    url: "/_actionlog/GetExcelTemplate",
                     method: "get"
                 }
             }

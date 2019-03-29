@@ -16,7 +16,7 @@ export default {
      * 表单模型 
      * @param props 
      */
-    editModels(props?) {
+    editModels(props?): WTM.FormItem {
         return {
 $fields$
         }
@@ -25,7 +25,7 @@ $fields$
      * 搜索 模型 
      * @param props 
      */
-    searchModels(props?) {
+    searchModels(props?): WTM.FormItem {
         return {
 $fields2$
         }
