@@ -1,11 +1,11 @@
 import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUpload, WtmUploadImg } from 'components/form';
 import lodash from 'lodash';
 import moment from 'moment';
 import * as React from 'react';
 import Regular from 'utils/Regular'; //正则
-import Store from '../store';
+import Request from 'utils/Request'; //正则
 
 /**
  * label  标识
@@ -56,7 +56,7 @@ export default {
                 formItem: <WtmSelect
                     placeholder="性别"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetSex" })}
                 />
             },
             /** 用户组 */
@@ -67,7 +67,7 @@ export default {
                     placeholder="用户组"
                     multiple // 多选标记
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             },
@@ -77,7 +77,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
+                    dataSource={Request.cache({ url: "/api/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
                 />
             },
@@ -123,7 +123,7 @@ export default {
                 formItem: <WtmSelect
                     placeholder="用户组"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             }
@@ -152,7 +152,7 @@ export default {
                 label: "地点",
                 rules: [],
                 formItem: <WtmCascader placeholder="地点"
-                    dataSource={Store.Request.cache({ url: "/School/GetCitys" })}
+                    dataSource={Request.cache({ url: "/School/GetCitys" })}
                 />
             },
             /** 地点2 */
@@ -160,7 +160,7 @@ export default {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
-                    dataSource={Store.Request.cache({ url: "/School/GetSubCities", body: { parentid: null } })}
+                    dataSource={Request.cache({ url: "/School/GetSubCities", body: { parentid: null } })}
                 />
             },
             /** 地点2 */
@@ -169,7 +169,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
                     linkageModels="Place2_Sheng"
-                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
+                    dataSource={(parentid) => Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 地点2 */
@@ -178,7 +178,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder="区"
                     linkageModels="Place2_Shi"
-                    dataSource={(parentid) => Store.Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
+                    dataSource={(parentid) => Request.cache({ url: "/School/GetSubCities", body: { parentid } })}
                 />
             },
             /** 性别 */
@@ -188,7 +188,7 @@ export default {
             //     formItem: <WtmSelect
             //         placeholder="性别"
             //         //请求 数据 Observable 对象，
-            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+            //         dataSource={Request.cache({ url: "/frameworkuser/GetSex" })}
             //     />
             // },
             /** 性别 */
@@ -199,7 +199,7 @@ export default {
                     placeholder="性别"
                     // value="1"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetSex" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetSex" })}
                 />
             },
             /** 用户组 */
@@ -210,7 +210,7 @@ export default {
             //         placeholder="用户组"
             //         multiple // 多选标记
             //         //请求 数据 Observable 对象，
-            //         dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+            //         dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
             //         dataKey="GroupId"
             //     />
             // },
@@ -220,7 +220,7 @@ export default {
                 formItem: <WtmCheckbox
                     placeholder="用户组"
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserGroups" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
                     dataKey="GroupId"
                 />
             },
@@ -230,7 +230,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     //请求 数据 Observable 对象，
-                    dataSource={Store.Request.cache({ url: "/frameworkuser/GetUserRoles" })}
+                    dataSource={Request.cache({ url: "/frameworkuser/GetUserRoles" })}
                     dataKey="RoleId"
                 />
             },

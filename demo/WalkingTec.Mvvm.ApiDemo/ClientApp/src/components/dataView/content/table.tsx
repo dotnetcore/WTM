@@ -212,9 +212,10 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      * 行选择
      */
     onRowSelection() {
+        const { DataSource } = this.Store;
         return {
-            selectedRowKeys: this.Store.selectedRowKeys,
-            onChange: e => this.Store.onSelectChange(e),
+            selectedRowKeys: DataSource.selectedRowKeys,
+            onChange: e => DataSource.selectedRowKeys = e,
         };
     }
     getHeight() {
@@ -259,7 +260,8 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         this.resize && this.resize.unsubscribe()
     }
     render() {
-        const dataSource = this.Store.dataSource;
+        const { DataSource, PageState } = this.Store;
+        const dataSource = DataSource.tableList;
         if (dataSource.Data) {
             const columns = this.columns
                 .map(x => {
@@ -303,7 +305,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 columns: columns,
                 scroll: scroll,
                 rowSelection: this.onRowSelection(),
-                loading: this.Store.pageState.loading,
+                loading: PageState.tableLoading,
             }
             return (
                 <Table

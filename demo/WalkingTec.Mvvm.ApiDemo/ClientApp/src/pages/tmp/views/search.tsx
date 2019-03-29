@@ -17,7 +17,7 @@ export default class extends React.Component<any, any> {
             // 模型
             models: this.models,
             // 默认值  
-            defaultValues: toJS(Store.searchParams)
+            defaultValues: toJS(Store.DataSource.searchParams)
         }
         return <DataViewSearch
             // columnCount={4} 默认全局

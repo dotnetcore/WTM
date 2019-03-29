@@ -1,8 +1,9 @@
-import { columnsRender, columnsRenderImg, columnsRenderDownload, DataViewTable } from 'components/dataView';
+import { columnsRender, columnsRenderDownload, DataViewTable } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
 import Action from './action';
+
 /**
  * 列 信息配置
  * 完整参数列表 https://ant.design/components/table-cn/#components-table-demo-dynamic-settings

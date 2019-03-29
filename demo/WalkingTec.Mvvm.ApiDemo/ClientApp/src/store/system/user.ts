@@ -28,7 +28,7 @@ class Store {
         try {
             const userid = lodash.get(JSON.parse(window.sessionStorage.getItem('User')), 'Id');
             if (userid) {
-                const res = await Request.get("/_login/CheckLogin/" + userid).toPromise();
+                const res = await Request.ajax("/api/_login/CheckLogin/" + userid).toPromise();
                 runInAction(() => {
                     this.User = {
                         ...this.User,
@@ -43,7 +43,12 @@ class Store {
     }
     @action.bound
     async Login(params) {
-        const res = await Request.post("/_login/login", params, { 'Content-Type': null }).toPromise();
+        const res = await Request.ajax({
+            method: "post",
+            url: "/api/_login/login",
+            body: params,
+            headers: { 'Content-Type': null }
+        }).toPromise();
         runInAction(() => {
             this.User = {
                 ...this.User,
@@ -58,7 +63,7 @@ class Store {
         this.isLogin = false;
         const userid = lodash.get(JSON.parse(window.sessionStorage.getItem('User')), 'Id');
         if (userid) {
-            Request.get("/_login/Logout/" + userid).toPromise();
+            Request.ajax("/api/_login/Logout/" + userid).toPromise();
         }
         window.sessionStorage.clear();
     }
