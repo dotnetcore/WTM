@@ -80,6 +80,6 @@ export default class extends React.Component<any, any> {
         return tableColumns
     }
     render() {
-        return <DataViewTable Store={Store} columns={this.renderColumns()} />
+        return <DataViewTable Store={Store} columns={this.renderColumns()} defaultExpandAllRows={true} childrenColumnName="Children" pagination={false}/>
     }
 }

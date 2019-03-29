@@ -105,6 +105,10 @@ class PageAction extends React.Component<any, any> {
                         <Button icon="download" >导出</Button>
                     </Dropdown>
                 </Visible>
+                <Visible visible={onAuthorizeActions(Store, "export")}>
+                    <Divider type="vertical" />
+                    <Button icon="folder-add" onClick={ActionEvents.onImport}>同步模块</Button>
+                </Visible>
 
             </Row>
         );

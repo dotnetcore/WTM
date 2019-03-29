@@ -19,53 +19,53 @@ export default {
     editModels(props?) {
         return {
             /** 页面名称 */
-            PageName:{
+            "Entity.PageName":{
                 label: "页面名称",
                 rules: [{ "required": true, "message": "页面名称不能为空" }],
                 formItem: <Input placeholder="请输入 页面名称" />
             },
             /** 目录 */
-            FolderOnly:{
+            "Entity.FolderOnly":{
                 label: "目录",
                 rules: [{ "required": true, "message": "目录不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 菜单显示 */
-            ShowOnMenu:{
+            "Entity.ShowOnMenu":{
                 label: "菜单显示",
                 rules: [{ "required": true, "message": "菜单显示不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 公开 */
-            IsPublic:{
+            "Entity.IsPublic":{
                 label: "公开",
                 rules: [{ "required": true, "message": "公开不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 顺序 */
-            DisplayOrder:{
+            "Entity.DisplayOrder":{
                 label: "顺序",
                 rules: [{ "required": true, "message": "顺序不能为空" }],
                 formItem: <InputNumber placeholder="请输入 顺序" />
             },
             /** 内部地址 */
-            IsInside:{
+            "Entity.IsInside":{
                 label: "内部地址",
                 rules: [{ "required": true, "message": "内部地址不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 图标 */
-            IConId:{
+            "Entity.IConId":{
                 label: "图标",
                 rules: [],
                 formItem: <WtmUploadImg />
             },
             /** 父目录 */
-            ParentId:{
+            "Entity.ParentId":{
                 label: "父目录",
                 rules: [],
                 formItem: <WtmSelect placeholder="父目录" 
-                    dataSource ={ Store.Request.cache({ url: "/FrameworkMenu/GetFrameworkMenus" })} 
+                    dataSource={Store.Request.cache({ url: "/_FrameworkMenu/GetFolders" })} 
                 /> 
             }
 
