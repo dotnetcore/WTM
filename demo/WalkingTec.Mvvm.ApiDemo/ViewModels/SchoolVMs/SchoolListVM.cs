@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.ApiDemo.Models;
 
 namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
 {
-    public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
+    public partial class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
@@ -47,7 +47,6 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
                 .CheckContain(Searcher.SchoolCode, x=>x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x=>x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x=>x.SchoolType)
-                .CheckEqual(Searcher.PlaceId, x=>x.PlaceId)
                 .Select(x => new School_View
                 {
 				    ID = x.ID,

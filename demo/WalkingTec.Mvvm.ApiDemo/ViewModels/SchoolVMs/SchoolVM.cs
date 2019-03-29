@@ -10,8 +10,22 @@ using WalkingTec.Mvvm.ApiDemo.Models;
 
 namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
 {
-    public class SchoolVM : BaseCRUDVM<School>
+    public partial class SchoolVM : BaseCRUDVM<School>
     {
+        public Guid? Place2_Sheng
+        {
+            get
+            {
+                return Entity.Place2?.Parent?.Parent?.ID;
+            }
+        }
+        public Guid? Place2_Shi
+        {
+            get
+            {
+                return Entity.Place2?.Parent?.ID;
+            }
+        }
 
         public SchoolVM()
         {

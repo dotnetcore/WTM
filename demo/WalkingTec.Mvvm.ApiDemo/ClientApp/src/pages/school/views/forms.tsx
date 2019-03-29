@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+﻿import { Col } from 'antd';
 import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -21,8 +21,16 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-$fields$
-            </InfoShellLayout>        
+            <FormItem {...props} fieId="Entity.SchoolCode" />
+            <FormItem {...props} fieId="Entity.SchoolName" />
+            <FormItem {...props} fieId="Entity.SchoolType" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.PlaceId" />
+            <FormItem {...props} fieId="Place2_Sheng" />
+            <FormItem {...props} fieId="Place2_Shi" />
+            <FormItem {...props} fieId="Entity.Place2Id" />
+
+        </InfoShellLayout>
     }
 }
 /**
@@ -49,7 +57,15 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         return <InfoShellLayout>
-$fields$
+            <FormItem {...props} fieId="Entity.SchoolCode" />
+            <FormItem {...props} fieId="Entity.SchoolName" />
+            <FormItem {...props} fieId="Entity.SchoolType" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.PlaceId" />
+            <FormItem {...props} fieId="Place2_Sheng" />
+            <FormItem {...props} fieId="Place2_Shi" />
+            <FormItem {...props} fieId="Entity.Place2Id" />
+
         </InfoShellLayout>
     }
 }
@@ -71,7 +87,13 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             display: true,
         }
         return <InfoShellLayout >
-$fields$
+            <FormItem {...props} fieId="Entity.SchoolCode" />
+            <FormItem {...props} fieId="Entity.SchoolName" />
+            <FormItem {...props} fieId="Entity.SchoolType" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.PlaceId" />
+            <FormItem {...props} fieId="Entity.Place2Id" />
+
         </InfoShellLayout>
     }
 }

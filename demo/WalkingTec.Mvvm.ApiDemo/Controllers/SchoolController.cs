@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
     [ActionDescription("学校管理")]
     [ApiController]
     [Route("api/School")]
-	public class SchoolController : BaseApiController
+	public partial class SchoolController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
@@ -178,7 +178,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(LoginUserInfo.DataPrivileges,null,x=>x.Name));
+            return Ok(DC.Set<City>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.Name));
         }
 
         [HttpGet("GetSubCities")]
@@ -187,6 +187,7 @@ namespace WalkingTec.Mvvm.ApiDemo.Controllers
             var city = DC.Set<City>().Where(x => x.ParentId == parentid).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.Name);
             return Ok(city);
         }
+
 
     }
 }
