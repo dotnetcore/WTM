@@ -1,6 +1,4 @@
-﻿import { Col } from 'antd';
-import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
-import { DesError } from 'components/decorators'; //错误
+﻿import { DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -23,17 +21,17 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.ModuleName" />
-                <FormItem {...props} fieId="Entity.ActionName" />
-                <FormItem {...props} fieId="Entity.ITCode" />
-                <FormItem {...props} fieId="Entity.ActionUrl" />
-                <FormItem {...props} fieId="Entity.ActionTime" />
-                <FormItem {...props} fieId="Entity.Duration" />
-                <FormItem {...props} fieId="Entity.Remark" />
-                <FormItem {...props} fieId="Entity.IP" />
-                <FormItem {...props} fieId="Entity.LogType" />
+            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
-            </InfoShellLayout>        
+        </InfoShellLayout>
     }
 }
 /**
@@ -48,26 +46,30 @@ export class InsertForm extends React.Component<any, any> {
     }
 })
 @observer
-export class UpdateForm extends React.Component<{ loadData: Function | Object }, any> {
+export class UpdateForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
         // item 的 props
         const props = {
             ...this.props,
             // 模型
             models: this.models,
         }
+        // 声明 ID
+        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.ModuleName" />
-                <FormItem {...props} fieId="Entity.ActionName" />
-                <FormItem {...props} fieId="Entity.ITCode" />
-                <FormItem {...props} fieId="Entity.ActionUrl" />
-                <FormItem {...props} fieId="Entity.ActionTime" />
-                <FormItem {...props} fieId="Entity.Duration" />
-                <FormItem {...props} fieId="Entity.Remark" />
-                <FormItem {...props} fieId="Entity.IP" />
-                <FormItem {...props} fieId="Entity.LogType" />
+            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
         </InfoShellLayout>
     }
@@ -81,7 +83,7 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
     }
 })
 @observer
-export class InfoForm extends React.Component<{ loadData: Function | Object }, any> {
+export class InfoForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -94,15 +96,15 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="Entity.ModuleName" />
-                <FormItem {...props} fieId="Entity.ActionName" />
-                <FormItem {...props} fieId="Entity.ITCode" />
-                <FormItem {...props} fieId="Entity.ActionUrl" />
-                <FormItem {...props} fieId="Entity.ActionTime" />
-                <FormItem {...props} fieId="Entity.Duration" />
-                <FormItem {...props} fieId="Entity.Remark" />
-                <FormItem {...props} fieId="Entity.IP" />
-                <FormItem {...props} fieId="Entity.LogType" />
+            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
         </InfoShellLayout>
     }

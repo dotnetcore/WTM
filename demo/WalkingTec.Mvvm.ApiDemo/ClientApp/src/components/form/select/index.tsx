@@ -187,7 +187,7 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             else {
                 newValue = lodash.toString(value);
             }
-            config.defaultValue = newValue
+            config.value = newValue;
         }
         return config;
     }
@@ -217,7 +217,6 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             }
             return <span></span>
         }
-        // throw "aaaaa"
         return (
             <Spin spinning={this.state.loading}>
                 <Select

@@ -80,7 +80,7 @@ export class InsertForm extends React.Component<any, any> {
     }
 })
 @observer
-export class UpdateForm extends React.Component<{ loadData: Function | Object }, any> {
+export class UpdateForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
@@ -90,6 +90,7 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             // 模型
             models: this.models,
         }
+        console.log(this.props)
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.ITCode" />
             <FormItem {...props} fieId="Entity.Password" disabled />
@@ -112,7 +113,7 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
     }
 })
 @observer
-export class InfoForm extends React.Component<{ loadData: Function | Object }, any> {
+export class InfoForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     render() {
