@@ -5,7 +5,7 @@ import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
-import Frameworkuserbase from '../../frameworkuserbase';
+// import Frameworkuserbase from '../../frameworkuserbase';
 import Store from '../store';
 import { InfoForm, InsertForm, TestForm, UpdateForm } from './forms';
 /**
@@ -20,7 +20,7 @@ export const ActionEvents = {
      * 导入
      */
     onImport() {
-        Store.onPageState("visiblePort", true)
+        Store.PageState.visiblePort = true;
     },
     /**
      * 导出
@@ -32,24 +32,24 @@ export const ActionEvents = {
      * 批量导出
      */
     onExportIds() {
-        Store.onExportIds([...Store.selectedRowKeys])
+        Store.onExportIds()
     },
     /**
      * 删除
      * @param data 
      */
     onDelete(data) {
-        Store.onDelete([lodash.get(data, Store.IdKey)])
+        Store.onDelete(data)
     },
     /**
     * 删除
     */
     onDeleteList() {
-        const length = Store.selectedRowKeys.length
+        const length = Store.DataSource.selectedRowKeys.length
         Modal.confirm({
             title: `确定删除 ${length} 条数据?`,
             onOk: async () => {
-                Store.onDelete([...Store.selectedRowKeys])
+                Store.onDelete(Store.DataSource.selectedRowKeys)
             },
             onCancel() { },
         });
@@ -62,7 +62,7 @@ export const ActionEvents = {
 @observer
 class PageAction extends React.Component<any, any> {
     render() {
-        const { selectedRowKeys } = Store;
+        const { selectedRowKeys } = Store.DataSource;
         const deletelength = selectedRowKeys.length;
         const disabled = deletelength < 1;
         return (
@@ -103,7 +103,7 @@ class PageAction extends React.Component<any, any> {
                         icon="edit"
                         disabled={deletelength != 1}
                     >
-                        <UpdateForm loadData={() => (lodash.find(Store.selectedRowKeys))} />
+                        <UpdateForm loadData={() => (lodash.find(selectedRowKeys))} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
@@ -146,13 +146,13 @@ class RowAction extends React.Component<{
         const { data } = this.props
         return (
             <Row className="data-view-row-action">
-                <DialogForm
+                {/* <DialogForm
                     title="测试"
                     showSubmit={false}
                     type="a"
                 >
                     <Frameworkuserbase defaultSearchParams={{ ITCode: "测试" }} />
-                </DialogForm>
+                </DialogForm> */}
                 <Divider type="vertical" />
                 <Visible visible={onAuthorizeActions(Store, "details")}>
                     <DialogForm
