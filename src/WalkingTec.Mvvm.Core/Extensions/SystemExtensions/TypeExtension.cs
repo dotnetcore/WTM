@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static bool IsNumber(this Type self)
         {
-            if(self == typeof(int) || self == typeof(short) || self == typeof(long) || self == typeof(float) || self == typeof(decimal))
+            if(self == typeof(int) || self == typeof(short) || self == typeof(long) || self == typeof(float) || self == typeof(decimal) || self == typeof(double))
             {
                 return true;
             }
