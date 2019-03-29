@@ -280,23 +280,23 @@ export function DialogFormDes(params: {
             async componentDidMount() {
                 // if (this.isOnLoadData && this.props.loadData) {
                 let res = {}
+                const time = Date.now();
                 if (this.isOnLoadData) {
                     // 检查 loadData 类型 函数 执行 后获取返回值
                     let loadData = this.props.loadData ? lodash.isFunction(this.props.loadData) ? this.props.loadData() : this.props.loadData : {};
                     const onLoadData = params.onLoadData.bind(this)(loadData, this.props);
                     if (onLoadData instanceof Promise) {
-                        const time = Date.now();
                         res = await onLoadData;
-                        // 强制 执行加载最少 400 毫秒
-                        await new Promise((res, rej) => {
-                            lodash.delay(res, 400 - (Date.now() - time))
-                        });
                     } else if (lodash.isFunction(onLoadData)) {
                         res = onLoadData();
                     } else {
                         res = onLoadData;
                     }
-                }
+                } 
+                // 强制 执行加载最少 400 毫秒
+                await new Promise((res, rej) => {
+                    lodash.delay(res, 400 - (Date.now() - time))
+                });
                 this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 super.componentDidMount && super.componentDidMount()
             }
