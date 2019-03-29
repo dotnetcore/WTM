@@ -10,7 +10,14 @@
         path: '/actionlog',
         component: () => import('./actionlog').then(x => x.default) 
     }
+
+, school: {
+        name: '学校管理',
+        path: '/school',
+        component: () => import('./school').then(x => x.default) 
+    }
 /**WTM**/
+ 
  
  
 }

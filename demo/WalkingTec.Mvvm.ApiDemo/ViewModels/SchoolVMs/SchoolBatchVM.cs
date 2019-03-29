@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.ApiDemo.Models;
 
 namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
 {
-    public class SchoolBatchVM : BaseBatchVM<School, School_BatchEdit>
+    public partial class SchoolBatchVM : BaseBatchVM<School, School_BatchEdit>
     {
         public SchoolBatchVM()
         {

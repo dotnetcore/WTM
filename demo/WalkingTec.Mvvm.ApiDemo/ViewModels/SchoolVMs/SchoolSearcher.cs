@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.ApiDemo.Models;
 
 namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
 {
-    public class SchoolSearcher : BaseSearcher
+    public partial class SchoolSearcher : BaseSearcher
     {
         [Display(Name = "学校编码")]
         public String SchoolCode { get; set; }
@@ -18,13 +18,9 @@ namespace WalkingTec.Mvvm.ApiDemo.ViewModels.SchoolVMs
         public String SchoolName { get; set; }
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
-        public List<ComboSelectListItem> AllPlaces { get; set; }
-        [Display(Name = "地点")]
-        public Guid? PlaceId { get; set; }
 
         protected override void InitVM()
         {
-            AllPlaces = DC.Set<City>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.Name);
         }
 
     }

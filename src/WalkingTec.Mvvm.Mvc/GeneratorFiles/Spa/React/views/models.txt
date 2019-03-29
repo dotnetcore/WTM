@@ -4,7 +4,7 @@ import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
-import Store from '../store';
+import Request from 'utils/Request';
 
 /**
  * label  标识
