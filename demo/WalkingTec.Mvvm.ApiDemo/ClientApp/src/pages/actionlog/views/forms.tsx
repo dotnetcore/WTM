@@ -23,15 +23,15 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="ModuleName" />
-                <FormItem {...props} fieId="ActionName" />
-                <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="ActionUrl" />
-                <FormItem {...props} fieId="ActionTime" />
-                <FormItem {...props} fieId="Duration" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="IP" />
-                <FormItem {...props} fieId="LogType" />
+                <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
             </InfoShellLayout>        
     }
@@ -59,15 +59,15 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="ModuleName" />
-                <FormItem {...props} fieId="ActionName" />
-                <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="ActionUrl" />
-                <FormItem {...props} fieId="ActionTime" />
-                <FormItem {...props} fieId="Duration" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="IP" />
-                <FormItem {...props} fieId="LogType" />
+            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
         </InfoShellLayout>
     }
@@ -94,15 +94,15 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="ModuleName" />
-                <FormItem {...props} fieId="ActionName" />
-                <FormItem {...props} fieId="ITCode" />
-                <FormItem {...props} fieId="ActionUrl" />
-                <FormItem {...props} fieId="ActionTime" />
-                <FormItem {...props} fieId="Duration" />
-                <FormItem {...props} fieId="Remark" />
-                <FormItem {...props} fieId="IP" />
-                <FormItem {...props} fieId="LogType" />
+            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="Entity.ActionName" />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.ActionUrl" />
+            <FormItem {...props} fieId="Entity.ActionTime" />
+            <FormItem {...props} fieId="Entity.Duration" />
+            <FormItem {...props} fieId="Entity.Remark" />
+            <FormItem {...props} fieId="Entity.IP" />
+            <FormItem {...props} fieId="Entity.LogType" />
 
         </InfoShellLayout>
     }

@@ -122,6 +122,7 @@ namespace WalkingTec.Mvvm.Mvc
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .ConfigureApiBehaviorOptions(options =>
             {
+               // options.SuppressModelStateInvalidFilter = true;
                 options.InvalidModelStateResponseFactory = (a) =>
                 {
                     return new BadRequestObjectResult(a.ModelState.GetErrorJson());

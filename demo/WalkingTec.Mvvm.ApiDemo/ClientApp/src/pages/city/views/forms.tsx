@@ -23,9 +23,9 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="ParentId" />
-                <FormItem {...props} fieId="Level" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.ParentId" />
+            <FormItem {...props} fieId="Entity.Level" />
 
             </InfoShellLayout>        
     }
@@ -53,9 +53,9 @@ export class UpdateForm extends React.Component<{ loadData: Function | Object },
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="ParentId" />
-                <FormItem {...props} fieId="Level" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.ParentId" />
+            <FormItem {...props} fieId="Entity.Level" />
 
         </InfoShellLayout>
     }
@@ -82,9 +82,9 @@ export class InfoForm extends React.Component<{ loadData: Function | Object }, a
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="Name" />
-                <FormItem {...props} fieId="ParentId" />
-                <FormItem {...props} fieId="Level" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.ParentId" />
+            <FormItem {...props} fieId="Entity.Level" />
 
         </InfoShellLayout>
     }

@@ -18,47 +18,47 @@ export default {
      */
     editModels(props?) {
         return {
-            ModuleName:{
+            "Entity.ModuleName":{
                 label: "模块",
                 rules: [],
                 formItem: <Input placeholder="请输入 模块" />
             },
-            ActionName:{
+            "Entity.ActionName":{
                 label: "动作",
                 rules: [],
                 formItem: <Input placeholder="请输入 动作" />
             },
-            ITCode:{
+            "Entity.ITCode":{
                 label: "ITCode",
                 rules: [],
                 formItem: <Input placeholder="请输入 ITCode" />
             },
-            ActionUrl:{
+            "Entity.ActionUrl":{
                 label: "Url",
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
-            ActionTime:{
+            "Entity.ActionTime":{
                 label: "操作时间",
                 rules: [],
                 formItem: <Input placeholder="请输入 操作时间" />
             },
-            Duration:{
+            "Entity.Duration":{
                 label: "时长",
                 rules: [{ "required": true, "message": "时长不能为空" }],
                 formItem: <Input placeholder="请输入 时长" />
             },
-            Remark:{
+            "Entity.Remark":{
                 label: "备注",
                 rules: [],
                 formItem: <Input placeholder="请输入 备注" />
             },
-            IP:{
+            "Entity.IP":{
                 label: "IP",
                 rules: [],
                 formItem: <Input placeholder="请输入 IP" />
             },
-            LogType:{
+            "Entity.LogType":{
                 label: "类型",
                 rules: [{ "required": true, "message": "类型不能为空" }],
                 formItem: <WtmSelect placeholder="类型" dataSource={[  
@@ -76,22 +76,22 @@ export default {
      */
     searchModels(props?) {
         return {
-            ITCode:{
+            "ITCode":{
                 label: "ITCode",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            ActionUrl:{
+            "ActionUrl":{
                 label: "Url",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            IP:{
+            "IP":{
                 label: "IP",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
-            LogType:{
+            "LogType":{
                 label: "类型",
                 rules: [],
                 formItem: <WtmSelect multiple placeholder="全部" dataSource={[  
