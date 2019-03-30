@@ -55,7 +55,7 @@ export default {
             },
 
             /** 地点2 */
-            "Place2_Sheng": {
+            "Entity.Place2_Sheng": {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
@@ -63,11 +63,11 @@ export default {
                 />
             },
             /** 地点2 */
-            "Place2_Shi": {
+            "Entity.Place2_Shi": {
                 label: "市",
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
-                    linkageModels="Place2_Sheng"
+                    linkageModels="Entity.Place2_Sheng"
                     dataSource={(parentid) => Request.cache({ url: "/api/School/GetSubCities", body: { parentid } })}
                 />
             },
@@ -76,7 +76,7 @@ export default {
                 label: "区",
                 rules: [],
                 formItem: <WtmSelect placeholder="区"
-                    linkageModels="Place2_Shi"
+                    linkageModels="Entity.Place2_Shi"
                     dataSource={(parentid) => Request.cache({ url: "/api/School/GetSubCities", body: { parentid } })}
                 />
             }

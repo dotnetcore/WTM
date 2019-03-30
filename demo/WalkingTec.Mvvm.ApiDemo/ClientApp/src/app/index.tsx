@@ -31,6 +31,9 @@ class Entrance extends React.Component<any, any> {
         document.title = globalConfig.default.title;
     }
     render() {
+        if (Store.User.loding) {
+            return <div></div>
+        }
         // 用户登陆菜单加载完成进入主界面
         if (Store.User.isLogin) {
             return <Layout {...this.props} />

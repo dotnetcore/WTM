@@ -39,24 +39,33 @@ class Store {
             }
         } catch (error) {
             window.sessionStorage.clear()
+        } finally {
+            runInAction(() => this.loding = false)
         }
     }
     @action.bound
     async Login(params) {
-        const res = await Request.ajax({
-            method: "post",
-            url: "/api/_login/login",
-            body: params,
-            headers: { 'Content-Type': null }
-        }).toPromise();
-        runInAction(() => {
-            this.User = {
-                ...this.User,
-                ...res
-            };
-            window.sessionStorage.setItem("User", JSON.stringify(res));
-            this.isLogin = true;
-        });
+        try {
+            const res = await Request.ajax({
+                method: "post",
+                url: "/api/_login/login",
+                body: params,
+                headers: { 'Content-Type': null }
+            }).toPromise();
+            runInAction(() => {
+                this.User = {
+                    ...this.User,
+                    ...res
+                };
+                window.sessionStorage.setItem("User", JSON.stringify(res));
+                this.isLogin = true;
+            });
+        } catch (error) {
+            throw error
+        }
+        finally {
+            runInAction(() => this.loding = false)
+        }
     }
     @action.bound
     async outLogin() {
