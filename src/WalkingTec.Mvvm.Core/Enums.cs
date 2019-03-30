@@ -26,7 +26,7 @@
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DBTypeEnum { SqlServer, MySql }
+    public enum DBTypeEnum { SqlServer, MySql, PgSql }
 
     /// <summary>
     /// 页面显示方式

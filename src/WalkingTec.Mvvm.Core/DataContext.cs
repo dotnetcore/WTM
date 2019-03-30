@@ -300,6 +300,9 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);
                     break;
+                case DBTypeEnum.PgSql:
+                    optionsBuilder.UseNpgsql(CSName);
+                    break;
                 default:
                     break;
             }
@@ -539,6 +542,28 @@ namespace WalkingTec.Mvvm.Core
                         mySqlCon.Close();
                     }
                     break;
+                case DBTypeEnum.PgSql:
+                    Npgsql.NpgsqlConnection npgCon = this.Database.GetDbConnection() as Npgsql.NpgsqlConnection;
+                    using (Npgsql.NpgsqlCommand cmd = new Npgsql.NpgsqlCommand(sql, npgCon))
+                    {
+                        if (npgCon.State == ConnectionState.Closed)
+                        {
+                            npgCon.Open();
+                        }
+                        cmd.CommandTimeout = 2400;
+                        cmd.CommandType = commandType;
+                        if (paras != null)
+                        {
+                            foreach (var param in paras)
+                                cmd.Parameters.Add(param);
+                        }
+                        Npgsql.NpgsqlDataReader dr = cmd.ExecuteReader();
+                        table.Load(dr);
+                        dr.Close();
+                        npgCon.Close();
+                    }
+                    break;
+
             }
             return table;
         }
