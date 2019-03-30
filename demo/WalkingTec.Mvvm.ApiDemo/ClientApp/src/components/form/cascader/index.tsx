@@ -199,7 +199,7 @@ export class WtmCascader extends React.Component<IAppProps, any> {
     }
     // 获取默认值
     getDefaultValue(value) {
-        if (value) {
+        if (value && !this.state.loading) {
             const defaultValue = this.getParent(value);
             defaultValue.push(value);
             if (defaultValue.length > 0) {

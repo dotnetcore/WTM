@@ -26,6 +26,7 @@ export default class LoginDemo extends React.Component<any, any>{
     if (this.state.loading) {
       return
     }
+    this.setState({ loading: true })
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         try {

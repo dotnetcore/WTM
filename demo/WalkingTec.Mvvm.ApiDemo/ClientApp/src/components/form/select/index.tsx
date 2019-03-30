@@ -167,6 +167,10 @@ export class WtmSelect extends React.Component<IAppProps, any> {
     }
     getDefaultValue(config: SelectProps) {
         const { value, dataKey } = this.props;
+        if (this.state.loading) {
+            config.value = undefined;
+            return config;
+        }
         // 默认值
         if (!lodash.isNil(value)) {
             let newValue = null;

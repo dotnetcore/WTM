@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:05:58
  * @desc [description]
  */
-import { Button, Col, Divider, Form, Icon, Row } from 'antd';
+import { Button, Col, Divider, Form, Icon, Row, Spin } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { DesError } from 'components/decorators';
 import GlobalConfig from 'global.config';
@@ -118,22 +118,24 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         const { PageState } = this.Store;
         return (
             <Form className="data-view-search" onSubmit={this.onSubmit}>
-                <Row type="flex" >
-                    {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
-                    <Col span={colSpanSearch} className="data-view-search-right" >
-                        <Button icon="search" type="primary" htmlType="submit" loading={PageState.tableLoading}>搜索</Button>
-                        <Divider type="vertical" />
-                        <Button icon="retweet" onClick={this.onReset} loading={PageState.tableLoading}>重置</Button>
-                        {
-                            toggleShow && <>
-                                <Divider type="vertical" />
-                                <a className="data-view-search-toggle" onClick={this.onToggle}>
-                                    {this.toggle ? <>收起 <Icon type='down' /></> : <>展开 <Icon type='up' /></>}
-                                </a>
-                            </>
-                        }
-                    </Col>
-                </Row>
+                <Spin spinning={PageState.tableLoading}>
+                    <Row type="flex" >
+                        {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
+                        <Col span={colSpanSearch} className="data-view-search-right" >
+                            <Button icon="search" type="primary" htmlType="submit" loading={PageState.tableLoading}>搜索</Button>
+                            <Divider type="vertical" />
+                            <Button icon="retweet" onClick={this.onReset} loading={PageState.tableLoading}>重置</Button>
+                            {
+                                toggleShow && <>
+                                    <Divider type="vertical" />
+                                    <a className="data-view-search-toggle" onClick={this.onToggle}>
+                                        {this.toggle ? <>收起 <Icon type='up' /></> : <>展开 <Icon type='down' /></>}
+                                    </a>
+                                </>
+                            }
+                        </Col>
+                    </Row>
+                </Spin>
                 <div className="data-view-search-divider"></div>
             </Form>
         );
