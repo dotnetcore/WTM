@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Mvc
             LogExceptionOnly = true;
             CS = "";
             UI = UIEnum.LayUI;
-            DbType = DBTypeEnum.MySql;
+            DbType = DBTypeEnum.SqlServer;
             CookiePre = "WTM";
             FileMode = SaveFileModeEnum.Database;
             UploadDir = "";
