@@ -75,6 +75,11 @@ class TabsPages extends React.Component<any, any> {
   onChange(event) {
     this.props.history.replace(event)
   }
+  onEdit(event) {
+    const path = this.TabsPagesStore.onClosable(event);
+    if (lodash.eq(this.props.location.pathname, event))
+      this.onChange(path)
+  }
   render() {
     const tabPane = this.TabsPagesStore.tabPane;
     const height = this.TabsPagesStore.height;
@@ -82,15 +87,17 @@ class TabsPages extends React.Component<any, any> {
       <Content className="app-layout-content app-layout-content-tabs">
         <Tabs
           activeKey={this.props.location.pathname}
-          size="small"
+          // size="small"
           className="app-layout-tabs"
           tabPosition={lodash.get(globalConfig, "tabPosition", "top") as any}
           onChange={this.onChange.bind(this)}
           animated={false}
+          type="editable-card"
+          onEdit={this.onEdit.bind(this)}
         >
           {tabPane.map(item => {
             const router = this.getRoutes(item.pathname);
-            return <Tabs.TabPane tab={item.title} key={item.pathname} style={{ height: height }}>
+            return <Tabs.TabPane tab={item.title} key={item.pathname} style={{ height: height }} closable={item.closable}>
               {React.createElement(router.component, { ...this.props, match: router.match } as any)}
             </Tabs.TabPane>
           })}
@@ -109,7 +116,8 @@ class TabsPagesStore {
   @observable height = this.getHeight();
   @observable tabPane = [{
     title: "首页",
-    pathname: "/"
+    pathname: "/",
+    closable: false,
   }];
   @action
   pushTabPane(pathname) {
@@ -117,11 +125,19 @@ class TabsPagesStore {
     const title = lodash.get(lodash.find(subMenu, ['Path', pathname]), 'Name', "Null")
     this.tabPane.push({
       title: title,
-      pathname
+      pathname,
+      closable: true
     });
   }
+  @action
+  onClosable(pathname) {
+    const index = lodash.findIndex(this.tabPane, ['pathname', pathname]);
+    const path = lodash.get(this.tabPane, `[${index - 1}].pathname`, "/");
+    lodash.remove(this.tabPane, ['pathname', pathname]);
+    return path
+  }
   getHeight() {
-    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 86 : 52);
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 90 : 52);
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
     const height = this.getHeight()
