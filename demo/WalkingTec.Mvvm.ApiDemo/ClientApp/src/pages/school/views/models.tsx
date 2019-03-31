@@ -55,7 +55,7 @@ export default {
             },
 
             /** 地点2 */
-            "Entity.Place2_Sheng": {
+            "Place2_Sheng": {
                 label: "省",
                 rules: [],
                 formItem: <WtmSelect placeholder="省"
@@ -63,7 +63,7 @@ export default {
                 />
             },
             /** 地点2 */
-            "Entity.Place2_Shi": {
+            "Place2_Shi": {
                 label: "市",
                 rules: [],
                 formItem: <WtmSelect placeholder="市"
