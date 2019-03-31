@@ -21,7 +21,7 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-            <FormItem {...props} fieId="Entity.SchoolCode" />
+            <FormItem {...props} fieId="Entity.SchoolCode" layout="row"/>
             <FormItem {...props} fieId="Entity.SchoolName" />
             <FormItem {...props} fieId="Entity.SchoolType" />
             <FormItem {...props} fieId="Entity.Remark" />
@@ -55,8 +55,9 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
+        // getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         return <InfoShellLayout>
+            <FormItem {...props} fieId="Entity.ID" hidden />
             <FormItem {...props} fieId="Entity.SchoolCode" />
             <FormItem {...props} fieId="Entity.SchoolName" />
             <FormItem {...props} fieId="Entity.SchoolType" />
