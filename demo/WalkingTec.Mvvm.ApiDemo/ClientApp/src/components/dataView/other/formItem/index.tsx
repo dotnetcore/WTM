@@ -30,11 +30,15 @@ interface IFormItemProps {
             formItem: React.ReactNode
         };
     };
+    /** 隐藏域 */
+    hidden?: boolean;
+    /** 模型的 value 优先级大于  defaultValues 中的值*/
+    value?: any;
     /** 禁用 控件输入更改 */
     disabled?: boolean;
     /** 禁用 组件 显示 span */
     display?: boolean;
-    /** 默认值 */
+    /** 默认值 列表 */
     defaultValues?: Object;
     /** Form.Item 的 props */
     formItemProps?: FormItemProps;
@@ -50,7 +54,8 @@ interface IFormItemProps {
 export class FormItem extends React.Component<IFormItemProps, any> {
     static wtmType = "FormItem";
     render() {
-        const { form = {}, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render, layout } = this.props;
+        const { form = {}, hidden, value, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render, layout } = this.props;
+        const { getFieldDecorator }: WrappedFormUtils = form;
         // 获取模型 item
         const model = lodash.get(models, fieId) || { rules: [], label: `未获取到模型(${fieId})`, formItem: <Input placeholder={`未获取到模型(${fieId})`} /> };
         let options: GetFieldDecoratorOptions = {
@@ -59,7 +64,12 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         };
         // 获取默认值 默认值，禁用，显示 span 
         if (typeof defaultValues === "object") {
-            options.initialValue = lodash.get(defaultValues, fieId);
+            options.initialValue = value || lodash.get(defaultValues, fieId);
+        }
+        // 隐藏 域
+        if (hidden) {
+            getFieldDecorator(fieId as never, options);
+            return null
         }
         let renderItem = null;
         // 重写渲染

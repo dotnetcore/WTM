@@ -119,6 +119,10 @@ export class InfoShellLayout extends React.Component<{ loading?: boolean }, any>
                 // if (["fieId", "models", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
                 if (lodash.isEqual(node.type.wtmType, 'FormItem') || ["labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
                     const layout = lodash.get(node, "props.layout");
+                    const hidden = lodash.get(node, "props.hidden");
+                    if (hidden) {
+                        return node
+                    }
                     return <InfoShellCol
                         key={node.key}
                         layout={layout}
