@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,8 +13,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuVM : BaseCRUDVM<FrameworkMenu>
     {
+        [JsonIgnore]
         public List<ComboSelectListItem> AllParents { get; set; }
+        [JsonIgnore]
         public List<ComboSelectListItem> AllModules { get; set; }
+        [JsonIgnore]
         public List<ComboSelectListItem> AllActions { get; set; }
 
         [Display(Name = "动作")]
@@ -22,7 +26,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [Display(Name = "允许角色")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
+        [JsonIgnore]
         public FrameworkUserBaseListVM UserListVM { get; set; }
+        [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
 
         public FrameworkMenuVM()

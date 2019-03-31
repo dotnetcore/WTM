@@ -77,25 +77,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<FrameworkGroupVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
 		[HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
             var vm = CreateVM<FrameworkGroupBatchVM>();
@@ -143,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("下载导入模板")]
+        [ActionDescription("下载模板")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {

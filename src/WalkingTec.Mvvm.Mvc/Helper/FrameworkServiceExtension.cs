@@ -388,7 +388,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
             }
-            models.Add(typeof(FrameworkMenu));
+            //models.Add(typeof(FrameworkMenu));
             //models.Add(typeof(FrameworkUserBase));
             //models.Add(typeof(FrameworkGroup));
             //models.Add(typeof(FrameworkRole));
@@ -426,6 +426,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (pubattr.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
+                }
+                if (typeof(BaseApiController).IsAssignableFrom(ctrl))
+                {
+                    model.IsApi = true;
                 }
                 model.NameSpace = ctrl.Namespace;
                 //获取controller上标记的ActionDescription属性的值

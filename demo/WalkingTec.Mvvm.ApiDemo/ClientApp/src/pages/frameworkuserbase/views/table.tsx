@@ -12,65 +12,47 @@ import Action from './action';
 const columns = [
 
     {
-        dataIndex: "LogType",
-        title: "类型",
-        render: columnsRender,
-        width:80
-    },
-   {
-        dataIndex: "ModuleName",
-        title: "模块",
-       render: columnsRender,
-       width: 120
-    },
-
-    {
-        dataIndex: "ActionName",
-        title: "动作",
-        render: columnsRender,
-        width: 120
-    },
-
-    {
         dataIndex: "ITCode",
-        title: "ITCode",
-        render: columnsRender,
-        width: 120
+        title: "账号",
+        render: columnsRender 
     },
 
     {
-        dataIndex: "ActionUrl",
-        title: "Url",
-        render: columnsRender,
-        width: 200
+        dataIndex: "Name",
+        title: "姓名",
+        render: columnsRender 
     },
 
     {
-        dataIndex: "ActionTime",
-        title: "操作时间",
-        render: columnsRender,
-        width: 200
+        dataIndex: "Sex",
+        title: "性别",
+        render: columnsRender 
     },
 
     {
-        dataIndex: "Duration",
-        title: "时长",
-        render: columnsRender,
-        width: 100
+        dataIndex: "PhotoId",
+        title: "照片",
+        render: columnsRenderImg 
     },
-    
 
     {
-        dataIndex: "IP",
-        title: "IP",
-        render: columnsRender,
-        width: 120
+        dataIndex: "IsValid",
+        title: "是否有效",
+        render: columnsRender 
     },
+
     {
-        dataIndex: "Remark",
-        title: "备注",
+        dataIndex: "RoleName_view",
+        title: "角色",
+        render: columnsRender 
+    },
+
+    {
+        dataIndex: "GroupName_view",
+        title: "用户组",
         render: columnsRender 
     }
+
 ]
 
 /**
@@ -90,7 +72,7 @@ export default class extends React.Component<any, any> {
                     title: '动作',
                     dataIndex: 'Action',
                     fixed: 'right',//固定 列
-                    width: 150,
+                    width: 160,
                     render: (text, record) => <Action.rowAction data={record} />
                 }
             )
