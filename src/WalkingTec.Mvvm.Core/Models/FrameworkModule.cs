@@ -33,5 +33,8 @@ namespace WalkingTec.Mvvm.Core
 
         [NotMapped]
         public bool IgnorePrivillege { get; set; }
+
+        [NotMapped]
+        public bool IsApi { get; set; }
     }
 }

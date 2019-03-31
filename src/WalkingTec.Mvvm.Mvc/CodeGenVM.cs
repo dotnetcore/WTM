@@ -834,14 +834,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
-                        var subpro = subtype.GetProperty(item.SubField);
-                        existSubPro.Add(subpro);
                         string prefix = "";
-                        int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
-                        if (count > 1)
-                        {
-                            prefix = count + "";
-                        }
                         if (subtype == typeof(FileAttachment))
                         {
                             render = "columnsRenderImg";
@@ -850,7 +843,14 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
+                            var subpro = subtype.GetProperty(item.SubField);
+                            existSubPro.Add(subpro);
                             newname = item.SubField  + "_view" + prefix;
+                            int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                            if (count > 1)
+                            {
+                                prefix = count + "";
+                            }
                         }
                     }
                     fieldstr.Append($@"
@@ -917,7 +917,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmTransfer
                     dataSource={{Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-                    dataKey=""Entity.{item.SubIdField}""
+                    dataKey=""{item.SubIdField}""
                 /> ");
 
                             }

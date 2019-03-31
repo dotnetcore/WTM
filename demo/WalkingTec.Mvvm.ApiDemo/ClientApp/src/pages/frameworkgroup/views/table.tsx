@@ -12,65 +12,29 @@ import Action from './action';
 const columns = [
 
     {
-        dataIndex: "LogType",
-        title: "类型",
-        render: columnsRender,
-        width:80
-    },
-   {
-        dataIndex: "ModuleName",
-        title: "模块",
-       render: columnsRender,
-       width: 120
+        dataIndex: "GroupCode",
+        title: "用户组编码",
+        render: columnsRender 
     },
 
     {
-        dataIndex: "ActionName",
-        title: "动作",
-        render: columnsRender,
-        width: 120
+        dataIndex: "GroupName",
+        title: "用户组名称",
+        render: columnsRender 
     },
 
     {
-        dataIndex: "ITCode",
-        title: "ITCode",
-        render: columnsRender,
-        width: 120
-    },
-
-    {
-        dataIndex: "ActionUrl",
-        title: "Url",
-        render: columnsRender,
-        width: 200
-    },
-
-    {
-        dataIndex: "ActionTime",
-        title: "操作时间",
-        render: columnsRender,
-        width: 200
-    },
-
-    {
-        dataIndex: "Duration",
-        title: "时长",
-        render: columnsRender,
-        width: 100
-    },
-    
-
-    {
-        dataIndex: "IP",
-        title: "IP",
-        render: columnsRender,
-        width: 120
-    },
-    {
-        dataIndex: "Remark",
+        dataIndex: "GroupRemark",
         title: "备注",
         render: columnsRender 
+    },
+
+    {
+        dataIndex: "UsersCount",
+        title: "包含用户",
+        render: columnsRender 
     }
+
 ]
 
 /**
@@ -90,7 +54,7 @@ export default class extends React.Component<any, any> {
                     title: '动作',
                     dataIndex: 'Action',
                     fixed: 'right',//固定 列
-                    width: 150,
+                    width: 160,
                     render: (text, record) => <Action.rowAction data={record} />
                 }
             )

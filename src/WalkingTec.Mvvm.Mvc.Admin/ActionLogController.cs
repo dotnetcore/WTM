@@ -32,70 +32,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("新建")]
-        [HttpPost("Add")]
-        public IActionResult Add(ActionLogVM vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                vm.DoAdd();
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState.GetErrorJson());
-                }
-                else
-                {
-                    return Ok(vm.Entity);
-                }
-            }
-
-        }
-
-        [ActionDescription("修改")]
-        [HttpPut("Edit")]
-        public IActionResult Edit(ActionLogVM vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                vm.DoEdit(true);
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState.GetErrorJson());
-                }
-                else
-                {
-                    return Ok(vm.Entity);
-                }
-            }
-        }
-
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<ActionLogVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
         [HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
             var vm = CreateVM<ActionLogBatchVM>();

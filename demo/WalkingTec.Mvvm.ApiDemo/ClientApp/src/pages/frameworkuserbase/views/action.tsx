@@ -62,8 +62,31 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
+                <Visible visible={onAuthorizeActions(Store, "insert")}>
+                    <DialogForm
+                        title="新建"
+                        icon="plus"
+                    >
+                        <InsertForm />
+                    </DialogForm>
+                </Visible>
+                <Visible visible={onAuthorizeActions(Store, "update")}>
+                    <Divider type="vertical" />
+                    <DialogForm
+                        title="修改"
+                        icon="edit"
+                        disabled={deletelength != 1}
+                    >
+                        <UpdateForm loadData={() => (lodash.find(selectedRowKeys))} />
+                    </DialogForm>
+                </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
+                    <Divider type="vertical" />
                     <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}> 删除  </Button>
+                </Visible>
+                <Visible visible={onAuthorizeActions(Store, "import")}>
+                    <Divider type="vertical" />
+                    <Button icon="folder-add" onClick={ActionEvents.onImport}>导入</Button>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "export")}>
                     <Divider type="vertical" />
@@ -104,6 +127,15 @@ class RowAction extends React.Component<{
                         type="a"
                     >
                         <InfoForm loadData={data} />
+                    </DialogForm>
+                </Visible>
+                <Visible visible={onAuthorizeActions(Store, "update")}>
+                    <Divider type="vertical" />
+                    <DialogForm
+                        title="修改"
+                        type="a"
+                    >
+                        <UpdateForm loadData={data} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>

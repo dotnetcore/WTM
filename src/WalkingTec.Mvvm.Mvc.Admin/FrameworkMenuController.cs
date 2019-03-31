@@ -80,25 +80,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<FrameworkMenuVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
         [HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
             var vm = CreateVM<FrameworkMenuBatchVM>();
@@ -182,14 +165,11 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var m = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.Module.ClassName == ModelName && x.MethodName != "Index").ToList();
+            var m = GlobalServices.GetRequiredService<GlobalData>().AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {
-                var f = modules.Where(x => x.ClassName == item.Module.ClassName && x.Area?.AreaName == item.Module.Area?.AreaName).FirstOrDefault();
-                var a = f?.Actions.Where(x => x.MethodName == item.MethodName).FirstOrDefault();
-                if (a?.IgnorePrivillege == true)
+                if (item.IgnorePrivillege == true || item.Module.IgnorePrivillege == true)
                 {
                     toremove.Add(item);
                 }
@@ -208,7 +188,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(m);
         }
 
-        [ActionDescription("同步模块")]
         protected void SycModelAndAction()
         {
             var allModules = GlobaInfo.AllModule.Where(x => x.IgnorePrivillege == false);

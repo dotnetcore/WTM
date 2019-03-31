@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("用户管理")]
     [ApiController]
     [Route("api/_FrameworkUserBase")]
-	public class FrameworkUseController : BaseApiController
+	public class FrameworkUserController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
@@ -77,25 +77,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<FrameworkUserVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
-
 		[HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
@@ -143,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("下载导入模板")]
+        [ActionDescription("下载模板")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -175,12 +158,14 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpGet("GetFrameworkRoles")]
+        [ActionDescription("获取角色")]
         public ActionResult GetFrameworkRoles()
         {
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
+        [ActionDescription("获取用户组")]
         public ActionResult GetFrameworkGroups()
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
