@@ -21,7 +21,7 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-            <FormItem {...props} fieId="Entity.SchoolCode" />
+            <FormItem {...props} fieId="Entity.SchoolCode" layout="row"/>
             <FormItem {...props} fieId="Entity.SchoolName" />
             <FormItem {...props} fieId="Entity.SchoolType" />
             <FormItem {...props} fieId="Entity.Remark" />

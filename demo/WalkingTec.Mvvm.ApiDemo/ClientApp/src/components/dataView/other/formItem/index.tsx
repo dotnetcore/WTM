@@ -14,6 +14,9 @@ import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 const formItemLayout = lodash.cloneDeep(GlobalConfig.formItemLayout);//布局
+const formItemLayoutver = Math.floor((24 - formItemLayout.labelCol.span - formItemLayout.wrapperCol.span) / 2);
+const labelSpan = formItemLayout.labelCol.span / GlobalConfig.infoColumnCount;
+const warppSpan = 24 - labelSpan - formItemLayoutver;
 /**
  * 表单item
  */
@@ -69,8 +72,6 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         // let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
         let itemlayout = formItemLayout;
         if (layout == "row") {
-            let labelSpan = itemlayout.labelCol.span / GlobalConfig.infoColumnCount;
-            let warppSpan = 24 - labelSpan - 2;
             itemlayout = {
                 labelCol: {
                     span: labelSpan
