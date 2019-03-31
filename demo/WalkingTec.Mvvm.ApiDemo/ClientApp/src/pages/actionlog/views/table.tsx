@@ -12,59 +12,65 @@ import Action from './action';
 const columns = [
 
     {
+        dataIndex: "LogType",
+        title: "类型",
+        render: columnsRender,
+        width:80
+    },
+   {
         dataIndex: "ModuleName",
         title: "模块",
-        render: columnsRender 
+       render: columnsRender,
+       width: 120
     },
 
     {
         dataIndex: "ActionName",
         title: "动作",
-        render: columnsRender 
+        render: columnsRender,
+        width: 120
     },
 
     {
         dataIndex: "ITCode",
         title: "ITCode",
-        render: columnsRender 
+        render: columnsRender,
+        width: 120
     },
 
     {
         dataIndex: "ActionUrl",
         title: "Url",
-        render: columnsRender 
+        render: columnsRender,
+        width: 200
     },
 
     {
         dataIndex: "ActionTime",
         title: "操作时间",
-        render: columnsRender 
+        render: columnsRender,
+        width: 200
     },
 
     {
         dataIndex: "Duration",
         title: "时长",
-        render: columnsRender 
+        render: columnsRender,
+        width: 100
     },
-
-    {
-        dataIndex: "Remark",
-        title: "备注",
-        render: columnsRender 
-    },
+    
 
     {
         dataIndex: "IP",
         title: "IP",
-        render: columnsRender 
+        render: columnsRender,
+        width: 120
     },
-
     {
-        dataIndex: "LogType",
-        title: "类型",
+        dataIndex: "Remark",
+        title: "备注",
         render: columnsRender 
     }
-
 ]
 
 /**
@@ -84,7 +90,7 @@ export default class extends React.Component<any, any> {
                     title: '动作',
                     dataIndex: 'Action',
                     fixed: 'right',//固定 列
-                    width: 160,
+                    width: 120,
                     render: (text, record) => <Action.rowAction data={record} />
                 }
             )
