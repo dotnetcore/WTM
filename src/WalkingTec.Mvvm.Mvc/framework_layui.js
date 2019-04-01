@@ -435,17 +435,16 @@ window.ff = {
                     form.render('select');
                 }
                else {
-                   var html = "";
+                   $('#' + target).html('');
                    for ( i = 0; i < data.Data.length; i++) {
                          item = data.Data[i];
                         if (item.Selected === true) {
-                            html += "<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />";
+                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
                         }
                         else {
-                            html += "<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />";
+                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
                         }
                     }
-                   $('#' + target).html(html);
                    form.render('checkbox');
 
                 }

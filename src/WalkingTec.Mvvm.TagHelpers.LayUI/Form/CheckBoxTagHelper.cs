@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 SetSelected(listitems, Field.Model as IList);
             }
 
-            output.TagName = "label";
+            output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Clear();
             for (int i = 0; i < listitems.Count; i++)

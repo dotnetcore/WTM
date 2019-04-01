@@ -88,6 +88,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         }
 
+        public override void Validate()
+        {
+            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
+            if (mainAction != null)
+            {
+                var test = DC.Set<FrameworkMenu>().Where(x => x.Url == mainAction.Url && x.ID != Entity.ID).FirstOrDefault();
+                if (test != null)
+                {
+                    MSD.AddModelError(" error", "该模块已经配置过了");
+                }
+            }
+            base.Validate();
+        }
 
         public override void DoEdit(bool updateAllFields = false)
         {
@@ -149,7 +163,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     int order = 1;
                     foreach (var action in otherActions)
                     {
-                        if (SelectedActionIDs.Contains(action.Url))
+                        if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.Url))
                         {
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
