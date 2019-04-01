@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Core
                 if (pos > 0)
                 {
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
                 }
             }
 
@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var pos = url.LastIndexOf("/");
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.ActionId != null && x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
                 }
             }
             return menu;

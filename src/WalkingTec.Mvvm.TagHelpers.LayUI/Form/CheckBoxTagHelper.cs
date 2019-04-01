@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 var item = listitems[i];
                 var selected = item.Selected ? " checked" : " ";
-                output.PostElement.AppendHtml($@"
+                output.PostContent.AppendHtml($@"
 <input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled=\"\"" : string.Empty)}/>");
             }
             base.Process(context, output);

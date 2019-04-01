@@ -34,11 +34,11 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "权限" )]
         public List<FunctionPrivilege> Privileges { get; set; }
 
-        [Display(Name = "动作" )]
-        public Guid? ActionId { get; set; }
+        //[Display(Name = "动作" )]
+        //public Guid? ActionId { get; set; }
 
-        [Display(Name = "模块" )]
-        public Guid? ModuleId { get; set; }
+        //[Display(Name = "模块" )]
+        //public Guid? ModuleId { get; set; }
 
         [Display(Name = "域" )]
         public Guid? DomainId { get; set; }

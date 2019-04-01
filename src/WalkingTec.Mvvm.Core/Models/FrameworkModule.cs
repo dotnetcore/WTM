@@ -36,5 +36,14 @@ namespace WalkingTec.Mvvm.Core
 
         [NotMapped]
         public bool IsApi { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return this.NameSpace + "," + this.ClassName;
+            }
+        }
     }
 }

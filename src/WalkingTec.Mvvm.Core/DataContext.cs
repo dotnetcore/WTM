@@ -319,12 +319,12 @@ namespace WalkingTec.Mvvm.Core
             if (await Database.EnsureCreatedAsync())
             {
                 var AllModules = allModules as List<FrameworkModule>;
-                foreach (var module in AllModules)
-                {
-                    module.CreateTime = DateTime.Now;
-                    module.CreateBy = "admin";
-                    Set<FrameworkModule>().Add(module);
-                }
+                //foreach (var module in AllModules)
+                //{
+                //    module.CreateTime = DateTime.Now;
+                //    module.CreateBy = "admin";
+                //    Set<FrameworkModule>().Add(module);
+                //}
 
                 var roles = new FrameworkRole[]
                 {
@@ -425,8 +425,8 @@ namespace WalkingTec.Mvvm.Core
             }
             FrameworkMenu menu = new FrameworkMenu
             {
-                ActionId = act.ID,
-                ModuleId = act.ModuleId,
+                //ActionId = act.ID,
+                //ModuleId = act.ModuleId,
                 Url = "/" + act.Module.ClassName + "/" + act.MethodName,
                 Privileges = new List<FunctionPrivilege>(),
                 ShowOnMenu = isMainLink,

@@ -43,8 +43,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
             if (ControllerName == "WalkingTec.Mvvm.Mvc._FrameworkController")
             {
-                 actions = newdc.Set<FrameworkAction>()
-                    .Where(x => x.Module.NameSpace != "WalkingTec.Mvvm.Admin.Api" &&  newdc.BaseFrameworkMenus.Where(y => y.ActionId != null).Select(y => y.ActionId).Distinct().Contains(x.ID) == false)
+                 actions = GlobalServices.GetRequiredService<GlobalData>().AllModule.SelectMany(x=>x.Actions)
+                    .Where(x => x.Module.IsApi == false &&  newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().Contains(x.Url) == false)
                     .Select(x => new FrameworkAction_ListView
                     {
                         ID = x.ID,
@@ -53,14 +53,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         ActionName = x.ActionName,
                         ClassName = x.Module.ClassName,
                         MethodName = x.MethodName,
-                        AreaName = x.Module.Area.AreaName
+                        AreaName = x.Module.Area?.AreaName
                     }).ToList();
             }
             else
             {
-                 actions = newdc.Set<FrameworkAction>()
-                    .Where(x => newdc.BaseFrameworkMenus.Where(y => y.ActionId != null).Select(y => y.ActionId).Distinct().Contains(x.ID) == false)
-                    .Select(x => new FrameworkAction_ListView
+                actions = GlobalServices.GetRequiredService<GlobalData>().AllModule.SelectMany(x => x.Actions)
+                   .Where(x => x.Module.IsApi == true && newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().Contains(x.Url) == false)
+                   .Select(x => new FrameworkAction_ListView
                     {
                         ID = x.ID,
                         ModuleID = x.ModuleId,
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         ActionName = x.ActionName,
                         ClassName = x.Module.ClassName,
                         MethodName = x.MethodName,
-                        AreaName = x.Module.Area.AreaName
+                        AreaName = x.Module.Area?.AreaName
                     }).ToList();
 
             }
