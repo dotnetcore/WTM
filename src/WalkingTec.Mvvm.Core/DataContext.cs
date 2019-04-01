@@ -19,8 +19,8 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public partial class FrameworkContext : DbContext, IDataContext
     {
-        public DbSet<FrameworkModule> BaseFrameworkModules { get; set; }
-        public DbSet<FrameworkAction> BaseFrameworkActions { get; set; }
+        //public DbSet<FrameworkModule> BaseFrameworkModules { get; set; }
+        //public DbSet<FrameworkAction> BaseFrameworkActions { get; set; }
         public DbSet<FrameworkMenu> BaseFrameworkMenus { get; set; }
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
