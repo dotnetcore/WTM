@@ -37,15 +37,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public JsonResult GetDomainMenus(Guid did)
-        {
-            var data = DC.Set<FrameworkMenu>()
-             .Where(x => x.DomainId == did)
-             .Select(x => new SimpleMenu { Id = x.ID, ActionId = x.ActionId, IsPublic = x.IsPublic, Url = x.Url, ParentId = x.ParentId })
-             .ToList();
-            return Json(data);
-        }
-
         [HttpPost]
         public IActionResult Selector(string _DONOT_USE_VMNAME
             , string _DONOT_USE_KFIELD

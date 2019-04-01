@@ -24,15 +24,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
 
             LinkedVM.AllParents = topMenu.Where(x => !this.Ids.Contains(x.ID) && !pids.Contains(x.ID)).ToList().ToListItems(y => y.PageName, x=>x.ID);
-            foreach (var p in LinkedVM.AllParents)
-            {
-                Guid temp = Guid.Parse(p.Value);
-                var m = topMenu.Where(x => x.ID == temp).SingleOrDefault();
-                if (m != null && m.ActionId != null)
-                {
-                    p.Text = p.Text + "(" + m.ModuleName + ")";
-                }
-            }
         }
     }
 

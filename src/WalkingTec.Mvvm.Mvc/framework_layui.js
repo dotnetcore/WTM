@@ -201,7 +201,7 @@ window.ff = {
 
         var datastr = $('#' + formid).serialize();
         var checkboxes = $('#' + formid + ' :checkbox');
-        for (var i = 0; i < checkboxes.length; i++) {
+        for ( i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
             if (ck.checked === false && (ck.value === true || ck.value === false)) {
                 datastr += "&" + ck.name + "=false";
@@ -435,16 +435,17 @@ window.ff = {
                     form.render('select');
                 }
                else {
-                   $('#' + target).html('');
-                    for ( i = 0; i < data.Data.length; i++) {
+                   var html = "";
+                   for ( i = 0; i < data.Data.length; i++) {
                          item = data.Data[i];
                         if (item.Selected === true) {
-                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
+                            html += "<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />";
                         }
                         else {
-                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                            html += "<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />";
                         }
                     }
+                   $('#' + target).html(html);
                    form.render('checkbox');
 
                 }

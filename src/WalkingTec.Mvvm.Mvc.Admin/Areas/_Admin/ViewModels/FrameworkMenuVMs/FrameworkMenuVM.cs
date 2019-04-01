@@ -21,7 +21,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public List<ComboSelectListItem> AllActions { get; set; }
 
         [Display(Name = "动作")]
-        public List<Guid> SelectedActionIDs { get; set; }
+        public List<string> SelectedActionIDs { get; set; }
+
+        [Display(Name = "模块")]
+        public string SelectedModule { get; set; }
 
         [Display(Name = "允许角色")]
         public List<Guid> SelectedRolesIDs { get; set; }
@@ -49,20 +52,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x=>x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
             AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
-            foreach (var p in AllParents)
-            {
-                Guid temp = Guid.Parse(p.Value);
-                var m = topMenu.Where(x => x.ID == temp).SingleOrDefault();
-                if (m != null && m.ActionId != null)
-                {
-                    p.Text = p.Text + "(" + m.ModuleName + ")";
-                }
-            }
+
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                var m = DC.Set<FrameworkModule>().Include(x=>x.Area).Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
+                var m = modules.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
                 List<FrameworkModule> toremove = new List<FrameworkModule>();
                 foreach (var item in m)
                 {
@@ -73,24 +68,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                 }
                 toremove.ForEach(x => m.Remove(x));
-                AllModules = m.ToListItems(y => y.ModuleName, y=>y.ID);
+                AllModules = m.ToListItems(y => y.ModuleName, y=>y.FullName);
             }
-            if (Entity.ModuleId != null)
+            if (Entity.Url != null)
             {
-                var m = DC.Set<FrameworkAction>().Include(x=>x.Module.Area).Where(x => x.ModuleId == Entity.ModuleId && x.MethodName != "Index").ToList();
-                List<FrameworkAction> toremove = new List<FrameworkAction>();
-                foreach (var item in m)
+                if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
                 {
-                    var f = modules.Where(x => x.ClassName == item.Module.ClassName && x.Area?.AreaName == item.Module.Area?.AreaName).FirstOrDefault();
-                    var a = f?.Actions.Where(x => x.MethodName == item.MethodName).FirstOrDefault();
-                    if (a?.IgnorePrivillege == true)
-                    {
-                        toremove.Add(item);
-                    }
+                    SelectedModule = modules.Where(x=>x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.Url == Entity.Url).FirstOrDefault().Module.FullName;
                 }
-                toremove.ForEach(x => m.Remove(x));
-                AllActions = m.ToListItems(y => y.ActionName, y => y.ID);
-                SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => x.ModuleId == this.Entity.ModuleId && x.ActionId != null).Select(x => x.ActionId.Value).ToList();
+                else
+                {
+                    SelectedModule = modules.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.Url == Entity.Url).FirstOrDefault().Module.FullName;
+                }
+                var m = modules.Where(x=>x.FullName == SelectedModule).SelectMany(x=>x.Actions).Where(x=> x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
+                AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
+                SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y=>y.Value).Contains(x.Url)  && x.IsInside == true && x.FolderOnly==false).Select(x => x.Url).ToList();
             }
 
 
@@ -101,8 +93,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == false)
             {
-                Entity.ActionId = null;
-                Entity.ModuleId = null;
                 if (Entity.Url != null && Entity.Url != "")
                 {
                     if (Entity.DomainId == null)
@@ -124,10 +114,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
 
-                if (Entity.ModuleId != null && Entity.FolderOnly == false)
+                if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
+                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     List<FrameworkAction> otherActions = null;
-                    var mainAction = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.MethodName == "Index").SingleOrDefault();
+                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x=>x.Actions).Where(x=> x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null)
                     {
                         MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
@@ -147,7 +138,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     ndc.SaveChanges();
 
-                    Entity.ActionId = mainAction.ID;
                     Entity.Url = "/" + mainAction.Module.ClassName + "/" + mainAction.MethodName;
                     if (mainAction.Module.Area != null)
                     {
@@ -155,15 +145,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     Entity.ModuleName = mainAction.Module.ModuleName;
 
-                    otherActions = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.ID != Entity.ActionId).ToList();
+                    otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
                     int order = 1;
                     foreach (var action in otherActions)
                     {
-                        if (SelectedActionIDs.Contains(action.ID))
+                        if (SelectedActionIDs.Contains(action.Url))
                         {
                             FrameworkMenu menu = new FrameworkMenu();
-                            menu.ActionId = action.ID;
-                            menu.ModuleId = action.ModuleId;
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
                             menu.Parent = Entity;
@@ -191,7 +179,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 else
                 {
                     Entity.Children = null;
-                    Entity.ModuleId = null;
                     Entity.Url = null;
                 }
             }
@@ -209,8 +196,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == false)
             {
-                Entity.ActionId = null;
-                Entity.ModuleId = null;
                 if (Entity.Url != null && Entity.Url != "")
                 {
                     if (Entity.DomainId == null)
@@ -232,32 +217,44 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
 
-                if (Entity.ModuleId != null && Entity.FolderOnly == false)
+                if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
+                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     List<FrameworkAction> otherActions = null;
-                    var mainAction =  DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.MethodName == "Index").SingleOrDefault();
+                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null)
                     {
                         MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
                         return;
                     }
-                    Entity.ActionId = mainAction.ID;
+                    var ndc = DC.ReCreate();
+                    var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
+                    foreach (var oldid in oldIDs)
+                    {
+                        try
+                        {
+                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
+                            ndc.Set<FrameworkMenu>().Attach(fp);
+                            ndc.DeleteEntity(fp);
+                        }
+                        catch { }
+                    }
+                    ndc.SaveChanges();
+
                     Entity.Url = "/" + mainAction.Module.ClassName + "/" + mainAction.MethodName;
-                    Entity.ModuleName = mainAction.Module.ModuleName;
                     if (mainAction.Module.Area != null)
                     {
                         Entity.Url = "/" + mainAction.Module.Area.Prefix + Entity.Url;
                     }
+                    Entity.ModuleName = mainAction.Module.ModuleName;
 
-                    otherActions = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == this.Entity.ModuleId && x.ID != Entity.ActionId).ToList();
+                    otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
                     int order = 1;
                     foreach (var action in otherActions)
                     {
-                        if (SelectedActionIDs.Contains(action.ID))
+                        if (SelectedActionIDs.Contains(action.Url))
                         {
                             FrameworkMenu menu = new FrameworkMenu();
-                            menu.ActionId = action.ID;
-                            menu.ModuleId = action.ModuleId;
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
                             menu.Parent = Entity;
@@ -285,7 +282,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 else
                 {
                     Entity.Children = null;
-                    Entity.ModuleId = null;
                     Entity.Url = null;
                 }
 

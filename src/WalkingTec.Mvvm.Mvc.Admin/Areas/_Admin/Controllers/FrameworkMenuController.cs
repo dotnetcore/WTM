@@ -170,24 +170,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         [ActionDescription("获取动作")]
-        public JsonResult GetActionsByModelId(Guid Id)
+        public JsonResult GetActionsByModelId(string Id)
         {
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var m = DC.Set<FrameworkAction>().Include(x => x.Module.Area).Where(x => x.ModuleId == Id && x.MethodName != "Index").ToList();
-            List<FrameworkAction> toremove = new List<FrameworkAction>();
-            foreach (var item in m)
-            {
-                var f = modules.Where(x => x.ClassName == item.Module.ClassName && x.Area?.AreaName == item.Module.Area?.AreaName).FirstOrDefault();
-                var a = f?.Actions.Where(x => x.MethodName == item.MethodName).FirstOrDefault();
-                if (a?.IgnorePrivillege == true)
-                {
-                    toremove.Add(item);
-                }
-            }
-            toremove.ForEach(x => m.Remove(x));
-            var actions = m.ToListItems(y => y.ActionName, y => y.ID);
-            actions.ForEach(x => x.Selected = true);
-            return Json(actions);
+            var m = modules.Where(x => x.FullName == Id && x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
+            var AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
+            AllActions.ForEach(x => x.Selected = true);
+            return Json(AllActions);
         }
 
         [ActionDescription("同步模块")]

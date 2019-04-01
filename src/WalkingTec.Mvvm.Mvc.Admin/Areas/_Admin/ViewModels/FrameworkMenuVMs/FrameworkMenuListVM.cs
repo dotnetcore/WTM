@@ -62,14 +62,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             string rv = "";
             if (item.FolderOnly == false)
             {
-                if (item.IsInside == true && item.ActionId != null)
+                if (item.IsInside == true)
                 {
                     
-                    var others = item.Children.ToList();
+                    var others = item.Children?.ToList();
                     rv += UIService.MakeCheckBox(item.Allowed, "主页面", "menu_" + item.ID, "1");
-                    foreach (var c in others)
+                    if (others != null)
                     {
-                        rv += UIService.MakeCheckBox(c.Allowed, c.ActionName, "menu_" + c.ID, "1");
+                        foreach (var c in others)
+                        {
+                            rv += UIService.MakeCheckBox(c.Allowed, c.ActionName, "menu_" + c.ID, "1");
+                        }
                     }
                 }
                 else
@@ -89,7 +92,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Edit, "修改菜单", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Delete, "删除菜单", "_Admin"),
                 this.MakeStandardAction("FrameworkMenu", GridActionStandardTypesEnum.Details, "详细信息", "_Admin"),
-                this.MakeAction("FrameworkMenu", "SyncModel","同步模块", "同步模块",  GridActionParameterTypesEnum.NoId,"_Admin").SetShowDialog(false),
                 this.MakeAction( "FrameworkMenu", "UnsetPages", "检查页面", "未配置的页面",GridActionParameterTypesEnum.NoId, "_Admin").SetIconCls("icon-check"),
                 this.MakeAction("FrameworkMenu", "RefreshMenu", "刷新菜单", "刷新菜单",  GridActionParameterTypesEnum.NoId,"_Admin").SetShowDialog(false).SetIconCls("icon-refresh"),
                 };
@@ -123,7 +125,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             
             var data = DC.Set<FrameworkMenu>().ToList();
-            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.ActionId == null || x.Url.EndsWith("/Index")).ToList();
+            var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || x.Url.EndsWith("/Index")).ToList();
             topdata.ForEach((x) => { int l = x.GetLevel(); for (int i = 0; i < l; i++) { x.PageName = "&nbsp;&nbsp;&nbsp;&nbsp;" + x.PageName; } });
             if (SearcherMode == ListVMSearchModeEnum.Custom2)
             {
@@ -151,8 +153,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     ExtraOrder = order++,
                     ParentID = x.ParentId,
                     Parent = x.Parent,
-                    ModelId = x.ModuleId,
-                    ActionId = x.ActionId,
                     IsInside = x.IsInside,
                     HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false,
                    Allowed = allowed.Contains(x.ID),
@@ -214,8 +214,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public bool HasChild { get; set; }
         public string IconClass { get; set; }
-        public Guid? ModelId { get; set; }
-        public Guid? ActionId { get; set; }
         public IEnumerable<FrameworkMenu_ListView> Children { get; set; }
         public FrameworkMenu Parent { get; set; }
         public Guid? ParentID { get; set; }

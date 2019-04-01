@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var m = GlobalServices.GetRequiredService<GlobalData>().AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
+            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {
