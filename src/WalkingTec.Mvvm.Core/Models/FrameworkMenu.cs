@@ -34,6 +34,8 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "权限" )]
         public List<FunctionPrivilege> Privileges { get; set; }
 
+        public string ClassName { get; set; }
+        public string MethodName { get; set; }
         //[Display(Name = "动作" )]
         //public Guid? ActionId { get; set; }
 

@@ -24,7 +24,7 @@ export class InsertForm extends React.Component<any, any> {
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
-            <FormItem {...props} fieId="Entity.ModuleName" hidden={!IsInside} />
+            <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
             <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
@@ -64,7 +64,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
-            <FormItem {...props} fieId="Entity.ModuleName" hidden={!IsInside} />
+            <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
             <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
@@ -97,7 +97,7 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
         return <InfoShellLayout >
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
             <FormItem {...props} fieId="Entity.Url" layout="row" />
-            <FormItem {...props} fieId="Entity.ModuleName" />
+            <FormItem {...props} fieId="SelectedModule" />
             <FormItem {...props} fieId="SelectedActionIDs" />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />

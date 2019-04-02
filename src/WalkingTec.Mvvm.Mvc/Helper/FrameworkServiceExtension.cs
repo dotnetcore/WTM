@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -215,11 +216,12 @@ namespace WalkingTec.Mvvm.Mvc
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
             }
+            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
             var cs = configs.ConnectionStrings.Select(x => x.Value);
             foreach (var item in cs)
             {
                 var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
-                dc.DataInit(gd.AllModule).Wait();
+                dc.DataInit(gd.AllModule,test != null).Wait();
             }
             return app;
         }

@@ -29,15 +29,15 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public FrameworkMenuVM Get(Guid id)
+        public FrameworkMenuVM2 Get(Guid id)
         {
-            var vm = CreateVM<FrameworkMenuVM>(id);
+            var vm = CreateVM<FrameworkMenuVM2>(id);
             return vm;
         }
 
         [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add(FrameworkMenuVM vm)
+        public IActionResult Add(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkMenuVM vm)
+        public IActionResult Edit(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -165,7 +165,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
+            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {
@@ -175,7 +175,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
             }
             toremove.ForEach(x => m.Remove(x));
-            var actions = m.ToListItems(y => y.ActionName, y => y.ID);
+            var actions = m.ToListItems(y => y.ActionName, y => y.MethodName);
             actions.ForEach(x => x.Selected = true);
             return Ok(actions);
         }
