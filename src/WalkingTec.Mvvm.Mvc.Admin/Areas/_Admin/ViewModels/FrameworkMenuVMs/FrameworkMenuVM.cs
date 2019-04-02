@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             toremove.ForEach(x => m.Remove(x));
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
-            if (Entity.Url != null)
+            if (Entity.Url != null && Entity.IsInside == true)
             {
                 SelectedModule = modules.Where(x => x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.Url == Entity.Url).FirstOrDefault().Module.FullName;
                 var mm = modules.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
@@ -80,14 +80,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void Validate()
         {
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
-            if (mainAction != null)
+            if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                var test = DC.Set<FrameworkMenu>().Where(x => x.Url == mainAction.Url && x.ID != Entity.ID).FirstOrDefault();
-                if (test != null)
+                var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
+                if (mainAction != null)
                 {
-                    MSD.AddModelError(" error", "该模块已经配置过了");
+                    var test = DC.Set<FrameworkMenu>().Where(x => x.Url == mainAction.Url && x.ID != Entity.ID).FirstOrDefault();
+                    if (test != null)
+                    {
+                        MSD.AddModelError(" error", "该模块已经配置过了");
+                    }
                 }
             }
             base.Validate();

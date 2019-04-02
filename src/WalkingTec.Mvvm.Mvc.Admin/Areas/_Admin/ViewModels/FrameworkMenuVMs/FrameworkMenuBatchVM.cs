@@ -11,19 +11,23 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         public FrameworkMenuBatchVM()
         {
-            ListVM = new FrameworkMenuListVM();
-            LinkedVM = new FrameworkMenu_BatchEdit();
         }
         protected override void InitVM()
         {
-            var topMenu = DC.Set<FrameworkMenu>().Where(x => x.ParentId == null).ToList().FlatTree();
-            List<Guid> pids = new List<Guid>();
-            foreach (var item in this.Ids)
-            {
-                pids.AddRange(DC.Set<FrameworkMenu>().Where(x => x.ParentId == item).Select(x => x.ID).ToList());
-            }
+        }
 
-            LinkedVM.AllParents = topMenu.Where(x => !this.Ids.Contains(x.ID) && !pids.Contains(x.ID)).ToList().ToListItems(y => y.PageName, x=>x.ID);
+        public override bool DoBatchDelete()
+        {
+            if(Ids != null)
+            {
+                foreach (var item in Ids)
+                {
+                    FrameworkMenu f = new FrameworkMenu { ID = item };
+                    DC.CascadeDelete(f);
+                }
+            }
+            DC.SaveChanges();
+            return true;
         }
     }
 

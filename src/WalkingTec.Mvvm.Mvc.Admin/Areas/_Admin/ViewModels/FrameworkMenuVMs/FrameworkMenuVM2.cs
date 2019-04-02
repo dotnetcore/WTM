@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var pids = Entity.GetAllChildrenIDs(DC);
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-            if (Entity.Url != null)
+            if (Entity.Url != null && Entity.IsInside == true)
             {
                 SelectedModule = modules.Where(x => x.IsApi == true && x.ClassName == Entity.ClassName).FirstOrDefault().ClassName;
                 var urls = modules.Where(x => x.ClassName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
@@ -48,11 +48,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void Validate()
         {
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.ClassName) && x.ID != Entity.ID).FirstOrDefault();
-            if (test != null)
+            if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                MSD.AddModelError(" error", "该模块已经配置过了");
+                var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
+                if (test != null)
+                {
+                    MSD.AddModelError(" error", "该模块已经配置过了");
+                }
             }
             base.Validate();
         }
@@ -103,7 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         catch { }
                     }
                     ndc.SaveChanges();
-                    var mo = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.Url = "/" + mo.ClassName;
                     Entity.ModuleName = mo.ModuleName;
                     Entity.ClassName = mo.ClassName;
@@ -187,7 +190,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-                    var mo = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                    var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.Url = "/" + mo.ClassName;
                     Entity.ModuleName = mo.ModuleName;
                     Entity.ClassName = mo.ClassName;

@@ -171,10 +171,13 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
-                ListVM.DoSearch();
-                foreach (var item in ListVM.GetEntityList())
+                ListVM?.DoSearch();
+                if (ListVM != null)
                 {
-                    item.BatchError = ErrorMessage.Where(x => x.Key == item.ID).Select(x => x.Value).FirstOrDefault();
+                    foreach (var item in ListVM?.GetEntityList())
+                    {
+                        item.BatchError = ErrorMessage.Where(x => x.Key == item.ID).Select(x => x.Value).FirstOrDefault();
+                    }
                 }
                 MSD.AddModelError("", "数据已被使用，无法删除");
             }
