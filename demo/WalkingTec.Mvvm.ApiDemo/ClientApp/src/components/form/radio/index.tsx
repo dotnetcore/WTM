@@ -110,7 +110,7 @@ export class WtmRadio extends React.Component<IAppProps, any> {
                     value: x.key
                 }
             }),
-            value: this.props.value,
+            value: lodash.toString(this.props.value),
             // defaultValue: this.props.value
         }
         if (this.props.display) {
@@ -123,7 +123,6 @@ export class WtmRadio extends React.Component<IAppProps, any> {
             }
             return <span></span>
         }
-        // throw "aaaaa"
         return (
             <Spin spinning={this.state.loading}>
                 <RadioGroup

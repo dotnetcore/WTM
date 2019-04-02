@@ -72,7 +72,7 @@ export class WtmTransfer extends React.Component<IAppProps, any> {
         }
         // 回填 已选择数据
         if (lodash.isArray(this.props.value) && lodash.isString(this.props.dataKey)) {
-            targetKeys = this.props.value.map(x => (lodash.get(x, this.props.dataKey)))
+            targetKeys = this.props.value.map(x => (lodash.toString(lodash.get(x, this.props.dataKey))))
         }
         if (this.Unmount) return
         this.setState({

@@ -1,11 +1,11 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
+﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
+import { Observable } from 'rxjs';
 import Regular from 'utils/Regular';
 import Request from 'utils/Request';
-
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -19,92 +19,101 @@ export default {
     editModels(props?): WTM.FormItem {
         return {
             /** 页面名称 */
-            "Entity.PageName":{
+            "Entity.PageName": {
                 label: "页面名称",
                 rules: [{ "required": true, "message": "页面名称不能为空" }],
                 formItem: <Input placeholder="请输入 页面名称" />
             },
             /** 模块名称 */
-            "Entity.ModuleName":{
+            "Entity.ModuleName": {
                 label: "模块名称",
                 rules: [],
                 formItem: <WtmSelect placeholder="选择模块"
-                    dataSource={[
-                        { Text: "日志管理", Value: "ActionLog" },
-                        { Text: "用户管理", Value: "FrameworkUser" },
-                        { Text: "角色管理", Value: "FrameworkRole" }
-                    ]} />               
+                    dataSource={new Observable((sub) => {
+                        import("pages/index").then(pages => {
+                            const PagesList = [];
+                            lodash.map(pages.default, (item) => {
+                                if (item.controller) {
+                                    PagesList.push({ Text: item.name, Value: item.controller })
+                                }
+                            })
+                            sub.next(PagesList);
+                            sub.complete();
+                        })
+
+                    })} />
             },
             /** 动作名称 */
             "SelectedActionIDs": {
                 label: "动作名称",
-                rules: [],                
+                rules: [],
                 formItem: <WtmSelect placeholder="选择动作"
                     multiple
                     linkageModels="Entity.ModuleName"
                     dataSource={(parentid) => Request.cache({
-                        url: "/api/_FrameworkMenu/GetActionsByModel", body: { "ModelName" : parentid } })}
+                        url: "/api/_FrameworkMenu/GetActionsByModel", body: { "ModelName": parentid }
+                    })}
                 />
             },
-           /** 目录 */
-            "Entity.FolderOnly":{
+            /** 目录 */
+            "Entity.FolderOnly": {
                 label: "目录",
                 rules: [{ "required": true, "message": "目录不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 继承 */
-            "Entity.IsInherit":{
+            "Entity.IsInherit": {
                 label: "继承",
                 rules: [{ "required": true, "message": "继承不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 菜单显示 */
-            "Entity.ShowOnMenu":{
+            "Entity.ShowOnMenu": {
                 label: "菜单显示",
                 rules: [{ "required": true, "message": "菜单显示不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 公开 */
-            "Entity.IsPublic":{
+            "Entity.IsPublic": {
                 label: "公开",
                 rules: [{ "required": true, "message": "公开不能为空" }],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 顺序 */
-            "Entity.DisplayOrder":{
+            "Entity.DisplayOrder": {
                 label: "顺序",
                 rules: [{ "required": true, "message": "顺序不能为空" }],
                 formItem: <InputNumber placeholder="请输入 顺序" />
             },
             /** 内部地址 */
-            "Entity.IsInside":{
+            "Entity.IsInside": {
                 label: "地址类型",
                 rules: [{ "required": true, "message": "内部地址不能为空" }],
-                formItem: <WtmRadio 
+                formItem: <WtmRadio
                     dataSource={[
                         { Text: "内部地址", Value: true },
                         { Text: "外部地址", Value: false },
-                    ]} />               
+                    ]} />
             },
             /** Url */
-            "Entity.Url":{
+            "Entity.Url": {
                 label: "Url",
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
             /** 图标 */
-            "Entity.IConId":{
+            "Entity.IConId": {
                 label: "图标",
                 rules: [],
                 formItem: <WtmUploadImg />
             },
             /** 父目录 */
-            "Entity.ParentId":{
+            "Entity.ParentId": {
                 label: "父目录",
                 rules: [],
-                formItem: <WtmSelect placeholder="父目录" 
-                    dataSource={Request.cache({ url: "/api/_FrameworkMenu/GetFolders" })} 
-                /> 
+                formItem: <WtmSelect placeholder="父目录"
+                    dataSource={Request.cache({ url: "/api/_FrameworkMenu/GetFolders" })}
+                />
             }
 
         }
