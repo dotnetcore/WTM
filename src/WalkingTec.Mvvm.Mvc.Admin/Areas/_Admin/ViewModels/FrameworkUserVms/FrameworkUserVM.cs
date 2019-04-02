@@ -38,27 +38,33 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            SelectedRolesIDs = Entity.UserRoles.Select(x => x.RoleId).ToList();
-            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.RoleName);
-            SelectedGroupIDs = Entity.UserGroups.Select(x => x.GroupId).ToList();
-            AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.GroupName);
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            {
+                SelectedRolesIDs = Entity.UserRoles.Select(x => x.RoleId).ToList();
+                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.RoleName);
+                SelectedGroupIDs = Entity.UserGroups.Select(x => x.GroupId).ToList();
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.GroupName);
+            }
 
         }
 
         public override void DoAdd()
         {
-            if (SelectedRolesIDs != null)
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                foreach (var roleid in SelectedRolesIDs)
+                if (SelectedRolesIDs != null)
                 {
-                    Entity.UserRoles.Add(new FrameworkUserRole { RoleId = roleid });
+                    foreach (var roleid in SelectedRolesIDs)
+                    {
+                        Entity.UserRoles.Add(new FrameworkUserRole { RoleId = roleid });
+                    }
                 }
-            }
-            if (SelectedGroupIDs != null)
-            {
-                foreach (var groupid in SelectedGroupIDs)
+                if (SelectedGroupIDs != null)
                 {
-                    Entity.UserGroups.Add(new FrameworkUserGroup { GroupId = groupid });
+                    foreach (var groupid in SelectedGroupIDs)
+                    {
+                        Entity.UserGroups.Add(new FrameworkUserGroup { GroupId = groupid });
+                    }
                 }
             }
             Entity.IsValid = true;
@@ -68,22 +74,25 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override void DoEdit(bool updateAllFields = false)
         {
-            if(SelectedRolesIDs == null || SelectedRolesIDs.Count == 0)
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
-            }
-            else
-            {
-                Entity.UserRoles = new List<FrameworkUserRole>();
-                SelectedRolesIDs.ForEach(x => Entity.UserRoles.Add(new FrameworkUserRole { ID = Guid.NewGuid(), UserId = Entity.ID, RoleId = x }));
-            }
-            if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
-            {
-                FC.Add("Entity.SelectedGroupIDs.DONOTUSECLEAR", "true");
-            }
-            else
-            {
-                SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
+                if (SelectedRolesIDs == null || SelectedRolesIDs.Count == 0)
+                {
+                    FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
+                }
+                else
+                {
+                    Entity.UserRoles = new List<FrameworkUserRole>();
+                    SelectedRolesIDs.ForEach(x => Entity.UserRoles.Add(new FrameworkUserRole { ID = Guid.NewGuid(), UserId = Entity.ID, RoleId = x }));
+                }
+                if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
+                {
+                    FC.Add("Entity.SelectedGroupIDs.DONOTUSECLEAR", "true");
+                }
+                else
+                {
+                    SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
+                }
             }
             base.DoEdit(updateAllFields);
         }
