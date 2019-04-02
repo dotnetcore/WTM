@@ -58,25 +58,25 @@ export default {
             /** 目录 */
             "Entity.FolderOnly": {
                 label: "目录",
-                rules: [{ "required": true, "message": "目录不能为空" }],
+                rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 继承 */
             "Entity.IsInherit": {
                 label: "继承",
-                rules: [{ "required": true, "message": "继承不能为空" }],
+                rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 菜单显示 */
             "Entity.ShowOnMenu": {
                 label: "菜单显示",
-                rules: [{ "required": true, "message": "菜单显示不能为空" }],
+                rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 公开 */
             "Entity.IsPublic": {
                 label: "公开",
-                rules: [{ "required": true, "message": "公开不能为空" }],
+                rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 顺序 */

@@ -29,7 +29,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
-            <FormItem {...props} fieId="Entity.ShowOnMenu" />
+            <FormItem {...props} fieId="Entity.ShowOnMenu" value={true}/>
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
             <FormItem {...props} fieId="Entity.IConId" />
