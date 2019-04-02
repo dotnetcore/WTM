@@ -30,14 +30,14 @@
     , frameworkrole: {
         name: '角色管理',
         path: '/frameworkrole',
-        controller: undefined,
+        controller: 'FrameworkRole',
         component: () => import('./frameworkrole').then(x => x.default)
     }
 
     , frameworkuserbase: {
         name: '用户管理',
         path: '/frameworkuserbase',
-        controller: 'frameworkuser',
+        controller: 'FrameworkUser',
         component: () => import('./frameworkuserbase').then(x => x.default)
     }
 

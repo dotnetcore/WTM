@@ -25,7 +25,7 @@ export default {
                 formItem: <Input placeholder="请输入 页面名称" />
             },
             /** 模块名称 */
-            "Entity.ModuleName": {
+            "SelectedModule": {
                 label: "模块名称",
                 rules: [],
                 formItem: <WtmSelect placeholder="选择模块"
@@ -49,7 +49,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder="选择动作"
                     multiple
-                    linkageModels="Entity.ModuleName"
+                    linkageModels="SelectedModule"
                     dataSource={(parentid) => Request.cache({
                         url: "/api/_FrameworkMenu/GetActionsByModel", body: { "ModelName": parentid }
                     })}

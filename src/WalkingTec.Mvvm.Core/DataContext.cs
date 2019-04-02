@@ -313,8 +313,9 @@ namespace WalkingTec.Mvvm.Core
         /// 数据初始化
         /// </summary>
         /// <param name="allModules"></param>
+        /// <param name="isSpa"></param>
         /// <returns>返回true即数据新建完成，进入初始化操作，返回false即数据库已经存在</returns>
-        public async virtual Task<bool> DataInit(object allModules)
+        public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
         {
             if (await Database.EnsureCreatedAsync())
             {
@@ -343,12 +344,12 @@ namespace WalkingTec.Mvvm.Core
                 if (Set<FrameworkMenu>().Any() == false)
                 {
                     var systemManagement = GetFolderMenu("系统管理", new List<FrameworkRole> { adminRole }, null);
-                    var logList = GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
-                    var userList = GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", new List<FrameworkRole> { adminRole }, null, 2);
-                    var roleList = GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", new List<FrameworkRole> { adminRole }, null, 3);
-                    var groupList = GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", new List<FrameworkRole> { adminRole }, null, 4);
-                    var menuList = GetMenu(AllModules, "_Admin", "FrameworkMenu", "Index", new List<FrameworkRole> { adminRole }, null, 5);
-                    var dpList = GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", new List<FrameworkRole> { adminRole }, null, 6);
+                    var logList = IsSpa ? GetMenu2(AllModules,"ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
+                    var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", new List<FrameworkRole> { adminRole }, null, 2);
+                    var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", new List<FrameworkRole> { adminRole }, null, 3);
+                    var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", new List<FrameworkRole> { adminRole }, null, 4);
+                    var menuList = IsSpa ? GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5) : GetMenu(AllModules, "_Admin", "FrameworkMenu", "Index", new List<FrameworkRole> { adminRole }, null, 5);
+                    var dpList = IsSpa ? GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6) : GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", new List<FrameworkRole> { adminRole }, null, 6);
                     if (logList != null)
                     {
                         systemManagement.Children.AddRange(new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList });
@@ -417,6 +418,29 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
+        private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
+        {
+            var acts = allModules.Where(x => x.ClassName == controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
+            if (menu != null)
+            {
+                menu.Url = "/" + acts[0].Module.ClassName;
+                menu.ModuleName = acts[0].Module.ModuleName;
+                menu.PageName = menu.ModuleName;
+                menu.ActionName = "主页面";
+                menu.ClassName = acts[0].Module.ClassName;
+                menu.MethodName = null;
+                for (int i = 0; i < acts.Count; i++)
+                {
+                    if (acts[i] != null)
+                    {
+                        menu.Children.Add(GetMenuFromAction(acts[i], false, allowedRoles, allowedUsers, (i + 1)));
+                    }
+                }
+            }
+            return menu;
+        }
+
         private FrameworkMenu GetMenuFromAction(FrameworkAction act, bool isMainLink, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder = 1)
         {
             if (act == null)
@@ -427,6 +451,8 @@ namespace WalkingTec.Mvvm.Core
             {
                 //ActionId = act.ID,
                 //ModuleId = act.ModuleId,
+                ClassName = act.Module.ClassName,
+                MethodName = act.MethodName,
                 Url = "/" + act.Module.ClassName + "/" + act.MethodName,
                 Privileges = new List<FunctionPrivilege>(),
                 ShowOnMenu = isMainLink,
