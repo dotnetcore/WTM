@@ -165,8 +165,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                     }
                     model.Validate();
-                    if (ctrl is BaseController)
-                    {
                         var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
                         if (ctrl.ModelState.IsValid)
                         {
@@ -183,7 +181,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                         }
                     }
-                }
             }
 
             base.OnActionExecuting(context);
