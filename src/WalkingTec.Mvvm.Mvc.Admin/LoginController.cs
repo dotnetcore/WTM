@@ -60,13 +60,19 @@ namespace WalkingTec.Mvvm.Admin.Api
             forapi.Roles = rv.Roles;
             forapi.Groups = rv.Groups;
             forapi.PhotoId = rv.PhotoId;
-            List<ComboSelectListItem> ms = new List<ComboSelectListItem>();
+            List<SimpleMenu> ms = new List<SimpleMenu>();
 
             var menus = DC.Set<FunctionPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                 .Select(x => x.MenuItem)
                 .Where(x => x.MethodName == null)
-                .GetSelectListItems(dpris, null, x => x.PageName, x => x.Url);
+                .Select(x => new SimpleMenu
+                {
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url
+                });
             ms.AddRange(menus);
 
             List<string> urls = new List<string>();
@@ -129,5 +135,16 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok();
         }
 
+    }
+
+    public class SimpleMenu
+    {
+        public string Id { get; set; }
+
+        public string ParentId { get; set; }
+
+        public string Text { get; set; }
+
+        public string Url { get; set; }
     }
 }
