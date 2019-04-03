@@ -173,6 +173,7 @@ function itemToDisplay(props, config) {
         case "Editor":
         case "DatePicker":
         case "Cascader":
+        case "Radio":
             render = formItem;// React.cloneElement(model.formItem, {});
             break;
         default:
