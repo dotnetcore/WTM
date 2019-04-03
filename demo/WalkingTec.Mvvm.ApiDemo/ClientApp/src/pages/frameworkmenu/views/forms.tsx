@@ -21,13 +21,12 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-       const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
-        console.log(IsInside);
+        const IsInside = lodash.get<string>(this.props.form.getFieldsValue(), "Entity.IsInside", 'true');
        return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
-            <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
-            <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
-            <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
+            <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside=='true'} />
+            <FormItem {...props} fieId="SelectedModule" hidden={IsInside=='false'} />
+            <FormItem {...props} fieId="SelectedActionIDs" hidden={IsInside=='false'} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
@@ -62,13 +61,12 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
-        console.log(IsInside);
+        const IsInside = lodash.get<string>(this.props.form.getFieldsValue(), "Entity.IsInside", 'true');
         return <InfoShellLayout>
-            <FormItem {...props} fieId="Entity.IsInside" layout="row" />
-            <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
-            <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
-            <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
+            <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
+            <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside == 'true'} />
+            <FormItem {...props} fieId="SelectedModule" hidden={IsInside == 'false'} />
+            <FormItem {...props} fieId="SelectedActionIDs" hidden={IsInside == 'false'} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
@@ -97,12 +95,12 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
             display: true,
         }
-        const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
-       return <InfoShellLayout >
-           <FormItem {...props} fieId="Entity.IsInside" layout="row" />
-           <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
-           <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
-           <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
+        const IsInside = lodash.get<string>(this.props.form.getFieldsValue(), "Entity.IsInside", 'true');
+        return <InfoShellLayout>
+            <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
+            <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside == 'true'} />
+            <FormItem {...props} fieId="SelectedModule" hidden={IsInside == 'false'} />
+            <FormItem {...props} fieId="SelectedActionIDs" hidden={IsInside == 'false'} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
