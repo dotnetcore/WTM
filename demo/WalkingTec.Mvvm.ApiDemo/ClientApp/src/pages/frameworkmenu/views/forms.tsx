@@ -20,7 +20,7 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const IsInside = lodash.get(this.props.form.getFieldsValue(), "Entity.IsInside", 'true') === "true";
+        const IsInside = lodash.toString(lodash.get(this.props.form.getFieldsValue(), "Entity.IsInside", 'true')) === "true";
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
@@ -29,7 +29,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
-            <FormItem {...props} fieId="Entity.ShowOnMenu" value={true}/>
+            <FormItem {...props} fieId="Entity.ShowOnMenu" value={true} />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
             <FormItem {...props} fieId="Entity.IConId" />
