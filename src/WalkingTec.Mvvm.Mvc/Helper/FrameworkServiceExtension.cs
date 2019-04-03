@@ -174,26 +174,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
-            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
-            foreach (var m in gd.AllModule)
-            {
-                if (m.IsApi == true)
-                {
-                    foreach (var a in m.Actions)
-                    {
-                        var u = lg.GetPathByAction(a.MethodName, m.ClassName);
-                        if(u == null)
-                        {
-                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0 });
-                        }
-                        if (u.EndsWith("/0"))
-                        {
-                            u = u.Substring(0, u.Length - 2);
-                        }
-                        a.Url = u;
-                    }
-                }
-            }
             app.UseResponseCaching();
             app.Use(async (context, next) =>
             {
@@ -235,6 +215,29 @@ namespace WalkingTec.Mvvm.Mvc
                         template: "{controller=Home}/{action=Index}/{id?}");
                 });
             }
+
+            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+            foreach (var m in gd.AllModule)
+            {
+                if (m.IsApi == true)
+                {
+                    foreach (var a in m.Actions)
+                    {
+                        var u = lg.GetPathByAction(a.MethodName, m.ClassName);
+                        if (u == null)
+                        {
+                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0 });
+                        }
+                        if (u.EndsWith("/0"))
+                        {
+                            u = u.Substring(0, u.Length - 2);
+                        }
+                        a.Url = u;
+                    }
+                }
+            }
+
+
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
             var cs = configs.ConnectionStrings.Select(x => x.Value);
             foreach (var item in cs)
@@ -597,7 +600,7 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = new List<string>();
             foreach (var ctrl in controllers)
             {
-                if(typeof(BaseApiController).IsAssignableFrom(ctrl))
+                if (typeof(BaseApiController).IsAssignableFrom(ctrl))
                 {
                     continue;
                 }

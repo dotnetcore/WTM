@@ -27,12 +27,6 @@ const columns = [
         dataIndex: "RoleRemark",
         title: "备注",
         render: columnsRender 
-    },
-
-    {
-        dataIndex: "CodeAndName_view",
-        title: "UserRoles",
-        render: columnsRender 
     }
 
 ]

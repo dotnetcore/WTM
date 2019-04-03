@@ -27,12 +27,6 @@ const columns = [
         dataIndex: "GroupRemark",
         title: "备注",
         render: columnsRender 
-    },
-
-    {
-        dataIndex: "UsersCount",
-        title: "包含用户",
-        render: columnsRender 
     }
 
 ]
