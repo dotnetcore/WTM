@@ -98,7 +98,41 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                return Ok(LoginUserInfo);
+                LoginUserInfo forapi = new LoginUserInfo();
+                forapi.Id = LoginUserInfo.Id;
+                forapi.ITCode = LoginUserInfo.ITCode;
+                forapi.Name = LoginUserInfo.Name;
+                forapi.Roles = LoginUserInfo.Roles;
+                forapi.Groups = LoginUserInfo.Groups;
+                forapi.PhotoId = LoginUserInfo.PhotoId;
+                List<SimpleMenu> ms = new List<SimpleMenu>();
+                var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
+
+                var menus = DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Select(x => x.MenuItem)
+                    .Where(x => x.MethodName == null)
+                    .Select(x => new SimpleMenu
+                    {
+                        Id = x.ID.ToString().ToLower(),
+                        ParentId = x.ParentId.ToString().ToLower(),
+                        Text = x.PageName,
+                        Url = x.Url
+                    });
+                ms.AddRange(menus);
+
+                List<string> urls = new List<string>();
+                urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Select(x => x.MenuItem)
+                    .Where(x => x.MethodName != null)
+                    .Select(x => x.Url)
+                    );
+                urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+                forapi.Attributes = new Dictionary<string, object>();
+                forapi.Attributes.Add("Menus", menus);
+                forapi.Attributes.Add("Actions", urls);
+                return Ok(forapi);
             }
         }
 
