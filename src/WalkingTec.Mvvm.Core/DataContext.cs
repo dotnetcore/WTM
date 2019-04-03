@@ -453,7 +453,7 @@ namespace WalkingTec.Mvvm.Core
                 //ModuleId = act.ModuleId,
                 ClassName = act.Module.ClassName,
                 MethodName = act.MethodName,
-                Url = "/" + act.Module.ClassName + "/" + act.MethodName,
+                Url = act.Url,
                 Privileges = new List<FunctionPrivilege>(),
                 ShowOnMenu = isMainLink,
                 FolderOnly = false,
@@ -463,10 +463,6 @@ namespace WalkingTec.Mvvm.Core
                 DisplayOrder = displayOrder,
                 CreateTime = DateTime.Now
             };
-            if (act.Module.Area != null)
-            {
-                menu.Url = "/" + act.Module.Area.Prefix + menu.Url;
-            }
             if (isMainLink)
             {
                 menu.PageName = act.Module.ModuleName;

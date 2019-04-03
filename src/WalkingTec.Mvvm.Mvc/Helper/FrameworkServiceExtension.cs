@@ -174,7 +174,26 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
-
+            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+            foreach (var m in gd.AllModule)
+            {
+                if (m.IsApi == true)
+                {
+                    foreach (var a in m.Actions)
+                    {
+                        var u = lg.GetPathByAction(a.MethodName, m.ClassName);
+                        if(u == null)
+                        {
+                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0 });
+                        }
+                        if (u.EndsWith("/0"))
+                        {
+                            u = u.Substring(0, u.Length - 2);
+                        }
+                        a.Url = u;
+                    }
+                }
+            }
             app.UseResponseCaching();
             app.Use(async (context, next) =>
             {
@@ -407,7 +426,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var modules = new List<FrameworkModule>();
 
-            foreach (var ctrl in controllers)
+           foreach (var ctrl in controllers)
             {
                 var pubattr = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
@@ -578,6 +597,10 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = new List<string>();
             foreach (var ctrl in controllers)
             {
+                if(typeof(BaseApiController).IsAssignableFrom(ctrl))
+                {
+                    continue;
+                }
                 var area = string.Empty;
                 var ControllerName = ctrl.Name.Replace("Controller", string.Empty);
                 var includeAll = false;

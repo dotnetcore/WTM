@@ -38,18 +38,28 @@ namespace WalkingTec.Mvvm.Core
         public bool IgnorePrivillege { get; set; }
 
         [NotMapped]
+        private string _url;
+        [NotMapped]
         public string Url
         {
             get
             {
-                if (this.Module.Area != null)
+                if (_url == null)
                 {
-                    return "/" + this.Module.Area.Prefix + "/" + this.Module.ClassName + "/" + this.MethodName;
+                    if (this.Module.Area != null)
+                    {
+                        _url = "/" + this.Module.Area.Prefix + "/" + this.Module.ClassName + "/" + this.MethodName;
+                    }
+                    else
+                    {
+                        _url = "/" + this.Module.ClassName + "/" + this.MethodName;
+                    }
                 }
-                else
-                {
-                    return "/" + this.Module.ClassName + "/" + this.MethodName;
-                }
+                return _url;
+            }
+            set
+            {
+                _url = value;
             }
         }
     }

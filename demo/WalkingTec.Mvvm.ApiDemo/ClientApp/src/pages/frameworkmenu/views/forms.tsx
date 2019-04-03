@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
+import { bool } from 'prop-types';
 
 @DialogFormDes({
     onFormSubmit(values) {
@@ -20,8 +21,9 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const IsInside = lodash.toString(lodash.get(this.props.form.getFieldsValue(), "Entity.IsInside", 'true')) === "true";
-        return <InfoShellLayout>
+       const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
+        console.log(IsInside);
+       return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
             <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
@@ -60,7 +62,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const IsInside = lodash.toString(lodash.get(this.props.form.getFieldsValue(), "Entity.IsInside", 'true')) === 'true';
+        const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
+        console.log(IsInside);
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
@@ -94,11 +97,12 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
             display: true,
         }
-        return <InfoShellLayout >
-            <FormItem {...props} fieId="Entity.IsInside" layout="row" />
-            <FormItem {...props} fieId="Entity.Url" layout="row" />
-            <FormItem {...props} fieId="SelectedModule" />
-            <FormItem {...props} fieId="SelectedActionIDs" />
+        const IsInside = lodash.get<boolean>(this.props.form.getFieldsValue(), "Entity.IsInside", true);
+       return <InfoShellLayout >
+           <FormItem {...props} fieId="Entity.IsInside" layout="row" />
+           <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
+           <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
+           <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
             <FormItem {...props} fieId="Entity.PageName" />
             <FormItem {...props} fieId="Entity.ParentId" />
             <FormItem {...props} fieId="Entity.FolderOnly" />
