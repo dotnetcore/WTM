@@ -26,7 +26,9 @@ class PageHeader extends React.Component<any, any> {
         return (
             <Header className="app-layout-header" style={{ marginLeft: this.props.LayoutStore.collapsedWidth }}>
                 <Row>
-                    <Col span={4}><Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
+                    <Col span={4}>
+                        <Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />
+                    </Col>
                     <Col span={20} style={{ textAlign: "right" }}>
                         <Row type="flex" justify="end" style={{ height: "100%" }}>
                             <Col style={{ height: "100%", marginRight: 10 }}>

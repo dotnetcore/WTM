@@ -26,6 +26,7 @@ interface IAppProps {
     display?: boolean;
     /** 联动模型 key 值 */
     linkageModels?: string;
+    onChange?: (value, props?) => void;
     [key: string]: any;
 }
 @DesError
@@ -162,13 +163,17 @@ export class WtmSelect extends React.Component<IAppProps, any> {
     }
     // filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1
     handleChange = (targetKeys) => {
+        if (this.props.onChange) {
+
+        }
         // 多选 返回 值 为数组 的情况下 有 dataKey 重组 数据
         if (this.props.dataKey && lodash.isArray(targetKeys)) {
             targetKeys = targetKeys.map(x => (
                 { [this.props.dataKey]: x }
             ))
+            // return this.props.onChange(targetKeys, { select:lodash.fi  form: this.props.form });
         }
-        this.props.onChange && this.props.onChange(targetKeys);
+        this.props.onChange(targetKeys, { select: lodash.find(this.state.mockData, [this.key, targetKeys]), form: this.props.form, });
     }
     getDefaultValue(config: SelectProps) {
         const { value, dataKey } = this.props;
