@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Select, notification, Spin } from 'antd';
+import { Select, notification, Spin, Tag } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -142,8 +142,13 @@ export class WtmSelect extends React.Component<IAppProps, any> {
                     // 加载数据 联动
                     if (!lodash.isNil(linkageModelsValue)) {
                         const data = await this.onLoadingData(this.props.dataSource(linkageModelsValue));
-                        if (!lodash.some(data, [this.key, this.props.value])) {
-                            setFields({ [this.props.id]: { value: undefined } })
+                        // 多选
+                        if (this.props.multiple) {
+
+                        } else {
+                            if (!lodash.some(data, [this.key, this.props.value])) {
+                                setFields({ [this.props.id]: { value: undefined } })
+                            }
                         }
                     } else {
                         setFields({ [this.props.id]: { value: undefined } })
@@ -214,12 +219,16 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         if (this.props.display) {
             if (!this.state.loading) {
                 // 多选的
-                if (lodash.isArray(config.defaultValue)) {
-                    return lodash.intersectionBy(this.state.mockData, (config.defaultValue as string[]).map(x => ({ key: x })), "key").map(x => x.title).join(",")
+                if (lodash.isArray(config.value)) {
+                    return lodash.intersectionBy(this.state.mockData, (config.value as string[]).map(x => ({ key: x })), "key").map(x => {
+                        return <Tag color="geekblue" key={x.key}>{x.title}</Tag>
+                    })
                 }
-                return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.defaultValue)]), "title")}</span>
+                return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.value)]), "title")}</span>
             }
-            return <span></span>
+            return <Spin spinning={this.state.loading}>
+                <span> </span>
+            </Spin>
         }
         return (
             <Spin spinning={this.state.loading}>

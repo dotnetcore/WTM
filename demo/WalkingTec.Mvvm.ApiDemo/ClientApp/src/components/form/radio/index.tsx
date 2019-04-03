@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Radio, Spin } from 'antd';
+import { Radio, Spin, Tag } from 'antd';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
 import React from 'react';
@@ -111,15 +111,17 @@ export class WtmRadio extends React.Component<IAppProps, any> {
                 }
             }),
             value: lodash.toString(this.props.value),
-            // defaultValue: this.props.value
+            // defaultValue: lodash.toString(this.props.value)
         }
         if (this.props.display) {
             if (!this.state.loading) {
                 // 多选的
-                if (lodash.isArray(config.defaultValue)) {
-                    return lodash.intersectionBy(this.state.mockData, (config.defaultValue as string[]).map(x => ({ key: x })), "key").map(x => x.title).join(",")
+                if (lodash.isArray(config.value)) {
+                    return lodash.intersectionBy(this.state.mockData, (config.value as string[]).map(x => ({ key: x })), "key").map(x => {
+                        return <Tag color="geekblue" key={x.key}>{x.title}</Tag>
+                    })
                 }
-                return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.defaultValue)]), "title")}</span>
+                return <span>{lodash.get(lodash.find(this.state.mockData, ["key", lodash.toString(config.value)]), "title")}</span>
             }
             return <span></span>
         }
