@@ -8,8 +8,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { observable, runInAction, action } from 'mobx';
 import lodash from 'lodash';
-import subMenu from 'subMenu.json';
-
+import Store from 'store/index';
 const { Content } = Layout;
 @observer
 class Pages extends React.Component<any, any> {
@@ -122,7 +121,7 @@ class TabsPagesStore {
   @action
   pushTabPane(pathname) {
     if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
-    const title = lodash.get(lodash.find(subMenu, ['Path', pathname]), 'Name', "Null")
+    const title = lodash.get(lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]), 'Text', "Null")
     this.tabPane.push({
       title: title,
       pathname,

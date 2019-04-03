@@ -5,13 +5,12 @@
  * @modify date 2018-09-12 18:52:54
  * @desc [description]
 */
-import { notification } from 'antd';
+import Exception from 'components/other/Exception';
 import GlobalConfig from 'global.config';
 import lodash from 'lodash';
-import PageStore from '../dataSource/index'
-import User from './user';
-import { runInAction } from 'mobx';
-
+import React from 'react';
+import PageStore from '../dataSource/index';
+import Menu from './menu';
 class Store {
     constructor() {
 
@@ -23,15 +22,12 @@ class Store {
      */
     onPassageway(props) {
         const { location } = props;
-        // 超级管理员直接放行
-        if (User.User.role == "administrator") {
-            return true;
-        }
         // 查找用户菜单配置中是否有当前路径
-        return lodash.includes(User.User.subMenu, location.pathname)
+        return lodash.some(Menu.ParallelMenu, ["Url", location.pathname])
     }
 }
-export default new Store();
+const AuthorizeStore = new Store();
+export default AuthorizeStore
 /**
  * 权限装饰器
  * @param PageParams 
@@ -43,19 +39,21 @@ export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
                 super(props);
                 // PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
             }
-            // shouldComponentUpdate() {
-            //     return false
-            // }
-            componentWillMount() {
+            // // shouldComponentUpdate() {
+            // //     return false
+            // // }
+            // componentWillMount() {
 
-                // console.log(this.props)
-                // 假设 所有 为 false
-                // notification.info({ message: "假设有权限 2 秒后" });
-                super.componentWillMount && super.componentWillMount()
-            }
+            //     // console.log(this.props)
+            //     // 假设 所有 为 false
+            //     // notification.info({ message: "假设有权限 2 秒后" });
+            //     super.componentWillMount && super.componentWillMount()
+            // }
             render(): any {
-                console.log("render")
-                return super.render();
+                if (AuthorizeStore.onPassageway(this.props)) {
+                    return super.render();
+                }
+                return <Exception type="404" desc={<h3>无法匹配 <code>{this.props.location.pathname}</code></h3>} />
             }
         }
     }

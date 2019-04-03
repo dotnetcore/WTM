@@ -75,8 +75,8 @@ class UserMenu extends React.Component<any, any> {
             } placement="bottomCenter">
                 <div className="app-user-menu" >
                     <div>
-                        <Avatar size="large" icon="user" src={Store.User.User.PhotoId ? RequestFiles.onFileUrl(Store.User.User.PhotoId) : globalConfig.default.avatar} />
-                        &nbsp;<span>{Store.User.User.Name}</span>
+                        <Avatar size="large" icon="user" src={Store.User.UserInfo.PhotoId ? RequestFiles.onFileUrl(Store.User.UserInfo.PhotoId) : globalConfig.default.avatar} />
+                        &nbsp;<span>{Store.User.UserInfo.Name}</span>
                     </div>
                 </div>
             </Dropdown>
