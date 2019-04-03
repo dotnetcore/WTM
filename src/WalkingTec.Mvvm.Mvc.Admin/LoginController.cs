@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
@@ -50,7 +51,23 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .ToList();
             rv.FunctionPrivileges = pris;
             LoginUserInfo = rv;
-            return Ok(LoginUserInfo);
+
+            LoginUserInfo forapi = new LoginUserInfo();
+            forapi.Id = user.ID;
+            forapi.ITCode = user.ITCode;
+            forapi.Name = user.Name;
+            forapi.Roles = rv.Roles;
+            forapi.Groups = rv.Groups;
+            forapi.PhotoId = rv.PhotoId;
+            List<string> urls = new List<string>();
+            urls.AddRange(DC.Set<FunctionPrivilege>()
+                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                .Select(x => x.MenuItem.Url)
+                .ToList());
+            urls.AddRange(GlobaInfo.AllModule.Where(x=>x.IsApi == true).SelectMany(x=>x.Actions).Where(x=>x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x=>x.Url));
+            forapi.Attributes = new Dictionary<string, object>();
+            forapi.Attributes.Add("Urls", urls);
+            return Ok(forapi);
         }
 
         [HttpGet("CheckLogin/{id}")]
