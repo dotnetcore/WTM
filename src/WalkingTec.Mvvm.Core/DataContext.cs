@@ -424,7 +424,7 @@ namespace WalkingTec.Mvvm.Core
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
-                menu.Url = "/" + acts[0].Module.ClassName;
+                menu.Url = "/" + acts[0].Module.ClassName.ToLower();
                 menu.ModuleName = acts[0].Module.ModuleName;
                 menu.PageName = menu.ModuleName;
                 menu.ActionName = "主页面";

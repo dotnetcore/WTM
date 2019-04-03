@@ -74,8 +74,8 @@
                 "Key": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
                 "Name": "用户管理",
                 "Icon": "menu-fold",
-                "Path": "/frameworkuserbase",
-                "Component": "frameworkuserbase",
+                "Path": "/frameworkuser",
+                "Component": "frameworkuser",
                 "Action": [],
                 "Children": []
             }

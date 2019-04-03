@@ -36,9 +36,9 @@
 
     , frameworkuserbase: {
         name: '用户管理',
-        path: '/frameworkuserbase',
+        path: '/frameworkuser',
         controller: 'FrameworkUser',
-        component: () => import('./frameworkuserbase').then(x => x.default)
+        component: () => import('./frameworkuser').then(x => x.default)
     }
 
     , frameworkmenu: {

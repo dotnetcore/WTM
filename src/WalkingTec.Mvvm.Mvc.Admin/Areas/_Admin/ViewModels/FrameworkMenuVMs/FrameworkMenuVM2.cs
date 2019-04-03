@@ -107,7 +107,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     ndc.SaveChanges();
                     var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
-                    Entity.Url = "/" + mo.ClassName;
                     Entity.ModuleName = mo.ModuleName;
                     Entity.ClassName = mo.ClassName;
                     Entity.MethodName = null;
@@ -191,7 +190,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
                     var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
-                    Entity.Url = "/" + mo.ClassName;
                     Entity.ModuleName = mo.ModuleName;
                     Entity.ClassName = mo.ClassName;
                     Entity.MethodName = null;
