@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Core.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,14 +60,26 @@ namespace WalkingTec.Mvvm.Admin.Api
             forapi.Roles = rv.Roles;
             forapi.Groups = rv.Groups;
             forapi.PhotoId = rv.PhotoId;
+            List<ComboSelectListItem> ms = new List<ComboSelectListItem>();
+
+            var menus = DC.Set<FunctionPrivilege>()
+                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                .Select(x => x.MenuItem)
+                .Where(x => x.MethodName == null)
+                .GetSelectListItems(dpris, null, x => x.PageName, x => x.Url);
+            ms.AddRange(menus);
+
             List<string> urls = new List<string>();
             urls.AddRange(DC.Set<FunctionPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .Select(x => x.MenuItem.Url)
-                .ToList());
-            urls.AddRange(GlobaInfo.AllModule.Where(x=>x.IsApi == true).SelectMany(x=>x.Actions).Where(x=>x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true).Select(x=>x.Url));
+                .Select(x => x.MenuItem)
+                .Where(x => x.MethodName != null)
+                .Select(x => x.Url)
+                );
+            urls.AddRange(GlobaInfo.AllModule.Where(x=>x.IsApi == true).SelectMany(x=>x.Actions).Where(x=>(x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x=>x.Url));
             forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Urls", urls);
+            forapi.Attributes.Add("Menus", menus);
+            forapi.Attributes.Add("Actions", urls);
             return Ok(forapi);
         }
 
