@@ -40,8 +40,8 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             loading: "加载中"
         },
         response: {
-            code: 'code',
-            data: 'data'
+            code: 'Code',
+            data: 'Data'
         },
         ajax: [],
         data: [],
@@ -76,7 +76,7 @@ layui.define(['jquery', 'laytpl', 'layer'], function (e) {
             success: function (resp) {
                 return 200 != eval('resp.' + _config.response.code) ? layer.msg(eval('resp.' + _config.response.data)) : _config.data[_self.index] = eval('resp.' + _config.response.data), _self.renderData(_config.data[_self.index])
             },
-            error: function () {
+            error: function (a,b,c) {
                 //hint.error("请求失败")
             },
             complete: function () {
