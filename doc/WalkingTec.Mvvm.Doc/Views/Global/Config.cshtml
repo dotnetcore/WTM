@@ -8,12 +8,12 @@
     {
     "ConnectionStrings": [
     {
-    "Key": "default",
-    "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "Key": "default",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
     },
     {
-    "Key": "test",
-    "Value": "Server=(localdb)\\mssqllocaldb;Database=test;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "Key": "test",
+        "Value": "Server=(localdb)\\mssqllocaldb;Database=test;Trusted_Connection=True;MultipleActiveResultSets=true"
     }
     ],
     "DBType": "SqlServer",
@@ -22,30 +22,33 @@
     "LogExceptionOnly": false,
     "IsQuickDebug": true,
     "RPP": 20,
-    "SaveFileMode": "Database",
-    "UploadDir": "",
-    "PageMode": "Tab", 
+    "PageMode": "Tab",
+    "FileUploadOptions": {
+        "UploadLimit": 20971520,
+        "SaveFileMode": "Database", //上传文件的保存方式，可选Database,local,dfs
+        "UploadDir": "D:\\" //当上传文件选择Local时，指定硬盘目录
+    },
     "DFSServer": {
-    "StorageMaxConnection": 100,
-    "TrackerMaxConnection": 100,
-    "ConnectionTimeout": 100,
-    "ConnectionLifeTime": 100,
-    "Trackers": [
-    {
-    "IP": "127.0.0.1",
-    "Port": 22122
-    }
-    ]
+        "StorageMaxConnection": 100,
+        "TrackerMaxConnection": 100,
+        "ConnectionTimeout": 100,
+        "ConnectionLifeTime": 100,
+        "Trackers": [
+            {
+                "IP": "127.0.0.1",
+                "Port": 22122
+            }
+        ]
     },
     "AppSettings": [
-    {
-    "Key": "aaa",
-    "Value": "bbb"
-    },
-    {
-    "Key": "ccc",
-    "Value": "ddd"
-    }
+        {
+            "Key": "aaa",
+            "Value": "bbb"
+        },
+        {
+            "Key": "ccc",
+            "Value": "ddd"
+        }
     ]
     }
 </wt:code>
