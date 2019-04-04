@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Core
         public List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user)
         {
             List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
-            if (user.Roles.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges.Where(x=>x.RelateId == null).FirstOrDefault() == null)
+            if (user.Roles?.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges?.Where(x=>x.RelateId == null).FirstOrDefault() == null)
             {
                 rv = dc.Set<T>().Where(x=>user.DataPrivileges.Select(y=>y.RelateId).Contains(x.ID)).GetSelectListItems(null, _where, _displayField, null, ignorDataPrivilege: true);
             }
