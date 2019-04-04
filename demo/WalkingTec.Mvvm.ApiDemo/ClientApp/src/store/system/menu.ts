@@ -23,9 +23,9 @@ class Store {
      * 获取菜单
      */
     async onInitMenu(menu: any[]) {
-        // if (globalConfig.development) {
-        //     menu = await import("../../subMenu.json").then(x => x.default);
-        // }
+        if (globalConfig.development) {
+            menu = await import("../../subMenu.json").then(x => x.default);
+        }
         menu = lodash.map(menu, data => {
             // 跨域页面
             if (Regular.url.test(data.Url)) {
