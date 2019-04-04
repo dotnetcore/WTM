@@ -6,16 +6,25 @@
  * @desc [description]
 */
 import Exception from 'components/other/Exception';
-import GlobalConfig from 'global.config';
 import lodash from 'lodash';
 import React from 'react';
 import PageStore from '../dataSource/index';
 import Menu from './menu';
+import User from './user';
+import { Request } from 'utils/Request';
+import globalConfig from 'global.config';
+
 class Store {
     constructor() {
 
     }
-
+    /**
+     * 认证动作
+     * @param url 
+     */
+    onAuthorizeActions(url) {
+        return lodash.some(lodash.get(User.UserInfo, 'Attributes.Actions', []), ["Url", url])
+    }
     /**
      * 认证通道 
      * @param props  
@@ -65,8 +74,18 @@ declare type UrlKeyType = "search" | "details" | "insert" | "update" | "delete" 
 /**
  * 认证动作
  * @param PageStore 页面 Store
- * @param UrlsKey 按钮对应 URL 权限
+ * @param UrlsKey 按钮对应 URL 权限 在 PageStore apis 中 未匹配 将 拿原始值 比对。
  */
 export function onAuthorizeActions(PageStore: PageStore, UrlsKey: UrlKeyType | any) {
-    return lodash.get(PageStore, `Urls.${UrlsKey}.url`, GlobalConfig.development)// 开发 环境 默认返回 true
+    if (globalConfig.development) {
+        return true;
+    }
+    const actionUrl = lodash.get(PageStore, `options.Apis.${UrlsKey}.url`);
+    if (actionUrl) {
+        return AuthorizeStore.onAuthorizeActions(Request.compatibleUrl(globalConfig.target, actionUrl));
+    }
+    else {
+        return AuthorizeStore.onAuthorizeActions(UrlsKey);
+    }
+    // return lodash.get(PageStore, `Urls.${UrlsKey}.url`, GlobalConfig.development)// 开发 环境 默认返回 true
 }
