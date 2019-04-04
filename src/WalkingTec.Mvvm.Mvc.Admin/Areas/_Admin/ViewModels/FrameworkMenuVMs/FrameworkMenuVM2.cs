@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (Entity.Url != null && Entity.IsInside == true)
             {
                 SelectedModule = modules.Where(x => x.IsApi == true && x.ClassName == Entity.ClassName).FirstOrDefault().ClassName;
-                var urls = modules.Where(x => x.ClassName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
+                var urls = modules.Where(x => x.ClassName == SelectedModule && x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
                 SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => urls.Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.MethodName).ToList();
             }
         }
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.PageName = action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
-                            menu.Url = "/" + action.Url;
+                            menu.Url = action.Url;
                             menu.ClassName = action.Module.ClassName;
                             menu.MethodName = action.MethodName;
                             Entity.Children.Add(menu);
@@ -214,7 +214,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.PageName = action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
-                            menu.Url = "/" + action.Url;
+                            menu.Url = action.Url;
                             menu.ClassName = action.Module.ClassName;
                             menu.MethodName = action.MethodName;
                             Entity.Children.Add(menu);

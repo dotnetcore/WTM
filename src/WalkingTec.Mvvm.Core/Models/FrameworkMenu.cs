@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -80,8 +81,10 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "父目录" )]
         public Guid? ParentId { get; set; }
         [Display(Name = "父目录")]
+        [JsonIgnore]
         public FrameworkMenu Parent { get; set; }
         [Display(Name = "子项" )]
+        [JsonIgnore]
         public List<FrameworkMenu> Children { get; set; }
 
         #endregion
