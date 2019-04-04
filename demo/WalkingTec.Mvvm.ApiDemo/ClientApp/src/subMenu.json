@@ -1,121 +1,80 @@
 ﻿[
     {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2935",
-        "Name": "测试",
-        "Icon": "menu-fold",
-        "Path": "/tmp",
-        "Component": "tmp",
-        "Action": [],
-        "Children": []
+        "ParentId": null,
+        "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935",
+        "Text": "测试",
+        "Url": "/tmp"
     },
     {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2934",
-        "Name": "外部页面",
-        "Icon": "menu-fold",
-        "Path": "https://www.baidu.com/",
-        "Component": "tmp",
-        "Action": [],
-        "Children": []
+        "ParentId": null,
+        "Id": "301f84d3-5a77-4b30-92c4-9c723ed2934",
+        "Text": "外部页面",
+        "Url": "https://www.baidu.com/"
     },
     {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2933",
-        "Name": "静态页面",
-        "Icon": "menu-fold",
-        "Path": "@StaticPage/pages/test.html",
-        "Component": "tmp",
-        "Action": [],
-        "Children": []
+        "ParentId": null,
+        "Id": "301f84d3-5a77-4b30-92c4-9c723ed2933",
+        "Text": "静态页面",
+        "Url": "@StaticPage/pages/test.html"
     },
     {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2937",
-        "Name": "动态页面",
-        "Icon": "menu-fold",
-        "Path": "@StaticPage/old/Pindex#/_admin/dataprivilege",
-        "Component": "tmp",
-        "Action": [],
-        "Children": []
+        "ParentId": null,
+        "Id": "301f84d3-5a77-4b30-92c4-9c723ed2937",
+        "Text": "动态页面",
+        "Url": "@StaticPage/old/Pindex#/_admin/dataprivilege"
     },
     {
-        "Key": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
-        "Name": "系统管理",
-        "Icon": "menu-fold",
-        "Path": "/",
-        "Component": "",
-        "Action": [],
-        "Children": [
-            {
-                "Key": "8b982671-cf11-4be8-b745-8903bd1df431",
-                "Name": "日志管理",
-                "Icon": "menu-fold",
-                "Path": "/actionlog",
-                "Component": "actionlog",
-                "Action": [],
-                "Children": []
-            },
-            {
-                "Key": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
-                "Name": "用户组管理",
-                "Icon": "menu-fold",
-                "Path": "/frameworkgroup",
-                "Component": "frameworkgroup",
-                "Action": [],
-                "Children": []
-            },
-            {
-                "Key": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
-                "Name": "角色管理",
-                "Icon": "menu-fold",
-                "Path": "/frameworkrole",
-                "Component": "frameworkrole",
-                "Action": [],
-                "Children": []
-            },
-            {
-                "Key": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
-                "Name": "用户管理",
-                "Icon": "menu-fold",
-                "Path": "/frameworkuser",
-                "Component": "frameworkuser",
-                "Action": [],
-                "Children": []
-            }
-        ]
+        "ParentId": null,
+        "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Text": "系统管理",
+        "Url": null
     },
     {
-        "Key": "fe01c7b5-49c1-45a8-b363-6a9917ea7630",
-        "Name": "地区管理",
-        "Icon": "menu-fold",
-        "Path": "/city",
-        "Component": "city",
-        "Action": [],
-        "Children": []
+        "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Id": "8b982671-cf11-4be8-b745-8903bd1df431",
+        "Text": "日志管理",
+        "Url": "/actionlog"
     },
     {
-        "Key": "b093dca3-867d-466f-b412-57e744eca07a",
-        "Name": "学校管理",
-        "Icon": "menu-fold",
-        "Path": "/school",
-        "Component": "school",
-        "Action": [],
-        "Children": []
+        "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Id": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
+        "Text": "用户组管理",
+        "Url": "/frameworkgroup"
     },
     {
-        "Key": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
-        "Name": "数据权限",
-        "Icon": "menu-fold",
-        "Path": "/dataprivilege",
-        "Component": "dataprivilege",
-        "Action": [],
-        "Children": []
+        "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Id": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+        "Text": "角色管理",
+        "Url": "/frameworkrole"
+    },
+    {
+        "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+        "Id": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
+        "Text": "用户管理",
+        "Url": "/frameworkuser"
+    },
+    {
+        "ParentId": null,
+        "Id": "fe01c7b5-49c1-45a8-b363-6a9917ea7630",
+        "Text": "地区管理",
+        "Url": "/city"
+    },
+    {
+        "ParentId": null,
+        "Id": "b093dca3-867d-466f-b412-57e744eca07a",
+        "Text": "学校管理",
+        "Url": "/school"
+    },
+    {
+        "ParentId": null,
+        "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
+        "Text": "数据权限",
+        "Url": "/dataprivilege"
+    },
+    {
+        "ParentId": null,
+        "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
+        "Text": "菜单管理",
+        "Url": "/frameworkmenu"
     }
-,{
-        "Key": "a975f408-043e-41d6-bbb5-a403ed234acd",
-        "Name": "菜单管理",
-        "Icon": "menu-fold",
-        "Path": "/frameworkmenu",
-        "Component": "frameworkmenu",
-        "Action": [],
-        "Children": []
-    }
-
 ]
