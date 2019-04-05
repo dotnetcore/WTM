@@ -23,7 +23,7 @@ class Store {
      * @param url 
      */
     onAuthorizeActions(url) {
-        return lodash.some(lodash.get(User.UserInfo, 'Attributes.Actions', []), ["Url", url])
+        return lodash.includes(User.Actions, lodash.toLower(url))
     }
     /**
      * 认证通道 
@@ -80,10 +80,12 @@ export function onAuthorizeActions(PageStore: PageStore, UrlsKey: UrlKeyType | a
     if (globalConfig.development) {
         return true;
     }
+    // 查找配置中的 值 
     const actionUrl = lodash.get(PageStore, `options.Apis.${UrlsKey}.url`);
     if (actionUrl) {
         return AuthorizeStore.onAuthorizeActions(Request.compatibleUrl(globalConfig.target, actionUrl));
     }
+    // 未查找到。使用原始 值 比较
     else {
         return AuthorizeStore.onAuthorizeActions(UrlsKey);
     }

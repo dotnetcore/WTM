@@ -26,10 +26,13 @@ class Store {
     // 用户信息
     @persist("object")
     @observable UserInfo: any = {};
+    /** 操作接口数组 */
+    Actions = [];
     @action
     onSetUserInfo(userInfo) {
         this.UserInfo = userInfo;
         this.isLogin = true;
+        this.Actions = lodash.map(lodash.get(userInfo, 'Attributes.Actions', []), lodash.toLower);
         Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []))
     }
     @action.bound
