@@ -29,11 +29,13 @@ class Store {
     /** 操作接口数组 */
     Actions = [];
     @action
-    onSetUserInfo(userInfo) {
+    async onSetUserInfo(userInfo) {
         this.UserInfo = userInfo;
-        this.isLogin = true;
         this.Actions = lodash.map(lodash.get(userInfo, 'Attributes.Actions', []), lodash.toLower);
-        Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []))
+        await Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []));
+        runInAction(() => {
+            this.isLogin = true;
+        })
     }
     @action.bound
     async CheckLogin() {
