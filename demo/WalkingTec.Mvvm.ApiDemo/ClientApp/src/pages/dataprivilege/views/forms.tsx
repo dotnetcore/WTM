@@ -24,11 +24,10 @@ export class InsertForm extends React.Component<any, any> {
         const groupvalue = this.props.form.getFieldValue("DpType") || '0';
         const Isgroup = lodash.eq(groupvalue, '0')
         const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
-        console.log(this.props.form.getFieldValue("DpType"))
         return <InfoShellLayout>
-            <FormItem {...props} fieId="DpType" layout="row" value='{groupvalue}' />
+            <FormItem {...props} fieId="DpType" layout="row" value={groupvalue} />
             <FormItem {...props} fieId="Entity.TableName" />
-            <FormItem {...props} fieId="IsAll" value={Isall} />
+            <FormItem {...props} fieId="IsAll" value={true} />
             <FormItem {...props} fieId="SelectedActionIDs" hidden={Isall} />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup}/>
             <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup}/>
