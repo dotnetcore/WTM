@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             vm.ExtraDir = vm.EntryDir + "\\" + vm.ExtraDir;
             vm.MainNs = vm.ExtraNS;
             vm.MainDir = vm.ExtraDir + "\\" + vm.MainNs;
-
+            string propertydir = vm.MainDir + "\\Properties";
             if (Directory.Exists(vm.ExtraDir) == false)
             {
                 Directory.CreateDirectory(vm.ExtraDir);
@@ -54,6 +54,10 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             if (Directory.Exists(vm.MainDir) == false)
             {
                 Directory.CreateDirectory(vm.MainDir);
+            }
+            if (Directory.Exists(propertydir) == false)
+            {
+                Directory.CreateDirectory(propertydir);
             }
             vm.WriteDefaultFiles();
             vm.DoSetup();
