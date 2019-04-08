@@ -33,8 +33,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         protected override void InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
-            AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
-            TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            {
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
+                TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            }
             SelectedItemsID = new List<Guid?>();
             List<Guid?> rids = null;
             if (DpType == DpTypeEnum.User)

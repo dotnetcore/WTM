@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using WalkingTec.Mvvm.ApiDemo.Models;
+using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 
@@ -20,7 +23,11 @@ namespace WalkingTec.Mvvm.ApiDemo
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(x =>
                 {
-                    x.AddFrameworkService();
+                    var pris = new List<IDataPrivilege>
+                        {
+                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
+                        };
+                    x.AddFrameworkService(dataPrivilegeSettings: pris);
                     x.AddLayui();
                     x.AddSwaggerGen(c =>
                     {

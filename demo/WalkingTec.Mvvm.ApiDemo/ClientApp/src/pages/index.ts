@@ -47,12 +47,12 @@
         controller: 'FrameworkMenu',
         component: () => import('./frameworkmenu').then(x => x.default)
     }
+    , dataprivilege: {
+        name: '菜单管理',
+        path: '/dataprivilege',
+        controller: 'DataPrivilege',
+        component: () => import('./dataprivilege').then(x => x.default)
+    }
     /**WTM**/
-
-
-
-
-
-
 
 }
