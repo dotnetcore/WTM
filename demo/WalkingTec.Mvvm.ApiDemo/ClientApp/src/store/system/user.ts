@@ -26,11 +26,16 @@ class Store {
     // 用户信息
     @persist("object")
     @observable UserInfo: any = {};
+    /** 操作接口数组 */
+    Actions = [];
     @action
-    onSetUserInfo(userInfo) {
+    async onSetUserInfo(userInfo) {
         this.UserInfo = userInfo;
-        this.isLogin = true;
-        Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []))
+        this.Actions = lodash.map(lodash.get(userInfo, 'Attributes.Actions', []), lodash.toLower);
+        await Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []));
+        runInAction(() => {
+            this.isLogin = true;
+        })
     }
     @action.bound
     async CheckLogin() {
@@ -38,10 +43,10 @@ class Store {
             const userid = lodash.get(this.UserInfo, 'Id');
             if (userid) {
                 const res = await Request.ajax("/api/_login/CheckLogin/" + userid).toPromise();
-                this.onSetUserInfo(res);
+                await this.onSetUserInfo(res);
             }
         } catch (error) {
-            console.log(error)
+            this.outLogin(false);
             throw error
         } finally {
             runInAction(() => this.loding = false)
@@ -55,7 +60,7 @@ class Store {
                 body: params,
                 headers: { 'Content-Type': null }
             }).toPromise();
-            this.onSetUserInfo(res);
+            await this.onSetUserInfo(res);
         } catch (error) {
             console.log(error)
             throw error
@@ -65,11 +70,15 @@ class Store {
         }
     }
     @action.bound
-    async outLogin() {
+    async outLogin(Logout = true) {
         this.isLogin = false;
+        this.UserInfo = null;
         const userid = lodash.get(this.UserInfo, 'Id');
-        if (userid) {
-            Request.ajax("/api/_login/Logout/" + userid).toPromise();
+        if (Logout && userid) {
+            try {
+                Request.ajax("/api/_login/Logout/" + userid).toPromise();
+            } catch (error) {
+            }
         }
         window.localStorage.clear();
     }

@@ -38,15 +38,13 @@ export default class App extends React.Component<any, any> {
     })
   }
   render() {
-    let selectedKeys = "/", openKeys = "";
-    //  == "/" && selectedKeys == "/";
-    const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
-    selectedKeys = lodash.get(find, 'Id', '/');
-    openKeys = lodash.get(find, 'ParentId', '');
-    let config = {
-      selectedKeys: [selectedKeys],
-      defaultOpenKeys: [openKeys]
+    const config = {
+      selectedKeys: [],
+      defaultOpenKeys: []
     };
+    const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
+    config.selectedKeys.push(lodash.get(find, 'Id', '/'));
+    config.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
     let width = this.props.LayoutStore.collapsedWidth;
     let title = GlobalConfig.default.title;
     if (this.props.LayoutStore.collapsed) {
@@ -61,7 +59,6 @@ export default class App extends React.Component<any, any> {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={[selectedKeys]}
             {...config}
             style={{ borderRight: 0, width }}
             inlineCollapsed={this.props.LayoutStore.collapsed}
