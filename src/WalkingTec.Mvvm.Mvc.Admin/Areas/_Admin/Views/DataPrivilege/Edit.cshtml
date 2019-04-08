@@ -8,7 +8,7 @@
         </wt:selector>
     </wt:row>
     <wt:row id="userrow">
-        <wt:textbox field="UserItCode" disabled="true" />
+        <wt:textbox field="UserItCode" search-url="/_Admin/FrameworkUser/GetUserById" />
     </wt:row>
     <wt:row id="grouprow">
         <wt:combobox field="Entity.GroupId" items="AllGroups" disabled="true" />
@@ -23,7 +23,7 @@
     DbTypeChange({ value: $('#DpType').val() });
     IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
     function DbTypeChange(data) {
-        if (data.value == "UserGroup") {
+        if (data.value == 0) {
             $('#userrow').css('display', 'none');
             $('#grouprow').css('display', 'block');
         }

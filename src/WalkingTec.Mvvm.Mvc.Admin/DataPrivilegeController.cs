@@ -129,5 +129,21 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             return Ok(AllItems);
         }
+
+        [AllRights]
+        [HttpGet("GetPrivileges")]
+        public ActionResult GetPrivileges()
+        {
+            var rv = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            return Ok(rv);
+        }
+
+        [AllRights]
+        [HttpGet("GetUserGroups")]
+        public ActionResult GetUserGroups()
+        {
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
+            return Ok(rv);
+        }
     }
 }
