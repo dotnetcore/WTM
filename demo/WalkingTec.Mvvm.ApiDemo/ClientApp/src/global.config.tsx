@@ -1,10 +1,13 @@
-import { notification, Modal } from 'antd';
+import { Modal, notification } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
-import { configure, observable } from 'mobx';
 import lodash from 'lodash';
-
+import { configure, observable } from 'mobx';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 import "./global.less";
+// 日期中午
+moment.locale('zh-cn');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 notification.config({
