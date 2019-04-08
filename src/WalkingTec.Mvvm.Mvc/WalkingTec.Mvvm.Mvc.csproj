@@ -49,6 +49,7 @@
     <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
     <None Remove="SetupFiles\SetupIndex.txt" />
     <None Remove="SetupFiles\SetupIndex1.txt" />
+    <None Remove="SetupFiles\Spa\Launch.txt" />
     <None Remove="SetupFiles\Spa\Program.txt" />
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
@@ -74,6 +75,7 @@
     <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
     <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />

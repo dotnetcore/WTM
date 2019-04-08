@@ -5,7 +5,7 @@
         <wt:radio field="Entity.IsInside" yes-text="内部" no-text="外部" change-func="MenuTypeChange(data)" />
     </wt:row>
     <wt:row id="modelrow">
-        <wt:combobox field="SelectedModule" items="AllModules" link-field="SelectedActionIDs" trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)" />
+        <wt:combobox field="SelectedModule" items="AllModules" link-field="SelectedActionIDs" trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)"/>
         <wt:checkbox field="SelectedActionIDs" items="AllActions" />
     </wt:row>
     <wt:row id="urlrow">

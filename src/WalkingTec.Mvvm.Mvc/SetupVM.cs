@@ -45,6 +45,21 @@ namespace WalkingTec.Mvvm.Mvc
         public string ExtraDir { get; set; }
         public string ExtraNS { get; set; }
         public bool IsNew { get; set; }
+
+        public int _port;
+        public int Port
+        {
+            get
+            {
+                if(_port == 0)
+                {
+                    Random r = new Random();
+                    _port = r.Next(5000, 9999);        
+                }
+                return _port;
+            }
+        }
+
         public string _mainDir;
         [ValidateNever()]
         public string MainDir
@@ -331,6 +346,17 @@ EndProject
                 File.WriteAllText($"{MainDir}\\Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
                 var config = File.ReadAllText($"{MainDir}\\ClientApp\\src\\global.config.tsx");
                 File.WriteAllText($"{MainDir}\\ClientApp\\src\\global.config.tsx", config.Replace("title: \"WalkingTec MVVM\",", $"title: \"{MainNs}\","), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}\\ClientApp\\src\\setupProxy.js", $@"
+const proxy = require('http-proxy-middleware');
+
+module.exports = (app) => {{
+    app.use(proxy('/api', {{
+        target: 'http://localhost:{Port}/',
+        changeOrigin: true,
+        logLevel: ""debug""
+    }}));
+}};
+", Encoding.UTF8);
 
             }
 
@@ -416,7 +442,10 @@ EndProject
         {
             File.WriteAllText($"{MainDir}\\{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
             File.WriteAllText($"{ExtraDir}\\{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
-
+            if (UI == UIEnum.React)
+            {
+                File.WriteAllText($"{MainDir}\\Properties\\launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
+            }
         }
     }
 }

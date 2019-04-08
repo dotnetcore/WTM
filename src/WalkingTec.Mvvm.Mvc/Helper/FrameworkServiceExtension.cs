@@ -52,7 +52,8 @@ namespace WalkingTec.Mvvm.Mvc
             var configBuilder =
                     new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables();
 
             if (webHostBuilderContext != null)
             {

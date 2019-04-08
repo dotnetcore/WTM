@@ -1,0 +1,88 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="前后端分离模式">
+    <p>虽然在我眼中，一个后台管理程序完全没有必要前后端分离，但是时代在发展，大家对于后台管理程序的界面要求也越来越高，产品经理们也在不断努力将ToC的交互性应用到ToB的管理程序中。
+    <p>一旦进行前后端分离，就不可避免的提高了人员成本，沟通成本和代码的复杂程度。</p>
+    <p>WTM的前后端分离模式定义了一套普遍适用的前后端接口规范，实现了前端、后端，api文档一键生成，最大限度的降低开发成本，提高开发效率</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="使用分离模式">
+    <wt:quote>
+        <p>你可以直接线上生成前后端分离的项目，点<a href="/setup" target="_blank">这里</a> 可以直接为你生成包含解决方案的zip包，下载，解压，vs打开即可</p>
+    </wt:quote>
+
+    <ul class="doc">
+        <li>
+            和不分离的项目类似，只是在运行setup的时候，选择React模式（后续也会支持VUE），如图<br /><br />
+            <img src="~/imgs/react1.png" /><br /><br />
+        </li>
+        <li>
+            生成完项目之后，按F5运行，第一次运行会下载很多javascrip的依赖包，时间较长请耐心等待，运行结果如图<br /><br />
+            <img src="~/imgs/react3.png" /><br /><br />
+            <wt:quote>
+                <p>建议使用淘宝的npm镜像来加快依赖包的安装速度</p>
+            </wt:quote>
+        </li>
+        <li>
+            通过右上角的菜单，我们可以启动代码生成器来根据model生成代码，同时可以访问接口的swagger文档<br />
+            关于如何使用代码生成器，请参考<a href="/#/QuickStart/FirstModule">第一个模块</a><br />
+            生成代码的步骤是相同的，只不过在前后端分离的模式下，会生成后台api和前台react页面
+        </li>
+
+    </ul>
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="WTM提供了什么">
+    <wt:quote>
+        WTM连通了前台UI，后台代码，和数据库操作。封装了Model,ViewModel,Controller,TagHelper,提供了大量实用的基类和方法，更重要的是它提供了各种常见场景的编程模型
+    </wt:quote>
+    <ol class="doc">
+        <li>
+            框架提供了4类ViewModel，涵盖了主流Web应用程序常见的功能，分别是：
+            <ul class="doc">
+                <li>BaseCRUDVM 提供最常见的数据增删改的功能</li>
+                <li>PagedListVM 提供分页列表以及导出的功能</li>
+                <li>ImportVM & TemplateVM 提供数据导入的功能</li>
+                <li>BatchVM 提供批量操作的功能</li>
+            </ul>
+        </li>
+        <li>
+            框架提供了数十种前台控件，包括了Form,Grid,Panel,Dialog等几乎所有常用控件，在不进行前后分离的情况下，后端人员也可以轻松写出漂亮的前台页面。目前前后端不分离的模式下，框架只支持Layui作为前端UI，后期我们会支持更多。
+        </li>
+        <li>
+            框架支持前后端分离模式，目前只有React，后续会支持VUE
+        </li>
+        <li>
+            框架提供了内置的用户，角色，用户组，数据权限，页面权限，菜单，日志，邮件，短信，文件等后台常用管理功能
+        </li>
+        <li>
+            框架支持单点登录，门户Portal，分布式数据库
+        </li>
+        <li>
+            框架提供了Redis,DFS等后台开发常用库的简化操作
+        </li>
+    </ol>
+</wt:fieldset>
+
+<wt:quote>
+    <p>初次使用框架的朋友如果遇到问题请先看<a href="/#/QuickStart/FAQ">FAQ</a>，如果解决不了欢迎来交流群提问，QQ交流群：694148336</p>
+</wt:quote>
+
+
+<h2 style="text-align:center">现在就点 <a href="/setup" target="_blank">这里</a> 立刻生成第一个WTM项目吧</h2>
+<br />
+<h2 style="text-align:center">
+    <a href="https://github.com/dotnetcore/wtm" target="_blank" style="background-color:#eee;background-image:linear-gradient(to bottom, #fcfcfc 0, #eee 100%);background-repeat:no-repeat;border:1px solid #d5d5d5;color:#333;padding:3px 10px 3px 8px;font-size:16px;line-height:22px">
+        <span width="20" style="width:20px;height:20px;font-size:16px;line-height:22px;box-sizing:border-box; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=')">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span>Star <cite id="githubstars"></cite></span>
+    </a>
+</h2>
+<script>
+    $.get("/_framework/GetGithubStarts", function (r) {
+        $("#githubstars").html(r);
+    });
+</script>

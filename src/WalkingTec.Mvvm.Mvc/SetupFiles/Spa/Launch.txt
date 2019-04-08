@@ -1,9 +1,9 @@
-{
+﻿{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57910/",
+      "applicationUrl": "http://localhost:$port$/",
       "sslPort": 0
     }
   },
@@ -15,20 +15,22 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "WalkingTec.Mvvm.ApiDemo": {
+    "$ns$": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:57911/"
+      "applicationUrl": "http://localhost:$port$/"
     },
-    "newProfile1": {
+    "ApiOnly": {
       "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://localhost:5555"
+      "applicationUrl": "http://localhost:$port$/"
     }
   }
 }

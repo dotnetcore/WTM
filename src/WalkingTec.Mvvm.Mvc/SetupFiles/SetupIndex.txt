@@ -97,7 +97,7 @@
                     <select name="DbType">
                         <option value="SqlServer">SqlServer</option>
                         <option value="MySql">MySql</option>
-                        <option value="MySql">PgSql</option>
+                        <option value="PgSql">PgSql</option>
                     </select>
                 </td>
             </tr>
