@@ -67,14 +67,40 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             toremove.ForEach(x => m.Remove(x));
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
-            if (Entity.Url != null && Entity.IsInside == true)
+            if (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true)
             {
                 SelectedModule = modules.Where(x => x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.Url == Entity.Url).FirstOrDefault().Module.FullName;
                 var mm = modules.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
                 AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
                 SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToList();
             }
+        }
 
+        protected override void ReInitVM()
+        {
+            var data = DC.Set<FrameworkMenu>().ToList();
+            var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
+            var pids = Entity.GetAllChildrenIDs(DC);
+            AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
+            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+
+            var m = modules.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
+            List<FrameworkModule> toremove = new List<FrameworkModule>();
+            foreach (var item in m)
+            {
+                var f = modules.Where(x => x.ClassName == item.ClassName && x.Area?.AreaName == item.Area?.AreaName).FirstOrDefault();
+                if (f?.IgnorePrivillege == true)
+                {
+                    toremove.Add(item);
+                }
+            }
+            toremove.ForEach(x => m.Remove(x));
+            AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
+            if (string.IsNullOrEmpty(SelectedModule) == false)
+            {
+                var mm = modules.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
+                AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
+            }
 
         }
 
