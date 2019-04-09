@@ -117,7 +117,10 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var feature = new ControllerFeature();
                 m.ApplicationParts.Add(new AssemblyPart(mvc));
-                m.ApplicationParts.Add(new AssemblyPart(admin));
+                if (admin != null)
+                {
+                    m.ApplicationParts.Add(new AssemblyPart(admin));
+                }
                 m.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
             })

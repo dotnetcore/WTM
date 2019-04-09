@@ -313,7 +313,7 @@ namespace WalkingTec.Mvvm.Core
         /// 数据初始化
         /// </summary>
         /// <param name="allModules"></param>
-        /// <param name="isSpa"></param>
+        /// <param name="IsSpa"></param>
         /// <returns>返回true即数据新建完成，进入初始化操作，返回false即数据库已经存在</returns>
         public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
         {
