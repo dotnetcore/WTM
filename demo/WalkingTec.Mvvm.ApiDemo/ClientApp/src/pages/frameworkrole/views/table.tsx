@@ -48,7 +48,7 @@ export default class extends React.Component<any, any> {
                     title: '动作',
                     dataIndex: 'Action',
                     fixed: 'right',//固定 列
-                    width: 160,
+                    width: 220,
                     render: (text, record) => <Action.rowAction data={record} />
                 }
             )

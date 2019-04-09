@@ -60,6 +60,35 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
     }
 }
 /**
+ * 权限
+ */
+@DialogFormDes({
+    onFormSubmit(values) {
+        return Store.onUpdate(values)
+    },
+    onLoadData(values, props) {
+        return Store.onDetails(values)
+    }
+})
+@observer
+export class JurisdictionForm extends React.Component<WTM.FormProps, any> {
+    // 创建模型
+    models = Models.editModels(this.props);
+    render() {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
+        const props = {
+            ...this.props,
+            models: this.models,
+        }
+        return <InfoShellLayout>
+                <FormItem {...props} fieId="Entity.ID" hidden />
+                <FormItem {...props} fieId="Entity.RoleCode" display/>
+                <FormItem {...props} fieId="Entity.RoleName" display/>
+        </InfoShellLayout>
+    }
+}
+/**
  * 详情
  */
 @DialogFormDes({
