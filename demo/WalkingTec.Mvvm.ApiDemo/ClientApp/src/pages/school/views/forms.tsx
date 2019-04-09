@@ -29,6 +29,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Place2_Sheng" />
             <FormItem {...props} fieId="Place2_Shi" />
             <FormItem {...props} fieId="Entity.Place2Id" />
+            <FormItem {...props} fieId="Entity.Majors" layout="row"/>
 
         </InfoShellLayout>
     }
@@ -66,6 +67,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Place2_Sheng" />
             <FormItem {...props} fieId="Place2_Shi" />
             <FormItem {...props} fieId="Entity.Place2Id" />
+            <FormItem {...props} fieId="Entity.Majors" layout="row" />
 
         </InfoShellLayout>
     }

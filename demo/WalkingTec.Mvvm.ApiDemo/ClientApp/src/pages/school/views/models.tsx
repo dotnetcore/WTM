@@ -1,10 +1,11 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload,WtmEditTable } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
 import Request from 'utils/Request';
+import { Observable } from 'rxjs';
 
 /**
  * label  标识
@@ -79,6 +80,35 @@ export default {
                     linkageModels="Place2_Shi"
                     dataSource={(parentid) => Request.cache({ url: "/api/School/GetSubCities", body: { parentid } })}
                 />
+            },
+            "Entity.Majors": {
+                label: "专业",
+                rules: [],
+                formItem: () => {
+                    return <WtmEditTable models={{
+                        "MajorCode": {
+                            label: "专业编码",
+                            rules: [],
+                            formItem: <Input placeholder="" />
+                        },
+                        /** 专业名称 */
+                        "MajorName": {
+                            label: "专业名称",
+                            rules: [],
+                            formItem: <Input placeholder="" />
+                        },
+                        "MajorType": {
+                            label: "专业类型",
+                            rules: [{ "required": true, "message": "专业类型不能为空" }],
+                            formItem: <WtmSelect placeholder="学校类型" dataSource={[
+                                { Text: "必修", Value: 0 },
+                                { Text: "选修", Value: 1 }
+                            ]} />
+                        },
+
+                    }} />
+                }
+
             }
         }
     },

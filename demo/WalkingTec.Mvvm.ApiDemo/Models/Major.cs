@@ -36,7 +36,6 @@ namespace WalkingTec.Mvvm.ApiDemo.Models
         public string Remark { get; set; }
 
         [Display(Name = "所属学校")]
-        [Required()]
         public Guid? SchoolId { get; set; }
 
 
