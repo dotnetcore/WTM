@@ -48,7 +48,7 @@ export class WtmSelect extends React.Component<IAppProps, any> {
      * @param nextContext 
      */
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return true
+        // return true
         if (!lodash.eq(this.state.loading, nextState.loading)) {
             return true
         }
@@ -235,6 +235,7 @@ export class WtmSelect extends React.Component<IAppProps, any> {
                 <span> </span>
             </Spin>
         }
+        // console.log(config.value, this.props.value)
         return (
             <Spin spinning={this.state.loading}>
                 <Select

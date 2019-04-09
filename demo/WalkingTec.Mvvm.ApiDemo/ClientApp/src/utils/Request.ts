@@ -22,10 +22,10 @@ const CacheHttp = new Map<string, Promise<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
 // 每30秒清理一次缓存
-interval(30000).subscribe(obs => {
-    CacheHttp.clear();
-    Cache.clear();
-})
+// interval(30000).subscribe(obs => {
+//     CacheHttp.clear();
+//     Cache.clear();
+// })
 export class Request {
     /**
      * 
@@ -81,11 +81,11 @@ export class Request {
                         // 无 响应 数据
                         if (lodash.isNil(ajax.response)) {
                             console.warn("响应体为 NULL", ajax)
-                            GlobalConfig.development && notification.warn({
-                                message: "响应体为 NULL ",
-                                duration: 5,
-                                description: `url:${lodash.get(ajax, "request.url")}`
-                            })
+                            // GlobalConfig.development && notification.warn({
+                            //     message: "响应体为 NULL ",
+                            //     duration: 5,
+                            //     description: `url:${lodash.get(ajax, "request.url")}`
+                            // })
                             return false
                         }
                         return true

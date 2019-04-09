@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InfoForm, InsertForm, UpdateForm } from './forms';
+import { InfoForm, InsertForm, UpdateForm, JurisdictionForm } from './forms';
 /**
  * 动作事件
  */
@@ -136,6 +136,15 @@ class RowAction extends React.Component<{
                         type="a"
                     >
                         <UpdateForm loadData={data} />
+                    </DialogForm>
+                </Visible>
+                <Visible visible={onAuthorizeActions(Store, "update")}>
+                    <Divider type="vertical" />
+                    <DialogForm
+                        title="分配权限"
+                        type="a"
+                    >
+                        <JurisdictionForm loadData={data} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>

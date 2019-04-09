@@ -45,7 +45,7 @@ interface IFormItemProps {
     /** 装饰器参数  */
     decoratorOptions?: GetFieldDecoratorOptions;
     /** 布局类型 row 整行 span 24 */
-    layout?: "row";
+    layout?: "row" | "row-hidden-label";
     /** 覆盖默认渲染 */
     render?: (props) => React.ReactNode;
     [key: string]: any;
@@ -55,6 +55,9 @@ export class FormItem extends React.Component<IFormItemProps, any> {
     static wtmType = "FormItem";
     render() {
         const { form = {}, hidden, value, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render, layout } = this.props;
+        if (typeof fieId === "undefined") {
+            return <div>fieId 为 空</div>
+        }
         const { getFieldDecorator }: WrappedFormUtils = form;
         // 获取模型 item
         const model = lodash.get(models, fieId) || { rules: [], label: `未获取到模型(${fieId})`, formItem: <Input placeholder={`未获取到模型(${fieId})`} /> };
@@ -81,7 +84,7 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         // 布局
         // let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
         let itemlayout = formItemLayout;
-        if (layout == "row") {
+        if (layout === "row") {
             itemlayout = {
                 labelCol: {
                     span: labelSpan
@@ -100,6 +103,15 @@ export class FormItem extends React.Component<IFormItemProps, any> {
                         span: 24
                     },
                 }
+            }
+        } else if (layout === "row-hidden-label") {
+            itemlayout = {
+                labelCol: {
+                    span: 0
+                },
+                wrapperCol: {
+                    span: 24
+                },
             }
         }
         // console.log(models, renderItem)
