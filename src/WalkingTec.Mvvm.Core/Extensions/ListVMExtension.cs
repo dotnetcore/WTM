@@ -260,7 +260,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             }
                             if (style != string.Empty)
                             {
-                                html = $"<div style=\"{style}\">{html}</div>";
+                                string uid = Guid.NewGuid().ToString().Replace("-", "");
+                                html = $"<div style='{style}' id='{uid}'>{html}<script>$('#{uid}').closest('td').css('background-color','#{backColor}');</script></div>";
                             }
                         }
                     }
