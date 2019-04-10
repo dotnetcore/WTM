@@ -58,6 +58,9 @@ export class WtmSelect extends React.Component<IAppProps, any> {
         if (!lodash.eq(this.props.value, nextProps.value)) {
             return true
         }
+        if (!lodash.eq(this.props.disabled, nextProps.disabled)) {
+            return true
+        }
         // 父子联动
         if (this.props.linkageModels) {
             const { getFieldValue }: WrappedFormUtils = this.props.form;
@@ -235,7 +238,6 @@ export class WtmSelect extends React.Component<IAppProps, any> {
                 <span> </span>
             </Spin>
         }
-        // console.log(config.value, this.props.value)
         return (
             <Spin spinning={this.state.loading}>
                 <Select

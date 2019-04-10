@@ -46,6 +46,21 @@ declare namespace WTM {
             label: string;
             rules: ValidationRule[];
             formItem: React.ReactNode;
+            /** 传递给 formItem 组件的 附加 props table 中有效  */
+            formItemProps?: {
+                /** 隐藏域 */
+                hidden?: boolean;
+                /** 模型的 value 优先级大于  defaultValues 中的值*/
+                value?: any;
+                /** 禁用 控件输入更改 */
+                disabled?: boolean;
+                /** 禁用 组件 显示 span */
+                display?: boolean;
+                /** 默认值 列表 */
+                defaultValues?: Object;
+            }
+            /** 传递给 columns 组件的 附加 props table 中有效  */
+            columnsProps?: ColumnProps<any>
         }
     }
     interface PageProps {
@@ -87,3 +102,33 @@ declare type ValidationRule = {
     /** custom validate function (Note: callback must be called) */
     validator?: (rule: any, value: any, callback: any, source?: any, options?: any) => any;
 };
+interface ColumnProps<T> {
+    title?: React.ReactNode | ((options: {
+        filters: TableStateFilters;
+        sortOrder?: SortOrder;
+    }) => React.ReactNode);
+    key?: React.Key;
+    dataIndex?: string;
+    render?: (text: any, record: T, index: number) => React.ReactNode;
+    align?: 'left' | 'right' | 'center';
+    filters?: ColumnFilterItem[];
+    onFilter?: (value: any, record: T) => boolean;
+    filterMultiple?: boolean;
+    filterDropdown?: React.ReactNode | ((props: Object) => React.ReactNode);
+    filterDropdownVisible?: boolean;
+    onFilterDropdownVisibleChange?: (visible: boolean) => void;
+    sorter?: boolean | CompareFn<T>;
+    defaultSortOrder?: SortOrder;
+    colSpan?: number;
+    width?: string | number;
+    className?: string;
+    fixed?: boolean | ('left' | 'right');
+    filterIcon?: React.ReactNode | ((filtered: boolean) => React.ReactNode);
+    filteredValue?: any[];
+    sortOrder?: SortOrder | boolean;
+    children?: ColumnProps<T>[];
+    onCellClick?: (record: T, event: any) => void;
+    onCell?: (record: T, rowIndex: number) => any;
+    onHeaderCell?: (props: ColumnProps<T>) => any;
+    sortDirections?: SortOrder[];
+}

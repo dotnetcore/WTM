@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:06:42
  * @desc [description]
  */
-import { Select, notification, Spin, Table, Button, ConfigProvider, Divider, Form, Popconfirm } from 'antd';
+import { Select, notification, Spin, Table, Button, ConfigProvider, Divider, Form, Popconfirm, Alert } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -19,23 +19,25 @@ import { Help } from 'utils/Help';
 import { observable, action, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import './style.less';
-const EditableContext = React.createContext(null);
+let EditableContext = React.createContext(null);
 @DesForm
 class EditableRow extends React.Component<any, any> {
+    constructor(props) {
+        super(props);
+    }
     FieldsValue = {};
-    isEdit = false;
-    componentDidUpdate() {
+    rowKey = lodash.get(this.props, 'data-row-key');
+    onEdit(isEdit = true) {
         const {
-            form,
-            models,
             handleUpdate,
             ...restProps
         } = this.props;
-        const FieldsValue = form.getFieldsValue();
-        if (!lodash.isEqual(this.FieldsValue, FieldsValue)) {
-            this.FieldsValue = FieldsValue;
-            this.isEdit = true;
-        }
+        this.props.form.validateFields((err, values) => {
+            if (!lodash.isEqual(this.FieldsValue, values)) {
+                this.FieldsValue = values;
+                handleUpdate(this.rowKey, this.FieldsValue);
+            }
+        })
     }
     componentDidMount() {
         const {
@@ -48,19 +50,7 @@ class EditableRow extends React.Component<any, any> {
         if (!lodash.isEqual(this.FieldsValue, FieldsValue)) {
             this.FieldsValue = FieldsValue;
         }
-    }
-    componentWillUnmount() {
-        const {
-            form,
-            handleUpdate,
-            ...restProps
-        } = this.props;
-        // const FieldsValue = form.getFieldsValue();
-        if (this.isEdit) {
-            this.isEdit = false;
-            // console.log(lodash.get(restProps, 'data-row-key'), this.FieldsValue)
-            handleUpdate(lodash.get(restProps, 'data-row-key'), this.FieldsValue);
-        }
+        this.props.form.validateFields()
     }
     render() {
         const {
@@ -74,17 +64,24 @@ class EditableRow extends React.Component<any, any> {
                 form: form,
                 models: models,
             }}>
-                {/* <Popconfirm placement="top" title={'保存确认'} okText="Yes" cancelText="No"> */}
-                <tr {...restProps} />
-                {/* </Popconfirm> */}
+                <tr {...restProps}
+                    onMouseEnter={this.onEdit.bind(this, true)} onMouseLeave={this.onEdit.bind(this, false)} />
             </EditableContext.Provider>
         );
     }
 }
 class EditableCell extends React.Component<any, any>{
+    constructor(props) {
+        super(props)
+    }
     renderForm(props) {
-        // console.log(toJS(this.props.record))
-        return <FormItem fieId={this.props.dataIndex} layout="row-hidden-label"  {...props} defaultValues={toJS(this.props.record)} />
+        return <FormItem
+            fieId={this.props.dataIndex}
+            layout="row-hidden-label"
+            {...props}
+            {...lodash.get(props, `models.${this.props.dataIndex}.formItemProps`)}
+            defaultValues={toJS(this.props.record)}
+        />
     }
     render() {
         const {
@@ -101,11 +98,9 @@ class EditableCell extends React.Component<any, any>{
         }
         return (
             <td {...restProps}>
-                <div style={style}>
-                    {record ? <EditableContext.Consumer>
-                        {this.renderForm.bind(this)}
-                    </EditableContext.Consumer> : restProps.children}
-                </div>
+                {record ? <EditableContext.Consumer>
+                    {this.renderForm.bind(this)}
+                </EditableContext.Consumer> : restProps.children}
             </td>
         );
     }
@@ -136,7 +131,17 @@ export class EditTable extends React.Component<IAppProps, any> {
             render: (text, record, index) => <div><a onClick={this.handleRemove.bind(this, record)}>删除</a></div>
         });
         // this.setState({ columns })
-        runInAction(() => this.columns = columns)
+        runInAction(() => {
+            this.columns = columns;
+            if (lodash.isArray(this.props.value) && this.props.value.length > 0) {
+                this.dataSource = this.props.value.map(x => {
+                    return {
+                        ...x,
+                        __key: lodash.get(x, lodash.get(this.props, "rowKey", "ID"))
+                    }
+                })
+            }
+        });
     }
     @Debounce(100)
     handleChange() {
@@ -177,29 +182,29 @@ export class EditTable extends React.Component<IAppProps, any> {
                 key,
                 dataIndex: key,
                 title: value.label,
-                width: 200,
+                width: 150,
+                ...value.columnsProps,
                 onCell: (record, rowIndex) => ({
                     record,
                     dataIndex: key,
                     title: value.label,
-                    width: 200,
-                    // handleUpdate: this.handleUpdate(key),
+                    width: 150,
+                    ...value.columnsProps,
                 })
-                // render: (text, record, index) => <div>{value.formItem}</div>
             }
         })
     }
     render() {
         const columns = [...this.columns];
         const dataSource = [...this.dataSource];
+        console.log(dataSource)
         return (
             <ConfigProvider renderEmpty={() => <div>暂无数据</div>}>
                 <Button onClick={this.handleAdd.bind(this)}>新建</Button>
                 <Divider type="vertical" />
-                <Button onClick={this.handleSave.bind(this)}>保存</Button>
+                <Alert message="验证未通过行提交数据将忽略" type="warning" showIcon closable style={{ display: "inline-block" }} />
                 <Table
                     rowKey="__key"
-                    size="middle"
                     bordered
                     components={{
                         body: {
@@ -208,6 +213,9 @@ export class EditTable extends React.Component<IAppProps, any> {
                         }
                     }}
                     className="WtmEditTable"
+                    style={{
+                        display: dataSource.length <= 0 ? "none" : ""
+                    }}
                     columns={columns}
                     dataSource={dataSource}
                     pagination={false}
@@ -226,7 +234,10 @@ export class EditTable extends React.Component<IAppProps, any> {
 interface IAppProps {
     /** 模型 */
     models: WTM.FormItem;
+    /** 行 Key 值 默认 ID */
+    rowKey?: string;
     onChange?: (value) => void;
+    value?: any;
 }
 @DesError
 export class WtmEditTable extends React.Component<IAppProps, any> {
@@ -238,13 +249,13 @@ export class WtmEditTable extends React.Component<IAppProps, any> {
     componentDidUpdate() {
     }
     componentDidMount() {
+        console.log(this.props)
     }
     handleChange = (dataSource) => {
-        console.log(dataSource)
         this.props.onChange(dataSource);
     }
     render() {
-        return <EditTable models={this.props.models} onChange={this.handleChange} />
+        return <EditTable rowKey={this.props.rowKey} value={this.props.value} models={this.props.models} onChange={this.handleChange} />
     }
 }
 export default WtmEditTable
