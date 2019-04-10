@@ -1,5 +1,5 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload,WtmEditTable } from 'components/form';
+﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload, WtmEditTable } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
@@ -20,39 +20,39 @@ export default {
     editModels(props?): WTM.FormItem {
         return {
             /** 学校编码 */
-            "Entity.SchoolCode":{
+            "Entity.SchoolCode": {
                 label: "学校编码",
                 rules: [{ "required": true, "message": "学校编码不能为空" }],
                 formItem: <Input placeholder="请输入 学校编码" />
             },
             /** 学校名称 */
-            "Entity.SchoolName":{
+            "Entity.SchoolName": {
                 label: "学校名称",
                 rules: [{ "required": true, "message": "学校名称不能为空" }],
                 formItem: <Input placeholder="请输入 学校名称" />
             },
             /** 学校类型 */
-            "Entity.SchoolType":{
+            "Entity.SchoolType": {
                 label: "学校类型",
                 rules: [{ "required": true, "message": "学校类型不能为空" }],
-                formItem: <WtmSelect placeholder="学校类型" dataSource={[  
+                formItem: <WtmSelect placeholder="学校类型" dataSource={[
                     { Text: "公立学校", Value: 0 },
                     { Text: "私立学校", Value: 1 }
-                ]}/>
+                ]} />
             },
             /** 备注 */
-            "Entity.Remark":{
+            "Entity.Remark": {
                 label: "备注",
                 rules: [{ "required": true, "message": "备注不能为空" }],
                 formItem: <Input placeholder="请输入 备注" />
             },
             /** 地点 */
-            "Entity.PlaceId":{
+            "Entity.PlaceId": {
                 label: "地点",
                 rules: [],
-                formItem: <WtmCascader placeholder="地点" 
-                    dataSource ={ Request.cache({ url: "/api/School/GetCitys" })} 
-                /> 
+                formItem: <WtmCascader placeholder="地点"
+                    dataSource={Request.cache({ url: "/api/School/GetCitys" })}
+                />
             },
 
             /** 地点2 */
@@ -83,9 +83,10 @@ export default {
             },
             "Entity.Majors": {
                 label: "专业",
-                rules: [],
-                formItem: () => {
-                    return <WtmEditTable models={{
+                rules: [{ "required": true, "message": "专业类型不能为空" }],
+                formItem: <WtmEditTable
+                    rowKey="ID"
+                    models={{
                         "MajorCode": {
                             label: "专业编码",
                             rules: [],
@@ -95,7 +96,8 @@ export default {
                         "MajorName": {
                             label: "专业名称",
                             rules: [],
-                            formItem: <Input placeholder="" />
+                            formItem: <Input placeholder="" />,
+                            formItemProps: { disabled: true }
                         },
                         "MajorType": {
                             label: "专业类型",
@@ -105,10 +107,11 @@ export default {
                                 { Text: "选修", Value: 1 }
                             ]} />
                         },
-
-                    }} />
-                }
-
+                    }}
+                    addButton={false}
+                    deleteButton={false}
+                    setValues={{ abcd: 1234 }}
+                />
             }
         }
     },
@@ -119,25 +122,25 @@ export default {
     searchModels(props?): WTM.FormItem {
         return {
             /** 学校编码 */
-            "SchoolCode":{
+            "SchoolCode": {
                 label: "学校编码",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 学校名称 */
-            "SchoolName":{
+            "SchoolName": {
                 label: "学校名称",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 学校类型 */
-            "SchoolType":{
+            "SchoolType": {
                 label: "学校类型",
                 rules: [],
-                formItem: <WtmSelect placeholder="全部" dataSource={[  
+                formItem: <WtmSelect placeholder="全部" dataSource={[
                     { Text: "公立学校", Value: 0 },
                     { Text: "私立学校", Value: 1 }
-                ]}/>
+                ]} />
             },
 
         }
