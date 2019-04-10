@@ -41,7 +41,18 @@ interface IFormItemProps {
     /** 默认值 列表 */
     defaultValues?: Object;
     /** Form.Item 的 props */
-    formItemProps?: FormItemProps;
+    formItemProps?: {
+        /** 隐藏域 */
+        hidden?: boolean;
+        /** 模型的 value 优先级大于  defaultValues 中的值*/
+        value?: any;
+        /** 禁用 控件输入更改 */
+        disabled?: boolean;
+        /** 禁用 组件 显示 span */
+        display?: boolean;
+        /** 默认值 列表 */
+        defaultValues?: Object;
+    };
     /** 装饰器参数  */
     decoratorOptions?: GetFieldDecoratorOptions;
     /** 布局类型 row 整行 span 24 */
@@ -54,7 +65,7 @@ interface IFormItemProps {
 export class FormItem extends React.Component<IFormItemProps, any> {
     static wtmType = "FormItem";
     render() {
-        const { form = {}, hidden, value, fieId, models, decoratorOptions, formItemProps, defaultValues, disabled, display, render, layout } = this.props;
+        const { form = {}, hidden, value, fieId, models, decoratorOptions, formItemProps = {}, defaultValues, disabled, display, render, layout } = this.props;
         if (typeof fieId === "undefined") {
             return <div>fieId 为 空</div>
         }
@@ -67,11 +78,11 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         };
         // 获取默认值 默认值，禁用，显示 span 
         if (typeof defaultValues === "object") {
-            options.initialValue = value || lodash.get(defaultValues, fieId);
+            options.initialValue = value || lodash.get(defaultValues, fieId, formItemProps.value);
         }
         // 隐藏 域
-        if (hidden) {
-            getFieldDecorator(fieId as never, options);
+        if (hidden || formItemProps.hidden) {
+            getFieldDecorator && getFieldDecorator(fieId as never, options);
             return null
         }
         let renderItem = null;
@@ -115,7 +126,7 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             }
         }
         // console.log(models, renderItem)
-        return <Form.Item label={model.label} {...itemlayout}  {...formItemProps}>
+        return <Form.Item label={model.label} {...itemlayout}>
             {renderItem}
         </Form.Item >
     }
@@ -125,8 +136,8 @@ export class FormItem extends React.Component<IFormItemProps, any> {
  * @param props 
  * @param config 
  */
-function itemRender(props, config) {
-    const { form = {}, disabled, display, fieId } = props;
+function itemRender(props: IFormItemProps, config) {
+    const { form = {}, disabled, display, fieId, formItemProps = {} } = props;
     const { options, model } = config;
     let { formItem } = model;
     const { getFieldDecorator }: WrappedFormUtils = form;
@@ -135,11 +146,11 @@ function itemRender(props, config) {
         formItem = formItem()
     }
     // 禁用显示 span
-    if (lodash.isEqual(display, true)) {
+    if (lodash.isEqual(display, true) || lodash.isEqual(formItemProps.display, true)) {
         propsNew.display = "true";
         propsNew.value = options.initialValue;
         // 创建一个存储 值得 from 级联使用
-        getFieldDecorator(fieId as never, options);
+        getFieldDecorator && getFieldDecorator(fieId as never, options);
         renderItem = itemToDisplay(props, config);
     } else {
         //  判断 组件 是否 已经 是 getFieldDecorator组件
@@ -155,7 +166,7 @@ function itemRender(props, config) {
         }
     }
     // 禁用 输入控件
-    if (lodash.isEqual(disabled, true)) {
+    if (lodash.isEqual(disabled, true) || lodash.isEqual(formItemProps.disabled, true)) {
         propsNew.disabled = true
     }
     // 布尔类型 Swatch
@@ -170,7 +181,7 @@ function itemRender(props, config) {
  * @param props 
  * @param config 
  */
-function itemToDisplay(props, config) {
+function itemToDisplay(props: IFormItemProps, config) {
     const { disabled, display, fieId } = props;
     const { options, model } = config;
     let { formItem } = model;
