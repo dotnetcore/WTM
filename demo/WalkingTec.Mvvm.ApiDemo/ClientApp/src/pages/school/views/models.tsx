@@ -87,13 +87,6 @@ export default {
                 formItem: <WtmEditTable
                     rowKey="ID"
                     models={{
-                        // "ID": {
-                        //     label: "ID",
-                        //     rules: [],
-                        //     formItem: <Input placeholder="" />,
-                        //     formItemProps: { display: true },
-                        //     columnsProps: { width: 50 }
-                        // },
                         "MajorCode": {
                             label: "专业编码",
                             rules: [],
@@ -114,8 +107,11 @@ export default {
                                 { Text: "选修", Value: 1 }
                             ]} />
                         },
-
-                    }} />
+                    }}
+                    addButton={false}
+                    deleteButton={false}
+                    setValues={{ abcd: 1234 }}
+                />
             }
         }
     },

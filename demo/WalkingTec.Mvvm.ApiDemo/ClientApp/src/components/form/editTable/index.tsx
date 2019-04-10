@@ -124,20 +124,23 @@ export class EditTable extends React.Component<IAppProps, any> {
     }
     componentDidMount() {
         const columns = this.createColumns();
-        columns.push({
-            title: "操作",
-            width: 70,
-            // fixed: "right",
-            render: (text, record, index) => <div><a onClick={this.handleRemove.bind(this, record)}>删除</a></div>
-        });
+        if (this.props.deleteButton) {
+            columns.push({
+                title: "操作",
+                width: 70,
+                // fixed: "right",
+                render: (text, record, index) => <div><a onClick={this.handleRemove.bind(this, record)}>删除</a></div>
+            });
+        }
         // this.setState({ columns })
         runInAction(() => {
             this.columns = columns;
             if (lodash.isArray(this.props.value) && this.props.value.length > 0) {
                 this.dataSource = this.props.value.map(x => {
                     return {
+                        ...this.props.setValues,
                         ...x,
-                        __key: lodash.get(x, lodash.get(this.props, "rowKey", "ID"))
+                        __key: lodash.get(x, this.props.rowKey)
                     }
                 })
             }
@@ -150,6 +153,7 @@ export class EditTable extends React.Component<IAppProps, any> {
     handleAdd() {
         const dataSource = [...this.dataSource];
         dataSource.push({
+            ...this.props.setValues,
             __key: Help.GUID(),
             ...lodash.mapValues(this.props.models, (value) => {
                 return undefined
@@ -197,10 +201,9 @@ export class EditTable extends React.Component<IAppProps, any> {
     render() {
         const columns = [...this.columns];
         const dataSource = [...this.dataSource];
-        console.log(dataSource)
         return (
             <ConfigProvider renderEmpty={() => <div>暂无数据</div>}>
-                <Button onClick={this.handleAdd.bind(this)}>新建</Button>
+                {this.props.addButton && <Button onClick={this.handleAdd.bind(this)}>新建</Button>}
                 <Divider type="vertical" />
                 <Alert message="验证未通过行提交数据将忽略" type="warning" showIcon closable style={{ display: "inline-block" }} />
                 <Table
@@ -236,8 +239,11 @@ interface IAppProps {
     models: WTM.FormItem;
     /** 行 Key 值 默认 ID */
     rowKey?: string;
+    setValues?: any;
     onChange?: (value) => void;
     value?: any;
+    addButton?: boolean;
+    deleteButton?: boolean;
 }
 @DesError
 export class WtmEditTable extends React.Component<IAppProps, any> {
@@ -255,7 +261,15 @@ export class WtmEditTable extends React.Component<IAppProps, any> {
         this.props.onChange(dataSource);
     }
     render() {
-        return <EditTable rowKey={this.props.rowKey} value={this.props.value} models={this.props.models} onChange={this.handleChange} />
+        return <EditTable
+            rowKey={lodash.get(this.props, "rowKey", "ID")}
+            value={this.props.value}
+            models={this.props.models}
+            onChange={this.handleChange}
+            setValues={this.props.setValues}
+            addButton={lodash.get(this.props, "addButton", true)}
+            deleteButton={lodash.get(this.props, "deleteButton", true)}
+        />
     }
 }
 export default WtmEditTable
