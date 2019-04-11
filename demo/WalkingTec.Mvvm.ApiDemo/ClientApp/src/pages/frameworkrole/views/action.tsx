@@ -138,7 +138,7 @@ class RowAction extends React.Component<{
                         <UpdateForm loadData={data} />
                     </DialogForm>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, "update")}>
+                <Visible visible={onAuthorizeActions(Store, "pages")}>
                     <Divider type="vertical" />
                     <DialogForm
                         title="分配权限"

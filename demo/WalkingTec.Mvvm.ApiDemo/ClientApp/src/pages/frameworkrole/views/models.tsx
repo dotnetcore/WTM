@@ -1,5 +1,5 @@
 ﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg,  } from 'components/form';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmEditTable } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
@@ -60,6 +60,68 @@ export default {
 
         }
     },
+
+    pageModels(props?): WTM.FormItem {
+        return {
+            /** 角色编号 */
+            "Entity.RoleCode": {
+                label: "角色编号",
+                rules: [{ "required": true, "message": "角色编号不能为空" }],
+                formItem: <Input placeholder="请输入 角色编号" />,
+                formItemProps: { display:true }
+            },
+            /** 角色名称 */
+            "Entity.RoleName": {
+                label: "角色名称",
+                rules: [{ "required": true, "message": "角色名称不能为空" }],
+                formItem: <Input placeholder="请输入 角色名称" />,
+                formItemProps: { display: true }
+            },
+            /** 备注 */
+            "Pages": {
+                label: "备注",
+                rules: [],
+                formItem: (props) => {
+                    console.log(props)
+                    return <WtmEditTable 
+                        rowKey="Id"
+                        models={{
+                            "Name": {
+                                label: "页面",
+                                rules: [],
+                                formItem: (props) => {
+                                    var m = props.defaultValues.Level * 20;
+                                    const style = {
+                                        marginLeft: m+'px'
+                                    };
+                                    return <span style={style}>{props.defaultValues.Name}</span>
+                                }
+                            },
+                            "Actions": {
+                                label: "动作",
+                                rules: [],
+                                formItem: (props) => {
+                                    if (props.defaultValues.AllActions == null || props.defaultValues.AllActions.length == 0) {
+                                        return <span></span>;
+                                    }
+                                    else {
+                                        return <WtmSelect placeholder="选择动作" multiple
+                                            dataSource={props.defaultValues.AllActions}
+                                        />
+                                    }
+                                }
+                            }
+                        }}
+                         addButton={false}
+                         deleteButton={false}
+                        setValues={{ abcd: 1234 }}
+                    />
+                }
+            }
+
+        }
+    },
+
     /**
      * 渲染 模型
      */

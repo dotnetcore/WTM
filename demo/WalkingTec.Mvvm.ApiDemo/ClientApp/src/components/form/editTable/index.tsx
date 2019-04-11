@@ -233,6 +233,8 @@ export class EditTable extends React.Component<IAppProps, any> {
                     columns={columns}
                     dataSource={dataSource}
                     pagination={false}
+                    childrenColumnName="Children"
+                    defaultExpandAllRows={true}
                     scroll={{
                         x: columns.reduce((accumulator, currentValue) => {
                             return Math.ceil(accumulator + (currentValue.width || 0))

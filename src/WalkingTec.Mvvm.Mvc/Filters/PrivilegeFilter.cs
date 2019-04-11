@@ -20,6 +20,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
+            if (controller.ConfigInfo.IsQuickDebug)
+            {
+                base.OnActionExecuting(context);
+                return;
+            }
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
             controller.BaseUrl = $"/{ad.ControllerName}/{ad.ActionName}";
@@ -38,12 +43,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             if (isDebug)
             {
-                if (controller.ConfigInfo.IsQuickDebug)
-                {
-                    base.OnActionExecuting(context);
-                }
-                else
-                {
                     if (controller is BaseController c)
                     {
                         context.Result = c.Content("该地址只能在调试模式下访问");
@@ -52,10 +51,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         context.Result = c2.BadRequest("该地址只能在调试模式下访问");
                     }
-                }
                 return;
             }
-
 
             if (isPublic == true)
             {

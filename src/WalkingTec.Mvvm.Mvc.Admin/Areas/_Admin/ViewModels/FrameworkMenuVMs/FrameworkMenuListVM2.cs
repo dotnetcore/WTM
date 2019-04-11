@@ -39,8 +39,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         /// </summary>
         public override IOrderedQueryable<FrameworkMenu_ListView> GetSearchQuery()
         {
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var ms = modules.Where(x => x.IsApi == true).Select(x => "/" + x.ClassName);
             var data = DC.Set<FrameworkMenu>().ToList();
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
             int order = 0;
