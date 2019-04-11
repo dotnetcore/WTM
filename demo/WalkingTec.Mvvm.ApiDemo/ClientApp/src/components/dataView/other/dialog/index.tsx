@@ -68,6 +68,7 @@ export class DialogForm extends React.Component<Props, any> {
         //初始化装载  按钮 第一次 点击 显示 为 已装载 优化性能
         load: false,
     }
+    @Debounce(100)
     onVisible(visible = !this.state.visible) {
         this.setState(state => {
             state.visible = visible;
@@ -292,7 +293,7 @@ export function DialogFormDes(params: {
                     } else {
                         res = onLoadData;
                     }
-                } 
+                }
                 // 强制 执行加载最少 400 毫秒
                 await new Promise((res, rej) => {
                     lodash.delay(res, 400 - (Date.now() - time))

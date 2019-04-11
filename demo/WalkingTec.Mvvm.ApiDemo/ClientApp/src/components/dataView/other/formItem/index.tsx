@@ -167,7 +167,7 @@ function itemRender(props: IFormItemProps, config) {
     }
     // 禁用 输入控件
     if (lodash.isEqual(disabled, true) || lodash.isEqual(formItemProps.disabled, true)) {
-        propsNew.disabled = true
+        propsNew.disabled = true;
     }
     // 布尔类型 Swatch
     if (lodash.isEqual(options.initialValue, true)) {
@@ -185,6 +185,9 @@ function itemToDisplay(props: IFormItemProps, config) {
     const { disabled, display, fieId } = props;
     const { options, model } = config;
     let { formItem } = model;
+    if (lodash.isFunction(formItem)) {
+        formItem = formItem(props)
+    }
     let value = options.initialValue;
     let render = null;
     switch (lodash.get(formItem, "type.wtmType")) {
@@ -197,6 +200,7 @@ function itemToDisplay(props: IFormItemProps, config) {
         case "DatePicker":
         case "Cascader":
         case "Radio":
+        case "EditTable":
             render = formItem;// React.cloneElement(model.formItem, {});
             break;
         default:
