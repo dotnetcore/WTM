@@ -12,40 +12,40 @@
     <p>4. 重写InitGridAction函数，这个函数定义列表中需要出现的操作按钮</p>
     <p>下面以学校模型为例，展示如何编写一个简单的ListVM，学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
     <wt:code title="SchoolListVM.cs">
-public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
-{
-    protected override List&ltGridAction&gt InitGridAction()
-    {
+        public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
+        {
+        protected override List&ltGridAction&gt InitGridAction()
+        {
         return new List&ltGridAction&gt
         {
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+        this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+        this.MakeStandardExportAction(null,false,ExportEnum.Excel)
         };
-    }
+        }
 
-    protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
-    {
+        protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
+        {
         return new List&ltGridColumn&ltSchool&gt&gt{
-            this.MakeGridHeader(x =&gt x.SchoolCode),
-            this.MakeGridHeader(x =&gt x.SchoolName),
-            this.MakeGridHeader(x =&gt x.SchoolType),
-            this.MakeGridHeaderAction(width: 200)
+        this.MakeGridHeader(x =&gt x.SchoolCode),
+        this.MakeGridHeader(x =&gt x.SchoolName),
+        this.MakeGridHeader(x =&gt x.SchoolType),
+        this.MakeGridHeaderAction(width: 200)
         };
-    }
+        }
 
-    public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
-    {
+        public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+        {
         var query = DC.Set&ltSchool&gt().OrderBy(x =&gt x.ID);
         return query;
-    }
+        }
 
-}
+        }
     </wt:code>
     <p>上面代码建立了一个简单的ListVM，它没有任何搜索条件，默认每页20行查询所有School的数据，并使用输出列表同样的逻辑来完成导出Excel。同时它定义了新建，修改等按钮</p>
     <wt:quote>
@@ -53,6 +53,111 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
         <p>MakeStandardExportAction的作用是在列表上生成一个导出按钮</p>
         <p>MakeGridHeaderAction的作用是在列表上增加一个操作列，操作列中出现的按钮是在InitGridAction中定义的所有ShowInRow为true的动作。当使用MakeStandardAction创建默认动作时，修改，删除和详细都是每行显示的</p>
     </wt:quote>
+    <wt:quote>
+        <p>MakeStandardAction用来生成标准的新建，修改等按钮，如果是自定义的按钮请使用MakeAction，MakeAction返回一个GridAction，GridAction的主要属性有：</p>
+    </wt:quote>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>areaName</td>
+                <td>按钮调用的Area名称，如果没有Area就为空</td>
+            </tr>
+            <tr>
+                <td>controllerName</td>
+                <td>按钮调用的Controller名称</td>
+            </tr>
+            <tr>
+                <td>actionName</td>
+                <td>按钮调用的方法名称</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>按钮上的文字</td>
+            </tr>
+            <tr>
+                <td>dialogTitle</td>
+                <td>弹出窗口的标题</td>
+            </tr>
+            <tr>
+                <td>paraType</td>
+                <td>
+                    参数类型。<br />
+                    NoId:表示按钮不需要任何参数<br />
+                    SingleId：表示按钮需要列表勾选一条数据，并把数据的id作为参数传递给调用的方法<br />
+                    MultiIds：表示按钮需要列表勾选一条或多条数据，并把数据的id作为数组传递给调用的方法<br />
+                </td>
+            </tr>
+            <tr>
+                <td>dialogWidth</td>
+                <td>弹出窗口的宽度，可为空</td>
+            </tr>
+            <tr>
+                <td>dialogHeight</td>
+                <td>弹出窗口的高度，可为空</td>
+            </tr>
+            <tr>
+                <td>IconCls</td>
+                <td>按钮的图标，指定css文件中的某个 class</td>
+            </tr>
+            <tr>
+                <td>ShowDialog</td>
+                <td>是否需要弹出窗口。有的按钮不需要弹出窗口，如果不弹窗口，则框架只会在后台调用指定方法</td>
+            </tr>
+            <tr>
+                <td>ShowInRow</td>
+                <td>按钮是否要出现在每一行的操作列上</td>
+            </tr>
+            <tr>
+                <td>HideOnToolBar</td>
+                <td>列表上方的按钮条是否应该隐藏这个按钮</td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+        <p>MakeGridHeader用来指定列表的某一列，我们可以通过一些流函数来设置一些属性来改变单元格的前景色，背景色，列头文字，列宽等等。主要流函数有：</p>
+    </wt:quote>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">函数</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>SetBackGroundFunc</td>
+                <td>设置背景色</td>
+            </tr>
+            <tr>
+                <td>SetForeGroundFunc</td>
+                <td>设置前景色</td>
+            </tr>
+            <tr>
+                <td>SetChildren</td>
+                <td>设置子表头</td>
+            </tr>
+            <tr>
+                <td>SetFormat</td>
+                <td>设置自定义格式</td>
+            </tr>
+            <tr>
+                <td>SetFlex</td>
+                <td>设置是否列宽需要充满空白区域</td>
+            </tr>
+            <tr>
+                <td>SetWidth</td>
+                <td>
+                    设置列宽
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="使用BasePagedListVM">
