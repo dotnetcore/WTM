@@ -143,7 +143,7 @@ function itemRender(props: IFormItemProps, config) {
     const { getFieldDecorator }: WrappedFormUtils = form;
     let renderItem, propsNew: any = { form };
     if (lodash.isFunction(formItem)) {
-        formItem = formItem()
+        formItem = formItem(props)
     }
     // 禁用显示 span
     if (lodash.isEqual(display, true) || lodash.isEqual(formItemProps.display, true)) {

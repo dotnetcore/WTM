@@ -84,34 +84,37 @@ export default {
             "Entity.Majors": {
                 label: "专业",
                 rules: [{ "required": true, "message": "专业类型不能为空" }],
-                formItem: <WtmEditTable
-                    rowKey="ID"
-                    models={{
-                        "MajorCode": {
-                            label: "专业编码",
-                            rules: [],
-                            formItem: <Input placeholder="" />
-                        },
-                        /** 专业名称 */
-                        "MajorName": {
-                            label: "专业名称",
-                            rules: [],
-                            formItem: <Input placeholder="" />,
-                            formItemProps: { disabled: true }
-                        },
-                        "MajorType": {
-                            label: "专业类型",
-                            rules: [{ "required": true, "message": "专业类型不能为空" }],
-                            formItem: <WtmSelect placeholder="学校类型" dataSource={[
-                                { Text: "必修", Value: 0 },
-                                { Text: "选修", Value: 1 }
-                            ]} />
-                        },
-                    }}
-                    addButton={false}
-                    deleteButton={false}
-                    setValues={{ abcd: 1234 }}
-                />
+                formItem: (props) => {
+                    console.log(props)
+                    return <WtmEditTable
+                        rowKey="ID"
+                        models={{
+                            "MajorCode": {
+                                label: "专业编码",
+                                rules: [],
+                                formItem: <Input placeholder="" />
+                            },
+                            /** 专业名称 */
+                            "MajorName": {
+                                label: "专业名称",
+                                rules: [],
+                                formItem: <Input placeholder="" />,
+                                formItemProps: { disabled: true }
+                            },
+                            "MajorType": {
+                                label: "专业类型",
+                                rules: [{ "required": true, "message": "专业类型不能为空" }],
+                                formItem: <WtmSelect placeholder="学校类型" dataSource={[
+                                    { Text: "必修", Value: 0 },
+                                    { Text: "选修", Value: 1 }
+                                ]} />
+                            },
+                        }}
+                        addButton={false}
+                        deleteButton={false}
+                        setValues={{ abcd: 1234 }}
+                    />
+                }
             }
         }
     },
