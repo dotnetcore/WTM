@@ -124,7 +124,7 @@ export class EditTable extends React.Component<IAppProps, any> {
     }
     componentDidMount() {
         const columns = this.createColumns();
-        if (this.props.deleteButton) {
+        if (this.props.deleteButton && !(this.props.disabled || this.props.display)) {
             columns.push({
                 title: "操作",
                 width: 70,
@@ -150,6 +150,7 @@ export class EditTable extends React.Component<IAppProps, any> {
     handleChange() {
         this.props.onChange(toJS(this.dataSource));
     }
+    @Debounce(100)
     handleAdd() {
         const dataSource = [...this.dataSource];
         dataSource.push({
@@ -201,17 +202,27 @@ export class EditTable extends React.Component<IAppProps, any> {
     render() {
         const columns = [...this.columns];
         const dataSource = [...this.dataSource];
+        const models = lodash.mapValues(this.props.models, value => {
+            return {
+                ...value,
+                formItemProps: {
+                    ...value.formItemProps,
+                    disabled: !!this.props.disabled,
+                    display: !!this.props.display,
+                }
+            }
+        });
         return (
             <ConfigProvider renderEmpty={() => <div>暂无数据</div>}>
-                {this.props.addButton && <Button onClick={this.handleAdd.bind(this)}>新建</Button>}
-                <Divider type="vertical" />
-                <Alert message="验证未通过行提交数据将忽略" type="warning" showIcon closable style={{ display: "inline-block" }} />
+                {this.props.addButton && !(this.props.disabled || this.props.display) && <Button onClick={this.handleAdd.bind(this)}>新建</Button>}
+                {/* <Divider type="vertical" />
+                <Alert message="验证未通过行提交数据将忽略" type="warning" showIcon closable style={{ display: "inline-block" }} /> */}
                 <Table
                     rowKey="__key"
                     bordered
                     components={{
                         body: {
-                            row: (props) => <EditableRow {...props} models={this.props.models} handleUpdate={this.handleUpdate} />,
+                            row: (props) => <EditableRow {...props} models={models} handleUpdate={this.handleUpdate} />,
                             cell: EditableCell
                         }
                     }}
@@ -244,6 +255,8 @@ interface IAppProps {
     value?: any;
     addButton?: boolean;
     deleteButton?: boolean;
+    display?: boolean;
+    disabled?: boolean;
 }
 @DesError
 export class WtmEditTable extends React.Component<IAppProps, any> {
@@ -267,6 +280,8 @@ export class WtmEditTable extends React.Component<IAppProps, any> {
             models={this.props.models}
             onChange={this.handleChange}
             setValues={this.props.setValues}
+            disabled={lodash.get(this.props, "disabled", false)}
+            display={lodash.get(this.props, "display", false)}
             addButton={lodash.get(this.props, "addButton", true)}
             deleteButton={lodash.get(this.props, "deleteButton", true)}
         />

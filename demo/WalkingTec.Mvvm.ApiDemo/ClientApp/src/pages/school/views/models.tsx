@@ -110,8 +110,8 @@ export default {
                                 ]} />
                             },
                         }}
-                        addButton={false}
-                        deleteButton={false}
+                        // addButton={false}
+                        // deleteButton={false}
                         setValues={{ abcd: 1234 }}
                     />
                 }
