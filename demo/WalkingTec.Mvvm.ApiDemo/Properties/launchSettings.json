@@ -23,12 +23,14 @@
       },
       "applicationUrl": "http://localhost:57911/"
     },
-    "newProfile1": {
+    "ApiOnly": {
       "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://localhost:5555"
+      "applicationUrl": "http://localhost:5555/"
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
+import lodash from 'lodash';
 @BindAll()
 export class Store extends DataSource {
     constructor() {
@@ -14,6 +15,11 @@ export class Store extends DataSource {
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
                     url: "/_frameworkrole/{ID}",
+                    method: "get"
+                },
+                pages: {
+                    // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
+                    url: "/_frameworkrole/GetPageActions/{ID}",
                     method: "get"
                 },
                 insert: {
@@ -46,6 +52,16 @@ export class Store extends DataSource {
                 }
             }
         });
+    }
+
+    /** 读取权限 */
+    async onPages(params) {
+        if (lodash.isString(params)) {
+            params = lodash.set({}, this.options.IdKey, params);
+        }
+        const res = await this.Observable.Request.ajax({ ...this.options.Apis.pages, body: params }).toPromise();
+        this.DataSource.details = res;
+        return res;
     }
 }
 export default new Store();

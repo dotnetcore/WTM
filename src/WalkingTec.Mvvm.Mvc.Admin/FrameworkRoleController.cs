@@ -32,6 +32,14 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
+        [ActionDescription("获取所有动作")]
+        [HttpGet("GetPageActions/{id}")]
+        public FrameworkRoleMDVM2 GetPageActions(Guid id)
+        {
+            var vm = CreateVM<FrameworkRoleMDVM2>(id);
+            return vm;
+        }
+
         [ActionDescription("新建")]
         [HttpPost("Add")]
         public IActionResult Add(FrameworkRoleVM vm)

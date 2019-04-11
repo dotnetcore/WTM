@@ -67,13 +67,13 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         return Store.onUpdate(values)
     },
     onLoadData(values, props) {
-        return Store.onDetails(values)
+        return Store.onPages(values)
     }
 })
 @observer
 export class JurisdictionForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
-    models = Models.editModels(this.props);
+    models = Models.pageModels(this.props);
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;
@@ -82,10 +82,10 @@ export class JurisdictionForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.ID" hidden />
                 <FormItem {...props} fieId="Entity.RoleCode" display/>
-                <FormItem {...props} fieId="Entity.RoleName" display/>
-        </InfoShellLayout>
+            <FormItem {...props} fieId="Entity.RoleName" display />
+            <FormItem {...props} fieId="Pages" layout="row" />
+       </InfoShellLayout>
     }
 }
 /**
