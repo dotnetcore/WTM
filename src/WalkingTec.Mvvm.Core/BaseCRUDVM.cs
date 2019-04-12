@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -436,9 +437,10 @@ namespace WalkingTec.Mvvm.Core
                                         var newitemType = item.GetType();
                                         foreach (var itempro in itemPros)
                                         {
-                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && setnames.Contains(itempro.Name))
+                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true ||  setnames.Contains(itempro.Name)))
                                             {
-                                                if (itempro.Name != "ID")
+                                                var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
+                                                if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
                                                 {
                                                     DC.UpdateProperty(i, itempro.Name);
                                                 }
