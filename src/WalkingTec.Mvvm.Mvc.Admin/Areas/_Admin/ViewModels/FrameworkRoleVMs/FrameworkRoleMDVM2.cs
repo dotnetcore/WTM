@@ -50,11 +50,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public bool DoChange()
         {
-            var all = FC.Where(x => x.Key.StartsWith("menu_")).ToList();
-            List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x=> Guid.Parse(x.Key.Replace("menu_",""))).ToList();
+            List<Guid> AllowedMenuIds = new List<Guid>();
             var torem = AllowedMenuIds.Distinct();
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleId == Entity.ID).Select(x => x.ID).ToList();
 
+            foreach (var page in Pages)
+            {
+                foreach (var action in page.Actions)
+                {
+                    if (AllowedMenuIds.Contains(action) == false)
+                    {
+                        AllowedMenuIds.Add(action);
+                    }
+                }
+            }
+
+            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => x.RoleId == Entity.ID).Select(x => x.ID).ToList();
             foreach (var oldid in oldIDs)
             {
                 FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };

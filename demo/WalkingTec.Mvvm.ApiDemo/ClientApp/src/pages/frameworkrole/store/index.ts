@@ -30,6 +30,10 @@ export class Store extends DataSource {
                     url: "/_frameworkrole/edit",
                     method: "put"
                 },
+                updatepage: {
+                    url: "/_frameworkrole/EditPrivilege",
+                    method: "put"
+                },
                 delete: {
                     url: "/_frameworkrole/BatchDelete",
                     method: "post"
@@ -56,6 +60,16 @@ export class Store extends DataSource {
 
     /** 读取权限 */
     async onPages(params) {
+        if (lodash.isString(params)) {
+            params = lodash.set({}, this.options.IdKey, params);
+        }
+        const res = await this.Observable.Request.ajax({ ...this.options.Apis.pages, body: params }).toPromise();
+        this.DataSource.details = res;
+        return res;
+    }
+
+    /** 设置权限 */
+    async onUpdatePages(params) {
         if (lodash.isString(params)) {
             params = lodash.set({}, this.options.IdKey, params);
         }

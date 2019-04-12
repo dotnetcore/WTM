@@ -40,6 +40,29 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
+
+        [ActionDescription("修改角色权限")]
+        [HttpPut("EditPrivilege")]
+        public IActionResult EditPrivilege(FrameworkRoleMDVM2 vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                vm.DoChange();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
         [ActionDescription("新建")]
         [HttpPost("Add")]
         public IActionResult Add(FrameworkRoleVM vm)
