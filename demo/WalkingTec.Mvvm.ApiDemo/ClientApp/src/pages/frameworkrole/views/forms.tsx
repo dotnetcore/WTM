@@ -64,7 +64,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
  */
 @DialogFormDes({
     onFormSubmit(values) {
-        return Store.onUpdate(values)
+        console.log(values);
+        return Store.onUpdatePages(values)
     },
     onLoadData(values, props) {
         return Store.onPages(values)
@@ -81,7 +82,8 @@ export class JurisdictionForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        return <InfoShellLayout>
+        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
+      return <InfoShellLayout>
                 <FormItem {...props} fieId="Entity.RoleCode" display/>
             <FormItem {...props} fieId="Entity.RoleName" display />
             <FormItem {...props} fieId="Pages" layout="row" />
