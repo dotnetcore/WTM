@@ -43,14 +43,21 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             if (isDebug)
             {
+                if (controller.ConfigInfo.IsQuickDebug)
+                {
+                    base.OnActionExecuting(context);
+                }
+                else
+                {
                     if (controller is BaseController c)
                     {
                         context.Result = c.Content("该地址只能在调试模式下访问");
                     }
-                    else if(controller is ControllerBase c2)
+                    else if (controller is ControllerBase c2)
                     {
                         context.Result = c2.BadRequest("该地址只能在调试模式下访问");
                     }
+                }
                 return;
             }
 
