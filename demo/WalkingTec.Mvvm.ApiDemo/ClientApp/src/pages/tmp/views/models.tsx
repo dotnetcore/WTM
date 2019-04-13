@@ -156,11 +156,11 @@ export default {
                                     })
 
                                 })}
-                                // onChange={(value, porp) => {
-                                //     props.form.setFieldsValue({
-                                //         'Entity.Url': lodash.get(porp, "select.Url")
-                                //     })
-                                // }}
+                            // onChange={(value, porp) => {
+                            //     props.form.setFieldsValue({
+                            //         'Entity.Url': lodash.get(porp, "select.Url")
+                            //     })
+                            // }}
                             />
                         },
                         /** 动作名称 */
@@ -267,16 +267,17 @@ export default {
             // //         dataKey="GroupId"
             // //     />
             // // },
-            // WtmCheckbox: {
-            //     label: "用户组",
-            //     rules: [],
-            //     formItem: <WtmCheckbox
-            //         placeholder="用户组"
-            //         //请求 数据 Observable 对象，
-            //         dataSource={Request.cache({ url: "/frameworkuser/GetUserGroups" })}
-            //         dataKey="GroupId"
-            //     />
-            // },
+            WtmCheckbox: {
+                label: "用户组",
+                rules: [],
+                formItem: <WtmCheckbox
+                    placeholder="用户组"
+                    //请求 数据 Observable 对象，
+                    dataSource={[{ Text: "男", Value: 0 },
+                    { Text: "女", Value: 1 }]}
+                    dataKey="GroupId"
+                />
+            },
             // /** 角色 */
             // UserRoles: {
             //     label: "角色",
