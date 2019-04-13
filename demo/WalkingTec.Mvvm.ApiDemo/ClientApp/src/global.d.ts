@@ -71,7 +71,7 @@ declare namespace WTM {
         [key: string]: any;
     }
     interface FormProps {
-        loadData: Function | Object;
+        loadData?: Function | Object;
         defaultValues?: any;
         form?: WrappedFormUtils;
         [key: string]: any;
