@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
-            if (controller.ConfigInfo.IsQuickDebug)
+            if (controller.ConfigInfo.IsQuickDebug && controller is BaseApiController)
             {
                 base.OnActionExecuting(context);
                 return;
