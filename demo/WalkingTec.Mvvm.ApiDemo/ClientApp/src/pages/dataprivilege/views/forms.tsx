@@ -7,6 +7,7 @@ import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
 import { bool } from 'prop-types';
+import { Help } from 'utils/Help';
 
 @DialogFormDes({
     onFormSubmit(values) {
@@ -21,8 +22,7 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const groupvalue = this.props.form.getFieldValue("DpType") || '0';
-        const Isgroup = lodash.eq(groupvalue, '0')
+        const Isgroup = Help.FormValueEqual(props, "DpType", "0")
         const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" value='0' />
@@ -50,7 +50,7 @@ export class InsertForm extends React.Component<any, any> {
 export class UpdateForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
-    componentDidMount(){
+    componentDidMount() {
         console.log("isall in mount", this.props.form.getFieldValue("IsAll"));
     }
     render() {
@@ -61,9 +61,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const Isgroup = lodash.eq(this.props.form.getFieldValue("DpType") || '0', '0')
-        console.log("isall in render=", this.props.form.getFieldValue("IsAll"));
-       const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        const Isgroup = Help.FormValueEqual(props, "DpType", "0")
+        const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
