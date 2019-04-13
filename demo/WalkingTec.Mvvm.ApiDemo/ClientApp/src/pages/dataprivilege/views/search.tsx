@@ -26,7 +26,8 @@ export default class extends React.Component<any, any> {
             Store={Store}
             form={this.props.form}
         >
-            {Models.renderModels(props)}
+            <FormItem {...props} fieId="TableName" />
+            <FormItem {...props} fieId="DpType" value='0' />
         </DataViewSearch>
     }
 }

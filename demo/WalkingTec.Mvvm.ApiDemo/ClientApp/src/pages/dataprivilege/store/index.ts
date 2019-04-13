@@ -1,5 +1,7 @@
 ﻿import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
+import { notification } from 'antd';
+import { url } from 'inspector';
 @BindAll()
 export class Store extends DataSource {
     constructor() {
@@ -13,7 +15,7 @@ export class Store extends DataSource {
                 },
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
-                    url: "/_dataprivilege/{ID}",
+                    url: "/_dataprivilege/get",
                     method: "get"
                 },
                 insert: {
@@ -47,5 +49,13 @@ export class Store extends DataSource {
             }
         });
     }
+
+     /** 修改 */
+    async onDetails(params) {
+        console.log(params);
+        const res = await this.Observable.Request.ajax({ ...this.options.Apis.details, body: params, headers: { 'Content-Type': null } }).toPromise();
+         return res;
+     }
+
 }
 export default new Store();

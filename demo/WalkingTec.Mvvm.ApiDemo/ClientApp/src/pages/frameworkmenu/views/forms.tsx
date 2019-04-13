@@ -61,9 +61,10 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const IsInside = lodash.eq(this.props.form.getFieldValue("Entity.IsInside") || 'true', 'true')
+        console.log("inside=" + this.props.form.getFieldValue("Entity.IsInside"))
+       const IsInside = lodash.eq(this.props.form.getFieldValue("Entity.IsInside") || 'true', 'true')
         return <InfoShellLayout>
-            <FormItem {...props} fieId="Entity.IsInside" layout="row" value='true' />
+            <FormItem {...props} fieId="Entity.IsInside" layout="row" />
             <FormItem {...props} fieId="Entity.Url" layout="row" disabled={IsInside} />
             <FormItem {...props} fieId="SelectedModule" hidden={!IsInside} />
             <FormItem {...props} fieId="SelectedActionIDs" hidden={!IsInside} />
