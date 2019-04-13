@@ -31,7 +31,7 @@ export class InsertForm extends React.Component<any, any> {
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" value='true' />
-            <FormItem {...props} fieId="SelectedActionIDs" disabled={Isall} />
+            <FormItem {...props} fieId="SelectedItemsID" disabled={Isall} />
         </InfoShellLayout>
     }
 }
@@ -51,7 +51,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     componentDidMount(){
-        console.log("isall=", this.props.defaultValues, this.props.form.getFieldsValue());
+        console.log("isall in mount", this.props.form.getFieldValue("IsAll"));
     }
     render() {
         const { form } = this.props;
@@ -62,7 +62,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         const Isgroup = lodash.eq(this.props.form.getFieldValue("DpType") || '0', '0')
-        const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        console.log("isall in render=", this.props.form.getFieldValue("IsAll"));
+       const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
@@ -70,7 +71,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" />
-            <FormItem {...props} fieId="SelectedActionIDs" disabled={Isall} />
+            <FormItem {...props} fieId="SelectedItemsID" disabled={Isall} />
         </InfoShellLayout>
     }
 }
