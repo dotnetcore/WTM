@@ -26,7 +26,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
                 this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader("操作"),
-            };
+                this.MakeGridHeader(x => x.DpType).SetHide(true),
+                this.MakeGridHeader(x => x.TargetId).SetHide(true)
+           };
         }
 
 
@@ -83,6 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         Name = x.Key.user.Name,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
+                        DpType = (int)Searcher.DpType
                     })
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
             }
@@ -99,6 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                         Name = x.Key.group.GroupName,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
+                        DpType = (int)Searcher.DpType
                     })
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
 
@@ -119,7 +123,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public string TableName { get; set; }
         [Display(Name = "权限数量")]
         public int RelateIDs { get; set; }
-
+        public int DpType { get; set; }
         [Display(Name = "域名")]
         public string DomainName { get; set; }
 

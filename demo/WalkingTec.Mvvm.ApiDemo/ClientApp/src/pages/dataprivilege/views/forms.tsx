@@ -25,12 +25,13 @@ export class InsertForm extends React.Component<any, any> {
         const Isgroup = lodash.eq(groupvalue, '0')
         const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
         return <InfoShellLayout>
-            <FormItem {...props} fieId="DpType" layout="row" value={groupvalue} />
+            <FormItem {...props} fieId="DpType" layout="row" value='0' />
+           <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
+            <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
-            <FormItem {...props} fieId="IsAll" value={true} />
-            <FormItem {...props} fieId="SelectedActionIDs" hidden={Isall} />
-            <FormItem {...props} fieId="UserItCode" hidden={Isgroup}/>
-            <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup}/>
+            <FormItem {...props} fieId="IsAll" value='true' />
+            <FormItem {...props} fieId="SelectedActionIDs" disabled={Isall} />
         </InfoShellLayout>
     }
 }
@@ -59,13 +60,15 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         const Isgroup = lodash.eq(this.props.form.getFieldValue("DpType") || '0', '0')
         const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        console.log("isall="+ this.props.form.getFieldValue("IsAll"));
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row"  />
-            <FormItem {...props} fieId="Entity.TableName" />
-            <FormItem {...props} fieId="IsAll" />
-            <FormItem {...props} fieId="SelectedActionIDs" hidden={Isall} />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
             <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            <Col span={24}></Col>
+            <FormItem {...props} fieId="Entity.TableName" />
+            <FormItem {...props} fieId="IsAll" />
+            <FormItem {...props} fieId="SelectedActionIDs" disabled={Isall} />
         </InfoShellLayout>
     }
 }
@@ -89,12 +92,13 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
         const Isgroup = lodash.eq(this.props.form.getFieldValue("DpType") || '0', '0')
         const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
         return <InfoShellLayout>
-            <FormItem {...props} fieId="DpType" layout="row"  />
-            <FormItem {...props} fieId="Entity.TableName" />
-            <FormItem {...props} fieId="IsAll"  />
-            <FormItem {...props} fieId="SelectedActionIDs" hidden={Isall} />
+            <FormItem {...props} fieId="DpType" layout="row" />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
             <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            <Col span={24}></Col>
+            <FormItem {...props} fieId="Entity.TableName" />
+            <FormItem {...props} fieId="IsAll" />
+            <FormItem {...props} fieId="SelectedActionIDs" disabled={Isall} />
         </InfoShellLayout>
     }
 }

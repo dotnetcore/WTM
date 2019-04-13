@@ -91,7 +91,7 @@ export default {
             /** 权限类型 */
             "DpType": {
                 label: "权限类型",
-                rules: [{ "required": true, "message": "权限类型不能为空" }],
+                rules: [],
                 formItem: <WtmRadio
                     dataSource={[
                         { Text: "用户组权限", Value: 0 },

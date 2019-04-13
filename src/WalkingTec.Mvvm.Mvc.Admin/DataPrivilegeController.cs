@@ -25,10 +25,19 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [ActionDescription("获取")]
-        [HttpGet("{id}")]
-        public DataPrivilegeVM Get(Guid id)
+        [HttpGet("Get")]
+        public DataPrivilegeVM Get(string TableName, Guid TargetId, DpTypeEnum DpType)
         {
-            var vm = CreateVM<DataPrivilegeVM>(id);
+            DataPrivilegeVM vm = null;
+            if (DpType == DpTypeEnum.User)
+            {
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserId == TargetId && x.DpType == DpType);
+                vm.UserItCode = DC.Set<FrameworkUserBase>().Where(x => x.ID == TargetId).Select(x => x.ITCode).FirstOrDefault();
+            }
+            else
+            {
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.GroupId == TargetId && x.DpType == DpType);
+            }
             return vm;
         }
 
