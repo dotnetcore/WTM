@@ -51,6 +51,7 @@ class EditableRow extends React.Component<any, any> {
             this.FieldsValue = FieldsValue;
         }
         this.props.form.validateFields()
+        // console.log("componentDidMount")
     }
     render() {
         const {

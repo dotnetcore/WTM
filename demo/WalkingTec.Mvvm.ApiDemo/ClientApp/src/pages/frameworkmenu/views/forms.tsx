@@ -96,7 +96,7 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
             display: true,
         }
-        const IsInside = lodash.get<string>(this.props.form.getFieldsValue(), "Entity.IsInside", 'true');
+        const IsInside = lodash.get(this.props.form.getFieldsValue(), "Entity.IsInside", 'true');
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside == 'true'} />

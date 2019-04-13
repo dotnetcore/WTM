@@ -174,6 +174,7 @@ class PageObservable {
       SortInfo: "",
       Page: 1,
       Limit: this.PageStore.DataSource.tableList.Limit,
+      ...this.PageStore.DataSource.searchParams,
       ...params,
     }
     runInAction(() => {

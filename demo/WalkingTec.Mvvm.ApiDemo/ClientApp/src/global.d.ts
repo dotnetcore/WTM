@@ -73,7 +73,7 @@ declare namespace WTM {
     interface FormProps {
         loadData: Function | Object;
         defaultValues?: any;
-        form?: any;
+        form?: WrappedFormUtils;
         [key: string]: any;
     }
 }
@@ -132,3 +132,43 @@ interface ColumnProps<T> {
     onHeaderCell?: (props: ColumnProps<T>) => any;
     sortDirections?: SortOrder[];
 }
+declare type WrappedFormUtils<V = any> = {
+    /** 获取一组输入控件的值，如不传入参数，则获取全部组件的值 */
+    getFieldsValue(fieldNames?: Array<string>): {
+        [field: string]: any;
+    };
+    /** 获取一个输入控件的值 */
+    getFieldValue(fieldName: string): any;
+    /** 设置一组输入控件的值 */
+    setFieldsValue(obj: Object): void;
+    /** 设置一组输入控件的值 */
+    setFields(obj: Object): void;
+    /** 校验并获取一组输入域的值与 Error */
+    validateFields(fieldNames: Array<string>, options: ValidateFieldsOptions, callback: ValidateCallback<V>): void;
+    validateFields(options: ValidateFieldsOptions, callback: ValidateCallback<V>): void;
+    validateFields(fieldNames: Array<string>, callback: ValidateCallback<V>): void;
+    validateFields(fieldNames: Array<string>, options: ValidateFieldsOptions): void;
+    validateFields(fieldNames: Array<string>): void;
+    validateFields(callback: ValidateCallback<V>): void;
+    validateFields(options: ValidateFieldsOptions): void;
+    validateFields(): void;
+    /** 与 `validateFields` 相似，但校验完后，如果校验不通过的菜单域不在可见范围内，则自动滚动进可见范围 */
+    validateFieldsAndScroll(fieldNames: Array<string>, options: ValidateFieldsOptions, callback: ValidateCallback<V>): void;
+    validateFieldsAndScroll(options: ValidateFieldsOptions, callback: ValidateCallback<V>): void;
+    validateFieldsAndScroll(fieldNames: Array<string>, callback: ValidateCallback<V>): void;
+    validateFieldsAndScroll(fieldNames: Array<string>, options: ValidateFieldsOptions): void;
+    validateFieldsAndScroll(fieldNames: Array<string>): void;
+    validateFieldsAndScroll(callback: ValidateCallback<V>): void;
+    validateFieldsAndScroll(options: ValidateFieldsOptions): void;
+    validateFieldsAndScroll(): void;
+    /** 获取某个输入控件的 Error */
+    getFieldError(name: string): Object[];
+    getFieldsError(names?: Array<string>): Object;
+    /** 判断一个输入控件是否在校验状态 */
+    isFieldValidating(name: string): boolean;
+    isFieldTouched(name: string): boolean;
+    isFieldsTouched(names?: Array<string>): boolean;
+    /** 重置一组输入控件的值与状态，如不传入参数，则重置所有组件 */
+    resetFields(names?: Array<string>): void;
+    getFieldDecorator<T extends Object = {}>(id: keyof T, options?: GetFieldDecoratorOptions): (node: React.ReactNode) => React.ReactNode;
+};
