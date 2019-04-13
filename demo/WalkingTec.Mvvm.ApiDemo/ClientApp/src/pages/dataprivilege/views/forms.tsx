@@ -22,8 +22,8 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const Isgroup = Help.FormValueEqual(props, "DpType", "0")
-        const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        const Isgroup = Models.getValue(props, "DpType") == "0"
+        const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" value='0' />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
@@ -61,8 +61,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        const Isgroup = Help.FormValueEqual(props, "DpType", "0")
-        const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        const Isgroup = Models.getValue(props,"DpType") == "0"
+        const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
@@ -91,8 +91,8 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
             display: true,
         }
-        const Isgroup = lodash.eq(this.props.form.getFieldValue("DpType") || '0', '0')
-        const Isall = lodash.eq(this.props.form.getFieldValue("IsAll") || 'true', 'true')
+        const Isgroup = Models.getValue(props, "DpType") == "0"
+        const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />

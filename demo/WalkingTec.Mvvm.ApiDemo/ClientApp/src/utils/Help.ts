@@ -22,4 +22,8 @@ export class Help {
     static FormValueEqual(props: WTM.FormProps, Field, eqValue) {
         return lodash.eq(lodash.toString(props.form.getFieldValue(Field) || lodash.get(props.defaultValues, Field)), lodash.toString(eqValue))
     }
+
+    static GetFormValue(props: WTM.FormProps, Field) {
+        return lodash.toString(props.form.getFieldValue(Field) || lodash.get(props.defaultValues, Field))
+    }
 }
