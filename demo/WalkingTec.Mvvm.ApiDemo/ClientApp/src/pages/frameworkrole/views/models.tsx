@@ -84,7 +84,7 @@ export default {
                 formItem: (props) => {
                     console.log(props)
                     return <WtmEditTable 
-                        rowKey="Id"
+                        rowKey="ID"
                         models={{
                             "Name": {
                                 label: "页面",
@@ -105,7 +105,7 @@ export default {
                                         return <span></span>;
                                     }
                                     else {
-                                        return <WtmSelect placeholder="选择动作" multiple
+                                        return <WtmCheckbox placeholder="选择动作" multiple
                                             dataSource={props.defaultValues.AllActions}
                                         />
                                     }

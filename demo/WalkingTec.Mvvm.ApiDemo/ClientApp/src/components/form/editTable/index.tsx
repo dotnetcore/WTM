@@ -138,6 +138,7 @@ export class EditTable extends React.Component<IAppProps, any> {
             this.columns = columns;
             if (lodash.isArray(this.props.value) && this.props.value.length > 0) {
                 this.dataSource = this.props.value.map(x => {
+                    // console.log(x, this.props.rowKey, lodash.get(x, this.props.rowKey))
                     return {
                         ...this.props.setValues,
                         ...x,
