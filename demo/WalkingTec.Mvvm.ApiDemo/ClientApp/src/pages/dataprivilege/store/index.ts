@@ -11,7 +11,7 @@ export class Store extends DataSource {
             Apis: {
                 search: {
                     url: "/_dataprivilege/search",
-                    method: "post"
+                    method: "post"                    
                 },
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
@@ -48,6 +48,7 @@ export class Store extends DataSource {
                 }
             }
         });
+        this.DataSource.searchParams = { DpType: '0' }
     }
 
      /** 修改 */

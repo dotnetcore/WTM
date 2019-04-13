@@ -17,7 +17,7 @@ export default class extends React.Component<any, any> {
         const props = {
             ...this.props,
             models: this.models,
-            defaultValues: toJS(Store.DataSource.searchParams)
+            defaultValues: toJS({DpType:'0'})
         }
         return <DataViewSearch
             // columnCount={4} 默认全局
@@ -26,8 +26,7 @@ export default class extends React.Component<any, any> {
             Store={Store}
             form={this.props.form}
         >
-            <FormItem {...props} fieId="TableName" />
-            <FormItem {...props} fieId="DpType" value='0' />
+            {Models.renderModels(props)}
         </DataViewSearch>
     }
 }
