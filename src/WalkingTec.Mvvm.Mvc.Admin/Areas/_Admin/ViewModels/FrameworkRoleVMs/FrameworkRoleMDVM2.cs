@@ -55,11 +55,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
             foreach (var page in Pages)
             {
-                foreach (var action in page.Actions)
+                if (page.Actions != null)
                 {
-                    if (AllowedMenuIds.Contains(action) == false)
+                    foreach (var action in page.Actions)
                     {
-                        AllowedMenuIds.Add(action);
+                        if (AllowedMenuIds.Contains(action) == false)
+                        {
+                            AllowedMenuIds.Add(action);
+                        }
                     }
                 }
             }

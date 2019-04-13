@@ -73,7 +73,7 @@ export class Store extends DataSource {
         if (lodash.isString(params)) {
             params = lodash.set({}, this.options.IdKey, params);
         }
-        const res = await this.Observable.Request.ajax({ ...this.options.Apis.pages, body: params }).toPromise();
+        const res = await this.Observable.Request.ajax({ ...this.options.Apis.updatepage, body: params }).toPromise();
         this.DataSource.details = res;
         return res;
     }

@@ -37,14 +37,14 @@ export default {
                 />
             },
            /** 允许访问 */
-           "SelectedActionIDs": {
+           "SelectedItemsID": {
                label: "允许访问",
                 rules: [],
                formItem: <WtmSelect placeholder="选择允许访问的权限"
                     multiple
-                    linkageModels="SelectedModule"
+                   linkageModels="Entity.TableName"
                     dataSource={(parentid) => Request.cache({
-                        url: "/api/_FrameworkMenu/GetPrivilegeByTableName", body: { "ModelName": parentid }
+                        url: "/api/_DataPrivilege/GetPrivilegeByTableName", body: { table: parentid }
                     })}
                 />
             },
