@@ -173,6 +173,16 @@ namespace WalkingTec.Mvvm.Core
                     //dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("yyyy/MM/dd");
                     dataStyle.DataFormat = dataFormat.GetFormat("yyyy/mm/dd");
                     break;
+                case ColumnDataType.DateTime:
+                    this.MinValueOrLength = DateTime.Parse("1950/01/01").ToString("yyyy/MM/dd HH:mm:ss");
+                    this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? DateTime.MaxValue.ToString("yyyy/MM/dd HH:mm:ss") : this.MaxValuseOrLength;
+                    dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
+                        DVConstraint.CreateDateConstraint(OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength, "yyyy/MM/dd HH:mm:ss"));
+                    dataValidation.CreateErrorBox("错误", "请输入日期");
+                    dataValidation.CreatePromptBox("请输入日期格式 yyyy/mm/dd HH:mm:ss", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    //dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("yyyy/MM/dd");
+                    dataStyle.DataFormat = dataFormat.GetFormat("yyyy/mm/dd HH:mm:ss");
+                    break;
                 case ColumnDataType.Number:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? long.MinValue.ToString() : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? long.MaxValue.ToString() : this.MaxValuseOrLength;
@@ -277,6 +287,7 @@ namespace WalkingTec.Mvvm.Core
                 switch (this.DataType)
                 {
                     case ColumnDataType.Date:
+                    case ColumnDataType.DateTime:
                         DateTime tryDateTimeResult;
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
@@ -351,7 +362,7 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        public static ExcelPropety CreateProperty<T>(Expression<Func<T, object>> field)
+        public static ExcelPropety CreateProperty<T>(Expression<Func<T, object>> field, bool isDateTime = false)
         {
             ExcelPropety cp = new ExcelPropety();
             cp.ColumnName = field.GetPropertyDisplayName();
@@ -408,6 +419,8 @@ namespace WalkingTec.Mvvm.Core
             else if(t == typeof(DateTime))
             {
                 cp.DataType = ColumnDataType.Date;
+                if (isDateTime)
+                    cp.DataType = ColumnDataType.DateTime;
             }
             else
             {
@@ -485,7 +498,7 @@ namespace WalkingTec.Mvvm.Core
         public string ErrorMsg { get; set; }
     }
 
-    public enum ColumnDataType { Text, Number, Date, Float, Bool, ComboBox, Enum, Dynamic }
+    public enum ColumnDataType { Text, Number, Date, Float, Bool, ComboBox, Enum, Dynamic, DateTime }
 
     #endregion
 }
