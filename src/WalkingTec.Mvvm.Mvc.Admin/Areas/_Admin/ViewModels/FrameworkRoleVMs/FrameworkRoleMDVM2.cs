@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         public FrameworkRoleMDVM2()
         {
-            
+
         }
 
         protected override void InitVM()
@@ -39,11 +39,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
             foreach (var item in data2)
             {
-                if (item.AllActions != null)
+                if (item.AllActions == null)
                 {
-                    var ids = item.AllActions.Select(x => Guid.Parse(x.Value));
-                    item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
+                    item.AllActions = new List<ComboSelectListItem>();
                 }
+                item.AllActions.Insert(0, new ComboSelectListItem { Text = "主页面", Value = item.ID.ToString() });
+                var ids = item.AllActions.Select(x => Guid.Parse(x.Value));
+                item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
             }
             Pages = data2;
         }
