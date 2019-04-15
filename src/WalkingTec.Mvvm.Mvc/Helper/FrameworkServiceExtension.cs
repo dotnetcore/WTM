@@ -235,6 +235,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (u.EndsWith("/0"))
                         {
                             u = u.Substring(0, u.Length - 2);
+                            u = u + "/{id}";
                         }
                         a.Url = u;
                     }
