@@ -14,7 +14,7 @@ notification.config({
     duration: 3,
     top: 60
 });
-const development = false;// process.env.NODE_ENV === "development"
+const development = process.env.NODE_ENV === "development"
 if (development) {
     if ('ActiveXObject' in window || lodash.includes(lodash.toLower(lodash.get(window, 'navigator.userAgent', '')), "edge")) {
         Modal.confirm({

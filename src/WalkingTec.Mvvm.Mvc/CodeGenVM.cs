@@ -286,6 +286,7 @@ namespace WalkingTec.Mvvm.Mvc
 , {ModelName.ToLower()}: {{
         name: '{ModuleName.ToLower()}',
         path: '/{ModelName.ToLower()}',
+        controller: '{ModelName}',
         component: () => import('./{ModelName.ToLower()}').then(x => x.default) 
     }}
 /**WTM**/
@@ -299,13 +300,10 @@ namespace WalkingTec.Mvvm.Mvc
                     var i = menu.LastIndexOf("}");
                     menu = menu.Insert(i + 1, $@"
 ,{{
-        ""Key"": ""{Guid.NewGuid().ToString()}"",
-        ""Name"": ""{ModuleName.ToLower()}"",
-        ""Icon"": ""menu-fold"",
-        ""Path"": ""/{ModelName.ToLower()}"",
-        ""Component"": ""{ModelName.ToLower()}"",
-        ""Action"": [],
-        ""Children"": []
+        ""Id"": ""{Guid.NewGuid().ToString()}"",
+        ""ParentId"": null,
+        ""Text"": ""{ModuleName.ToLower()}"",
+        ""Url"": ""/{ModelName.ToLower()}""
     }}
 ");
                     File.WriteAllText($"{MainDir}\\ClientApp\\src\\subMenu.json", menu, Encoding.UTF8);
