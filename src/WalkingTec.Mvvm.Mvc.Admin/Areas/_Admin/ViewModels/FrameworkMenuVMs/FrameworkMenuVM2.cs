@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.Url = null;
                 }
             }
-            base.DoEdit();
+            base.DoEdit(updateAllFields);
             List<Guid> guids = new List<Guid>();
             guids.Add(Entity.ID);
             if (Entity.Children != null)
