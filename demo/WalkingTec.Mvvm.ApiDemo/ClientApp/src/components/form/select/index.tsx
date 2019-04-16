@@ -140,9 +140,12 @@ export class WtmSelect extends React.Component<IAppProps, any> {
                 const linkageModelsValue = getFieldValue(this.props.linkageModels);
                 // console.log("onlinkageModelsUpdate", this.props.linkageModels, linkageModelsValue)
                 if (!lodash.eq(this.linkageModelsValue, linkageModelsValue)) {
+                    // 非第一次加载，父状态更改 清空 选项
+                    if (!lodash.isNil(this.linkageModelsValue)) {
+                        setFields({ [this.props.id]: { value: undefined } })
+                    }
                     this.linkageModelsValue = linkageModelsValue;
                     // 重置选择的值
-                    // resetFields([this.props.id])
                     // 加载数据 联动
                     if (!lodash.isNil(linkageModelsValue)) {
                         const data = await this.onLoadingData(this.props.dataSource(linkageModelsValue));
