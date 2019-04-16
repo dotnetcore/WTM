@@ -10,6 +10,7 @@ import lodash from 'lodash';
 import { action, observable, runInAction } from "mobx";
 import { create, persist } from 'mobx-persist';
 import Menu from './menu'
+import globalConfig from 'global.config';
 const hydrate = create({
     storage: window.localStorage,   // or AsyncStorage in react-native.
     jsonify: true,  // if you use AsyncStorage, here shoud be true
@@ -80,7 +81,7 @@ class Store {
             } catch (error) {
             }
         }
-        window.localStorage.clear();
+        globalConfig.token.clear()
     }
 
 }

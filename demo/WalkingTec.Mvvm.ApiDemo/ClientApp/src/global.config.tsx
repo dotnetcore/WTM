@@ -60,6 +60,10 @@ export default observable({
         get() {
             return window.localStorage.getItem('__token') || null;
         },
+        clear() {
+            window.localStorage.clear();
+            window.location.reload()
+        }
     },
     /** 列表 分页 可选 行数 以下是默认值 */
     // pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200'],
