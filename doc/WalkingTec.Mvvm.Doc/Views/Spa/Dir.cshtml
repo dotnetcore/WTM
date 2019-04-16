@@ -1,0 +1,59 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>ClientApp/src/pages/index.ts定义了系统中所有的模块</p>
+<p>ClientApp/src/pages下的每一个子目录对应一个独立的模块</p>
+<p>对于每一个模块，框架将他们分割成若干文件，便于开发和测试</p>
+<wt:fieldset field-set-style="Simple" title="模块文件结构">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">文件</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>index.tsx</td>
+                <td>模块主页面</td>
+            </tr>
+            <tr>
+                <td>style.less</td>
+                <td>模块范围内的自定义css</td>
+            </tr>
+            <tr>
+                <td>store/index.ts</td>
+                <td>定义了模块需要调用的api</td>
+            </tr>
+            <tr>
+                <td>views/models.tsx</td>
+                <td>定义了表单和搜索条件的模型</td>
+            </tr>
+            <tr>
+                <td>views/forms.tsx</td>
+                <td>定义了添加，修改，详情等表单</td>
+            </tr>
+            <tr>
+                <td>search.tsx</td>
+                <td>定义了搜索条件所使用的表单</td>
+            </tr>
+            <tr>
+                <td>table.tsx</td>
+                <td>定义列表</td>
+            </tr>
+            <tr>
+                <td>action.tsx</td>
+                <td>定义了模块中的各种按钮，包括列表中每行上需要的按钮</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+</script>
+<script>
+    layui.table.init('parse-table-demo');
+</script>
