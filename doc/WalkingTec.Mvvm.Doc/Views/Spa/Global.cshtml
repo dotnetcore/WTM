@@ -1,0 +1,77 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="全局配置">
+    <wt:quote>ClientApp/src 目录下的 global.config.tsx文件定义了前端的一些全局配置</wt:quote>
+
+    <wt:fieldset field-set-style="Simple" title="ConfigInfo属性说明">
+        <table lay-filter="parse-table-demo">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'username', width:200}">属性</th>
+                    <th lay-data="{field:'joinTime', width:600}">描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>development</td>
+                    <td>是否为开发模式</td>
+                </tr>
+                <tr>
+                    <td>Limit</td>
+                    <td>默认列表行数</td>
+                </tr>
+                <tr>
+                    <td>infoType</td>
+                    <td>弹出窗口模式，Drawer或者Modal，Drawer是抽屉式弹出，Modal是普通的居中弹出</td>
+                </tr>
+                <tr>
+                    <td>infoTypeWidth</td>
+                    <td>默认弹出窗口宽度</td>
+                </tr>
+                <tr>
+                    <td>infoColumnCount</td>
+                    <td>表单每行显示几个控件</td>
+                </tr>
+                <tr>
+                    <td>searchColumnCount</td>
+                    <td>搜索条件每行显示几个控件</td>
+                </tr>
+                <tr>
+                    <td>lockingTableRoll</td>
+                    <td>是否让表格充满空白区域并内部滚动</td>
+                </tr>
+                <tr>
+                    <td>collapsed</td>
+                    <td>搜索条件是否收起</td>
+                </tr>
+                <tr>
+                    <td>tabsPage</td>
+                    <td>是否使用Tab页显示多页面</td>
+                </tr>
+                <tr>
+                    <td>tabPosition</td>
+                    <td>当使用Tab页的时候，Tab标签出现的方位，可选值有 top right bottom left</td>
+                </tr>
+            </tbody>
+        </table>
+    </wt:fieldset>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="菜单配置">
+    <p>在开发模式下，框架读取ClientApp/src/subMenu.json文件来生成左侧菜单</p>
+    <p>发布之后，框架通过数据库里配置的菜单来生成左侧菜单</p>
+    <wt:quote>开发人员也可以通过修改ClientApp/src/global.config.tsx文件中development的属性来指定非开发模式</wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="api代理配置">
+    <p>如果使用Visual Studio来运行代码，框架自动匹配了前台和后台，不需要配置代理</p>
+    <p>如果前端在ClientApp目录下手动npm start来运行前端，则需要修改ClientApp/src/setupProxy.js文件来指定后台api的地址</p>
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+</script>
+<script>
+    layui.table.init('parse-table-demo');
+</script>
