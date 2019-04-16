@@ -1,25 +1,10 @@
 ﻿export default {
-    tmp: {
-        name: '测试',
-        path: '/tmp',
-        controller: undefined,
-        component: () => import('./tmp').then(x => x.default)
-    }
-
-    , actionlog: {
+    actionlog: {
         name: '日志管理',
         path: '/actionlog',
         controller: 'ActionLog',
         component: () => import('./actionlog').then(x => x.default)
     }
-
-    , school: {
-        name: '学校管理',
-        path: '/school',
-        controller: 'School',
-        component: () => import('./school').then(x => x.default)
-    }
-
     , frameworkgroup: {
         name: '用户组管理',
         path: '/frameworkgroup',
