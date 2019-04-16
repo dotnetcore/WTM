@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Implement;
 using System.Threading.Tasks;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -112,6 +115,23 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     catch { }
 
+                    if (ctrl is BaseApiController apictrl)
+                    {
+                        apictrl.TryValidateModel(model);
+                        apictrl.HttpContext.Request.Body.Position = 0;
+                        StreamReader tr = new StreamReader(apictrl.HttpContext.Request.Body);
+                        string body = tr.ReadToEnd();
+                        var obj = JsonConvert.DeserializeObject(body) as JObject;
+                        var fields = GetJsonFields(obj);
+                        foreach (var field in fields)
+                        {
+                            model.FC.Add(field, null);
+                        }
+
+                    }
+
+
+
                     //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
                     if (model is IBaseBatchVM<BaseVM>)
                     {
@@ -136,7 +156,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 self.RemoveAction();
                                 //if (temp.ErrorMessage.Count > 0)
                                 //{
-                                    self.AddErrorColumn();
+                                self.AddErrorColumn();
                                 //}
                             };
                             if (temp.ListVM.Searcher != null)
@@ -165,6 +185,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                     }
                     model.Validate();
+                    if (ctrl is BaseController)
+                    {
                         var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
                         if (ctrl.ModelState.IsValid)
                         {
@@ -181,6 +203,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                         }
                     }
+                }
             }
 
             base.OnActionExecuting(context);
@@ -307,6 +330,38 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
             base.OnResultExecuted(context);
+        }
+
+        private IEnumerable<string> GetJsonFields(JObject j)
+        {
+            var children = j.Children();
+            foreach (var item in children)
+            {
+                var rv = GetTokenFields(item);
+                foreach (var i in rv)
+                {
+                    yield return i;
+                }
+            }
+            yield break;
+        }
+
+        private IEnumerable<string> GetTokenFields(JToken j)
+        {
+            if (j.Type == JTokenType.Property)
+            {
+                yield return j.Path;
+            }
+            var children = j.Children();
+            foreach (var item in children)
+            {
+                var rv = GetTokenFields(item);
+                foreach (var i in rv)
+                {
+                    yield return i;
+                }
+            }
+            yield break;
         }
     }
 }

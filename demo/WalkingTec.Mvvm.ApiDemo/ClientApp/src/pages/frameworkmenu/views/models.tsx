@@ -140,5 +140,14 @@ export default {
         return lodash.map(props.models, (value, key) => {
             return <FormItem {...props} fieId={key} key={key} />
         })
+    },
+
+    getValue(props: WTM.FormProps, fieId, defaultvalue = undefined) {
+        var rv = lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
+        console.log("rv=" + rv);
+        if (rv == "") {
+            rv = lodash.toString(defaultvalue);
+        }
+        return rv;
     }
 }

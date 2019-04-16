@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -59,13 +62,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPut("Edit")]
         public IActionResult Edit(FrameworkUserVM vm)
         {
+            ModelState.Remove("Entity.Password");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
-                vm.DoEdit(true);
+                vm.DoEdit(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -77,7 +81,10 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-		[HttpPost("BatchDelete")]
+
+
+
+        [HttpPost("BatchDelete")]
         [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
