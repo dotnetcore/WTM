@@ -588,14 +588,14 @@ namespace WalkingTec.Mvvm.Core
                 List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
                 //如果包含附件，则先删除附件
-                var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+                var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fa)
                 {
                     if (f.GetValue(Entity) is FileAttachment file)
                     {
                         fileids.Add(file.ID);
-                        f.SetValue(Entity, null);
                     }
+                    f.SetValue(Entity, null);
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
