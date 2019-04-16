@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(false);
+                vm.DoEdit(true);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
