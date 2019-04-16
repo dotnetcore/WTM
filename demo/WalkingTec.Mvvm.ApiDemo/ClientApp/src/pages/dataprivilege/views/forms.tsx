@@ -22,8 +22,8 @@ export class InsertForm extends React.Component<any, any> {
             ...this.props,
             models: this.models,
         }
-        const Isgroup = Models.getValue(props, "DpType") == "0"
-        const Isall = Models.getValue(props, "IsAll") == "true"
+        const Isgroup = Models.getValue(props, "DpType",0) == "0"
+        const Isall = Models.getValue(props, "IsAll",true) == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" value='0' />
             <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />

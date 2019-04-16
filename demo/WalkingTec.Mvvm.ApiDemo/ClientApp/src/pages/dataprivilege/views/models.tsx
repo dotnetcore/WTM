@@ -109,7 +109,12 @@ export default {
         })
     },
     
-    getValue(props: WTM.FormProps, fieId) {
-        return lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
+    getValue(props: WTM.FormProps, fieId, defaultvalue = undefined) {
+        var rv = lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
+        console.log("rv=" + rv);
+        if (rv == "") {
+            rv = lodash.toString(defaultvalue);
+        }
+        return rv;
     }
 }

@@ -65,7 +65,6 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-        getFieldDecorator('Entity.Password', { initialValue: lodash.get(this.props.defaultValues, 'Entity.Password') });
        return <InfoShellLayout>
                 <FormItem {...props} fieId="Entity.ITCode"  />
                 <FormItem {...props} fieId="Entity.Email" />
@@ -76,7 +75,6 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
                 <FormItem {...props} fieId="Entity.Address" />
                 <FormItem {...props} fieId="Entity.ZipCode" />
                 <FormItem {...props} fieId="Entity.PhotoId" />
-                <FormItem {...props} fieId="Entity.IsValid" />
                 <Col span={24}>
                     <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
                 </Col>
