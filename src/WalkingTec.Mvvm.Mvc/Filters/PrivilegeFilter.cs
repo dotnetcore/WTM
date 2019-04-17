@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,30 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
-            controller.BaseUrl = $"/{ad.ControllerName}/{ad.ActionName}";
-            controller.BaseUrl += context.HttpContext.Request.QueryString.ToUriComponent();
-            if (context.RouteData.Values["area"] != null)
+            if (controller is BaseController)
             {
-                controller.BaseUrl = $"/{context.RouteData.Values["area"]}{controller.BaseUrl}";
+                controller.BaseUrl = $"/{ad.ControllerName}/{ad.ActionName}";
+                controller.BaseUrl += context.HttpContext.Request.QueryString.ToUriComponent();
+                if (context.RouteData.Values["area"] != null)
+                {
+                    controller.BaseUrl = $"/{context.RouteData.Values["area"]}{controller.BaseUrl}";
+                }
+            }
+            if (controller is BaseApiController)
+            {
+                var lg = GlobalServices.GetRequiredService<LinkGenerator>();
+                var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName);
+                if (u == null)
+                {
+                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { id = 0 });
+                }
+                if (u.EndsWith("/0"))
+                {
+                    u = u.Substring(0, u.Length - 2);
+                    u = u + "/{id}";
+                }
+                controller.BaseUrl = u;
+
             }
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限
@@ -78,7 +98,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     if (controller is BaseController c)
                     {
-                        context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType="text/html" };
+                        context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType = "text/html" };
                     }
                     else if (controller is ControllerBase c2)
                     {
