@@ -687,5 +687,14 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        public static string GetNugetVersion()
+        {
+            string v = APIHelper.CallAPI("https://api.nuget.org/v3-flatcontainer/walkingtec.mvvm.mvc/index.json").Result;
+            var i = v.LastIndexOf("\"");
+            v = v.Substring(0, i);
+            i = v.LastIndexOf("\"");
+            v = v.Substring(i+1);
+            return v;
+        }
     }
 }

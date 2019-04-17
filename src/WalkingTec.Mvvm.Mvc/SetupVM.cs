@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class SetupVM : BaseVM
     {
-        private string version = "2.2.33";
+        private string version = "";
 
         public bool EnableLog { get; set; }
 
@@ -118,6 +118,11 @@ namespace WalkingTec.Mvvm.Mvc
             FileMode = SaveFileModeEnum.Database;
             UploadDir = "";
             Rpp = 20;
+        }
+
+        public SetupVM()
+        {
+            version = Utils.GetNugetVersion();           
         }
 
         public void DoSetup()
