@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:52:27
  * @desc [description] .
  */
-import { message, notification } from 'antd';
+import { message, notification, List, Col, Row, Button } from 'antd';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 import { Help } from 'utils/Help';
 import { Request } from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
+import React from 'react';
 declare type PageStoreOptions = {
   /** api 列表 */
   Apis: WTM.IUrls,
@@ -120,7 +121,7 @@ export default class PageStore {
       notification.success({ message: "操作成功" });
       return res
     } catch (error) {
-      console.log(error);
+      this.onErrorMessage("导入失败", [{ value: lodash.get(error, 'Form["Entity.Import"]'), key: null, FileId: lodash.get(error, 'Form["Entity.ErrorFileId"]') }])
     }
   }
   /**
@@ -152,6 +153,34 @@ export default class PageStore {
     await RequestFiles.download({
       ...this.options.Apis.template,
       url: Request.compatibleUrl(this.options.Target, this.options.Apis.template.url)
+    })
+  }
+  /**
+   * 错误提示
+   * @param message 
+   * @param dataSource 
+   */
+  onErrorMessage(message, dataSource?: { key: string, value: string, FileId?: string }[]) {
+    notification.error({
+      duration: 5,
+      message: message,
+      description: dataSource && dataSource.length > 0 && <List
+        itemLayout="horizontal"
+        dataSource={dataSource}
+        renderItem={item => (
+          <List.Item>
+            <Row style={{ width: "100%" }}>
+              {/* <Col span={10}>{item.key}</Col> */}
+              <Col span={14}>{item.value}</Col>
+              {item.FileId && <Col span={10}>
+                <Button type="primary" onClick={e => {
+                  RequestFiles.download({ url: RequestFiles.onFileDownload(item.FileId, "/"), method: "get" })
+                }}>下载错误文件</Button>
+              </Col>}
+            </Row>
+          </List.Item>
+        )}
+      />
     })
   }
 }
@@ -250,7 +279,7 @@ class PageObservable {
    * @param UploadFileId 
    */
   onImport(UploadFileId) {
-    return this.Request.ajax({ ...this.options.Apis.import, body: UploadFileId }).toPromise();
+    return this.Request.ajax({ ...this.options.Apis.import, body: { UploadFileId } }).toPromise();
   }
 }
 /**
