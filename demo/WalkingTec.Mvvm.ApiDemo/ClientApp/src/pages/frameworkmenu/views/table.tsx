@@ -24,7 +24,7 @@ const columns = [
     },
 
     {
-        dataIndex: "IConId",
+        dataIndex: "ICon",
         title: "图标",
         render: columnsRenderDownload 
     }
