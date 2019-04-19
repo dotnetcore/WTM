@@ -201,7 +201,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.PageName = action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
-                            menu.Url = "/" + action.Url;
+                            menu.Url = action.Url;
                             Entity.Children.Add(menu);
                         }
                     }
