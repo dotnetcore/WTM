@@ -13,7 +13,8 @@
 
 <wt:quote>
     <p>问：为什么我左侧显示的菜单不是我在菜单管理里配置的菜单？</p>
-    <p>答：appsettings文件中有一个IsQuickDebug属性，默认是true，当IsQuickDebug为true的时候框架处于调试模式，框架会反射你所有controller的方法并列在左边菜单中，并跳过所有权限验证，方便你进行调试。当IsQuickDebug为false的时候，框架才会读取你配置的菜单并进行权限验证。所以当你发布生产环境的时候，请把IsQuickDebug改为false</p>
+    <p>答：在前后端不分离的情况下，appsettings文件中有一个IsQuickDebug属性，默认是true，当IsQuickDebug为true的时候框架处于调试模式，框架会反射你所有controller的方法并列在左边菜单中，并跳过所有权限验证，方便你进行调试。当IsQuickDebug为false的时候，框架才会读取你配置的菜单并进行权限验证。所以当你发布生产环境的时候，请把IsQuickDebug改为false</p>
+    <p>在前后端分离模式下，左侧菜单是由前端控制的，ClientApp/src 目录下的 global.config.tsx文件中有一个development的属性，为true时，框架会读取ClientApp/src/subMenu.json文件中定义的菜单，为false时，框架才会使用数据库中配置的菜单。发布前端时，development会自动被设定为false。</p>
 </wt:quote>
 
 <wt:quote>
@@ -28,4 +29,9 @@
 <wt:quote>
     <p>问：我需要自定义的用户表怎么办？</p>
     <p>答：可以通过简单的继承来扩展框架自带的用户表，具体介绍参见<a href="/#/QuickStart/CustomUser">这里</a></p>
+</wt:quote>
+
+<wt:quote>
+    <p>问：为什么我添加了新model，但是数据库中没有新的表</p>
+    <p>答：EF目前不支持自动更新数据库，可以手动将数据库修改成和Model对应的，或者直接删掉原有数据库，EF会生成新的</p>
 </wt:quote>
