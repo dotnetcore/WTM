@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             var vm = CreateVM<SetupVM>();
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
             Guid g = Guid.NewGuid();
-            string newdir = vm.EntryDir + "\\" + g.ToString();
+            string newdir = vm.EntryDir + Path.DirectorySeparatorChar + g.ToString();
             vm.MainNs = ns;
             var rv = vm.GetIndex()
                 .Replace("$extradir$", g.ToString())
@@ -43,10 +43,10 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Index2(SetupVM vm)
         {
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
-            vm.ExtraDir = vm.EntryDir + "\\" + vm.ExtraDir;
+            vm.ExtraDir = vm.EntryDir + Path.DirectorySeparatorChar + vm.ExtraDir;
             vm.MainNs = vm.ExtraNS;
-            vm.MainDir = vm.ExtraDir + "\\" + vm.MainNs;
-            string propertydir = vm.MainDir + "\\Properties";
+            vm.MainDir = vm.ExtraDir + Path.DirectorySeparatorChar + vm.MainNs;
+            string propertydir = vm.MainDir + Path.DirectorySeparatorChar +"Properties";
             if (Directory.Exists(vm.ExtraDir) == false)
             {
                 Directory.CreateDirectory(vm.ExtraDir);
@@ -62,12 +62,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             vm.WriteDefaultFiles();
             vm.DoSetup();
 
-            var zipdir = vm.EntryDir + "\\ZipFiles";
+            var zipdir = vm.EntryDir + Path.DirectorySeparatorChar +"ZipFiles";
             if(Directory.Exists(zipdir) == false)
             {
                 Directory.CreateDirectory(zipdir);
             }
-            var zipfile = zipdir + "\\" + vm.ExtraNS + ".zip";
+            var zipfile = zipdir + Path.DirectorySeparatorChar + vm.ExtraNS + ".zip";
             System.IO.Compression.ZipFile.CreateFromDirectory(vm.ExtraDir, zipfile);
 
             byte[] rv = System.IO.File.ReadAllBytes(zipfile);
