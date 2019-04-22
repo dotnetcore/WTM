@@ -66,6 +66,7 @@ public class DataContext : FrameworkContext
             代码生成完毕后，关闭浏览器，重新启动调试，我们可以看到左侧菜单已经有了自定义用户管理，和框架自带的没有什么区别，但是已经有了你需要的字段<br />
             <wt:quote>
                 <p>唯一需要修改一下的就是框架的登陆是MD5验证的，所以当你添加MyUser之前，记得加上一句Entity.Password = Utils.GetMD5String(Entity.Password);把密码MD5加密一下</p>
+                <p>自定义的用户管理中是看不到系统默认创建的admin的，因为EF通过Discriminator字段来判读数据属于哪个类，你可以手动将admin的Discriminator字段修改为MyUser。或者直接删掉admin，在自定义用户中添加一个新账户属于管理员角色。</p>
             </wt:quote>
         </li>
         <li>
