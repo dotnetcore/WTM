@@ -18,7 +18,7 @@ const development = process.env.NODE_ENV === "development"
 if (development) {
     if ('ActiveXObject' in window || lodash.includes(lodash.toLower(lodash.get(window, 'navigator.userAgent', '')), "edge")) {
         Modal.confirm({
-            title: "求求您，别用IE了~"
+            title: "哥，咱别用IE了叭 （开发模式存在）~"
         })
     }
 }
