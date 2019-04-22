@@ -203,7 +203,7 @@ window.ff = {
         var checkboxes = $('#' + formid + ' :checkbox');
         for ( i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
-            if (ck.checked === false && (ck.value === true || ck.value === false)) {
+            if (ck.checked === false && (ck.value === 'true' || ck.value === 'false')) {
                 datastr += "&" + ck.name + "=false";
             }
         }
