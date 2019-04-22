@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.ApiDemo.Models;
 
 namespace WalkingTec.Mvvm.ApiDemo.Controllers
 {
-    
+    [Area("aaa")]
     [ActionDescription("地区管理")]
     [ApiController]
     [Route("api/City")]
