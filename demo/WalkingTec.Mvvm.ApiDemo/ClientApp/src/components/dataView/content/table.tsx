@@ -31,48 +31,32 @@ interface ITablePorps extends TableProps<any> {
 
 const TableUtils = {
     // 页面宽度
-    clientWidth: 0,
-    // 左边选择框 宽度
-    selectionColumnWidth: 0,
+    // clientWidth: 0,
+    // // 左边选择框 宽度
+    // selectionColumnWidth: 0,
     /**
      * 设置列宽度
      * @param tableBody 
      * @param columns 
      */
-    onSetColumnsWidth(tableBody, columns: ColumnProps<any>[]) {
+    onSetColumnsWidth(tableBody: HTMLDivElement, columns: ColumnProps<any>[]) {
         // 获取页面宽度
         if (tableBody) {
+            const notfixed = lodash.filter(columns, data => !lodash.isString(data.fixed));
             // 表头
-            const { clientWidth } = tableBody.querySelector(".ant-table-thead ");
-            const columnsLenght = columns.filter(x => typeof x.fixed !== "string").length;
+            const columnsLenght = notfixed.length// columns.length //columns.filter(x => typeof x.fixed !== "string").length;
             //计算表格设置的总宽度
-            const columnWidth = this.onGetcolumnsWidth(columns);
-            const columnFixedWidth = this.onGetcolumnsWidth(columns.filter(x => typeof x.fixed === "string"));
-            // 总宽度差值
-            const width = clientWidth - columnWidth - columnFixedWidth + 60;
-            if (width > 0) {
-                const average = Math.ceil(width / columnsLenght)
-                // 平均分配
-                columns = columns.map(x => {
-                    if (typeof x.fixed === "string") {
-                        return x;
-                    }
-                    return {
-                        ...x,
-                        width: ((x.width as any || 0) + average)
-                    }
-                })
+            const columnWidth = this.onGetcolumnsWidth(columns) + lodash.get(tableBody.querySelector('th.ant-table-selection-column'), 'clientWidth', 0);
+            if (columnWidth > tableBody.clientWidth) {
             } else {
-                // const average = Math.ceil(TableUtils.clientWidth / columnsLenght);
-                // columns = columns.map(x => {
-                //     if (typeof x.fixed === "string") {
-                //         return x;
-                //     }
-                //     return {
-                //         ...x,
-                //         width: average
-                //     }
-                // })
+                const width = Math.ceil((tableBody.clientWidth - columnWidth) / columnsLenght);
+                // console.log(tableBody.clientWidth, columnWidth, width)
+                lodash.mapValues(columns, data => {
+                    if (typeof data.width === "number") {
+                        data.width += width;
+                    }
+                    return data;
+                })
             }
             return columns
         }
@@ -84,7 +68,7 @@ const TableUtils = {
     onGetcolumnsWidth(columns) {
         //计算表格设置的总宽度
         return columns.reduce((accumulator, currentValue) => {
-            return Math.ceil(accumulator + (currentValue.width || 0))
+            return Math.ceil(accumulator + (currentValue.width || 200))
         }, 0);
     },
     /**
@@ -94,7 +78,7 @@ const TableUtils = {
         let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
-            x: scrollX + 100,
+            x: scrollX + 50,
         }
     },
     /**
@@ -137,6 +121,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         return x;
     });
     @observable Height = 500;
+    isResize = false;
     Store = this.props.Store;
     tableRef = React.createRef<any>();
     tableDom: HTMLDivElement;
@@ -156,6 +141,9 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      */
     @Debounce(300)
     onChange(page, filters, sorter) {
+        if (this.isResize) {
+            return console.log("拖拽中")
+        }
         let sort: any = "";
         if (sorter.columnKey) {
             if (sorter.order == 'descend') {
@@ -172,20 +160,26 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             Limit: page.pageSize
         })
     }
+    @Debounce(1000)
+    onUpdateResize() {
+        this.isResize = false;
+    }
     /**
      * 拖拽
      */
     handleResize(index) {
         const path = `[${index}].width`;
         return (e, { size }) => {
-            let width = lodash.get(this.columns, path);
-            let scrollw = TableUtils.onGetScroll(this.columns).x - width + size.width;
-            if (TableUtils.clientWidth - scrollw > 5) {
-                return
-            }
+            // let width = lodash.get(this.columns, path);
+            // let scrollw = TableUtils.onGetScroll(this.columns).x - width + size.width;
+            // // if (TableUtils.clientWidth - scrollw > 5) {
+            // //     return
+            // // }
+            this.isResize = true;
+            this.onUpdateResize();
             runInAction(() => {
                 lodash.update(this.columns, path, () => {
-                    return lodash.max([size.width, 100])
+                    return lodash.max([size.width, 50])
                 })
             })
         }
@@ -245,7 +239,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     async componentDidMount() {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
-            TableUtils.clientWidth = this.tableDom.clientWidth;
+            // TableUtils.clientWidth = this.tableDom.clientWidth;
             this.Store.onSearch();
             this.onCalculationHeight()
             this.initColumns();
