@@ -344,6 +344,20 @@ namespace WalkingTec.Mvvm.Core
                             bool found = false;
                             foreach (var newitem in list)
                             {
+                                var subtype = newitem.GetType();
+                                if (subtype.IsSubclassOf(typeof(BasePoco)))
+                                {
+                                    BasePoco ent = newitem as BasePoco;
+                                    if (ent.UpdateTime == null)
+                                    {
+                                        ent.UpdateTime = DateTime.Now;
+                                    }
+                                    if (string.IsNullOrEmpty(ent.UpdateBy))
+                                    {
+                                        ent.UpdateBy = LoginUserInfo?.ITCode;
+                                    }
+                                }
+                                //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
                                 foreach (var itempro in itemPros)
                                 {
                                     if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
@@ -367,38 +381,6 @@ namespace WalkingTec.Mvvm.Core
                             }
 
 
-                            //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
-                            foreach (var newitem in list)
-                            {
-                                var subtype = newitem.GetType();
-                                if (subtype.IsSubclassOf(typeof(BasePoco)))
-                                {
-                                    BasePoco ent = newitem as BasePoco;
-                                    if (ent.UpdateTime == null)
-                                    {
-                                        ent.UpdateTime = DateTime.Now;
-                                    }
-                                    if (string.IsNullOrEmpty(ent.UpdateBy))
-                                    {
-                                        ent.UpdateBy = LoginUserInfo?.ITCode;
-                                    }
-                                }
-                                foreach (var itempro in itemPros)
-                                {
-                                    if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
-                                    {
-                                        itempro.SetValue(newitem, null);
-                                    }
-                                    if (!string.IsNullOrEmpty(fkname))
-                                    {
-                                        if (itempro.Name.ToLower() == fkname.ToLower())
-                                        {
-                                            itempro.SetValue(newitem, Entity.ID);
-                                            found = true;
-                                        }
-                                    }
-                                }
-                            }
                             TModel _entity = null;
                             //打开新的数据库联接,获取数据库中的主表和子表数据
                             using (var ndc = DC.CreateNew())
@@ -417,10 +399,7 @@ namespace WalkingTec.Mvvm.Core
                                 if (field.StartsWith("Entity." + pro.Name + "[0]."))
                                 {
                                     string name = field.Replace("Entity." + pro.Name + "[0].", "");
-                                    if (name != "UpdateTime" && name != "UpdateBy")
-                                    {
                                         setnames.Add(name);
-                                    }
                                 }
                             }
 
@@ -517,8 +496,6 @@ namespace WalkingTec.Mvvm.Core
                     if (field.StartsWith("Entity.") && !field.Contains("["))
                     {
                         string name = field.Replace("Entity.", "");
-                        if (name != "UpdateTime" && name != "UpdateBy")
-                        {
                             try
                             {
                                 DC.UpdateProperty(Entity, name);
@@ -526,7 +503,17 @@ namespace WalkingTec.Mvvm.Core
                             catch (Exception)
                             {
                             }
-                        }
+                    }
+                }
+                if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
+                {
+                    try
+                    {
+                        DC.UpdateProperty(Entity, "UpdateTime");
+                        DC.UpdateProperty(Entity, "UpdateBy");
+                    }
+                    catch (Exception)
+                    {
                     }
                 }
             }
