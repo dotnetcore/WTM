@@ -227,12 +227,12 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     foreach (var a in m.Actions)
                     {
-                        var u = lg.GetPathByAction(a.MethodName, m.ClassName);
+                        var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
                         if (u == null)
                         {
-                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0 });
+                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
                         }
-                        if (u.EndsWith("/0"))
+                        if (u!= null && u.EndsWith("/0"))
                         {
                             u = u.Substring(0, u.Length - 2);
                             u = u + "/{id}";
@@ -248,7 +248,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var item in cs)
             {
                 var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
-                dc.DataInit(gd.AllModule,test != null).Wait();
+                dc.DataInit(gd.AllModule, test != null).Wait();
             }
             return app;
         }
@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.IsQuickDebug)
             {
                 menus = new List<FrameworkMenu>();
-                foreach (var model in allModule.Where(x=>x.NameSpace != "WalkingTec.Mvvm.Admin.Api"))
+                foreach (var model in allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api"))
                 {
                     var modelmenu = new FrameworkMenu
                     {
@@ -434,7 +434,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var modules = new List<FrameworkModule>();
 
-           foreach (var ctrl in controllers)
+            foreach (var ctrl in controllers)
             {
                 var pubattr = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
