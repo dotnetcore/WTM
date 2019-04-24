@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
-                vmdir = MainDir + "{Path.DirectorySeparatorChar}ViewModels";
+                vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
             }
             else
             {
