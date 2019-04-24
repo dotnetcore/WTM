@@ -384,7 +384,8 @@ namespace WalkingTec.Mvvm.Core
                     fproperty.SetMemberValue(temp, value, null);
                 }
             }
-            catch { }
+            catch{
+            }
         }
 
         /// <summary>
