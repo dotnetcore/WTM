@@ -18,7 +18,7 @@ function hasErrors(fieldsError) {
 export default class LoginDemo extends React.Component<any, any>{
   state = {
     loading: false,
-    notCode: !globalConfig.development,
+    notCode: false, //!globalConfig.development,取消注释可以在发布环境出现滑块验证
     visible: false
   }
   onSubmit(e) {
@@ -101,7 +101,6 @@ export default class LoginDemo extends React.Component<any, any>{
                   visible={this.state.visible && this.state.notCode}
                   icon="" >
                   <Button
-
                     disabled={disabled || this.state.notCode}
                     type="primary" htmlType="submit" block
                     loading={this.state.loading}>

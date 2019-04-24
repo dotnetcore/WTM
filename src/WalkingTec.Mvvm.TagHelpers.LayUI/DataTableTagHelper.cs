@@ -191,21 +191,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string CheckedFunc { get; set; }
 
-        #region 需要修改
-        // TODO 需要修改
-        /// <summary>
-        /// 初始排序 字段
-        /// <para>用于在数据表格渲染完毕时，默认按某个字段排序。注：该参数为 layui 2.1.1 新增</para>
-        /// </summary>
-        public ModelExpression InitSortField { get; set; }
-
-        /// <summary>
-        /// 初始排序 类型默认ASC
-        /// <para>用于在数据表格渲染完毕时，默认按某个字段排序。注：该参数为 layui 2.1.1 新增</para>
-        /// </summary>
-        public SortTypeEnum InitSortType { get; set; }
-        #endregion
-
         /// <summary>
         /// 是否开启分页 默认 true
         /// </summary>
@@ -512,6 +497,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
  var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
+    ,autoSort: false
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
@@ -526,7 +512,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
-    {(InitSortField == null ? string.Empty : $",initSort: {{field: '{InitSortField.Metadata.PropertyName}',type: '{InitSortType.ToString().ToLower()}'}}")}
     ,cols:{JsonConvert.SerializeObject(layuiCols, _jsonSerializerSettings)}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
@@ -556,6 +541,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
   table.on('tool({Id})',wtToolBarFunc_{Id});
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $"table.on('edit({Id})',wtEditFunc_{Id});")}
   {(string.IsNullOrEmpty(CheckedFunc) ? string.Empty : $"table.on('checkbox({Id})',{CheckedFunc});")}
+
+    table.on('sort({Id})', function(obj){{
+    var sortfilter = {{}};
+    sortfilter['Searcher.SortInfo.Property'] = obj.field;
+    sortfilter['Searcher.SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
+   var w = $.extend({Id}option.where,sortfilter);
+
+  table.reload('{Id}', {{
+    initSort: obj,
+    where: w   
+  }});
+  }});
 </script>
 <!-- Grid 行内按钮 -->
 <script type=""text/html"" id=""{ToolBarId}"">{rowBtnStrBuilder}</script>

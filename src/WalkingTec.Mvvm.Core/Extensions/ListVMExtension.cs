@@ -292,7 +292,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (inner == false)
                     {
-                        html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                        html = "\"" + html.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     }
                     sb.Append(html);
                     sb.Append(",");
@@ -358,7 +358,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                     }
 
-                    html = "\"" + html.Replace(Environment.NewLine, "").Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                    html = "\"" + html.Replace(Environment.NewLine, "").Replace("\t", string.Empty).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     sb.Append(html);
                     sb.Append(",");
                 }
