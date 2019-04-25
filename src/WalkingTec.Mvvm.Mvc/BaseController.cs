@@ -464,7 +464,7 @@ namespace WalkingTec.Mvvm.Mvc
                 //循环FormCollection
                 foreach (var item in bvm.FC.Keys)
                 {
-                    PropertyHelper.SetPropertyValue(vm, item, bvm.FC[item].ToString(), prefix, true);
+                    PropertyHelper.SetPropertyValue(vm, item, bvm.FC[item], prefix, true);
                 }
                 return true;
             }

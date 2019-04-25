@@ -7,12 +7,14 @@ using WalkingTec.Mvvm.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Demo.Models;
-
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 {
     public class MyUserListVM : BasePagedListVM<MyUser_View, MyUserSearcher>
     {
+        public FrameworkRoleListVM RoleList = new FrameworkRoleListVM();
+
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
