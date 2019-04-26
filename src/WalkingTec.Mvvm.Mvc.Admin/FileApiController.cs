@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Mvc;
 namespace WalkingTec.Mvvm.Admin.Api
 {
     /// <summary>
-    /// 
+    /// 文件接口
     /// </summary>
     [ApiController]
     [Route("api/_file")]
