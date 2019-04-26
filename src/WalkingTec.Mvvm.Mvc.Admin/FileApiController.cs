@@ -8,6 +8,9 @@ using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     [Route("api/_file")]
     [AllRights]
