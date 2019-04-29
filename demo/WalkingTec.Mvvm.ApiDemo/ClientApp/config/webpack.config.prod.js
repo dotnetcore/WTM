@@ -18,6 +18,8 @@ module.exports = (config, env) => {
     config.devtool = false;
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
     config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
+    // 清空 console
+    config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
     config.module.rules = [
         {
             oneOf: [
