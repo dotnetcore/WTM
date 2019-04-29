@@ -178,5 +178,17 @@ namespace WalkingTec.Mvvm.Core
             self.Resizable = resizable;
             return self;
         }
+
+        /// <summary>
+        /// 设置一个布尔值的列名，当改列值为true的时候才显示本行的这个动作按钮
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="colName"></param>
+        /// <returns></returns>
+        public static GridAction SetBindVisiableColName(this GridAction self, string colName)
+        {
+            self.BindVisiableColName = colName;
+            return self;
+        }
     }
 }
