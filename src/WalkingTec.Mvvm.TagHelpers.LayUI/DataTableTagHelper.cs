@@ -596,7 +596,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (item.ParameterType != GridActionParameterTypesEnum.RemoveRow)
                     {
+                        bool condition = false;
+                        if(string.IsNullOrEmpty(item.BindVisiableColName) == false)
+                        {
+                            condition = true;
+                        }
+                        if(condition == true)
+                        {
+                            rowBtnStrBuilder.Append("{{#  if(d."+item.BindVisiableColName+" == true || d."+item.BindVisiableColName+" == 'true' ){ }}");
+                        }
                         rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
+                        if(condition == true)
+                        {
+                            rowBtnStrBuilder.Append("{{#  } else{ }}");
+                            rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" style=""visibility:collapse"">{item.Name}</a>");
+                            rowBtnStrBuilder.Append("{{# } }}");
+                        }
                     }
                     else
                     {
