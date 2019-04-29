@@ -58,10 +58,15 @@
             if (obj.type === "all") { // 全选
                 var selected = ff.GetSelectionData(gridId);
                 for (var i = 0; i < selected.length; i++) {
+                    var checked = false;
                     for (var j = 0; j < @(tempvar).length; j++) { // 是否已经选中
-                        if (@(tempvar).ID == selected[i].ID) break;
+                        if (@(tempvar)[j].ID == selected[i].ID) {
+                            checked=true;
+                            break;
+                        }
                     }
-                    @(tempvar).push(selected[i]);
+                    if(!checked)
+                        @(tempvar).push(selected[i]);
                 }
             } else {
                 if (obj.data.ID === undefined) {
