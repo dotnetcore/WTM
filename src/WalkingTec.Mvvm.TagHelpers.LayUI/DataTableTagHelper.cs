@@ -609,7 +609,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if(condition == true)
                         {
                             rowBtnStrBuilder.Append("{{#  } else{ }}");
-                            rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" style=""visibility:collapse"">{item.Name}</a>");
+                            //rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" style=""visibility:collapse"">{item.Name}</a>");
                             rowBtnStrBuilder.Append("{{# } }}");
                         }
                     }
