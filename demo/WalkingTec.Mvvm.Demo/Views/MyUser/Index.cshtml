@@ -6,7 +6,7 @@
 <wt:textbox field="Searcher.Name" />
 <wt:combobox field="Searcher.Sex" empty-text="全部" />
 <wt:textbox field="Searcher.IsValid" /><wt:combobox field="Searcher.IsValid" empty-text="全部" />
-<wt:combobox field="Searcher.SelectedUserRolesIDs" items="Searcher.AllUserRoless" empty-text="全部" />
+<wt:selector  field="Searcher.SelectedUserRolesIDs" list-vm="RoleList" text-bind="RoleList.EntityList[0].RoleName" />
 </wt:row>
 </wt:searchpanel>
 <wt:grid vm="@Model" />

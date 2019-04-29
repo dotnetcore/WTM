@@ -35,15 +35,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             header.Add(this.MakeGridHeader(x => x.ActionName, 120));
             header.Add(this.MakeGridHeader(x => x.ITCode, 120));
             header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
-            header.Add(this.MakeGridHeader(x => x.ActionTime, 200));
-            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetForeGroundFunc((entity)=> {
+            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true).SetForeGroundFunc((entity)=> {
                 if(entity.Duration <= 1)
                 {
-                    return "00FF00";
+                    return "008000";
                 }
                 else if(entity.Duration <= 3)
                 {
-                    return "FFFF00";
+                    return "FFC90E";
                 }
                 else
                 {

@@ -101,6 +101,8 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public bool HideOnToolBar { get; set; }
 
+        public string BindVisiableColName { get; set; }
+
         #region 请求链接相关
 
         /// <summary>
