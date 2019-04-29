@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
-
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
+using Newtonsoft.Json;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 {
@@ -18,11 +19,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         public List<ComboSelectListItem> AllUserGroupss { get; set; }
         [Display(Name = "用户组")]
         public List<Guid> SelectedUserGroupsIDs { get; set; }
+        [JsonIgnore]
+        public FrameworkRoleListVM RoleListVM { get; set; }
 
         public MyUserVM()
         {
             SetInclude(x => x.UserRoles);
             SetInclude(x => x.UserGroups);
+            RoleListVM = new FrameworkRoleListVM();
         }
 
         protected override void InitVM()
