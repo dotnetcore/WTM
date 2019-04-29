@@ -548,7 +548,7 @@ window.ff = {
             index = 0;
         }
         var tab = "";
-        if (DONOTUSE_TABLAYID !== undefined) {
+        if (DONOTUSE_TABLAYID !== undefined && dialogid == "DONOTUSE_MAINPANEL") {
             tab = " .layui-tab-item.layui-show";
         }
         var tables = $('#' + dialogid + tab + ' table[id]');
