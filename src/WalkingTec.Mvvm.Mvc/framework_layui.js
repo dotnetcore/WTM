@@ -122,7 +122,7 @@ window.ff = {
                 }
                 else {
                     data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
-                    if ($.cookie("pagemode") === 'Tab') {
+                    if ($.cookie("pagemode") === 'Tab' && window.location.href.toLowerCase().indexOf("/home/pindex#/") === -1) {
                         $('#DONOTUSE_MAINPANEL').css('overflow', 'hidden');
                         if ($('#DONOTUSE_MAINTAB').length === 0) {
                             $('#DONOTUSE_MAINPANEL').html('<div class="layui-tab donotuse_pdiv" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
