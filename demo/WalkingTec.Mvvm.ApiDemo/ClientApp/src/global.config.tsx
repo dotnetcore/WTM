@@ -15,13 +15,7 @@ notification.config({
     top: 60
 });
 const development = process.env.NODE_ENV === "development"
-if (development) {
-    if ('ActiveXObject' in window || lodash.includes(lodash.toLower(lodash.get(window, 'navigator.userAgent', '')), "edge")) {
-        Modal.confirm({
-            title: "哥，咱别用IE了叭 （开发模式存在）~"
-        })
-    }
-}
+
 export default observable({
     /**
      * 开发环境
