@@ -129,6 +129,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script type=""text/javascript"">
 layui.element.init();
 $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
+$('#{ResetBtnId}').on('click', function (btn) {{
+    var hiddenAreas = $('#'+this.form.id +' input[wtm-tag=wtmselector]')
+    if(hiddenAreas && hiddenAreas.length>0){{
+        for(i=0;i<hiddenAreas.length;i++){{
+            hiddenAreas[i].remove();
+        }}
+    }}
+}});
 $('#{SearchBtnId}').on('click', function () {{
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
     var layer = layui.layer;

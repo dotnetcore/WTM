@@ -23,7 +23,7 @@
             }
             for (var i = 0; i < selected.length; i++) {
                 displayStrArr.push(selected[i]['@ViewBag.TextName']);
-                hiddenStrArr.push("<input type='hidden' name='@ViewBag.FieldName' value='" + selected[i]['@ViewBag.ValName'] +"' />");
+                hiddenStrArr.push("<input type='hidden' wtm-tag='wtmselector' name='@ViewBag.FieldName' value='" + selected[i]['@ViewBag.ValName'] +"' />");
             }
         }
 
