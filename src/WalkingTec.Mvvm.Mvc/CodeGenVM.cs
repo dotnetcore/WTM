@@ -633,13 +633,22 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     var proType = modelType.GetProperty(pro.FieldName);
                     var display = proType.GetCustomAttribute<DisplayAttribute>();
-                    if (display != null)
+                    var filefk = DC.GetFKName2(modelType, pro.FieldName);
+                   if (display != null)
                     {
                         prostring += $@"
         [Display(Name = ""{display.Name}"")]";
                     }
-                    prostring += $@"
+                    if (string.IsNullOrEmpty(pro.RelatedField) == false)
+                    {
+                        prostring += $@"
+        public ExcelPropety {pro.FieldName + "_Excel"} = ExcelPropety.CreateProperty<{ModelName}>(x => x.{filefk});";
+                    }
+                    else
+                    {
+                        prostring += $@"
         public ExcelPropety {pro.FieldName + "_Excel"} = ExcelPropety.CreateProperty<{ModelName}>(x => x.{pro.FieldName});";
+                    }
                 }
                 rv = rv.Replace("$pros$", prostring).Replace("$init$", initstr);
                 rv = GetRelatedNamespace(pros, rv);
@@ -1176,7 +1185,13 @@ namespace WalkingTec.Mvvm.Mvc
         public bool IsImportField { get; set; }
         public bool IsBatchField { get; set; }
 
+        /// <summary>
+        /// 字段关联的类名
+        /// </summary>
         public string SubField { get; set; }
+        /// <summary>
+        /// 多对多关系时，记录中间表关联到主表的字段名称
+        /// </summary>
         public string SubIdField { get; set; }
 
     }
