@@ -28,9 +28,31 @@
     </wt:quote>
 </wt:fieldset>
 
+<wt:fieldset field-set-style="Simple" title="有附件的模型">
+    <p>附件是系统中比较常用的，框架自带了附件表FileAttachment，需要有附件的模型只需要关联这个表就可以了</p>
+    <p>比如下面例子中的Photo和PhotoId这一组属性就关联了FileAttachment表，代码生成器可以根据这个关联，自动为你生成上传文件和浏览/下载文件的功能</p>
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Display(Name = "账号")]
+    [Required(ErrorMessage = "{0}是必填项")]
+    [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+    public string LoginName { get; set; }
+
+    [Display(Name = "照片")]
+    public Guid? PhotoId { get; set; }
+
+    [Display(Name = "照片")]
+    public FileAttachment Photo { get; set; }
+
+}
+    </wt:code>
+</wt:fieldset>
+
 <wt:fieldset field-set-style="Simple" title="其他">
     框架除了要求模型必须最终继承自TopBasePoco之外，没有其他额外要求。只要遵循EF Core的方式创建模型类就可以
 </wt:fieldset>
+
 
 <wt:fieldset field-set-style="Simple" title="示例">
     <wt:quote>
@@ -131,6 +153,12 @@ namespace FirstProject.Model
 
         [Display(Name = "日期")]
         public DateTime? EnRollDate { get; set; }
+
+        [Display(Name = "照片")]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "照片")]
+        public FileAttachment Photo { get; set; }
 
         [Display(Name = "专业")]
         public List&ltStudentMajor&gt StudentMajor { get; set; }
