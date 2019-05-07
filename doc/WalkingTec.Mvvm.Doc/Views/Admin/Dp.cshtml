@@ -11,33 +11,33 @@
             数据权限在系统开发阶段，就应该确定好。当业务上将数据权限确定好之后，需要在代码中将数据权限声明给框架，让框架知道，系统中有哪些数据权限。声明的方式就是在Programe文件中的配置服务中
         </wt:quote>
         <wt:code>
-            public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-            .ConfigureServices(x =>
-            {
-                List<IDataPrivilege> pris = new List<IDataPrivilege>();
-                pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
-                x.AddFrameworkService(dataPrivilegeSettings: pris);
-                x.AddLayui();
-            })
-            .Configure(x =>
-            {
-            x.UseFrameworkService();
-            })
-            .Build();
+public static IWebHost BuildWebHost(string[] args) =&gt;
+    WebHost.CreateDefaultBuilder(args)
+    .ConfigureServices(x =&gt;
+    {
+        List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+        pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
+        x.AddFrameworkService(dataPrivilegeSettings: pris);
+        x.AddLayui();
+    })
+    .Configure(x =&gt;
+    {
+    x.UseFrameworkService();
+    })
+    .Build();
         </wt:code>
         配置如下代码：
         <wt:code>
-        List<IDataPrivilege> pris = new List<IDataPrivilege>();
-        pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
-        x.AddFrameworkService(dataPrivilegeSettings: pris);
+List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
+x.AddFrameworkService(dataPrivilegeSettings: pris);
         </wt:code>
         <p>当数据权限有多个的时候，继续在此添加即可，例如：</p>
         <wt:code>
-        List<IDataPrivilege> pris = new List<IDataPrivilege>();
-        pris.Add(new DataPrivilegeInfo<Company>("公司权限", m => m.Name));
-        pris.Add(new DataPrivilegeInfo<Department>("部门权限", m => m.Name));
-        x.AddFrameworkService(dataPrivilegeSettings: pris);
+List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;Department&gt;("部门权限", m =&gt; m.Name));
+x.AddFrameworkService(dataPrivilegeSettings: pris);
         </wt:code>
         <p>
         通过上述配置后，系统可以知道有哪些数据权限。在新建数据权限过程中，"数据权限"字段的下拉列表中，会显示出配置的数据权限的内容。如图：<br />
@@ -56,43 +56,43 @@
         <li>使用数据权限</li>
         查询条件中通过LoginUserInfo.DataPrivileges使用数据权限
         <wt:code>
-            public class EmployeeSearcher : BaseSearcher
-            {
-                public List<ComboSelectListItem>
-                    AllCompanys { get; set; }
-                    [Display(Name = "所属公司")]
-                    public Guid CompanyID { get; set; }
-                    [Display(Name = "员工姓名")]
-                    public String Name { get; set; }
-                    [Display(Name = "员工性别")]
-                    public SexEnum Sex { get; set; }
+public class EmployeeSearcher : BaseSearcher
+{
+    public List&lt;ComboSelectListItem&gt;
+        AllCompanys { get; set; }
+        [Display(Name = "所属公司")]
+        public Guid CompanyID { get; set; }
+        [Display(Name = "员工姓名")]
+        public String Name { get; set; }
+        [Display(Name = "员工性别")]
+        public SexEnum Sex { get; set; }
 
-                    protected override void InitVM()
-                    {
-                        AllCompanys = DC.Set<Company>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.Name);
-                    }
-            }
+        protected override void InitVM()
+        {
+            AllCompanys = DC.Set&lt;Company&gt;().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y =&gt; y.Name);
+        }
+}
         </wt:code>
         查询的数据列表通过DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)方式根据数据权限过滤数据
         <wt:code>
-            public override IOrderedQueryable<Employee_View> GetSearchQuery()
-            {
-                var query = DC.Set<Employee>()
-                    .CheckEqual(Searcher.CompanyID, x=>x.CompanyID)
-                    .CheckContain(Searcher.Name, x=>x.Name)
-                    .CheckEqual(Searcher.Sex, x=>x.Sex)
-                    .DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)
-                    .Select(x => new Employee_View
-                    {
-                        ID = x.ID,
-                        Name_view = x.Company.Name,
-                        Name = x.Name,
-                        Age = x.Age,
-                        Sex = x.Sex,
-                    })
-                    .OrderBy(x => x.ID);
-                    return query;
-            }
+public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
+{
+    var query = DC.Set&lt;Employee&gt;()
+        .CheckEqual(Searcher.CompanyID, x=&gt;x.CompanyID)
+        .CheckContain(Searcher.Name, x=&gt;x.Name)
+        .CheckEqual(Searcher.Sex, x=&gt;x.Sex)
+        .DPWhere(LoginUserInfo.DataPrivileges,x=&gt;x.CompanyID)
+        .Select(x =&gt; new Employee_View
+        {
+            ID = x.ID,
+            Name_view = x.Company.Name,
+            Name = x.Name,
+            Age = x.Age,
+            Sex = x.Sex,
+        })
+        .OrderBy(x =&gt; x.ID);
+        return query;
+}
         </wt:code>
     </ol>
 </wt:fieldset>

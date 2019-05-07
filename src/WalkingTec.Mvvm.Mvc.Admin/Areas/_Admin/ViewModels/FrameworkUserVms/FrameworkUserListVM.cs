@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return new List<ColumnFormatInfo>
             {
                 ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
-                ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+                ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId),
             };
         }
 
