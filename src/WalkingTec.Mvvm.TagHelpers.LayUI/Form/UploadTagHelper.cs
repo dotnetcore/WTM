@@ -13,6 +13,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public UploadTypeEnum UploadType { get; set; }
 
+        public int? ThumbWidth { get; set; }
+
+        public int? ThumbHeight { get; set; }
+
         public string CustomType { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -57,10 +61,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 ext = CustomType;
             }
             var vm = context.Items["model"] as BaseVM;
-            var url = "/_Framework/Upload";
+            var url = "/_Framework/Upload?1=1";
+            if(UploadType == UploadTypeEnum.ImageFile)
+            {
+                url = "/_Framework/UploadImage?1=1";
+                if(ThumbWidth != null)
+                {
+                    url += "&width=" + ThumbWidth;
+                }
+                if(ThumbHeight != null)
+                {
+                    url += "&height=" + ThumbHeight;
+                }
+            }
             if (vm != null)
             {
-                url += $"?_DONOT_USE_CS={vm.CurrentCS}";
+                url += $"&_DONOT_USE_CS={vm.CurrentCS}";
             }
 
             output.PreElement.SetHtmlContent($@"
@@ -81,7 +97,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         elem: '#{Id}button'
         ,url: '{url}'
         ,size: {FileSize}
-        ,accept: 'file'
+        ,accept: 'images'
         ,exts: '{ext}'
         ,before: function(obj){{
             index = layui.layer.load(2);
