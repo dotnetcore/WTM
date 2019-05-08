@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 Id = user.ID,
                 ITCode = user.ITCode,
                 Name = user.Name,
+                PhotoId = user.PhotoId,
                 Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
                 Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
                 DataPrivileges = dpris

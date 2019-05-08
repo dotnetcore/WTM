@@ -142,7 +142,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 layui.layer.msg('上传失败');
             }}
             else{{
-                $('#{Id}').val(res.Data.Id);
+                  $('#{Id}label').html('');        
+              $('#{Id}').val(res.Data.Id);
             {(ShowPreview == true ? $@"
              {Id}preview.preview(function(index, file, result){{
                     $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
