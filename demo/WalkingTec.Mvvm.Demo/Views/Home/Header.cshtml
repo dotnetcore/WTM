@@ -5,7 +5,14 @@
 <ul class="layui-nav layui-layout-right">
     <li class="layui-nav-item">
         <a href="javascript:;">
-            <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+            @if (Model.LoginUserInfo.PhotoId == null)
+            {
+                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+            }
+            else
+            {
+                <img src="/_Framework/GetFile?id=@Model.LoginUserInfo.PhotoId&stream=true" class="layui-nav-img">
+            }
             @Model.LoginUserInfo.Name
         </a>
         <dl class="layui-nav-child">
