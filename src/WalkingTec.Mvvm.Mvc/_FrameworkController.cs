@@ -324,11 +324,11 @@ namespace WalkingTec.Mvvm.Mvc
             }
             if (width == null)
             {
-                width = height * oimage.Height / oimage.Width;
+                width = height * oimage.Width / oimage.Height;
             }
             if (height == null)
             {
-                height = width * oimage.Width / oimage.Height;
+                height = width * oimage.Height /oimage.Width ;
             }
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
@@ -382,7 +382,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("获取文件")]
-        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default")
+        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default",int? width = null, int? height = null)
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             if (id == Guid.Empty)
@@ -395,6 +395,25 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 data = new byte[0];
             }
+            MemoryStream ms = new MemoryStream(data);
+            Image oimage = Image.FromStream(ms);
+            ms.Close();
+            if (oimage != null && (width != null || height != null))
+            {
+                if (width == null)
+                {
+                    width = height * oimage.Height / oimage.Width;
+                }
+                if (height == null)
+                {
+                    height = width * oimage.Width / oimage.Height;
+                }
+                ms = new MemoryStream();
+                oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                data = ms.ToArray();
+                oimage.Dispose();
+            }
+
             var ext = vm.Entity.FileExt.ToLower();
             var contenttype = "application/octet-stream";
             if (ext == "pdf")

@@ -9,13 +9,40 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:upload", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class UploadTagHelper : BaseFieldTag
     {
+        /// <summary>
+        /// 限定上传文件大小，单位K
+        /// </summary>
         public int FileSize { get; set; }
 
+        /// <summary>
+        /// 上传文件类别
+        /// </summary>
         public UploadTypeEnum UploadType { get; set; }
 
+        /// <summary>
+        /// 当上传文件类别为ImageFile时，指定缩小的宽度，框架会使用缩小后的图片保存
+        /// </summary>
         public int? ThumbWidth { get; set; }
 
+        /// <summary>
+        /// 当上传文件类别为ImageFile时，指定缩小的高度，框架会使用缩小后的图片保存
+        /// </summary>
         public int? ThumbHeight { get; set; }
+
+        /// <summary>
+        /// 是否使用缩略图预览，当上传文件类别为ImageFile时，默认为true
+        /// </summary>
+        public bool? ShowPreview { get; set; }
+
+        /// <summary>
+        /// 如果使用缩略图预览，指定缩略图宽度，默认64
+        /// </summary>
+        public int? PreviewWidth { get; set; }
+
+        /// <summary>
+        /// 如果使用缩略图预览，指定缩略图高度，默认64
+        /// </summary>
+        public int? PreviewHeight { get; set; }
 
         public string CustomType { get; set; }
 
@@ -64,6 +91,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var url = "/_Framework/Upload?1=1";
             if(UploadType == UploadTypeEnum.ImageFile)
             {
+                if(ShowPreview == null)
+                {
+                    ShowPreview = true;
+                }
                 url = "/_Framework/UploadImage?1=1";
                 if(ThumbWidth != null)
                 {
@@ -91,7 +122,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         $('#{Id}').val('');
     }}
     var index = 0;
- 
+    var {Id}preview; 
+
     //普通图片上传
     var uploadInst = layui.upload.render({{
         elem: '#{Id}button'
@@ -101,19 +133,32 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         ,exts: '{ext}'
         ,before: function(obj){{
             index = layui.layer.load(2);
+            {Id}preview = obj;
         }}
         ,done: function(res){{
             layui.layer.close(index);
             if(res.Data.Id == ''){{
+                $('#{Id}label').html('');        
                 layui.layer.msg('上传失败');
             }}
             else{{
                 $('#{Id}').val(res.Data.Id);
-                var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name+""  删除</button>"";
-                $('#{Id}label').html(del);
-                $('#{Id}del').on('click',function(){{
-                    {Id}DoDelete(res.Data.Id);
-                }});
+            {(ShowPreview == true ? $@"
+             {Id}preview.preview(function(index, file, result){{
+                    $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+                    $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64)-10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
+                    $('#{Id}del').on('click',function(){{
+                        {Id}DoDelete(res.Data.Id);
+                    }});
+                  }});       
+            " : $@"
+                    $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  删除</button>"");
+                    $('#{Id}del').on('click',function(){{
+                        {Id}DoDelete(res.Data.Id);
+                    }});
+
+            "
+            )}
             }}
         }}
         ,error: function(){{
@@ -129,6 +174,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     geturl += $"?_DONOT_USE_CS={vm.CurrentCS}";
                 }
+                var picurl = $"/_Framework/GetFile?id={Field.Model}&stream=true&width={PreviewWidth ?? 64}&height={PreviewHeight ?? 64}";
+                if (vm != null)
+                {
+                    picurl += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                }
                 output.PostElement.AppendHtml($@"
 <script>
     $.ajax({{
@@ -137,11 +187,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         url: '{geturl}',
         async: false,
         success: function(data) {{
-            var del = ""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"";
-            $('#{Id}label').html(del);
-            $('#{Id}del').on('click',function(){{
-                {Id}DoDelete('{Field.Model}');
-            }});
+            {(ShowPreview == true ? $@"
+                $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+                $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
+                $('#{Id}del').on('click',function(){{
+                    {Id}DoDelete('{Field.Model}');
+                }});
+            " : $@"
+                    $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"");
+                    $('#{Id}del').on('click',function(){{
+                        {Id}DoDelete('{Field.Model}');
+                    }});
+            ")}
         }}
     }});
 </script>
