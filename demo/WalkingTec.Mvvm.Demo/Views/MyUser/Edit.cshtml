@@ -14,7 +14,7 @@
         <wt:textbox field="Entity.Address" />
         <wt:textbox field="Entity.ZipCode" />
         <wt:upload field="Entity.PhotoId" />
-        <wt:combobox field="Entity.IsValid" />
+        <wt:checkbox field="Entity.IsValid" />
         <wt:selector list-vm="RoleListVM" field="SelectedUserRolesIDs" text-bind="RoleListVM.EntityList[0].RoleName">
             <wt:searchpanel vm="RoleListVM">
                 <wt:row items-per-row=" ItemsPerRowEnum.Two">
