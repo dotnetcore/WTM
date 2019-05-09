@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 else if (modelType.IsBoolOrNullableBool())
                 {
-                    listitems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Selected = Field.Model?.ToString().ToLower() == "true" } };
+                    listitems = new List<ComboSelectListItem>() { new ComboSelectListItem { Value = "true", Text = "|", Selected = Field.Model?.ToString().ToLower() == "true" } };
                 }
             }
             else
