@@ -3,18 +3,18 @@
 ## v2.2.x (2018-12-20)
 欢迎来到 WTM v2.2。此次更新主要是将 .Net Core 升级到 v2.2.0，并新增 Layui 组件。
 
-### v2.2.39 (2019-5-210)
+### v2.2.39 (2019-5-10)
 
 * **修改：** 修复代码生成器对关联字段生成ImportVM时的bug 
 
 #### 前后端不分离模式
 
 * **修改：** upload控件增加修改尺寸的选项，当UploadType为ImageFile时，通过设置ThumbWidth和ThumbHeight，可以让服务器保存缩小后的图片
-* **修改：** upload控件增加缩略图预览，当UploadType为ImageFile时默认开启缩略图预览，通过ShowPreview，PreviewWidth，PreviewHeight等参数可配置细节
+* **修改：** upload控件增加缩略图预览，当UploadType为ImageFile时默认开启缩略图预览，通过ShowPreview，PreviewWidth，PreviewHeight等参数可配置
 * **修改：** 更改绑定布尔值时checkbox的样式 
-* **修改：** 修复layui模式下登录用户头像显示的问题，已经生成的项目可以将以下两个文件覆盖到自己的项目中
-
-
+* **修改：** 修复layui模式下登录用户头像显示的问题，已经生成的项目可以将以下两个文件覆盖自己的项目对应的文件
+https://github.com/dotnetcore/WTM/blob/develop/demo/WalkingTec.Mvvm.Demo/ViewModels/HomeVMs/LoginVM.cs
+https://github.com/dotnetcore/WTM/blob/develop/demo/WalkingTec.Mvvm.Demo/Views/Home/Header.cshtml
 
 ### v2.2.38 (2019-4-29)
 
