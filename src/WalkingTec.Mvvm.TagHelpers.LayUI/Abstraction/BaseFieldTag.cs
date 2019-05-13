@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
             }
 
-            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired)
+            if (!(this is DisplayTagHelper) && !(this is CheckBoxTagHelper) && Field.Metadata.IsRequired)
             {
                 requiredDot = "<font color='red'>*</font>";
                 if (!(this is UploadTagHelper)) // 上传组件自定义验证
