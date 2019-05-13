@@ -17,12 +17,17 @@
 
 .data-view-row-action {
     white-space: nowrap;
-    width: 155;
+    width: 100%;
     text-align: center;
+    overflow: hidden;
 }
 
 .data-view-table {
     margin-top: 10px; // 排序
+
+    .ant-table-thead th {
+        text-align: center;
+    }
 
     .ant-table-thead>tr>th .ant-table-column-sorter {
         right: 20px;
@@ -34,21 +39,29 @@
     }
 
     td.ant-table-selection-column,
-    td.ant-table-column-has-actions{
+    td.ant-table-column-has-actions {
         padding: 0 8px !important;
+        overflow: hidden;
     }
 
-    .columns-render,
+    .ant-table-fixed-columns-in-body {
+        .data-view-row-action {
+            // width: 10px;
+        }
+    }
+
+    // .columns-render,
     .data-view-columns-render {
-        max-height: 120px;
-        // line-height: 15px;
-        min-height: 10px;
+        max-height: 54px;
+        line-height: 18px;
+        min-height: 18px;
         // padding: 0 10px;
         position: relative;
         margin: auto;
         overflow: hidden;
         white-space: normal;
         text-align: justify;
+        text-overflow: ellipsis;
         display: inline-block;
     }
 

@@ -23,12 +23,12 @@ import External from "./pages/external";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
-
 @observer
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
         // console.clear()
         document.title = globalConfig.default.title;
+        // console.log('aaaaa')
     }
     render() {
         if (Store.User.loding) {
@@ -130,14 +130,14 @@ export default class RootRoutes extends React.Component<any, any> {
      * @param classNames 
      */
     createCSSTransition(Component: any, classNames = "fade") {
-        return class extends React.Component {
+        return class extends React.Component<any, any> {
             shouldComponentUpdate() {
                 return !globalConfig.tabsPage
             }
             render() {
                 return <Animate transitionName={classNames}
                     transitionAppear={true} component="" >
-                    <div className="app-animate-content" key="app-animate-content" >
+                    <div className="app-animate-content" key="app-animate-content" style={...this.props.style} >
                         <Component {...this.props} />
                     </div>
                 </Animate  >

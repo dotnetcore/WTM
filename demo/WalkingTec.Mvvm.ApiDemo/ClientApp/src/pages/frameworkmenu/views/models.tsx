@@ -120,8 +120,13 @@ export default {
                 formItem: <WtmSelect placeholder="父目录"
                     dataSource={Request.cache({ url: "/api/_FrameworkMenu/GetFolders" })}
                 />
+            },
+            /** 父目录 */
+            "Entity.tt": {
+                label: "父目录",
+                rules: [],
+                formItem: <WtmEditor />
             }
-
         }
     },
     /**

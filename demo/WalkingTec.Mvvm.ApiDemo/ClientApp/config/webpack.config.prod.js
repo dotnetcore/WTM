@@ -6,8 +6,9 @@
  * @desc [description]
 */
 const paths = require("./paths");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 /**
  * 重写 react-scripts 默认配置
  */
@@ -17,7 +18,10 @@ module.exports = (config, env) => {
     // config.mode = 'development';
     config.devtool = false;
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
-    config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
+    // 查看 文件 大小 分布地图
+    // config.plugins.push(
+    //     new BundleAnalyzerPlugin()
+    // );
     // 清空 console
     config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
     config.module.rules = [
@@ -55,10 +59,11 @@ module.exports = (config, env) => {
                     loader: 'awesome-typescript-loader',
                     options: {
                         useCache: true,
-                        transpileOnly: true,
-                        errorsAsWarnings: true,
+                        configFileName: "tsconfig.new.json",
+                        cacheDirectory: "node_modules/.cache/awcache",
+                        // transpileOnly: true,
+                        // errorsAsWarnings: true,
                         // usePrecompiledFiles: true,
-                        sourceMap: false,
                     }
                 },
                 {

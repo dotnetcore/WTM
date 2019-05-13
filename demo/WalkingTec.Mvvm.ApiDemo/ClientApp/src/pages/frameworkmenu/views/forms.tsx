@@ -34,7 +34,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
             <FormItem {...props} fieId="Entity.IConId" />
-
+            <FormItem {...props} fieId="Entity.tt" layout="row" />
         </InfoShellLayout>
     }
 }

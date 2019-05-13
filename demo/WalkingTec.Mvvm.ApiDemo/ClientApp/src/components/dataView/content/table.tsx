@@ -116,12 +116,16 @@ const TableUtils = {
  */
 @observer
 export class DataViewTable extends React.Component<ITablePorps, any> {
-    @observable columns = this.props.columns.map(x => {
+    // 原始初始化列配置
+    private OriginalColumns = this.props.columns.map(x => {
         x.width = lodash.get(x, 'width', 200)
         return x;
     });
+    @observable columns = lodash.cloneDeep(this.OriginalColumns);
     @observable Height = 500;
+    // 拖拽状态
     isResize = false;
+    // 页面状态
     Store = this.props.Store;
     tableRef = React.createRef<any>();
     tableDom: HTMLDivElement;
@@ -131,7 +135,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      */
     @action.bound
     initColumns() {
-        this.columns = this.onGetColumns(TableUtils.onSetColumnsWidth(this.tableDom, toJS(this.columns)));
+        this.columns = this.onGetColumns(TableUtils.onSetColumnsWidth(this.tableDom, this.OriginalColumns));
     }
     /**
      * 分页、排序、筛选变化时触发
@@ -223,6 +227,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     @action
     onCalculationHeight() {
         if (globalConfig.lockingTableRoll && this.tableDom) {
+            console.log(this.tableDom.offsetTop)
             let height = window.innerHeight - this.tableDom.offsetTop - 120;//(globalConfig.tabsPage ? 210 : 120);
             if (globalConfig.tabsPage) {
                 height -= 90;
@@ -244,7 +249,8 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             this.onCalculationHeight()
             this.initColumns();
             this.resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
-                this.onCalculationHeight()
+                this.onCalculationHeight();
+                this.initColumns();
             });
         } catch (error) {
             console.error(error)
@@ -257,6 +263,17 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const { DataSource, PageState } = this.Store;
         const dataSource = DataSource.tableList;
         if (dataSource.Data) {
+            // const columns = this.columns
+            //     .map((x: any) => {
+            //         return {
+            //             ...x,
+            //             render: (text, record, index) => {
+            //                 return <div className="data-view-columns-render" style={{ width: lodash.get(x, 'width', 200) - 24 }}>
+            //                     {x.render(text, record, index)}
+            //                 </div>
+            //             }
+            //         }
+            //     });
             const columns = this.columns
                 .map(x => {
                     return {

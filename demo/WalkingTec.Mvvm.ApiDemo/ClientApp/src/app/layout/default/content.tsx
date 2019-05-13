@@ -96,8 +96,8 @@ class TabsPages extends React.Component<any, any> {
         >
           {tabPane.map(item => {
             const router = this.getRoutes(item.pathname);
-            return <Tabs.TabPane tab={item.title} key={item.pathname} style={{ height: height }} closable={item.closable}>
-              {React.createElement(router.component, { ...this.props, match: router.match } as any)}
+            return <Tabs.TabPane tab={item.title} key={item.pathname} closable={item.closable}>
+              {React.createElement(router.component, { ...this.props, match: router.match, style: { height: height } } as any)}
             </Tabs.TabPane>
           })}
         </Tabs>
@@ -136,9 +136,9 @@ class TabsPagesStore {
     return path
   }
   getHeight() {
-    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 90 : 52);
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 110 : 52);
   }
-  resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
+  resize = fromEvent(window, "resize").pipe(debounceTime(200)).subscribe(e => {
     const height = this.getHeight()
     if (this.height != height) {
       runInAction(() => this.height = height)
