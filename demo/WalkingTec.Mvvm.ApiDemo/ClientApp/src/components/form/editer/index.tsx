@@ -11,12 +11,14 @@ import 'braft-editor/dist/index.css';
 import lodash from 'lodash';
 import React from 'react';
 import './style.less';
+import globalConfig from 'global.config';
 
 
 
 interface IAppProps extends BraftEditorProps {
   display?: boolean;
   disabled?: boolean;
+  onChange?: any;
   [key: string]: any;
 }
 /**
@@ -25,13 +27,11 @@ interface IAppProps extends BraftEditorProps {
  */
 export class WtmEditor extends React.Component<IAppProps, any> {
   static wtmType = "Editor";
-  console = true
+  console = globalConfig.development
   default: BraftEditorProps = {
 
   }
   componentDidMount() {
-    // console.log("componentDidMount", this.props)
-
   }
   state = {
     editorState: BraftEditor.createEditorState(lodash.unescape(this.props.value)), // 设置编辑器初始内容
@@ -43,7 +43,7 @@ export class WtmEditor extends React.Component<IAppProps, any> {
     this.setState({ editorState });
     const value = editorState.toHTML()
     this.console && console.log(value)
-    this.props.onChange && this.props.onChange(lodash.escape(lodash.eq(value, '<p></p>') ? '' : value))
+    this.props.onChange && this.props.onChange(lodash.escape(lodash.eq(value, '<p></p>') ? '' : value), editorState)
   }
   render() {
     const { editorState } = this.state;

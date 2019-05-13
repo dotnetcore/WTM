@@ -6,16 +6,12 @@
  * @desc [description]
 */
 const paths = require("./paths");
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 /**
  * 重写 react-scripts 默认配置
  */
 module.exports = (config, env) => {
-    // config.entry.pop();
-    // config.entry.push(paths.appIndexJs);
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
-    config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
     config.plugins.push(new MiniCssExtractPlugin({
         filename: 'static/css/[name].css',
         chunkFilename: 'static/css/[name].chunk.css',
@@ -86,6 +82,8 @@ module.exports = (config, env) => {
                     loader: 'awesome-typescript-loader',
                     options: {
                         useCache: true,
+                        configFileName: "tsconfig.new.json",
+                        cacheDirectory: "node_modules/.cache/awcache",
                         // transpileOnly: true,
                         // errorsAsWarnings: true,
                         usePrecompiledFiles: true,

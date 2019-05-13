@@ -1,65 +1,67 @@
 {
-  "name": "my-test",
-  "version": "0.1.0",
+  "name": "wtm-react",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^3.5.3",
-    "antd": "3.16.2",
-    "braft-editor": "^2.2.9",
-    "hammerjs": "^2.0.8",
+    "@babel/core": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
+    "antd": "^3.17.0",
+    "braft-editor": "^2.2.10",
     "lodash": "^4.17.11",
     "lodash-decorators": "^6.0.1",
-    "mobx": "^4.9.4",
+    "mobx": "^5.9.4",
     "mobx-persist": "^0.4.1",
-    "mobx-react": "5.4.3",
+    "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
-    "rc-animate": "^2.6.0",
+    "rc-animate": "^2.8.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-loadable": "^5.5.0",
     "react-resizable": "^1.7.5",
     "react-router-config": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "rxjs": "6.4.0",
     "viewerjs": "^1.3.3",
-    "viser-react": "^2.4.5"
+    "viser-react": "^2.4.6"
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "rimraf ./build && react-app-rewired build",
+    "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/polyfill": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "@types/hammerjs": "^2.0.36",
-    "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.0",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.3",
-    "@types/react-loadable": "^5.5.1",
-    "@types/react-router-config": "^1.1.2",
+    "@babel/preset-env": "^7.4.4",
+    "@types/jest": "24.0.12",
+    "@types/lodash": "^4.14.125",
+    "@types/node": "^12.0.0",
+    "@types/react": "16.8.17",
+    "@types/react-dom": "16.8.4",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "8.0.4",
-    "cache-loader": "^2.0.1",
-    "http-proxy-middleware": "^0.19.1",
+    "babel-loader": "^8.0.5",
+    "cache-loader": "^3.0.0",
     "less": "^3.9.0",
-    "less-loader": "^4.1.0",
-    "react-app-rewired": "^2.1.1",
-    "react-scripts": "2.0.5",
-    "rimraf": "^2.6.3",
-    "ts-import-plugin": "^1.5.5",
-    "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "typescript": "3.4.1"
+    "less-loader": "^5.0.0",
+    "react-app-rewired": "^2.1.3",
+    "react-scripts": "3.0.1",
+    "typescript": "3.4.5",
+    "webpack-bundle-analyzer": "^3.3.2"
   }
 }
