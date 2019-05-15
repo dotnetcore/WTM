@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Mvc.Admin",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo", "demo\WalkingTec.Mvvm.Demo\WalkingTec.Mvvm.Demo.csproj", "{3B4F66AE-D208-4E51-BDD7-396FAF3226C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ApiDemo", "demo\WalkingTec.Mvvm.ApiDemo\WalkingTec.Mvvm.ApiDemo.csproj", "{11643068-5E89-44F5-BF68-BA52D9EDFDE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{11643068-5E89-44F5-BF68-BA52D9EDFDE6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{8D8985E4-8178-41CA-ADAE-2B239156E820}"
 EndProject
