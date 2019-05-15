@@ -4,9 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env webpack --env=dev --watch --progress  --config ./build/webpack.config.js",
-        "start": "cross-env webpack-dev-server --env=server --color --config ./build/webpack.config.js",
-        "build": "cross-env webpack --env=prod --progress --config ./build/webpack.config.js"
+        "dev": "cross-env webpack --env=dev --watch --progress  --config ./config/webpack.config.js",
+        "start": "cross-env webpack-dev-server --env=server --color --config ./config/webpack.config.js",
+        "build": "cross-env webpack --env=prod --progress --config ./config/webpack.config.js"
     },
     "devDependencies": {
         "autoprefixer": "^7.1.3",
