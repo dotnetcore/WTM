@@ -1,49 +1,17 @@
 import Vue from 'vue';
-import '@/assets/css/index.less';
 import router from '@/router/index';
 import store from '@/store/index/index';
 import App from '@/pages/index/app.vue';
+import '@/assets/css/index.less';
 import utilDate from '@/util/date';
-import 'element-ui/lib/theme-chalk/index.css';
 import 'babel-polyfill';
-import {
-    Input,
-    Tag,
-    Table,
-    TableColumn,
-    Pagination,
-    Button,
-    Carousel,
-    CarouselItem,
-    Message,
-    Checkbox,
-    MessageBox,
-    Dialog,
-    DatePicker,
-    Tooltip,
-    Icon
-} from 'element-ui';
+// 饿了吗ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
-Vue.use(Input);
-Vue.use(Tag);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Pagination);
-Vue.use(Button);
-Vue.use(Carousel);
-Vue.use(CarouselItem);
-Vue.use(Checkbox);
-Vue.use(Dialog);
-Vue.use(DatePicker);
-Vue.use(Icon);
+Vue.use(ElementUI);
 
-Vue.use(Tooltip);
-Vue.prototype.$message = Message;
-Vue.prototype.$confirm = MessageBox.confirm;
-Vue.prototype.$alert = MessageBox.alert;
-
-// 时间格式
-// | formatTime('yyyy-MM-dd')
+// 时间格式 | formatTime('yyyy-MM-dd')
 Vue.filter(
     'formatTime',
     (value, customFormat = 'yyyy-MM-dd hh:mm:ss', isMsec = true, days = 0) => {
@@ -59,12 +27,6 @@ Vue.filter(
     }
 );
 
-Vue.filter('formatSubStr', (value, num = 6) => {
-    if (value && value.length > num) {
-        return value.substr(0, num) + '...';
-    }
-    return value;
-});
 /* eslint-disable */
 const app = new Vue({
     router,

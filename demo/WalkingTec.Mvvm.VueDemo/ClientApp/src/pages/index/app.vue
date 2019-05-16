@@ -1,24 +1,22 @@
 <template>
-    <div id="app" class="wx-urm">
-        <Header pageNmae="index"></Header>
+    <div id="app" class="app-main">
+        <Header></Header>
+        <leftMenu></leftMenu>
         <AppMain></AppMain>
         <!-- copyright -->
-        <Footer class="copyright" pageNmae="index"></Footer>
-        <RightFloat></RightFloat>
+        <Footer></Footer>
     </div>
 </template>
 
 <style lang="less">
-@import '../../assets/css/index.less';
-.wx-urm {
-    height: 100%;
+// @import '../../assets/css/index.less';
+.app-main {
+    // height: 100%;
 }
 </style>
 
 <script>
-import { AppMain, Footer, Header } from '@/components/layout/index';
-import cookie from '@/util/cookie.js';
-import config from '@/config/index.js';
+import { AppMain, Footer, Header, leftMenu } from '@/components/layout/index';
 import { mapState, mapMutations, mapActions } from 'vuex';
 const mixin = {
     computed: {
@@ -34,22 +32,15 @@ export default {
     components: {
         AppMain,
         Header,
-        Footer
+        Footer,
+        leftMenu
     },
     mixins: [mixin],
     data() {
         return {};
     },
     computed: {},
-    mounted() {
-        const token = cookie.getCookie(config.tokenKey);
-        console.log('app login');
-        if (token) {
-            this.setIsLogin(true);
-        } else {
-            this.setIsLogin(false);
-        }
-    },
+    mounted() {},
     methods: {}
 };
 </script>
