@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        header - hot
+        WalkingTec.Mvvm Framework
     </div>
 </template>
 <script>
@@ -26,11 +26,12 @@ export default {
 
 <style lang="less">
 .header {
-    background-color: #fff;
+    z-index: 1000;
+    height: 60px;
+    background-color: #23262e;
     width: 100%;
     position: relative;
-    z-index: 20;
-    color: #333;
+    color: #009688;
 }
 </style>
 

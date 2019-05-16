@@ -4,9 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env webpack --env=dev --watch --progress  --config ./config/webpack.config.js",
-        "start": "cross-env webpack-dev-server --env=server --color --config ./config/webpack.config.js",
-        "build": "cross-env webpack --env=prod --progress --config ./config/webpack.config.js"
+        "dev":
+            "cross-env webpack --env=dev --watch --progress  --config ./config/webpack.config.js",
+        "start":
+            "cross-env webpack-dev-server --env=server --color --config ./config/webpack.config.js",
+        "build":
+            "cross-env webpack --env=prod --progress --config ./config/webpack.config.js"
     },
     "devDependencies": {
         "autoprefixer": "^7.1.3",
@@ -58,7 +61,7 @@
         "axios": "^0.17.1",
         "babel-polyfill": "^6.26.0",
         "echarts": "^3.8.5",
-        "element-ui": "^2.6.3",
+        "element-ui": "^2.8.2",
         "vue": "^2.3.4",
         "vue-pull-to": "^0.1.6",
         "vue-quill-editor": "^3.0.6",
