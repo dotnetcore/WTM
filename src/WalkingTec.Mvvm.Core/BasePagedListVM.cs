@@ -285,7 +285,10 @@ namespace WalkingTec.Mvvm.Core
 
                             if (IsEmunBoolParp)
                             {
-                                text = PropertyHelper.GetEnumDisplayName(proType, text);
+                                if (int.TryParse(text, out int enumvalue))
+                                {
+                                    text = PropertyHelper.GetEnumDisplayName(proType, enumvalue);
+                                }
                             }
 
 
