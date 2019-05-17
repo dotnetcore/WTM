@@ -32,6 +32,18 @@ export default {
 <style lang="less" scoped>
 @import '../../assets/css/variable';
 .app-main {
-    //height: 100%;
+    // margin: 10px;
+    // font-family: 'segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif';
+    // line-height: 160%;
+    position: absolute;
+    left: 200px;
+    right: 0;
+    top: 60px;
+    bottom: 44px;
+    z-index: 998;
+    width: auto;
+    overflow: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 </style>
