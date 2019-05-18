@@ -1,0 +1,75 @@
+{
+    "name": "wtm",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev":
+            "cross-env webpack --env=dev --watch --progress  --config ./config/webpack.config.js",
+        "start":
+            "cross-env webpack-dev-server --env=server --color --config ./config/webpack.config.js",
+        "build":
+            "cross-env webpack --env=prod --progress --config ./config/webpack.config.js"
+    },
+    "devDependencies": {
+        "autoprefixer": "^7.1.3",
+        "babel-core": "^6.26.0",
+        "babel-eslint": "^7.2.3",
+        "babel-loader": "^7.1.2",
+        "babel-plugin-component": "^1.1.1",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-es2015": "^6.24.1",
+        "babel-preset-stage-1": "^6.24.1",
+        "clean-webpack-plugin": "^0.1.16",
+        "cross-env": "^5.1.1",
+        "css-loader": "^0.28.5",
+        "eslint": "^4.13.1",
+        "eslint-friendly-formatter": "^3.0.0",
+        "eslint-loader": "^1.9.0",
+        "eslint-plugin-html": "^4.0.1",
+        "eslint-plugin-import": "^2.7.0",
+        "eslint-plugin-prettier": "^2.5.0",
+        "eslint-plugin-vue": "^4.0.0-beta.2",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "file-loader": "^0.11.2",
+        "friendly-errors-webpack-plugin": "^1.6.1",
+        "glob": "^7.1.3",
+        "highlight.js": "^9.12.0",
+        "html-loader": "^0.5.1",
+        "html-webpack-plugin": "^2.30.1",
+        "json5-loader": "^1.0.1",
+        "less": "^2.7.2",
+        "less-loader": "^4.0.5",
+        "optimize-css-assets-webpack-plugin": "^3.2.0",
+        "prettier": "1.7.4",
+        "style-loader": "^0.18.2",
+        "uglify-es": "^3.3.9",
+        "url-loader": "^0.5.9",
+        "vue-loader": "^13.0.4",
+        "vue-template-compiler": "^2.4.2",
+        "webpack": "^3.5.5",
+        "webpack-bundle-analyzer": "^2.9.1",
+        "webpack-dev-server": "^2.7.1",
+        "webpack-manifest-plugin": "^1.3.1",
+        "webpack-merge": "^4.1.0",
+        "uglifyjs-webpack-plugin": "^1.0.0-beta.2"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.17.1",
+        "babel-polyfill": "^6.26.0",
+        "echarts": "^3.8.5",
+        "element-ui": "^2.8.2",
+        "vue": "^2.3.4",
+        "vue-pull-to": "^0.1.6",
+        "vue-quill-editor": "^3.0.6",
+        "vue-router": "^2.8.1",
+        "vuex": "^2.3.1"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true
+    }
+}
