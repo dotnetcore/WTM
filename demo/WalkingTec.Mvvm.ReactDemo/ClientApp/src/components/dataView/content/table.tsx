@@ -51,7 +51,7 @@ const TableUtils = {
             } else {
                 const width = Math.ceil((tableBody.clientWidth - columnWidth) / columnsLenght);
                 // console.log(tableBody.clientWidth, columnWidth, width)
-                lodash.mapValues(columns, data => {
+                lodash.mapValues(columns, (data: any) => {
                     if (typeof data.width === "number") {
                         data.width += width;
                     }
