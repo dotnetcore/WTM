@@ -1,0 +1,34 @@
+/*
+ * element样式重载
+ **/
+
+.el-table 
+{
+    .cell {
+        line-height: 40px;
+    }
+    td, th {
+        padding: 0;
+    }
+    thead {
+        color: #333333;
+        th {
+           //  border-bottom-width: 2px !important;
+            background: rgba(243,248,255,1);
+            font-size: 14px;
+            font-weight: inherit;
+        }
+    }
+    tr {
+        background-color: inherit;
+    }
+}
+.el-table__body-wrapper {
+    overflow: initial;
+}
+.el-table--enable-row-transition .el-table__body td {
+    transition: background-color 0s ease;
+}
+.home-talbe {
+    margin-top: 10px;
+}
