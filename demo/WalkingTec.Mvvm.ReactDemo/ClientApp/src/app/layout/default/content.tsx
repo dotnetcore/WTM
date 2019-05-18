@@ -136,7 +136,7 @@ class TabsPagesStore {
     return path
   }
   getHeight() {
-    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 110 : 52);
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 110 : 70);
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(200)).subscribe(e => {
     const height = this.getHeight()

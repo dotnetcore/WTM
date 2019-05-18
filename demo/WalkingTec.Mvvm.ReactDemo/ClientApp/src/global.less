@@ -17,6 +17,7 @@ body {
         // background: red;
         background-image: -webkit-linear-gradient(top left, red, blue 25%, yellow 90%);
     }
+
     .spinner-icon {
         width: 30px;
         height: 30px;
@@ -43,6 +44,7 @@ body {
     width: 6px;
     height: 6px;
 }
+
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-corner {
     display: none;
@@ -60,11 +62,11 @@ body {
     background: rgb(123, 123, 123);
     cursor: pointer
 }
-/* 过度动画 */
 
+/* 过度动画 */
 .fade-enter {
     opacity: 0;
-    animation-duration: .2s;
+    animation-duration: .5s;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
     animation-play-state: paused;
@@ -72,14 +74,14 @@ body {
 
 .fade-appear {
     opacity: 0;
-    animation-duration: .2s;
+    animation-duration: .5s;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
     animation-play-state: paused;
 }
 
 .fade-leave {
-    animation-duration: .2s;
+    animation-duration: .5s;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
     animation-play-state: paused;
@@ -104,6 +106,7 @@ body {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -113,6 +116,7 @@ body {
     0% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
     }

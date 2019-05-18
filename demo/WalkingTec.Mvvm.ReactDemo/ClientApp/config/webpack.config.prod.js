@@ -8,13 +8,10 @@
 const paths = require("./paths");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 /**
  * 重写 react-scripts 默认配置
  */
 module.exports = (config, env) => {
-    // config.entry.pop();
-    // config.entry.push(paths.appIndexJs);
     // config.mode = 'development';
     config.devtool = false;
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
@@ -62,7 +59,7 @@ module.exports = (config, env) => {
                         configFileName: "tsconfig.new.json",
                         cacheDirectory: "node_modules/.cache/awcache",
                         // transpileOnly: true,
-                        // errorsAsWarnings: true,
+                        errorsAsWarnings: true,
                         // usePrecompiledFiles: true,
                     }
                 },
