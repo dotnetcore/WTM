@@ -48,7 +48,7 @@ export class Store extends DataSource {
                 }
             }
         });
-        this.DataSource.searchParams = { TableName: "School", DpType: '1' }
+        this.DataSource.searchParams = { DpType: '0' }
     }
 
     /** 修改 */
