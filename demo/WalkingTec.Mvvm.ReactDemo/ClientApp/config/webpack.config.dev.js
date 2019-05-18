@@ -85,7 +85,7 @@ module.exports = (config, env) => {
                         configFileName: "tsconfig.new.json",
                         cacheDirectory: "node_modules/.cache/awcache",
                         // transpileOnly: true,
-                        // errorsAsWarnings: true,
+                        errorsAsWarnings: true,
                         usePrecompiledFiles: true,
                     }
                 },

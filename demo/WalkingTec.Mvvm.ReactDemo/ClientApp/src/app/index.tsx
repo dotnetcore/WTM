@@ -135,8 +135,9 @@ export default class RootRoutes extends React.Component<any, any> {
                 return !globalConfig.tabsPage
             }
             render() {
-                return <Animate transitionName={classNames}
-                    transitionAppear={true} component="" >
+                return <Animate
+                    transitionName={classNames}
+                    transitionAppear component="" >
                     <div className="app-animate-content" key="app-animate-content" style={...this.props.style} >
                         <Component {...this.props} />
                     </div>

@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
+    "start:api":"cd .. && dotnet run --launch-profile ApiOnly",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

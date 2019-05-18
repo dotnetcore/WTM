@@ -4,3 +4,7 @@
 >2: src/subMenu.json 只在 dev 环境中 使用的菜单 目录，正式环境请使用接口返回 数据<br/>
 >3: src/setupProxy.js 代理配置文件，更改这个文件需要重新 npm start 才能生效<br/>
 >4: @antv 依赖 是 导致 编译文件 大的 主要原因。不需要的可注释 或者更改成其他 图表库使用<br/>
+
+## 清空 生产环境中的 console 日志
+> congig/webpack.config.prod.js 26行 true 为清空
+> config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
