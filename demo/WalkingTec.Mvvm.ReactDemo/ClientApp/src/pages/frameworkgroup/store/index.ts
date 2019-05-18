@@ -46,6 +46,9 @@ export class Store extends DataSource {
                 }
             }
         });
+        this.DataSource.searchParams={
+            GroupCode:"aaaa"
+        }
     }
 }
 export default new Store();
