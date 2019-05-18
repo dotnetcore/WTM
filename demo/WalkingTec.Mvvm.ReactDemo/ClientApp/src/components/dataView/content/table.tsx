@@ -344,14 +344,14 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
  */
 export function columnsRender(text, record) {
     if (lodash.isBoolean(text) || text === "true" || text === "false") {
-        text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
+        text = (text === true || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
     } else if (Regular.isHtml.test(text)) {
         // text = <Popover content={
         //     <div dangerouslySetInnerHTML={{ __html: text }}></div>
         // } trigger="hover">
         //     <a>查看详情</a>
         // </Popover>
-        text = <div dangerouslySetInnerHTML={{ __html: text }}></div>
+        text = <div className="data-view-columns-render" style={record.__style} dangerouslySetInnerHTML={{ __html: text }}></div>
     }
     if (lodash.isString(text) && text.length <= 12) {
         return text
