@@ -395,25 +395,28 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 data = new byte[0];
             }
-            MemoryStream ms = new MemoryStream(data);
-            Image oimage = Image.FromStream(ms);
-            ms.Close();
-            if (oimage != null && (width != null || height != null))
+            try
             {
-                if (width == null)
+                MemoryStream ms = new MemoryStream(data);
+                Image oimage = Image.FromStream(ms);
+                ms.Close();
+                if (oimage != null && (width != null || height != null))
                 {
-                    width = height * oimage.Height / oimage.Width;
+                    if (width == null)
+                    {
+                        width = height * oimage.Height / oimage.Width;
+                    }
+                    if (height == null)
+                    {
+                        height = width * oimage.Width / oimage.Height;
+                    }
+                    ms = new MemoryStream();
+                    oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    data = ms.ToArray();
+                    oimage.Dispose();
                 }
-                if (height == null)
-                {
-                    height = width * oimage.Width / oimage.Height;
-                }
-                ms = new MemoryStream();
-                oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                data = ms.ToArray();
-                oimage.Dispose();
             }
-
+            catch { }
             var ext = vm.Entity.FileExt.ToLower();
             var contenttype = "application/octet-stream";
             if (ext == "pdf")
