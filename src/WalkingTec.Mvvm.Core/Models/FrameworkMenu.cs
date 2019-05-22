@@ -76,6 +76,9 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "图标")]
         public Guid? IConId { get; set; }
 
+        [Display(Name = "自定义图标")]
+        public string CustumIcon { get; set; }
+
         #region ITreeData成员
 
         [Display(Name = "父目录" )]
