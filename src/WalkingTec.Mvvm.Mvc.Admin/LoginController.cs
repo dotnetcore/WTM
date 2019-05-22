@@ -71,7 +71,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
-                    Url = x.Url
+                    Url = x.Url,
+                    Icon = (x.IConId == null ? x.CustumIcon : x.IConId.ToString())
                 });
             ms.AddRange(menus);
 
@@ -180,5 +181,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public string Text { get; set; }
 
         public string Url { get; set; }
+
+        public string Icon { get; set; }
     }
 }
