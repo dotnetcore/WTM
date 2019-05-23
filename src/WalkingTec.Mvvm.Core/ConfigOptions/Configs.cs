@@ -256,6 +256,31 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        #region Tab页显示方式
+
+        private TabModeEnum? _tabMode;
+
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        public TabModeEnum TabMode
+        {
+            get
+            {
+                if (_tabMode == null)
+                {
+                    _tabMode = TabModeEnum.Default;
+                }
+                return _tabMode.Value;
+            }
+            set
+            {
+                _tabMode = value;
+            }
+        }
+        #endregion
+
+
         #region 加密密钥
 
         private string _encryptKey;
@@ -394,6 +419,28 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
+
+        #region 附件是否公开
+
+        private bool? _isFilePublic;
+
+        /// <summary>
+        /// 是否启动调试模式
+        /// </summary>
+        public bool IsFilePublic
+        {
+            get
+            {
+                return _isFilePublic ?? false;
+            }
+            set
+            {
+                _isFilePublic = value;
+            }
+        }
+
+        #endregion
+
 
     }
 }

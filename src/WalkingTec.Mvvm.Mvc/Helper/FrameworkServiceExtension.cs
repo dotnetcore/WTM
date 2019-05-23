@@ -184,6 +184,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (context.Request.Path == "/")
                 {
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
+                    context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
                 }
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
