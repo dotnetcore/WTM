@@ -30,11 +30,11 @@ class Store {
             // 跨域页面
             if (Regular.url.test(data.Url)) {
                 data.Url = "/external/" + encodeURIComponent(data.Url);
-            }
-            // public 下的 pages 页面
-            if (lodash.includes(data.Url, globalConfig.staticPage)) {
-                data.Url = "/external/" + encodeURIComponent(lodash.replace(data.Url, globalConfig.staticPage, `${window.location.origin}`));
-            }
+            } else
+                // public 下的 pages 页面
+                if (lodash.includes(data.Url, globalConfig.staticPage)) {
+                    data.Url = "/external/" + encodeURIComponent(lodash.replace(data.Url, globalConfig.staticPage, `${window.location.origin}`));
+                }
             return data;
         })
         this.setSubMenu(menu);
@@ -56,7 +56,9 @@ class Store {
     @action.bound
     setSubMenu(subMenu) {
         this.ParallelMenu = subMenu;
-        this.subMenu = this.recursionTree(subMenu, null, []);
+        const menu = this.recursionTree(subMenu, null, []);
+        console.log(menu)
+        this.subMenu = menu
     }
     /** 菜单收起 展开 */
     @action.bound
