@@ -22,6 +22,7 @@ import Regular from 'utils/Regular';
 import { ToImg } from '../help/toImg';
 import './style.less';
 import RequestFiles from 'utils/RequestFiles';
+import { Help } from 'utils/Help';
 
 
 interface ITablePorps extends TableProps<any> {
@@ -123,6 +124,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     });
     @observable columns = lodash.cloneDeep(this.OriginalColumns);
     @observable Height = 500;
+    @observable TableKey = Help.GUID();
     // 拖拽状态
     isResize = false;
     // 页面状态
@@ -244,14 +246,14 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     async componentDidMount() {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
-            // TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch();
             this.onCalculationHeight()
             this.initColumns();
             this.resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
                 this.onCalculationHeight();
                 this.initColumns();
             });
+            await this.Store.onSearch();
+            runInAction(() => this.TableKey = Help.GUID())
         } catch (error) {
             console.error(error)
         }
@@ -309,7 +311,6 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     // defaultCurrent: dataSource.Page,
                     total: dataSource.Count
                 },
-                ...this.props,
                 components: TableUtils.components,
                 dataSource: toJS(dataSource.Data),
                 onChange: this.onChange.bind(this),
@@ -317,10 +318,13 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 scroll: scroll,
                 rowSelection: this.onRowSelection(),
                 loading: PageState.tableLoading,
+                ...this.props,
             }
+            console.log(this.TableKey)
             return (
                 <Table
                     ref={this.tableRef}
+                    key={this.TableKey}
                     {...props}
                 />
             );

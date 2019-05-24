@@ -133,6 +133,10 @@ class ConfigStore {
     @observable
     tabsPage = true;
     /**
+     * tabs 切换动画
+     */
+    tabsAnimated = false;
+    /**
      * tabs 页签位置，可选值有 top right bottom left
      */
     @persist
@@ -144,6 +148,7 @@ class ConfigStore {
     @persist
     @observable
     staticPage = "@StaticPage";
+   
 }
 const GlobalConfig = new ConfigStore();
 

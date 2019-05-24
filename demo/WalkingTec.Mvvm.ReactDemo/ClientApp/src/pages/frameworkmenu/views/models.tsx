@@ -1,11 +1,13 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
+﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 import { Observable } from 'rxjs';
 import Regular from 'utils/Regular';
+// import AntIcons from "@ant-design/icons/lib/manifest";
 import Request from 'utils/Request';
+import { BindAll } from 'lodash-decorators';
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -120,12 +122,6 @@ export default {
                 formItem: <WtmSelect placeholder="父目录"
                     dataSource={Request.cache({ url: "/api/_FrameworkMenu/GetFolders" })}
                 />
-            },
-            /** 父目录 */
-            "Entity.tt": {
-                label: "父目录",
-                rules: [],
-                formItem: <WtmEditor />
             }
         }
     },
@@ -156,3 +152,58 @@ export default {
         return rv;
     }
 }
+// @BindAll()
+// class IConId extends React.Component<any, any> {
+//     state = {
+//         // 自定义
+//         custom: false
+//     }
+//     onChange(event) {
+//         this.props.onChange(event);
+//     }
+//     onSearch() {
+
+//     }
+//     componentDidMount() {
+//         // console.log('componentDidMount')
+//     }
+//     render() {
+//         return (
+//             <Row type="flex">
+//                 <Col>
+//                     <Select
+//                         disabled={this.state.custom}
+//                         showSearch
+//                         style={{ width: 105 }}
+//                         placeholder="Ant Icon"
+//                         onChange={this.onChange}
+//                         value={this.props.value}
+//                         allowClear
+//                         // onSearch={this.onSearch}
+//                         filterOption={(input, option: any) =>
+//                             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+//                         }
+//                     >
+//                         {AntIcons.fill.map(data => {
+//                             return <Select.Option key={data} value={data}>{data}</Select.Option>
+//                         })}
+//                     </Select>
+//                 </Col>
+//                 <Col offset={1}>
+//                     <span>自定义：</span><Switch checked={this.state.custom} onChange={event => {
+//                         this.setState({ custom: event })
+//                         this.onChange(undefined);
+//                     }}
+//                         checkedChildren={<Icon type="check" />}
+//                         unCheckedChildren={<Icon type="close" />} />
+//                 </Col>
+//                 <Col span={24}>
+//                     {this.state.custom ?
+//                         <WtmUploadImg {...this.props} /> :
+//                         <Icon type={this.props.value} style={{ fontSize: 100 }} />
+//                     }
+//                 </Col>
+//             </Row>
+//         );
+//     }
+// }
