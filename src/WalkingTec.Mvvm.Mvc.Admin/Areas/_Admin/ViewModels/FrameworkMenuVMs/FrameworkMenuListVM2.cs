@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.IsPublic, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
                         this.MakeGridHeader(x => x.ICon, 100),
+                        this.MakeGridHeader(x => x.CustomICon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeaderAction(width: 290)
                     });
