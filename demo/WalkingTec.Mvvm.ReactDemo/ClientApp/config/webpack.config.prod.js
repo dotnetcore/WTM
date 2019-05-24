@@ -7,6 +7,8 @@
 */
 const paths = require("./paths");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+const lodash = require('lodash');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 /**
  * 重写 react-scripts 默认配置
@@ -15,6 +17,7 @@ module.exports = (config, env) => {
     // config.mode = 'development';
     config.devtool = false;
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
+    lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
     // 查看 文件 大小 分布地图
     // config.plugins.push(
     //     new BundleAnalyzerPlugin()
@@ -32,36 +35,42 @@ module.exports = (config, env) => {
                         name: 'static/media/[name].[hash:8].[ext]',
                     },
                 },
-                {
-                    test: /\.js$/,
-                    include: paths.appNodeModules,
-                    exclude: paths.jsExclude,
-                    use: [
-                        'cache-loader',
-                        {
-                            loader: "babel-loader",
-                            options: {
-                                inputSourceMap: false,
-                                sourceMap: false,
-                                // compact: true,
-                                presets: ['@babel/preset-env']
-                            }
-                        }
-                    ],
+                // {
+                //     test: /\.js$/,
+                //     include: paths.appNodeModules,
+                //     exclude: paths.jsExclude,
+                //     use: [
+                //         'cache-loader',
+                //         {
+                //             loader: "babel-loader",
+                //             options: {
+                //                 inputSourceMap: false,
+                //                 sourceMap: false,
+                //                 // compact: true,
+                //                 presets: ['@babel/preset-env']
+                //             }
+                //         }
+                //     ],
 
-                },
+                // },
                 {
                     test: /\.(tsx|ts|js|jsx)$/,
                     include: paths.appSrc,
-                    loader: 'awesome-typescript-loader',
-                    options: {
-                        useCache: true,
-                        configFileName: "tsconfig.new.json",
-                        cacheDirectory: "node_modules/.cache/awcache",
-                        // transpileOnly: true,
-                        errorsAsWarnings: true,
-                        // usePrecompiledFiles: true,
-                    }
+                    use: [
+                        'cache-loader',
+                        {
+                            loader: 'awesome-typescript-loader',
+                            options: {
+                                useCache: true,
+                                configFileName: "tsconfig.compile.json",
+                                cacheDirectory: "node_modules/.cache/awcache",
+                                // transpileOnly: true,
+                                errorsAsWarnings: true,
+                                // usePrecompiledFiles: true,
+                            }
+                        }
+                    ]
+
                 },
                 {
                     test: /\.(less|css)$/,
