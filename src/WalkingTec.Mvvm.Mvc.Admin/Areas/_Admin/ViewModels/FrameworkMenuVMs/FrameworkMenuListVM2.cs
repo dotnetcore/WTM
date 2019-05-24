@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 ExtraOrder = order++,
                 ParentID = x.ParentId,
                 ICon = x.IConId,
+                CustomICon = x.CustumIcon,
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 
@@ -84,6 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 ExtraOrder = order++,
                                 ParentID = item.ParentID,
                                 ICon = item.ICon,
+                                CustomICon = item.CustomICon,
                                 HasChild = (item.Children != null && item.Children.Count() > 0) ? true : false
                             }
                         );
