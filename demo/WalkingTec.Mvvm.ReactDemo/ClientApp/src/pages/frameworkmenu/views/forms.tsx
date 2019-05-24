@@ -20,6 +20,7 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
+        const IsCustumIcon = Help.FormValueEqual(props, 'CustumIcon', true, false);
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
@@ -31,7 +32,9 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" value={true} />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.IConId" />
+            <FormItem {...props} fieId="CustumIcon" layout="row" />
+            <FormItem {...props} fieId="Entity.CustumIcon" hidden={IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.IConId" hidden={!IsCustumIcon} />
         </InfoShellLayout>
     }
 }
@@ -57,8 +60,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        // getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
+        const IsCustumIcon = Help.FormValueEqual(props, 'CustumIcon', true, !!Help.GetFormValue(props, 'Entity.IConId'));
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.ID" hidden />
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
@@ -71,8 +74,9 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.IConId" />
-
+            <FormItem {...props} fieId="CustumIcon" layout="row" value={IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.CustumIcon" hidden={IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.IConId" hidden={!IsCustumIcon} />
         </InfoShellLayout>
     }
 }

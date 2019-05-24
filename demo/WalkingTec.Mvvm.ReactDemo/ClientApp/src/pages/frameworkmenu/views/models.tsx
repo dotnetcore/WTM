@@ -5,7 +5,7 @@ import * as React from 'react';
 import lodash from 'lodash';
 import { Observable } from 'rxjs';
 import Regular from 'utils/Regular';
-// import AntIcons from "@ant-design/icons/lib/manifest";
+import AntIcons from "@ant-design/icons/lib/manifest";
 import Request from 'utils/Request';
 import { BindAll } from 'lodash-decorators';
 /**
@@ -109,6 +109,17 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
+            /** 自定义Icon */
+            "CustumIcon": {
+                label: "自定义Icon",
+                rules: [],
+                formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
+            },
+            "Entity.CustumIcon": {
+                label: "图标",
+                rules: [],
+                formItem: <IConId />
+            },
             /** 图标 */
             "Entity.IConId": {
                 label: "图标",
@@ -152,58 +163,51 @@ export default {
         return rv;
     }
 }
-// @BindAll()
-// class IConId extends React.Component<any, any> {
-//     state = {
-//         // 自定义
-//         custom: false
-//     }
-//     onChange(event) {
-//         this.props.onChange(event);
-//     }
-//     onSearch() {
+@BindAll()
+class IConId extends React.Component<any, any> {
+    state = {
+        // 自定义
+        custom: false
+    }
+    onChange(event) {
+        this.props.onChange(event);
+    }
+    onSearch() {
 
-//     }
-//     componentDidMount() {
-//         // console.log('componentDidMount')
-//     }
-//     render() {
-//         return (
-//             <Row type="flex">
-//                 <Col>
-//                     <Select
-//                         disabled={this.state.custom}
-//                         showSearch
-//                         style={{ width: 105 }}
-//                         placeholder="Ant Icon"
-//                         onChange={this.onChange}
-//                         value={this.props.value}
-//                         allowClear
-//                         // onSearch={this.onSearch}
-//                         filterOption={(input, option: any) =>
-//                             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-//                         }
-//                     >
-//                         {AntIcons.fill.map(data => {
-//                             return <Select.Option key={data} value={data}>{data}</Select.Option>
-//                         })}
-//                     </Select>
-//                 </Col>
-//                 <Col offset={1}>
-//                     <span>自定义：</span><Switch checked={this.state.custom} onChange={event => {
-//                         this.setState({ custom: event })
-//                         this.onChange(undefined);
-//                     }}
-//                         checkedChildren={<Icon type="check" />}
-//                         unCheckedChildren={<Icon type="close" />} />
-//                 </Col>
-//                 <Col span={24}>
-//                     {this.state.custom ?
-//                         <WtmUploadImg {...this.props} /> :
-//                         <Icon type={this.props.value} style={{ fontSize: 100 }} />
-//                     }
-//                 </Col>
-//             </Row>
-//         );
-//     }
-// }
+    }
+    componentDidMount() {
+        // console.log('componentDidMount')
+    }
+    render() {
+        return (
+            <Row type="flex">
+                <Col span={24}>
+                    <Select
+                        disabled={this.state.custom}
+                        showSearch
+                        style={{ width: '100%' }}
+                        placeholder="Ant Icon"
+                        onChange={this.onChange}
+                        value={this.props.value || undefined}
+                        allowClear
+                        // onSearch={this.onSearch}
+                        filterOption={(input, option: any) =>
+                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {AntIcons.fill.map(data => {
+                            return <Select.Option key={data} value={data}>{data}</Select.Option>
+                        })}
+                    </Select>
+                </Col>
+                <Col span={24}>
+                    {/* {this.state.custom ?
+                        // <WtmUploadImg {...this.props} /> :
+                        
+                    } */}
+                    {this.props.value && <Icon type={this.props.value} style={{ fontSize: 100 }} />}
+                </Col>
+            </Row>
+        );
+    }
+}
