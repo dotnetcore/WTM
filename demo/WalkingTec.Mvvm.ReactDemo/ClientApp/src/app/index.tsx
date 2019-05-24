@@ -111,7 +111,7 @@ export default class RootRoutes extends React.Component<any, any> {
         } else if (props.timedOut) {
             return <div>Taking a long time...</div>;
         } else if (props.pastDelay) {
-            return <Skeleton paragraph={{ rows: 10 }} />
+            return <Skeleton paragraph={{ rows: 20 }} />
         } else {
             return <div></div>;
         }

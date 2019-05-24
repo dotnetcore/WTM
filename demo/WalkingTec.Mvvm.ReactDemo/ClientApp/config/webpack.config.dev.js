@@ -7,11 +7,15 @@
 */
 const paths = require("./paths");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const lodash = require('lodash');
+const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+
 /**
  * 重写 react-scripts 默认配置
  */
 module.exports = (config, env) => {
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
+    lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
     config.plugins.push(new MiniCssExtractPlugin({
         filename: 'static/css/[name].css',
         chunkFilename: 'static/css/[name].chunk.css',
@@ -51,6 +55,7 @@ module.exports = (config, env) => {
         }
     ]
     config.module.rules = [
+        { parser: { requireEnsure: false } },
         {
             oneOf: [
                 {
@@ -61,33 +66,69 @@ module.exports = (config, env) => {
                         name: 'static/media/[name].[ext]',
                     },
                 },
-                {
-                    test: /\.js$/,
-                    include: paths.appNodeModules,
-                    exclude: paths.jsExclude,
-                    use: [
-                        'cache-loader',
-                        {
-                            loader: "babel-loader",
-                            options: {
-                                // compact: true,
-                                presets: ['@babel/preset-env']
-                            }
-                        }
-                    ],
-                },
+                // {
+                //     test: /\.js$/,
+                //     include: paths.appNodeModules,
+                //     exclude: paths.jsExclude,
+                //     use: [
+                //         'cache-loader',
+                //         {
+                //             loader: "babel-loader",
+                //             options: {
+                //                 // compact: true,
+                //                 cacheDirectory: true,
+                //                 cacheCompression: true,
+                //                 presets: ['@babel/preset-env']
+                //             }
+                //         }
+                //     ],
+                // },
+                // {
+                //     test: /\.(js|mjs)$/,
+                //     exclude: /@babel(?:\/|\\{1,2})runtime/,
+                //     use: [
+                //         'cache-loader',
+                //         {
+                //             loader: "babel-loader",
+                //             options: {
+                //                 babelrc: false,
+                //                 configFile: false,
+                //                 compact: false,
+                //                 //   presets: [
+                //                 //     [
+                //                 //       require.resolve('babel-preset-react-app/dependencies'),
+                //                 //       { helpers: true },
+                //                 //     ],
+                //                 //   ],
+                //                 cacheDirectory: true,
+                //                 cacheCompression: true,
+                //                 // If an error happens in a package, it's possible to be
+                //                 // because it was compiled. Thus, we don't want the browser
+                //                 // debugger to show the original code. Instead, the code
+                //                 // being evaluated would be much more helpful.
+                //                 sourceMaps: false,
+                //             }
+                //         }
+                //     ],
+                // },
                 {
                     test: /\.(tsx|ts|js|jsx)$/,
                     include: paths.appSrc,
-                    loader: 'awesome-typescript-loader',
-                    options: {
-                        useCache: true,
-                        configFileName: "tsconfig.new.json",
-                        cacheDirectory: "node_modules/.cache/awcache",
-                        // transpileOnly: true,
-                        errorsAsWarnings: true,
-                        usePrecompiledFiles: true,
-                    }
+                    use: [
+                        'cache-loader',
+                        {
+                            loader: 'awesome-typescript-loader',
+                            options: {
+                                useCache: true,
+                                configFileName: "tsconfig.compile.json",
+                                cacheDirectory: "node_modules/.cache/awcache",
+                                // transpileOnly: true,
+                                errorsAsWarnings: true,
+                                // usePrecompiledFiles: true,
+                            }
+                        }
+                    ]
+
                 },
                 {
                     test: /\.(less|css)$/,

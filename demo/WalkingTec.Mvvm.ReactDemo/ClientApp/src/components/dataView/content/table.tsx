@@ -311,6 +311,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     // defaultCurrent: dataSource.Page,
                     total: dataSource.Count
                 },
+                ...this.props,
                 components: TableUtils.components,
                 dataSource: toJS(dataSource.Data),
                 onChange: this.onChange.bind(this),
@@ -318,9 +319,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 scroll: scroll,
                 rowSelection: this.onRowSelection(),
                 loading: PageState.tableLoading,
-                ...this.props,
             }
-            console.log(this.TableKey)
             return (
                 <Table
                     ref={this.tableRef}

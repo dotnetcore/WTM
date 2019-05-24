@@ -15,7 +15,7 @@ function beforeUpload(file) {
     // }
     return isJPG //&& isLt2M;
 }
-export  class WtmUploadImg extends React.Component<any, any> {
+export class WtmUploadImg extends React.Component<any, any> {
     static wtmType = "UploadImg";
     img = new Image();
     viewer: Viewer = new Viewer(this.img);
@@ -75,7 +75,7 @@ export  class WtmUploadImg extends React.Component<any, any> {
         }
         const response = file.response
         this.setState({ fileList: [], loading: false }, () => {
-            this.onChange(null);
+            this.onChange(undefined);
         });
         const fileId = response && response.Id //|| this.props.value
         if (typeof fileId === "string") {
@@ -109,5 +109,5 @@ export  class WtmUploadImg extends React.Component<any, any> {
             </div>
         );
     }
-}  
+}
 export default WtmUploadImg
