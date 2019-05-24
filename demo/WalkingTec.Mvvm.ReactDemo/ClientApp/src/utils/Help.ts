@@ -31,7 +31,7 @@ export class Help {
     static GetFormValue(props: WTM.FormProps, Field) {
         const FieldValue = lodash.toString(props.form.getFieldValue(Field));
         if (FieldValue === '' ||FieldValue === undefined || FieldValue === null) {
-            return lodash.get(props.defaultValues, Field)
+            return lodash.toString(lodash.get(props.defaultValues, Field))
         }
         return FieldValue
     }
