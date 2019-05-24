@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.10.2",
-    "@antv/g2": "^3.5.4",
-    "@babel/core": "^7.4.4",
+    "@antv/g2": "^3.5.5",
+    "@babel/core": "^7.4.5",
     "@babel/polyfill": "^7.4.4",
     "antd": "3.18.1",
-    "braft-editor": "^2.2.10",
+    "braft-editor": "^2.3.1",
     "lodash": "^4.17.11",
     "lodash-decorators": "^6.0.1",
     "mobx": "^4.9.4",
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "start:api":"cd .. && dotnet run --launch-profile ApiOnly",
+    "start:api": "cd .. && dotnet run --launch-profile ApiOnly",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

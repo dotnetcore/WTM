@@ -90,7 +90,7 @@ class TabsPages extends React.Component<any, any> {
           className="app-layout-tabs"
           tabPosition={lodash.get(globalConfig, "tabPosition", "top") as any}
           onChange={this.onChange.bind(this)}
-          animated={false}
+          animated={globalConfig.tabsAnimated}
           type="editable-card"
           onEdit={this.onEdit.bind(this)}
         >
