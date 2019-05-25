@@ -321,11 +321,13 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 loading: PageState.tableLoading,
             }
             return (
-                <Table
-                    ref={this.tableRef}
-                    key={this.TableKey}
-                    {...props}
-                />
+                <div  ref={this.tableRef}>
+                    <Table
+                       
+                        key={this.TableKey}
+                        {...props}
+                    />
+                </div>
             );
         } else {
             return <div >

@@ -83,7 +83,7 @@ class TabsPages extends React.Component<any, any> {
     const tabPane = this.TabsPagesStore.tabPane;
     const height = this.TabsPagesStore.height;
     return (
-      <Content className="app-layout-content app-layout-content-tabs">
+      <Content className={`app-layout-content app-layout-content-tabs app-lockingTableRoll-${globalConfig.lockingTableRoll}`}>
         <Tabs
           activeKey={this.props.location.pathname}
           // size="small"
@@ -96,8 +96,9 @@ class TabsPages extends React.Component<any, any> {
         >
           {tabPane.map(item => {
             const router = this.getRoutes(item.pathname);
-            return <Tabs.TabPane tab={item.title} key={item.pathname} closable={item.closable}>
-              {React.createElement(router.component, { ...this.props, match: router.match, style: { height: height } } as any)}
+            const props = { ...this.props, match: router.match };
+            return <Tabs.TabPane tab={item.title} key={item.pathname} closable={item.closable} style={{ height: height }}>
+              {React.createElement(router.component, props)}
             </Tabs.TabPane>
           })}
         </Tabs>
@@ -136,7 +137,7 @@ class TabsPagesStore {
     return path
   }
   getHeight() {
-    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 110 : 70);
+    return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 90 : 50);
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(200)).subscribe(e => {
     const height = this.getHeight()
