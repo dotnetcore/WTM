@@ -49,6 +49,10 @@ img.ant-menu-item-img {
     box-sizing: border-box;
     position: relative;
 
+    .ant-tabs-tabpane[aria-hidden="true"] {
+        display: none !important
+    }
+
     &.app-layout-content-tabs {
         padding: 0;
         padding-top: @headerHeight;
@@ -79,7 +83,11 @@ img.ant-menu-item-img {
             }
         }
     }
-
+    &.app-lockingTableRoll-true{
+        .ant-tabs-tabpane{
+            // overflow: hidden !important;
+        }
+    }
     .app-animate-content {
         box-sizing: border-box;
         background: @color-fff;
@@ -98,7 +106,7 @@ img.ant-menu-item-img {
     height: @headerHeight;
     .sider-position();
 
-    >.ant-row {
+    >.ant-row-flex {
         height: 100%;
 
         >div {

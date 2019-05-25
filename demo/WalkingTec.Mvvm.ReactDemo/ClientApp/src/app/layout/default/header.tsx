@@ -1,14 +1,14 @@
 
-import { Avatar, Col, Drawer, Dropdown, Form, Icon, Layout, Menu, Radio, Row, Select } from 'antd';
-import RadioGroup from 'antd/lib/radio/group';
-import { DesForm } from 'components/decorators';
+import { Avatar, Col, Dropdown, Icon, Layout, Menu, Row } from 'antd';
 import globalConfig from 'global.config';
-import { BindAll } from 'lodash-decorators';
-import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/index';
 import RequestFiles from 'utils/RequestFiles';
+import SetUp from './setUp'
+import Sider from './sider'
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
 const { Header } = Layout;
 export default class App extends React.Component<any, any> {
     shouldComponentUpdate() {
@@ -25,11 +25,12 @@ class PageHeader extends React.Component<any, any> {
     render() {
         return (
             <Header className="app-layout-header" style={{ marginLeft: this.props.LayoutStore.collapsedWidth }}>
-                <Row>
-                    <Col span={4}>
+                <Row type="flex">
+                    <Col span={19}>
+                        {/* <Test/> */}
                         <Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />
                     </Col>
-                    <Col span={20} style={{ textAlign: "right" }}>
+                    <Col span={5} style={{ textAlign: "right" }}>
                         <Row type="flex" justify="end" style={{ height: "100%" }}>
                             <Col style={{ height: "100%", marginRight: 10 }}>
                                 <SetUp />
@@ -83,91 +84,53 @@ class UserMenu extends React.Component<any, any> {
         );
     }
 }
-@observer
-@DesForm
-@BindAll()
-class SetUp extends React.Component<any, any> {
-    state = {
-        visible: false
-    }
-    handleSubmit() {
 
-    }
-    onClose() {
-        this.setState({ visible: false })
-    }
+class Test extends React.Component {
+    state = {
+      current: 'mail',
+    };
+  
+    handleClick = e => {
+      console.log('click ', e);
+      this.setState({
+        current: e.key,
+      });
+    };
+  
     render() {
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24 },
-                sm: { span: 4 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 20 },
-            },
-        };
-        const { getFieldDecorator } = this.props.form;
-        return (
-            <>
-                <Icon onClick={() => { this.setState({ visible: true }) }} className="app-collapsed-trigger" type="setting" theme="outlined" />
-                <Drawer
-                    title="Global Config"
-                    placement="right"
-                    width={500}
-                    closable={false}
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                >
-                    <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-                        <Form.Item
-                            label="弹框类型"
-                        >
-                            {getFieldDecorator('infoType', {
-                                rules: [],
-                                initialValue: globalConfig.infoType
-                            })(
-                                <RadioGroup onChange={event => { runInAction(() => globalConfig.infoType = event.target.value) }}>
-                                    <Radio value='Modal'>Modal</Radio>
-                                    <Radio value='Drawer'>Drawer</Radio>
-                                </RadioGroup>
-                            )}
-                        </Form.Item>
-                        <Form.Item
-                            label="Tabs页签"
-                        >
-                            {getFieldDecorator('tabsPage', {
-                                rules: [],
-                                initialValue: globalConfig.tabsPage
-                            })(
-                                <RadioGroup onChange={event => { runInAction(() => globalConfig.tabsPage = event.target.value) }}>
-                                    <Radio value={true}>开启</Radio>
-                                    <Radio value={false}>关闭</Radio>
-                                </RadioGroup>
-                            )}
-                        </Form.Item>
-                        <Form.Item
-                            label="Tabs页签位置"
-                        >
-                            {getFieldDecorator('tabPosition', {
-                                rules: [],
-                                initialValue: globalConfig.tabPosition
-                                // top right bottom left
-                            })(
-                                <Select style={{ width: '100%' }} onChange={(event: any) => {
-                                    dispatchEvent(new CustomEvent('resize'));
-                                    runInAction(() => globalConfig.tabPosition = event)
-                                }}>
-                                    <Select.Option value="top">top</Select.Option>
-                                    <Select.Option value="right">right</Select.Option>
-                                    <Select.Option value="bottom">bottom</Select.Option>
-                                    <Select.Option value="left">left</Select.Option>
-                                </Select>
-                            )}
-                        </Form.Item>
-                    </Form>
-                </Drawer>
-            </>
-        );
+      return (
+        <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal" theme="dark">
+          <Menu.Item key="mail">
+            <Icon type="mail" />
+            Navigation One
+          </Menu.Item>
+          <Menu.Item key="app" disabled>
+            <Icon type="appstore" />
+            Navigation Two
+          </Menu.Item>
+          <SubMenu
+            title={
+              <span className="submenu-title-wrapper">
+                <Icon type="setting" />
+                Navigation Three - Submenu
+              </span>
+            }
+          >
+            <MenuItemGroup title="Item 1">
+              <Menu.Item key="setting:1">Option 1</Menu.Item>
+              <Menu.Item key="setting:2">Option 2</Menu.Item>
+            </MenuItemGroup>
+            <MenuItemGroup title="Item 2">
+              <Menu.Item key="setting:3">Option 3</Menu.Item>
+              <Menu.Item key="setting:4">Option 4</Menu.Item>
+            </MenuItemGroup>
+          </SubMenu>
+          <Menu.Item key="alipay">
+            <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
+              Navigation Four - Link
+            </a>
+          </Menu.Item>
+        </Menu>
+      );
     }
-}
+  }

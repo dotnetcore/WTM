@@ -138,7 +138,7 @@ export default class RootRoutes extends React.Component<any, any> {
                 return <Animate
                     transitionName={classNames}
                     transitionAppear component="" >
-                    <div className="app-animate-content" key="app-animate-content" style={...this.props.style} >
+                    <div className="app-animate-content" key="app-animate-content" >
                         <Component {...this.props} />
                     </div>
                 </Animate  >
