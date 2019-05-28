@@ -594,7 +594,7 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }

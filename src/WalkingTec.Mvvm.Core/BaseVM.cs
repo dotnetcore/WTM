@@ -17,7 +17,9 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// BaseVM
         /// </summary>
-        public BaseVM() { }
+        public BaseVM() {
+            FC = new Dictionary<string, object>();
+        }
 
         /// <summary>
         /// BaseVM

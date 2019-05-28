@@ -303,6 +303,9 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);
                     break;
+                case DBTypeEnum.Memory:
+                    optionsBuilder.UseInMemoryDatabase(CSName);
+                    break;
                 default:
                     break;
             }
