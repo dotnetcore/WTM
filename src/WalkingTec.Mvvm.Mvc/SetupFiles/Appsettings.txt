@@ -15,6 +15,7 @@
   "EncryptKey": "", //加密密钥
   "PageMode": "$pagemode$", //页面显示模式，Single或者Tab
   "TabMode": "Simple", //Tab页显示方式，Default或者Simple
+  "IsFilePublic": false,//是否允许附件不用登陆就可以查看和下载
   "FileUploadOptions": {
     "UploadLimit": 20971520,
     "SaveFileMode": "$filemode$", //上传文件的保存方式，可选Database,local,dfs
