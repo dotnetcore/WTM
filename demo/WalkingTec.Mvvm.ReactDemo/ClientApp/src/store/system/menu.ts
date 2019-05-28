@@ -32,7 +32,7 @@ class Store {
                 data.Url = "/external/" + encodeURIComponent(data.Url);
             } else
                 // public 下的 pages 页面
-                if (lodash.includes(data.Url, globalConfig.staticPage)) {
+                if (lodash.startsWith(data.Url, globalConfig.staticPage)) {
                     data.Url = "/external/" + encodeURIComponent(lodash.replace(data.Url, globalConfig.staticPage, `${window.location.origin}`));
                 }
             return data;
