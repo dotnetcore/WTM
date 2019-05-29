@@ -15,15 +15,24 @@ export class Help {
     }
     /**
      * 比较Form 字段的 值 ，都转换为 字符串 比较
-     * @param props 
-     * @param Field 
-     * @param eqValue 
+     * @param props 表单 props
+     * @param Field 表单 id
+     * @param eqValue 比较的字段
+     * @param nullValues 表单属性 值 为空情况下 返回默认 布尔值
      */
-    static FormValueEqual(props: WTM.FormProps, Field, eqValue) {
-        return lodash.eq(lodash.toString(props.form.getFieldValue(Field) || lodash.get(props.defaultValues, Field)), lodash.toString(eqValue))
+    static FormValueEqual(props: WTM.FormProps, Field, eqValue, nullValues = false) {
+        const FieldValue = Help.GetFormValue(props, Field);
+        if (FieldValue === '' || FieldValue === undefined || FieldValue === null) {
+            return nullValues
+        }
+        return lodash.eq(FieldValue, lodash.toString(eqValue))
     }
 
     static GetFormValue(props: WTM.FormProps, Field) {
-        return lodash.toString(props.form.getFieldValue(Field) || lodash.get(props.defaultValues, Field))
+        const FieldValue = lodash.toString(props.form.getFieldValue(Field));
+        if (FieldValue === '' ||FieldValue === undefined || FieldValue === null) {
+            return lodash.toString(lodash.get(props.defaultValues, Field))
+        }
+        return FieldValue
     }
 }

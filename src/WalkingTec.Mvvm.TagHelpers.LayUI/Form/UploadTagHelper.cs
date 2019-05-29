@@ -129,8 +129,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         elem: '#{Id}button'
         ,url: '{url}'
         ,size: {FileSize}
-        ,accept: 'images'
-        ,exts: '{ext}'
+        ,accept: 'file'
+        {(ext == "" ? "" :$", exts: '{ext}'")}
         ,before: function(obj){{
             index = layui.layer.load(2);
             {Id}preview = obj;

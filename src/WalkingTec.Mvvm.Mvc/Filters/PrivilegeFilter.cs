@@ -60,7 +60,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var isPublic = ad.MethodInfo.IsDefined(typeof(PublicAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(PublicAttribute), false);
             var isAllRights = ad.MethodInfo.IsDefined(typeof(AllRightsAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllRightsAttribute), false);
             var isDebug = ad.MethodInfo.IsDefined(typeof(DebugOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(DebugOnlyAttribute), false);
-
+            if (controller.ConfigInfo.IsFilePublic == true)
+            {
+                if (ad.ControllerName == "_Framework" && (ad.MethodInfo.Name == "GetFile" || ad.MethodInfo.Name == "ViewFile"))
+                {
+                    isPublic = true;
+                }
+            }
             if (isDebug)
             {
                 if (controller.ConfigInfo.IsQuickDebug)

@@ -11,7 +11,7 @@ export class Store extends DataSource {
             Apis: {
                 search: {
                     url: "/_dataprivilege/search",
-                    method: "post"                    
+                    method: "post"
                 },
                 details: {
                     // 支持 嵌套 参数 /user/{ID}/{AAA}/{BBB}
@@ -51,12 +51,12 @@ export class Store extends DataSource {
         this.DataSource.searchParams = { DpType: '0' }
     }
 
-     /** 修改 */
+    /** 修改 */
     async onDetails(params) {
         console.log(params);
         const res = await this.Observable.Request.ajax({ ...this.options.Apis.details, body: params, headers: { 'Content-Type': null } }).toPromise();
-         return res;
-     }
+        return res;
+    }
 
 }
 export default new Store();

@@ -1,12 +1,12 @@
-import { Modal, notification } from 'antd';
+import { notification } from 'antd';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
-import lodash from 'lodash';
 import { configure, observable } from 'mobx';
+import { create, persist } from 'mobx-persist';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "./global.less";
-// 日期中午
+// 日期中文
 moment.locale('zh-cn');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
@@ -14,39 +14,50 @@ notification.config({
     duration: 3,
     top: 60
 });
+const hydrate = create({
+    storage: window.localStorage,   // 存储的对象
+    jsonify: true, // 格式化 json
+    debounce: 1000,
+});
+// 环境变量 开发 模型
 const development = process.env.NODE_ENV === "development"
-
-export default observable({
+class ConfigStore {
+    constructor() {
+        hydrate('WTM_GlobalConfig', this)
+            // post hydration
+            .then(() => console.log('some WTM_GlobalConfig', { ...this }))
+    }
+    buildTime = process.env.REACT_APP_TIME;
     /**
-     * 开发环境
-     */
-    development: development,
+    * 开发环境
+    */
+    development = development;
     /**
      * 默认配置
      */
-    default: {
+    default = {
         title: "WalkingTec MVVM",
         logo: ImgLogo,
         avatar: ImgUser,
-    },
+    };
     /**
      * 服务器地址 前缀
      * process.env.NODE_ENV === "development" 根据 环境替换
      */
-    target: "/api",
+    target = "/api";
     /**
      * 请求头
      */
-    headers: {
+    headers = {
         credentials: 'include',
         accept: "*/*",
         "Content-Type": "application/json",
         "token": null
-    },
+    };
     /**
      * token
      */
-    token: {
+    token = {
         set(token) {
             window.localStorage.setItem('__token', token);
             return token
@@ -58,57 +69,87 @@ export default observable({
             window.localStorage.clear();
             window.location.reload()
         }
-    },
+    };
     /** 列表 分页 可选 行数 以下是默认值 */
     // pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200'],
     /** 列表 行  */
-    Limit: 20,
+    @persist
+    @observable
+    Limit = 20;
     /** 
      * 详情信息 展示类型 
      */
-    infoType: "Drawer",//Drawer || Modal
+    @persist
+    @observable
+    infoType = "Drawer";//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */
-    infoTypeWidth: '800px',
+    @persist
+    @observable
+    infoTypeWidth = '800px';
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
      */
-    formItemLayout: {
+    @persist("object")
+    @observable
+    formItemLayout = {
         labelCol: {
             span: 6
         },
         wrapperCol: {
             span: 16
         },
-    },
+    };
     /**
      * 详情信息 列 数 24 的除数
      */
-    infoColumnCount: 2,
+    @persist
+    @observable
+    infoColumnCount = 2;
     /**
     * 搜索 列 数 24 的除数
     */
-    searchColumnCount: 3,
+    @persist
+    @observable
+    searchColumnCount = 3;
     /**
      * 锁定表格滚动
      */
-    lockingTableRoll: true,
+    @persist
+    @observable
+    lockingTableRoll = true;
     /**
      * 菜单默认展开 true=收起
      */
-    collapsed: false,
+    @persist
+    @observable
+    collapsed = false;
     /**
      * tabs 页面
      */
-    tabsPage: true,
+    @persist
+    @observable
+    tabsPage = true;
+    /**
+     * tabs 切换动画
+     */
+    tabsAnimated = false;
     /**
      * tabs 页签位置，可选值有 top right bottom left
      */
-    tabPosition: "top",
+    @persist
+    @observable
+    tabPosition: 'top' | 'right' | 'bottom' | 'left' = "top";
     /**
      * 静态页面 标记
      */
-    staticPage: "@StaticPage",
-}) 
+    @persist
+    @observable
+    staticPage = "@StaticPage";
+   
+}
+const GlobalConfig = new ConfigStore();
+
+export default GlobalConfig

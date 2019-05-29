@@ -17,7 +17,7 @@ export default class extends React.Component<any, any> {
         const props = {
             ...this.props,
             models: this.models,
-            defaultValues: toJS({DpType:'0'})
+            defaultValues: toJS(Store.DataSource.searchParams)
         }
         return <DataViewSearch
             // columnCount={4} 默认全局

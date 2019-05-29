@@ -111,7 +111,7 @@ export default class RootRoutes extends React.Component<any, any> {
         } else if (props.timedOut) {
             return <div>Taking a long time...</div>;
         } else if (props.pastDelay) {
-            return <Skeleton paragraph={{ rows: 10 }} />
+            return <Skeleton paragraph={{ rows: 20 }} />
         } else {
             return <div></div>;
         }
@@ -135,9 +135,10 @@ export default class RootRoutes extends React.Component<any, any> {
                 return !globalConfig.tabsPage
             }
             render() {
-                return <Animate transitionName={classNames}
-                    transitionAppear={true} component="" >
-                    <div className="app-animate-content" key="app-animate-content" style={...this.props.style} >
+                return <Animate
+                    transitionName={classNames}
+                    transitionAppear component="" >
+                    <div className="app-animate-content" key="app-animate-content" >
                         <Component {...this.props} />
                     </div>
                 </Animate  >

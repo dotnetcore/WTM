@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     if (Entity.DomainId == null)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false)
+                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
@@ -231,7 +231,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     if (Entity.DomainId == null)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false)
+                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
