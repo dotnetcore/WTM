@@ -14,9 +14,9 @@
             });
  */
 
-import axios from 'axios';
-import config from '@/config/index.js';
-import { Message } from 'element-ui';
+import axios from "axios";
+import config from "@/config/index.js";
+import { Message } from "element-ui";
 
 const service = (option, serverHost) => {
     const originalData = option.data || {};
@@ -30,31 +30,31 @@ const service = (option, serverHost) => {
         if (
             originalData[key] !== null &&
             originalData[key] !== undefined &&
-            originalData[key] !== ''
+            originalData[key] !== ""
         ) {
             data[key] = originalData[key];
         }
     }
-    if (option.method === 'post') {
-        //针对参数类型是对象（包含数组）
+    if (option.method === "post") {
+        // 针对参数类型是对象（包含数组）
         req.data = data;
         req.headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            "Content-Type": "application/x-www-form-urlencoded"
         };
         req.transformRequest = [
             function(data) {
-                let ret = '';
+                let ret = "";
                 for (const it in data) {
                     ret +=
                         encodeURIComponent(it) +
-                        '=' +
+                        "=" +
                         encodeURIComponent(data[it]) +
-                        '&';
+                        "&";
                 }
-                if (ret !== '') {
+                if (ret !== "") {
                     ret = ret.substr(0, ret.length - 1);
                 }
-                console.log('ret', ret);
+                console.log("ret", ret);
                 return ret;
             }
         ];
@@ -64,13 +64,12 @@ const service = (option, serverHost) => {
     console.log(req);
     return axios({ ...req })
         .then(res => {
-            // console.log('axios:', res.data);
             if (
                 res.data.tip === 1 &&
                 (res.data.code === 1 || res.data.code === 500)
             ) {
                 Message({
-                    type: 'error',
+                    type: "error",
                     message: res.data.msg
                 });
             }

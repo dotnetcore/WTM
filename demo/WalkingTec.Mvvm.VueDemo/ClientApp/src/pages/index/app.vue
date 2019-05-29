@@ -3,7 +3,6 @@
         <Header></Header>
         <leftMenu></leftMenu>
         <AppMain></AppMain>
-        <!-- copyright -->
         <Footer></Footer>
     </div>
 </template>
@@ -16,14 +15,19 @@
 </style>
 
 <script>
-import { AppMain, Footer, Header, leftMenu } from '@/components/layout/index';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { AppMain, Footer, Header, leftMenu } from "@/components/layout/index";
+import { mapState, mapMutations, mapActions } from "vuex";
+// import AppMain from "@/components/layout/app-main";
+// import Header from "@/components/layout/header";
+// import Footer from "@/components/layout/footer";
+// import leftMenu from "@/components/layout/left-menu";
+
 const mixin = {
     computed: {
         ...mapState({})
     },
     methods: {
-        ...mapMutations({ setIsLogin: 'setIsLogin' }),
+        ...mapMutations({ setIsLogin: "setIsLogin" }),
         ...mapActions({})
     }
 };

@@ -9,7 +9,7 @@ export default {
     props: {
         pageNmae: {
             type: String,
-            default: ''
+            default: ""
         }
     },
     data() {
@@ -26,13 +26,12 @@ export default {
             });
         }
     },
-    components: {
-    }
+    components: {}
 };
 </script>
 
 <style lang="less">
-@import '../../assets/css/mixin.less';
+@import "../../assets/css/mixin.less";
 .footerbg {
     position: fixed;
     left: 200px;
@@ -44,5 +43,3 @@ export default {
     background-color: #eee;
 }
 </style>
-
-

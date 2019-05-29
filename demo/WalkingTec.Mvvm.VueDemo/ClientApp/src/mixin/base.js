@@ -1,8 +1,8 @@
 /**
  * base js
  */
-import utilPath from '@/util/path.js';
-import { mapGetters } from 'vuex';
+import utilPath from "@/util/path.js";
+import { mapGetters } from "vuex";
 // const vuexMixin = {
 //     computed: {
 //         ...mapState({
@@ -22,7 +22,7 @@ const mixin = {
         }
     },
     computed: {
-        ...mapGetters(['isLogin'])
+        ...mapGetters(["isLogin"])
     }
 };
 export default mixin;
