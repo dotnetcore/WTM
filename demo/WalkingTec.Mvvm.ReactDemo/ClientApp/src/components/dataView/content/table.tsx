@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { Alert, Button, Divider, Icon, Switch, Table } from 'antd';
-import { ColumnProps, TableProps } from 'antd/lib/table';
+import { ColumnProps, TableProps, TableRowSelection } from 'antd/lib/table';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
 import { Debounce } from 'lodash-decorators';
@@ -22,6 +22,7 @@ import Regular from 'utils/Regular';
 import { ToImg } from '../help/toImg';
 import './style.less';
 import RequestFiles from 'utils/RequestFiles';
+import { Help } from 'utils/Help';
 
 
 interface ITablePorps extends TableProps<any> {
@@ -42,17 +43,17 @@ const TableUtils = {
     onSetColumnsWidth(tableBody: HTMLDivElement, columns: ColumnProps<any>[]) {
         // 获取页面宽度
         if (tableBody) {
-            const notfixed = lodash.filter(columns, data => !lodash.isString(data.fixed));
+            const fixed = lodash.filter(columns, data => lodash.isString(data.fixed));
             // 表头
-            const columnsLenght = notfixed.length// columns.length //columns.filter(x => typeof x.fixed !== "string").length;
+            const columnsLenght = fixed.length// columns.length //columns.filter(x => typeof x.fixed !== "string").length;
             //计算表格设置的总宽度
-            const columnWidth = this.onGetcolumnsWidth(columns) + lodash.get(tableBody.querySelector('th.ant-table-selection-column'), 'clientWidth', 0);
-            if (columnWidth > tableBody.clientWidth) {
+            const columnWidth = this.onGetcolumnsWidth(columns, 0) + 50;
+            const { clientWidth } = tableBody;
+            if (columnWidth > clientWidth) {
             } else {
-                const width = Math.ceil((tableBody.clientWidth - columnWidth) / columnsLenght);
-                // console.log(tableBody.clientWidth, columnWidth, width)
-                lodash.mapValues(columns, data => {
-                    if (typeof data.width === "number") {
+                const width = Math.ceil((clientWidth - columnWidth) / (columns.length - columnsLenght));
+                lodash.mapValues(columns, (data: any) => {
+                    if (typeof data.width === "number" && !lodash.isString(data.fixed)) {
                         data.width += width;
                     }
                     return data;
@@ -65,10 +66,10 @@ const TableUtils = {
      * 获取列总宽度
      * @param columns 
      */
-    onGetcolumnsWidth(columns) {
+    onGetcolumnsWidth(columns, width = 200) {
         //计算表格设置的总宽度
         return columns.reduce((accumulator, currentValue) => {
-            return Math.ceil(accumulator + (currentValue.width || 200))
+            return Math.ceil(accumulator + (currentValue.width || width))
         }, 0);
     },
     /**
@@ -76,9 +77,10 @@ const TableUtils = {
     */
     onGetScroll(columns) {
         let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
+        console.log("TCL: onGetScroll -> scrollX", scrollX)
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
-            x: scrollX + 50,
+            x: scrollX,
         }
     },
     /**
@@ -123,6 +125,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     });
     @observable columns = lodash.cloneDeep(this.OriginalColumns);
     @observable Height = 500;
+    @observable TableKey = Help.GUID();
     // 拖拽状态
     isResize = false;
     // 页面状态
@@ -174,6 +177,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     handleResize(index) {
         const path = `[${index}].width`;
         return (e, { size }) => {
+            console.log("TCL: DataViewTable -> handleResize -> e", e)
             // let width = lodash.get(this.columns, path);
             // let scrollw = TableUtils.onGetScroll(this.columns).x - width + size.width;
             // // if (TableUtils.clientWidth - scrollw > 5) {
@@ -193,12 +197,12 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      */
     onGetColumns(columns) {
         return columns.map((column, index) => {
-            if (typeof column.fixed === "string") {
-                return column;
-            }
+            // if (typeof column.fixed === "string") {
+            //     return column;
+            // }
             return {
                 ...column,
-                sorter: true,
+                sorter: typeof column.fixed !== "string",
                 onHeaderCell: col => ({
                     width: col.width,
                     onResize: this.handleResize(index),
@@ -209,11 +213,12 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     /**
      * 行选择
      */
-    onRowSelection() {
+    onRowSelection(): TableRowSelection<any> {
         const { DataSource } = this.Store;
         return {
+            columnWidth: 50,
             selectedRowKeys: DataSource.selectedRowKeys,
-            onChange: e => DataSource.selectedRowKeys = e,
+            onChange: (e: string[]) => DataSource.selectedRowKeys = e,
         };
     }
     getHeight() {
@@ -244,14 +249,14 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     async componentDidMount() {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
-            // TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch();
             this.onCalculationHeight()
             this.initColumns();
             this.resize = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
                 this.onCalculationHeight();
                 this.initColumns();
             });
+            await this.Store.onSearch();
+            runInAction(() => this.TableKey = Help.GUID())
         } catch (error) {
             console.error(error)
         }
@@ -319,10 +324,13 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 loading: PageState.tableLoading,
             }
             return (
-                <Table
-                    ref={this.tableRef}
-                    {...props}
-                />
+                <div ref={this.tableRef}>
+                    <Table
+
+                        key={this.TableKey}
+                        {...props}
+                    />
+                </div>
             );
         } else {
             return <div >
@@ -344,14 +352,14 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
  */
 export function columnsRender(text, record) {
     if (lodash.isBoolean(text) || text === "true" || text === "false") {
-        text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
+        text = (text === true || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
     } else if (Regular.isHtml.test(text)) {
         // text = <Popover content={
         //     <div dangerouslySetInnerHTML={{ __html: text }}></div>
         // } trigger="hover">
         //     <a>查看详情</a>
         // </Popover>
-        text = <div dangerouslySetInnerHTML={{ __html: text }}></div>
+        text = <div className="data-view-columns-render" style={record.__style} dangerouslySetInnerHTML={{ __html: text }}></div>
     }
     if (lodash.isString(text) && text.length <= 12) {
         return text

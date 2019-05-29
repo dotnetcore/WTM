@@ -220,7 +220,11 @@ export class WtmSelect extends React.Component<IAppProps, any> {
             placeholder: this.props.placeholder,
             disabled: this.props.disabled,
             onChange: this.handleChange,
-            value: this.props.value,
+            value: this.props.value || undefined,
+            showSearch: true,
+            filterOption: (input, option: any) => {
+                return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
         }
         // 多选
         if (this.props.multiple) {

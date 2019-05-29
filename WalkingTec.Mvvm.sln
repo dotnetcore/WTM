@@ -37,6 +37,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Doc", "doc\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{99C28EA9-9826-4384-AE82-BAE317E7670E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Core.Test", "test\WalkingTec.Mvvm.Core.Test\WalkingTec.Mvvm.Core.Test.csproj", "{72432B21-E5E4-4DD9-B062-8235FBF619D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,10 @@ Global
 		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +96,7 @@ Global
 		{11643068-5E89-44F5-BF68-BA52D9EDFDE6} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011} = {8D8985E4-8178-41CA-ADAE-2B239156E820}
 		{99C28EA9-9826-4384-AE82-BAE317E7670E} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{72432B21-E5E4-4DD9-B062-8235FBF619D5} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D25EAAD-E43A-466A-95DA-ECE1F3C462DC}

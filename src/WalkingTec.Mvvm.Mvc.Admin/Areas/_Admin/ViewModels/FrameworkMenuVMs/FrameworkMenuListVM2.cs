@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.IsPublic, 60),
                         this.MakeGridHeader(x => x.DisplayOrder, 60),
                         this.MakeGridHeader(x => x.ICon, 100),
+                        this.MakeGridHeader(x => x.CustomICon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
                         this.MakeGridHeaderAction(width: 290)
                     });
@@ -55,6 +56,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 ExtraOrder = order++,
                 ParentID = x.ParentId,
                 ICon = x.IConId,
+                CustomICon = x.CustumIcon,
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 
@@ -83,6 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                 ExtraOrder = order++,
                                 ParentID = item.ParentID,
                                 ICon = item.ICon,
+                                CustomICon = item.CustomICon,
                                 HasChild = (item.Children != null && item.Children.Count() > 0) ? true : false
                             }
                         );

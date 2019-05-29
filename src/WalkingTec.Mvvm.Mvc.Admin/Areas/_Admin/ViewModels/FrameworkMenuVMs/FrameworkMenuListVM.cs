@@ -208,7 +208,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public int? DisplayOrder { get; set; }
         [Display(Name = "图标")]
         public Guid? ICon { get; set; }
-
+        public string CustomICon { get; set; }
         public bool Allowed { get; set; }
         public bool Denied { get; set; }
 

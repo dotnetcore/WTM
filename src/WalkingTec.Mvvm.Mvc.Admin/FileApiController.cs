@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
@@ -41,6 +43,51 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
              vm.DoAdd();
             return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
+        }
+
+        [HttpPost("uploadimage")]
+        [ActionDescription("上传图片")]
+        public IActionResult UploadImage(int? width = null, int? height = null)
+        {
+            if (width == null && height == null)
+            {
+                return Upload();
+            }
+            var FileData = Request.Form.Files[0];
+            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
+            var vm = CreateVM<FileAttachmentVM>();
+
+            Image oimage = Image.FromStream(FileData.OpenReadStream());
+            if (oimage == null)
+            {
+                return BadRequest("上传失败");
+            }
+            if (width == null)
+            {
+                width = height * oimage.Width / oimage.Height;
+            }
+            if (height == null)
+            {
+                height = width * oimage.Height / oimage.Width;
+            }
+            MemoryStream ms = new MemoryStream();
+            oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            ms.Position = 0;
+            vm.Entity.FileName = FileData.FileName.Replace(".", "") + ".jpg";
+            vm.Entity.UploadTime = DateTime.Now;
+            vm.Entity.SaveFileMode = sm;
+            vm = FileHelper.GetFileByteForUpload(vm, ms, ConfigInfo, FileData.FileName.Replace(".", "") + ".jpg", sm);
+            vm.Entity.Length = ms.Length;
+            vm.Entity.IsTemprory = true;
+            oimage.Dispose();
+
+            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            {
+                vm.DoAdd();
+                return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
+            }
+            return BadRequest("上传失败");
+
         }
 
         [HttpGet("getFileName/{id}")]
@@ -97,7 +144,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpGet("deleteFile/{id}")]
-        [ActionDescription("下载文件")]
+        [ActionDescription("删除文件")]
         public IActionResult DeletedFile(Guid id)
         {
             if (id == Guid.Empty)
