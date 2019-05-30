@@ -14,7 +14,8 @@ const utils = {
 };
 module.exports = {
     entry: {
-        index: utils.resolve("src/index.js")
+        index: utils.resolve("src/index.js"),
+        login: utils.resolve("src/login.js")
     },
     resolve: {
         extensions: [".js", ".vue", ".json"],
@@ -80,6 +81,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "view/index.html",
+            chunks: ["index"],
+            inject: true
+        }),
+        new HtmlWebpackPlugin({
+            filename: "login.html",
+            template: "view/index.html",
+            chunks: ["login"],
             inject: true
         }),
         new VueLoaderPlugin(),

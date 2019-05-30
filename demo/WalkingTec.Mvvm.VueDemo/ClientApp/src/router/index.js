@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import index from "../pages/index/index";
+import login from "../pages/login/index";
 
 Vue.use(Router);
 const router = new Router({
@@ -10,8 +11,12 @@ const router = new Router({
         {
             name: "index",
             path: "*",
-            meta: { index: 1 },
             component: () => index
+        },
+        {
+            name: "login",
+            path: "/login",
+            component: () => login
         }
     ]
 });
