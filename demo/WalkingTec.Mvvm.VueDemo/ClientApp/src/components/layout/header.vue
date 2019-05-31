@@ -7,7 +7,7 @@
 // import cookie from '@/util/cookie.js';
 // import config from '@/config/index.js';
 
-const logo = require('@/assets/images/logo.png');
+const logo = require("@/assets/images/logo.png");
 
 export default {
     props: {},
@@ -15,7 +15,7 @@ export default {
         return {
             logo: logo,
             isLogin: false,
-            userName: ''
+            userName: ""
         };
     },
     mounted() {},

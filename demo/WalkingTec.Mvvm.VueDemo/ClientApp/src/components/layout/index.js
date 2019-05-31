@@ -1,6 +1,5 @@
-// eslint-disable-next-line
-export AppMain from './app-main';
-
-export Header from './header';
-export Footer from './footer';
-export leftMenu from './left-menu';
+import AppMain from "./app-main";
+import Header from "./header";
+import Footer from "./footer";
+import leftMenu from "./left-menu";
+export { AppMain, Header, Footer, leftMenu };

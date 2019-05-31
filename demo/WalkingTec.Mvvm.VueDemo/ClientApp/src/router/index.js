@@ -1,14 +1,22 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from "vue";
+import Router from "vue-router";
+
+import index from "../pages/index/index";
+import login from "../pages/login/index";
+
 Vue.use(Router);
 const router = new Router({
     // mode: 'history',
     routes: [
         {
-            name: 'index',
-            path: '*',
-            meta: { index: 1 },
-            component: () => import('../pages/index/index')
+            name: "index",
+            path: "*",
+            component: () => index
+        },
+        {
+            name: "login",
+            path: "/login",
+            component: () => login
         }
     ]
 });
