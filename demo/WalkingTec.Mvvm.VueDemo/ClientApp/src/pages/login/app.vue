@@ -1,9 +1,7 @@
 <template>
-    <div id="app" class="app-main">
-        <Header></Header>
-        <leftMenu></leftMenu>
-        <AppMain></AppMain>
-        <Footer></Footer>
+    <div class="app-main">
+        sdf login
+        <index></index>
     </div>
 </template>
 
@@ -18,7 +16,7 @@
 </style>
 
 <script>
-import { AppMain, Footer, Header, leftMenu } from "@/components/layout/index";
+import index from "./index";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 const mixin = {
@@ -33,17 +31,11 @@ const mixin = {
 
 export default {
     components: {
-        AppMain,
-        Header,
-        Footer,
-        leftMenu
+        index
     },
     mixins: [mixin],
     data() {
         return {};
-    },
-    computed: {},
-    mounted() {},
-    methods: {}
+    }
 };
 </script>
