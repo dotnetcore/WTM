@@ -374,5 +374,241 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
         }
 
+
+        [TestMethod]
+        [Description("一对多修改")]
+        public void One2ManyDoEdit()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x=>x.ID).First();
+                var mid = context.Set<Major>().Select(x => x.ID).First();
+                School s = new School { ID = id };
+                s.Majors = new List<Major>();
+                s.Majors.Add(new Major
+                {
+                    MajorCode = "333",
+                    MajorName = "major3",
+                    MajorType = MajorTypeEnum.Optional
+                });
+                s.Majors.Add(new Major { ID = mid, MajorCode = "111update" });
+                _schoolvm.Entity = s;
+                _schoolvm.DC = context;
+                _schoolvm.DoEdit(true);
+            }
+
+            using(var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                Assert.AreEqual(1, context.Set<School>().Count());
+                Assert.AreEqual(2, context.Set<Major>().Where(x=>x.SchoolId == id).Count());
+                var rv1 = context.Set<Major>().Where(x=>x.MajorCode == "111update").SingleOrDefault();
+                Assert.AreEqual("111update", rv1.MajorCode);
+                Assert.AreEqual(null, rv1.MajorName);
+                Assert.AreEqual(null, rv1.MajorType);
+                var rv2 = context.Set<Major>().Where(x => x.MajorCode == "333").SingleOrDefault();
+                Assert.AreEqual("333", rv2.MajorCode);
+                Assert.AreEqual("major3", rv2.MajorName);
+                Assert.AreEqual(MajorTypeEnum.Optional, rv2.MajorType);
+
+                Assert.AreEqual("schooluser", context.Set<School>().First().UpdateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(context.Set<School>().First().UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual("schooluser", rv1.UpdateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(rv1.UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual("schooluser", rv2.CreateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(rv2.CreateTime.Value).Seconds < 10);
+
+
+            }
+        }
+
+
+        [TestMethod]
+        [Description("一对多修改指定字段")]
+        public void One2ManyDoEditFields()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                var mid = context.Set<Major>().Select(x => x.ID).First();
+                School s = new School { ID = id };
+                s.Majors = new List<Major>();
+                s.Majors.Add(new Major
+                {
+                    MajorCode = "333",
+                    MajorName = "major3",
+                    MajorType = MajorTypeEnum.Optional
+                });
+                s.Majors.Add(new Major { ID = mid, MajorCode = "111update" });
+                _schoolvm.Entity = s;
+                _schoolvm.DC = context;
+                _schoolvm.FC = new Dictionary<string, object>();
+                _schoolvm.FC.Add("Entity.Majors[0].MajorCode",null);
+                _schoolvm.DoEdit();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                Assert.AreEqual(1, context.Set<School>().Count());
+                Assert.AreEqual(2, context.Set<Major>().Where(x => x.SchoolId == id).Count());
+                var rv1 = context.Set<Major>().Where(x => x.MajorCode == "111update").SingleOrDefault();
+                Assert.AreEqual("111update", rv1.MajorCode);
+                Assert.AreEqual("major1", rv1.MajorName);
+                Assert.AreEqual( MajorTypeEnum.Optional, rv1.MajorType);
+                var rv2 = context.Set<Major>().Where(x => x.MajorCode == "333").SingleOrDefault();
+                Assert.AreEqual("333", rv2.MajorCode);
+                Assert.AreEqual("major3", rv2.MajorName);
+                Assert.AreEqual(MajorTypeEnum.Optional, rv2.MajorType);
+
+                Assert.AreEqual("schooluser", context.Set<School>().First().UpdateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(context.Set<School>().First().UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual("schooluser", rv1.UpdateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(rv1.UpdateTime.Value).Seconds < 10);
+                Assert.AreEqual("schooluser", rv2.CreateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(rv2.CreateTime.Value).Seconds < 10);
+
+
+            }
+        }
+
+
+        [TestMethod]
+        [Description("多对多修改")]
+        public void Many2ManyDoEdit()
+        {
+            Major m1 = new Major
+            {
+                MajorCode = "111",
+                MajorName = "major1",
+                MajorType = MajorTypeEnum.Optional
+            };
+            Major m2 = new Major
+            {
+                MajorCode = "222",
+                MajorName = "major2",
+                MajorType = MajorTypeEnum.Required
+            };
+            Major m3 = new Major
+            {
+                MajorCode = "333",
+                MajorName = "major3",
+                MajorType = MajorTypeEnum.Required
+            };
+            Student s1 = new Student
+            {
+                LoginName = "s1",
+                Password = "aaa",
+                Name = "student1"
+            };
+            _majorvm.Entity = m1;
+            _majorvm.DoAdd();
+            _majorvm.Entity = m2;
+            _majorvm.DoAdd();
+            _majorvm.Entity = m3;
+            _majorvm.DoAdd();
+
+            s1.StudentMajor = new List<StudentMajor>();
+            s1.StudentMajor.Add(new StudentMajor { MajorId = m1.ID });
+            s1.StudentMajor.Add(new StudentMajor { MajorId = m2.ID });
+            _studentvm.Entity = s1;
+            _studentvm.DoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                s1.StudentMajor.RemoveAt(0);
+                s1.StudentMajor.Add(new StudentMajor { MajorId = m3.ID });
+                _studentvm.DC = context;
+                _studentvm.Entity = s1;
+                _studentvm.DoEdit();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(3, context.Set<Major>().Count());
+                Assert.AreEqual(1, context.Set<Student>().Count());
+                Assert.AreEqual(2, context.Set<StudentMajor>().Count());
+                var rv1 = context.Set<StudentMajor>().Where(x => x.MajorId == m2.ID).SingleOrDefault();
+                var rv2 = context.Set<StudentMajor>().Where(x => x.MajorId == m3.ID).SingleOrDefault();
+                Assert.AreEqual(s1.ID, rv1.StudentId);
+                Assert.AreEqual(m2.ID, rv1.MajorId);
+                Assert.AreEqual(s1.ID, rv2.StudentId);
+                Assert.AreEqual(m3.ID, rv2.MajorId);
+            }
+        }
+
+
+        [TestMethod]
+        [Description("多对多修改清除关联")]
+        public void Many2ManyDoEditClearRelation()
+        {
+            Major m1 = new Major
+            {
+                MajorCode = "111",
+                MajorName = "major1",
+                MajorType = MajorTypeEnum.Optional
+            };
+            Major m2 = new Major
+            {
+                MajorCode = "222",
+                MajorName = "major2",
+                MajorType = MajorTypeEnum.Required
+            };
+            Major m3 = new Major
+            {
+                MajorCode = "333",
+                MajorName = "major3",
+                MajorType = MajorTypeEnum.Required
+            };
+            Student s1 = new Student
+            {
+                LoginName = "s1",
+                Password = "aaa",
+                Name = "student1"
+            };
+            _majorvm.Entity = m1;
+            _majorvm.DoAdd();
+            _majorvm.Entity = m2;
+            _majorvm.DoAdd();
+            _majorvm.Entity = m3;
+            _majorvm.DoAdd();
+
+            s1.StudentMajor = new List<StudentMajor>();
+            s1.StudentMajor.Add(new StudentMajor { MajorId = m1.ID });
+            s1.StudentMajor.Add(new StudentMajor { MajorId = m2.ID });
+            s1.StudentMajor.Add(new StudentMajor { MajorId = m3.ID });
+            _studentvm.Entity = s1;
+            _studentvm.DoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                s1.StudentMajor = null;
+                _studentvm.DC = context;
+                _studentvm.Entity = s1;
+                _studentvm.DoEdit();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(3, context.Set<StudentMajor>().Count());
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                s1.StudentMajor = new List<StudentMajor>();
+                _studentvm.DC = context;
+                _studentvm.Entity = s1;
+                _studentvm.DoEdit();
+            }
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(0, context.Set<StudentMajor>().Count());
+            }
+        }
+
     }
 }
