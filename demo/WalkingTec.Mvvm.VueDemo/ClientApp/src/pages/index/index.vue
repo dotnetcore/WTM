@@ -4,13 +4,11 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from "vuex";
 
 const mixin = {
     computed: {
-        ...mapState({
-            isLogin: 'isLogin'
-        })
+        ...mapState({})
     },
     methods: {
         ...mapMutations({}),
@@ -22,15 +20,17 @@ export default {
     data() {
         return {};
     },
-    mounted() {},
+    mounted() {
+        console.log("idnex");
+    },
     methods: {},
     computed: {},
     components: {}
 };
 </script>
 <style lang="less">
-@import '../../assets/css/variable.less';
-@import '../../assets/css/mixin.less';
+@import "~@/assets/css/variable.less";
+@import "~@/assets/css/mixin.less";
 
 .main-box {
     background-color: #f2f3f5;

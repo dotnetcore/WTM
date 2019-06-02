@@ -1,22 +1,22 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import index from "../pages/index/index";
-import login from "../pages/login/index";
+// import index from "../pages/index/index";
+import test from "../pages/index/test/index";
 
 Vue.use(Router);
 const router = new Router({
-    // mode: 'history',
+    mode: "hash", // 'history',
     routes: [
         {
-            name: "index",
+            name: "test",
             path: "*",
-            component: () => index
+            component: test
         },
         {
-            name: "login",
-            path: "/login",
-            component: () => login
+            name: "index",
+            path: "/index",
+            component: () => import("../pages/index/index")
         }
     ]
 });

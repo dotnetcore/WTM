@@ -1,17 +1,18 @@
 <template>
     <div class="app-main">
-        sdf login
         <index></index>
     </div>
 </template>
 
 <style lang="less">
+@import "../../assets/css/mixin.less";
 .app-main {
-    // background-image: url(/static/media/background.svg);
+    background-image: url(~static/svg/background.svg);
     background-repeat: no-repeat;
     background-position: center 110px;
     background-size: 100%;
     min-height: 100vh;
+    .center();
 }
 </style>
 
