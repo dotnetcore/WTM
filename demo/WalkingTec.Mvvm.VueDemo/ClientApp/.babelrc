@@ -10,5 +10,6 @@
                 }
             }
         ]
-    ]
+    ],
+    "plugins": ["dynamic-import-webpack"]
 }

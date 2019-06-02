@@ -9,15 +9,13 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
 Vue.use(ElementUI);
-
-/* eslint-disable */
 const app = new Vue({
     router,
     store,
     render(h) {
         return h(App, {
             props: {
-                projectName: "trade"
+                projectName: "wtm"
             }
         });
     }

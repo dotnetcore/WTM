@@ -77,17 +77,39 @@ module.exports = {
         ]
     },
 
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                // 注意: priority属性
+                // 其次: 打包业务中公共代码
+                common: {
+                    name: "common",
+                    chunks: "all",
+                    minSize: 1,
+                    priority: 0
+                },
+                // 首先: 打包node_modules中的文件
+                vendor: {
+                    name: "vendor",
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: "all",
+                    priority: 10
+                    // enforce: true
+                }
+            }
+        }
+    },
     plugins: [
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "view/index.html",
-            chunks: ["index"],
+            chunks: ["index", "vendor", "common"],
             inject: true
         }),
         new HtmlWebpackPlugin({
             filename: "login.html",
             template: "view/index.html",
-            chunks: ["login"],
+            chunks: ["login", "vendor", "common"],
             inject: true
         }),
         new VueLoaderPlugin(),

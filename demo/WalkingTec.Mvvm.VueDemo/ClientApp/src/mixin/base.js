@@ -1,7 +1,6 @@
 /**
  * base js
  */
-import utilPath from "@/util/path.js";
 import { mapGetters } from "vuex";
 // const vuexMixin = {
 //     computed: {
@@ -17,8 +16,13 @@ const mixin = {
     mounted() {},
     methods: {
         // 跳转
-        onPath(path, isBefore = true) {
-            utilPath.onPath.bind(this)(path, isBefore);
+        onPath(path) {
+            this.$router.push({
+                path: "/" + path
+            });
+        },
+        onHref(path) {
+            location.href = path;
         }
     },
     computed: {
