@@ -15,13 +15,13 @@ import baseMixin from "@/mixin/base.js";
 
 const mixin = {
     computed: {
-        ...mapState({
-            isLogin: "isLogin"
-        })
+        ...mapState({})
     },
     methods: {
         ...mapMutations({}),
-        ...mapActions({})
+        ...mapActions({
+            postLogin: "postLogin"
+        })
     }
 };
 export default {
@@ -36,11 +36,16 @@ export default {
     mounted() {},
     methods: {
         onSubmit() {
+            const params = {
+                username: this.username,
+                password: this.password
+            };
+            this.postLogin(params);
             this.isloading = true;
             setTimeout(() => {
                 this.isloading = false;
                 this.onHref("/index.html");
-            }, 1000);
+            }, 2000);
         }
     },
     computed: {},
