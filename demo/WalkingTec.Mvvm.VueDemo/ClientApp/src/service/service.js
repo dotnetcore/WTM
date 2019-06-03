@@ -16,7 +16,7 @@
 
 import axios from "axios";
 import config from "@/config/index.js";
-import { Message } from "element-ui";
+import { Message, Notification } from "element-ui";
 
 const service = (option, serverHost) => {
     const originalData = option.data || {};
@@ -76,6 +76,10 @@ const service = (option, serverHost) => {
             return res.data;
         })
         .catch(res => {
+            Notification.error({
+                title: "错误",
+                message: res
+            });
             throw res;
         });
 };
