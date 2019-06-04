@@ -18,7 +18,8 @@ module.exports = merge(baseConfig, {
         open: true,
         overlay: { warnings: false, errors: true },
         publicPath: "/",
-        quiet: true
+        quiet: true,
+        openPage: "login.html"
     },
 
     module: {

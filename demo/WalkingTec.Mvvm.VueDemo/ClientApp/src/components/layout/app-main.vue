@@ -1,11 +1,11 @@
 <template>
     <section class="app-main" :style="[]">
-        <router-view class="view animated"></router-view>
+        <router-view></router-view>
     </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
     props: {
@@ -16,7 +16,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            layout: 'layout'
+            layout: "layout"
         })
     },
     data() {
@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../assets/css/variable';
+@import "../../assets/css/variable";
 .app-main {
     // margin: 10px;
     // font-family: 'segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif';
