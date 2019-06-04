@@ -1,22 +1,27 @@
 .data-view-search {
     .data-view-search-left {}
+
     .data-view-search-right {
-        text-align: right; 
+        text-align: right;
         // padding-right: 20px !important;
         transform: translateX(-40px);
+
         .data-view-search-toggle {
             // margin-right: 40px;
             white-space: nowrap;
         }
     }
+
     .data-view-search-divider {
         height: 10px; // width: 120%;
         background: #e5e9ee;
         margin: 10px -20px;
     }
+
     .ant-row-flex {
         margin-bottom: 0px !important;
     }
+
     .ant-form-item {
         margin-bottom: 5px;
         // display: flex;
@@ -27,5 +32,23 @@
         // .ant-form-item-control-wrapper {
         //     flex: 1 1;
         // }
+    }
+}
+
+.data-view-search-spin {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: all .2s;
+    display: flex;
+
+    &.ant-spin-spinning {
+        z-index: 10;
+        // display: flex;
     }
 }
