@@ -29,6 +29,7 @@
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.5.0",
         "babel-loader": "^8.0.5",
+        "babel-plugin-dynamic-import-webpack": "^1.1.0",
         "babel-polyfill": "^6.26.0",
         "copy-webpack-plugin": "^5.0.2",
         "css-loader": "^2.1.1",

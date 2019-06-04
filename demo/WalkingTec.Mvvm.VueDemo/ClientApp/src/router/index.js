@@ -1,23 +1,34 @@
 import Vue from "vue";
 import Router from "vue-router";
-
-import index from "../pages/index/index";
-import login from "../pages/login/index";
+import { state } from "../store/menu";
 
 Vue.use(Router);
+
+const generateRoutesFromMenu = (menu = [], routes = [], parentMenu = null) => {
+    for (let i = 0, l = menu.length; i < l; i++) {
+        const item = menu[i];
+        if (item.path) {
+            item.meta.parentMenu = parentMenu;
+            const itemClone = { ...item };
+            delete itemClone.children;
+            routes.push(itemClone);
+        }
+        if (item.children) {
+            generateRoutesFromMenu(item.children, routes, item);
+        }
+    }
+    return routes;
+};
+
 const router = new Router({
-    // mode: 'history',
+    mode: "hash", // 'history',
     routes: [
         {
-            name: "index",
+            name: "user",
             path: "*",
-            component: () => index
+            component: () => import("@/pages/index/user/index")
         },
-        {
-            name: "login",
-            path: "/login",
-            component: () => login
-        }
+        ...generateRoutesFromMenu(state.items)
     ]
 });
 export default router;

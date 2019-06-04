@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="app-main">
+    <div id="app" class="app-layout">
         <Header></Header>
         <leftMenu></leftMenu>
         <AppMain></AppMain>
@@ -8,8 +8,7 @@
 </template>
 
 <style lang="less">
-.app-main {
-    // background-image: url(/static/media/background.svg);
+.app-layout {
     background-repeat: no-repeat;
     background-position: center 110px;
     background-size: 100%;
@@ -43,7 +42,9 @@ export default {
         return {};
     },
     computed: {},
-    mounted() {},
+    mounted() {
+        console.log("app", this);
+    },
     methods: {}
 };
 </script>

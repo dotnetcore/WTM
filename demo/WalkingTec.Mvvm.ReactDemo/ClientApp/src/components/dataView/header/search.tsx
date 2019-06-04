@@ -117,14 +117,16 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         }
         const { PageState } = this.Store;
         return (
-            <Form className="data-view-search" onSubmit={this.onSubmit}>
-                <Spin spinning={PageState.tableLoading}>
+            <>
+                <DataSpin Store={this.Store} />
+                {items.length > 0 && <Form className="data-view-search" onSubmit={this.onSubmit}>
+                    {/* <Spin spinning={PageState.tableLoading}> */}
                     <Row type="flex" >
                         {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
                         <Col span={colSpanSearch} className="data-view-search-right" >
-                            <Button icon="search" type="primary" htmlType="submit" loading={PageState.tableLoading}>搜索</Button>
+                            <Button icon="search" type="primary" htmlType="submit" >搜索</Button>
                             <Divider type="vertical" />
-                            <Button icon="retweet" onClick={this.onReset} loading={PageState.tableLoading}>重置</Button>
+                            <Button icon="retweet" onClick={this.onReset} >重置</Button>
                             {
                                 toggleShow && <>
                                     <Divider type="vertical" />
@@ -135,9 +137,20 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
                             }
                         </Col>
                     </Row>
-                </Spin>
-                <div className="data-view-search-divider"></div>
-            </Form>
+                    {/* </Spin> */}
+                    <div className="data-view-search-divider"></div>
+                </Form>}
+            </>
+        );
+    }
+}
+@observer
+class DataSpin extends React.Component<any, any> {
+    Store: Store = this.props.Store;
+    public render() {
+        const { PageState } = this.Store;
+        return (
+            <Spin spinning={PageState.tableLoading} className="data-view-search-spin" size="large" />
         );
     }
 }
