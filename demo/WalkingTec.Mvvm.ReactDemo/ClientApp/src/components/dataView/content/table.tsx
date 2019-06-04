@@ -77,7 +77,7 @@ const TableUtils = {
     */
     onGetScroll(columns) {
         let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
-        console.log("TCL: onGetScroll -> scrollX", scrollX)
+        // console.log("TCL: onGetScroll -> scrollX", scrollX)
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
             x: scrollX,
@@ -177,7 +177,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     handleResize(index) {
         const path = `[${index}].width`;
         return (e, { size }) => {
-            console.log("TCL: DataViewTable -> handleResize -> e", e)
+            // console.log("TCL: DataViewTable -> handleResize -> e", e)
             // let width = lodash.get(this.columns, path);
             // let scrollw = TableUtils.onGetScroll(this.columns).x - width + size.width;
             // // if (TableUtils.clientWidth - scrollw > 5) {
@@ -267,18 +267,9 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
     render() {
         const { DataSource, PageState } = this.Store;
         const dataSource = DataSource.tableList;
-        if (dataSource.Data) {
-            // const columns = this.columns
-            //     .map((x: any) => {
-            //         return {
-            //             ...x,
-            //             render: (text, record, index) => {
-            //                 return <div className="data-view-columns-render" style={{ width: lodash.get(x, 'width', 200) - 24 }}>
-            //                     {x.render(text, record, index)}
-            //                 </div>
-            //             }
-            //         }
-            //     });
+        const tableDataSource = [...dataSource.Data];
+        console.log("TCL: render -> tableDataSource", tableDataSource)
+        if (tableDataSource) {
             const columns = this.columns
                 .map(x => {
                     return {
@@ -316,12 +307,12 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                 },
                 ...this.props,
                 components: TableUtils.components,
-                dataSource: toJS(dataSource.Data),
+                dataSource: tableDataSource,
                 onChange: this.onChange.bind(this),
                 columns: columns,
                 scroll: scroll,
                 rowSelection: this.onRowSelection(),
-                loading: PageState.tableLoading,
+                // loading: PageState.tableLoading,
             }
             return (
                 <div ref={this.tableRef}>
