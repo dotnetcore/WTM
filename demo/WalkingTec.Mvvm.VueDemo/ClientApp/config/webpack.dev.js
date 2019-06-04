@@ -19,7 +19,13 @@ module.exports = merge(baseConfig, {
         overlay: { warnings: false, errors: true },
         publicPath: "/",
         quiet: true,
-        openPage: "login.html"
+        openPage: "login.html",
+        proxy: {
+            "/api": {
+                target: "http://localhost:7598/",
+                changeOrigin: true
+            }
+        }
     },
 
     module: {
