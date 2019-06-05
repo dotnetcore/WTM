@@ -40,14 +40,20 @@
                 <el-button type="primary" size="mini" icon="el-icon-finished">批量操作</el-button>
             </el-col>
         </el-row>
-        <el-table :data="tableData" stripe style="width: 100%" size="small">
-            <el-table-column prop="date" label="日期" width="180">
+        <el-table :data="searchList.Data" stripe style="width: 100%" size="small">
+            <el-table-column prop="ITCode" label="账号">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="180">
+            <el-table-column prop="Name" label="姓名">
             </el-table-column>
-            <el-table-column prop="address" label="地址">
+            <el-table-column prop="Sex" label="性别">
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
+            <el-table-column prop="Sex" label="性别">
+            </el-table-column>
+            <el-table-column prop="RoleName_view" label="角色">
+            </el-table-column>
+            <el-table-column prop="GroupName_view" label="用户组">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作">
                 <template slot-scope="scope">
                     <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                     <el-button type="text" size="small">编辑</el-button>
@@ -64,9 +70,32 @@
 import baseMixin from "@/mixin/base.js";
 import searchMixin from "@/mixin/search.js";
 import add from "./add";
+import store from "@/store/index/index";
+import { mapState, mapMutations, mapActions } from "vuex";
 
+const mixin = {
+    computed: {
+        ...mapState({
+            searchList: "searchList"
+        })
+    },
+    methods: {
+        ...mapMutations({}),
+        ...mapActions({
+            getSearchList: "getSearchList",
+            getFrameworkRolesList: "getFrameworkRolesList",
+            getFrameworkGroupsList: "getFrameworkGroupsList"
+        })
+    }
+};
+const tempSearchData = {
+    ITCode: "",
+    Name: "",
+    IsValid: true
+};
 export default {
-    mixins: [baseMixin, searchMixin()],
+    mixins: [mixin, baseMixin, searchMixin(tempSearchData)],
+    store,
     data() {
         return {
             formData: {
@@ -97,10 +126,15 @@ export default {
         };
     },
     mounted() {
+        this.onSearch();
         console.log("test");
+        this.getFrameworkRolesList();
+        this.getFrameworkGroupsList();
     },
     methods: {
-        privateRequest() {},
+        privateRequest(param) {
+            return this.getSearchList(param);
+        },
         handleClick() {},
         onAdd() {
             this.$refs.addComp.onOpen();
