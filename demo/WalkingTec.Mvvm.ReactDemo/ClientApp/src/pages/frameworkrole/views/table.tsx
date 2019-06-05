@@ -14,18 +14,21 @@ const columns = [
     {
         dataIndex: "RoleCode",
         title: "角色编号",
+        width:150,
         render: columnsRender 
     },
 
     {
         dataIndex: "RoleName",
         title: "角色名称",
+        width:150,
         render: columnsRender 
     },
 
     {
         dataIndex: "RoleRemark",
         title: "备注",
+        // width:150,
         render: columnsRender 
     }
 
