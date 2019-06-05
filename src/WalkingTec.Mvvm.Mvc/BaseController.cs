@@ -27,6 +27,10 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return _configInfo;
             }
+            set
+            {
+                _configInfo = value;
+            }
         }
         private GlobalData _globaInfo;
         public GlobalData GlobaInfo
@@ -38,6 +42,10 @@ namespace WalkingTec.Mvvm.Mvc
                     _globaInfo = (GlobalData)HttpContext.RequestServices.GetService(typeof(GlobalData));
                 }
                 return _globaInfo;
+            }
+            set
+            {
+                _globaInfo = value;
             }
         }
 
@@ -51,6 +59,10 @@ namespace WalkingTec.Mvvm.Mvc
                     _uiservice = (IUIService)HttpContext.RequestServices.GetService(typeof(IUIService));
                 }
                 return _uiservice;
+            }
+            set
+            {
+                _uiservice = value;
             }
         }
 
@@ -110,22 +122,20 @@ namespace WalkingTec.Mvvm.Mvc
         {
             get
             {
-                if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}windowguid", out string windowguid) == true)
+                string rv = string.Empty;
+                try
                 {
+                    if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}windowguid", out string windowguid) == true)
+                    {
 
-                    if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}{windowguid}windowids", out string windowid) == true)
-                    {
-                        return windowid;
-                    }
-                    else
-                    {
-                        return string.Empty;
+                        if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}{windowguid}windowids", out string windowid) == true)
+                        {
+                            rv = windowid;
+                        }
                     }
                 }
-                else
-                {
-                    return string.Empty;
-                }
+                catch { }
+                return rv;
             }
         }
 
@@ -606,38 +616,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-        #region View PartialView
-
-        [NonAction]
-        public virtual ViewResult View(BaseVM model) => base.View(model);
-        [NonAction]
-        public virtual ViewResult View(string viewName, BaseVM model) => base.View(viewName, model);
-        [NonAction]
-        public virtual PartialViewResult PartialView(BaseVM model) => base.PartialView(model);
-        [NonAction]
-        public virtual PartialViewResult PartialView(string viewName, BaseVM model) => base.PartialView(viewName, model);
-
-        #region 弃用
-
-        [Obsolete("弃用", true)]
-        [NonAction]
-        public override ViewResult View(object model) => base.View(model);
-
-        [Obsolete("弃用", true)]
-        [NonAction]
-        public override ViewResult View(string viewName, object model) => base.View(viewName, model);
-
-        [Obsolete("弃用", true)]
-        [NonAction]
-        public override PartialViewResult PartialView(object model) => base.PartialView(model);
-
-        [Obsolete("弃用", true)]
-        [NonAction]
-        public override PartialViewResult PartialView(string viewName, object model) => base.PartialView(viewName, model);
-
-        #endregion
-
-        #endregion
     }
 
 }

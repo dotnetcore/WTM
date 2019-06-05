@@ -10,7 +10,6 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { setTimeout } from "timers";
 import baseMixin from "@/mixin/base.js";
 
 const mixin = {
@@ -36,16 +35,19 @@ export default {
     mounted() {},
     methods: {
         onSubmit() {
+            this.isloading = true;
             const params = {
-                username: this.username,
+                userid: this.username,
                 password: this.password
             };
-            this.postLogin(params);
-            this.isloading = true;
-            setTimeout(() => {
-                this.isloading = false;
-                this.onHref("/index.html");
-            }, 2000);
+            this.postLogin(params)
+                .then(() => {
+                    this.isloading = false;
+                    this.onHref("/index.html");
+                })
+                .catch(() => {
+                    this.isloading = false;
+                });
         }
     },
     computed: {},
