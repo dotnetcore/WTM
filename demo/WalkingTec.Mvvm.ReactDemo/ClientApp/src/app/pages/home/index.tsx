@@ -4,6 +4,8 @@ import Github from 'components/other/githubStar';
 import Antv1 from './antv1';
 import Antv2 from './antv2';
 import Antv3 from './antv3';
+import Colendar from './colendar';
+
 import globalConfig from 'global.config';
 
 export default class IApp extends React.Component<any, any> {
@@ -23,6 +25,13 @@ export default class IApp extends React.Component<any, any> {
                         </div>
                     </Col>
                 </Row>}
+                <Row type="flex" gutter={16}>
+                    <Col span={24} >
+                        <Card bordered={false}>
+                            <Colendar />
+                        </Card>
+                    </Col>
+                </Row>
                 <Row type="flex" gutter={16}>
                     <Col span={12} >
                         <Card bordered={false}>  <Antv1 /></Card>
