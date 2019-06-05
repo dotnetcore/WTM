@@ -2,7 +2,7 @@
  * 查询复用 混入
  * tempSearch: 查询列表参数
  * callBack = () => {}
- * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口 返回 
+ * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口 返回
  */
 const mixin = (tempSearch = {}) => {
     return {
@@ -36,22 +36,30 @@ const mixin = (tempSearch = {}) => {
                 }
                 const params = {
                     ...this.searchFormClone,
-                    pageNum: this.pageDate.currentPage,
-                    pageSize: this.pageDate.pageSize
+                    Page: this.pageDate.currentPage - 1,
+                    Limit: this.pageDate.pageSize
                 };
                 for (const key in params) {
                     if (
-                        params[key] === '' ||
+                        params[key] === "" ||
                         // params[key] === null ||
                         params[key] === undefined
                     ) {
                         delete params[key];
                     }
                 }
+                // Page: 0,
+                // Limit: 0,
+                // Count: 0,
+                // PageCount: 0,
+                // SortInfo: {
+                //     Property: "string",
+                //     Direction: 0
+                // },
                 // 组件查询中方法
                 this.privateRequest(params, this.pageDate.currentPage)
                     .then(repData => {
-                        // console.log('repData', repData)
+                        console.log("repData", repData);
                         this.loading = false;
                         this.pageDate.pageTotal = repData.total || 0;
                     })
@@ -88,7 +96,7 @@ const mixin = (tempSearch = {}) => {
                     //去除搜索中的error信息
                     this.$refs[formName].resetFields();
                 }
-                this.onSearch('');
+                this.onSearch("");
             },
             // 页码大小
             handleSizeChange(size) {
@@ -99,17 +107,17 @@ const mixin = (tempSearch = {}) => {
             // 翻页
             handleCurrentChange(currentpage) {
                 this.pageDate.currentPage = currentpage;
-                console.log('currentpage', currentpage);
+                console.log("currentpage", currentpage);
                 this.fetch(true);
             },
             // 排序
             onSortChange({ prop, order }) {
                 this.searchForm.orderByColumn = prop;
                 this.pageDate.currentPage = 1;
-                if (order === 'ascending') {
-                    this.searchForm.isAsc = 'asc';
-                } else if (order === 'descending') {
-                    this.searchForm.isAsc = 'desc';
+                if (order === "ascending") {
+                    this.searchForm.isAsc = "asc";
+                } else if (order === "descending") {
+                    this.searchForm.isAsc = "desc";
                 } else {
                     this.searchForm.isAsc = null;
                     this.searchForm.isAsc = null;
