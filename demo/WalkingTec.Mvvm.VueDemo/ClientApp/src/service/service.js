@@ -16,7 +16,7 @@
 
 import axios from "axios";
 import config from "@/config/index.js";
-import { Message, Notification } from "element-ui";
+import { Notification } from "element-ui"; // Message,
 
 const service = (option, serverHost) => {
     const originalData = option.data || {};
@@ -39,43 +39,35 @@ const service = (option, serverHost) => {
         // 针对参数类型是对象（包含数组）
         req.data = data;
         req.headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
+            // "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/json"
         };
-        req.transformRequest = [
-            function(data) {
-                let ret = "";
-                for (const it in data) {
-                    ret +=
-                        encodeURIComponent(it) +
-                        "=" +
-                        encodeURIComponent(data[it]) +
-                        "&";
-                }
-                if (ret !== "") {
-                    ret = ret.substr(0, ret.length - 1);
-                }
-                console.log("ret", ret);
-                return ret;
-            }
-        ];
+        // req.transformRequest = [
+        //     function(data) {
+        //         let ret = "";
+        //         for (const it in data) {
+        //             ret +=
+        //                 encodeURIComponent(it) +
+        //                 "=" +
+        //                 encodeURIComponent(data[it]) +
+        //                 "&";
+        //         }
+        //         if (ret !== "") {
+        //             ret = ret.substr(0, ret.length - 1);
+        //         }
+        //         return ret;
+        //     }
+        // ];
     } else {
         req.params = data;
     }
-    console.log(req);
     return axios({ ...req })
         .then(res => {
-            if (
-                res.data.tip === 1 &&
-                (res.data.code === 1 || res.data.code === 500)
-            ) {
-                Message({
-                    type: "error",
-                    message: res.data.msg
-                });
-            }
+            console.log("res::", res);
             return res.data;
         })
         .catch(res => {
+            console.log("error", res);
             Notification.error({
                 title: "错误",
                 message: res
