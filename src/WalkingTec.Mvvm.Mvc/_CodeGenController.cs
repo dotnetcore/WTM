@@ -64,9 +64,29 @@ namespace WalkingTec.Mvvm.Mvc
                 ViewData["filename"] = vm.ModelName + vm.PreviewFile.Replace("CrudVM","VM") + ".cs";
                 ViewData["code"] = vm.GenerateVM(vm.PreviewFile);
             }
+            else if(vm.UI == UIEnum.React)
+            {
+                if (vm.PreviewFile == "storeindex")
+                {
+                    ViewData["code"] = vm.GetResource("index.txt", "Spa.React.store").Replace("$modelname$", vm.ModelName.ToLower());
+                }
+                else if (vm.PreviewFile == "index")
+                {
+                    ViewData["code"] = vm.GetResource("index.txt", "Spa.React").Replace("$modelname$", vm.ModelName.ToLower());
+                }
+                else if (vm.PreviewFile == "style")
+                {
+                    ViewData["code"] = vm.GetResource("style.txt", "Spa.React").Replace("$modelname$", vm.ModelName.ToLower());
+                }
+                else
+                {
+                    ViewData["code"] = vm.GenerateReactView(vm.PreviewFile);
+                }
+
+            }
             else if (vm.PreviewFile.EndsWith("View"))
             {
-                ViewData["filename"] = vm.PreviewFile.Replace("ListView","Index").Replace("View","") + "Controller.cshtml";
+                ViewData["filename"] = vm.PreviewFile.Replace("ListView","Index").Replace("View","") + "cshtml";
                 ViewData["code"] = vm.GenerateView(vm.PreviewFile);
             }
             return PartialView(vm);
