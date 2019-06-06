@@ -22,16 +22,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public ActionLogControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = new ActionLogController();
-            _controller.DC = new FrameworkContext(_seed, DBTypeEnum.Memory);
-            Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
-            MockHttpSession mockSession = new MockHttpSession();
-            mockSession["UserInfo"] = new LoginUserInfo { ITCode = "user" };
-            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            _controller.ControllerContext.HttpContext = mockHttpContext.Object;
-            _controller.ConfigInfo = new Configs();
-            _controller.GlobaInfo = new GlobalData();
-            _controller.UIService = new LayuiUIService();
+            _controller = MockController.CreateController<ActionLogController>(_seed,"user");
         }
 
         [TestMethod]

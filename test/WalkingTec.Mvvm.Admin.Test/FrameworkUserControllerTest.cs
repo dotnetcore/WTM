@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
-    class FrameworkUserControllerTest
+    public class FrameworkUserControllerTest
     {
+        private FrameworkUserController _controller;
+        private string _seed;
+
     }
 }

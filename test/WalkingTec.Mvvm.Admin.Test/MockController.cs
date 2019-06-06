@@ -11,13 +11,13 @@ namespace WalkingTec.Mvvm.Admin.Test
 {
     public class MockController
     {
-        public T CreateController<T>(string dataseed) where T:BaseController,new()
+        public static T CreateController<T>(string dataseed, string usercode) where T:BaseController,new()
         {
             var _controller = new T();
             _controller.DC = new FrameworkContext(dataseed, DBTypeEnum.Memory);
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
             MockHttpSession mockSession = new MockHttpSession();
-            mockSession["UserInfo"] = new LoginUserInfo { ITCode = "user" };
+            mockSession["UserInfo"] = new LoginUserInfo { ITCode = usercode??"user" };
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             _controller.ConfigInfo = new Configs();

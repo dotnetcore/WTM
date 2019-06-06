@@ -1118,7 +1118,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        private string GetResource(string fileName, string subdir = "")
+        public string GetResource(string fileName, string subdir = "")
         {
             //获取编译在程序中的Controller原始代码文本
             Assembly assembly = Assembly.GetExecutingAssembly();
