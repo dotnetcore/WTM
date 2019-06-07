@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
 
-namespace WalkingTec.Mvvm.Admin.Test
+namespace $ns$
 {
     public class MockController
     {

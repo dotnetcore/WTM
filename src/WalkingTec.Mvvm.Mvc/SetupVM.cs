@@ -130,9 +130,12 @@ namespace WalkingTec.Mvvm.Mvc
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
+            string testdir = MainDir + ".Test";
             string vmns = MainNs + ".ViewModels";
             string datans = MainNs;
             string modelns = MainNs;
+            string testns = MainNs + ".Test";
+            Directory.CreateDirectory($"{MainDir}.Test");
             if (ProjectType == ProjectTypeEnum.Single)
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
@@ -155,6 +158,9 @@ namespace WalkingTec.Mvvm.Mvc
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}{vmns}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
                 File.WriteAllText($"{datadir}{Path.DirectorySeparatorChar}{datans}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
             }
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}{testns}.csproj", GetResource("TestProj.txt").Replace("$ns$", MainNs), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockController.cs", GetResource("MockController.txt","test").Replace("$ns$", testns), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockHttpSession.cs", GetResource("MockHttpSession.txt","test").Replace("$ns$", testns), Encoding.UTF8);
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Areas");
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Controllers");
             if (UI == UIEnum.LayUI)
@@ -307,6 +313,14 @@ EndProject
                     File.WriteAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln", solution, Encoding.UTF8);
                 }
             }
+
+
+           var s1 = File.ReadAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln");
+            s1 = s1.Replace("EndProject", $@"EndProject
+Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{testns}"", ""{testns}\{testns}.csproj"", ""{{{Guid.NewGuid()}}}""
+EndProject
+");
+            File.WriteAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln", s1, Encoding.UTF8);
 
 
             File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}appsettings.json", GetResource("Appsettings.txt")
