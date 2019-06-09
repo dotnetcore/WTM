@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using WalkingTec.Mvvm.Core;
@@ -79,9 +80,8 @@ namespace WalkingTec.Mvvm.Mvc
                 var originNeedPage = listVM.NeedPage;
                 listVM.NeedPage = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
-
-                ViewBag.SelectData = (listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson();
-
+                Regex r = new Regex("<script>.*?</script>");
+                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");                
                 listVM.IsSearched = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Selector;
                 listVM.NeedPage = originNeedPage;
