@@ -71,7 +71,21 @@ export default class RootRoutes extends React.Component<any, any> {
                 {
                     path: "/demo",
                     exact: true,
-                    component: this.createCSSTransition(Demo)
+                    component: this.createCSSTransition(Demo),
+                    // path: "/demo",
+                    // component: this.renderRoute(),
+                    // routes: [
+                    //     {
+                    //         path: "/demo",
+                    //         exact: true,
+                    //         component: this.createCSSTransition(Demo),
+                    //     },
+                    //     {
+                    //         path: "/demo/:activeKey",
+                    //         exact: true,
+                    //         component: this.createCSSTransition(Demo),
+                    //     },
+                    // ]
                 },
                 {
                     // 外部页面
@@ -109,7 +123,17 @@ export default class RootRoutes extends React.Component<any, any> {
             };
         })
     }
-
+    /**
+     * 嵌套路由容器
+     */
+    renderRoute() {
+        return class extends React.Component<any, any>{
+            renderRoutes = renderRoutes(this.props.route.routes);
+            render() {
+                return this.renderRoutes;
+            }
+        }
+    }
     // 组件加载动画
     Loading = (props) => {
         if (props.error) {

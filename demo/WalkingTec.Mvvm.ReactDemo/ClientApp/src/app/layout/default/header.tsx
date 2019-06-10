@@ -36,7 +36,7 @@ class PageHeader extends React.Component<any, any> {
               <AppMenu mode="horizontal" {...this.props} />
               : <Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />}
           </Col>
-          <Col style={{ textAlign: "right", flex: 1 }}>
+          <Col style={{ textAlign: "right", flex: 1, overflow: "hidden" }}>
             <Row type="flex" justify="end" style={{ height: "100%" }}>
               <Col style={{ height: "100%", marginRight: 10 }}>
                 <SetUp />
