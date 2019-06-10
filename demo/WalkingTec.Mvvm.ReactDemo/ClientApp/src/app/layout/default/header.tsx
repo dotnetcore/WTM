@@ -6,13 +6,14 @@ import * as React from 'react';
 import Store from 'store/index';
 import RequestFiles from 'utils/RequestFiles';
 import SetUp from './setUp'
-import Sider from './sider'
+import { AppMenu } from './sider'
+import GlobalConfig from 'global.config';
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 const { Header } = Layout;
 export default class App extends React.Component<any, any> {
   shouldComponentUpdate() {
-    return false
+    return GlobalConfig.menuMode === "horizontal"
   }
   render() {
     return (
@@ -24,11 +25,10 @@ export default class App extends React.Component<any, any> {
 class PageHeader extends React.Component<any, any> {
   render() {
     return (
-      <Header className="app-layout-header" style={{ marginLeft: this.props.LayoutStore.collapsedWidth }}>
+      <Header className="app-layout-header" style={GlobalConfig.menuMode === "horizontal" ? {} : { marginLeft: this.props.LayoutStore.collapsedWidth }}>
         <Row type="flex">
           <Col >
-            {/* <Test/> */}
-            <Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />
+            {GlobalConfig.menuMode === "horizontal" ? <AppMenu mode="horizontal" {...this.props} /> : <Icon onClick={() => { this.props.LayoutStore.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />}
           </Col>
           <Col style={{ textAlign: "right", flex: 1 }}>
             <Row type="flex" justify="end" style={{ height: "100%" }}>
