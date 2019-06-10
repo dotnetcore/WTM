@@ -83,11 +83,13 @@ img.ant-menu-item-img {
             }
         }
     }
-    &.app-lockingTableRoll-true{
-        .ant-tabs-tabpane{
+
+    &.app-lockingTableRoll-true {
+        .ant-tabs-tabpane {
             // overflow: hidden !important;
         }
     }
+
     .app-animate-content {
         box-sizing: border-box;
         background: @color-fff;
@@ -102,7 +104,7 @@ img.ant-menu-item-img {
 
 .app-layout-header {
     padding: 0;
-    border-bottom: 1px solid rgba(89, 89, 89, 0.16);
+    // border-bottom: 1px solid rgba(89, 89, 89, 0.16);
     height: @headerHeight;
     .sider-position();
 
@@ -112,6 +114,15 @@ img.ant-menu-item-img {
         >div {
             height: 100%;
         }
+    }
+
+    .ant-menu-horizontal {
+        line-height: @headerHeight;
+    }
+
+    .app-layout-logo {
+        height: @headerHeight;
+        padding: 0 8px;
     }
 
     .app-collapsed-trigger {
