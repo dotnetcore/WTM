@@ -23,6 +23,7 @@ import External from "./pages/external";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
+import Demo from "./pages/demo";
 @observer
 class Entrance extends React.Component<any, any> {
     componentDidMount() {
@@ -66,6 +67,11 @@ export default class RootRoutes extends React.Component<any, any> {
                     path: "/",
                     exact: true,
                     component: this.createCSSTransition(Home)
+                },
+                {
+                    path: "/demo",
+                    exact: true,
+                    component: this.createCSSTransition(Demo)
                 },
                 {
                     // 外部页面

@@ -268,7 +268,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const { DataSource, PageState } = this.Store;
         const dataSource = DataSource.tableList;
         const tableDataSource = [...dataSource.Data];
-        console.log("TCL: render -> tableDataSource", tableDataSource)
+        // console.log("TCL: render -> tableDataSource", tableDataSource)
         if (tableDataSource) {
             const columns = this.columns
                 .map(x => {

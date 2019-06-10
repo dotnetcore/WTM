@@ -6,9 +6,12 @@ import * as React from 'react';
 import { renderRoutes, matchRoutes } from 'react-router-config';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { observable, runInAction, action } from 'mobx';
+import { observable, runInAction, action, toJS } from 'mobx';
 import lodash from 'lodash';
 import Store from 'store/index';
+import { renderIconTitle } from './sider'
+import { Help } from 'utils/Help';
+
 const { Content } = Layout;
 @observer
 class Pages extends React.Component<any, any> {
@@ -97,7 +100,11 @@ class TabsPages extends React.Component<any, any> {
           {tabPane.map(item => {
             const router = this.getRoutes(item.pathname);
             const props = { ...this.props, match: router.match };
-            return <Tabs.TabPane tab={item.title} key={item.pathname} closable={item.closable} style={{ height: height }}>
+            return <Tabs.TabPane
+              tab={renderIconTitle({ Icon: item.icon, Text: item.title })}
+              key={item.pathname}
+              closable={item.closable}
+              style={{ height: height }}>
               {React.createElement(router.component, props)}
             </Tabs.TabPane>
           })}
@@ -108,25 +115,29 @@ class TabsPages extends React.Component<any, any> {
 }
 class TabsPagesStore {
   constructor() {
-
   }
   componentWillUnmount() {
     this.resize.unsubscribe();
   }
   @observable height = this.getHeight();
   @observable tabPane = [{
-    title: "首页",
+    title: '首页',
     pathname: "/",
     closable: false,
+    icon: "home",
   }];
   @action
   pushTabPane(pathname) {
     if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
-    const title = lodash.get(lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]), 'Text', "Null")
+    const menu = lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]);
+    // console.log("TCL: TabsPagesStore -> pushTabPane -> menu", menu)
+    const title = lodash.get(menu, 'Text', "Null")
+    const icon = lodash.get(menu, 'Icon', "appstore")
     this.tabPane.push({
-      title: title,
+      title: title,//renderIconTitle(menu || { Text: "NULL", Icon: "appstore", Id: Help.GUID() }),
       pathname,
-      closable: true
+      closable: true,
+      icon
     });
   }
   @action
