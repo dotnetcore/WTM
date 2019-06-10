@@ -12,6 +12,7 @@ import lodash from 'lodash';
 import React from 'react';
 import './style.less';
 import globalConfig from 'global.config';
+import RequestFiles from 'utils/RequestFiles';
 
 
 
@@ -29,7 +30,39 @@ export class WtmEditor extends React.Component<IAppProps, any> {
   static wtmType = "Editor";
   console = globalConfig.development
   default: BraftEditorProps = {
-
+    media: {
+      uploadFn: (params) => {
+        console.log("TCL: WtmEditor -> params", params)
+        RequestFiles.customRequest({
+          action: RequestFiles.FileTarget,
+          filename: "file",
+          file: params.file,
+          onProgress: (event) => {
+            params.progress(event.percent)
+          },
+          onSuccess: (res) => {
+            const url = RequestFiles.onFileDownload(res.Id);
+            params.success({
+              url: url,
+              meta: {
+                id: res.Id,
+                title: res.Name,
+                alt: res.Name,
+                loop: true, // 指定音视频是否循环播放
+                autoPlay: true, // 指定音视频是否自动播放
+                controls: true, // 指定音视频是否显示控制栏
+                poster: url, // 指定视频播放器的封面
+              }
+            })
+          },
+          onError: (err) => {
+            params.error({
+              msg: err.message
+            })
+          }
+        });
+      }
+    }
   }
   componentDidMount() {
   }

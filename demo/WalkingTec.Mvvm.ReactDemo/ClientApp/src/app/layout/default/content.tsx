@@ -66,9 +66,11 @@ class TabsPages extends React.Component<any, any> {
   }
   componentDidUpdate() {
     this.TabsPagesStore.pushTabPane(this.props.location.pathname);
+    console.log("TCL: TabsPages -> componentDidUpdate -> this.props", this.props)
   }
   getRoutes(pathname) {
     const router = matchRoutes(this.props.route.routes, pathname);
+    console.log("TCL: TabsPages -> getRoutes -> router", router)
     return {
       component: router[0].route.component,
       match: router[0].match
@@ -128,6 +130,7 @@ class TabsPagesStore {
   }];
   @action
   pushTabPane(pathname) {
+    console.log("TCL: TabsPagesStore -> pushTabPane -> pathname", pathname)
     if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
     const menu = lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]);
     // console.log("TCL: TabsPagesStore -> pushTabPane -> menu", menu)
