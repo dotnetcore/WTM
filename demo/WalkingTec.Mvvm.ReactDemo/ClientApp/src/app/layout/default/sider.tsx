@@ -11,6 +11,31 @@ import RequestFiles from 'utils/RequestFiles';
 const { SubMenu } = Menu;
 @observer
 export default class App extends React.Component<any, any> {
+  render() {
+    if (GlobalConfig.menuMode === "horizontal") {
+      return null
+    }
+    let width = this.props.LayoutStore.collapsedWidth;
+    let title = GlobalConfig.default.title;
+    if (this.props.LayoutStore.collapsed) {
+      title = "";
+    }
+    return (
+      <>
+        <div className="app-layout-sider" style={{ width, minWidth: width }} >
+          <div className="app-layout-logo" >
+            <img src={GlobalConfig.default.logo} /><span>{title}</span>
+          </div>
+          <AppMenu {...this.props} />
+        </div>
+        <div className="app-layout-sider-stance" style={{ width, minWidth: width }}>
+        </div>
+      </>
+    );
+  }
+}
+
+export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [key: string]: any }, any> {
   renderIcon(menu) {
     let icon = null;
     if (menu.Icon && menu.Icon.length === 36) {
@@ -56,35 +81,22 @@ export default class App extends React.Component<any, any> {
     config.selectedKeys.push(lodash.get(find, 'Id', '/'));
     config.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
     let width = this.props.LayoutStore.collapsedWidth;
-    let title = GlobalConfig.default.title;
-    if (this.props.LayoutStore.collapsed) {
-      title = "";
-    }
+    const mode = this.props.mode || 'inline'
     return (
-      <>
-        <div className="app-layout-sider" style={{ width, minWidth: width }} >
-          <div className="app-layout-logo" >
-            <img src={GlobalConfig.default.logo} /><span>{title}</span>
-          </div>
-          <Menu
-            theme="dark"
-            mode="inline"
-            {...config}
-            style={{ borderRight: 0, width }}
-            inlineCollapsed={this.props.LayoutStore.collapsed}
-          >
-            <Menu.Item key="/">
-              <Link to="/">
-                <Icon type="home" /><span>首页</span>
-              </Link>
-            </Menu.Item>
-            {this.runderSubMenu()}
-          </Menu>
-        </div>
-        <div className="app-layout-sider-stance" style={{ width, minWidth: width }}>
-        </div>
-      </>
+      <Menu
+        theme="dark"
+        mode={mode}
+        {...config}
+        style={{ borderRight: 0, ...(mode === "inline" ? { width } : {}) }}
+        inlineCollapsed={this.props.LayoutStore.collapsed}
+      >
+        <Menu.Item key="/">
+          <Link to="/">
+            <Icon type="home" /><span>首页</span>
+          </Link>
+        </Menu.Item>
+        {this.runderSubMenu()}
+      </Menu>
     );
   }
 }
-
