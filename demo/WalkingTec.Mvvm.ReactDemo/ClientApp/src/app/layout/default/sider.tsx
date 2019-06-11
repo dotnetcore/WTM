@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Store from 'store/index';
 import lodash from 'lodash';
 import RequestFiles from 'utils/RequestFiles';
+import { MenuProps } from 'antd/lib/menu';
 
 const { SubMenu } = Menu;
 @observer
@@ -16,16 +17,11 @@ export default class App extends React.Component<any, any> {
       return null
     }
     let width = this.props.LayoutStore.collapsedWidth;
-    let title = GlobalConfig.default.title;
-    if (this.props.LayoutStore.collapsed) {
-      title = "";
-    }
+
     return (
       <>
         <div className="app-layout-sider" style={{ width, minWidth: width }} >
-          <div className="app-layout-logo" >
-            <img src={GlobalConfig.default.logo} /><span>{title}</span>
-          </div>
+          <AppLogo  {...this.props} />
           <AppMenu {...this.props} />
         </div>
         <div className="app-layout-sider-stance" style={{ width, minWidth: width }}>
@@ -34,22 +30,26 @@ export default class App extends React.Component<any, any> {
     );
   }
 }
+export class AppLogo extends React.Component<any, any> {
+  render() {
+    let title = GlobalConfig.default.title;
+    if (this.props.LayoutStore.collapsed) {
+      title = "";
+    }
+    return (
+      <div className="app-layout-logo" >
+        <img src={GlobalConfig.default.logo} /><span>{title}</span>
+      </div>
+    );
+  }
+}
 
 export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [key: string]: any }, any> {
-  renderIcon(menu) {
-    let icon = null;
-    if (menu.Icon && menu.Icon.length === 36) {
-      icon = <img className='ant-menu-item-img' src={RequestFiles.onFileDownload(menu.Icon)} alt="" />
-    } else {
-      icon = <Icon type={menu.Icon || 'appstore'} />
-    }
-    return <>{icon}<span>{menu.Text}</span> </>
-  }
   renderLink(menu) {
     if (menu.Url) {
-      return <Link to={menu.Url}>{this.renderIcon(menu)}</Link>
+      return <Link to={menu.Url}>{renderIconTitle(menu)}</Link>
     }
-    return this.renderIcon(menu)
+    return renderIconTitle(menu)
   }
   renderMenu(menus, index) {
     return menus.Children.map((x, i) => {
@@ -61,7 +61,7 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
   runderSubMenu() {
     return Store.Meun.subMenu.map((menu, index) => {
       if (menu.Children && menu.Children.length > 0) {
-        return <SubMenu key={menu.Id} title={<span>{this.renderIcon(menu)}</span>}>
+        return <SubMenu key={menu.Id} title={<span>{renderIconTitle(menu)}</span>}>
           {
             this.renderMenu(menu, index)
           }
@@ -73,22 +73,25 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
     })
   }
   render() {
-    const config = {
+    const props: MenuProps = {
+      theme: "dark",
+      mode: this.props.mode || 'inline',
       selectedKeys: [],
-      defaultOpenKeys: []
-    };
+      defaultOpenKeys: [],
+      style: { borderRight: 0 },
+      // inlineCollapsed: this.props.LayoutStore.collapsed,
+    }
     const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
-    config.selectedKeys.push(lodash.get(find, 'Id', '/'));
-    config.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
+    props.selectedKeys.push(lodash.get(find, 'Id', '/'));
+    props.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
+    if (props.mode === "inline") {
+      props.style.width = this.props.LayoutStore.collapsedWidth;
+      props.inlineCollapsed = this.props.LayoutStore.collapsed
+    }
     let width = this.props.LayoutStore.collapsedWidth;
-    const mode = this.props.mode || 'inline'
     return (
       <Menu
-        theme="dark"
-        mode={mode}
-        {...config}
-        style={{ borderRight: 0, ...(mode === "inline" ? { width } : {}) }}
-        inlineCollapsed={this.props.LayoutStore.collapsed}
+        {...props}
       >
         <Menu.Item key="/">
           <Link to="/">
@@ -99,4 +102,13 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
       </Menu>
     );
   }
+}
+export function renderIconTitle(menu) {
+  let icon = null;
+  if (menu.Icon && menu.Icon.length === 36) {
+    icon = <img className='ant-menu-item-img' src={RequestFiles.onFileDownload(menu.Icon)} alt="" />
+  } else {
+    icon = <Icon type={menu.Icon || 'appstore'} />
+  }
+  return <>{icon}<span>{menu.Text}</span> </>
 }

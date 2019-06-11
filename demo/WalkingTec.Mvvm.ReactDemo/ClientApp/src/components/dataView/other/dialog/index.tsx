@@ -5,7 +5,7 @@
  * @modify date 2019-03-08 02:36:43
  * @desc [description]
  */
-import { Button, Divider, message, notification, Skeleton, Spin } from 'antd';
+import { Button, Divider, message, notification, Skeleton, Spin, Icon } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -96,7 +96,7 @@ export class DialogForm extends React.Component<Props, any> {
             icon={option.icon}
             disabled={option.disabled}
             onClick={this.onVisible.bind(this, true)}>{option.title}</Button> :
-            <a onClick={this.onVisible.bind(this, true)} >{option.title}</a>;
+            <a onClick={this.onVisible.bind(this, true)} >{option.icon && <Icon type={option.icon} />} {option.title}</a>;
         return (
             <React.Fragment key={this.key}>
                 {button}
@@ -147,7 +147,7 @@ class Optimization extends React.Component<{
             this.props.form.validateFields((err, values) => {
                 console.info('表单数据', values)
                 if (err) {
-                    notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
+                    // notification.warn({ key: 'validateFields_err', message: "数据未填写完整" })
                     this.state.loading && this.setState({ loading: false })
                     return
                 }
