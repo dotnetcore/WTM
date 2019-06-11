@@ -159,8 +159,10 @@ namespace WalkingTec.Mvvm.Mvc
                 File.WriteAllText($"{datadir}{Path.DirectorySeparatorChar}{datans}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
             }
             File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}{testns}.csproj", GetResource("TestProj.txt").Replace("$ns$", MainNs), Encoding.UTF8);
-            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockController.cs", GetResource("MockController.txt","test").Replace("$ns$", testns), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockController.cs", GetResource("MockController.txt","test").Replace("$ns$", testns).Replace("$datans$", datans), Encoding.UTF8);
             File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockHttpSession.cs", GetResource("MockHttpSession.txt","test").Replace("$ns$", testns), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}HomeControllerTest.cs", GetResource("HomeControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}LoginControllerTest.cs", GetResource("LoginControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns).Replace("$datans$", datans), Encoding.UTF8);
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Areas");
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Controllers");
             if (UI == UIEnum.LayUI)
@@ -296,6 +298,8 @@ Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{datans}"", ""{datans}
 EndProject
 Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{vmns}"", ""{vmns}\{vmns}.csproj"", ""{{{g3}}}""
 EndProject
+Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{testns}"", ""{testns}\{testns}.csproj"", ""{{{Guid.NewGuid()}}}""
+EndProject
 ");
                     solution = solution.Replace(".Release|Any CPU.Build.0 = Release|Any CPU", $@".Release|Any CPU.Build.0 = Release|Any CPU
 		{{{g1}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -314,14 +318,15 @@ EndProject
                 }
             }
 
-
-           var s1 = File.ReadAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln");
-            s1 = s1.Replace("EndProject", $@"EndProject
+            else
+            {
+                var s1 = File.ReadAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln");
+                s1 = s1.Replace("EndProject", $@"EndProject
 Project(""{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}"") = ""{testns}"", ""{testns}\{testns}.csproj"", ""{{{Guid.NewGuid()}}}""
 EndProject
 ");
-            File.WriteAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln", s1, Encoding.UTF8);
-
+                File.WriteAllText($"{Directory.GetParent(MainDir)}{Path.DirectorySeparatorChar}{MainNs}.sln", s1, Encoding.UTF8);
+            }
 
             File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}appsettings.json", GetResource("Appsettings.txt")
     .Replace("$cs$", CS ?? "")

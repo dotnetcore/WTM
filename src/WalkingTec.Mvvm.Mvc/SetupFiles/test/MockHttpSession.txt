@@ -38,18 +38,16 @@ namespace $ns$
         {
             sessionStorage.Clear();
         }
-        Task ISession.CommitAsync(CancellationToken cancellationToken = default(CancellationToken))
+        Task ISession.CommitAsync(CancellationToken cancellationToken)
         {
             Task t = new Task(() =>
             {
-                int a = 0;
-                int b = 0;
             });
             t.Start();
             return t;
         }
 
-        Task ISession.LoadAsync(CancellationToken cancellationToken = default(CancellationToken))
+        Task ISession.LoadAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
