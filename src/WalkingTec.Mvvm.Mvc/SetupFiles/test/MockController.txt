@@ -6,6 +6,7 @@ using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
+using $datans$;
 
 namespace $ns$
 {
@@ -14,7 +15,7 @@ namespace $ns$
         public static T CreateController<T>(string dataseed, string usercode) where T:BaseController,new()
         {
             var _controller = new T();
-            _controller.DC = new FrameworkContext(dataseed, DBTypeEnum.Memory);
+            _controller.DC = new DataContext(dataseed, DBTypeEnum.Memory);
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);

@@ -37,6 +37,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
             FrameworkUserBase v = new FrameworkUserBase();
+            
             v.ITCode = "itcode";
             v.Name = "name";
             v.Password = "password";
@@ -155,7 +156,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 v2.Name = "name2";
                 v2.Password = "password2";
                 context.Set<FrameworkUserBase>().Add(v1);
-                context.Set<FrameworkUserBase>().Add(v1);
+                context.Set<FrameworkUserBase>().Add(v2);
                 context.SaveChanges();
             }
 
@@ -172,5 +173,16 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
         }
 
+        private void AddXXX()
+        {
+            FrameworkAction v = new FrameworkAction();
+            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            {
+                v.ActionName = "";
+                v.Checked = true;
+                context.Set<FrameworkAction>().Add(v);
+                context.SaveChanges();
+            }
+        }
     }
 }
