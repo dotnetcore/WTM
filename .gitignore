@@ -8,6 +8,9 @@ NuPack*
 package-lock.json
 node_modules/
 
+.awcache
+.cache-loader
+
 Migrations/
 *.pubxml
 

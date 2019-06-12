@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Doc
                 {
                     x.UseFrameworkService();
                 })
-                .UseUrls("http://*:7777")
+                .UseUrls("http://*:80")
                 .Build();
     }
 }
