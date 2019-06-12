@@ -1,5 +1,9 @@
+# node
+**/node_modules
+
 **/.DS_Store
 **/.vscode
+**/.azure
 **/.vs
 **/*.md
 **/*.sh
@@ -17,7 +21,7 @@
 **/logs
 
 # Docker
-**/Dockerfile*
+**/*Dockerfile*
 **/.dockerignore
 **/docker-compose.yml
 **/docker-compose.*.yml
