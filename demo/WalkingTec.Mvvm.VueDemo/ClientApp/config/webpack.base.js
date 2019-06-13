@@ -14,11 +14,11 @@ const utils = {
 };
 module.exports = {
     entry: {
-        index: utils.resolve("src/index.js"),
-        login: utils.resolve("src/login.js")
+        index: utils.resolve("src/index.ts"),
+        login: utils.resolve("src/login.ts")
     },
     resolve: {
-        extensions: [".js", ".vue", ".json"],
+        extensions: [".js", ".ts", ".vue", ".json"],
         alias: {
             "@": utils.resolve("src"),
             pages: utils.resolve("src/pages"),
@@ -32,6 +32,20 @@ module.exports = {
                 test: /\.(js|vue)$/,
                 use: "eslint-loader",
                 enforce: "pre"
+            },
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                enforce: "pre",
+                loader: "tslint-loader"
+            },
+            {
+                test: /\.tsx?$/,
+                loader: "ts-loader",
+                exclude: /node_modules/,
+                options: {
+                    appendTsSuffixTo: [/\.vue$/]
+                }
             },
             {
                 test: /\.vue$/,

@@ -53,8 +53,8 @@
     </el-dialog>
 </template>
 <script>
-import baseMixin from "@/mixin/base.js";
-import searchMixin from "@/mixin/search.js";
+import baseMixin from "@/mixin/base.ts";
+import searchMixin from "@/mixin/search.ts";
 export default {
     mixins: [baseMixin, searchMixin()],
     data() {

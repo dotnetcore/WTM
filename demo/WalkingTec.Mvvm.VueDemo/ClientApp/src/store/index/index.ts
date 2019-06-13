@@ -4,12 +4,12 @@ import reqLogin from "@/service/index";
 import { createStore } from "../base/index";
 Vue.use(Vuex);
 // 回调统一判断登陆
-const callback = (result, commit) => {
+function callback(result, commit) {
     if (result && result.code === 3) {
         console.log("stsore login");
         commit("setIsLogin", false);
     }
-};
+}
 const { state, actions, mutations } = createStore(reqLogin, callback);
 const modules = {};
 const getters = {
