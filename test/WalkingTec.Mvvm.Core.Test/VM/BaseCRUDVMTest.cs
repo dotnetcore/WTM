@@ -15,7 +15,6 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         private BaseCRUDVM<Major> _majorvm = new BaseCRUDVM<Major>();
         private BaseCRUDVM<Student> _studentvm = new BaseCRUDVM<Student>();
         private string _seed;
-        private Dictionary<string, string> _msd;
 
         public BaseCRUDVMTest()
         {

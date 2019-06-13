@@ -87,6 +87,23 @@ export default class SetUp extends React.Component<any, any> {
                                 </Select>
                             )}
                         </Form.Item>
+                        <Form.Item
+                            label="菜单位置"
+                        >
+                            {getFieldDecorator('menuMode', {
+                                rules: [],
+                                initialValue: globalConfig.menuMode
+                                // "horizontal" | "inline"
+                            })(
+                                <Select style={{ width: '100%' }} onChange={(event: any) => {
+                                    runInAction(() => globalConfig.menuMode = event);
+                                    dispatchEvent(new CustomEvent('resize'));
+                                }}>
+                                    <Select.Option value="inline">left</Select.Option>
+                                    <Select.Option value="horizontal">top</Select.Option>
+                                </Select>
+                            )}
+                        </Form.Item>
                     </Form>
                 </Drawer>
             </>

@@ -43,17 +43,17 @@ const TableUtils = {
     onSetColumnsWidth(tableBody: HTMLDivElement, columns: ColumnProps<any>[]) {
         // 获取页面宽度
         if (tableBody) {
-            const fixed = lodash.filter(columns, data => lodash.isString(data.fixed));
+            const notCol = lodash.filter(columns, data => lodash.isString(data.fixed) || data.width !== 201);
             // 表头
-            const columnsLenght = fixed.length// columns.length //columns.filter(x => typeof x.fixed !== "string").length;
+            const notColLenght = notCol.length// columns.length //columns.filter(x => typeof x.fixed !== "string").length;
             //计算表格设置的总宽度
             const columnWidth = this.onGetcolumnsWidth(columns, 0) + 50;
             const { clientWidth } = tableBody;
             if (columnWidth > clientWidth) {
             } else {
-                const width = Math.ceil((clientWidth - columnWidth) / (columns.length - columnsLenght));
+                const width = Math.ceil((clientWidth - columnWidth) / (columns.length - notColLenght));
                 lodash.mapValues(columns, (data: any) => {
-                    if (typeof data.width === "number" && !lodash.isString(data.fixed)) {
+                    if (typeof data.width === "number" && !(lodash.isString(data.fixed) || data.width !== 201)) {
                         data.width += width;
                     }
                     return data;
@@ -66,7 +66,7 @@ const TableUtils = {
      * 获取列总宽度
      * @param columns 
      */
-    onGetcolumnsWidth(columns, width = 200) {
+    onGetcolumnsWidth(columns, width = 201) {
         //计算表格设置的总宽度
         return columns.reduce((accumulator, currentValue) => {
             return Math.ceil(accumulator + (currentValue.width || width))
@@ -120,7 +120,7 @@ const TableUtils = {
 export class DataViewTable extends React.Component<ITablePorps, any> {
     // 原始初始化列配置
     private OriginalColumns = this.props.columns.map(x => {
-        x.width = lodash.get(x, 'width', 200)
+        x.width = lodash.get(x, 'width', 201)
         return x;
     });
     @observable columns = lodash.cloneDeep(this.OriginalColumns);
@@ -197,12 +197,12 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
      */
     onGetColumns(columns) {
         return columns.map((column, index) => {
-            // if (typeof column.fixed === "string") {
-            //     return column;
-            // }
+            if (typeof column.fixed === "string") {
+                return column;
+            }
             return {
                 ...column,
-                sorter: typeof column.fixed !== "string",
+                sorter: true,//typeof column.fixed !== "string",
                 onHeaderCell: col => ({
                     width: col.width,
                     onResize: this.handleResize(index),
@@ -268,7 +268,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         const { DataSource, PageState } = this.Store;
         const dataSource = DataSource.tableList;
         const tableDataSource = [...dataSource.Data];
-        console.log("TCL: render -> tableDataSource", tableDataSource)
+        // console.log("TCL: render -> tableDataSource", tableDataSource)
         if (tableDataSource) {
             const columns = this.columns
                 .map(x => {
@@ -288,7 +288,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
             const scroll = { ...TableUtils.onGetScroll(columns), ...this.getHeight() }
             // 分页参数
             const props: TableProps<any> = {
-                bordered: true,
+                // bordered: true,
                 size: "small",
                 className: "data-view-table",
                 rowKey: "ID",
@@ -352,9 +352,9 @@ export function columnsRender(text, record) {
         // </Popover>
         text = <div className="data-view-columns-render" style={record.__style} dangerouslySetInnerHTML={{ __html: text }}></div>
     }
-    if (lodash.isString(text) && text.length <= 12) {
-        return text
-    }
+    // if (lodash.isString(text) && text.length <= 12) {
+    //     return text
+    // }
     return <div className="data-view-columns-render" title={text} style={record.__style}>
         <span>{text}</span>
     </div>

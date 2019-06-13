@@ -692,8 +692,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
+                    bool hassubtable = false;
                     for (int i = 0; i < cells.Count; i++)
                     {
+                        if (excelPropetys[pIndex].SubTableType != null)
+                        {
+                            hassubtable = true;
+                        }
                         if (excelPropetys[pIndex].DataType != ColumnDataType.Dynamic)
                         {
                             if (cells[i].ToString().Trim('*') != excelPropetys[pIndex].ColumnName)
@@ -718,6 +723,19 @@ namespace WalkingTec.Mvvm.Core
                             }
                             i = i - 1;
                             pIndex++;
+                        }
+                    }
+
+                    //如果有子表，则设置主表字段非必填
+                    if (hassubtable == true)
+                    {
+                        for (int i = 0; i < cells.Count; i++)
+                        {
+                            if (excelPropetys[i].SubTableType == null)
+                            {
+                                excelPropetys[i].IsNullAble = true;
+                            }
+
                         }
                     }
                 }
@@ -851,6 +869,10 @@ namespace WalkingTec.Mvvm.Core
                 var de = e as DbUpdateException;
                 if (de.Entries != null)
                 {
+                    if(de.Entries.Count == 0)
+                    {
+                        ErrorListVM.EntityList.Add(new ErrorMessage { Index = 0, Message = e.Message });
+                    }
                     //循环此错误相关的数据
                     foreach (var ent in de.Entries)
                     {

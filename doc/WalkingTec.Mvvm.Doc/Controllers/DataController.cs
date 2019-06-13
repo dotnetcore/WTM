@@ -18,5 +18,10 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("数据库同步")]
+        public IActionResult Migration()
+        {
+            return PartialView();
+        }
     }
 }
