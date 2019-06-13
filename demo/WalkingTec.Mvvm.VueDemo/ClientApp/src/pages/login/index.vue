@@ -10,7 +10,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import baseMixin from "@/mixin/base.js";
+import baseMixin from "@/mixin/base.ts";
 
 const mixin = {
     computed: {
