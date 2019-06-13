@@ -16,6 +16,7 @@
     <None Remove="GeneratorFiles\BatchEditView.txt" />
     <None Remove="GeneratorFiles\BatchVM.txt" />
     <None Remove="GeneratorFiles\Controller.txt" />
+    <None Remove="GeneratorFiles\ControllerTest.txt" />
     <None Remove="GeneratorFiles\CreateView.txt" />
     <None Remove="GeneratorFiles\CrudVM.txt" />
     <None Remove="GeneratorFiles\DeleteView.txt" />
@@ -36,6 +37,8 @@
     <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
     <None Remove="SetupFiles\DefaultProj.txt" />
     <None Remove="SetupFiles\DefaultSolution.txt" />
+    <None Remove="SetupFiles\MockController.txt" />
+    <None Remove="SetupFiles\MockHttpSession.txt" />
     <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
     <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
     <None Remove="SetupFiles\Mvc\home\Header.txt" />
@@ -54,6 +57,9 @@
     <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
     <None Remove="SetupFiles\Spa\React\Proj.txt" />
+    <None Remove="SetupFiles\TestProj.txt" />
+    <None Remove="SetupFiles\test\HomeControllerTest.txt" />
+    <None Remove="SetupFiles\test\LoginControllerTest.txt" />
     <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
     <None Remove="SetupFiles\vms\IndexVM.txt" />
     <None Remove="SetupFiles\vms\LoginVM.txt" />
@@ -62,6 +68,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\ControllerTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\store\index.txt" />
@@ -72,6 +79,11 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
+    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
+    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />

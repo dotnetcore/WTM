@@ -1,0 +1,51 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+<p>当我们创建了新的模型，并在DataContext中指定了要生成数据库表之后，框架并不能自动更新数据库。这是因为EF Core目前没有提供这个功能</p>
+<p>我们可以使用如下几种方法同步数据库</p>
+
+<wt:fieldset field-set-style="Simple" title="1. 删库重来">
+    <p>将已有数据库删除，重新运行项目，框架会根据新的模型重新创建数据库</p>
+    <p>这种方法最简便，适合开发初期使用，但在项目后期已有一些数据的时候显然是不适合的</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="2. 使用EF提供的命令行工具">
+    <p>EF Core提供了一些命令行工具来进行数据同步，比如add-migration, update等，具体可以参考<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/managing-schemas/migrations/">微软文档</a></p>
+    <p>EF Core的原理是通过反射寻找代码中的DbContext，找到连接字符串从而确定要操作的数据库。</p>
+    <p>但是WTM框架支持SqlServer，MySql，PgSql等多种数据库，通过配置文件来决定使用哪种，而EF是不知道应该去哪里找的</p>
+    <p>这种情况下，我们可以使用Design-time DbContext来手工指定需要同步的数据库，具体可以参考<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dbcontext-creation">微软文档</a></p>
+    <p>简单来说，就是在代码中创建一个继承IDesignTimeDbContextFactory的类，例如：</p>
+        <wt:code title="DataContextFactory.cs">
+public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
+{
+    public DataContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder&lt;DataContext&gt;();
+        //使用UseSqlServer，UseMySql，UseNpgsql等指定使用不同的数据库
+        optionsBuilder.UseMySql("这里指定完整的连接字符串");
+        return new BloggingContext(optionsBuilder.Options);
+    }
+}
+
+    </wt:code>
+    <p>加入上面这个类之后，我们就可以使用add-migration等方法了,EF会使用上面这个类中指定的数据库进行操作</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="3. 使用数据库比较工具">
+    <p>我们可以将连接字符串改为一个新库，运行项目让框架生成一个新的数据库</p>
+    <p>然后我们使用第三方的数据库比较工具，来将原有库的结构更新成新库一样</p>
+    <p>市面上有很多数据库比较工具，都可以比较两个数据库并生成sql语句来同步，具体工具请百度</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="4. 手工同步">
+    <p>如果只是更新了很少的字段，可以手工将数据库对应的表修改成跟model对应的结构就可以了</p>
+</wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo');
+    </script>

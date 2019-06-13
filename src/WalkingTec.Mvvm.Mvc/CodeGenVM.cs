@@ -107,6 +107,23 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        public string _testdir;
+        [ValidateNever()]
+        public string TestDir
+        {
+            get
+            {
+                if (_testdir == null)
+                {
+                    var up = Directory.GetParent(MainDir);
+                    var testdir = up.GetDirectories().Where(x => x.Name.ToLower().EndsWith(".test")).FirstOrDefault();
+                    _testdir = testdir?.FullName;
+                }
+                return _testdir;
+            }
+        }
+
+
         public string _controllerdir;
         [ValidateNever()]
         public string ControllerDir
@@ -150,6 +167,29 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
 
+        private string _mainNs;
+        public string MainNS
+        {
+            get
+            {
+                int index = MainDir.LastIndexOf(Path.DirectorySeparatorChar);
+                if (index > 0)
+                {
+                    _mainNs = MainDir.Substring(index + 1);
+                }
+                else
+                {
+                    _mainNs = MainDir;
+                }
+                return _mainNs;
+            }
+            set
+            {
+                _mainNs = value;
+            }
+
+        }
+
         private string _controllerNs;
         [Display(Name = "Controller命名空间")]
         [ValidateNever()]
@@ -159,16 +199,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (_controllerNs == null)
                 {
-                    int index = MainDir.LastIndexOf(Path.DirectorySeparatorChar);
-                    if (index > 0)
-                    {
-                        _controllerNs = MainDir.Substring(index + 1);
-                    }
-                    else
-                    {
-                        _controllerNs = MainDir;
-                    }
-                    _controllerNs += ".Controllers";
+                    _controllerNs = MainNS + ".Controllers";
                 }
                 return _controllerNs;
             }
@@ -177,6 +208,54 @@ namespace WalkingTec.Mvvm.Mvc
                 _controllerNs = value;
             }
         }
+
+        private string _testNs;
+        [Display(Name = "Test命名空间")]
+        [ValidateNever()]
+        public string TestNs
+        {
+            get
+            {
+                if (_testNs == null)
+                {
+                    _testNs = MainNS + ".Test";
+                }
+                return _testNs;
+            }
+            set
+            {
+                _testNs = value;
+            }
+        }
+
+        private string _dataNs;
+        [Display(Name = "Data命名空间")]
+        [ValidateNever()]
+        public string DataNs
+        {
+            get
+            {
+                if (_dataNs == null)
+                {
+                    var up = Directory.GetParent(MainDir);
+                    var vmdir = up.GetDirectories().Where(x => x.Name.ToLower().EndsWith(".dataaccess")).FirstOrDefault();
+                    if (vmdir == null)
+                    {
+                        _dataNs = MainNS;
+                    }
+                    else
+                    {
+                        _dataNs = MainNS + ".DataAccess"; ;
+                    }
+                }
+                return _dataNs;
+            }
+            set
+            {
+                _dataNs = value;
+            }
+        }
+
 
         private string _vmNs;
         [Display(Name = "VM命名空间")]
@@ -193,11 +272,11 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         if (string.IsNullOrEmpty(Area))
                         {
-                            _vmNs = ControllerNs.Replace(".Controllers", $".ViewModels.{ModelName}VMs");
+                            _vmNs = MainNS +  $".ViewModels.{ModelName}VMs";
                         }
                         else
                         {
-                            _vmNs = ControllerNs.Replace(".Controllers", $".{Area}.ViewModels.{ModelName}VMs");
+                            _vmNs = MainNS +  $".{Area}.ViewModels.{ModelName}VMs";
                         }
                     }
                     else
@@ -309,6 +388,11 @@ namespace WalkingTec.Mvvm.Mvc
                     File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}subMenu.json", menu, Encoding.UTF8);
 
                 }
+            }
+            var test = GenerateTest();
+            if (test != "")
+            {
+                File.WriteAllText($"{TestDir}{Path.DirectorySeparatorChar}{ModelName}ControllerTest.cs", test, Encoding.UTF8);
             }
         }
 
@@ -821,6 +905,111 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        public string GenerateTest()
+        {
+            var rv = "";
+            if (TestDir != null)
+            {
+                rv = GetResource($"ControllerTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$",DataNs);
+                Type modelType = Type.GetType(SelectedModel);
+                var modelprops = modelType.GetRandomValues();
+                string cpros = "";
+                string epros = "";
+                string pros = "";
+                string mpros = "";
+                string assert = "";
+                string eassert = "";
+                string fc = "";
+                string add = "";
+
+            foreach (var pro in modelprops)
+            {
+                if (pro.Value == "$fk$")
+                {
+                    var fktype = modelType.GetProperty(pro.Key.Substring(0, pro.Key.Length - 2)).PropertyType;
+                    add += GenerateAddFKModel(fktype);
+                }
+            }
+
+            foreach (var pro in modelprops)
+                {
+                if (pro.Value == "$fk$")
+                {
+                    cpros += $@"
+            v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length-2)}();";
+                    pros += $@"
+                v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                    mpros += $@"
+                v1.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                    fc += $@"
+            vm.FC.Add(""Entity.{pro.Key}"", """");";
+
+                }
+                else
+                {
+                    cpros += $@"
+            v.{pro.Key} = {pro.Value};";
+                    pros += $@"
+                v.{pro.Key} = {pro.Value};";
+                    mpros += $@"
+                v1.{pro.Key} = {pro.Value};";
+                    assert += $@"
+                Assert.AreEqual(data.{pro.Key}, {pro.Value});";
+                    fc += $@"
+            vm.FC.Add(""Entity.{pro.Key}"", """");";
+                }
+                }
+
+                var modelpros2 = modelType.GetRandomValues();
+            foreach (var pro in modelpros2)
+            {
+                if (pro.Value == "$fk$")
+                {
+                    mpros += $@"
+                v2.{ pro.Key} = v1.{pro.Key}; ";
+
+                }
+                else
+                {
+                    epros += $@"
+            v.{pro.Key} = {pro.Value};";
+                    mpros += $@"
+                v2.{pro.Key} = {pro.Value};";
+                    eassert += $@"
+                Assert.AreEqual(data.{pro.Key}, {pro.Value});";
+                }
+            }
+                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add);
+            }
+            return rv;
+        }
+
+        private string GenerateAddFKModel(Type t)
+        {
+            var modelprops = t.GetRandomValues();
+            var mname = t.Name?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
+            string cpros = "";
+            foreach (var pro in modelprops)
+            {
+                cpros += $@"
+                v.{pro.Key} = {pro.Value};";
+            }
+            string rv = $@"
+        private Guid Add{mname}()
+        {{
+            {mname} v = new {mname}();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {{
+{cpros}
+                context.Set<{mname}>().Add(v);
+                context.SaveChanges();
+            }}
+            return v.ID;
+        }}
+";
+            return rv;
+        }
+
         public string GenerateReactView(string name)
         {
             var rv = GetResource($"{name}.txt", "Spa.React.views")
@@ -1118,7 +1307,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        private string GetResource(string fileName, string subdir = "")
+        public string GetResource(string fileName, string subdir = "")
         {
             //获取编译在程序中的Controller原始代码文本
             Assembly assembly = Assembly.GetExecutingAssembly();

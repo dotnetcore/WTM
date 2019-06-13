@@ -1,6 +1,12 @@
 ﻿[
   {
     "ParentId": null,
+    "Id": "401f84d3-5a77-4b30-92c4-9c723ed2934",
+    "Text": "Demo",
+    "Url": "/demo"
+  },
+  {
+    "ParentId": null,
     "Id": "301f84d3-5a77-4b30-92c4-9c723ed2934",
     "Text": "外部页面",
     "Url": "https://www.baidu.com/"
@@ -15,7 +21,7 @@
     "ParentId": null,
     "Id": "301f84d3-5a77-4b30-92c4-9c723ed2937",
     "Text": "动态页面",
-    "Url": "@StaticPage/_CodeGen/Index"
+    "Url": "@StaticPage/_CodeGen/Index?ui=react"
   },
   {
     "ParentId": null,

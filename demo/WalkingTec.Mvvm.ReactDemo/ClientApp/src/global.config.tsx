@@ -143,12 +143,18 @@ class ConfigStore {
     @observable
     tabPosition: 'top' | 'right' | 'bottom' | 'left' = "top";
     /**
+     * 菜单类型  horizontal 头部  inline 左侧
+     */
+    @persist
+    @observable
+    menuMode: "horizontal" | "inline" = "inline";
+    /**
      * 静态页面 标记
      */
     @persist
     @observable
     staticPage = "@StaticPage";
-   
+
 }
 const GlobalConfig = new ConfigStore();
 

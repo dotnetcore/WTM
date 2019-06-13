@@ -1,0 +1,161 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using WalkingTec.Mvvm.Core;
+using $cns$;
+using $vns$;
+using $mns$;
+using $dns$;
+
+namespace $tns$
+{
+    [TestClass]
+    public class $model$ControllerTest
+    {
+        private $model$Controller _controller;
+        private string _seed;
+
+        public $model$ControllerTest()
+        {
+            _seed = Guid.NewGuid().ToString();
+            _controller = MockController.CreateController<$model$Controller>(_seed, "user");
+        }
+
+        [TestMethod]
+        public void SearchTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+        }
+
+        [TestMethod]
+        public void CreateTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Create();
+            Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
+
+            $model$VM vm = rv.Model as $model$VM;
+            $model$ v = new $model$();
+			$cpros$
+            vm.Entity = v;
+            _controller.Create(vm);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data = context.Set<$model$>().FirstOrDefault();
+				$assert$
+                Assert.AreEqual(data.CreateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
+            }
+
+        }
+
+        [TestMethod]
+        public void EditTest()
+        {
+            $model$ v = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+       			$pros$
+                context.Set<$model$>().Add(v);
+                context.SaveChanges();
+            }
+
+            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID);
+            Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
+
+            $model$VM vm = rv.Model as $model$VM;
+            v = new $model$();
+            v.ID = vm.Entity.ID;
+       		$epros$
+            vm.Entity = v;
+            vm.FC = new Dictionary<string, object>();
+			$fc$
+            _controller.Edit(vm);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data = context.Set<$model$>().FirstOrDefault();
+ 				$eassert$
+                Assert.AreEqual(data.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
+            }
+
+        }
+
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            $model$ v = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+        		$pros$
+                context.Set<$model$>().Add(v);
+                context.SaveChanges();
+            }
+
+            PartialViewResult rv = (PartialViewResult)_controller.Delete(v.ID);
+            Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
+
+            $model$VM vm = rv.Model as $model$VM;
+            v = new $model$();
+            v.ID = vm.Entity.ID;
+            vm.Entity = v;
+            _controller.Delete(v.ID,null);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+            }
+
+        }
+
+
+        [TestMethod]
+        public void DetailsTest()
+        {
+            $model$ v = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+				$pros$
+                context.Set<$model$>().Add(v);
+                context.SaveChanges();
+            }
+            PartialViewResult rv = (PartialViewResult)_controller.Details(v.ID);
+            Assert.IsInstanceOfType(rv.Model, typeof(IBaseCRUDVM<TopBasePoco>));
+            Assert.AreEqual(v.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.ID);
+        }
+
+        [TestMethod]
+        public void BatchDeleteTest()
+        {
+            $model$ v1 = new $model$();
+            $model$ v2 = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+				$mpros$
+                context.Set<$model$>().Add(v1);
+                context.Set<$model$>().Add(v2);
+                context.SaveChanges();
+            }
+
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            Assert.IsInstanceOfType(rv.Model, typeof($model$BatchVM));
+
+            $model$BatchVM vm = rv.Model as $model$BatchVM;
+            vm.Ids = new Guid[] { v1.ID, v2.ID };
+            _controller.DoBatchDelete(vm, null);
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+            }
+        }
+$add$
+
+    }
+}

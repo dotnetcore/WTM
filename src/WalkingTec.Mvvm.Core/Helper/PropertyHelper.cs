@@ -247,6 +247,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
+                var test = pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault();
                 //对于其他类，检查是否有RequiredAttribute，如果有就是必填
                 if (pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault() is RequiredAttribute required && required.AllowEmptyStrings == false)
                 {

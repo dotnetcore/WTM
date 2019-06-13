@@ -137,7 +137,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 var aType = node.Arguments[0].Type;
                 //如果节点是order
-                if (node != null && (node.Method.Name.ToLower() == "orderby" || node.Method.Name.ToLower() == "orderbydescending") && aType.GetTypeInfo().IsGenericType)
+                if (node != null && (node.Method.Name.ToLower() == "orderby" || node.Method.Name.ToLower() == "orderbydescending" || node.Method.Name.ToLower() == "thenby" || node.Method.Name.ToLower() == "thenbydescending") && aType.GetTypeInfo().IsGenericType)
                 {
                     //继续往上找到不是where的节点
                     return GetParentExpNotOrder(node);

@@ -10,6 +10,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const lodash = require('lodash');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const postcssNormalize = require('postcss-normalize');
+
 /**
  * 重写 react-scripts 默认配置
  */
@@ -88,18 +90,18 @@ module.exports = (config, env) => {
                             options: {
                                 // https://github.com/facebookincubator/create-react-app/issues/2677
                                 ident: 'postcss',
-                                sourceMap: false,
                                 plugins: () => [
                                     require('postcss-flexbugs-fixes'),
-                                    require('autoprefixer')({
-                                        browsers: [
-                                            '>1%',
-                                            'last 4 versions',
-                                            'Firefox ESR',
-                                            'not ie < 9', // React doesn't support IE8 anyway
-                                        ],
+                                    require('postcss-preset-env')({
+                                      autoprefixer: {
                                         flexbox: 'no-2009',
+                                      },
+                                      stage: 3,
                                     }),
+                                    // Adds PostCSS Normalize as the reset css with default options,
+                                    // so that it honors browserslist config in package.json
+                                    // which in turn let's users customize the target behavior as per their needs.
+                                    postcssNormalize(),
                                 ],
                             },
                         },

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Reflection;
 
 namespace WalkingTec.Mvvm.Core.Extensions
@@ -101,7 +104,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static bool IsNumber(this Type self)
         {
-            if(self == typeof(int) || self == typeof(short) || self == typeof(long) || self == typeof(float) || self == typeof(decimal) || self == typeof(double))
+            Type checktype = self;
+            if (self.IsNullable())
+            {
+                checktype = self.GetGenericArguments()[0];
+            }
+            if (checktype == typeof(int) || checktype == typeof(short) || checktype == typeof(long) || checktype == typeof(float) || checktype == typeof(decimal) || checktype == typeof(double))
             {
                 return true;
             }
@@ -141,5 +149,66 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
         #endregion
+
+        public static Dictionary<string,string> GetRandomValues(this Type self)
+        {
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+            var pros = self.GetProperties();
+            foreach (var pro in pros)
+            {
+                string key = pro.Name;
+                string val = "";
+                var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
+                if (pro.IsPropertyRequired() && notmapped == null && 
+                    pro.PropertyType.IsBoolOrNullableBool() == false && 
+                    pro.PropertyType.IsEnumOrNullableEnum() == false &&
+                    pro.PropertyType.IsList() == false &&
+                    pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false)
+                {
+                    if (pro.PropertyType.IsNumber())
+                    {
+                        var range = pro.GetCustomAttribute<RangeAttribute>();
+                        int start = 0;
+                        int end = 100;
+                        if (range != null)
+                        {
+                            start = (int)Math.Truncate(double.Parse(range.Minimum.ToString()));
+                            end = (int)Math.Truncate(double.Parse(range.Maximum.ToString()));
+                        }
+                        Random r = new Random();
+                        val = r.Next(start,end).ToString();
+                    }
+                    else if (pro.PropertyType == typeof(string))
+                    {
+                        var length = pro.GetCustomAttribute<StringLengthAttribute>();
+                        var l = new Random().Next(3,10);
+                        if (length != null && l > length.MaximumLength)
+                        {
+                            l = length.MaximumLength;
+                        }
+                        Random r = new Random();                        
+                        for (int i = 0; i < l; i++)
+                        {
+                            int index = r.Next(pat.Length);
+                            val += pat[index];
+                        }
+                        val = "\"" + val + "\"";
+                    }
+                    else if(pro.PropertyType == typeof(Guid) || pro.PropertyType == typeof(Guid?))
+                    {
+                        if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
+                        {
+                            val = "$fk$";
+                        }
+                    }
+                    if (val != "")
+                    {
+                        rv.Add(key, val);
+                    }
+                }
+            }
+            return rv;
+        }
     }
 }
