@@ -69,7 +69,7 @@ export default class RootRoutes extends React.Component<any, any> {
                     component: this.createCSSTransition(Home)
                 },
                 {
-                    path: "/demo",
+                    path: "/demo/:path?",
                     exact: true,
                     component: this.createCSSTransition(Demo),
                     // path: "/demo",
@@ -163,6 +163,9 @@ export default class RootRoutes extends React.Component<any, any> {
         return class extends React.Component<any, any> {
             shouldComponentUpdate() {
                 return !globalConfig.tabsPage
+            }
+            componentDidMount() {
+                // console.log("TCL: extends -> componentDidMount -> this.props", this.props)
             }
             render() {
                 return <Animate

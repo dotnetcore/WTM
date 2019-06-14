@@ -36,7 +36,7 @@ export default class SetUp extends React.Component<any, any> {
             <>
                 <Icon onClick={() => { this.setState({ visible: true }) }} className="app-collapsed-trigger" type="setting" theme="outlined" />
                 <Drawer
-                    title="Global Config"
+                    title="全局设置"
                     placement="right"
                     width={500}
                     closable={false}
@@ -52,8 +52,8 @@ export default class SetUp extends React.Component<any, any> {
                                 initialValue: globalConfig.infoType
                             })(
                                 <RadioGroup onChange={event => { runInAction(() => globalConfig.infoType = event.target.value) }}>
-                                    <Radio value='Modal'>Modal</Radio>
-                                    <Radio value='Drawer'>Drawer</Radio>
+                                    <Radio value='Modal'>弹框</Radio>
+                                    <Radio value='Drawer'>抽屉</Radio>
                                 </RadioGroup>
                             )}
                         </Form.Item>
@@ -80,10 +80,10 @@ export default class SetUp extends React.Component<any, any> {
                                     runInAction(() => globalConfig.tabPosition = event);
                                     dispatchEvent(new CustomEvent('resize'));
                                 }}>
-                                    <Select.Option value="top">top</Select.Option>
-                                    <Select.Option value="right">right</Select.Option>
-                                    <Select.Option value="bottom">bottom</Select.Option>
-                                    <Select.Option value="left">left</Select.Option>
+                                    <Select.Option value="top">上</Select.Option>
+                                    <Select.Option value="bottom">下</Select.Option>
+                                    <Select.Option value="left">左</Select.Option>
+                                    <Select.Option value="right">右</Select.Option>
                                 </Select>
                             )}
                         </Form.Item>
@@ -99,8 +99,8 @@ export default class SetUp extends React.Component<any, any> {
                                     runInAction(() => globalConfig.menuMode = event);
                                     dispatchEvent(new CustomEvent('resize'));
                                 }}>
-                                    <Select.Option value="inline">left</Select.Option>
-                                    <Select.Option value="horizontal">top</Select.Option>
+                                    <Select.Option value="horizontal">上</Select.Option>
+                                    <Select.Option value="inline">左</Select.Option>
                                 </Select>
                             )}
                         </Form.Item>
