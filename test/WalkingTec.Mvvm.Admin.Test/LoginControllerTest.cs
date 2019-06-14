@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace WalkingTec.Mvvm.Admin1.Test
         [TestMethod]
         public void LoginTest()
         {
-            //调用Login
+            //调用Login            
             ViewResult rv = (ViewResult)_controller.Login();
             //测试Login方法返回LoginVM
             Assert.IsInstanceOfType(rv.Model, typeof(LoginVM));

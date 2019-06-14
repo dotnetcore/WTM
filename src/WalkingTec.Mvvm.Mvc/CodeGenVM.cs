@@ -392,7 +392,14 @@ namespace WalkingTec.Mvvm.Mvc
             var test = GenerateTest();
             if (test != "")
             {
-                File.WriteAllText($"{TestDir}{Path.DirectorySeparatorChar}{ModelName}ControllerTest.cs", test, Encoding.UTF8);
+                if (UI == UIEnum.LayUI)
+                {
+                    File.WriteAllText($"{TestDir}{Path.DirectorySeparatorChar}{ModelName}ControllerTest.cs", test, Encoding.UTF8);
+                }
+                else
+                {
+                    File.WriteAllText($"{TestDir}{Path.DirectorySeparatorChar}{ModelName}ApiTest.cs", test, Encoding.UTF8);
+                }
             }
         }
 
@@ -910,7 +917,14 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = "";
             if (TestDir != null)
             {
-                rv = GetResource($"ControllerTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$",DataNs);
+                if (UI == UIEnum.LayUI)
+                {
+                    rv = GetResource($"ControllerTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs);
+                }
+                else
+                {
+                    rv = GetResource($"ApiTest.txt").Replace("$cns$", ControllerNs).Replace("$tns$", TestNs).Replace("$vns$", VMNs).Replace("$model$", ModelName).Replace("$mns$", ModelNS).Replace("$dns$", DataNs);
+                }
                 Type modelType = Type.GetType(SelectedModel);
                 var modelprops = modelType.GetRandomValues();
                 string cpros = "";
@@ -1077,6 +1091,11 @@ namespace WalkingTec.Mvvm.Mvc
                     var property = modelType.GetProperty(item.FieldName);
                     string label = property.GetPropertyDisplayName();
                     bool isrequired = property.IsPropertyRequired();
+                    var fktest = DC.GetFKName2(modelType, item.FieldName);
+                    if(string.IsNullOrEmpty(fktest) == false)
+                    {
+                        isrequired = modelType.GetProperty(item.FieldName).IsPropertyRequired();
+                    }
                     string rules = "rules: []";
                     if (isrequired == true)
                     {

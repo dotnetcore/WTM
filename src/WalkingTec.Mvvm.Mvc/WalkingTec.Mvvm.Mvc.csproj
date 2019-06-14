@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="echarts.common.min.js" />
     <None Remove="framework_layui.js" />
+    <None Remove="GeneratorFiles\ApiTest.txt" />
     <None Remove="GeneratorFiles\BatchDeleteView.txt" />
     <None Remove="GeneratorFiles\BatchEditView.txt" />
     <None Remove="GeneratorFiles\BatchVM.txt" />
@@ -68,6 +69,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ControllerTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />

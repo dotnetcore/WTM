@@ -1,0 +1,127 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using WalkingTec.Mvvm.Core;
+using $cns$;
+using $vns$;
+using $mns$;
+using $dns$;
+
+namespace $tns$
+{
+    [TestClass]
+    public class $model$ApiTest
+    {
+        private $model$Controller _controller;
+        private string _seed;
+
+        public $model$ApiTest()
+        {
+            _seed = Guid.NewGuid().ToString();
+            _controller = MockController.CreateApi<$model$Controller>(_seed, "user");
+        }
+
+        [TestMethod]
+        public void SearchTest()
+        {
+            string rv = _controller.Search(new $model$Searcher());
+            Assert.IsTrue(string.IsNullOrEmpty(rv)==false);
+        }
+
+        [TestMethod]
+        public void CreateTest()
+        {
+            $model$VM vm = _controller.CreateVM<$model$VM>();
+            $model$ v = new $model$();
+            $cpros$
+            vm.Entity = v;
+            var rv = _controller.Add(vm);
+            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data = context.Set<$model$>().FirstOrDefault();
+                $assert$
+                Assert.AreEqual(data.CreateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.CreateTime.Value).Seconds < 10);
+            }
+        }
+
+        [TestMethod]
+        public void EditTest()
+        {
+            $model$ v = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+       			$pros$
+                context.Set<$model$>().Add(v);
+                context.SaveChanges();
+            }
+
+            $model$VM vm = _controller.CreateVM<$model$VM>();
+            var oldID = v.ID;
+            v = new $model$();
+            v.ID = oldID;
+       		$epros$
+            vm.Entity = v;
+            vm.FC = new Dictionary<string, object>();
+			$fc$
+            var rv = _controller.Edit(vm);
+            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var data = context.Set<$model$>().FirstOrDefault();
+ 				$eassert$
+                Assert.AreEqual(data.UpdateBy, "user");
+                Assert.IsTrue(DateTime.Now.Subtract(data.UpdateTime.Value).Seconds < 10);
+            }
+
+        }
+
+		[TestMethod]
+        public void GetTest()
+        {
+            $model$ v = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+        		$pros$
+                context.Set<$model$>().Add(v);
+                context.SaveChanges();
+            }
+            var rv = _controller.Get(v.ID);
+            Assert.IsNotNull(rv);
+        }
+
+        [TestMethod]
+        public void BatchDeleteTest()
+        {
+            $model$ v1 = new $model$();
+            $model$ v2 = new $model$();
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+				$mpros$
+                context.Set<$model$>().Add(v1);
+                context.Set<$model$>().Add(v2);
+                context.SaveChanges();
+            }
+
+            var rv = _controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+            }
+
+            rv = _controller.BatchDelete(new Guid[] {});
+            Assert.IsInstanceOfType(rv, typeof(OkResult));
+
+        }
+$add$
+
+    }
+}
