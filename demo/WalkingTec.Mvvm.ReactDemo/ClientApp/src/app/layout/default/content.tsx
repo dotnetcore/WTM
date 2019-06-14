@@ -57,7 +57,7 @@ class SwitchPages extends React.Component<any, any> {
  */
 @observer
 class TabsPages extends React.Component<any, any> {
-  TabsPagesStore = new TabsPagesStore();
+  TabsPagesStore = new TabsPagesStore(this.props.route.routes);
   componentDidMount() {
     this.TabsPagesStore.pushTabPane(this.props.location.pathname);
   }
@@ -67,14 +67,6 @@ class TabsPages extends React.Component<any, any> {
   componentDidUpdate() {
     this.TabsPagesStore.pushTabPane(this.props.location.pathname);
     // console.log("TCL: TabsPages -> componentDidUpdate -> this.props", this.props)
-  }
-  getRoutes(pathname) {
-    const router = matchRoutes(this.props.route.routes, pathname);
-    // console.log("TCL: TabsPages -> getRoutes -> router", router)
-    return {
-      component: router[0].route.component,
-      match: router[0].match
-    }
   }
   onChange(event) {
     this.props.history.replace(event)
@@ -100,7 +92,7 @@ class TabsPages extends React.Component<any, any> {
           onEdit={this.onEdit.bind(this)}
         >
           {tabPane.map(item => {
-            const router = this.getRoutes(item.pathname);
+            const router = item.router;
             const props = { ...this.props, match: router.match };
             return <Tabs.TabPane
               tab={renderIconTitle({ Icon: item.icon, Text: item.title })}
@@ -116,7 +108,7 @@ class TabsPages extends React.Component<any, any> {
   }
 }
 class TabsPagesStore {
-  constructor() {
+  constructor(private routes) {
   }
   componentWillUnmount() {
     this.resize.unsubscribe();
@@ -127,20 +119,22 @@ class TabsPagesStore {
     pathname: "/",
     closable: false,
     icon: "home",
+    router: this.getRoutes("/")
   }];
   @action
   pushTabPane(pathname) {
-    // console.log("TCL: TabsPagesStore -> pushTabPane -> pathname", pathname)
+    const router = this.getRoutes(pathname);
+    console.log("TCL: TabsPagesStore -> pushTabPane -> router", pathname, router)
     if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
     const menu = lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]);
-    // console.log("TCL: TabsPagesStore -> pushTabPane -> menu", menu)
     const title = lodash.get(menu, 'Text', "Null")
     const icon = lodash.get(menu, 'Icon', "appstore")
     this.tabPane.push({
       title: title,//renderIconTitle(menu || { Text: "NULL", Icon: "appstore", Id: Help.GUID() }),
       pathname,
       closable: true,
-      icon
+      icon,
+      router
     });
   }
   @action
@@ -152,6 +146,13 @@ class TabsPagesStore {
   }
   getHeight() {
     return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 90 : 50);
+  }
+  getRoutes(pathname) {
+    const router = matchRoutes(this.routes, pathname);
+    return {
+      component: router[0].route.component,
+      match: router[0].match
+    }
   }
   resize = fromEvent(window, "resize").pipe(debounceTime(200)).subscribe(e => {
     const height = this.getHeight()
