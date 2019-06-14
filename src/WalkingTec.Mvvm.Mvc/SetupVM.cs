@@ -140,6 +140,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
+                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
@@ -148,6 +149,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
+                Directory.CreateDirectory($"{MainDir}.ViewModel");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}.ViewModel{Path.DirectorySeparatorChar}HomeVMs");
