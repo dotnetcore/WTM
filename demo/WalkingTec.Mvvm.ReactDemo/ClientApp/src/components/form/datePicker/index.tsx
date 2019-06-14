@@ -45,7 +45,7 @@ export class WtmDatePicker extends React.Component<IWtmDatePickerProps, any> {
         props.defaultValue = moment(props.value, props.format)
       }
     }
-    console.log("TCL: WtmRangePicker -> render -> props", this.props)
+    // console.log("TCL: WtmRangePicker -> render -> props", this.props)
     delete props.value;
     return (<DatePicker  {...props} onChange={this.onChange.bind(this)} />);
   }
