@@ -15,15 +15,18 @@
  */
 
 import axios from "axios";
-import config from "@/config/index.js";
+import config from "@/config/index";
 import { Notification } from "element-ui"; // Message,
 
-const service = (option, serverHost) => {
+const service = (option, serverHost?) => {
     const originalData = option.data || {};
     const url = serverHost ? serverHost : config.serverHost + option.url;
     const req = {
         method: option.method,
-        url: url
+        url: url,
+        data: {},
+        params: {},
+        headers: {}
     };
     const data = {};
     for (const key in originalData) {

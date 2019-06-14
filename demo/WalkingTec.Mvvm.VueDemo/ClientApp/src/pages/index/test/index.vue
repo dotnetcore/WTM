@@ -13,8 +13,8 @@
     </div>
 </template>
 <script>
-import baseMixin from "@/mixin/base.js";
-import searchMixin from "@/mixin/search.js";
+import baseMixin from "@/mixin/base";
+import searchMixin from "@/mixin/search";
 export default {
     mixins: [baseMixin, searchMixin()],
     data() {

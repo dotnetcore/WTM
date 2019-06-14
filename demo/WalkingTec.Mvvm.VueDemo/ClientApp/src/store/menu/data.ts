@@ -14,7 +14,9 @@ const genMenus = menuItems => {
                 meta: {
                     icon: menuItem.icon
                 },
-                children: []
+                children: [],
+                path: "",
+                component: null
             };
             ret.path = menuItem.url;
             ret.component = () =>

@@ -4,13 +4,13 @@
  * 目前创建 state，actions，mutations 部分
  */
 import service from "@/service/service";
-import { firstUpperCase } from "@/util/string.js";
+import { firstUpperCase } from "@/util/string";
 
 /**
  * 根据service 创建store
  * @param {*} serviceUnit
  */
-export function createStore(serviceUnit, fn = () => {}) {
+export function createStore(serviceUnit, callback?: Function) {
     const store = {
         state: {},
         actions: {},
@@ -19,7 +19,10 @@ export function createStore(serviceUnit, fn = () => {}) {
     for (const key in serviceUnit) {
         // 参数
         const request = serviceUnit[key];
-        let serviceItem = {};
+        let serviceItem = {
+            action: "",
+            method: ""
+        };
         if (typeof request === "function") {
             serviceItem = request({});
         } else {
@@ -54,14 +57,14 @@ export function createStore(serviceUnit, fn = () => {}) {
             } else {
                 Object.assign(option, request);
             }
-            return service(option).then(result => {
+            return service(option, null).then(result => {
                 if (
                     serviceItem.method === "get" ||
                     serviceItem.action === "get"
                 ) {
                     commit(mutationsKey, result || {});
                     // 判断是否回调方法
-                    fn && fn(result, commit);
+                    callback && callback(result, commit);
                     return result || {};
                 }
                 return result;

@@ -26,7 +26,7 @@ const router = new Router({
         {
             name: "user",
             path: "*",
-            component: () => import("@/pages/index/user/index")
+            component: () => import("@/pages/index/user/index.vue")
         },
         ...generateRoutesFromMenu(state.items)
     ]

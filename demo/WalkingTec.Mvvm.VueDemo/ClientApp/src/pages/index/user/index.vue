@@ -67,8 +67,8 @@
     </div>
 </template>
 <script>
-import baseMixin from "@/mixin/base.js";
-import searchMixin from "@/mixin/search.js";
+import baseMixin from "@/mixin/base.ts";
+import searchMixin from "@/mixin/search.ts";
 import add from "./add";
 import store from "@/store/index/index";
 import { mapState, mapMutations, mapActions } from "vuex";

@@ -8,7 +8,7 @@ const dataManageItems = [
             icon: "el-icon-info"
         },
         path: "/test/index",
-        component: () => import("@/pages/index/test/index")
+        component: () => import("@/pages/index/test/index.vue")
     },
     {
         name: "用户管理",
@@ -16,7 +16,7 @@ const dataManageItems = [
             icon: "el-icon-user-solid"
         },
         path: "/user/index",
-        component: () => import("@/pages/index/user/index")
+        component: () => import("@/pages/index/user/index.vue")
     },
     {
         name: "角色管理",
@@ -24,7 +24,7 @@ const dataManageItems = [
             icon: "el-icon-s-tools"
         },
         path: "/test/index",
-        component: () => import("@/pages/index/test/index")
+        component: () => import("@/pages/index/test/index.vue")
     },
     {
         name: "用户组管理",
@@ -32,7 +32,7 @@ const dataManageItems = [
             icon: "el-icon-s-custom"
         },
         path: "/test/index",
-        component: () => import("@/pages/index/test/index")
+        component: () => import("@/pages/index/test/index.vue")
     },
     {
         name: "菜单管理",
@@ -40,7 +40,7 @@ const dataManageItems = [
             icon: "el-icon-s-fold"
         },
         path: "/test/index",
-        component: () => import("@/pages/index/test/index")
+        component: () => import("@/pages/index/test/index.vue")
     },
     {
         name: "数据权限",
@@ -48,7 +48,7 @@ const dataManageItems = [
             icon: "el-icon-s-check"
         },
         path: "/test/index",
-        component: () => import("@/pages/index/test/index")
+        component: () => import("@/pages/index/test/index.vue")
     }
 ];
 
