@@ -139,9 +139,12 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             var vm = CreateVM<FrameworkUserImportVM>();
             var qs = new Dictionary<string, string>();
-            foreach (var item in Request.Query.Keys)
+            if (Request != null)
             {
-                qs.Add(item, Request.Query[item]);
+                foreach (var item in Request.Query.Keys)
+                {
+                    qs.Add(item, Request.Query[item]);
+                }
             }
             vm.SetParms(qs);
             var data = vm.GenerateTemplate(out string fileName);

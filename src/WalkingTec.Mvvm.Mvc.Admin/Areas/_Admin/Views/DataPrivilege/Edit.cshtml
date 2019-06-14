@@ -23,7 +23,7 @@
     DbTypeChange({ value: $('#DpType').val() });
     IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
     function DbTypeChange(data) {
-        if (data.value == 0) {
+        if (data.value == "UserGroup") {
             $('#userrow').css('display', 'none');
             $('#grouprow').css('display', 'block');
         }

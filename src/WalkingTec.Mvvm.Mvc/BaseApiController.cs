@@ -27,6 +27,10 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return _configInfo;
             }
+            set
+            {
+                _configInfo = value;
+            }
         }
         private GlobalData _globaInfo;
         public GlobalData GlobaInfo
@@ -38,6 +42,10 @@ namespace WalkingTec.Mvvm.Mvc
                     _globaInfo = (GlobalData)HttpContext.RequestServices.GetService(typeof(GlobalData));
                 }
                 return _globaInfo;
+            }
+            set
+            {
+                _globaInfo = value;
             }
         }
 
