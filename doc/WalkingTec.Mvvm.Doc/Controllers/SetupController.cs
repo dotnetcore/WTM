@@ -67,11 +67,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             {
                 Directory.CreateDirectory(zipdir);
             }
-            var zipfile = zipdir + Path.DirectorySeparatorChar + vm.ExtraNS + ".zip";
+            string g = Guid.NewGuid().ToString();
+            var zipfile = zipdir + Path.DirectorySeparatorChar + g + ".zip";
             System.IO.Compression.ZipFile.CreateFromDirectory(vm.ExtraDir, zipfile);
 
             byte[] rv = System.IO.File.ReadAllBytes(zipfile);
             System.IO.File.Delete(zipfile);
+            System.IO.Directory.Delete(vm.ExtraDir, true);
             return File(rv, "application/zip", vm.ExtraNS + ".zip");
         }
     }
