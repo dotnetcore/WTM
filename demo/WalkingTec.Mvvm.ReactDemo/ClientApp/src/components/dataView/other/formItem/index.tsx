@@ -77,7 +77,7 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             ...decoratorOptions
         };
         // 获取默认值 默认值，禁用，显示 span 
-        if (typeof defaultValues === "object") {
+        if (value || typeof defaultValues === "object") {
             options.initialValue = value || lodash.get(defaultValues, fieId, formItemProps.value);
         }
         // 隐藏 域
