@@ -1094,7 +1094,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var fktest = DC.GetFKName2(modelType, item.FieldName);
                     if(string.IsNullOrEmpty(fktest) == false)
                     {
-                        isrequired = modelType.GetProperty(item.FieldName).IsPropertyRequired();
+                        isrequired = modelType.GetProperty(fktest).IsPropertyRequired();
                     }
                     string rules = "rules: []";
                     if (isrequired == true)
