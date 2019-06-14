@@ -51,10 +51,10 @@ namespace WalkingTec.Mvvm.Mvc
         {
             get
             {
-                if(_port == 0)
+                if (_port == 0)
                 {
                     Random r = new Random();
-                    _port = r.Next(5000, 9999);        
+                    _port = r.Next(5000, 9999);
                 }
                 return _port;
             }
@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public SetupVM()
         {
-            version = Utils.GetNugetVersion();           
+            version = Utils.GetNugetVersion();
         }
 
         public void DoSetup()
@@ -140,12 +140,18 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
-                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
+                if (UI == UIEnum.LayUI)
+                {
+                    Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
+                }
                 vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
             }
             else
             {
-                Directory.CreateDirectory($"{MainDir}.ViewModel{Path.DirectorySeparatorChar}HomeVMs");
+                if (UI == UIEnum.LayUI)
+                {
+                    Directory.CreateDirectory($"{MainDir}.ViewModel{Path.DirectorySeparatorChar}HomeVMs");
+                }
                 Directory.CreateDirectory($"{MainDir}.Model");
                 Directory.CreateDirectory($"{MainDir}.DataAccess");
                 vmdir = MainDir + ".ViewModel";
@@ -159,14 +165,14 @@ namespace WalkingTec.Mvvm.Mvc
                 File.WriteAllText($"{datadir}{Path.DirectorySeparatorChar}{datans}.csproj", GetResource("Proj.txt"), Encoding.UTF8);
             }
             File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}{testns}.csproj", GetResource("TestProj.txt").Replace("$ns$", MainNs), Encoding.UTF8);
-            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockController.cs", GetResource("MockController.txt","test").Replace("$ns$", testns).Replace("$datans$", datans), Encoding.UTF8);
-            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockHttpSession.cs", GetResource("MockHttpSession.txt","test").Replace("$ns$", testns), Encoding.UTF8);
-            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}HomeControllerTest.cs", GetResource("HomeControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}LoginControllerTest.cs", GetResource("LoginControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns).Replace("$datans$", datans), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockController.cs", GetResource("MockController.txt", "test").Replace("$ns$", testns).Replace("$datans$", datans), Encoding.UTF8);
+            File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}MockHttpSession.cs", GetResource("MockHttpSession.txt", "test").Replace("$ns$", testns), Encoding.UTF8);
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Areas");
             Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Controllers");
             if (UI == UIEnum.LayUI)
             {
+                File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}HomeControllerTest.cs", GetResource("HomeControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{testdir}{Path.DirectorySeparatorChar}LoginControllerTest.cs", GetResource("LoginControllerTest.txt", "test").Replace("$ns$", MainNs).Replace("$vmns$", vmns).Replace("$datans$", datans), Encoding.UTF8);
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Shared");

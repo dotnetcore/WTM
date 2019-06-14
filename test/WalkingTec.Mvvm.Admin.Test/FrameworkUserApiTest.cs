@@ -69,11 +69,12 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
 
             FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
-            var v2 = new FrameworkUserBase();
-            v2.ID = v.ID;
-            v2.ITCode = "itcode1";
-            v2.Name = "name1";
-            vm.Entity = v2;
+            var oldID = v.ID;
+            v = new FrameworkUserBase();
+            v.ID = oldID;
+            v.ITCode = "itcode1";
+            v.Name = "name1";
+            vm.Entity = v;
             vm.FC = new Dictionary<string, object>();
             vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
