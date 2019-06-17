@@ -150,6 +150,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         [JsonProperty("hide")]
         public bool? Hide { get; set; }
 
+        [JsonProperty("style")]
+        public string Style { get; set; }
         #endregion
     }
 }
