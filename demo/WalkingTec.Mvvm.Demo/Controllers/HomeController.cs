@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
             ViewData["cd"] = cd1;
             ViewData["cd2"] = cd2;
+            ViewData["debug"] = ConfigInfo.IsQuickDebug;
             return PartialView();
         }
 

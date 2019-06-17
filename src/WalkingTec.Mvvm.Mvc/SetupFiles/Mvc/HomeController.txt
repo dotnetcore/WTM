@@ -47,7 +47,8 @@ namespace $ns$.Controllers
 
             ViewData["cd"] = cd1;
             ViewData["cd2"] = cd2;
-            return PartialView();
+			ViewData["debug"] = ConfigInfo.IsQuickDebug;
+			return PartialView();
         }
 
     }
