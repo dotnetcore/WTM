@@ -14,6 +14,15 @@
             <a href="http://wtmdoc.walkingtec.cn" target="_blank">
                 <h2>WTM框架文档</h2>
             </a>
+            @if ((bool?)ViewData["debug"] == true)
+            {
+            <br /><br />
+                <p style="font-size:16px">你正在使用<font color="Red">调试模式</font>，在调试模式下，框架会：</p>
+                <p style="font-size:16px"><span class="layui-badge layui-bg-cyan">1</span>&nbsp;反射所有controller下的所有方法作为左侧菜单</p>
+                <p style="font-size:16px"><span class="layui-badge layui-bg-cyan">2</span>&nbsp;登陆时自动添加用户名和密码</p>
+                <p style="font-size:16px"><span class="layui-badge layui-bg-cyan">3</span>&nbsp;跳过权限验证</p>
+                <p style="font-size:16px">修改appsettings文件中的IsQuickDebug可关闭调试模式，<a href="http://wtmdoc.walkingtec.cn/#/QuickStart/FAQ" target="_blank">详见文档</a> </p>
+            }
         </wt:container>
         <wt:container>
             <span style="font-size:16px">WTM是纯开源框架，如果喜欢，来GitHub赏个星~~</span>
