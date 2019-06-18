@@ -141,6 +141,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public int? Height { get; set; }
 
         /// <summary>
+        /// 设置单元格是否允许自动换行，默认为false
+        /// </summary>
+        public bool MultiLine { get; set; }
+
+        /// <summary>
         /// 设定容器宽度 默认值：'auto'
         /// table容器的默认宽度是 auto，你可以借助该参数设置一个固定值，当容器中的内容超出了该宽度时，会自动出现横向滚动条。
         /// </summary>
@@ -423,7 +428,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
-                    Hide = item.Hide
+                    Hide = item.Hide,
+                    //Style = "height:auto !important;white-space:normal !important"
                     //EditType = item.EditType
                 };
                 switch (item.ColumnType)
@@ -518,7 +524,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
 ,done: function(res,curr,count){{layer.close(msg);
     var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
-    {(Height == null ? $"var tab = $('#{Id} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
+    {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
+    {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
 }}

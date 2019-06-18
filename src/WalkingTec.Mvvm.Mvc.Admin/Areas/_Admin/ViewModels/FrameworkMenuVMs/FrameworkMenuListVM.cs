@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 case ListVMSearchModeEnum.Custom2:
                     rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
                         this.MakeGridHeader(x => x.PageName,200),
-                         this.MakeGridHeader(x => x.ParentID, 1000).SetHeader("操作").SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+                         this.MakeGridHeader(x => x.ParentID).SetHeader("操作").SetFormat((item, cell) => GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
                    });
                     break;
                 default:
