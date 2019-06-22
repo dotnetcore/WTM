@@ -609,5 +609,104 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
         }
 
+
+        [TestMethod]
+        [Description("根据ID读取")]
+        public void GetTest()
+        {
+            One2ManyDoAdd();
+            _majorvm.SetInclude(x => x.School);
+            Guid id;
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                id = context.Set<Major>().Select(x => x.ID).FirstOrDefault();
+            }
+            _majorvm.SetEntityById(id);
+            Assert.IsTrue(_majorvm.Entity.School.ID != Guid.Empty);
+        }
+
+        [TestMethod]
+        [Description("设置单一不可重复字段")]
+        public void DuplicateTest()
+        {
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                context.Set<Major>().Add(new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                context.SaveChanges();
+            }
+
+            _majorvm = new MajorVM1();
+            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _majorvm.MSD = new MockMSD();
+            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
+            _majorvm.Validate();
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
+        }
+
+        [TestMethod]
+        [Description("设置多个不可重复字段")]
+        public void DuplicateTest2()
+        {
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                context.Set<Major>().Add(new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                context.SaveChanges();
+            }
+
+            _majorvm = new MajorVM2();
+            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _majorvm.MSD = new MockMSD();
+            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
+            _majorvm.Validate();
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorName"].Count > 0);
+        }
+
+        [TestMethod]
+        [Description("设置组合不可重复字段")]
+        public void DuplicateTest3()
+        {
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                context.Set<Major>().Add(new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                context.SaveChanges();
+            }
+
+            _majorvm = new MajorVM3();
+            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _majorvm.MSD = new MockMSD();
+            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
+            _majorvm.Validate();
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count == 0);
+            _majorvm.Entity = new Major { MajorCode = "not111", MajorName = "222", MajorType = MajorTypeEnum.Required };
+            _majorvm.Validate();
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorName"].Count == 0);
+            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
+            _majorvm.Validate();
+            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
+        }
+
+        class MajorVM1 : BaseCRUDVM<Major>
+        {
+            public override DuplicatedInfo<Major> SetDuplicatedCheck()
+            {
+                return CreateFieldsInfo(SimpleField(x => x.MajorCode));
+            }
+        }
+        class MajorVM2 : BaseCRUDVM<Major>
+        {
+            public override DuplicatedInfo<Major> SetDuplicatedCheck()
+            {
+                return CreateFieldsInfo(SimpleField(x => x.MajorCode)).AddGroup(SimpleField(x=>x.MajorName));
+            }
+        }
+        class MajorVM3 : BaseCRUDVM<Major>
+        {
+            public override DuplicatedInfo<Major> SetDuplicatedCheck()
+            {
+                return CreateFieldsInfo(SimpleField(x => x.MajorCode),SimpleField(x => x.MajorName));
+            }
+        }
     }
 }
