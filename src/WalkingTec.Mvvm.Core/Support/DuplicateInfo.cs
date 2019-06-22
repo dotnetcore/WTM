@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Core
         /// 添加一组重复信息，一组中的多个字段必须同时重复才认为是重复数据
         /// </summary>
         /// <param name="FieldExps">一个或多个重复数据字段</param>
-        public void AddGroup(params DuplicatedField<T>[] FieldExps)
+        public DuplicatedInfo<T> AddGroup(params DuplicatedField<T>[] FieldExps)
         {
             DuplicatedGroup<T> newGroup = new DuplicatedGroup<T>()
             {
@@ -46,6 +46,7 @@ namespace WalkingTec.Mvvm.Core
                 newGroup.Fields.Add(exp);
             }
             Groups.Add(newGroup);
+            return this;
         }
     }
 

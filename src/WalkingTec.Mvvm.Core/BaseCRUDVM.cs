@@ -106,10 +106,10 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 设定读取是Include的内容，子类进行相关操作时应重载这个函数
+        /// 设定读取是Include的内容
         /// </summary>
         /// <param name="exps">需要关联的类</param>
-        protected void SetInclude(params Expression<Func<TModel, object>>[] exps)
+        public void SetInclude(params Expression<Func<TModel, object>>[] exps)
         {
             _toInclude = _toInclude ?? new List<Expression<Func<TModel, object>>>();
             _toInclude.AddRange(exps);
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="Id">主键Id</param>
         /// <returns>Entity</returns>
-        public virtual TModel GetById(Guid Id)
+        protected virtual TModel GetById(Guid Id)
         {
             TModel rv = null;
             //建立基础查询
