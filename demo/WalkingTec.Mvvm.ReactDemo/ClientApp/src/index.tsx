@@ -6,7 +6,7 @@
  * @desc [description]
  * 
  */
-import "@babel/polyfill";
+import "core-js";
 import 'antd/dist/antd.css';
 import 'viewerjs/dist/viewer.css';
 import 'braft-editor/dist/index.css';
