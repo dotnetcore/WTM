@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
-            if (ignorDataPrivilege == false)
+            if (ignorDataPrivilege == false || dps != null)
             {
                 query = AppendSelfDPWhere(query, dps);
             }

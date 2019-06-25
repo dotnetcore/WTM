@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         protected override IEnumerable<IGridColumn<DpView>> InitGridHeader()
         {
             return new List<GridColumn<DpView>>{
-                this.MakeGridHeader(x => x.Name, 200),
+                this.MakeGridHeader(x => x.Name),
             };
         }
 
