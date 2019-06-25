@@ -711,7 +711,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (Searcher.Limit == 0)
                         {
-                            Searcher.Limit = ConfigInfo.RPP;
+                            Searcher.Limit = ConfigInfo?.RPP ?? 20;
                         }
                         //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
                         Searcher.Count = count;
@@ -724,7 +724,6 @@ namespace WalkingTec.Mvvm.Core
                         {
                             Searcher.Page = Searcher.PageCount;
                         }
-                        var test = query.ToList();
                         EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                     }
                     else //如果不需要分页则直接获取数据
@@ -732,6 +731,7 @@ namespace WalkingTec.Mvvm.Core
                         EntityList = query.AsNoTracking().ToList();
                         Searcher.Count = EntityList.Count();
                         Searcher.Limit = EntityList.Count();
+                        Searcher.PageCount = 1;
                         Searcher.Page = 1;
                     }
                 }

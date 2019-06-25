@@ -98,6 +98,24 @@ namespace WalkingTec.Mvvm.Core
         {
             //先调用一次Visit，删除所有的where表达式
             var rv = Visit(expression);
+            if(rv.NodeType == ExpressionType.Constant)
+            {
+                if ((rv.Type.IsGeneric(typeof(EntityQueryable<>)) || rv.Type.IsGeneric(typeof(EnumerableQuery<>))))
+                {
+                    var modelType = rv.Type.GenericTypeArguments[0];
+                    ParameterExpression pe = Expression.Parameter(modelType, "x");
+                    Expression left1 = Expression.Constant(1);
+                    Expression right1 = Expression.Constant(1);
+                    Expression trueExp = Expression.Equal(left1, right1);
+                    rv = Expression.Call(
+ typeof(Queryable),
+ "Where",
+ new Type[] { modelType },
+ rv,
+ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
+
+                }
+            }
             //将模式设为addMode，再调用一次Visit来添加新的表达式
             _addMode = true;
             rv = Visit(rv);
