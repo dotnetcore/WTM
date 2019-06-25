@@ -18,111 +18,60 @@ const postcssNormalize = require('postcss-normalize');
 module.exports = (config, env) => {
     // config.mode = 'development';
     config.devtool = false;
-    config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
-    lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
     // 查看 文件 大小 分布地图
     // config.plugins.push(
     //     new BundleAnalyzerPlugin()
     // );
     // 清空 console
     config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
-    config.module.rules = [
+    const cssloader = [
         {
-            oneOf: [
-                {
-                    test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                    loader: 'url-loader',
-                    options: {
-                        limit: 10000,
-                        name: 'static/media/[name].[hash:8].[ext]',
-                    },
-                },
-                // {
-                //     test: /\.js$/,
-                //     include: paths.appNodeModules,
-                //     exclude: paths.jsExclude,
-                //     use: [
-                //         'cache-loader',
-                //         {
-                //             loader: "babel-loader",
-                //             options: {
-                //                 inputSourceMap: false,
-                //                 sourceMap: false,
-                //                 // compact: true,
-                //                 presets: ['@babel/preset-env']
-                //             }
-                //         }
-                //     ],
-
-                // },
-                {
-                    test: /\.(tsx|ts|js|jsx)$/,
-                    include: paths.appSrc,
-                    use: [
-                        'cache-loader',
-                        {
-                            loader: 'awesome-typescript-loader',
-                            options: {
-                                useCache: true,
-                                configFileName: "tsconfig.compile.json",
-                                cacheDirectory: "node_modules/.cache/awcache",
-                                // transpileOnly: true,
-                                errorsAsWarnings: true,
-                                // usePrecompiledFiles: true,
-                            }
-                        }
-                    ]
-
-                },
-                {
-                    test: /\.(less|css)$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                importLoaders: 1,
-                                sourceMap: false,
-                            },
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                // https://github.com/facebookincubator/create-react-app/issues/2677
-                                ident: 'postcss',
-                                plugins: () => [
-                                    require('postcss-flexbugs-fixes'),
-                                    require('postcss-preset-env')({
-                                      autoprefixer: {
-                                        flexbox: 'no-2009',
-                                      },
-                                      stage: 3,
-                                    }),
-                                    // Adds PostCSS Normalize as the reset css with default options,
-                                    // so that it honors browserslist config in package.json
-                                    // which in turn let's users customize the target behavior as per their needs.
-                                    postcssNormalize(),
-                                ],
-                            },
-                        },
-                        {
-                            loader: 'less-loader',
-                            options: {
-                                sourceMap: false,
-                                javascriptEnabled: true,
-                            },
-                        }
-                    ],
-                },
-                {
-                    exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
-                    loader: 'file-loader',
-                    options: {
-                        name: 'static/media/[name].[hash:8].[ext]',
-                    },
-                },
-            ],
+            loader: 'css-loader',
+            options: {
+                importLoaders: 1,
+            },
         },
+        {
+            loader: 'postcss-loader',
+            options: {
+                // https://github.com/facebookincubator/create-react-app/issues/2677
+                ident: 'postcss',
+                plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    require('postcss-preset-env')({
+                        autoprefixer: {
+                            flexbox: 'no-2009',
+                        },
+                        stage: 3,
+                    }),
+                    // Adds PostCSS Normalize as the reset css with default options,
+                    // so that it honors browserslist config in package.json
+                    // which in turn let's users customize the target behavior as per their needs.
+                    postcssNormalize(),
+                ],
+            },
+        },
+        {
+            loader: 'less-loader',
+            options: {
+                sourceMap: true,
+                javascriptEnabled: true,
+            },
+        }
     ]
+    // 添加 less 编译
+    lodash.update(config, 'module.rules[1].oneOf', value => {
+        lodash.remove(value, data => String(data.test) === String(/\.css$/) && data.sideEffects === true || String(data.test) === String(/\.module\.css$/));
+        return [
+            {
+                test: /\.(less|css)$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    ...cssloader
+                ],
+            },
+            ...value,
+        ]
+    });
     return config
 }
