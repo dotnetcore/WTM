@@ -177,6 +177,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     //SetReinit
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
+                    if((ctrl as ControllerBase).Request.Method.ToLower() == "put")
                     foreach (var v in invalid)
                     {
                         if (model.FC.ContainsKey(v) == false)
