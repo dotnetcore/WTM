@@ -16,7 +16,6 @@ namespace WalkingTec.Mvvm.Core
         where T : TopBasePoco
         where S : ISearcher
     {
-        DataTable EntityDataTable { get; set; }
 
         /// <summary>
         /// 多级表头深度  默认 1级

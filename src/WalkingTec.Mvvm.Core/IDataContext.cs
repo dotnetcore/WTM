@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading;
@@ -119,6 +120,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="paras">参数</param>
         /// <returns></returns>
         DataTable RunSP(string command, params object[] paras);
+        IEnumerable<TElement> RunSP<TElement>(string command, params object[] paras);
 
         /// <summary>
         /// 执行sql语句，返回datatable
@@ -127,6 +129,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="paras">参数</param>
         /// <returns></returns>
         DataTable RunSQL(string command, params object[] paras);
-
+        IEnumerable<TElement> RunSQL<TElement>(string sql, params object[] paras);
+        DataTable Run(string sql, CommandType commandType, params object[] paras);
+        IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras);
+        object CreateCommandParameter(string name, object value, ParameterDirection dir);
     }
 }

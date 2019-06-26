@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -793,6 +794,14 @@ where S : struct
             {
                 return "";
             }
+        }
+    }
+
+    public static class DbCommandExtension
+    {
+        public static void AddParameter(this DbCommand command)
+        {
+            
         }
     }
 }

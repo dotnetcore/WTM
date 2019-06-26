@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -509,12 +510,23 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+        public IEnumerable<TElement> RunSP<TElement>(string command, params object[] paras)
+        {
+            return Run<TElement>(command, CommandType.StoredProcedure, paras);
+        }
+
         #region 执行Sql语句，返回datatable
         public DataTable RunSQL(string sql, params object[] paras)
         {
             return Run(sql, CommandType.Text, paras);
         }
         #endregion
+
+        public IEnumerable<TElement> RunSQL<TElement>(string sql, params object[] paras)
+        {
+            return Run<TElement>(sql, CommandType.Text, paras);
+        }
+
 
         #region 执行存储过程或Sql语句返回DataTable
         /// <summary>
@@ -524,7 +536,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="commandType">命令类型</param>
         /// <param name="paras">参数</param>
         /// <returns></returns>
-        private DataTable Run(string sql, CommandType commandType, params object[] paras)
+        public DataTable Run(string sql, CommandType commandType, params object[] paras)
         {
             DataTable table = new DataTable();
             switch (this.DBType)
@@ -593,5 +605,33 @@ namespace WalkingTec.Mvvm.Core
             return table;
         }
         #endregion
+
+
+        public IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras)
+        {
+            IEnumerable<TElement> entityList = new List<TElement>();
+            DataTable dt = Run(sql, commandType, paras);
+            entityList = EntityHelper.GetEntityList<TElement>(dt);
+            return entityList;
+        }
+
+
+        public object CreateCommandParameter(string name, object value, ParameterDirection dir)
+        {
+            object rv = null;
+            switch (this.DBType)
+            {
+                case DBTypeEnum.SqlServer:
+                    rv = new SqlParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.MySql:
+                    rv = new MySqlParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.PgSql:
+                    rv = new NpgsqlParameter(name, value) { Direction = dir };
+                    break;
+            }
+            return rv;
+        }
     }
 }
