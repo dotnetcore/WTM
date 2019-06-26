@@ -661,24 +661,34 @@ namespace WalkingTec.Mvvm.Core
                 {
                     parms.Add(new MySqlParameter(string.Format("@{0}", item.ParameterName), item.Value));
                 }
-
-                parms.Add(new MySqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
-                parms.Add(new MySqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
-                parms.Add(new MySqlParameter("@CurrentPage", Searcher.Page));
-                parms.Add(new MySqlParameter("@RecordsPerPage", Searcher.Limit));
-                parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
-
-                MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64)
+                if (cmd.CommandType == CommandType.StoredProcedure)
                 {
-                    Value = 0,
-                    Direction = ParameterDirection.Output
-                };
-                parms.Add(outp);
+                    parms.Add(new MySqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
+                    parms.Add(new MySqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
+                    parms.Add(new MySqlParameter("@CurrentPage", Searcher.Page));
+                    parms.Add(new MySqlParameter("@RecordsPerPage", Searcher.Limit));
+                    parms.Add(new MySqlParameter("@Sort", Searcher.SortInfo?.Property));
+                    parms.Add(new MySqlParameter("@SortDir", Searcher.SortInfo?.Direction));
+                    parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
 
+                    MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64)
+                    {
+                        Value = 0,
+                        Direction = ParameterDirection.Output
+                    };
+                    parms.Add(outp);
+                }
                 var pa = parms.ToArray();
 
-                EntityList = DC.Run<TModel>(cmd.CommandText,cmd.CommandType, pa).ToList();
-                total = outp.Value;
+                EntityList = DC.Run<TModel>(cmd.CommandText, cmd.CommandType, pa).ToList();
+                if (cmd.CommandType == CommandType.StoredProcedure)
+                {
+                    total = pa.Last().Value;
+                }
+                else
+                {
+                    total = EntityList.Count;
+                }
             }
             else if (DC.Database.IsNpgsql())
             {
@@ -688,23 +698,34 @@ namespace WalkingTec.Mvvm.Core
                     parms.Add(new NpgsqlParameter(string.Format("@{0}", item.ParameterName), item.Value));
                 }
 
-                parms.Add(new NpgsqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
-                parms.Add(new NpgsqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
-                parms.Add(new NpgsqlParameter("@CurrentPage", Searcher.Page));
-                parms.Add(new NpgsqlParameter("@RecordsPerPage", Searcher.Limit));
-                parms.Add(new NpgsqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
-
-                NpgsqlParameter outp = new NpgsqlParameter("@TotalRecords", NpgsqlDbType.Bigint)
+                if (cmd.CommandType == CommandType.StoredProcedure)
                 {
-                    Value = 0,
-                    Direction = ParameterDirection.Output
-                };
-                parms.Add(outp);
+                    parms.Add(new NpgsqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
+                    parms.Add(new NpgsqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
+                    parms.Add(new NpgsqlParameter("@CurrentPage", Searcher.Page));
+                    parms.Add(new NpgsqlParameter("@RecordsPerPage", Searcher.Limit));
+                    parms.Add(new NpgsqlParameter("@Sort", Searcher.SortInfo?.Property));
+                    parms.Add(new NpgsqlParameter("@SortDir", Searcher.SortInfo?.Direction));
+                    parms.Add(new NpgsqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
 
+                    NpgsqlParameter outp = new NpgsqlParameter("@TotalRecords", NpgsqlDbType.Bigint)
+                    {
+                        Value = 0,
+                        Direction = ParameterDirection.Output
+                    };
+                    parms.Add(outp);
+                }
                 var pa = parms.ToArray();
 
                 EntityList = DC.Run<TModel>(cmd.CommandText, cmd.CommandType, pa).ToList();
-                total = outp.Value;
+                if (cmd.CommandType == CommandType.StoredProcedure)
+                {
+                    total = pa.Last().Value;
+                }
+                else
+                {
+                    total = EntityList.Count;
+                }
             }
             else
             {
@@ -713,22 +734,34 @@ namespace WalkingTec.Mvvm.Core
                 {
                     parms.Add(new SqlParameter(string.Format("@{0}", item.ParameterName), item.Value));
                 }
-
-                parms.Add(new SqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
-                parms.Add(new SqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
-                parms.Add(new SqlParameter("@CurrentPage", Searcher.Page));
-                parms.Add(new SqlParameter("@RecordsPerPage", Searcher.Limit));
-                parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
-
-                SqlParameter outp = new SqlParameter("@TotalRecords", 0)
+                if (cmd.CommandType == CommandType.StoredProcedure)
                 {
-                    Direction = ParameterDirection.Output
-                };
-                parms.Add(outp);
+
+                    parms.Add(new SqlParameter("@SearchMode", Enum.GetName(typeof(ListVMSearchModeEnum), SearcherMode)));
+                    parms.Add(new SqlParameter("@NeedPage", (NeedPage && Searcher.Limit != -1)));
+                    parms.Add(new SqlParameter("@CurrentPage", Searcher.Page));
+                    parms.Add(new SqlParameter("@RecordsPerPage", Searcher.Limit));
+                    parms.Add(new SqlParameter("@Sort", Searcher.SortInfo?.Property));
+                    parms.Add(new SqlParameter("@SortDir", Searcher.SortInfo?.Direction));
+                    parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+
+                    SqlParameter outp = new SqlParameter("@TotalRecords", 0)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    parms.Add(outp);
+                }
                 var pa = parms.ToArray();
 
                 EntityList = DC.Run<TModel>(cmd.CommandText, cmd.CommandType, pa).ToList();
-                total = outp.Value;
+                if (cmd.CommandType == CommandType.StoredProcedure)
+                {
+                    total = pa.Last().Value;
+                }
+                else
+                {
+                    total = EntityList.Count;
+                }
 
             }
             if (NeedPage && Searcher.Limit != -1)
@@ -737,7 +770,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     try
                     {
-                        Searcher.Count = (long)total;
+                        Searcher.Count = long.Parse(total.ToString());
                         Searcher.PageCount = (int)((Searcher.Count - 1) / Searcher.Limit + 1);
                     }
                     catch { }
