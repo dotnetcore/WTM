@@ -12,40 +12,39 @@
     <p>4. 重写InitGridAction函数，这个函数定义列表中需要出现的操作按钮</p>
     <p>下面以学校模型为例，展示如何编写一个简单的ListVM，学校模型的定义可以参考<a href="/#/QuickStart/FirstModule">第一个模块</a></p>
     <wt:code title="SchoolListVM.cs">
-        public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
-        {
-        protected override List&ltGridAction&gt InitGridAction()
-        {
+public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
+{
+    protected override List&ltGridAction&gt InitGridAction()
+    {
         return new List&ltGridAction&gt
         {
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-        this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-        this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
         };
-        }
+    }
 
-        protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
-        {
+    protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
+    {
         return new List&ltGridColumn&ltSchool&gt&gt{
-        this.MakeGridHeader(x =&gt x.SchoolCode),
-        this.MakeGridHeader(x =&gt x.SchoolName),
-        this.MakeGridHeader(x =&gt x.SchoolType),
-        this.MakeGridHeaderAction(width: 200)
+            this.MakeGridHeader(x =&gt x.SchoolCode),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            this.MakeGridHeaderAction(width: 200)
         };
-        }
+    }
 
-        public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
-        {
+    public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+    {
         var query = DC.Set&ltSchool&gt().OrderBy(x =&gt x.ID);
         return query;
-        }
-
-        }
+    }
+}
     </wt:code>
     <p>上面代码建立了一个简单的ListVM，它没有任何搜索条件，默认每页20行查询所有School的数据，并使用输出列表同样的逻辑来完成导出Excel。同时它定义了新建，修改等按钮</p>
     <wt:quote>
@@ -366,6 +365,104 @@ private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, obje
     <p>上面代码中，我们首先指定了DetailGridPrix字段，这个字段是告诉框架提交之后应该将数据保存在哪里，比如我们设定DetailGridPrix="Students"，那么提交的时候，框架会使用Students[0].Id,Students[0].Name,Students[1].Id,Students[1].Name这种形式来提交数据</p>
     <p>然后在InitGridAction方法中，我们定义了两个按钮，分别是AddRow和RemoveRow类型。这两个按钮负责动态给Grid添加或者删除行</p>
     <p>最后再InitGridHeader方法中，我们使用SetEditType方法给每一列定义需要使用的控件</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="使用存储过程">
+
+    <p>有时我们需要使用sql语句或者存储过程来查询数据</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM2.cs">
+    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
+    {
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            var actions = new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+            };
+            return actions;
+        }
+
+        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
+        {
+            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
+
+            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
+            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
+            header.Add(this.MakeGridHeaderAction(width: 120));
+
+            return header;
+        }
+
+        public override DbCommand GetSearchCommand()
+        {
+            var sql = string.Format("SELECT top 10 * from actionlogs");
+            var cmd = DC.Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.Text;
+            return cmd;
+        }
+    }
+
+
+    </wt:code>
+    <p>上面代码中，我们重写了GetSearchCommand方法，它返回一个DbCommand，我们可以指定sql语句或者存储过程</p>
+    <wt:quote>
+        <p>如果使用存储过程，框架自带的分页，排序等功能只能依靠你在存储过程里自己完成</p>
+        <p>框架会自动把下列信息作为变量添加到存储过程里</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">变量</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@@SearchMode</td>
+                <td>搜索类别</td>
+            </tr>
+            <tr>
+                <td>@@NeedPage</td>
+                <td>是否需要分页</td>
+            </tr>
+            <tr>
+                <td>@@CurrentPage</td>
+                <td>当前页</td>
+            </tr>
+            <tr>
+                <td>@@RecordsPerPage</td>
+                <td>每页条数</td>
+            </tr>
+            <tr>
+                <td>@@Sort</td>
+                <td>排序字段</td>
+            </tr>
+            <tr>
+                <td>@@SortDir</td>
+                <td>升序或降序</td>
+            </tr>
+            <tr>
+                <td>@@IDs</td>
+                <td>当SearchMode为CheckExport，勾选导出时，IDs会传用户勾选的ID</td>
+            </tr>
+            <tr>
+                <td>@@TotalRecords</td>
+                <td>output变量，返回所有记录数</td>
+            </tr>
+        </tbody>
+    </table>
+        <p>使用存储过程比较繁琐，绝大部分需求时可以使用lambda或者linq来写的，不到万不得已尽量别用存储过程</p>
+    </wt:quote>
+
 </wt:fieldset>
 
 
