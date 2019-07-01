@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         continue;
                     }
-                    if (col.FieldName.ToLower() == "id")
+                    if (col.FieldName?.ToLower() == "id")
                     {
                         containsID = true;
                     }
