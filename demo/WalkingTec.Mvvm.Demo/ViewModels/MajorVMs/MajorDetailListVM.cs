@@ -32,8 +32,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             return new List<GridColumn<Major>>{
                 this.MakeGridHeader(x => x.MajorCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.MajorType).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
-                this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeaderAction(width: 200)
+                this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox).SetEditType(EditTypeEnum.TextBox),
+               this.MakeGridHeaderAction(width: 200)
             };
         }
 

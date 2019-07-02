@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -203,6 +204,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 model.DoReInit();
                             }
                         }
+                    }
+
+                    //如果是子表外键验证错误，例如Entity.Majors[0].SchoolId为空这种错误，则忽略。因为框架会在添加修改的时候自动给外键赋值
+                    var toremove = ctrl.ModelState.Select(x => x.Key).Where(x => Regex.IsMatch(x, ".*?\\[.*?\\]\\..*?id", RegexOptions.IgnoreCase));
+                    foreach (var r in toremove)
+                    {
+                        ctrl.ModelState.Remove(r);
                     }
                 }
             }

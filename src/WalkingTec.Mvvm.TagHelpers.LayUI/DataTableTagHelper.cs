@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
@@ -507,7 +508,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
-    {(UseLocalData ? $",data: {ListVM.GetDataJson()}" : string.Empty)}
     {(!Loading.HasValue ? string.Empty : $",loading: {Loading.Value.ToString().ToLower()}")}
     ,request: {JsonConvert.SerializeObject(request)}
     ,response: {JsonConvert.SerializeObject(response)}
@@ -533,6 +533,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
   {TableJSVar} = table.render({Id}option);
   
+ {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>","$$script$$").Replace("</script>","$$#script$$")}); " : string.Empty)}  
+
+
   // 监听工具条
   function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
     var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
@@ -786,7 +789,8 @@ isPost = true;
 case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{");
                 if (item.ParameterType == GridActionParameterTypesEnum.AddRow)
                 {
-                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{ListVM.GetSingleDataJson(null,false)});
+                    Regex r = new Regex("<script>.*?</script>"); 
+                    gridBtnEventStrBuilder.Append($@"ff.AddGridRow(""{Id}"",{Id}option,{r.Replace(ListVM.GetSingleDataJson(null, false), "")});
 ");
                 }
                 else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow) { }

@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                     return "";
                 }
             }));
-            header.Add(this.MakeGridHeader(x => x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x => x.ModuleName, 120).SetEditType(EditTypeEnum.TextBox));
             header.Add(this.MakeGridHeader(x => x.ActionName, 120));
             header.Add(this.MakeGridHeader(x => x.ITCode, 120));
             header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
