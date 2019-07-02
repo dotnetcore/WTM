@@ -427,6 +427,10 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 contenttype = $"image/{ext}";
             }
+            if (ext == "mp4")
+            {
+                contenttype = $"video/mpeg4";
+            }
             if (stream == false)
             {
                 return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));

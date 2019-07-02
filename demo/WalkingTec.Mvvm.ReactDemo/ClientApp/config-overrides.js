@@ -59,13 +59,13 @@ function magicChange() {
     const startPath = path.resolve(appDirectory, 'node_modules', 'react-scripts', 'scripts', 'start.js');
     // 文件存在
     if (fs.existsSync(startPath)) {
-      console.log('------------------------------------ 魔改默认配置 ------------------------------------')
+      console.log('------------------------------------ modify default setting ------------------------------------')
       const startjs = fs.readFileSync(startPath).toString();
       // 替换 代码
       const newStartjs = startjs.replace('const useTypeScript = fs.existsSync(paths.appTsConfig);', 'const useTypeScript = false ;// config-overrides.js 魔改 fs.existsSync(paths.appTsConfig);');
       fs.writeFileSync(startPath, newStartjs);
     }
   } catch (error) {
-    console.log("魔改 出错", error);
+    console.log("modify failed", error);
   }
 }
