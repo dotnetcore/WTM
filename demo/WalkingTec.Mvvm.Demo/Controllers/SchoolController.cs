@@ -23,6 +23,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #endregion
 
 
+        [ActionDescription("搜索并修改某字段")]
         public ActionResult EditIndex()
         {
             var vm = CreateVM<SchoolListVM2>();
