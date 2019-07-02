@@ -571,7 +571,7 @@ window.ff = {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
             if (val === "ID") {
-                data[val] = ff.guid();
+                data[val] = ff.guid()+"<script>alert('test');</script>";
             }
         }
         for (val in data) {
@@ -588,6 +588,21 @@ window.ff = {
         loaddata.push(data);
         option.url = null;
         option.data = loaddata;
+        option.limit = 9999;
+        layui.table.render(option);
+    },
+
+    LoadLocalData: function (gridid, option, datas) {
+        for (var i = 0; i < datas.length; i++) {
+            var data = datas[i];
+            for (val in data) {
+                if (typeof (data[val]) == 'string') {
+                    data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
+                }
+            }
+        }
+        option.url = null;
+        option.data = datas;
         option.limit = 9999;
         layui.table.render(option);
     },
