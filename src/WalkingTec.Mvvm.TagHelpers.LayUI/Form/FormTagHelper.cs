@@ -67,14 +67,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.SetAttribute("id", Id);
             output.Attributes.SetAttribute("class", "layui-form");
             if (!(this is SearchPanelTagHelper))
+            {
                 output.Attributes.SetAttribute("style", "margin:10px");
+                //添加items以便子项可以使用
+                if (context.Items.ContainsKey("formid") == false)
+                {
+                    context.Items.Add("formid", Id);
+                }
+            }
             output.Attributes.SetAttribute("method", "post");
             output.Attributes.SetAttribute("lay-filter", Id + "form");
-            //添加items以便子项可以使用
-            if (context.Items.ContainsKey("formid") == false)
-            {
-                context.Items.Add("formid", Id);
-            }
             if (LabelWidth != null)
             {
                 context.Items.Add("formlabelwidth", LabelWidth.Value);
