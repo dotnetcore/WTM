@@ -1,0 +1,17 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM2
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+    <wt:row items-per-row="ItemsPerRowEnum.Three">
+        <wt:textbox field="Searcher.SchoolCode" />
+        <wt:textbox field="Searcher.SchoolName" />
+        <wt:combobox field="Searcher.SchoolType" empty-text="全部" />
+    </wt:row>
+</wt:searchpanel>
+
+<wt:form vm="@Model" id="editindexform">
+
+    <wt:grid vm="@Model" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+    </wt:row>
+</wt:form>
