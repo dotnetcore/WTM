@@ -37,8 +37,9 @@ namespace WalkingTec.Mvvm.VueDemo
                         x.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                         {
                             HotModuleReplacement = false,
-                            ConfigFile = "config/webpack.config.js",
-                            ProjectPath = "ClientApp/"
+                            ConfigFile = "config/webpack.dev.js",
+                            ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
+
                         });
                     }
                     x.UseSwagger();

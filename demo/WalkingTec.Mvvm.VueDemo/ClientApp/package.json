@@ -3,15 +3,6 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
-    "scripts": {
-        "start": "webpack-dev-server --progress --config config/webpack.dev.js",
-        "prod": "webpack --config config/webpack.prod.js",
-        "lint": "eslint --ext .js,.vue src",
-        "lint:fix": "eslint --ext .js,.vue src --fix",
-        "test:unit": "jest --config test/jest.config.js",
-        "test": "npm run lint && npm run test:unit",
-        "test:debug": "node --inspect node_modules/.bin/jest --runInBand --config test/jest.config.js"
-    },
     "author": "",
     "license": "ISC",
     "dependencies": {
