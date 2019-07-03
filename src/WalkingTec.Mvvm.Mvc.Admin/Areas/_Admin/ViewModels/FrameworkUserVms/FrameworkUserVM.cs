@@ -48,6 +48,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         }
 
+        protected override void ReInitVM()
+        {
+            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            {
+                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.RoleName);
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.GroupName);
+            }
+        }
+
         public override void DoAdd()
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
