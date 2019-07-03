@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
@@ -26,14 +27,20 @@ namespace WalkingTec.Mvvm.VueDemo
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
                     });
-                    x.AddSpaStaticFiles(configuration =>
-                    {
-                        configuration.RootPath = "ClientApp/build";
-                    });
                 })
                 .Configure(x =>
                 {
                     var env = x.ApplicationServices.GetService<IHostingEnvironment>();
+                    x.UseDeveloperExceptionPage();
+                    if (env.IsDevelopment())
+                    {
+                        x.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                        {
+                            HotModuleReplacement = false,
+                            ConfigFile = "config/webpack.config.js",
+                            ProjectPath = "ClientApp/"
+                        });
+                    }
                     x.UseSwagger();
                     x.UseSwaggerUI(c =>
                     {
@@ -41,15 +48,6 @@ namespace WalkingTec.Mvvm.VueDemo
                     });
                     x.UseSpaStaticFiles();
                     x.UseFrameworkService();
-                    x.UseSpa(spa =>
-                    {
-                        spa.Options.SourcePath = "ClientApp";                        
-                        if (env.IsDevelopment())
-                        {                            
-                            spa.UseProxyToSpaDevelopmentServer("http://localhost:8080");
-                        }
-                    });
-
                 })
                 .Build();
 
