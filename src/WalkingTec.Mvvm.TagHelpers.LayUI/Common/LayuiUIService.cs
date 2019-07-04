@@ -56,20 +56,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         {
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
             var selected = ischeck ? " checked" : " ";
-            return $@"<input lay-skin=""primary"" type=""checkbox"" name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" title=""{text ?? ""}"" {selected} {disable}/>";
+            return $@"<input lay-skin=""primary"" type=""checkbox"" name=""{name ?? ""}"" id=""{(name == null ? "" : Utils.GetIdByName(name))}"" value=""{value ?? ""}"" title=""{text ?? ""}"" {selected} {disable}/>";
         }
 
         public string MakeRadio(bool ischeck, string text = null, string name = null, string value = null, bool isReadOnly = false)
         {
                 var selected = ischeck ? " checked" : " ";
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
-                return $@"<input lay-skin=""primary"" type=""radio"" name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" title=""{text ?? ""}"" {selected} {disable}/>";
+                return $@"<input lay-skin=""primary"" type=""radio"" name=""{name ?? ""}"" id=""{(name == null ? "" : Utils.GetIdByName(name))}"" value=""{value ?? ""}"" title=""{text ?? ""}"" {selected} {disable}/>";
         }
 
         public string MakeCombo(string name = null, List<ComboSelectListItem> value = null, string selectedValue = null, string emptyText = null, bool isReadOnly = false)
         {
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
-            string rv = $"<select name=\"{name}\" class=\"layui-input\" style=\"height:28px\"   lay-ignore>";
+            string rv = $"<select name=\"{name}\" id=\"{(name == null? "": Utils.GetIdByName(name))}\" class=\"layui-input\" style=\"height:28px\"   lay-ignore>";
             if(string.IsNullOrEmpty(emptyText) == false)
             {
                 rv += $@"
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
         public string MakeTextBox(string name = null, string value = null, string emptyText = null, bool isReadOnly = false)
         {
             var disable = isReadOnly ? " disabled=\"\" class=\"layui-disabled\"" : " ";
-            return $@"<input class=""layui-input"" style=""height:28px""  name=""{name ?? ""}"" id=""{name ?? Utils.GetIdByName(name)}"" value=""{value ?? ""}"" {disable} />";
+            return $@"<input class=""layui-input"" style=""height:28px""  name=""{name ?? ""}"" id=""{(name == null? "": Utils.GetIdByName(name))}"" value=""{value ?? ""}"" {disable} />";
 
         }
         public string MakeRedirectButton(ButtonTypesEnum buttonType, string url, string buttonText)
