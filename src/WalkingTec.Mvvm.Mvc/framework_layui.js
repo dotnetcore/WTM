@@ -576,7 +576,8 @@ window.ff = {
         }
         for (val in data) {
             if (typeof (data[val]) == 'string') {
-                data[val] = data[val].replace(/\[.*?\]/ig, "[" + loaddata.length + "]");
+                data[val] = data[val].replace(/\[\d?\]/ig, "[" + loaddata.length + "]");
+                data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
                 var re = /(<input .*?)\s*\/>/ig;
                 var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
                 var re3 = /(.*?)<input hidden name=\"(.*?)\.id\" .*?\/>(.*?)/ig;
@@ -613,7 +614,8 @@ window.ff = {
         for (var i = 0; i < loaddata.length; i++) {
             for (val in loaddata[i]) {
                 if (typeof (loaddata[i][val]) == 'string') {
-                    loaddata[i][val] = loaddata[i][val].replace(/\[.*?\]/ig, "[" + i + "]");
+                    loaddata[i][val] = loaddata[i][val].replace(/\[\d?\]/ig, "[" + i + "]");
+                    loaddata[i][val] = loaddata[i][val].replace(/_\d?_/ig, "_" + i + "_");
                     loaddata[i][val] = loaddata[i][val].replace("/onchange=\".*?\"/", "onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "')\"");
                 }
             }
