@@ -5,6 +5,10 @@
     "main": "index.js",
     "author": "",
     "license": "ISC",
+    "scripts": {
+        "start": "webpack-dev-server --progress --config config/webpack.dev.js",
+        "prod": "webpack --config config/webpack.prod.js"
+    },
     "dependencies": {
         "axios": "^0.19.0",
         "element-ui": "^2.8.2",

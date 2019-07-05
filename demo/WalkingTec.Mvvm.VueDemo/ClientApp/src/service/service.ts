@@ -26,7 +26,7 @@ const service = (option, serverHost?) => {
         url: url,
         data: {},
         params: {},
-        headers: {}
+        headers: { "Content-Type": "application/json" }
     };
     const data = {};
     for (const key in originalData) {
@@ -41,26 +41,29 @@ const service = (option, serverHost?) => {
     if (option.method === "post") {
         // 针对参数类型是对象（包含数组）
         req.data = data;
-        req.headers = {
-            // "Content-Type": "application/x-www-form-urlencoded"
-            "Content-Type": "application/json"
-        };
-        // req.transformRequest = [
-        //     function(data) {
-        //         let ret = "";
-        //         for (const it in data) {
-        //             ret +=
-        //                 encodeURIComponent(it) +
-        //                 "=" +
-        //                 encodeURIComponent(data[it]) +
-        //                 "&";
-        //         }
-        //         if (ret !== "") {
-        //             ret = ret.substr(0, ret.length - 1);
-        //         }
-        //         return ret;
-        //     }
-        // ];
+        if (req.url.indexOf("login") > 0) {
+            req.headers = {
+                "Content-Type":
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+                // "Content-Type": "application/json"
+            };
+            req["transformRequest"] = [
+                function(data) {
+                    let ret = "";
+                    for (const it in data) {
+                        ret +=
+                            encodeURIComponent(it) +
+                            "=" +
+                            encodeURIComponent(data[it]) +
+                            "&";
+                    }
+                    if (ret !== "") {
+                        ret = ret.substr(0, ret.length - 1);
+                    }
+                    return ret;
+                }
+            ];
+        }
     } else {
         req.params = data;
     }
@@ -73,7 +76,7 @@ const service = (option, serverHost?) => {
             console.log("error", res);
             Notification.error({
                 title: "错误",
-                message: res
+                message: res.response.data.Message[0]
             });
             throw res;
         });

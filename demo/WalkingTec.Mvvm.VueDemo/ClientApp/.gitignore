@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.vscode
+.awcache
+.cache-loader
+# testing
+/coverage
+
+# production
+/build
+/dist
