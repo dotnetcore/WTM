@@ -47,7 +47,6 @@ namespace WalkingTec.Mvvm.VueDemo
                     {
                         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                     });
-                    x.UseSpaStaticFiles();
                     x.UseFrameworkService();
                 })
                 .Build();
