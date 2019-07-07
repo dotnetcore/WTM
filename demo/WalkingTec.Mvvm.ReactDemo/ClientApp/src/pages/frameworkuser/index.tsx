@@ -4,7 +4,8 @@ import Store from './store';
 import Action from './views/action';
 import Other from './views/other';
 import Search from './views/search';
-import Table from './views/table';
+// import Table from './views/table';
+import Table from './views/agGrid';
 /**
  * 页面入口
  *  Action：页面动作
