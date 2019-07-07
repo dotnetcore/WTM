@@ -5,13 +5,13 @@
   "dependencies": {
     "@antv/data-set": "^0.10.2",
     "@antv/g2": "^3.5.7",
-    "@babel/core": "^7.4.5",
-    "antd": "3.19.8",
+    "@babel/core": "^7.5.0",
+    "antd": "3.20.0",
     "braft-editor": "^2.3.7",
     "core-js": "^3.1.4",
     "lodash": "^4.17.11",
     "lodash-decorators": "^6.0.1",
-    "mobx": "^4.11.0",
+    "mobx": "^4.12.0",
     "mobx-persist": "^0.4.1",
     "mobx-react": "^6.1.1",
     "moment": "^2.24.0",
@@ -24,7 +24,7 @@
     "react-router-config": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "rxjs": "^6.5.2",
-    "viewerjs": "^1.3.3",
+    "viewerjs": "^1.3.6",
     "viser-react": "^2.4.6"
   },
   "scripts": {
