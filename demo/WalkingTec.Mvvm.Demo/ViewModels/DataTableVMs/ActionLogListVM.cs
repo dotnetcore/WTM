@@ -10,53 +10,24 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 {
-    public class ActionLogListVM : BasePagedListVM<ActionLog,BaseSearcher>
+    public class ActionLogListVM : BasePagedListVM<CustomView, BaseSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
             var actions = new List<GridAction>
             {
-                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeAction(null,null,"test",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test").SetShowInRow(true),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel)
             };
             return actions;
         }
 
-        protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<CustomView>> InitGridHeader()
         {
-            var header = new List<GridColumn<ActionLog>>();
+            var header = new List<GridColumn<CustomView>>();
 
-            header.Add(this.MakeGridHeader(x => x.LogType, 80).SetForeGroundFunc((entity) => {
-                if (entity.LogType == ActionLogTypesEnum.Exception)
-                {
-                    return "FF0000";
-                }
-                else
-                {
-                    return "";
-                }
-            }));
-            header.Add(this.MakeGridHeader(x => x.ModuleName, 120));
-            header.Add(this.MakeGridHeader(x => x.ActionName, 120));
-            header.Add(this.MakeGridHeader(x => x.ITCode, 120));
-            header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
-            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true));
-            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true).SetForeGroundFunc((entity) => {
-                if (entity.Duration <= 1)
-                {
-                    return "008000";
-                }
-                else if (entity.Duration <= 3)
-                {
-                    return "FFC90E";
-                }
-                else
-                {
-                    return "FF0000";
-                }
-            }).SetFormat((entity, v) => { return ((double)v).ToString("f2"); }));
-            header.Add(this.MakeGridHeader(x => x.IP, 120));
-            header.Add(this.MakeGridHeader(x => x.Remark));
+            header.Add(this.MakeGridHeader(x => x.test1, 120));
+            header.Add(this.MakeGridHeader(x => x.test2, 120));
             header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;
@@ -64,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 
         public override DbCommand GetSearchCommand()
         {
-            var sql = string.Format("SELECT top 10 * from actionlogs");
+            var sql = string.Format("SELECT top 10 itcode as test1, modulename as test2 from actionlogs");
 
             var cmd = DC.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql;
@@ -75,5 +46,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
             //cmd.CommandType = System.Data.CommandType.StoredProcedure;
             return cmd;
         }
+    }
+
+    public class CustomView: TopBasePoco
+    {
+        public string test1 { get; set; }
+        public string test2 { get; set; }
     }
 }
