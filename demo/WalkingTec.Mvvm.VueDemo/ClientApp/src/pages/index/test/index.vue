@@ -1,16 +1,12 @@
 <template>
-    <div class="main-box">
-        <el-table :data="tableData" stripe style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="180">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
-        </el-table>
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageDate.currentPage" :page-sizes="pageDate.pageSizes" :page-size="pageDate.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400">
-        </el-pagination>
-    </div>
+  <div class="main-box">
+    <el-table :data="tableData" stripe style="width: 100%">
+      <el-table-column prop="date" label="日期" width="180"/>
+      <el-table-column prop="name" label="姓名" width="180"/>
+      <el-table-column prop="address" label="地址"/>
+    </el-table>
+    <el-pagination @size-change="handleSizeChange" :current-page="pageDate.currentPage" @current-change="handleCurrentChange" :page-sizes="pageDate.pageSizes" :page-size="pageDate.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"/>
+  </div>
 </template>
 <script>
 import baseMixin from "@/mixin/base";
@@ -43,13 +39,13 @@ export default {
             ]
         };
     },
+    computed: {},
     mounted() {
         console.log("test");
     },
     methods: {
-        privateRequest() {}
+        privateRequest() { }
     },
-    computed: {},
     components: {}
 };
 </script>

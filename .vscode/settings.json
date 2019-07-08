@@ -30,5 +30,6 @@
         ]
     },
     "workbench.startupEditor": "welcomePage",
-    "git.autofetch": true
+    "git.autofetch": true,
+    "javascript.implicitProjectConfig.experimentalDecorators": true
 }
