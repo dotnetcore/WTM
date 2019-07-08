@@ -34,6 +34,10 @@
     <p>可以写在Controller或Controller中的方法上</p>
     <p>框架默认会在Post回来的VM验证失败时自动调用VM中的ReInitVM()方法，通过标记ReInit可以改变这种默认行为</p>
 </wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="ValidateFormItemOnly">
+    <p>可以写在Controller中的方法上</p>
+    <p>指示框架只验证表单提交的字段，对于表单没有提交的字段不要验证，主要用于修改某些字段的方法上</p>
+</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="StringNeedLTGT">
     <p>可以写在Controller或Controller中的方法上</p>

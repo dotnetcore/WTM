@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
-
+            var validpostonly = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ValidateFormItemOnlyAttribute), false).Cast<ValidateFormItemOnlyAttribute>().FirstOrDefault();
             var crossDomain = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
             if (crossDomain == null) {
                 crossDomain = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
@@ -176,9 +176,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         template.CopyContext(model);
                         template.DoReInit();
                     }
+                    model.Validate();
                     //SetReinit
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
-                    if ((ctrl as ControllerBase).Request.Method.ToLower() == "put")
+                    if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
                     {
                         foreach (var v in invalid)
                         {
@@ -188,7 +189,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                         }
                     }
-                    model.Validate();
                     if (ctrl is BaseController)
                     {
                         var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
