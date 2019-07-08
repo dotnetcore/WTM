@@ -1,7 +1,10 @@
 module.exports = {
     root: true,
     parserOptions: {
-        parser: "babel-eslint"
+        parser: "babel-eslint",
+        ecmaFeatures: {
+            legacyDecorators: true
+        }
     },
     env: {
         browser: true,
@@ -25,6 +28,16 @@ module.exports = {
         quotes: ["off", "double"],
         "func-style": 0,
         "generator-star-spacing": "off",
-        "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+        "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+        "vue/max-attributes-per-line": [
+            2,
+            {
+                singleline: 10, //当开始标记在一行中时每行的最大属性数，这里设置为10
+                multiline: {
+                    max: 1, //当开始标记位于多行时每行的最大属性数，这里设置为1
+                    allowFirstLine: false //多行时禁止与标记名称在同一行写属性
+                }
+            }
+        ]
     }
 };
