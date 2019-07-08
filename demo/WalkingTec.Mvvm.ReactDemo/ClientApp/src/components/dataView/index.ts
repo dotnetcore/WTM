@@ -1,4 +1,5 @@
 export * from "./content/table";
+export * from "./content/agGrid";
 export * from "./header/search";
 export * from "./help/toImg";
 export * from "./help/visible";

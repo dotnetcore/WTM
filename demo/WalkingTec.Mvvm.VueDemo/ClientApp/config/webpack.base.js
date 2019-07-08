@@ -13,6 +13,12 @@ const utils = {
     }
 };
 module.exports = {
+    output: {
+        path: utils.resolve("dist"),
+        publicPath: "/",
+        filename: '[name].js',
+        library: '[name]_[hash]'
+    },
     entry: {
         index: utils.resolve("src/index.ts"),
         login: utils.resolve("src/login.ts")

@@ -68,6 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("修改")]
         [HttpPost]
+        [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkUserVM vm)
         {
             if (ModelState.Any(x => x.Key != "Entity.Password" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))

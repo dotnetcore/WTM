@@ -25,7 +25,7 @@
  </ItemGroup>
   <ItemGroup>
     <Content Remove="$(SpaRoot)**" />
-    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**;$(SpaRoot)dist\**;$(SpaRoot).awcache\**;$(SpaRoot).cache-loader\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**;$(SpaRoot)dist\**;$(SpaRoot)dist\**;$(SpaRoot).awcache\**;$(SpaRoot).cache-loader\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />

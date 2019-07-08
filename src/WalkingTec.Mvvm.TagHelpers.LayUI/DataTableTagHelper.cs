@@ -660,7 +660,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             break;
                     }
                     //如果是按钮组容器，加载子按钮
-                    if (item.ActionName.Equals("ActionsGroup")
+                    if (item.ActionName?.Equals("ActionsGroup") == true
                         && item.SubActions != null &&
                         item.SubActions.Count > 0
                     )
