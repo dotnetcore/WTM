@@ -566,11 +566,12 @@ namespace WalkingTec.Mvvm.Core
                     var tempPros = typeof(T).GetFields();
                     foreach (var pro in tempPros)
                     {
-                        var proToSet = typeof(P).GetProperty(pro.Name);
+                        var excelProp = Template.GetType().GetField(pro.Name).GetValue(Template) as ExcelPropety;
+                        var proToSet = typeof(P).GetProperty(excelProp.FieldName);
                         if (proToSet != null)
                         {
                             var val = proToSet.GetValue(item);
-                            PropertyHelper.SetPropertyValue(exist, pro.Name, val, stringBasedValue: true);
+                            PropertyHelper.SetPropertyValue(exist, excelProp.FieldName, val, stringBasedValue: true);
                         }
                     }
                     //更新修改时间字段
