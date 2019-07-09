@@ -1,7 +1,7 @@
 <template>
-    <section class="app-main" :style="[]">
-        <router-view></router-view>
-    </section>
+  <section class="app-main" :style="[]">
+    <router-view />
+  </section>
 </template>
 
 <script>
@@ -14,18 +14,17 @@ export default {
             default: false
         }
     },
-    computed: {
-        ...mapGetters({
-            layout: "layout"
-        })
-    },
     data() {
         return {
             showLevelbar: true
         };
     },
-    methods: {},
-    components: {}
+    computed: {
+        ...mapGetters({
+            layout: "layout"
+        })
+    },
+    methods: {}
 };
 </script>
 

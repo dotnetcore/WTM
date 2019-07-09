@@ -1,27 +1,32 @@
 <template>
-    <section class="left-ment">
-        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :router="true" background-color="#393D49" text-color="#fff" active-text-color="#ccc">
+  <section class="left-ment">
+    <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#393D49" text-color="#fff" active-text-color="#ccc" :router="true" @open="handleOpen" @close="handleClose">
+      <el-menu-item v-for="(item, index) in menuItems" :key="index" :index="item.path">
+        <i :class="[item.meta.icon]" />
+        <span>{{ item.name }}</span>
+      </el-menu-item>
 
-            <el-menu-item v-for="(item, index) in menuItems" :key="index" :index="item.path">
-                <i :class="[item.meta.icon]"></i>
-                <span>{{item.name}}</span>
-            </el-menu-item>
-
-            <el-submenu index="1">
-                <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span>test2</span>
-                </template>
-                <el-menu-item-group title="分组2">
-                    <el-menu-item index="1-3">选项3</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                    <template slot="title">选项4</template>
-                    <el-menu-item index="1-4-1">选项1</el-menu-item>
-                </el-submenu>
-            </el-submenu>
-        </el-menu>
-    </section>
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-location" />
+          <span>test2</span>
+        </template>
+        <el-menu-item-group title="分组2">
+          <el-menu-item index="1-3">
+            选项3
+          </el-menu-item>
+        </el-menu-item-group>
+        <el-submenu index="1-4">
+          <template slot="title">
+            选项4
+          </template>
+          <el-menu-item index="1-4-1">
+            选项1
+          </el-menu-item>
+        </el-submenu>
+      </el-submenu>
+    </el-menu>
+  </section>
 </template>
 
 <script>
@@ -34,13 +39,13 @@ export default {
             default: false
         }
     },
-    computed: {
-        ...mapGetters(["menuItems"])
-    },
     data() {
         return {
             showLevelbar: true
         };
+    },
+    computed: {
+        ...mapGetters(["menuItems"])
     },
     methods: {
         handleOpen(key, keyPath) {
@@ -49,8 +54,7 @@ export default {
         handleClose(key, keyPath) {
             console.log(key, keyPath);
         }
-    },
-    components: {}
+    }
 };
 </script>
 
