@@ -1,10 +1,10 @@
 <template>
-    <div id="app" class="app-layout">
-        <Header></Header>
-        <leftMenu></leftMenu>
-        <AppMain></AppMain>
-        <Footer></Footer>
-    </div>
+  <div id="app" class="app-layout">
+    <Header />
+    <LeftMenu />
+    <AppMain />
+    <Footer />
+  </div>
 </template>
 
 <style lang="less">
@@ -16,9 +16,10 @@
 }
 </style>
 
-<script>
-import { AppMain, Footer, Header, leftMenu } from "@/components/layout/index";
+<script lang="ts">
+import { AppMain, Footer, Header, LeftMenu } from "@/components/layout/index";
 import { mapState, mapMutations, mapActions } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
 
 const mixin = {
     computed: {
@@ -29,22 +30,18 @@ const mixin = {
         ...mapActions({})
     }
 };
-
-export default {
+@Component({
     components: {
         AppMain,
         Header,
         Footer,
-        leftMenu
+        LeftMenu
     },
-    mixins: [mixin],
-    data() {
-        return {};
-    },
-    computed: {},
+    mixins: [mixin]
+})
+export default class App extends Vue {
     mounted() {
         console.log("app", this);
-    },
-    methods: {}
-};
+    }
+}
 </script>

@@ -16,8 +16,8 @@ module.exports = {
     output: {
         path: utils.resolve("dist"),
         publicPath: "/",
-        filename: '[name].js',
-        library: '[name]_[hash]'
+        filename: "[name].js",
+        library: "[name]_[hash]"
     },
     entry: {
         index: utils.resolve("src/index.ts"),
@@ -31,6 +31,10 @@ module.exports = {
             static: utils.resolve("static"),
             components: utils.resolve("src/components")
         }
+    },
+    externals: {
+        vue: "Vue",
+        "element-ui": "ELEMENT"
     },
     module: {
         rules: [

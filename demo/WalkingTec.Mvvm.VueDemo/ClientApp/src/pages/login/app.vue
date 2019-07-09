@@ -1,7 +1,7 @@
 <template>
-    <div class="app-main">
-        <index></index>
-    </div>
+  <div class="app-main">
+    <index />
+  </div>
 </template>
 
 <style lang="less">
@@ -16,9 +16,10 @@
 }
 </style>
 
-<script>
-import index from "./index";
+<script lang="ts">
+import index from "./index.vue";
 import { mapState, mapMutations, mapActions } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
 
 const mixin = {
     computed: {
@@ -30,13 +31,11 @@ const mixin = {
     }
 };
 
-export default {
+@Component({
     components: {
         index
     },
-    mixins: [mixin],
-    data() {
-        return {};
-    }
-};
+    mixins: [mixin]
+})
+export default class App extends Vue {}
 </script>
