@@ -1,7 +1,7 @@
 <template>
-    <div class="header">
-        WalkingTec.Mvvm Framework
-    </div>
+  <div class="header">
+    WalkingTec.Mvvm Framework
+  </div>
 </template>
 <script>
 // import cookie from '@/util/cookie.js';
@@ -18,9 +18,8 @@ export default {
             userName: ""
         };
     },
-    mounted() {},
-    methods: {},
-    computed: {}
+    mounted() { },
+    methods: {}
 };
 </script>
 
@@ -34,6 +33,5 @@ export default {
     color: #009688;
 }
 </style>
-
 
 
