@@ -1,8 +1,9 @@
 <template>
-    <div class="footerbg">
-        <div class="copyright"> Copyright 2019 www.123.com AII Rights Reserved. ICP备 123号 123有限公司版权所有
-        </div>
+  <div class="footerbg">
+    <div class="copyright">
+      Copyright 2019 www.123.com AII Rights Reserved. ICP备 123号 123有限公司版权所有
     </div>
+  </div>
 </template>
 <script>
 export default {
@@ -25,8 +26,7 @@ export default {
                 treePath: param
             });
         }
-    },
-    components: {}
+    }
 };
 </script>
 
