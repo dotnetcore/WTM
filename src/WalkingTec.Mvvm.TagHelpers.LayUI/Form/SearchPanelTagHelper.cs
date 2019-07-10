@@ -108,6 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
@@ -137,6 +138,8 @@ $('#{ResetBtnId}').on('click', function (btn) {{
         }}
     }}
 }});
+
+{(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
     var layer = layui.layer;
@@ -157,6 +160,7 @@ $('#{SearchBtnId}').on('click', function () {{
     }})
   /* 暂时解决 layui table首次及table.reload()无loading的bug */
 }});
+    ")}
 layui.element.on('collapse({tempSearchTitleId})', function(data){{ff.triggerResize()}});
 
 </script>");

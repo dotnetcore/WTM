@@ -217,6 +217,9 @@ window.ff = {
     PostForm: function (url, formid, divid) {
         var layer = layui.layer;
         var index = layer.load(2);
+        if (url === undefined || url === "") {
+            url = $("#" + formid).attr("action");
+        }
         $.ajax({
             cache: false,
             type: "POST",
