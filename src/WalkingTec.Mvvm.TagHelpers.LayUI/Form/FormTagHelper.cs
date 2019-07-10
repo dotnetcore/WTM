@@ -120,7 +120,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     }})
   }}
 ");
-            if (OldPost == false)
+            //如果是普通表单并且没有设置oldpost，则使用ajax方式提交
+            //如果普通表单设置了oldpost，则用传统form提交
+            if (OldPost == false && !(this is SearchPanelTagHelper))
             {
                 output.PostElement.AppendHtml($@"
   layui.form.on('submit({Id}filter)', function(data){{
@@ -129,6 +131,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     return false;
   }});
 ");
+            }
+            //如果是SearchPanel，并且指定了oldpost，则提交整个表单，而不是只刷新grid数据
+            if( OldPost == true && this is SearchPanelTagHelper search)
+            {
+                output.PostElement.AppendHtml($@"
+$('#{search.SearchBtnId}').on('click', function () {{
+    if({BeforeSubmit ?? "true"} == false){{return false;}}
+    ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
+    return false;
+  }});
+");
+
             }
             //输出后台返回的错误信息
             if (baseVM?.MSD?.Count > 0)
