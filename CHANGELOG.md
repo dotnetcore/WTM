@@ -7,10 +7,6 @@
 * **修改：** 修改前后端分离模式菜单排序的bug 
 * **修改：** 修改layui模式下，searchpanel中oldpost参数无效的bug 
 
-#### 前后端不分离模式
-* **修改：** 修复Admin中更新用户的bug 
-* **修改：** 修复grid中form控件id的错误
-
 ### v2.2.47 (2019-7-5)
 
 * **新增：** 新增ValidateFormItemOnly属性，可以加在controller的方法上，用来指示框架只验证表单提交的字段
