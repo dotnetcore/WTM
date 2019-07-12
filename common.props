@@ -4,13 +4,13 @@
     <Product>WalkingTec.Mvvm</Product>
     <Authors>Michael,Vito</Authors>
     <Company>Michael,Vito</Company>
-    <Copyright>Copyright © WalkingTec 2018</Copyright>
+    <Copyright>Copyright © WalkingTec 2019</Copyright>
     <PackageId>$(ProjectName)</PackageId>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/WalkingTec/WalkingTec.Mvvm.git</RepositoryUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/WalkingTec/WalkingTec.Mvvm/master/LICENSE</PackageLicenseUrl>
-    <PackageLicense>https://raw.githubusercontent.com/WalkingTec/WalkingTec.Mvvm/master/LICENSE</PackageLicense>
+    <RepositoryUrl>https://github.com/DotNetCore/WTM</RepositoryUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/dotnetcore/WTM/develop/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://raw.githubusercontent.com/dotnetcore/WTM/develop/LICENSE</PackageLicense>
     <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
     <PackageIconUrl>http://imgs.walkingtec.cn/logo.png</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
