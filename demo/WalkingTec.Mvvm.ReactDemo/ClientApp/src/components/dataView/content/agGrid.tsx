@@ -9,18 +9,21 @@
 import { GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import "ag-grid-enterprise";
-import globalConfig from 'global.config';
-// import "./style.scss";
+import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { Pagination } from 'antd';
+import { Icon, Pagination, Switch } from 'antd';
 import { PaginationProps } from 'antd/lib/pagination';
+import globalConfig from 'global.config';
 import lodash from 'lodash';
-import { Debounce, BindAll } from 'lodash-decorators';
+import { BindAll, Debounce } from 'lodash-decorators';
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import Store from 'store/dataSource';
-import { observer } from 'mobx-react';
+import "./style.less";
+import { columnsRenderImg } from './table';
+LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
     Store: Store,
@@ -44,6 +47,18 @@ interface ITableProps extends AgGridReactProps {
      * 加载中
      */
     loading?: boolean;
+    /**
+     * 选择
+     */
+    checkboxSelection?: boolean;
+}
+const frameworkRender = {
+    columnsRenderImg: (props) => {
+        return columnsRenderImg(props.value, props.data)
+    },
+    columnsRenderBoolean: (props) => {
+        return props.value ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />
+    }
 }
 export class AgGrid extends React.Component<ITableProps, any> {
     /**
@@ -52,15 +67,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
     refFullscreen = React.createRef<HTMLDivElement>();
     render() {
         let {
-            // actions,
-            // dropdown,
             ...props
         } = this.props;
         return (
-            // <div className='lenovo-collapse-refFullscreen' ref={this.refFullscreen}>
-            //     {/* <Action actions={actions} dropdown={dropdown} fullscreenBody={() => this.refFullscreen} /> */}
-            //     <Table {...props} />
-            // </div>
             <Table {...props} />
         );
     }
@@ -159,36 +168,58 @@ class Table extends React.Component<ITableProps, any> {
             onGridReady,
             loading,
             defaultColDef,
+            columnDefs,
+            checkboxSelection = true,
+            frameworkComponents,
             // rowData,
             ...props
         } = this.props;
         const { DataSource } = Store;
         const dataSource = DataSource.tableList;
-        const rowData = [...dataSource.Data];
         if (loading) {
             props.rowData = undefined
+        } else {
+            props.rowData = toJS(dataSource.Data);
         }
         return (
             <>
-                <div ref={this.refTableBody} style={{ height: this.state.height, width: '100%', transition: 'all .1s', ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
+                <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
+                    {/* <Spin spinning={loading} > */}
                     <AgGridReact
+                        suppressNoRowsOverlay
+                        suppressLoadingOverlay
                         rowSelection="multiple"
                         {...props}
+                        frameworkComponents={
+                            { ...frameworkRender, ...frameworkComponents }
+                        }
                         defaultColDef={{
-                            sortable: true,
-                            filter: true,
+                            // editable: true,
                             resizable: true,
-                            // autoHeight: true,
-                            ...defaultColDef,
+                            sortable: true,
+                            ...defaultColDef
                         }}
-                        rowData={rowData}
+                        columnDefs={[
+                            checkboxSelection && {
+                                editable: false,
+                                filter: false,
+                                resizable: false,
+                                checkboxSelection: true,
+                                headerCheckboxSelection: true,
+                                width: 45,
+                                maxWidth: 45,
+                                minWidth: 45,
+                                pinned: 'left',
+                            },
+                            ...columnDefs
+                        ].filter(Boolean)}
                         onSelectionChanged={this.onSelectionChanged}
                         onGridReady={event => {
                             onGridReady && onGridReady(event);
                             this.onGridReady(event);
                         }}
                     />
-                    {/* <Spin spinning={true} /> */}
+                    {/* </Spin> */}
                 </div>
                 <Pagination
                     className='ant-table-pagination'

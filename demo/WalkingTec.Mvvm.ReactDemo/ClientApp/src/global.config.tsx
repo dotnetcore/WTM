@@ -31,7 +31,7 @@ class ConfigStore {
     /**
     * 开发环境
     */
-    development = true;
+    development = development;
     /**
      * 默认配置
      */
