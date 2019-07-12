@@ -1,5 +1,6 @@
 ﻿import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
+import { observable, action } from 'mobx';
 @BindAll()
 export class Store extends DataSource {
     constructor() {
@@ -46,6 +47,11 @@ export class Store extends DataSource {
                 }
             }
         });
+    }
+    @observable isAGGrid = false;
+    @action
+    onAGGrid(isAGGrid = !this.isAGGrid) {
+        this.isAGGrid = isAGGrid;
     }
 }
 export default new Store();

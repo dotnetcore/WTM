@@ -5,58 +5,6 @@ import Store from '../store';
 import Action from './action';
 import { Switch, Icon } from 'antd';
 /**
- * 列 信息配置
- * 完整参数列表 https://ant.design/components/table-cn/#components-table-demo-dynamic-settings
- * dataIndex:属性名称 区分大小写
- * title:表格显示的中文标题
- */
-// const columns = [
-
-//     {
-//         dataIndex: "ITCode",
-//         title: "账号",
-//         render: columnsRender
-//     },
-
-//     {
-//         dataIndex: "Name",
-//         title: "姓名",
-//         render: columnsRender
-//     },
-
-//     {
-//         dataIndex: "Sex",
-//         title: "性别",
-//         render: columnsRender
-//     },
-
-//     {
-//         dataIndex: "PhotoId",
-//         title: "照片",
-//         render: columnsRenderImg
-//     },
-
-//     {
-//         dataIndex: "IsValid",
-//         title: "是否有效",
-//         render: columnsRender
-//     },
-
-//     {
-//         dataIndex: "RoleName_view",
-//         title: "角色",
-//         render: columnsRender
-//     },
-
-//     {
-//         dataIndex: "GroupName_view",
-//         title: "用户组",
-//         render: columnsRender
-//     }
-
-// ]
-
-/**
  * 表格
  */
 @DesError
@@ -66,7 +14,7 @@ export default class extends React.Component<any, any> {
             Store={Store}
             columnDefs={[
                 {
-                    headerName: "账号", field: "ITCode", checkboxSelection: true, headerCheckboxSelection: true
+                    headerName: "账号", field: "ITCode",
                 },
                 {
                     headerName: "姓名", field: "Name",
