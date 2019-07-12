@@ -667,24 +667,32 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [Description("设置组合不可重复字段")]
         public void DuplicateTest3()
         {
+            School s = new School { SchoolCode = "s1", SchoolName = "s1", Remark = "r", SchoolType = SchoolTypeEnum.PRI };
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                context.Set<Major>().Add(new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional });
+                context.Set<School>().Add(s);
+                context.SaveChanges();
+                context.Set<OptMajor>().Add(new OptMajor { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Optional,SchoolId = s.ID });
                 context.SaveChanges();
             }
 
-            _majorvm = new MajorVM3();
-            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _majorvm.MSD = new MockMSD();
-            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
-            _majorvm.Validate();
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count == 0);
-            _majorvm.Entity = new Major { MajorCode = "not111", MajorName = "222", MajorType = MajorTypeEnum.Required };
-            _majorvm.Validate();
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorName"].Count == 0);
-            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
-            _majorvm.Validate();
-            Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
+            var OptMajorvm = new MajorVM3();
+            OptMajorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            OptMajorvm.MSD = new MockMSD();
+            OptMajorvm.Entity = new OptMajor { MajorCode = "111", MajorName = "not222", SchoolId=null, MajorType = MajorTypeEnum.Required };
+            OptMajorvm.Validate();
+            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
+
+            OptMajorvm.MSD.Clear();
+            OptMajorvm.Entity = new OptMajor { MajorCode = "not111", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
+            OptMajorvm.Validate();
+            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
+
+            OptMajorvm.MSD.Clear();
+            OptMajorvm.Entity = new OptMajor { MajorCode = "111", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
+            OptMajorvm.Validate();
+            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() > 0);
+
         }
 
         class MajorVM1 : BaseCRUDVM<Major>
@@ -701,11 +709,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 return CreateFieldsInfo(SimpleField(x => x.MajorCode)).AddGroup(SimpleField(x=>x.MajorName));
             }
         }
-        class MajorVM3 : BaseCRUDVM<Major>
+        class MajorVM3 : BaseCRUDVM<OptMajor>
         {
-            public override DuplicatedInfo<Major> SetDuplicatedCheck()
+            public override DuplicatedInfo<OptMajor> SetDuplicatedCheck()
             {
-                return CreateFieldsInfo(SimpleField(x => x.MajorCode),SimpleField(x => x.MajorName));
+                return CreateFieldsInfo(SimpleField(x => x.MajorCode),SimpleField(x => x.SchoolId));
             }
         }
     }
