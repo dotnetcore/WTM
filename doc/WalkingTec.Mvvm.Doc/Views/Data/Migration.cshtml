@@ -26,7 +26,7 @@ public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
         var optionsBuilder = new DbContextOptionsBuilder&lt;DataContext&gt;();
         //使用UseSqlServer，UseMySql，UseNpgsql等指定使用不同的数据库
         optionsBuilder.UseMySql("这里指定完整的连接字符串");
-        return new BloggingContext(optionsBuilder.Options);
+        return new DataContext(optionsBuilder.Options);
     }
 }
 
