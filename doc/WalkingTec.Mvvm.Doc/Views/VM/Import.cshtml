@@ -213,5 +213,7 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
         layui.code({ about: false });
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+            limit: 100 
+        });
     </script>

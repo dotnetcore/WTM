@@ -150,5 +150,7 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
         layui.code({ about: false });
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+            limit: 100 
+        });
     </script>
