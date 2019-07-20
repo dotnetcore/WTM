@@ -137,11 +137,11 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
         <tbody>
             <tr>
                 <td>SetBackGroundFunc</td>
-                <td>设置背景色</td>
+                <td>设置背景色,返回类似FF0000这种格式的字符串代表颜色</td>
             </tr>
             <tr>
                 <td>SetForeGroundFunc</td>
-                <td>设置前景色</td>
+                <td>设置前景色,返回类似FF0000这种格式的字符串代表颜色</td>
             </tr>
             <tr>
                 <td>SetChildren</td>
@@ -551,5 +551,7 @@ private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, obje
         layui.code({ about: false });
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+            limit: 100 
+        });
     </script>

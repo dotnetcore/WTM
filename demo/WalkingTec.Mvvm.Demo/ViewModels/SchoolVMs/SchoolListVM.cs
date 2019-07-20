@@ -26,8 +26,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel),
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
-                      this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入1","", dialogWidth: 800),
-                      this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入2","", dialogWidth: 800),
+                      this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+                      this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                  })
             };
         }
