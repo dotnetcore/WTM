@@ -8,7 +8,8 @@
 // import { IActionProps, Action } from '../action';
 import { GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+// import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { Icon, Pagination, Switch } from 'antd';
@@ -162,7 +163,7 @@ class Table extends React.Component<ITableProps, any> {
             Store,
             paginationProps,
             style,
-            theme = 'ag-theme-balham',
+            theme = 'ag-theme-material',
             className = '',
             children,
             onGridReady,
@@ -186,6 +187,7 @@ class Table extends React.Component<ITableProps, any> {
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
                     {/* <Spin spinning={loading} > */}
                     <AgGridReact
+                        suppressMenuHide
                         suppressNoRowsOverlay
                         suppressLoadingOverlay
                         rowSelection="multiple"
@@ -206,9 +208,9 @@ class Table extends React.Component<ITableProps, any> {
                                 resizable: false,
                                 checkboxSelection: true,
                                 headerCheckboxSelection: true,
-                                width: 45,
-                                maxWidth: 45,
-                                minWidth: 45,
+                                width: 70,
+                                maxWidth: 70,
+                                minWidth: 70,
                                 pinned: 'left',
                             },
                             ...columnDefs
