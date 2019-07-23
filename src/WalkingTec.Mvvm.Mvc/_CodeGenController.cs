@@ -22,6 +22,14 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("配置字段")]
         public IActionResult SetField(CodeGenVM vm)
         {
+            if (vm.SelectedModel != null)
+            {
+                Type modeltype = Type.GetType(vm.SelectedModel);
+                if(modeltype.IsSubclassOf(typeof(TopBasePoco)) == false)
+                {
+                    ModelState.AddModelError("SelectedModel", "所选模型必须继承TopBasePoco基类");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
