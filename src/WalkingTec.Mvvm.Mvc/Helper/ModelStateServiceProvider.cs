@@ -34,6 +34,10 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="errorMessage">错误信息</param>
         public void AddModelError(string key, string errorMessage)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                key = Guid.NewGuid().ToString();
+            }
             _states.AddModelError(key, errorMessage);
         }
 
