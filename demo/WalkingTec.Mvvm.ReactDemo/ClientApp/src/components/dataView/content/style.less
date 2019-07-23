@@ -99,10 +99,55 @@
     }
 }
 
-.lenovo-ag-grid.ag-theme-balham .ag-root {
-    border: none;
+// .lenovo-ag-grid.ag-theme-balham .ag-root {
+//     border: none;
+// }
+
+// .ag-root-wrapper .ag-watermark {
+//     display: none !important;
+// }
+
+body:not(.dark) ::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
 }
 
-.ag-root-wrapper .ag-watermark {
-    display: none !important;
+body:not(.dark) ::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+    border-radius: 10px;
+    background-clip: content-box;
+}
+
+body:not(.dark) ::-webkit-scrollbar-thumb:hover {
+    background-color: #7d7d7d;
+    border-radius: 10px;
+    background-clip: content-box;
+}
+
+body:not(.dark) ::-webkit-scrollbar-thumb:vertical,
+body:not(.dark) ::-webkit-scrollbar-thumb:vertical:hover {
+    border: 3px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+body:not(.dark) ::-webkit-scrollbar-thumb:horizontal,
+body:not(.dark) ::-webkit-scrollbar-thumb:horizontal:hover {
+    border: 3px solid transparent;
+    border-top: 4px solid transparent;
+}
+
+body:not(.dark) ::-webkit-scrollbar-track {
+    background-color: #fafafa;
+}
+
+body:not(.dark) ::-webkit-scrollbar-track:vertical {
+    border-left: 1px solid #e8e8e8;
+}
+
+body:not(.dark) ::-webkit-scrollbar-track:horizontal {
+    border-top: 1px solid #e8e8e8;
+}
+
+body:not(.dark) ::-webkit-scrollbar-corner {
+    background-color: #fafafa;
 }
