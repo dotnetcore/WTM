@@ -56,5 +56,10 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 框架文档地址：http://wtmdoc.walkingtec.cn  文档还在不断完善中。。。
 框架QQ交流群：694148336
 
+
+![WTM框架二维码](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5xOOlS26GZTfk9Hs2uzHiaMXG4df96849seoGFiatGrqODTWPr7SsOqoA/0?wx_fmt=jpeg)
+
+关注WTM微信公众号，及时了解框架更新，公众号还会定期发布视频教程
+
 您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
 
