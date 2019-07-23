@@ -312,6 +312,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;
+                    if(string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                    {
+                        log.Remark = log.Remark.Substring(0, 1000);
+                    }
                     var starttime = context.HttpContext.Items["actionstarttime"] as DateTime?;
                     if (starttime != null)
                     {
