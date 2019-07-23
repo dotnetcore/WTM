@@ -26,7 +26,7 @@ export default class extends React.Component<any, any> {
                     headerName: "照片", field: "PhotoId", cellRenderer: "columnsRenderImg"
                 },
                 {
-                    headerName: "是否有效", field: "IsValid",cellRenderer: "columnsRenderBoolean"
+                    headerName: "是否有效", field: "IsValid", cellRenderer: "columnsRenderBoolean"
                 },
                 {
                     headerName: "角色", field: "RoleName_view",
@@ -34,9 +34,22 @@ export default class extends React.Component<any, any> {
                 {
                     headerName: "用户组", field: "GroupName_view",
                 },
+                // 固定右侧 操作列
+                {
+                    headerName: "Action",
+                    field: "RowAction",
+                    cellRenderer: 'RowAction',
+                    pinned: 'right',
+                    editable: false,
+                    filter: false,
+                }
             ]}
             rowHeight={110}
             frameworkComponents={{
+                /**
+                * 行 动作
+                */
+                RowAction: Action.rowAction,
                 columnsRenderImg: (props) => {
                     return columnsRenderImg(props.value, props.data)
                 },
