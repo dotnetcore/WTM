@@ -532,6 +532,7 @@ namespace WalkingTec.Mvvm.Core
                 if (vm != null)
                 {
                     vm.SetEntity(entity);
+                    vm.ByPassBaseValidation = true;
                     vm.Validate();
                     var basevm = vm as BaseVM;
                     if (basevm?.MSD?.Count > 0)
