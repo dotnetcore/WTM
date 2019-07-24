@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             AllModules = m.ToListItems(y => y.ModuleName, y => y.FullName);
             if (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true)
             {
-                SelectedModule = modules.Where(x => x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.Url == Entity.Url).FirstOrDefault().Module.FullName;
+                SelectedModule = modules.Where(x => x.IsApi == false && (x.ClassName == Entity.ClassName || x.FullName == Entity.ClassName)).SelectMany(x => x.Actions).FirstOrDefault().Module.FullName;
                 var mm = modules.Where(x => x.FullName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
                 AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
                 SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToList();
@@ -157,10 +157,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     List<FrameworkAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
-                    if (mainAction == null)
+                    if (mainAction == null && Entity.ShowOnMenu == true)
                     {
                         MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
                         return;
+                    }
+                    if (mainAction == null && Entity.ShowOnMenu == false)
+                    {
+                        var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                        mainAction = new FrameworkAction();
+                        mainAction.Module = model;
+                        mainAction.MethodName = "Index";
                     }
                     var ndc = DC.ReCreate();
                     var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
@@ -178,7 +185,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
-                    Entity.ClassName = mainAction.Module.FullName;
+                    Entity.ClassName = mainAction.Module.ClassName;
                     Entity.MethodName = "Index";
 
                     otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
@@ -258,27 +265,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     List<FrameworkAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
-                    if (mainAction == null)
+                    if (mainAction == null && Entity.ShowOnMenu == true)
                     {
                         MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
                         return;
                     }
-                    var ndc = DC.ReCreate();
-                    var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
-                    foreach (var oldid in oldIDs)
+                    if(mainAction == null && Entity.ShowOnMenu == false)
                     {
-                        try
-                        {
-                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
-                            ndc.Set<FrameworkMenu>().Attach(fp);
-                            ndc.DeleteEntity(fp);
-                        }
-                        catch { }
+                        var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
+                        mainAction = new FrameworkAction();
+                        mainAction.Module = model;
+                        mainAction.MethodName = "Index";
                     }
-                    ndc.SaveChanges();
-
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
+                    Entity.ClassName = mainAction.Module.ClassName;
+                    Entity.MethodName = "Index";
 
                     otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
                     int order = 1;
