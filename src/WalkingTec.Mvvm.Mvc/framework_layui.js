@@ -158,9 +158,14 @@ window.ff = {
                 }
                 layer.close(index);
             },
-            error: function () {
+            error: function (a,b,c) {
                 layer.close(index);
-                layer.alert('加载失败');
+                if (a.responseText !== undefined && a.responseText !== "") {
+                    layer.alert(a.responseText);
+                }
+                else {
+                    layer.alert('加载失败');
+                }
             },
             complete: function () {
                 if (window.location.hash !== "#" + furl) {
