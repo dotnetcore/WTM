@@ -248,13 +248,13 @@ namespace WalkingTec.Mvvm.Core
                 }
                 entity.ExcelIndex = item.ExcelIndex;
                 var cinfo = this.SetDuplicatedCheck();
-                if (IsUpdateRecordDuplicated(cinfo, entity) == false)
-                {
+                //if (IsUpdateRecordDuplicated(cinfo, entity) == false)
+                //{
                     if (isMainData)
                     {
                         EntityList.Add(entity);
                     }
-                }
+                //}
             }
             isEntityListSet = true;
         }
@@ -562,7 +562,7 @@ namespace WalkingTec.Mvvm.Core
             foreach (var item in EntityList)
             {
                 //根据唯一性的设定查找数据库中是否有同样的数据
-                P exist = IsDuplicateData(item);
+                P exist = IsDuplicateData(item,finalInfo);
                 //如果有重复数据，则进行修改
                 if (exist != null)
                 {
@@ -913,10 +913,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="Entity">要验证的数据</param>
         /// <returns>null代表没有重复</returns>
-        protected P IsDuplicateData(P Entity)
+        protected P IsDuplicateData(P Entity, DuplicatedInfo<P> checkCondition)
         {
             //获取设定的重复字段信息
-            var checkCondition = SetDuplicatedCheck();
             if (checkCondition != null && checkCondition.Groups.Count > 0)
             {
                 //生成基础Query
