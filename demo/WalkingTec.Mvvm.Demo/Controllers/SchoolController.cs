@@ -20,6 +20,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             var vm = CreateVM<SchoolListVM>();
             return PartialView(vm);
         }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public ActionResult Index(SchoolListVM vm)
+        {
+            return PartialView(vm);
+        }
         #endregion
 
 
