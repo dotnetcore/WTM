@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 case CheckBoxTagHelper item:
                     if (string.IsNullOrEmpty(item.ChangeFunc) == false)
                     {
-                        output.PostElement.SetHtmlContent(output.PostElement.GetContent().Replace("type=\"checkbox\" ", $"type=\"checkbox\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
+                        output.PostContent.SetHtmlContent(output.PostContent.GetContent().Replace("type=\"checkbox\" ", $"type=\"checkbox\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
                         output.PostElement.AppendHtml($@"
 <script>
         var form = layui.form;
