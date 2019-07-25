@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         var form = layui.form;
         form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
            {FormatFuncName(item.ChangeFunc)};
-           ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.Name)}');
+           ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "."+ item.LinkField.Name)}');
         }});
 </script>
 ");

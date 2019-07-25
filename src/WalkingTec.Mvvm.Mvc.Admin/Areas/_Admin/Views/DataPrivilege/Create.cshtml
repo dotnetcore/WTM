@@ -42,9 +42,9 @@
     }
     function PriTypeChange(data) {
         selectedtablename = data.value;
-        ff.clearSelector("SelectedItemsID");
+        ff.clearSelector("DataPrivilegeVM_SelectedItemsID");
     }
     function SetTableName() {
-        ff.setSelectorPara("SelectedItemsID", { "Searcher.TableName": selectedtablename})
+        ff.setSelectorPara("DataPrivilegeVM_SelectedItemsID", { "Searcher.TableName": selectedtablename})
     }
 </script>
