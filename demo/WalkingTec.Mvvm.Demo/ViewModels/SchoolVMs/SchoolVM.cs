@@ -13,6 +13,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
     {
         public MajorDetailListVM MajorList { get; set; }
 
+        public int? Slider0 { get; set; }
+        public int? Slider1 { get; set; }
+        public int? Slider2 { get; set; }
+
 
         public SchoolVM()
         {
