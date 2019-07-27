@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (string.IsNullOrEmpty(_id))
                 {
-                    return Utils.GetIdByName(Field.Name) ?? string.Empty;
+                    return Utils.GetIdByName(Field?.ModelExplorer.Container.ModelType.Name+"."+Field.Name) ?? string.Empty;
                 }
                 else
                 {
