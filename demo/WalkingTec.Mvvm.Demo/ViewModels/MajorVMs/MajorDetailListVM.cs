@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         protected override IEnumerable<IGridColumn<Major>> InitGridHeader()
         {          
             return new List<GridColumn<Major>>{
-                this.MakeGridHeader(x => x.MajorCode).SetEditType(EditTypeEnum.TextBox),
+                this.MakeGridHeader(x => x.MajorCode).SetEditType(EditTypeEnum.TextBox).SetShowTotal(),
                 this.MakeGridHeader(x => x.MajorType).SetEditType(EditTypeEnum.ComboBox,typeof(MajorTypeEnum).ToListItems(null,true)),
                 this.MakeGridHeader(x => x.MajorName).SetEditType(EditTypeEnum.TextBox).SetEditType(EditTypeEnum.TextBox),
                this.MakeGridHeaderAction(width: 200)

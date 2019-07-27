@@ -60,41 +60,41 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 HasChild = (x.Children != null && x.Children.Count() > 0) ? true : false
             }).OrderBy(x => x.ExtraOrder).ToList();
 
-            foreach (var item in data2)
-            {
-                if (item.ParentID != null)
-                {
-                    var p = data2.Where(x => x.ID == item.ParentID).SingleOrDefault();
-                    if (p != null)
-                    {
-                        if (p.Children == null)
-                        {
-                            p.Children = new List<FrameworkMenu_ListView>();
-                        }
-                        var t = p.Children.ToList();
-                        t.Add(new FrameworkMenu_ListView
-                            {
-                                ID = item.ID,
-                                PageName = item.PageName,
-                                ModuleName = item.ModuleName,
-                                ActionName = item.ActionName,
-                                ShowOnMenu = item.ShowOnMenu,
-                                FolderOnly = item.FolderOnly,
-                                IsPublic = item.IsPublic,
-                                DisplayOrder = item.DisplayOrder,
-                                ExtraOrder = order++,
-                                ParentID = item.ParentID,
-                                ICon = item.ICon,
-                                CustomICon = item.CustomICon,
-                                HasChild = (item.Children != null && item.Children.Count() > 0) ? true : false
-                            }
-                        );
-                        p.Children = t;
-                    }
-                }
-            }
-            var toremove = data2.Where(x => x.ParentID != null).ToList();
-            toremove.ForEach(x => data2.Remove(x));
+            //foreach (var item in data2)
+            //{
+            //    if (item.ParentID != null)
+            //    {
+            //        var p = data2.Where(x => x.ID == item.ParentID).SingleOrDefault();
+            //        if (p != null)
+            //        {
+            //            if (p.Children == null)
+            //            {
+            //                p.Children = new List<FrameworkMenu_ListView>();
+            //            }
+            //            var t = p.Children.ToList();
+            //            t.Add(new FrameworkMenu_ListView
+            //                {
+            //                    ID = item.ID,
+            //                    PageName = item.PageName,
+            //                    ModuleName = item.ModuleName,
+            //                    ActionName = item.ActionName,
+            //                    ShowOnMenu = item.ShowOnMenu,
+            //                    FolderOnly = item.FolderOnly,
+            //                    IsPublic = item.IsPublic,
+            //                    DisplayOrder = item.DisplayOrder,
+            //                    ExtraOrder = order++,
+            //                    ParentID = item.ParentID,
+            //                    ICon = item.ICon,
+            //                    CustomICon = item.CustomICon,
+            //                    HasChild = (item.Children != null && item.Children.Count() > 0) ? true : false
+            //                }
+            //            );
+            //            p.Children = t;
+            //        }
+            //    }
+            //}
+            //var toremove = data2.Where(x => x.ParentID != null).ToList();
+            //toremove.ForEach(x => data2.Remove(x));
             return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
         }
 
