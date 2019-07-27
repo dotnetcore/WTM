@@ -1,5 +1,5 @@
 
-import { Layout, Tabs } from 'antd';
+import { Layout, Tabs, Skeleton } from 'antd';
 import globalConfig from 'global.config';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -47,7 +47,9 @@ class SwitchPages extends React.Component<any, any> {
   render() {
     return (
       <Content className="app-layout-content" >
-        {this.renderRoutes}
+        <React.Suspense fallback={<Skeleton paragraph={{ rows: 20 }} />}>
+          {this.renderRoutes}
+        </React.Suspense>
       </Content>
     );
   }
@@ -99,7 +101,9 @@ class TabsPages extends React.Component<any, any> {
               key={item.pathname}
               closable={item.closable}
               style={{ height: height }}>
-              {React.createElement(router.component, props)}
+              <React.Suspense fallback={<Skeleton paragraph={{ rows: 20 }} />}>
+                {React.createElement(router.component, props)}
+              </React.Suspense>
             </Tabs.TabPane>
           })}
         </Tabs>
@@ -124,7 +128,6 @@ class TabsPagesStore {
   @action
   pushTabPane(pathname) {
     const router = this.getRoutes(pathname);
-    console.log("TCL: TabsPagesStore -> pushTabPane -> router", pathname, router)
     if (lodash.some(this.tabPane, item => lodash.eq(item.pathname, pathname))) return;
     const menu = lodash.find(Store.Meun.ParallelMenu, ['Url', pathname]);
     const title = lodash.get(menu, 'Text', "Null")

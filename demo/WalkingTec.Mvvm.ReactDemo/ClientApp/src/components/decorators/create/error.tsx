@@ -8,6 +8,7 @@
 import * as React from 'react';
 import lodash from "lodash";
 export function DesError(Component: React.ComponentClass): any {
+    // function <T extends { new(...args: any[]): React.Component<any, any> }>(constructor: T) {
     return class AppError extends Component {
         state = {
             ...this.state,
