@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -136,7 +137,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <para>这是一个非常实用的功能，你的表格内容会因此而丰富多样。</para>
         /// </summary>
         [JsonProperty("templet")]
-        public string Templet { get; set; }
+        public JRaw Templet { get; set; }
 
         /// <summary>
         /// 列宽不可改变 默认false
