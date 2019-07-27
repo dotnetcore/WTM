@@ -296,10 +296,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Align = item.Align,
                     UnResize = item.UnResize,
                     Hide = item.Hide,
-                    ShowTotal = item.ShowTotal,
-                    Templet = string.IsNullOrEmpty(item.Field) ? null : new Newtonsoft.Json.Linq.JRaw(getTemplate(item.Field))
+                    ShowTotal = item.ShowTotal
                     //EditType = item.EditType
                 };
+                if ((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
+                {
+                    tempCol.Templet = new Newtonsoft.Json.Linq.JRaw(getTemplate(item.Field));
+                }
+
                 if (item.ShowTotal == true)
                 {
                     NeedShowTotal = true;
@@ -442,11 +446,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Align = item.Align,
                     UnResize = item.UnResize,
                     Hide = item.Hide,
-                    ShowTotal = item.ShowTotal,
-                    Templet = string.IsNullOrEmpty(item.Field) ? null : new Newtonsoft.Json.Linq.JRaw(getTemplate(item.Field))
+                    ShowTotal = item.ShowTotal
                     //Style = "height:auto !important;white-space:normal !important"
                     //EditType = item.EditType
                 };
+                //非编辑状态且有字段名的情况下，设置template
+                if((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
+                {
+                    tempCol.Templet = new Newtonsoft.Json.Linq.JRaw(getTemplate(item.Field));
+                }
 
                 if (item.ShowTotal == true)
                 {
