@@ -152,6 +152,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         [JsonProperty("style")]
         public string Style { get; set; }
+
+        [JsonProperty("totalRow")]
+        public bool? ShowTotal { get; set; }
+
+        [JsonProperty("totalRowText")]
+        public string TotalRowText { get; set; }
         #endregion
     }
 }

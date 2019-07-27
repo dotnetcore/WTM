@@ -189,5 +189,18 @@ namespace WalkingTec.Mvvm.Core
             self.BackGroundFunc = backGroundFunc;
             return self;
         }
+
+        /// <summary>
+        /// 设置本列是否显示汇总
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="show">是否显示</param>
+        /// <returns></returns>
+        public static GridColumn<T> SetShowTotal<T>(this GridColumn<T> self, bool show = true) where T : TopBasePoco
+        {
+            self.ShowTotal = show;
+            return self;
+        }
     }
 }

@@ -246,6 +246,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public Type VMType { get; set; }
 
         /// <summary>
+        /// 是否显示汇总行
+        /// </summary>
+        public bool NeedShowTotal { get; set; }
+        /// <summary>
         /// 排除的搜索条件
         /// </summary>
         private static readonly string[] _excludeParams = new string[]
@@ -291,9 +295,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Fixed = item.Fixed,
                     Align = item.Align,
                     UnResize = item.UnResize,
-                    Hide = item.Hide
+                    Hide = item.Hide,
+                    ShowTotal = item.ShowTotal
                     //EditType = item.EditType
                 };
+                if(item.ShowTotal == true)
+                {
+                    NeedShowTotal = true;
+                }
                 if (item.Children != null && item.Children.Count() > 0)
                 {
                     tempCol.Colspan = item.ChildrenLength;
@@ -430,9 +439,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Align = item.Align,
                     UnResize = item.UnResize,
                     Hide = item.Hide,
+                    ShowTotal = item.ShowTotal
                     //Style = "height:auto !important;white-space:normal !important"
                     //EditType = item.EditType
                 };
+                if (item.ShowTotal == true)
+                {
+                    NeedShowTotal = true;
+                }
                 switch (item.ColumnType)
                 {
                     case GridColumnTypeEnum.Space:
@@ -459,6 +473,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (nextCols.Count > 0)
             {
                 CalcChildCol(layuiCols, nextCols, maxDepth, 1);
+            }
+
+            if(layuiCols.Count > 0 && layuiCols[0].Count > 0)
+            {
+                layuiCols[0][0].TotalRowText = ListVM?.TotalText;
             }
 
             #endregion
@@ -505,6 +524,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     elem: '#{Id}'
     ,id: '{Id}'
     ,autoSort: false
+    ,totalRow: {NeedShowTotal.ToString().ToLower()}
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}

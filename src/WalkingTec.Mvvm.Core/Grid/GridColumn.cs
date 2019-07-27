@@ -13,6 +13,7 @@ namespace WalkingTec.Mvvm.Core
     /// <typeparam name="T">列表的数据源类</typeparam>
     public class GridColumn<T> : IGridColumn<T> where T : TopBasePoco
     {
+        public bool? ShowTotal { get; set; }
         public GridColumn(Expression<Func<T, object>> columnExp, int? width)
         {
             ColumnExp = columnExp;
