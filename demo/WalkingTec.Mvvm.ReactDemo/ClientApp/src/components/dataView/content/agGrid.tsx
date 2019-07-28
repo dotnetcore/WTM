@@ -79,7 +79,7 @@ const frameworkRender = {
     columnsRenderDownload: (props) => {
         if (props.value) {
             return <div style={{ textAlign: "center" }} >
-                <Button shape="circle" icon="download" onClick={e => {
+                <Button style={{ height: 25, width: 25, objectFit: "cover" }} shape="circle" icon="download" onClick={e => {
                     window.open(RequestFiles.onFileDownload(props.value))
                 }} />
             </div>

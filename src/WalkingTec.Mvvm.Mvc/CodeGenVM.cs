@@ -366,7 +366,7 @@ namespace WalkingTec.Mvvm.Mvc
         name: '{ModuleName.ToLower()}',
         path: '/{ModelName.ToLower()}',
         controller: '{ModelName}',
-        component: () => import('./{ModelName.ToLower()}').then(x => x.default) 
+        component: React.lazy(() => import('./{ModelName.ToLower()}'))
     }}
 /**WTM**/
  ");
@@ -1035,19 +1035,32 @@ namespace WalkingTec.Mvvm.Mvc
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 fieldstr.Append(Environment.NewLine);
                 List<PropertyInfo> existSubPro = new List<PropertyInfo>();
+                int rowheight = 30;
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
                     string label = modelType.GetProperty(item.FieldName).GetPropertyDisplayName();
-                    string render = "columnsRender";
+                    string render = "";
                     string newname = item.FieldName;
+                    if (modelType.GetProperty(item.FieldName).PropertyType.IsBoolOrNullableBool())
+                    {
+                        render = "columnsRenderBoolean";
+                    }
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         string prefix = "";
                         if (subtype == typeof(FileAttachment))
                         {
-                            render = "columnsRenderImg";
+                            if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon"))
+                            {
+                                render = "columnsRenderImg";
+                                rowheight = 110;
+                            }
+                            else
+                            {
+                                render = "columnsRenderDownload";
+                            }
                             var fk = DC.GetFKName2(modelType, item.FieldName);
                             newname = fk;
                         }
@@ -1065,9 +1078,15 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     fieldstr.Append($@"
     {{
-        dataIndex: ""{newname}"",
-        title: ""{label}"",
-        render: {render} 
+        field: ""{newname}"",
+        headerName: ""{label}""");
+
+                    if(render != "")
+                    {
+                        fieldstr.Append($@",
+        cellRenderer: {render} ");
+                    }
+                    fieldstr.Append($@"
     }}");
                     if (i < pros.Count - 1)
                     {
@@ -1075,7 +1094,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     fieldstr.Append(Environment.NewLine);
                 }
-                return rv.Replace("$columns$", fieldstr.ToString());
+                return rv.Replace("$columns$", fieldstr.ToString()).Replace("$rowheight$", rowheight.ToString());
             }
             if (name == "models")
             {

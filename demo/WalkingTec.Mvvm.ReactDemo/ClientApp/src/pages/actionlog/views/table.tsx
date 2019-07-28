@@ -24,7 +24,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         headerName: "操作时间", field: "ActionTime",
     },
     {
-        headerName: "时长", field: "Duration",
+        headerName: "时长", field: "Duration", enableValue: true
     },
     {
         headerName: "IP", field: "IP",
