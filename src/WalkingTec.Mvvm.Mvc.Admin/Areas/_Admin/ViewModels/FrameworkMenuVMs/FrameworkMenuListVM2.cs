@@ -30,6 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         this.MakeGridHeader(x => x.ICon, 100),
                         this.MakeGridHeader(x => x.CustomICon, 100),
                         this.MakeGridHeader(x => x.Children, 100),
+                        this.MakeGridHeader(x=>x.ParentID).SetHide(),
                         this.MakeGridHeaderAction(width: 290)
                     });
             return rv;
