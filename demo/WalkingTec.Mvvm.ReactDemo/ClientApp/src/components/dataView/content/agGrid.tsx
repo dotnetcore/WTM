@@ -84,7 +84,7 @@ const frameworkRender = {
     },
     // 默认
     columnsRenderDefault: (props) => {
-    console.log("TCL: props", props)
+        console.log("TCL: props", props)
         let render = props.value
         // colDef.field
         if (Regular.isHtml.test(props.value)) {
@@ -233,10 +233,20 @@ export class AgGrid extends React.Component<ITableProps, any> {
             props.rowData = toJS(dataSource.Data);
         }
         // 替换默认的渲染器
-        // columnDefs = columnDefs.map((col: ColDef) => {
-        //     col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
-        //     return col
-        // })
+        columnDefs = columnDefs.map((col: ColDef) => {
+            // 根据 数据 定制 样式
+            col.cellStyle = col.cellStyle ||
+                ((props) => {
+                    if (props.data) {
+                        // 前景色
+                        const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
+                        // 背景色
+                        const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
+                        return { color: forecolor, backgroundColor: backcolor }
+                    }
+                })
+            return col
+        })
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>

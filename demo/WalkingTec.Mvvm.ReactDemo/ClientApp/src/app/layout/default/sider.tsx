@@ -83,8 +83,8 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
     }
     const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
     props.selectedKeys.push(lodash.get(find, 'Id', '/'));
-    props.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
     if (props.mode === "inline") {
+      props.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
       props.style.width = Store.Meun.collapsedWidth;
       props.inlineCollapsed = Store.Meun.collapsed
     }
