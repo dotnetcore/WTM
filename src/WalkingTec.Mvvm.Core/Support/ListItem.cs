@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -8,9 +7,30 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public class ComboSelectListItem
     {
+        /// <summary>
+        /// The value to display
+        /// </summary>
         public string Text { get; set; }
+
+
+        /// <summary>
+        /// The value to be submitted
+        /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Whether it is selected
+        /// </summary>
         public bool Selected { get; set; }
+
+        /// <summary>
+        /// Whether it is disabled
+        /// </summary>
+        public bool Disabled { get; set; }
+
+        /// <summary>
+        /// ParentId
+        /// </summary>
         public string ParentId { get; set; }
 
     }

@@ -1,20 +1,23 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
 
 <wt:form vm="@Model">
-  <wt:row>
-    <wt:textbox field="Entity.SchoolCode" />
-    <wt:textbox field="Entity.SchoolName" />
-    <wt:combobox field="Entity.SchoolType" />
-    <wt:richtextbox field="Entity.Remark" height="500" />
-  </wt:row>
-  <wt:row items-per-row=" ItemsPerRowEnum.Three">
-    <wt:slider field="Slider1" field1="Slider2" range="true" value="[20,30]" />
-  </wt:row>
-  <wt:row items-per-row=" ItemsPerRowEnum.Three">
-    <wt:slider field="Slider0" slider-type=" SliderTypeEnum.Vertical" v-slider-height="50" value="20" min="0" max="50" />
-  </wt:row>
-  <wt:row align="AlignEnum.Right">
-    <wt:submitbutton />
-    <wt:closebutton />
-  </wt:row>
+    <wt:row>
+        <wt:textbox field="Entity.SchoolCode" />
+        <wt:textbox field="Entity.SchoolName" />
+        <wt:combobox field="Entity.SchoolType" />
+        <wt:richtextbox field="Entity.Remark" height="500" />
+    </wt:row>
+    <wt:row items-per-row=" ItemsPerRowEnum.Three">
+        <wt:slider field="Slider1" field1="Slider2" range="true" value="[20,30]" />
+    </wt:row>
+    <wt:row items-per-row=" ItemsPerRowEnum.Three">
+        <wt:slider field="Slider0" slider-type=" SliderTypeEnum.Vertical" v-slider-height="50" value="20" min="0" max="50" />
+    </wt:row>
+    <wt:row>
+        <wt:transfer field="SchoolIds" enable-search="true" items="TransferItmes" default-value="['4181ae59-fc98-410c-a420-e223fce5a79b']" />
+    </wt:row>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
 </wt:form>
