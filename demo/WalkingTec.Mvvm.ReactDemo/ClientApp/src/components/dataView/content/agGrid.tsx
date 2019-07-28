@@ -252,7 +252,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         // 前景色
                         const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
                         // 背景色
-                        const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
+                        const backcolor = lodash.get(props.data, props.colDef.field + '__bgcolor');
                         return { color: forecolor, backgroundColor: backcolor }
                     }
                 });
