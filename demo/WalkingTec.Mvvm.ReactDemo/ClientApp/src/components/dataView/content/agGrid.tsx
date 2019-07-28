@@ -10,7 +10,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { Icon, Pagination, Switch } from 'antd';
+import { Icon, Pagination, Switch, Button } from 'antd';
 import { PaginationProps } from 'antd/lib/pagination';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -23,6 +23,8 @@ import Store from 'store/dataSource';
 import localeText from './localeText ';
 import "./style.less";
 import { columnsRenderImg } from './table';
+import RequestFiles from 'utils/RequestFiles';
+import Regular from 'utils/Regular';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
@@ -68,6 +70,33 @@ const frameworkRender = {
     // 布尔
     columnsRenderBoolean: (props) => {
         return props.value ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />
+    },
+    // 下载 
+    columnsRenderDownload: (props) => {
+        if (props.value) {
+            return <div style={{ textAlign: "center" }} >
+                <Button shape="circle" icon="download" onClick={e => {
+                    window.open(RequestFiles.onFileDownload(props.value))
+                }} />
+            </div>
+        }
+        return null
+    },
+    // 默认
+    columnsRenderDefault: (props) => {
+        let render = props.value
+        // colDef.field
+        if (Regular.isHtml.test(props.value)) {
+            render = <span dangerouslySetInnerHTML={{ __html: props.value }}></span>
+        }
+        // 前景色
+        const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
+        // 背景色
+        const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
+        if (forecolor || backcolor) {
+            render = <div style={{ color: forecolor, backgroundColor: backcolor, display: "inline-block" }}>{render}</div>
+        }
+        return render
     }
 }
 // export class AgGrid extends React.Component<ITableProps, any> {
@@ -202,6 +231,11 @@ export class AgGrid extends React.Component<ITableProps, any> {
         } else {
             props.rowData = toJS(dataSource.Data);
         }
+        // 替换默认的渲染器
+        columnDefs = columnDefs.map((col: ColDef) => {
+            col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
+            return col
+        })
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
