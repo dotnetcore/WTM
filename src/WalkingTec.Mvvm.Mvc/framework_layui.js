@@ -134,7 +134,7 @@ window.ff = {
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
                                 ff.triggerResize();
-                                if (xdata.elem.context.attributes !== undefined && xdata.elem.context.attributes !== null) {
+                                if (xdata.elem.context !== undefined && xdata.elem.context.attributes !== undefined && xdata.elem.context.attributes !== null) {
                                     var surl = xdata.elem.context.attributes['lay-id'].value;
                                     if (surl !== undefined && surl !== null && surl !== '') {
                                         DONOTUSE_IGNOREHASH = true;
