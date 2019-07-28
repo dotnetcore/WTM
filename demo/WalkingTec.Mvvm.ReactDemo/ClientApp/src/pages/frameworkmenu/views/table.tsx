@@ -7,9 +7,9 @@ import Store from '../store';
 import Action from './action';
 // 列配置
 const columnDefs: (ColDef | ColGroupDef)[] = [
-    {
-        headerName: "页面名称", field: "PageName"
-    },
+    // {
+    //     headerName: "页面名称", field: "PageName"
+    // },
     {
         headerName: "顺序", field: "DisplayOrder",
     },
@@ -23,6 +23,13 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
 export default class extends React.Component<any, any> {
     render() {
         return <AgGrid
+            treeData
+            groupDefaultExpanded={-1}
+            getDataPath={data => data.treePath}
+            autoGroupColumnDef={{
+                headerName: "页面名称",
+                cellRendererParams: { suppressCount: true }
+            }}
             // 页面状态 
             Store={Store}
             // 列配置
