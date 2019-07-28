@@ -121,6 +121,11 @@ namespace WalkingTec.Mvvm.Core
         bool? Hide { get; set; }
 
         /// <summary>
+        /// 是否显示汇总
+        /// </summary>
+        bool? ShowTotal { get; set; }
+
+        /// <summary>
         /// 子列
         /// </summary>
         IEnumerable<IGridColumn<T>> Children { get; }

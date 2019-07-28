@@ -1,13 +1,10 @@
 ﻿import { Col } from 'antd';
-import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
-import { DesError } from 'components/decorators'; //错误
+import { DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
-import { bool } from 'prop-types';
-import { Help } from 'utils/Help';
 
 @DialogFormDes({
     onFormSubmit(values) {
@@ -51,7 +48,6 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
     // 创建模型
     models = Models.editModels(this.props);
     componentDidMount() {
-        console.log("isall in mount", this.props.form.getFieldValue("IsAll"));
     }
     render() {
         const { form } = this.props;
