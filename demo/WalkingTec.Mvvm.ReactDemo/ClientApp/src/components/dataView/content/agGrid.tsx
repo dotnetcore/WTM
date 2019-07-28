@@ -311,7 +311,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                             ...columnDefs,
                             // 固定右侧 操作列
                             rowAction && {
-                                headerName: "Action",
+                                headerName: "操作",
                                 field: "RowAction",
                                 cellRenderer: 'RowAction',
                                 pinned: 'right',
