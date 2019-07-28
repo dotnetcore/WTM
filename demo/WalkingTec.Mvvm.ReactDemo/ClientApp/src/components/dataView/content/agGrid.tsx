@@ -5,10 +5,8 @@
  * @modify date 2019-06-26 16:55:28
  * @desc [description]
  */
-// import { IActionProps, Action } from '../action';
-import { GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent, ColGroupDef, ColDef } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-// import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
@@ -27,7 +25,15 @@ import { columnsRenderImg } from './table';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
-    Store: Store,
+    Store: Store;
+    /**
+     * 行 操作
+     */
+    rowAction?: React.ReactNode;
+    /**
+     * 行 操作列配置
+     */
+    rowActionCol?: ColDef;
     /**
      * 容器样式
      */
@@ -54,30 +60,32 @@ interface ITableProps extends AgGridReactProps {
     checkboxSelection?: boolean;
 }
 const frameworkRender = {
+    // 图片
     columnsRenderImg: (props) => {
         return columnsRenderImg(props.value, props.data)
     },
+    // 布尔
     columnsRenderBoolean: (props) => {
         return props.value ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />
     }
 }
-export class AgGrid extends React.Component<ITableProps, any> {
-    /**
-     * 全屏 容器
-     */
-    refFullscreen = React.createRef<HTMLDivElement>();
-    render() {
-        let {
-            ...props
-        } = this.props;
-        return (
-            <Table {...props} />
-        );
-    }
-}
+// export class AgGrid extends React.Component<ITableProps, any> {
+//     /**
+//      * 全屏 容器
+//      */
+//     refFullscreen = React.createRef<HTMLDivElement>();
+//     render() {
+//         let {
+//             ...props
+//         } = this.props;
+//         return (
+//             <Table {...props} />
+//         );
+//     }
+// }
 @observer
 @BindAll()
-class Table extends React.Component<ITableProps, any> {
+export class AgGrid extends React.Component<ITableProps, any> {
     gridApi: GridApi;
     // 表格容器
     refTableBody = React.createRef<HTMLDivElement>();
@@ -133,12 +141,21 @@ class Table extends React.Component<ITableProps, any> {
             Limit: pageSize
         });
     }
+    onSortChanged(event: SortChangedEvent) {
+        const SortModel = lodash.head(event.api.getSortModel());
+        this.props.Store.onSearch({
+            SortInfo: SortModel && SortModel.sort && { Direction: lodash.capitalize(SortModel.sort), Property: SortModel.colId },
+            Page: 1,
+            Limit: this.props.Store.DataSource.searchParams.Limit
+        })
+    }
     /**
      * 选择的 行 数据 回调
      * @param event 
      */
     onSelectionChanged(event: SelectionChangedEvent) {
-        console.log("TCL: App -> onSelectionChanged -> event", event.api.getSelectedRows())
+        // console.log("TCL: App -> onSelectionChanged -> event", event.api.getSelectedRows())
+        // event.api.getSelectedNodesById()
         this.props.Store.DataSource.selectedRowKeys = lodash.map(event.api.getSelectedRows(), 'key');
     }
 
@@ -161,6 +178,8 @@ class Table extends React.Component<ITableProps, any> {
     public render() {
         let {
             Store,
+            rowAction,
+            rowActionCol,
             paginationProps,
             style,
             theme = 'ag-theme-material',
@@ -190,15 +209,23 @@ class Table extends React.Component<ITableProps, any> {
                         suppressMenuHide
                         suppressNoRowsOverlay
                         suppressLoadingOverlay
+                        enableRangeSelection
+                        suppressMakeColumnVisibleAfterUnGroup
+                        suppressDragLeaveHidesColumns
                         rowSelection="multiple"
                         {...props}
                         frameworkComponents={
-                            { ...frameworkRender, ...frameworkComponents }
+                            {
+                                RowAction: rowAction,
+                                ...frameworkRender,
+                                ...frameworkComponents,
+                            }
                         }
                         defaultColDef={{
                             // editable: true,
                             resizable: true,
                             sortable: true,
+                            minWidth: 100,
                             ...defaultColDef
                         }}
                         columnDefs={[
@@ -208,14 +235,26 @@ class Table extends React.Component<ITableProps, any> {
                                 resizable: false,
                                 checkboxSelection: true,
                                 headerCheckboxSelection: true,
+                                menuTabs: [],
                                 width: 70,
                                 maxWidth: 70,
                                 minWidth: 70,
                                 pinned: 'left',
                             },
-                            ...columnDefs
+                            ...columnDefs,
+                            // 固定右侧 操作列
+                            rowAction && {
+                                headerName: "Action",
+                                field: "RowAction",
+                                cellRenderer: 'RowAction',
+                                pinned: 'right',
+                                sortable: false,
+                                menuTabs: [],
+                                ...rowActionCol,
+                            }
                         ].filter(Boolean)}
                         onSelectionChanged={this.onSelectionChanged}
+                        onSortChanged={this.onSortChanged}
                         onGridReady={event => {
                             onGridReady && onGridReady(event);
                             this.onGridReady(event);
