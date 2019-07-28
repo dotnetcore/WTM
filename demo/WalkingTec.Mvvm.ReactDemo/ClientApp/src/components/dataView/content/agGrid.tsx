@@ -84,20 +84,23 @@ const frameworkRender = {
     },
     // 默认
     columnsRenderDefault: (props) => {
-        console.log("TCL: props", props)
-        let render = props.value
-        // colDef.field
-        if (Regular.isHtml.test(props.value)) {
-            render = <span dangerouslySetInnerHTML={{ __html: props.value }}></span>
+        if (props.value) {
+            let render = props.value
+            // colDef.field
+            if (Regular.isHtml.test(props.value)) {
+                render = <span dangerouslySetInnerHTML={{ __html: props.value }}></span>
+            }
+            // // 前景色
+            // const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
+            // // 背景色
+            // const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
+            // if (forecolor || backcolor) {
+            //     render = <div style={{ color: forecolor, backgroundColor: backcolor, display: "inline-block" }}>{render}</div>
+            // }
+            return render
+        } else {
+            return ''
         }
-        // 前景色
-        const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
-        // 背景色
-        const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
-        if (forecolor || backcolor) {
-            render = <div style={{ color: forecolor, backgroundColor: backcolor, display: "inline-block" }}>{render}</div>
-        }
-        return render
     }
 }
 // export class AgGrid extends React.Component<ITableProps, any> {
@@ -244,7 +247,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
                         return { color: forecolor, backgroundColor: backcolor }
                     }
-                })
+                });
+            // 渲染器
+            col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
             return col
         })
         return (
