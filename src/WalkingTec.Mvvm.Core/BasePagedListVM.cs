@@ -45,6 +45,8 @@ namespace WalkingTec.Mvvm.Core
         where TSearcher : BaseSearcher
     {
 
+        public string TotalText { get; set; } = "合计：";
+
         public virtual DbCommand GetSearchCommand()
         {
             return null;

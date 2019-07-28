@@ -28,7 +28,7 @@ export declare type ISearchParams = {
   /** 搜索条件 */
   // search?: Object,
   /** 排序 字符 */
-  SortInfo?: string,
+  SortInfo?: any,
   /** 页码 */
   Page?: number,
   /** 条数 */
@@ -198,7 +198,7 @@ class PageObservable {
    * 搜索
    * @param params 
    */
-  onSearch(params) {
+  onSearch(params): Promise<{ Count: number, Data: any[], Page: number, PageCount: number, Limit: number }> {
     params = {
       SortInfo: "",
       Page: 1,
