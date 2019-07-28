@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string NoText { get; set; }
 
         /// <summary>
-        /// 弃用搜索
+        /// 启用搜索
         /// 注意：多选与搜索不能同时启用
         /// </summary>
         public bool EnableSearch { get; set; }

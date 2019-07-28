@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -23,7 +24,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:slider", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class SliderTagHelper : BaseFieldTag
     {
-        protected const string REQUIRED_ATTR_NAME1 = "field,[range=true],field1";
+        private const string REQUIRED_ATTR_NAME1 = "field,[range=true],field1";
         private const string _idPrefix = "_slider";
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 滑块初始值，默认为数字
         /// 若开启了滑块为范围拖拽（即 range: true），则需赋值数组，异表示开始和结尾的区间，如：value: [30, 60]
         /// </summary>
-        public string Value { get; set; }
+        public new string DefaultValue { get; set; }
 
         /// <summary>
         /// 拖动的步长
@@ -123,24 +124,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             string value0 = Field?.Model?.ToString();
             string value1 = Field1?.Model?.ToString();
-            if (string.IsNullOrEmpty(Value))
+            if (string.IsNullOrEmpty(DefaultValue))
             {
                 value0 = Field?.Model == null ? "0" : Field.Model.ToString();
                 value1 = Field1?.Model == null ? "0" : Field1.Model.ToString();
-                Value = Range.HasValue && Range.Value ? $"[{value0},{value1}]" : value0;
+                DefaultValue = Range.HasValue && Range.Value ? $"[{value0},{value1}]" : value0;
             }
             else
             {
-                if (Value.StartsWith('[') && Value.EndsWith(']'))
+                if (DefaultValue.StartsWith('[') && DefaultValue.EndsWith(']'))
                 {
-                    var tmp = Value.TrimStart('[').TrimEnd(']').Replace(" ", string.Empty);
+                    var tmp = DefaultValue.TrimStart('[').TrimEnd(']').Replace(" ", string.Empty);
                     var arr = tmp.Split(",", StringSplitOptions.RemoveEmptyEntries).OrderBy(x => x).ToArray();
                     value0 = arr[0];
                     value1 = arr[1];
                 }
                 else
                 {
-                    value0 = Value;
+                    value0 = DefaultValue;
                 }
             }
 
@@ -160,7 +161,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {(Min == null ? string.Empty : $",min:{Min.Value}")}
         {(Max == null ? string.Empty : $",max:{Max.Value}")}
         {(Range == null ? string.Empty : $",range:{Range.Value.ToString().ToLower()}")}
-        {(Value == null ? string.Empty : $",value:{Value}")}
+        {(DefaultValue == null ? string.Empty : $",value:{DefaultValue}")}
         ,step:{Step}
         ,showstep:{ShowStep.ToString().ToLower()}
         ,tips:{Tips.ToString().ToLower()}
