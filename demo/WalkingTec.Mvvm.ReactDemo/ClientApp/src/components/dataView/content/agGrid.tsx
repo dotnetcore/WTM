@@ -5,7 +5,7 @@
  * @modify date 2019-06-26 16:55:28
  * @desc [description]
  */
-import { GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent, ColGroupDef, ColDef } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { LicenseManager } from 'ag-grid-enterprise';
@@ -20,6 +20,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import Store from 'store/dataSource';
+import localeText from './localeText ';
 import "./style.less";
 import { columnsRenderImg } from './table';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
@@ -206,13 +207,21 @@ export class AgGrid extends React.Component<ITableProps, any> {
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
                     {/* <Spin spinning={loading} > */}
                     <AgGridReact
-                        suppressMenuHide
+                        // 内置 翻译 替换
+                        localeText={localeText}
+                        // suppressMenuHide
+                        // 禁用“加载” 叠加层。
                         suppressNoRowsOverlay
+                        // 禁用“无行” 覆盖。
                         suppressLoadingOverlay
+                        // 设置为true以启用范围选择。
                         enableRangeSelection
-                        suppressMakeColumnVisibleAfterUnGroup
-                        suppressDragLeaveHidesColumns
+                        // suppressMakeColumnVisibleAfterUnGroup
+                        // suppressDragLeaveHidesColumns
                         rowSelection="multiple"
+                        sideBar={{
+                            toolPanels: ["columns"]
+                        }}
                         {...props}
                         frameworkComponents={
                             {
