@@ -62,10 +62,6 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
-                <Checkbox defaultChecked={Store.isAGGrid} onChange={event => {
-                    Store.onAGGrid(event.target.value)
-                }}>使用 AG Grid</Checkbox>
-                <Divider type="vertical" />
                 <Visible visible={onAuthorizeActions(Store, "insert")}>
                     <DialogForm
                         title="新建"

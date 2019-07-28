@@ -48,10 +48,5 @@ export class Store extends DataSource {
             }
         });
     }
-    @observable isAGGrid = false;
-    @action
-    onAGGrid(isAGGrid = !this.isAGGrid) {
-        this.isAGGrid = isAGGrid;
-    }
 }
 export default new Store();
