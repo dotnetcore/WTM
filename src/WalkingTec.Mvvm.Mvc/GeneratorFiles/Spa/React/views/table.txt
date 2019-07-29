@@ -12,7 +12,6 @@ const columnDefs: (ColDef | ColGroupDef)[] = [$columns$
 export default class extends React.Component<any, any> {
     render() {
         return <AgGrid
-            rowGroupPanelShow="always" 
             Store={Store} 
             columnDefs={columnDefs} 
             rowAction={Action.rowAction} 

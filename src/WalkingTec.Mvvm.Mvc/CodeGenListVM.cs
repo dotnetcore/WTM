@@ -41,13 +41,13 @@ namespace WalkingTec.Mvvm.Mvc
 
         private string withHidden(string fieldname, string val)
         {
-            return val + $"<input type=\"hidden\" name=\"{fieldname}\" value=\"{val}\" />";
+            return val + $"<input type='hidden' name='{fieldname}' value='{val}' />";
         }
 
         private string subField(string fieldname, CodeGenListView entity)
         {
-            string rv = $"<input type=\"hidden\" name=\"{fieldname}.RelatedField\" value=\"{entity.LinkedType}\" />";
-            rv += $"<input type=\"hidden\" name=\"{fieldname}.SubIdField\" value=\"{entity.SubIdField}\" />";
+            string rv = $"<input type='hidden' name='{fieldname}.RelatedField' value='{entity.LinkedType}' />";
+            rv += $"<input type='hidden' name='{fieldname}.SubIdField' value='{entity.SubIdField}' />";
             if (string.IsNullOrEmpty(entity.LinkedType) == false)
             {
                 var linktype = Type.GetType(entity.LinkedType);
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 else
                 {
-                    rv += $"<input type=\"hidden\" name=\"{fieldname}.SubField\" value=\"`file\" />";
+                    rv += $"<input type='hidden' name='{fieldname}.SubField' value='`file' />";
                 }
             }
             return rv;
