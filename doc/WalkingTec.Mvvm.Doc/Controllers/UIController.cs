@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Doc.FrameworkUserVms;
 using WalkingTec.Mvvm.Doc.Models;
@@ -114,6 +114,20 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Js()
         {
             return PartialView();
+        }
+
+        [ActionDescription("Transfer")]
+        public IActionResult Transfer()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("Slider")]
+        public IActionResult Slider()
+        {
+            var vm = CreateVM<StudentVm>();
+            return PartialView(vm);
         }
 
         public IActionResult GetSchool(string keywords)
