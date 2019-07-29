@@ -154,7 +154,14 @@ class ConfigStore {
     @persist
     @observable
     staticPage = "@StaticPage";
-
+    /**
+     * AgGrid 主题
+     * ag-theme-balham
+     * ag-theme-material
+     */
+    @persist
+    @observable
+    agGridTheme = "ag-theme-balham";
 }
 const GlobalConfig = new ConfigStore();
 

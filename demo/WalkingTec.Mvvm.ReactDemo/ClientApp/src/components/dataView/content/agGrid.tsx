@@ -7,7 +7,11 @@
  */
 import { ColDef, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+// import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
+// import 'ag-grid-community/dist/styles/ag-theme-blue.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { Icon, Pagination, Switch, Button } from 'antd';
@@ -75,7 +79,7 @@ const frameworkRender = {
     columnsRenderDownload: (props) => {
         if (props.value) {
             return <div style={{ textAlign: "center" }} >
-                <Button shape="circle" icon="download" onClick={e => {
+                <Button style={{ height: 25, width: 25, objectFit: "cover" }} shape="circle" icon="download" onClick={e => {
                     window.open(RequestFiles.onFileDownload(props.value))
                 }} />
             </div>
@@ -216,7 +220,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
             rowActionCol,
             paginationProps,
             style,
-            theme = 'ag-theme-material',
+            theme = globalConfig.agGridTheme,//'ag-theme-balham',
             className = '',
             children,
             onGridReady,
@@ -230,6 +234,10 @@ export class AgGrid extends React.Component<ITableProps, any> {
         } = this.props;
         const { DataSource } = Store;
         const dataSource = DataSource.tableList;
+        const checkboxSelectionWidth = {
+            "ag-theme-balham": 40,
+            "ag-theme-material": 70,
+        }[theme];
         if (loading) {
             props.rowData = undefined
         } else {
@@ -244,7 +252,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         // 前景色
                         const forecolor = lodash.get(props.data, props.colDef.field + '__forecolor');
                         // 背景色
-                        const backcolor = lodash.get(props.data, props.colDef.field + '__backcolor');
+                        const backcolor = lodash.get(props.data, props.colDef.field + '__bgcolor');
                         return { color: forecolor, backgroundColor: backcolor }
                     }
                 });
@@ -295,15 +303,15 @@ export class AgGrid extends React.Component<ITableProps, any> {
                                 checkboxSelection: true,
                                 headerCheckboxSelection: true,
                                 menuTabs: [],
-                                width: 70,
-                                maxWidth: 70,
-                                minWidth: 70,
+                                width: checkboxSelectionWidth,
+                                maxWidth: checkboxSelectionWidth,
+                                minWidth: checkboxSelectionWidth,
                                 pinned: 'left',
                             },
                             ...columnDefs,
                             // 固定右侧 操作列
                             rowAction && {
-                                headerName: "Action",
+                                headerName: "操作",
                                 field: "RowAction",
                                 cellRenderer: 'RowAction',
                                 pinned: 'right',
