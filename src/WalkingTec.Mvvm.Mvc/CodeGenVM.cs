@@ -1084,7 +1084,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if(render != "")
                     {
                         fieldstr.Append($@",
-        cellRenderer: {render} ");
+        cellRenderer: ""{render}"" ");
                     }
                     fieldstr.Append($@"
     }}");
