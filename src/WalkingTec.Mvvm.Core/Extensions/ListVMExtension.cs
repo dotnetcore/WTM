@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 }
                             }
 
-                            //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
+                            //如果列是布尔值，直接返回true或false，让前台生成CheckBox
                             if (ptype == typeof(bool) || ptype == typeof(bool?))
                             {
                                 if (returnColumnObject == false)

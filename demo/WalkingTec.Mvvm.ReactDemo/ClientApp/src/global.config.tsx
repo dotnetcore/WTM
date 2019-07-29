@@ -75,7 +75,7 @@ class ConfigStore {
     /** 列表 行  */
     @persist
     @observable
-    Limit = 20;
+    Limit = 50;
     /** 
      * 详情信息 展示类型 
      */
