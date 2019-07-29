@@ -1,0 +1,215 @@
+﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+<style>
+    .layui-table-cell {
+        height: auto;
+        white-space: normal;
+        word-break: break-all;
+        overflow: hidden;
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="Slider 滑块">
+    <p>Slider的常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'required', width:60}">必填</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td><i class="layui-icon layui-icon-ok"></i></td>
+                <td>绑定字段</td>
+            </tr>
+            <tr>
+                <td>Field1</td>
+                <td><i class="layui-icon layui-icon-ok"></i></td>
+                <td>第二绑定字段，若 Field1 绑定了字段，则认为是范围选择，默认开启了 Layui 的 Range。</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>DefaultValue</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>滑块初始值，默认为数字。若开启了滑块为范围拖拽（即 Field1 绑定到属性上了），则需赋值数组，异表示开始和结尾的区间，如：value: [30, 60]</td>
+            </tr>
+            <tr>
+                <td>SliderType</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>滑块类型，可选值有：default（水平滑块）、vertical（垂直滑块），默认为 default（水平滑块）</td>
+            </tr>
+            <tr>
+                <td>Min</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>滑动条最小值，默认为 0</td>
+            </tr>
+            <tr>
+                <td>Max</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>滑动条最大值，默认为 100</td>
+            </tr>
+            <tr>
+                <td>Step</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>拖动的步长，默认为正整数 1</td>
+            </tr>
+            <tr>
+                <td>ShowStep</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否显示间断点，默认 false</td>
+            </tr>
+            <tr>
+                <td>Tips</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否显示文字提示，默认 true</td>
+            </tr>
+            <tr>
+                <td>Input</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否显示输入框（注意：若 Field1 绑定到属性上了 则强制无效），点击输入框的上下按钮，以及输入任意数字后回车或失去焦点，均可动态改变滑块，默认 false</td>
+            </tr>
+            <tr>
+                <td>SliderHeight</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>滑动条高度，需配合 SliderType:Vertical 参数使用，默认 200</td>
+            </tr>
+            <tr>
+                <td>Theme</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>主题颜色，以便用在不同的主题风格下，默认 #009688</td>
+            </tr>
+            <tr>
+                <td>ChangeFunc</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>
+                    数值改变的回调<br />
+                    在滑块数值被改变时触发。该回调非常重要，可动态获得滑块当前的数值。你可以将得到的数值，赋值给隐藏域，或者进行一些其它操作。<br />
+                    参数：<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value：当前值<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderIns：当前 slider 实例
+                </td>
+            </tr>
+            <tr>
+                <td>OnTipsFunc</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>
+                    当鼠标放在圆点和滑块拖拽时均会触发提示层。<br />
+                    其默认显示的文本是它的对应数值，你也可以自定义提示内容。<br />
+                    参数：<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value：当前值<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sliderIns：当前 slider 实例
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+        <p>Slider</p>
+        <ul class="doc"></ul>
+    </wt:quote>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model">
+                    <wt:row items-per-row="ItemsPerRowEnum.Two">
+                        <wt:slider field="Age1" step="5" show-step="true" input="true" theme="#00FF00" />
+                    </wt:row>
+                    <wt:row items-per-row="ItemsPerRowEnum.Two">
+                        <wt:slider field="StuCount0" field1="StuCount1"
+                                   input="true"
+                                   on-tips-func="onTipsCallback" change-func="onChangeCallback"
+                                   min="10" max="80" default-value="[40,60]" />
+                    </wt:row>
+                    <wt:row items-per-row="ItemsPerRowEnum.One">
+                        <wt:slider field="Age2" slider-type="SliderTypeEnum.Vertical" slider-height="300" input="true" theme="#00FF00" />
+                    </wt:row>
+                    <wt:row items-per-row="ItemsPerRowEnum.Two">
+                        <wt:slider field="StuCount2" field1="StuCount3" theme="#FF0000" />
+                    </wt:row>
+                    <wt:row align="AlignEnum.Right">
+                        <wt:submitbutton disabled="true" />
+                        <wt:closebutton disabled="true" />
+                    </wt:row>
+                </wt:form>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:form vm="@@Model"&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+        &ltwt:slider field="Age1" step="5" show-step="true" input="true" theme="#00FF00" /&gt
+    &lt/wt:row&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+        &ltwt:slider field="StuCount0" field1="StuCount1"
+                    input="true"
+                    on-tips-func="onTipsCallback" change-func="onChangeCallback"
+                    min="10" max="80" default-value="[40,60]" /&gt
+    &lt/wt:row&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.One"&gt
+        &ltwt:slider field="Age2" slider-type="SliderTypeEnum.Vertical" input="true" theme="#00FF00" /&gt
+    &lt/wt:row&gt
+    &ltwt:row items-per-row="ItemsPerRowEnum.Two"&gt
+        &ltwt:slider field="StuCount2" field1="StuCount3" theme="#FF0000" /&gt
+    &lt/wt:row&gt
+    &ltwt:row align="AlignEnum.Right"&gt
+        &ltwt:submitbutton disabled="true" /&gt
+        &ltwt:closebutton disabled="true" /&gt
+    &lt/wt:row&gt
+&lt/wt:form&gt
+&ltscript&gt
+    function onTipsCallback(value, sliderIns) {
+        return '-' + value + '-';
+    }
+    function onChangeCallback(value, sliderIns) {
+        ff.Alert(value[0] + '-' + value[1]);
+    }
+&lt/script&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+
+<script>layui.code({ about: false });
+    layui.table.init('parse-table-demo', {
+        limit: 100
+    });
+    function onTipsCallback(value, sliderIns) {
+        return '-' + value + '-';
+    }
+    function onChangeCallback(value, sliderIns) {
+        ff.Alert(value[0] + '-' + value[1]);
+    }
+</script>
