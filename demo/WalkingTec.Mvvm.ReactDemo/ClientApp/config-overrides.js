@@ -19,9 +19,9 @@ module.exports = (config, env) => {
   // 删除 ForkTsCheckerWebpackPlugin
   lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
   // 暂时 修复 antd Antd Webpack build failing (Can't resolve 'css-animation/es/Event') https://github.com/ant-design/ant-design/issues/17928
-  lodash.update(config, 'resolve.alias', value => {
-    return { ...value, "css-animation/es/Event": "css-animation/dist-src/Event" }
-  })
+  // lodash.update(config, 'resolve.alias', value => {
+  //   return { ...value, "css-animation/es/Event": "css-animation/dist-src/Event" }
+  // })
   // 修改 ts 编译器
   lodash.update(config, 'module.rules[1].oneOf[1]', value => {
     return {
