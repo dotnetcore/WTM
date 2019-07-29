@@ -6,83 +6,104 @@
             <thead>
                 <tr>
                     <th lay-data="{field:'username', width:200}">属性</th>
+                    <th lay-data="{field:'required', width:60}">必填</th>
                     <th lay-data="{field:'joinTime', width:600}">描述</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>Id</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>控件Id，默认根据绑定字段名称生成</td>
                 </tr>
                 <tr>
                     <td>Field</td>
-                    <td>绑定字段，必填</td>
+                    <td><i class="layui-icon layui-icon-ok"></i></td>
+                    <td>绑定字段</td>
                 </tr>
                 <tr>
                     <td>Disabled</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>是否禁用</td>
                 </tr>
                 <tr>
                     <td>Name</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>控件Name，默认根据绑定字段名称生成</td>
                 </tr>
                 <tr>
                     <td>LabelText</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>标签内容</td>
                 </tr>
                 <tr>
                     <td>LabelWidth</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>标签的长度，默认为80</td>
                 </tr>
                 <tr>
                     <td>HideLabel</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>是否隐藏标签</td>
                 </tr>
                 <tr>
                     <td>EmptyText</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>无数据时显示的提示文本</td>
                 </tr>
                 <tr>
                     <td>YesText</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>当绑定字段为布尔类型是，对应true显示的文本，默认为‘是’</td>
                 </tr>
                 <tr>
                     <td>NoText</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>当绑定字段为布尔类型是，对应false显示的文本，默认为‘否’</td>
                 </tr>
                 <tr>
                     <td>Items</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>列表数据源，当绑定字段为布尔或枚举时，框架会自动反射下拉列表，不需要填</td>
                 </tr>
                 <tr>
                     <td>MultiSelect</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>是否开启多选</td>
                 </tr>
                 <tr>
                     <td>EnableSearch</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>开启本地搜索，搜索不能和多选共同使用</td>
                 </tr>
                 <tr>
                     <td>ChangeFunc</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>选择改变后触发的js</td>
                 </tr>
                 <tr>
                     <td>LinkField</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>联动模式，指定需要联动的另一个ComboBox所绑定的字段</td>
                 </tr>
                 <tr>
                     <td>TriggerUrl</td>
+                    <td><i class="layui-icon layui-icon-close"></i></td>
                     <td>联动模式，指定改变选择后调用的url，该url接收一个名为id的参数，并返回text，value数组格式的json</td>
                 </tr>
             </tbody>
         </table>
     <wt:quote>
-        <p>Combobox支持直接绑定枚举，布尔字段，也支持通过Items属性设置数据源，Items需要绑定一个List&lt;ComboSelectListItem&gt;,ComboSelectListItem是框架提供的辅助类，有Text，Value和Selected三个属性</p>
+        <p>
+            Combobox 支持直接绑定枚举，布尔字段，也支持通过 Items 属性设置数据源，Items需要绑定一个List&lt;ComboSelectListItem&gt;,
+            ComboSelectListItem 是框架提供的辅助类，有 Text，Value，Selected 和 Disabled 4个属性，
+            其中 Disabled 目前是专门为 Transfer 组件新增的属性，用于禁用某些特定 Item 的修改。
+        </p>
         <ul class="doc">
-            <li>当绑定枚举字段时，框架自动反射枚举，根据每个枚举值的display属性作为Text，枚举值本身作为Value来生成下拉菜单</li>
-            <li>当绑定布尔字段时，框架根据YesText和NoText的值作为Text，布尔值作为Value来生成下拉菜单，默认true显示‘是’，false显示‘否’</li>
-            <li>当指定了items数据源时，框架使用ComboSelectListItem中的Text属性作为Text，Value属性作为Value来生成下拉菜单</li>
-            <li>items数据源也可以指定为其他类型的List，这种情况下框架会为List中的每一项调用ToString作为下拉菜单的Text和Value</li>
+            <li>当绑定枚举字段时，框架自动反射枚举，根据每个枚举值的 Display 属性作为 Text，枚举值本身作为 Value 来生成下拉菜单</li>
+            <li>当绑定布尔字段时，框架根据 YesTex 和 NoText 的值作为 Text，布尔值作为 Value 来生成下拉菜单，默认 true 显示‘是’，false显示‘否’</li>
+            <li>当指定了 Items 数据源时，框架使用 ComboSelectListItem 中的 Text 属性作为 Text，Value 属性作为 Value 来生成下拉菜单</li>
+            <li>Items 数据源也可以指定为其他类型的List，这种情况下框架会为 List 中的每一项调用 ToString 作为下拉菜单的 Text 和 Value</li>
         </ul>
     </wt:quote>
         <wt:tab>

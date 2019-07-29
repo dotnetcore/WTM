@@ -1,0 +1,174 @@
+﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+
+<style>
+    .layui-table-cell {
+        height: auto;
+        white-space: normal;
+        word-break: break-all;
+        overflow: hidden;
+    }
+</style>
+
+<wt:fieldset field-set-style="Simple" title="Transfer 穿梭框">
+    <p>Transfer的常用属性有：</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'required', width:60}">必填</th>
+                <th lay-data="{field:'joinTime', width:600}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>控件Id，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>Field</td>
+                <td><i class="layui-icon layui-icon-ok"></i></td>
+                <td>绑定字段，必填</td>
+            </tr>
+            <tr>
+                <td>Items</td>
+                <td><i class="layui-icon layui-icon-ok"></i></td>
+                <td>左侧穿梭框数据源</td>
+            </tr>
+            <tr>
+                <td>RightTitle</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>右侧穿梭框上方标题，默认：“已选择”</td>
+            </tr>
+            <tr>
+                <td>Disabled</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否禁用</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>控件Name，默认根据绑定字段名称生成</td>
+            </tr>
+            <tr>
+                <td>LabelText</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>标签内容</td>
+            </tr>
+            <tr>
+                <td>LabelWidth</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>标签的长度，默认为80</td>
+            </tr>
+            <tr>
+                <td>HideLabel</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>是否隐藏标签</td>
+            </tr>
+            <tr>
+                <td>DefaultValue</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>默认选中的值，其优先级高于 Field 所绑定属性的值</td>
+            </tr>
+            <tr>
+                <td>LeftTitle</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>左侧穿梭框上方标题，默认：“待选择”</td>
+            </tr>
+            <tr>
+                <td>EnableSearch</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>开启本地搜索，默认 false</td>
+            </tr>
+            <tr>
+                <td>NonePlaceholder</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>没有数据时的文案，默认：“无数据”</td>
+            </tr>
+            <tr>
+                <td>SearchNonePlaceholder</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>搜索无匹配数据时的文案，默认：“无匹配数据”</td>
+            </tr>
+            <tr>
+                <td>ChangeFunc</td>
+                <td><i class="layui-icon layui-icon-close"></i></td>
+                <td>
+                    当数据在左右穿梭时触发，回调返回当前被穿梭的数据。<br />
+                    参数：<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data：得到当前被穿梭的数据<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index：如果数据来自左边，index 为 0，否则为 1<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transferIns：当前 transfer 实例
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+        <p>
+            Transfer 只支持通过设置 Items 属性设置待选择数据源，Items 需要绑定一个 List&lt;ComboSelectListItem&gt;，
+            ComboSelectListItem 是框架提供的辅助类，有 Text，Value，Selected 和 Disabled 4个属性，
+            其中 Disabled 目前是专门为 Transfer 组件新增的属性，用于禁用某些特定 Item 的修改。
+        <p>
+            <ul class="doc">
+                <li>当指定了 Items数据源时，框架使用 ComboSelectListItem 中的 Text 属性作为 transfer 的 title，Value 属性作为 transfer 的 value 来生成数据；</li>
+                <li>Items 数据源也可以指定为其他类型的 List，这种情况下框架会为 List中 的每一项调用 ToString 作为下拉菜单的 Text 和 Value；</li>
+                <li>当 Field 所绑定的属性有值时，将会自动将 Items 中的选项放置在“已选中”框中。；</li>
+                <li>
+                    DefaultValue 的优先级高于 Field 。所以当设置了 DefaultValue，
+                    则只会自动将 DefaultValue 中的选项放置在“已选中”框中，而忽略 Field 所绑定的属性值。
+                    DefaultValue 一般适用于新建页面，而在修改页面有时候并不适用。
+                </li>
+            </ul>
+    </wt:quote>
+    <wt:tab>
+        <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+        </wt:tabheaders>
+        <wt:tabcontents>
+            <wt:tabcontent>
+                <wt:form vm="@Model" width="600">
+                    <wt:transfer items="AllSchools" field="TransferSelectedSchools"
+                                 left-title="自定义Title1" right-title="自定义Title2"
+                                 none-placeholder="没有选中的数据" disabled="false"
+                                 enable-search="true" search-none-placeholder="没有匹配的数据"
+                                 change-func="onChangeCallback" />
+                    <wt:row align="AlignEnum.Right">
+                        <wt:submitbutton disabled="true" />
+                        <wt:closebutton disabled="true" />
+                    </wt:row>
+                </wt:form>
+            </wt:tabcontent>
+            <wt:tabcontent>
+                <wt:code>
+&ltwt:form vm="@@Model" width="600"&gt
+  &ltwt:transfer items="AllSchools" field="TransferSelectedSchools"
+    left-title="自定义Title1" right-title="自定义Title2"
+    none-placeholder="没有选中的数据" disabled="false"
+    enable-search="true" search-none-placeholder="没有匹配的数据"
+    change-func="onChangeCallback" /&gt
+&ltwt:row align="AlignEnum.Right"&gt
+  &ltwt:submitbutton disabled="true" /&gt
+  &ltwt:closebutton disabled="true" /&gt
+&lt/wt:row&gt
+&lt/wt:form&gt
+&ltscript&gt
+  function onChangeCallback(data, index, transferIns) {
+    ff.Alert((index == 0 ? '左到右：' : '右到左：') + '&ltbr/&gtTitle=' + data[0].title + '&ltbr/&gt Value=' + data[0].value);
+  }
+&lt/script&gt
+                </wt:code>
+            </wt:tabcontent>
+        </wt:tabcontents>
+    </wt:tab>
+</wt:fieldset>
+
+<script>
+    layui.code({ about: false });
+    layui.table.init('parse-table-demo', {
+        limit: 100
+    });
+    function onChangeCallback(data, index, transferIns) {
+        ff.Alert((index == 0 ? '左到右：' : '右到左：') + '<br/>Title=' + data[0].title + '<br/> Value=' + data[0].value);
+    }
+</script>

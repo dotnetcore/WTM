@@ -39,26 +39,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public SliderTypeEnum? SliderType { get; set; }
 
         /// <summary>
-        /// 滑动条最小值，正整数，
+        /// 滑动条最小值
         /// 默认为 0
         /// </summary>
         public int? Min { get; set; }
 
         /// <summary>
-        /// 滑动条最大值，正整数，
+        /// 滑动条最大值
         /// 默认为 100
         /// </summary>
         public int? Max { get; set; }
 
         /// <summary>
-        /// 是否开启滑块的范围拖拽，若设为 true，则滑块将出现两个可拖拽的环，
-        /// 默认false
-        /// </summary>
-        public bool? Range { get; set; }
-
-        /// <summary>
         /// 滑块初始值，默认为数字
-        /// 若开启了滑块为范围拖拽（即 range: true），则需赋值数组，异表示开始和结尾的区间，如：value: [30, 60]
+        /// 若开启了滑块为范围拖拽（即 Field1 绑定到属性上了），则需赋值数组，异表示开始和结尾的区间，如：value: [30, 60]
         /// </summary>
         public new string DefaultValue { get; set; }
 
@@ -81,7 +75,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool Tips { get; set; } = true;
 
         /// <summary>
-        /// 是否显示输入框（注意：若 range 参数为 true 则强制无效） 
+        /// 是否显示输入框（注意：若 Field1 绑定到属性上了 则强制无效） 
         /// 点击输入框的上下按钮，以及输入任意数字后回车或失去焦点，均可动态改变滑块
         /// 默认 false
         /// </summary>
@@ -91,7 +85,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 滑动条高度，需配合 SliderType:Vertical 参数使用
         /// 默认 200
         /// </summary>
-        public int? VSliderHeight { get; set; }
+        public int? SliderHeight { get; set; }
 
         /// <summary>
         /// 主题颜色，以便用在不同的主题风格下
@@ -114,13 +108,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// param1: 当前 slider 实例
         /// </summary>
         public string OnTipsFunc { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("id", $"{_idPrefix}{Id}");
 
-            Range |= Field1 != null;
+            // 是否启用范围选择
+            var range = Field1 != null;
+            Input = !range && Input;
+
+            if (SliderType == SliderTypeEnum.Vertical && Input)
+            {
+                SliderHeight = (SliderHeight ?? 200) + 35;
+                output.Attributes.Add("style", "margin-top: 35px;display: inline-block;");
+            }
 
             string value0 = Field?.Model?.ToString();
             string value1 = Field1?.Model?.ToString();
@@ -128,7 +131,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 value0 = Field?.Model == null ? "0" : Field.Model.ToString();
                 value1 = Field1?.Model == null ? "0" : Field1.Model.ToString();
-                DefaultValue = Range.HasValue && Range.Value ? $"[{value0},{value1}]" : value0;
+                DefaultValue = range ? $"[{value0},{value1}]" : value0;
             }
             else
             {
@@ -151,32 +154,39 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
 ;!function(){{
     var $ = layui.$;
-    function defaultFunc(value,sliderIns) {{
-        {(Range.HasValue && Range.Value ? $"$('input[name=\"{Field.Name}\"]').val(value[0]);$('input[name=\"{Field1.Name}\"]').val(value[1]);" : $"$('input[name=\"{Field.Name}\"]').val(value);")}
-    }}
+    var _id = '{_idPrefix}{Id}';
     var slider = layui.slider;
+    function defaultFunc(value,sliderIns) {{
+        {(range ? $"$('input[name=\"{Field.Name}\"]').val(value[0]);$('input[name=\"{Field1.Name}\"]').val(value[1]);" : $"$('input[name=\"{Field.Name}\"]').val(value);")}
+    }}
     var sliderIns = slider.render({{
-        elem: '#{_idPrefix}{Id}'
+        elem: '#'+_id
         {(SliderType == null ? string.Empty : $",type:'{SliderType.Value.ToString().ToLower()}'")}
         {(Min == null ? string.Empty : $",min:{Min.Value}")}
         {(Max == null ? string.Empty : $",max:{Max.Value}")}
-        {(Range == null ? string.Empty : $",range:{Range.Value.ToString().ToLower()}")}
+        {(!range ? string.Empty : $",range:true")}
         {(DefaultValue == null ? string.Empty : $",value:{DefaultValue}")}
         ,step:{Step}
+        {(!Disabled ? string.Empty : ",disabled:true")}
         ,showstep:{ShowStep.ToString().ToLower()}
         ,tips:{Tips.ToString().ToLower()}
         ,input:{Input.ToString().ToLower()}
-        {(SliderType == null || SliderType.Value == SliderTypeEnum.Default ? string.Empty : (VSliderHeight == null ? ",height:200" : $",height:{VSliderHeight.Value}"))}
+        {(SliderType == null || SliderType.Value == SliderTypeEnum.Default ? string.Empty : (SliderHeight == null ? string.Empty : $",height:{SliderHeight.Value}"))}
         {(string.IsNullOrEmpty(Theme) ? string.Empty : $",theme: '{Theme}'")}
         ,change: function(value){{defaultFunc(value,sliderIns);
         {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(value,sliderIns)")}
         }}
-        {(string.IsNullOrEmpty(OnTipsFunc) ? string.Empty : $",setTips: function(value){{{OnTipsFunc}(value,sliderIns);}}")}
+        {(string.IsNullOrEmpty(OnTipsFunc) ? string.Empty : $",setTips: function(value){{return {OnTipsFunc}(value,sliderIns);}}")}
     }});
-    $('#{_idPrefix}{Id}').attr('style','min-height: 18px;padding-top: 18px;');
+    {
+        (SliderType == SliderTypeEnum.Vertical ?
+            (Input ? "$('#'+_id+' .layui-slider-input').attr('style','right:unset;top:-40px');" : string.Empty) :
+            $"$('#'+_id).attr('style','min-height: 18px;padding-top: 18px;');{(Input ? "$('#'+_id+' .layui-slider-input').attr('style','top:3px;');" : string.Empty)}")
+    }
 }}();
 </script>
 ";
+
             output.PostElement.AppendHtml(content);
             base.Process(context, output);
         }
