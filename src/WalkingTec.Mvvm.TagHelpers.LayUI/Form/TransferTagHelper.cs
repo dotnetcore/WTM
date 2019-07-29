@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -61,8 +63,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string SearchNonePlaceholder { get; set; } = "无匹配数据";
 
         /// <summary>
-        /// 数值改变的回调
-        /// 在滑块数值被改变时触发。该回调非常重要，可动态获得滑块当前的数值。你可以将得到的数值，赋值给隐藏域，或者进行一些其它操作。
+        /// 当数据在左右穿梭时触发，回调返回当前被穿梭的数据
         /// param0: 得到当前被穿梭的数据
         /// param1: 如果数据来自左边，index 为 0，否则为 1
         /// param2: 当前 transfer 实例
@@ -79,6 +80,23 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var modeltype = Field.Metadata.ModelType;
             var listItems = Items?.Model as List<ComboSelectListItem>;
+
+            if (listItems == null)
+            {
+                listItems = new List<ComboSelectListItem>();
+                if (Items.Metadata.ModelType.IsList())
+                {
+                    var exports = (Items.Model as IList);
+                    foreach (var item in exports)
+                    {
+                        listItems.Add(new ComboSelectListItem
+                        {
+                            Text = item?.ToString(),
+                            Value = item?.ToString()
+                        });
+                    }
+                }
+            }
 
             var data = listItems.Select(x => new
             {
@@ -116,11 +134,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     var $ = layui.$;
     var transfer = layui.transfer;
     var name = '{Field.Name}';
-    var container = $('#{_idPrefix}{Id}');
+    var _id = '{_idPrefix}{Id}';
+    var container = $('#'+_id);
     function defaultFunc(data,index,transferIns) {{
         var selectVals = transfer.getData('{Id}');
         // remove old values
-        var inputs = $('#{_idPrefix}{Id} input[name='+name+']')
+        var inputs = $('#'+_id+' input[name='+name+']')
         if(inputs!=null && inputs.length>0){{
             for (var i = 0; i < inputs.length; i++) {{
                 inputs[i].remove();
@@ -131,9 +150,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             container.append('<input type=""hidden"" name=""'+name+'"" value=""'+selectVals[i].value+'""/>');
         }}
     }}
-    var defaultVal = {DefaultValue};
+    var defaultVal = {(string.IsNullOrEmpty(DefaultValue) ? "[]" : DefaultValue)};
     var transferIns = transfer.render({{
-        elem: '#{_idPrefix}{Id}'
+        elem: '#'+_id
         ,title:{title}
         ,data:{JsonConvert.SerializeObject(data, _jsonSerializerSettings)}
         {(string.IsNullOrEmpty(DefaultValue) ? string.Empty : $",value:defaultVal")}
@@ -152,6 +171,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             container.append('<input type=""hidden"" name=""'+name+'"" value=""'+defaultVal[i]+'""/>');
         }}
     }}
+    {(!Disabled?string.Empty: $@"
+        $('#'+_id).find(':checkbox').prop('disabled',true)
+        $('#'+_id).find(':input').prop('disabled',true)
+        transfer.render();")}
 }}();
 </script>
 ";
