@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -28,32 +28,16 @@
     <Content Update="Views\Global\Publish.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="wwwroot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\css\*">
-      <Link>wwwroot\layui\css\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\css\modules\*">
-      <Link>wwwroot\layui\css\modules\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\css\modules\laydate\default\*">
-      <Link>wwwroot\layui\css\modules\laydate\default\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\css\modules\layer\default\*">
-      <Link>wwwroot\layui\css\modules\layer\default\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\font\*">
-      <Link>wwwroot\layui\font\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\images\face\*">
-      <Link>wwwroot\layui\images\face\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\layui\lay\modules\*">
-      <Link>wwwroot\layui\lay\modules\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\*">
-      <Link>wwwroot\%(FileName)%(Extension)</Link>
+    <None Include="..\..\demo\WalkingTec.Mvvm.Demo\wwwroot\**">
+      <Link>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
 </Project>
