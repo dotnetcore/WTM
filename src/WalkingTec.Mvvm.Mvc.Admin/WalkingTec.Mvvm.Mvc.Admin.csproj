@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
-  
+
   <ItemGroup>
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\BatchDelete.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkUser\Create.cshtml" />
@@ -48,7 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App">
+      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />

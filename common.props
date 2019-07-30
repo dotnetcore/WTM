@@ -11,11 +11,11 @@
     <RepositoryUrl>https://github.com/DotNetCore/WTM</RepositoryUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/dotnetcore/WTM/develop/LICENSE</PackageLicenseUrl>
     <PackageLicense>https://raw.githubusercontent.com/dotnetcore/WTM/develop/LICENSE</PackageLicense>
-    <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
-    <PackageIconUrl>http://imgs.walkingtec.cn/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://wtmdoc.walkingtec.cn</PackageProjectUrl>
+    <PackageIconUrl>https://wtmdoc.walkingtec.cn/logo.png</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
+    <PackageReleaseNotes>框架文档地址：https://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
     <PackageOutputPath></PackageOutputPath>
     <IncludeSymbols>false</IncludeSymbols>
     <IncludeSource>false</IncludeSource>
