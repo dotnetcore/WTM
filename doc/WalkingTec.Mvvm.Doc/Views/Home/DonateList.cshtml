@@ -1,0 +1,71 @@
+
+<style>
+    .layui-table-cell {
+        height: auto;
+        white-space: normal;
+        word-break: break-all;
+        overflow: hidden;
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="捐赠名单">
+    <table lay-filter="parse-table-demo" lay-size="lg" lay-even>
+        <thead>
+            <tr>
+                <th lay-data="{field:'username1', width:115}">日期</th>
+                <th lay-data="{field:'username2', width:130}">姓名</th>
+                <th lay-data="{field:'username3', width:115}">金额</th>
+                <th lay-data="{field:'username4', width:60}">来源</th>
+                <th lay-data="{field:'username5', width:600}">留言</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2019-07-30</td>
+                <td>Snappy <sup>2</sup></td>
+                <td>¥66.60</td>
+                <td>微信</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>2019-07-30</td>
+                <td>蜗牛</td>
+                <td>¥99.99</td>
+                <td>微信</td>
+                <td>感谢各位大佬</td>
+            </tr>
+            <tr>
+                <td>2019-07-30</td>
+                <td>super斌</td>
+                <td>¥6.66</td>
+                <td>微信</td>
+                <td>点赞，加油</td>
+            </tr>
+            <tr>
+                <td>2019-07-24</td>
+                <td>勇</td>
+                <td>¥2.22</td>
+                <td>微信</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>2019-04-24</td>
+                <td>Snappy</td>
+                <td>¥100.00</td>
+                <td>QQ</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>2018-10-21</td>
+                <td>新月无眠</td>
+                <td>¥166.00</td>
+                <td>QQ</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</wt:fieldset>
+<script>
+    layui.table.init('parse-table-demo', {
+        limit: 100
+    });
+</script>

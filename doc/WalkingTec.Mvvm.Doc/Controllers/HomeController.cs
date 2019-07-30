@@ -28,5 +28,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return Redirect("/QuickStart/Intro");
         }
+
+        [Public]
+        [ActionDescription("捐赠名单")]
+        public IActionResult DonateList()
+        {
+            return PartialView();
+        }
+
     }
 }
