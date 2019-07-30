@@ -58,6 +58,9 @@
             -ms-flex: auto;
             flex: auto;
         }
+         [lay-skin=primary].layui-form-checkbox span {
+            padding-left:22px !important
+        }   
     </style>
 </head>
 <body class="layui-layout-body">
