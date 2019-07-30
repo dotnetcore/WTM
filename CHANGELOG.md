@@ -182,7 +182,7 @@ https://github.com/dotnetcore/WTM/blob/develop/demo/WalkingTec.Mvvm.Demo/Views/H
 
 #### Features
 
-* **新增：** 新增在线生成项目，http://wtmdoc.walkingtec.cn/setup ，生成WTM项目更快捷
+* **新增：** 新增在线生成项目，https://wtmdoc.walkingtec.cn/setup ，生成WTM项目更快捷
 * **修改：** 进一步完善React的前后端分离模式，当然目前还是预览
 
 ### v2.2.8 (2019-2-24)
