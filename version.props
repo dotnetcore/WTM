@@ -1,19 +1,32 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>2.2.50</VersionPrefix>
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
-    <ProductBuildNumber></ProductBuildNumber>
-    <PackageSuffix></PackageSuffix>
+    <VersionPrefix>2.2.51</VersionPrefix>
+  </PropertyGroup>
 
-    <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
-    <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
-    <Version Condition="'$(VersionSuffix)' != '' AND '$(ProductBuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(ProductBuildNumber)</Version>
-    <Version Condition="'$(VersionSuffix)' != '' AND '$(ProductBuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition="'$(VersionSuffix)' == '' AND '$(ProductBuildNumber)' != ''">$(VersionPrefix)-$(ProductBuildNumber)</Version>
-    <Version Condition="'$(VersionSuffix)' == '' AND '$(ProductBuildNumber)' == ''">$(VersionPrefix)</Version>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <!--
+        -alpha: Alpha 版本，通常用于开发过程和试验。
+        -beta: Beta 版本，通常指可用于下一计划版本的功能完整的版本，但可能包含已知 bug。
+        -rc: 候选发布，通常可能为最终（稳定）版本，除非出现重大 bug。
+    -->
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">alpha</VersionSuffix>
+    <BuildNumber Condition="'$(BuildNumber)' == ''">$([System.DateTime]::Now.DayOfYear)$([System.DateTime]::Now.TimeOfDay.TotalSeconds.ToString("f0"))</BuildNumber>
 
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(PackageSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(PackageSuffix)</PackageVersion>
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(PackageSuffix)' == ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' == ''">$(VersionPrefix)</Version>
+
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' != ''">$(VersionPrefix)</Version>
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)</PackageVersion>
+  </PropertyGroup>
+
 </Project>
