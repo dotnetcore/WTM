@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		QA.md = QA.md
 		README.md = README.md
 		version.props = version.props
+		.editorconfig = .editorconfig
+		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{46CFCDC6-4358-48EB-A901-5618B6530CEE}"
@@ -38,9 +40,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Core.Test",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Admin.Test", "test\WalkingTec.Mvvm.Admin.Test\WalkingTec.Mvvm.Admin.Test.csproj", "{B1A6773F-A9F2-42A6-806C-07B175AF4165}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{FBD4100B-1842-4958-AA53-9011EA9A2FE6}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{3682BA85-1749-4486-B414-40D4E0817875}"
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,14 +82,14 @@ Global
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBD4100B-1842-4958-AA53-9011EA9A2FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBD4100B-1842-4958-AA53-9011EA9A2FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBD4100B-1842-4958-AA53-9011EA9A2FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBD4100B-1842-4958-AA53-9011EA9A2FE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3682BA85-1749-4486-B414-40D4E0817875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3682BA85-1749-4486-B414-40D4E0817875}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3682BA85-1749-4486-B414-40D4E0817875}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3682BA85-1749-4486-B414-40D4E0817875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,8 +103,8 @@ Global
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011} = {8D8985E4-8178-41CA-ADAE-2B239156E820}
 		{72432B21-E5E4-4DD9-B062-8235FBF619D5} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
-		{FBD4100B-1842-4958-AA53-9011EA9A2FE6} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
-		{3682BA85-1749-4486-B414-40D4E0817875} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{ED38FB6B-DDB7-4BA5-A65B-7D16DBE3334B} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{AE103EE4-0F80-4EBA-AE0A-37EE93F58F60} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D25EAAD-E43A-466A-95DA-ECE1F3C462DC}
