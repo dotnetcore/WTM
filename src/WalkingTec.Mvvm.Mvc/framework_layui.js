@@ -427,7 +427,7 @@ window.ff = {
         layer.closeAll();
     },
 
-    LinkedChange: function (url, target) {
+    LinkedChange: function (url, target,targetname) {
         $.get(url, {}, function (data, status) {
             if (status === "success") {
                 var i = 0;
@@ -451,10 +451,10 @@ window.ff = {
                    for ( i = 0; i < data.Data.length; i++) {
                          item = data.Data[i];
                         if (item.Selected === true) {
-                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
+                            $('#' + target).append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
                         }
                         else {
-                            $('#' + target).append("<input type='checkbox' name = '" + target + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                            $('#' + target).append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
                         }
                     }
                    form.render('checkbox');
