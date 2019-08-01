@@ -40,11 +40,12 @@ Header 部分只有一行，包括三个字段：type（必需）、scope（可�
 
 #### type（必需）
 
-`type` 用于描述 `commit` 的类型，只允许如下 8 种类型
+`type` 用于描述 `commit` 的类型，只允许如下 10 种类型
 
 - feature ( 功能的增删改 )
 - fix ( 修复 bug [PS: 修复 bug 的描述中包含 Issue 的 Id,如：Issue #269] )
 - refactor ( 重构，即不是新增功能，也不是修改 bug 的代码变动 )
+- ci ( 针对 CI 配置文件和脚本的更改 )
 - style ( 不影响代码运行的变动，如格式，修改 using 排序 )
 - perf ( performance 缩写，提升性能、优化 )
 - lib ( 升级依赖项，如 .net 平台的 nuget 包，node 的 node_modules 等 )
