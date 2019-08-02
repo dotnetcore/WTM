@@ -10,23 +10,21 @@
         -rc: 候选发布，通常可能为最终（稳定）版本，除非出现重大 bug。
     -->
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">alpha</VersionSuffix>
-    <BuildNumber Condition="'$(BuildNumber)' == ''">$([System.DateTime]::Now.DayOfYear)$([System.DateTime]::Now.TimeOfDay.TotalSeconds.ToString("f0"))</BuildNumber>
 
+    <FileVersion Condition="'$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</FileVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
+
     <Version Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
-    <Version Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</Version>
-    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</Version>
     <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' == ''">$(VersionPrefix)</Version>
 
     <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</PackageVersion>
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' == ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <FileVersion>$(VersionPrefix)</FileVersion>
-    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' != ''">$(VersionPrefix)</Version>
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)</PackageVersion>
+    <Version>$(VersionPrefix)</Version>
+    <PackageVersion>$(VersionPrefix)</PackageVersion>
   </PropertyGroup>
 
 </Project>
