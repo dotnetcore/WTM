@@ -583,6 +583,13 @@ namespace WalkingTec.Mvvm.Mvc
             }, 1800);
         }
 
+        [Public]
+        [ResponseCache(Duration = 3600)]
+        public string Redirect()
+        {
+            return "";
+        }
+
         private class github
         {
             public int stargazers_count { get; set; }
