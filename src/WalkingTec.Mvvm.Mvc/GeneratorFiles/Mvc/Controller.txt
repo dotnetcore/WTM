@@ -138,7 +138,7 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
             }
         }
         #endregion
@@ -162,7 +162,7 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
             }
         }
         #endregion
@@ -185,7 +185,7 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
             }
         }
         #endregion

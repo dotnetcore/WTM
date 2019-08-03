@@ -829,18 +829,57 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                 else if (item.ParameterType == GridActionParameterTypesEnum.RemoveRow) { }
                 else
                 {
+                    string actionScript = "";
+                    if (string.IsNullOrEmpty(item.OnClickFunc))
+                    {
+                        if(item.ShowDialog == true)
+                        {
+                            string width= "null";
+                            string height = "null";
+                            if(item.DialogWidth != null)
+                            {
+                                width = item.DialogWidth.ToString();
+                            }
+                            if(item.DialogHeight != null)
+                            {
+                                height = item.DialogHeight.ToString();
+                            }
+                            if (item.IsRedirect == true)
+                            {
+                                actionScript = $"ff.LoadPage(tempUrl,{item.IsRedirect.ToString().ToLower()},'{item.DialogTitle ?? ""}',isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                            }
+                            else
+                            {
+                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                            }
+                        }
+                        else
+                        {
+                            if(item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel")
+                            {
+                                actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)},ids);";
+                            }
+                            else
+                            {
+                                if (item.IsRedirect == true)
+                                {
+                                    actionScript = $"ff.LoadPage(tempUrl,false,'{item.DialogTitle ?? ""}',isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                }
+                                else
+                                {
+                                    actionScript = $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        actionScript = $"{item.OnClickFunc}();";
+                    }
                     gridBtnEventStrBuilder.Append($@"
 var isPost = false;
 {script}
-{(string.IsNullOrEmpty(item.OnClickFunc) ?
-(item.ShowDialog ?
-    $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{(item.DialogWidth == null ? "null" : item.DialogWidth.ToString())},{(item.DialogHeight == null ? "null" : item.DialogHeight.ToString())},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
-    : (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel" ?
-        $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)},ids);"
-        : $"ff.BgRequest(tempUrl, isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);"
-        )
-)
-: $"{item.OnClickFunc}();")}");
+{actionScript}");
                 }
                 gridBtnEventStrBuilder.Append($@"}};break;
 ");

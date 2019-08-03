@@ -209,14 +209,10 @@ namespace WalkingTec.Mvvm.Core
                 {
                     //如果找不到对应数据，则输出错误
                     TModel entity = null;
+                    entity = DC.Set<TModel>().Find(idsData[i]);
                     if (vm == null)
                     {
-                        entity = DC.Set<TModel>().Find(idsData[i]);
-                    }
-                    else
-                    {
-                        vm.SetEntityById(idsData[i]);
-                        entity = vm.Entity;
+                        vm.SetEntity(entity);
                     }
                     if (entity == null)
                     {
