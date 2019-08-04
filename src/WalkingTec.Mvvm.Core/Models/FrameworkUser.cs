@@ -79,6 +79,7 @@ namespace WalkingTec.Mvvm.Core
         public List<SearchCondition> SearchConditions { get; set; } 
 
         [NotMapped]
+        [Display(Name = "用户")]
         public string CodeAndName
         {
             get
