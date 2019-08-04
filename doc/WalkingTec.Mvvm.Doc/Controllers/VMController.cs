@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +28,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
 
         [ActionDescription("PagedListVM")]
         public IActionResult List()
+        {
+            return PartialView();
+        }
+
+        [ActionDescription("ListVMAction")]
+        public IActionResult ListAction()
         {
             return PartialView();
         }

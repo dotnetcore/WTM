@@ -4,16 +4,16 @@ VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4B8AF76-3B9F-4D3E-BA9B-F5C157F20B25}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		CHANGELOG.md = CHANGELOG.md
 		common.props = common.props
 		deploy.sh = deploy.sh
 		LICENSE = LICENSE
+		NuGet.Config = NuGet.Config
 		QA.md = QA.md
 		README.md = README.md
 		version.props = version.props
-		.editorconfig = .editorconfig
-		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{46CFCDC6-4358-48EB-A901-5618B6530CEE}"
@@ -32,17 +32,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo", "dem
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{8D8985E4-8178-41CA-ADAE-2B239156E820}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Doc", "doc\WalkingTec.Mvvm.Doc\WalkingTec.Mvvm.Doc.csproj", "{685CDB69-B873-45F8-AA41-5CBBDB6AE011}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Doc", "doc\WalkingTec.Mvvm.Doc\WalkingTec.Mvvm.Doc.csproj", "{685CDB69-B873-45F8-AA41-5CBBDB6AE011}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Core.Test", "test\WalkingTec.Mvvm.Core.Test\WalkingTec.Mvvm.Core.Test.csproj", "{72432B21-E5E4-4DD9-B062-8235FBF619D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Admin.Test", "test\WalkingTec.Mvvm.Admin.Test\WalkingTec.Mvvm.Admin.Test.csproj", "{B1A6773F-A9F2-42A6-806C-07B175AF4165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Admin.Test", "test\WalkingTec.Mvvm.Admin.Test\WalkingTec.Mvvm.Admin.Test.csproj", "{B1A6773F-A9F2-42A6-806C-07B175AF4165}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{93064FB9-6CAB-46D0-9F17-154B9517429A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{93064FB9-6CAB-46D0-9F17-154B9517429A}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{D6A25BAD-2519-4594-953D-7A6F1311E5F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{D6A25BAD-2519-4594-953D-7A6F1311E5F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
