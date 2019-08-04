@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -28,9 +28,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
         protected override IEnumerable<IGridColumn<CustomView>> InitGridHeader()
         {
             var header = new List<GridColumn<CustomView>>();
-
-            header.Add(this.MakeGridHeader(x => x.test1, 120));
-            header.Add(this.MakeGridHeader(x => x.test2, 120));
+            var topheader = this.MakeGridHeaderParent("父表头");
+            topheader.SetChildren(
+                this.MakeGridHeader(x => x.test1, 120),
+                this.MakeGridHeader(x => x.test2, 120)
+            );
+            header.Add(topheader);
             header.Add(this.MakeGridHeaderAction(width: 320));
 
             return header;

@@ -38,6 +38,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("ListVMColumn")]
+        public IActionResult ListColumn()
+        {
+            return PartialView();
+        }
+
         [ActionDescription("ImportVM")]
         public IActionResult Import()
         {

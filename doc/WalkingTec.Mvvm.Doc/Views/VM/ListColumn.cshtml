@@ -1,0 +1,242 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>我们通过重写ListVM中的InitGridHeader()方法来定义列表上的列</p>
+<p></p>
+<wt:fieldset field-set-style="Simple" title="复杂表头">
+  <wt:quote>
+    <p>GridColumn可以指定Children，以形成多级表头</p>
+  </wt:quote>
+  <p>以下代码片段展示了多级表头的设置方法</p>
+  <wt:code title="InitGridHeaderInitGridHeader">
+protected override IEnumerable&lt;IGridColumn&lt;CustomView&gt;&gt; InitGridHeader()
+{
+    var header = new List&lt;GridColumn&lt;CustomView&gt;&gt;();
+    var topheader = this.MakeGridHeaderParent("父表头");
+    topheader.SetChildren(
+        this.MakeGridHeader(x =&gt; x.test1, 120),
+        this.MakeGridHeader(x =&gt; x.test2, 120)
+    );
+    header.Add(topheader);
+    header.Add(this.MakeGridHeaderAction(width: 320));
+
+    return header;
+}
+</wt:code>
+    <wt:quote>
+      <p>MakeGridHeaderAction方法输出操作列，就是你在ListVM中定义的那些按钮如果在每行都显示，那就显示在操作列中</p>
+  </wt:quote>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="自定义输出">
+    <p>实际情况中，我们并不总是输出数据库中的原始数据，很多时候我们需要对原有数据进行加工，转换，或者显示数据库中并不存在的新列</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            this.MakeGridHeader(x =&gt x.SchoolCode),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            //内联函数直接返回格式化后的数字
+            this.MakeGridHeader(x =&gt x.Total).SetFormat((entity,v)=&gt { return ((double)v).ToString("f2"); }),
+            //调用方法
+            this.MakeGridHeader(x =&gt x.FullName).SetFormat(TotalFormat),
+            //可以不绑定任何列，直接通过SetFormat输出内容
+            this.MakeGridHeader(null).SetTitle("测试").SetFormat(PhotoIdFormat),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+
+    private string TotalFormat(School_View entity, object val)
+    {
+        return entity.SchoolCode + "," + entity.SchoolName + "," + entity.SchoolType;
+    }
+
+    private List&ltColumnFormatInfo&gt PhotoIdFormat(School_View entity, object val)
+    {
+        return new List&ltColumnFormatInfo&gt
+        {
+            ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
+            ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+        };
+    }
+
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>上面代码中，我们新建了School_View类，用于扩展School来显示模型中并不存在的字段</p>
+    <p>然后我们通过在列上调用SetFormat方法来指定一个函数用于返回这列需要显示的数据</p>
+    <wt:quote>
+      <p>SetFormat函数有两个参数，第一个参数是整行的数据，第二个参数是本列绑定的字段的值</p>
+      <p>SetFormat接受的方法可以直接返回string，也可以返回List&ltColumnFormatInfo&gt</p>
+      <p>ColumnFormatInfo的作用主要是方便我们生成一些按钮显示在列表中，如果返回string的话，比如我们需要根据某列数据生成一个按钮，点击按钮后弹出指定url的窗口，可能需要开发人员编写大量js</p>
+      <p>ColumnFormatInfo提供了很多扩展函数方便开发人员生成各种按钮，比如MakeDialogButton，MakeScriptButton，MakeDownloadButton等</p>
+    </wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="颜色">
+    <p>我们可以控制列表单元格的前景色和背景色</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+    //设置整行的背景色
+    public override string SetFullRowBgColor(object entity)
+    {
+        return "FF0000";
+    }
+    //设置整行的前景色
+    public override string SetFullRowColor(object entity)
+    {
+        return "FF0000";
+    }
+
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            //设置单元格前景色为红色
+            this.MakeGridHeader(x =&gt x.SchoolCode).SetForeGroundFunc((entity)=&gt "ff0000"),
+            //设置单元格背景色为绿色
+            this.MakeGridHeader(x =&gt x.SchoolName).SetBackGroundFunc((entity)=&gt "00ff00"),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            //根据当前行的数据，返回不同的颜色
+            this.MakeGridHeader(x =&gt x.Total).SetForeGroundFunc((entity)=> {
+                if(entity.Total <= 1)
+                {
+                    return "008000";
+                }
+                else if(entity.Total <= 3)
+                {
+                    return "FFC90E";
+                }
+                else
+                {
+                    return "FF0000";
+                }
+            }),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>我们通过在列上调用SetForeGroundFunc和SetBackGroundFunc方法来指定单元格的前景色和背景色</p>
+    <p>我们通过重写ListVM中的SetFullRowColor和SetFullRowBgColor方法来指定整行的前景色和背景色</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="排序和汇总">
+    <p>我们可以设置某列允许排序和汇总</p>
+    <p>请看下面的例子</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            //指定本列可以排序
+            this.MakeGridHeader(x =&gt x.SchoolCode).SetSort(true),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            //指定本列显示汇总
+            this.MakeGridHeader(x =&gt x.Total).SetShowTotal(true),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>我们通过在列上调用SetSort方法设置改列可以排序</p>
+    <p>我们通过在列上调用SetShowTotal方法设置改列需要显示汇总</p>
+      <wt:quote>
+        <p>可以排序的字段在前台列头上会出现排序按钮，排序是自动的，框架会自动获得排序信息并更新你的查询语句，目前只支持单列排序</p>
+        <p>汇总只能设置在数字格式的字段上，其他格式的列设置无效</p>
+    </wt:quote>
+
+</wt:fieldset>
+
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+            limit: 100 
+        });
+    </script>

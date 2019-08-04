@@ -1,0 +1,123 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>我们通过重写ListVM中的InitGridAction()方法来定义列表上的功能按钮</p>
+<p></p>
+<wt:fieldset field-set-style="Simple" title="功能按钮的行为">
+  <wt:quote>
+    <p>通过ShowDialog和IsDirect两个属性的组合可以控制点击按钮后如何展示页面</p>
+    <p>通过ShowInRow和HideOnToolBar来控制按钮显示在列表上方还是每行都显示</p>
+  </wt:quote>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">属性</th>
+        <th lay-data="{field:'joinTime', width:400}">行为</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>IsRedirect=false,ShowDialog=true</td>
+        <td>弹出模式对话框展现页面</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=false,ShowDialog=false</td>
+        <td>不弹出任何页面，只是在后台调用方法并执行方法返回的js</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=true,ShowDialog=true</td>
+        <td>打开新的浏览器窗口显示页面</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=true,ShowDialog=false</td>
+        <td>在当前页或者显示页面，如果是Tab模式则在新Tab页上显示</td>
+      </tr>
+      <tr>
+        <td>OnClickScript</td>
+        <td>如果设置了OnClickScript，则框架运行指定的js方法</td>
+      </tr>
+      <tr>
+        <td>ShowInRow=true</td>
+        <td>按钮在每行的操作列上都显示</td>
+      </tr>
+      <tr>
+        <td>HideOnToolBar=true</td>
+        <td>按钮不在列表上方显示</td>
+      </tr>
+    </tbody>
+  </table>
+  <wt:quote>列表按钮的默认行为显示在列表上方，点击后弹出模式对话框显示页面</wt:quote>
+  <p>以下代码片段展示了按钮的多种设置方法</p>
+  <wt:code title="InitGridAction">
+protected override List&lt;GridAction&gt; InitGridAction()
+{
+    var actions = new List&lt;GridAction&gt;
+  {
+    //调用页面上的名为test()的js方法
+    this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
+    //默认弹出对话框，并在每行显示按钮
+    this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowInRow(true).SetQueryString("a=1"),
+    //设置IsRedirect和ShowDialog为true，弹出新浏览器窗口，并在每行显示按钮
+    this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
+    //设置IsRedirect为true，ShowDialog为false，在本窗口或tab页上显示，并在每行显示按钮
+    this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
+  };
+  return actions;
+}
+</wt:code>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="功能按钮获取列表数据">
+  <wt:quote>
+    <p>在调用MakeAction方法时，通过GridActionParameterTypesEnum来设定按钮是否需要列表数据</p>
+  </wt:quote>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">属性</th>
+        <th lay-data="{field:'joinTime', width:450}">描述</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GridActionParameterTypesEnum.NoId</td>
+        <td>点击按钮时不需要获取列表数据的id，比如新建按钮</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.SingleId</td>
+        <td>按钮会获取勾选的一行数据的id调用新方法，比如修改按钮</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.MultiIds</td>
+        <td>按钮会获取勾选的多行数据的id调用新方法，比如批量修改，批量删除</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.SingleIdWithNull</td>
+        <td>可以勾选一行，也可以不选</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.MultiIdWithNull</td>
+        <td>可以勾选多行，也可以不选</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.AddRow</td>
+        <td>用于可编辑列表中添加一行</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.RemoveRow</td>
+        <td>用于可编辑列表中删除一行</td>
+      </tr>
+    </tbody>
+  </table>
+  </wt:fieldset>
+    <script>
+        layui.code({ about: false });
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+            limit: 100 
+        });
+    </script>
