@@ -418,6 +418,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Type = LayuiColumnTypeEnum.Checkbox,
                     LAY_CHECKED = CheckedAll,
                     Rowspan = maxDepth,
+                    // Fixed = GridColumnFixedEnum.Left,
                     Width = 45
                 };
                 tempCols.Add(checkboxHeader);
@@ -429,6 +430,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Type = LayuiColumnTypeEnum.Numbers,
                     Rowspan = maxDepth,
+                    // Fixed = GridColumnFixedEnum.Left,
                     Width = 45
                 };
                 tempCols.Add(gridIndex);
@@ -451,7 +453,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     //EditType = item.EditType
                 };
                 //非编辑状态且有字段名的情况下，设置template
-                if((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
+                if ((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
                 {
                     tempCol.Templet = new Newtonsoft.Json.Linq.JRaw(getTemplate(item.Field));
                 }
@@ -565,8 +567,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
 
   {TableJSVar} = table.render({Id}option);
-  
- {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}  
+
+ {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
 
 
   // 监听工具条
@@ -593,7 +595,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
   table.reload('{Id}', {{
     initSort: obj,
-    where: w   
+    where: w
   }});
   }});
 </script>
@@ -721,16 +723,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if (!toolBarBtnStrBuilder.ToString().Contains("layui.use(["))
                         {
                             toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"">layui.use([""form""], function () {{
-                            var form = layui.form, $ = layui.jquery; 
+                            var form = layui.form, $ = layui.jquery;
                             $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
                                 $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
                                 $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
                                             e.stopPropagation();
                                         }});
-                            $(document).click(function(event) {{ 
+                            $(document).click(function(event) {{
                             var _con2 = $("".downpanel"");
                             if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
-                            _con2.removeClass(""layui -form-selected""); 
+                            _con2.removeClass(""layui -form-selected"");
                             }}
                             }});
                             }});</script>");
@@ -849,7 +851,6 @@ var isPost = false;
 
         private string getTemplate(string field)
         {
-
             return $@"function(d){{
                 var sty = '';var bg = '';var did = '{field}_'+d.LAY_INDEX;if(d.{field}__bgcolor != undefined) bg = ""<script>$('#""+did+""').closest('td').css('background-color','""+d.{field}__bgcolor+""');</s""+""cript>""; if(d.{field}__forecolor != undefined) sty = 'color:'+d.{field}__forecolor+';'; return '<div style=""'+sty+'"" id=""'+did+'"">'+d.{field}.replace(/\""/g,""'"")+bg+'</div>';
             }}
