@@ -18,15 +18,12 @@
     <p>但是WTM框架支持SqlServer，MySql，PgSql等多种数据库，通过配置文件来决定使用哪种，而EF是不知道应该去哪里找的</p>
     <p>这种情况下，我们可以使用Design-time DbContext来手工指定需要同步的数据库，具体可以参考<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dbcontext-creation">微软文档</a></p>
     <p>简单来说，就是在代码中创建一个继承IDesignTimeDbContextFactory的类，例如：</p>
-        <wt:code title="DataContextFactory.cs">
+    <wt:code title="DataContextFactory.cs">
 public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
 {
     public DataContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder&lt;DataContext&gt;();
-        //使用UseSqlServer，UseMySql，UseNpgsql等指定使用不同的数据库
-        optionsBuilder.UseMySql("这里指定完整的连接字符串");
-        return new DataContext(optionsBuilder.Options);
+        return new DataContext("你的完整连接字符串",DBTypeEnum.SqlServer);
     }
 }
 
