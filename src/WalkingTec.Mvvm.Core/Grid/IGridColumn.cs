@@ -156,6 +156,11 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         IEnumerable<IGridColumn<T>> BottomChildren { get; }
 
+        /// <summary>
+        /// 最大深度
+        /// </summary>
+        int MaxDepth { get; }
+
         #endregion
 
 
