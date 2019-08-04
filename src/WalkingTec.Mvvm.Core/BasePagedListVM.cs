@@ -52,11 +52,22 @@ namespace WalkingTec.Mvvm.Core
             return null;
         }
 
+        private int? _childrenDepth;
+
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        public int ChildrenDepth { get; set; }
-
+        public int ChildrenDepth
+        {
+            get
+            {
+                if (_childrenDepth == null)
+                {
+                    _childrenDepth = _getHeaderDepth();
+                }
+                return _childrenDepth.Value;
+            }
+        }
 
         /// <summary>
         /// GridHeaders
@@ -76,7 +87,17 @@ namespace WalkingTec.Mvvm.Core
             return GridHeaders;
         }
 
+        /// <summary>
+        /// 计算多级表头深度
+        /// </summary>
+        /// <returns></returns>
+        private int _getHeaderDepth()
+        {
+            IEnumerable<IGridColumn<TModel>> headers = GetHeaders();
+            return headers.Max(x => x.MaxDepth);
+        }
         private List<GridAction> _gridActions;
+
         /// <summary>
         /// 页面动作
         /// </summary>
@@ -169,7 +190,7 @@ namespace WalkingTec.Mvvm.Core
                 var dr = sheets[sheetindex].CreateRow(rowIndex - sheetindex * 60000) as HSSFRow;
                 foreach (var baseCol in GridHeaders)
                 {
-                    //处理枚举变量的多语言 
+                    //处理枚举变量的多语言
                     bool IsEmunBoolParp = false;
                     var proType = baseCol.FieldType;
                     if (proType.IsEnumOrNullableEnum())
@@ -183,7 +204,7 @@ namespace WalkingTec.Mvvm.Core
                         //获取数据，并过滤特殊字符
                         string text = Regex.Replace(col.GetText(row).ToString(), @"<[^>]*>", String.Empty);
 
-                        //处理枚举变量的多语言 
+                        //处理枚举变量的多语言
 
                         if (IsEmunBoolParp)
                         {
