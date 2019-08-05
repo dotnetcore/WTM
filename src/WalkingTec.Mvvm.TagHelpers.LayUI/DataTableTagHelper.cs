@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -668,31 +668,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 if (!item.HideOnToolBar)
                 {
                     var icon = string.Empty;
-                    switch (item.ActionName)
+                    if (item.IconCls?.StartsWith("layui-icon-") == true)
                     {
-                        case "Create":
-                            icon = @"<i class=""layui-icon"">&#xe654;</i>";
-                            break;
-                        case "Delete":
-                        case "BatchDelete":
-                            icon = @"<i class=""layui-icon"">&#xe640;</i>";
-                            break;
-                        case "Edit":
-                        case "BatchEdit":
-                            icon = @"<i class=""layui-icon"">&#xe642;</i>";
-                            break;
-                        case "Details":
-                            icon = @"<i class=""layui-icon"">&#xe60e;</i>";
-                            break;
-                        case "Import":
-                            icon = @"<i class=""layui-icon"">&#xe630;</i>";
-                            break;
-                        case "GetExportExcel":
-                            icon = @"<i class=""layui-icon"">&#xe62d;</i>";
-                            break;
-                        case "ActionsGroup":
-                            //icon = @"<i class=""layui-icon"">&#xe62d;</i>";
-                            break;
+                        icon = $@"<i class=""layui-icon {item.IconCls}""></i>";
+                    }
+                    else
+                    {
+                        icon = $@"<i class=""{item.IconCls}""></i>";
                     }
                     //如果是按钮组容器，加载子按钮
                     if (item.ActionName?.Equals("ActionsGroup") == true
