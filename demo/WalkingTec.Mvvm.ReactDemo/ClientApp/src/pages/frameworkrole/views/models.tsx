@@ -1,10 +1,8 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmEditTable } from 'components/form';
+﻿import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
-import * as React from 'react';
+import { WtmCheckbox, WtmEditTable } from 'components/form';
 import lodash from 'lodash';
-import Regular from 'utils/Regular';
-import Request from 'utils/Request';
+import * as React from 'react';
 
 /**
  * label  标识
@@ -19,19 +17,19 @@ export default {
     editModels(props?): WTM.FormItem {
         return {
             /** 角色编号 */
-            "Entity.RoleCode":{
+            "Entity.RoleCode": {
                 label: "角色编号",
                 rules: [{ "required": true, "message": "角色编号不能为空" }],
                 formItem: <Input placeholder="请输入 角色编号" />
             },
             /** 角色名称 */
-            "Entity.RoleName":{
+            "Entity.RoleName": {
                 label: "角色名称",
                 rules: [{ "required": true, "message": "角色名称不能为空" }],
                 formItem: <Input placeholder="请输入 角色名称" />
             },
             /** 备注 */
-            "Entity.RoleRemark":{
+            "Entity.RoleRemark": {
                 label: "备注",
                 rules: [],
                 formItem: <Input placeholder="请输入 备注" />
@@ -46,13 +44,13 @@ export default {
     searchModels(props?): WTM.FormItem {
         return {
             /** 角色编号 */
-            "RoleCode":{
+            "RoleCode": {
                 label: "角色编号",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 角色名称 */
-            "RoleName":{
+            "RoleName": {
                 label: "角色名称",
                 rules: [],
                 formItem: <Input placeholder="" />
@@ -68,7 +66,7 @@ export default {
                 label: "角色编号",
                 rules: [{ "required": true, "message": "角色编号不能为空" }],
                 formItem: <Input placeholder="请输入 角色编号" />,
-                formItemProps: { display:true }
+                formItemProps: { display: true }
             },
             /** 角色名称 */
             "Entity.RoleName": {
@@ -83,7 +81,7 @@ export default {
                 rules: [],
                 formItem: (props) => {
                     console.log(props)
-                    return <WtmEditTable 
+                    return <WtmEditTable
                         rowKey="ID"
                         models={{
                             "Name": {
@@ -92,7 +90,7 @@ export default {
                                 formItem: (props) => {
                                     var m = props.defaultValues.Level * 20;
                                     const style = {
-                                        marginLeft: m+'px'
+                                        marginLeft: m + 'px'
                                     };
                                     return <span style={style}>{props.defaultValues.Name}</span>
                                 }
@@ -105,15 +103,15 @@ export default {
                                         return <span></span>;
                                     }
                                     else {
-                                        return <WtmCheckbox placeholder="选择动作" multiple
+                                        return <WtmCheckbox placeholder="选择动作"
                                             dataSource={props.defaultValues.AllActions}
                                         />
                                     }
                                 }
                             }
                         }}
-                         addButton={false}
-                         deleteButton={false}
+                        addButton={false}
+                        deleteButton={false}
                         setValues={{ abcd: 1234 }}
                     />
                 }

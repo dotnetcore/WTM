@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "ag-grid-community": "^21.1.0",
-    "ag-grid-enterprise": "^21.1.0",
+    "ag-grid-community": "^21.1.1",
+    "ag-grid-enterprise": "^21.1.1",
     "ag-grid-react": "^21.1.0",
-    "antd": "3.20.7",
+    "antd": "3.21.2",
     "braft-editor": "^2.3.7",
     "core-js": "^3.1.4",
     "echarts": "^4.2.1",
@@ -36,6 +35,9 @@
     "test": "react-scripts test",
     "init": "yarn install",
     "clean": "rimraf node_modules package-lock.json yarn.lock",
+    "merge_to_dev": " git checkout develop && npm run merge_react && git checkout feature/React",
+    "merge_react": "git pull && git merge feature/React --no-edit ",
+    "merge_dev": "git pull && git merge develop --no-edit ",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -54,20 +56,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.4.5",
-    "@types/jest": "24.0.13",
-    "@types/lodash": "^4.14.129",
-    "@types/node": "^12.0.2",
-    "@types/react": "16.8.17",
-    "@types/react-dom": "16.8.4",
+    "@types/jest": "24.0.16",
+    "@types/lodash": "^4.14.136",
+    "@types/node": "^12.6.9",
+    "@types/react": "16.8.24",
+    "@types/react-dom": "16.8.5",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "8.0.5",
-    "cache-loader": "^4.0.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
-    "react-app-rewired": "^2.1.3",
+    "mockjs": "^1.0.0",
+    "react-app-rewired": "2.1.3",
     "react-scripts": "3.0.1",
     "typescript": "3.5.3",
-    "webpack-bundle-analyzer": "^3.3.2"
+    "webpack-bundle-analyzer": "^3.4.1"
   }
 }

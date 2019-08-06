@@ -5,7 +5,7 @@
  * @modify date 2018-07-24 05:02:33
  * @desc [description]
  */
-import { LocaleProvider } from 'antd';
+import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -15,11 +15,11 @@ import routes from './router';
 export default class RootRoutes extends React.Component<any, any> {
     render() {
         return (
-            <LocaleProvider locale={zhCN}>
+            <ConfigProvider locale={zhCN}>
                 <BrowserRouter >
                     {routes}
                 </BrowserRouter>
-            </LocaleProvider>
+            </ConfigProvider>
         );
     }
 
