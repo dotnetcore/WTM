@@ -6,9 +6,36 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
-
+/**
+ * 转换表单中的 UserRoles和UserGroups为对象数组
+ * @param values 
+ */
+function toUpdateUserRGs(values) {
+    values = lodash.update(values, 'Entity.UserRoles', data => {
+        return data && data.map(role => {
+            if (lodash.isString(role)) {
+                role = {
+                    RoleId: role
+                }
+            }
+            return role
+        });
+    })
+    values = lodash.update(values, 'Entity.UserGroups', data => {
+        return data && data.map(group => {
+            if (lodash.isString(group)) {
+                group = {
+                    GroupId: group
+                }
+            }
+            return group
+        })
+    })
+    return values
+}
 @DialogFormDes({
     onFormSubmit(values) {
+        values = toUpdateUserRGs(values)
         return Store.onInsert(values)
     }
 })
@@ -21,25 +48,25 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.ITCode" />
-                <FormItem {...props} fieId="Entity.Password" />
-                <FormItem {...props} fieId="Entity.Email" />
-                <FormItem {...props} fieId="Entity.Name" />
-                <FormItem {...props} fieId="Entity.Sex" />
-                <FormItem {...props} fieId="Entity.CellPhone" />
-                <FormItem {...props} fieId="Entity.HomePhone" />
-                <FormItem {...props} fieId="Entity.Address" />
-                <FormItem {...props} fieId="Entity.ZipCode" />
-                <FormItem {...props} fieId="Entity.PhotoId" />
-                <FormItem {...props} fieId="Entity.IsValid" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
-                </Col>
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.Password" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <FormItem {...props} fieId="Entity.IsValid" />
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
+            </Col>
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
+            </Col>
 
-            </InfoShellLayout>        
+        </InfoShellLayout>
     }
 }
 /**
@@ -47,6 +74,7 @@ export class InsertForm extends React.Component<any, any> {
  */
 @DialogFormDes({
     onFormSubmit(values) {
+        values = toUpdateUserRGs(values)
         return Store.onUpdate(values)
     },
     onLoadData(values, props) {
@@ -64,23 +92,23 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-       return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.ITCode"  />
-                <FormItem {...props} fieId="Entity.Email" />
-                <FormItem {...props} fieId="Entity.Name" />
-                <FormItem {...props} fieId="Entity.Sex" />
-                <FormItem {...props} fieId="Entity.CellPhone" />
-                <FormItem {...props} fieId="Entity.HomePhone" />
-                <FormItem {...props} fieId="Entity.Address" />
-                <FormItem {...props} fieId="Entity.ZipCode" />
-                <FormItem {...props} fieId="Entity.PhotoId" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
-                </Col>
+        return <InfoShellLayout>
+            <FormItem {...props} fieId="Entity.ID" hidden />
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")} />
+            </Col>
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")} />
+            </Col>
 
         </InfoShellLayout>
     }
@@ -103,22 +131,22 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="Entity.ITCode" />
-                <FormItem {...props} fieId="Entity.Email" />
-                <FormItem {...props} fieId="Entity.Name" />
-                <FormItem {...props} fieId="Entity.Sex" />
-                <FormItem {...props} fieId="Entity.CellPhone" />
-                <FormItem {...props} fieId="Entity.HomePhone" />
-                <FormItem {...props} fieId="Entity.Address" />
-                <FormItem {...props} fieId="Entity.ZipCode" />
-                <FormItem {...props} fieId="Entity.PhotoId" />
-                <FormItem {...props} fieId="Entity.IsValid" />
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
-                </Col>
-                <Col span={24}>
-                    <FormItem {...props} fieId="Entity.UserGroups" layout="row" />
-                </Col>
+            <FormItem {...props} fieId="Entity.ITCode" />
+            <FormItem {...props} fieId="Entity.Email" />
+            <FormItem {...props} fieId="Entity.Name" />
+            <FormItem {...props} fieId="Entity.Sex" />
+            <FormItem {...props} fieId="Entity.CellPhone" />
+            <FormItem {...props} fieId="Entity.HomePhone" />
+            <FormItem {...props} fieId="Entity.Address" />
+            <FormItem {...props} fieId="Entity.ZipCode" />
+            <FormItem {...props} fieId="Entity.PhotoId" />
+            <FormItem {...props} fieId="Entity.IsValid" />
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")} />
+            </Col>
+            <Col span={24}>
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")} />
+            </Col>
 
         </InfoShellLayout>
     }
