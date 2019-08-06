@@ -21,11 +21,11 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.RoleCode" />
-                <FormItem {...props} fieId="Entity.RoleName" />
-                <FormItem {...props} fieId="Entity.RoleRemark" />
+            <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
 
-            </InfoShellLayout>        
+        </InfoShellLayout>
     }
 }
 /**
@@ -50,12 +50,11 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.RoleCode" />
-                <FormItem {...props} fieId="Entity.RoleName" />
-                <FormItem {...props} fieId="Entity.RoleRemark" />
-
+            <FormItem {...props} fieId="Entity.ID" hidden />
+            <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
         </InfoShellLayout>
     }
 }
@@ -82,12 +81,12 @@ export class JurisdictionForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
-      return <InfoShellLayout>
-                <FormItem {...props} fieId="Entity.RoleCode" display/>
+        return <InfoShellLayout>
+            <FormItem {...props} fieId="Entity.ID" hidden />
+            <FormItem {...props} fieId="Entity.RoleCode" display />
             <FormItem {...props} fieId="Entity.RoleName" display />
             <FormItem {...props} fieId="Pages" layout="row" />
-       </InfoShellLayout>
+        </InfoShellLayout>
     }
 }
 /**
@@ -108,10 +107,9 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             display: true,
         }
         return <InfoShellLayout >
-                <FormItem {...props} fieId="Entity.RoleCode" />
-                <FormItem {...props} fieId="Entity.RoleName" />
-                <FormItem {...props} fieId="Entity.RoleRemark" />
-
+            <FormItem {...props} fieId="Entity.RoleCode" />
+            <FormItem {...props} fieId="Entity.RoleName" />
+            <FormItem {...props} fieId="Entity.RoleRemark" />
         </InfoShellLayout>
     }
 }

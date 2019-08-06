@@ -50,12 +50,11 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             ...this.props,
             models: this.models,
         }
-        getFieldDecorator('Entity.ID', { initialValue: lodash.get(this.props.defaultValues, 'Entity.ID') })
         return <InfoShellLayout>
+                <FormItem {...props} fieId="Entity.ID" hidden />
                 <FormItem {...props} fieId="Entity.GroupCode" />
                 <FormItem {...props} fieId="Entity.GroupName" />
                 <FormItem {...props} fieId="Entity.GroupRemark" />
-
         </InfoShellLayout>
     }
 }

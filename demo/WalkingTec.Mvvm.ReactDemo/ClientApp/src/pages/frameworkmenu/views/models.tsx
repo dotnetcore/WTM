@@ -56,11 +56,14 @@ export default {
                 label: "动作名称",
                 rules: [],
                 formItem: <WtmSelect placeholder="选择动作"
-                    multiple
-                    linkageModels="SelectedModule"
-                    dataSource={(parentid) => Request.cache({
-                        url: "/api/_FrameworkMenu/GetActionsByModel", body: { "ModelName": parentid }
-                    })}
+                    mode="multiple"
+                    linkage={["SelectedModule"]}
+                    dataSource={(props) => {
+                        const ModelName = lodash.get(props, 'SelectedModule');
+                        return ModelName && Request.cache({
+                            url: "/api/_FrameworkMenu/GetActionsByModel", body: { ModelName }
+                        })
+                    }}
                 />
             },
             /** 目录 */
