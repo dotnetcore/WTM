@@ -93,7 +93,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
-                    dataKey="RoleId"
+                    // dataKey="RoleId" 废弃
                 /> 
             },
             /** 用户组 */
@@ -102,7 +102,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
-                    dataKey="GroupId"
+                    // dataKey="GroupId" 废弃
                 /> 
             }
 
