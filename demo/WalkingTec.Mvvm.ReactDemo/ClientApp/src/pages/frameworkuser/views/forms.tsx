@@ -1,4 +1,4 @@
-﻿import { Col, Form } from 'antd';
+import { Col, Form } from 'antd';
 import { DialogForm, DialogFormDes, DialogFormSubmit, FormItem, InfoShellLayout, DialogLoadData, } from 'components/dataView';
 import { DesError } from 'components/decorators'; //错误
 import lodash from 'lodash';
@@ -58,7 +58,6 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.Address" />
             <FormItem {...props} fieId="Entity.ZipCode" />
             <FormItem {...props} fieId="Entity.PhotoId" />
-            <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
                 <FormItem {...props} fieId="Entity.UserRoles" layout="row" />
             </Col>
@@ -103,7 +102,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.Address" />
             <FormItem {...props} fieId="Entity.ZipCode" />
             <FormItem {...props} fieId="Entity.PhotoId" />
-            <Col span={24}>
+            <FormItem {...props} fieId="Entity.IsValid" />
+          <Col span={24}>
                 <FormItem {...props} fieId="Entity.UserRoles" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")} />
             </Col>
             <Col span={24}>
