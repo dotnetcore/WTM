@@ -84,7 +84,9 @@ export default {
             /** 是否有效 */
             "Entity.IsValid":{
                 label: "是否有效",
-                rules: [{ "required": true, "message": "是否有效不能为空" }],
+                rules: [
+                    // { "required": true, "message": "是否有效不能为空" }
+                ],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 角色 */
