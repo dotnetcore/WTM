@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
                 if (u == null)
                 {
-                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { id = 0 });
+                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"], id = 0 });
                 }
                 if (u.EndsWith("/0"))
                 {
