@@ -36,7 +36,7 @@ function toUpdateUserRGs(values) {
 @DialogFormDes({
     onFormSubmit(values) {
         values = toUpdateUserRGs(values)
-        // return Store.onInsert(values)
+        return Store.onInsert(values)
     }
 })
 @observer
