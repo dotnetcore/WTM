@@ -30,7 +30,7 @@ export function DesLoadingData(options: ILoadingDataOptions = {}) {
     options.value = lodash.get(options, 'value', 'Value');
     options.map = lodash.get(options, 'map', (item) => {
         return {
-            key: String(lodash.get(item, options.value)),
+            key: lodash.get(item, options.value),
             ...item,
             value: lodash.get(item, options.value),
             title: lodash.get(item, options.title),
