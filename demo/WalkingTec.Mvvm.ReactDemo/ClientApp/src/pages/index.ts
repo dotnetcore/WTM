@@ -1,6 +1,5 @@
-﻿import React from "react";
+import React from "react";
 export default {
-    /**WTM**/
     actionlog: {
         name: '日志管理',
         path: '/actionlog',
