@@ -18,6 +18,7 @@ export class WtmSelect extends React.Component<ILoadingDataProps & SelectProps<a
     }
     render() {
         const { dataSource, ...props } = this.props;
+        console.log("TCL: WtmSelect -> render -> props", props)
         return (
             <Select
                 placeholder="Please choose"
