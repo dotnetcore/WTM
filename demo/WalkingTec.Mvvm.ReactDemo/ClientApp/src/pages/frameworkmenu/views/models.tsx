@@ -13,6 +13,19 @@ import { BindAll } from 'lodash-decorators';
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
  * formItem  表单组件
  */
+const pages = new Observable<{ Text: string, Value: string, Url: string }[]>((sub) => {
+    import("pages/index").then(pages => {
+        const PagesList = [];
+        lodash.map(pages.default, (item) => {
+            if (item.controller) {
+                PagesList.push({ Text: item.name, Value: item.controller, Url: item.path })
+            }
+        })
+        sub.next(PagesList);
+        sub.complete();
+    })
+
+})
 export default {
     /**
      * 表单模型 
@@ -31,22 +44,12 @@ export default {
                 label: "模块名称",
                 rules: [],
                 formItem: <WtmSelect placeholder="选择模块"
-                    dataSource={new Observable((sub) => {
-                        import("pages/index").then(pages => {
-                            const PagesList = [];
-                            lodash.map(pages.default, (item) => {
-                                if (item.controller) {
-                                    PagesList.push({ Text: item.name, Value: item.controller, Url: item.path })
-                                }
+                    dataSource={pages}
+                    onChange={(value, option) => {
+                        pages.subscribe(data => {
+                            props.form.setFieldsValue({
+                                'Entity.Url': lodash.get(lodash.find(data, ['Value', value]), "Url")
                             })
-                            sub.next(PagesList);
-                            sub.complete();
-                        })
-
-                    })}
-                    onChange={(value, porp) => {
-                        props.form.setFieldsValue({
-                            'Entity.Url': lodash.get(porp, "select.Url")
                         })
                     }}
                 />
