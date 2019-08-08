@@ -52,11 +52,11 @@ export function DesLoadingData(options: ILoadingDataOptions = {}) {
                         // 多选的
                         if (lodash.isArray(this.props.value)) {
                             return this.props.value.map(value => {
-                                const data = lodash.find(this.state.dataSource, ['key', String(value)])
+                                const data = lodash.find(this.state.dataSource, ['key', value])
                                 return data && <Tag color="geekblue" key={data.key}>{data.title}</Tag>
                             })
                         }
-                        return <span>{lodash.get(lodash.find(this.state.dataSource, ["key", String(this.props.value)]), "title")}</span>
+                        return <span>{lodash.get(lodash.find(this.state.dataSource, ["key", this.props.value]), "title")}</span>
                     }
                     return super.render();
                 }
