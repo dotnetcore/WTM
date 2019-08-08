@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -271,7 +271,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
                     {
-                        html += $@"<input hidden name=""{self.DetailGridPrix}[{index}].ID"" value=""{sou.ID}""/>";
+                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.ID}'/>";
                         addHiddenID = true;
                     }
                     if (inner == false)
