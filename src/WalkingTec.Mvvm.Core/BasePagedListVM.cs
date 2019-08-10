@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using NpgsqlTypes;
@@ -891,7 +891,7 @@ namespace WalkingTec.Mvvm.Core
             if (root != null)
             {
                 var aroot = root as List<GridColumn<TModel>>;
-                var remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.FieldName.ToLower() == "id").ToList();
+                var remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
                 foreach (var item in remove)
                 {
                     aroot.Remove(item);
@@ -900,7 +900,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (child.Children != null && child.Children.Count() > 0)
                     {
-                        RemoveActionColumn(child.Children);
+                        RemoveActionAndIdColumn(child.Children);
                     }
                 }
             }

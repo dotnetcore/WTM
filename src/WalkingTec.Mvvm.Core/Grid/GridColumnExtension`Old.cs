@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -150,16 +150,16 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="self"></param>
         /// <param name="childrens"></param>
         /// <returns></returns>
-        public static GridColumn<T> SetChildren<T>(this GridColumn<T> self, params IGridColumn<T>[] childrens) where T : TopBasePoco
+        public static GridColumn<T> SetChildren<T>(this GridColumn<T> self, params GridColumn<T>[] childrens) where T : TopBasePoco
         {
-            List<IGridColumn<T>> temp = new List<IGridColumn<T>>();
+            List<GridColumn<T>> temp = new List<GridColumn<T>>();
             if (self.Children == null)
             {
-                temp = new List<IGridColumn<T>>();
+                temp = new List<GridColumn<T>>();
             }
             else
             {
-                temp = self.Children.ToList();
+                temp = self.Children.Cast<GridColumn<T>>().ToList();
             }
             temp.AddRange(childrens);
             self.Children = temp;
