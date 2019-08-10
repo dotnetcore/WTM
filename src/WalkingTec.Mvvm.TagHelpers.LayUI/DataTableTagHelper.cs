@@ -287,7 +287,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
 
-            GenerateColHeader(rawCols, nextCols, tempCols, maxDepth);
+            generateColHeader(rawCols, nextCols, tempCols, maxDepth);
 
             if (nextCols.Count > 0)
             {
@@ -407,7 +407,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
 
-            GenerateColHeader(rawCols, nextCols, tempCols, maxDepth);
+            generateColHeader(rawCols, nextCols, tempCols, maxDepth);
 
             if (nextCols.Count > 0)
             {
@@ -530,7 +530,30 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             base.Process(context, output);
         }
 
-        private void GenerateColHeader(IEnumerable<IGridColumn<TopBasePoco>> rawCols, List<IGridColumn<TopBasePoco>> nextCols, List<LayuiColumn> tempCols, int maxDepth)
+        private void generateColHeader(
+            IEnumerable<IGridColumn<TopBasePoco>> rawCols,
+            List<IGridColumn<TopBasePoco>> nextCols,
+            List<LayuiColumn> tempCols,
+            int maxDepth
+        )
+        {
+            var temp = rawCols.Where(x => x.Fixed == GridColumnFixedEnum.Left).ToArray();
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+
+            temp = rawCols.Where(x => x.Fixed == null).ToArray();
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+
+            temp = rawCols.Where(x => x.Fixed == GridColumnFixedEnum.Right).ToArray();
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+
+        }
+
+        private void generateColHeaderCore(
+            IEnumerable<IGridColumn<TopBasePoco>> rawCols,
+            List<IGridColumn<TopBasePoco>> nextCols,
+            List<LayuiColumn> tempCols,
+            int maxDepth
+        )
         {
             foreach (var item in rawCols)
             {
