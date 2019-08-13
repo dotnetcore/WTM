@@ -1,24 +1,40 @@
 import Vue from "vue";
-import router from "@/router/index";
+import createRouter from "@/router/index";
 import store from "@/store/index";
-import App from "@/pages/index/app.vue";
+import App from "@/views/index.vue";
 import "@/assets/css/index.less";
-import "babel-polyfill";
+import "font-awesome/css/font-awesome.min.css";
+// import "element-ui/lib/theme-chalk/index.css";
+import "@/assets/theme/index.css";
+import date from "@/util/date.js";
 // 饿了吗ui
 import ElementUI from "element-ui";
-// import "element-ui/lib/theme-chalk/index.css";
-
+import NProgress from "vue-nprogress";
+Vue.use(NProgress, {});
 Vue.use(ElementUI);
-const app = new Vue({
-    router,
-    store,
-    render(h) {
-        return h(App, {
-            props: {
-                projectName: "wtm"
-            }
-        });
+// 时间格式
+Vue.filter(
+    "formatTime",
+    (value, customFormat = "yyyy-MM-dd hh:mm:ss", isMsec = true) => {
+        // customFormat 要展示的时间格式
+        // isMsec----传入的value值是否是毫秒
+        value = isMsec ? value : value * 1000;
+        return date.toFormat(value, customFormat);
     }
+);
+const nprogress = new NProgress({ parent: ".app-nprogress" });
+createRouter().then(router => {
+    const app = new Vue({
+        nprogress,
+        router,
+        store,
+        render(h) {
+            return h(App, {
+                props: {
+                    projectName: "wtm"
+                }
+            });
+        }
+    });
+    app.$mount("#App");
 });
-
-app.$mount("#App");

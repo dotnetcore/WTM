@@ -12,10 +12,12 @@ module.exports = {
         mocha: true
     },
     globals: {
-        expect: true
+        expect: true,
+        window: true,
+        _: true
     },
     extends: ["plugin:vue/recommended", "standard"],
-    plugins: ["vue"],
+    plugins: ["html"],
     rules: {
         semi: 0,
         "no-spaced-func": 0, // 函数调用时 函数名与()之间不能有空格

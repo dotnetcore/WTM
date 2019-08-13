@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <!-- <link rel="icon" type="image/png" href=""> -->
+        <title>
+            demo
+        </title>
+        <%=process.env.LOACL==='loacl' ? '' : '<link rel="stylesheet" href="https://unpkg.com/element-ui@2.10.1/lib/theme-chalk/index.css" />'%>
+    </head>
+
+    <body>
+        <%=process.env.LOACL==='loacl' ? '' : '<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>'%>
+        <%=process.env.LOACL==='loacl' ? '' : '<script src="https://unpkg.com/element-ui@2.8.2/lib/index.js"></script>'%>
+        <div class="page" id="App"></div>
+    </body>
+</html>

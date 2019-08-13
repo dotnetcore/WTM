@@ -1,20 +1,19 @@
 /*
  * element样式重载
  **/
-
-.el-table 
-{
+.el-table {
     .cell {
         line-height: 40px;
     }
-    td, th {
+    td,
+    th {
         padding: 0;
     }
     thead {
         color: #333333;
         th {
-           //  border-bottom-width: 2px !important;
-            background: rgba(243,248,255,1);
+            //  border-bottom-width: 2px !important;
+            background: rgba(243, 248, 255, 1);
             font-size: 14px;
             font-weight: inherit;
         }
@@ -31,4 +30,18 @@
 }
 .home-talbe {
     margin-top: 10px;
+}
+.el-menu--collapse .el-submenu .el-submenu__title .el-submenu__icon-arrow {
+    display: none;
+}
+.el-menu--collapse .el-menu-item span,
+.el-menu--collapse .el-submenu > .el-submenu__title span {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    visibility: hidden;
+    display: inline-block;
+}
+.el-pagination {
+    text-align: right;
 }

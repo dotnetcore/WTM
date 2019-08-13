@@ -1,9 +1,10 @@
 import Vue from "vue";
 import store from "@/store/login/index";
-import App from "@/pages/login/app.vue";
+import App from "@/views/login.vue";
 // 饿了吗ui
 import ElementUI from "element-ui";
-// import "element-ui/lib/theme-chalk/index.css";
+require("element-ui/lib/theme-chalk/index.css");
+// if (process.env.LOACL === "loacl") {}
 Vue.use(ElementUI);
 /* eslint-disable */
 const app = new Vue({

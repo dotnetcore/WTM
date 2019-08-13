@@ -6,12 +6,18 @@
 import service from "@/service/service";
 import { firstUpperCase } from "@/util/string";
 
+interface StoreType {
+    state: {};
+    actions: {};
+    mutations: {};
+}
+
 /**
  * 根据service 创建store
  * @param {*} serviceUnit
  */
-export function createStore(serviceUnit, callback?: Function) {
-    const store = {
+export default (serviceUnit, callback?: Function) => {
+    const store: StoreType = {
         state: {},
         actions: {},
         mutations: {}
@@ -45,7 +51,7 @@ export function createStore(serviceUnit, callback?: Function) {
             // mutations
             store.mutations[mutationsKey] = (state, data) => {
                 // console.log('data', key, data);
-                state[key] = data;
+                state[key] = data.data || data;
             };
         }
 
@@ -72,4 +78,4 @@ export function createStore(serviceUnit, callback?: Function) {
         };
     }
     return store;
-}
+};

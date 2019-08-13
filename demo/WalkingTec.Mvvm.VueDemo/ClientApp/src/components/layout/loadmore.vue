@@ -1,34 +1,24 @@
 <template>
-  <div class="loadmore">
-    <div v-if="isLoad" class="weui-loadmore">
-      <i class="weui-loading"/>
-      <span class="weui-loadmore__tips">正在加载</span>
+    <div class="loadmore">
+        <div v-if="isLoad" class="weui-loadmore">
+            <i class="weui-loading" />
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+        <div v-else class="weui-loadmore weui-loadmore_line">
+            <span class="weui-loadmore__tips">{{ loadmoreText }}</span>
+        </div>
     </div>
-    <div v-else class="weui-loadmore weui-loadmore_line">
-      <span class="weui-loadmore__tips">{{ loadmoreText }}</span>
-    </div>
-  </div>
 </template>
-<script>
-export default {
-    props: {
-        isLoad: {
-            type: Boolean,
-            default: false
-        },
-        loadmoreText: {
-            type: String,
-            default: () => {
-                return '无数据';
-            }
-        }
-    },
-    data() {
-        return {};
-    },
-    mounted() { },
-    methods: {}
-};
+<script lang='ts'>
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { State, Getter, Action, Mutation, namespace } from "vuex-class";
+@Component
+export default class LoadMore extends Vue {
+    @Prop({ default: false })
+    isLoad!: boolean;
+    @Prop({ default: "无数据" })
+    loadmoreText: string | undefined;
+}
 </script>
 
 <style lang="less">
