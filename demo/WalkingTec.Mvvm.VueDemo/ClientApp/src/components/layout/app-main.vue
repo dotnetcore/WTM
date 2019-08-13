@@ -1,48 +1,56 @@
 <template>
-  <section class="app-main" :style="[]">
-    <router-view />
+  <section :class="[collapse?'folder':'','app-main']" :style="[]">
+    <div class="app-content">
+      <Breadcrumd />
+      <div class="content-com">
+        <router-view class="animated fadeIn" />
+      </div>
+    </div>
   </section>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-
-export default {
-    props: {
-        isEmbed: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data() {
-        return {
-            showLevelbar: true
-        };
-    },
-    computed: {
-        ...mapGetters({
-            layout: "layout"
-        })
-    },
-    methods: {}
-};
+<script lang='ts'>
+import { Component, Vue } from "vue-property-decorator";
+import Breadcrumd from "./bread-crumb.vue";
+import { Getter } from "vuex-class";
+@Component({
+    components: { Breadcrumd }
+})
+export default class AppMain extends Vue {
+    @Getter("isCollapse")
+    collapse;
+}
 </script>
 
 <style lang="less" scoped>
 @import "../../assets/css/variable";
 .app-main {
-    // margin: 10px;
-    // font-family: 'segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif';
-    // line-height: 160%;
     position: absolute;
-    left: 200px;
+    left: 220px;
+    width: 100%;
+    // height: 100%;
+    min-height: 650px;
     right: 0;
     top: 60px;
-    bottom: 44px;
-    z-index: 998;
+    // bottom: 44px;
+    // z-index: 998;
     width: auto;
     overflow: hidden;
     overflow-y: auto;
     box-sizing: border-box;
+    transition: left 400ms ease;
+    padding: 20px;
+    padding-bottom: 0;
+    .content-com {
+        margin-top: 20px;
+    }
+    &.folder {
+        left: @foldWith;
+    }
+    .app-content {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+    }
 }
 </style>

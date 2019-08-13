@@ -1,100 +1,106 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
+const webpack = require("webpack");
 const path = require("path");
+const { utils } = require("./webpack-util");
 
-const utils = {
-    resolve: function(dir) {
-        return path.join(__dirname, "..", dir);
-    },
-    assetsPath: function(_path) {
-        const assetsSubDirectory = "static";
-        return path.posix.join(assetsSubDirectory, _path);
+// 个性参数
+let options = {
+    // cdn配置 第三方
+    externals: {
+        vue: "Vue",
+        "element-ui": "ELEMENT"
     }
 };
+if (process.env.NODE_ENV === "development") {
+    options.externals = {};
+}
 module.exports = {
-    output: {
-        path: utils.resolve("dist"),
-        publicPath: "/",
-        filename: "[name].js",
-        library: "[name]_[hash]"
-    },
     entry: {
         index: utils.resolve("src/index.ts"),
         login: utils.resolve("src/login.ts")
     },
     resolve: {
-        extensions: [".js", ".ts", ".vue", ".json"],
+        extensions: [".ts", ".js", ".vue", ".json"],
         alias: {
             "@": utils.resolve("src"),
-            pages: utils.resolve("src/pages"),
+            views: utils.resolve("src/views"),
             static: utils.resolve("static"),
             components: utils.resolve("src/components")
         }
     },
     externals: {
-        vue: "Vue",
-        "element-ui": "ELEMENT"
+        ...options.externals
     },
     module: {
         rules: [
-            {
-                test: /\.(js|vue)$/,
-                use: "eslint-loader",
-                enforce: "pre"
-            },
+            // ts
             {
                 test: /\.ts$/,
                 exclude: /node_modules/,
-                enforce: "pre",
-                loader: "tslint-loader"
-            },
-            {
-                test: /\.tsx?$/,
-                loader: "ts-loader",
-                exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/]
-                }
-            },
-            {
-                test: /\.vue$/,
-                use: "vue-loader"
+                use: [
+                    {
+                        loader: "babel-loader"
+                    },
+                    {
+                        loader: "ts-loader",
+                        options: {
+                            transpileOnly: true,
+                            appendTsSuffixTo: ["\\.vue$"],
+                            happyPackMode: false
+                        }
+                    }
+                    // {
+                    //     loader: "tslint-loader"
+                    // }
+                ]
             },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
+                loader: "babel-loader",
+                include: [utils.resolve("src")]
             },
+            // vue
+            {
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                use: ["vue-loader"]
+            },
+            // img
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 use: {
                     loader: "url-loader",
                     options: {
                         limit: 10000,
-                        name: utils.assetsPath("img/[name].[hash:7].[ext]")
+                        name: utils.assetsPath("img/[name].[hash:7].[ext]"),
+                        publicPath: "/"
                     }
                 }
             },
+            // media
             {
                 test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
                 use: {
                     loader: "url-loader",
                     options: {
                         limit: 10000,
-                        name: utils.assetsPath("media/[name].[hash:7].[ext]")
+                        name: utils.assetsPath("media/[name].[hash:7].[ext]"),
+                        publicPath: "/"
                     }
                 }
             },
+            // fonts
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 use: {
                     loader: "url-loader",
                     options: {
                         limit: 10000,
-                        name: utils.assetsPath("fonts/[name].[hash:7].[ext]")
+                        name: utils.assetsPath("fonts/[name].[hash:7].[ext]"),
+                        publicPath: "/"
                     }
                 }
             }
@@ -102,6 +108,7 @@ module.exports = {
     },
 
     optimization: {
+        moduleIds: "hashed", // keep module.id stable when vender modules does not change
         splitChunks: {
             cacheGroups: {
                 // 注意: priority属性
@@ -109,6 +116,7 @@ module.exports = {
                 common: {
                     name: "common",
                     chunks: "all",
+                    minChunks: 2,
                     minSize: 1,
                     priority: 0
                 },
@@ -127,15 +135,28 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "view/index.html",
-            chunks: ["index", "vendor", "common"],
-            inject: true
+            chunks: ["index", "vendor", "common", "runtime"]
+            // minify: {
+            //     removeComments: true,
+            //     collapseWhitespace: true,
+            //     removeAttributeQuotes: true
+            //     // more options:
+            //     // https://github.com/kangax/html-minifier#options-quick-reference
+            // }
         }),
         new HtmlWebpackPlugin({
             filename: "login.html",
             template: "view/index.html",
-            chunks: ["login", "vendor", "common"],
-            inject: true
+            chunks: ["login", "vendor", "common", "runtime"]
+            // minify: {
+            //     removeComments: true,
+            //     collapseWhitespace: true,
+            //     removeAttributeQuotes: true
+            //     // more options:
+            //     // https://github.com/kangax/html-minifier#options-quick-reference
+            // }
         }),
+        // VueLoaderPlugin在vue-loaderv15的版本中,这个插件是必须启用的.
         new VueLoaderPlugin(),
         new CopyWebpackPlugin([
             {
@@ -143,6 +164,10 @@ module.exports = {
                 to: utils.resolve("dist/static/img"),
                 toType: "dir"
             }
-        ])
+        ]),
+
+        new webpack.ProvidePlugin({
+            _: "lodash"
+        })
     ]
 };

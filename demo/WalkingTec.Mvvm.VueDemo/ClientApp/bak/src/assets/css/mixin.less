@@ -1,0 +1,60 @@
+.flex-display(@display: flex) {
+  display: ~'-webkit-@{display}';
+  display: @display;
+}
+
+.box-flex(@columns: initial) {
+  -webkit-box-flex: @columns;
+  box-flex: @columns;
+  flex: @columns;
+}
+.flexbox(@dir:row, @justifycontent:flex-start) {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  .flexdirection(@dir);
+}
+
+.flexdirection(@dir:row) when(@dir = row) {
+  -webkit-box-orient: horizontal;
+}
+
+.flexdirection(@dir:row) when(@dir = column) {
+  -webkit-box-orient: vertical;
+}
+
+.flexdirection(@dir) {
+  -webkit-flex-direction: @dir;
+  flex-direction: @dir;
+}
+
+.flexjustify(@jc: flex-start) when(@jc = flex-start) {
+  -webkit-box-pack: start;
+}
+.flexjustify(@jc: flex-start) when(@jc = flex-end) {
+  -webkit-box-pack: end;
+}
+.flexjustify(@jc: flex-start) when(@jc = space-between) {
+  -webkit-box-pack: justify;
+}
+.flexjustify(@jc) {
+  -webkit-justify-content: @jc;
+  justify-content: @jc;
+  -webkit-box-pack: @jc;
+  box-pack: @jc;
+}
+
+.flexalign(@al) {
+  /*垂直居中*/
+  /*老版本语法*/
+  -webkit-box-align: @al;
+  /*新版本语法*/
+  -webkit-align-items: @al;
+  align-items: @al;
+}
+
+.center(@dir:row) {
+  .flexbox(@dir);
+  .flexalign(center);
+  .flexjustify(center);
+  }

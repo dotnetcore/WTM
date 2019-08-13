@@ -2,9 +2,10 @@
  * 配置文件
  */
 const config = {
-    serverHost: "/api",
+    serverHost: "/wtm", // /api
+    headApi: "/api",
     // token 名称
-    tokenKey: "JSESSIONID_my",
+    tokenKey: "token",
     userInfo: "userinfo"
 };
 export default config;

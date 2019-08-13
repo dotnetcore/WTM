@@ -1,77 +1,87 @@
 <template>
-  <section class="left-ment">
-    <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#393D49" text-color="#fff" active-text-color="#ccc" :router="true" @open="handleOpen" @close="handleClose">
-      <el-menu-item v-for="(item, index) in menuItems" :key="index" :index="item.path">
-        <i :class="[item.meta.icon]" />
-        <span>{{ item.name }}</span>
-      </el-menu-item>
-
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location" />
-          <span>test2</span>
-        </template>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">
-            选项3
-          </el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
+  <aside class="app-sidebar animated slideInLeft" :class="{ 'slide-toggle-left': !showLevelbar }">
+    <el-menu class="el-menu-vertical-demo" :default-active="defaultPath" :router="true" :default-openeds="defaultOpen" :collapse="collapse">
+      <div v-for="(item, index) in menuItems" v-bind:key="index">
+        <el-submenu :index="item.path || index + ''" v-if="item.children && item.children.length">
           <template slot="title">
-            选项4
+            <i :class="['fa', item.meta.icon]"></i>
+            <span slot="title">{{item.name}}</span>
           </template>
-          <el-menu-item index="1-4-1">
-            选项1
-          </el-menu-item>
+          <el-menu-item-group>
+            <el-menu-item v-for="(subItem, subIndex) in item.children" v-if="subItem.name || subItem.path" v-bind:key="subIndex" :index="subItem.path || index + '' + subIndex">
+              {{subItem.name}}
+            </el-menu-item>
+          </el-menu-item-group>
         </el-submenu>
-      </el-submenu>
+        <el-menu-item :index="item.path || index + ''" v-else>
+          <i :class="['fa', item.meta.icon]"></i>
+          <span slot="title">{{item.name}}</span>
+        </el-menu-item>
+      </div>
     </el-menu>
-  </section>
+  </aside>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script lang='ts'>
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
+import { State, Getter } from "vuex-class";
+import dataMenuItems from "@/store/menu/menu-items";
 
-export default {
-    props: {
-        isEmbed: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data() {
-        return {
-            showLevelbar: true
-        };
-    },
-    computed: {
-        ...mapGetters(["menuItems"])
-    },
-    methods: {
-        handleOpen(key, keyPath) {
-            console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-            console.log(key, keyPath);
-        }
+@Component
+export default class Menu extends Vue {
+    @Prop({ default: false })
+    isEmbed!: boolean;
+    showLevelbar: boolean = true;
+    defaultPath: string = "";
+    defaultOpen: string[] = [];
+    @Getter("isCollapse")
+    collapse;
+    @Getter("menuItems")
+    menuItems;
+    @State resourcesList;
+    mounted() {
+        // const menuItems = this.menuItems;
+        // menuItems.forEach((item, index) => {
+        //     if (item.meta.expanded) {
+        //         this.defaultOpen.push(item.path || index + "");
+        //     }
+        // });
     }
-};
+    @Watch("$route")
+    routeChange() {
+        const matched = [this.$route];
+        let meta = this.$route.meta;
+        while (meta && meta.parentMenu) {
+            matched.unshift(meta.parentMenu);
+            meta = meta.parentMenu.meta;
+        }
+        this.defaultPath = (matched[1] && matched[1].path) || "/";
+    }
+}
 </script>
 
 <style lang="less" scoped>
 @import "../../assets/css/variable";
-.left-ment {
-    width: 200px;
-    // height: 100%;
-    display: inline-block;
+.app-sidebar {
     position: fixed;
+    top: 0;
     left: 0;
-    top: 60px;
     bottom: 0;
-    z-index: 999;
+    // width: @sidebarWidth;
+    margin-top: @navbarHeight;
+    z-index: @maxZindex + 1;
+    background: #fff;
+    overflow-y: auto;
     overflow-x: hidden;
-    .el-menu-vertical-demo {
-        height: 100%;
+    padding: 0 0 15px;
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+        width: @sidebarWidth;
+    }
+    .sidebar-hd {
+        color: #fff;
+        font-size: 25px;
+        height: @navbarHeight;
+        background-color: #000;
     }
 }
 </style>

@@ -1,25 +1,26 @@
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const baseConfig = require("./webpack.base");
-
+const { utils } = require("./webpack-util");
 const HOST = "localhost";
 const PORT = 8051;
 
+console.log("resolve");
 module.exports = merge(baseConfig, {
     mode: "development",
-
+    // devtool: 'inline-source-map',
+    output: {
+        path: utils.resolve("dist"),
+        publicPath: "/",
+        filename: "[name].js",
+        library: "[name]_[hash]",
+        chunkFilename: "[name].bundle.js"
+    },
     devServer: {
-        clientLogLevel: "warning",
-        hot: true,
-        contentBase: "dist",
-        compress: true,
         host: HOST,
         port: PORT,
         open: true,
-        overlay: { warnings: false, errors: true },
-        publicPath: "/",
-        quiet: true,
-        openPage: "login.html",
+        openPage: "index.html",
         proxy: {
             "/api": {
                 target: "http://localhost:7598/",

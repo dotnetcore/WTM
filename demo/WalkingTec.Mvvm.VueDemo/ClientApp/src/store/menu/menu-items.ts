@@ -1,54 +1,53 @@
 /**
  *  菜单数据
  */
+
 const dataManageItems = [
     {
-        name: "日志管理",
+        name: "管理",
         meta: {
-            icon: "el-icon-info"
+            icon: "el-icon-coin"
         },
-        path: "/test/index",
-        component: () => import("@/pages/index/test/index.vue")
+        path: "",
+        children: [
+            {
+                name: "用户管理",
+                meta: {},
+                path: "/userManage",
+                url: "/user-manage/index",
+                component: () => import("@/views/user-manage/index.vue")
+            },
+            {
+                name: "订单管理",
+                meta: {},
+                path: "/orderManage",
+                url: "/order-manage/index",
+                component: () => import("@/views/order-manage/index.vue")
+            }
+        ]
     },
     {
-        name: "用户管理",
+        name: "设置",
         meta: {
-            icon: "el-icon-user-solid"
+            icon: "el-icon-setting"
         },
-        path: "/user/index",
-        component: () => import("@/pages/index/user/index.vue")
-    },
-    {
-        name: "角色管理",
-        meta: {
-            icon: "el-icon-s-tools"
-        },
-        path: "/test/index",
-        component: () => import("@/pages/index/test/index.vue")
-    },
-    {
-        name: "用户组管理",
-        meta: {
-            icon: "el-icon-s-custom"
-        },
-        path: "/test/index",
-        component: () => import("@/pages/index/test/index.vue")
-    },
-    {
-        name: "菜单管理",
-        meta: {
-            icon: "el-icon-s-fold"
-        },
-        path: "/test/index",
-        component: () => import("@/pages/index/test/index.vue")
-    },
-    {
-        name: "数据权限",
-        meta: {
-            icon: "el-icon-s-check"
-        },
-        path: "/test/index",
-        component: () => import("@/pages/index/test/index.vue")
+        path: "",
+        children: [
+            {
+                name: "平台信息",
+                meta: {},
+                path: "/shopManage",
+                url: "/shop-manage/index",
+                component: () => import("@/views/shop-manage/index.vue")
+            },
+            {
+                name: "二维码",
+                meta: {},
+                path: "/qrCode",
+                url: "/qr-code/index",
+                component: () => import("@/views/qr-code/index.vue")
+            }
+        ]
     }
 ];
 

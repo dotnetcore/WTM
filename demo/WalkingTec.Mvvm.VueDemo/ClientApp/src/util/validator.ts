@@ -13,8 +13,6 @@ export default {
             callback(new Error("密码长度不够8位"));
         } else if (!/\d/.test(value) || !/[a-zA-Z]/.test(value)) {
             callback(new Error("密码必须含有数字和字母"));
-        } else if (this.form.password !== value) {
-            callback(new Error("两次输入的密码不一致,请重新输入"));
         } else {
             callback();
         }
@@ -38,7 +36,7 @@ export default {
         }
     },
     // 正整数
-    validatePositiveS(rule, val, callback) {
+    validatePositiveS(val, callback) {
         if (!/^[0-9]+\.?[0-9]+?$/.test(val)) {
             callback(new Error("请输入小数"));
         } else {
