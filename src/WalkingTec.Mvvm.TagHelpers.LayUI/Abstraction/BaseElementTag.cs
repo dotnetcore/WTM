@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -45,6 +45,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if(string.IsNullOrEmpty(Style) == false)
             {
+                if(this is TreeTagHelper)
+                {
+                    Style += " overflow:auto;";
+                }
                 output.Attributes.SetAttribute("style", Style);
             }
 
