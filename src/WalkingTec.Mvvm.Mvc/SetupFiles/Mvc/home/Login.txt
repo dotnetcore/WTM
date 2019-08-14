@@ -1,4 +1,4 @@
-﻿@model $vmns$.HomeVMs.LoginVM
+@model $vmns$.HomeVMs.LoginVM
 
 @{
     Layout = null;
@@ -14,7 +14,7 @@
     <script src="/jquery.haschange.js"></script>
     <script src="/jquery.cookie.js"></script>
     <script src="/layui/layui.all.js"></script>
-    <script src="/framework_layui.js"></script>
+    <script src="/_js/framework_layui.js"></script>
 </head>
 <body class="layui-layout-body">
     <div id="DONOTUSE_MAINPANEL">

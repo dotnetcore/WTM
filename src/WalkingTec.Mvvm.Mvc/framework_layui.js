@@ -719,5 +719,18 @@ window.ff = {
                 }
             }
         }, 10);
+    },
+
+    getTreeChecked: function (items) {
+        var rv = [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].children == null || items[i].children.length == 0) {
+                rv.push(items[i].id);
+            }
+            else {
+                rv = rv.concat(this.getTreeChecked(items[i].children));
+            }
+        }
+        return rv;
     }
 };
