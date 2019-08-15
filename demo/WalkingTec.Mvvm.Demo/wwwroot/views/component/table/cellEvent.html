@@ -1,0 +1,67 @@
+
+
+  <title>监听单元格事件 - 数据表格</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>数据表格</cite></a>
+      <a><cite>监听单元格事件</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">监听单元格事件</div>
+          <div class="layui-card-body">
+            <blockquote class="layui-elem-quote">点击下面表格中的【签名列】，以演示单元格事件</blockquote>
+            <table class="layui-hide" id="test-table-demoEvent" lay-filter="test-table-demoEvent"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'table'], function(){
+    var table = layui.table;
+    
+    table.render({
+      elem: '#test-table-demoEvent'
+      ,height: 313
+      ,url: './json/table/user.js'
+      ,cols: [[
+        {field:'id', title: 'ID', width:80}
+        ,{field:'username', title: '用户名', width:80}
+        ,{field:'sign', title: '签名', width:'50%', event: 'setSign', style:'cursor: pointer;'}
+        ,{field:'experience', title: '积分'}
+        ,{field:'score', title: '评分'}
+      ]]
+    });
+  
+    //监听单元格事件
+    table.on('tool(test-table-demoEvent)', function(obj){
+      var data = obj.data;
+      if(obj.event === 'setSign'){
+        layer.prompt({
+          formType: 2
+          ,title: '修改 ID 为 ['+ data.id +'] 的用户签名'
+          ,value: data.sign
+        }, function(value, index){
+          layer.close(index);
+          
+          //这里一般是发送修改的Ajax请求
+          
+          //同步更新表格和缓存对应的值
+          obj.update({
+            sign: value
+          });
+        });
+      }
+    });
+  
+  });
+  </script>

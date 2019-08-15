@@ -1,0 +1,59 @@
+
+  <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+      <label class="layui-form-label">文章标题</label>
+      <div class="layui-input-inline">
+        <script type="text/html" template>
+          <input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        </script>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">发布人</label>
+      <div class="layui-input-inline">
+        <script type="text/html" template>
+          <input type="text" name="author" value="{{ d.params.author || '' }}" lay-verify="required" placeholder="请输入号码" autocomplete="off" class="layui-input">
+        </script>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">文章内容</label>
+      <div class="layui-input-inline">
+        <script type="text/html" template>
+          <textarea name="content" lay-verify="required" style="width: 400px; height: 150px;" autocomplete="off" class="layui-textarea">
+            {{ d.params.content || '' }}
+          </textarea>
+        </script>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">标签</label>
+      <div class="layui-input-inline">
+        <script type="text/html" template>
+          <select name="label" lay-verify="required">
+            <option value="">请选择标签</option>
+            <option value="美食" {{ d.params.label === '美食' ? 'selected' : '' }}>美食</option>
+            <option value="新闻" {{ d.params.label === '新闻' ? 'selected' : '' }}>新闻</option>
+            <option value="八卦" {{ d.params.label === '八卦' ? 'selected' : '' }}>八卦</option>
+            <option value="体育" {{ d.params.label === '体育' ? 'selected' : '' }}>体育</option>
+            <option value="音乐" {{ d.params.label === '音乐' ? 'selected' : '' }}>音乐</option>
+          </select>
+        </script>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">发布状态</label>
+      <div class="layui-input-inline">
+        <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch" lay-text="已发布|待修改">
+      </div>
+    </div>
+    <script type="text/html" template>
+      <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+    </script>
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-inline">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" value="确认" class="layui-btn">
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,176 @@
+
+<title>消息中心</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>消息中心</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid" id="LAY-app-message">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <ul class="layui-tab-title">
+        <li class="layui-this">全部消息</li>
+        <li>通知<span class="layui-badge">6</span></li>
+        <li>私信</li>
+      </ul>
+      <div class="layui-tab-content">
+      
+        <div class="layui-tab-item layui-show">
+          <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="del">删除</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="ready">标记已读</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="all" data-events="readyAll">全部已读</button>
+          </div>
+          
+          <table id="LAY-app-message-all" lay-filter="LAY-app-message-all"></table>
+        </div>
+        <div class="layui-tab-item">
+        
+          <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="del">删除</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="ready">标记已读</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="notice" data-events="readyAll">全部已读</button>
+          </div>
+          
+          <table id="LAY-app-message-notice" lay-filter="LAY-app-message-notice"></table>
+        </div>
+        <div class="layui-tab-item">
+        
+          <div class="LAY-app-message-btns" style="margin-bottom: 10px;">
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="del">删除</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="ready">标记已读</button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" data-type="direct" data-events="readyAll">全部已读</button>
+          </div>
+          
+          <table id="LAY-app-message-direct" lay-filter="LAY-app-message-direct"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'table', 'util'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,table = layui.table
+  ,element = layui.element;
+
+  
+  var DISABLED = 'layui-btn-disabled'
+  
+  //区分各选项卡中的表格
+  ,tabs = {
+    all: {
+      text: '全部消息'
+      ,id: 'LAY-app-message-all'
+    }
+    ,notice: {
+      text: '通知'
+      ,id: 'LAY-app-message-notice'
+    }
+    ,direct: {
+      text: '私信'
+      ,id: 'LAY-app-message-direct'
+    }
+  };
+  
+  //标题内容模板
+  var tplTitle = function(d){
+    return '<a lay-href="app/message/detail/id='+ d.id +'">'+ d.title;
+  };
+  
+  //全部消息
+  table.render({
+    elem: '#LAY-app-message-all'
+    ,url: './json/message/all.js' //模拟接口
+    ,page: true
+    ,cols: [[
+      {type: 'checkbox', fixed: 'left'}
+      ,{field: 'title', title: '标题内容', minWidth: 300, templet: tplTitle}
+      ,{field: 'time', title: '时间', width: 170, templet: '<div>{{ layui.util.timeAgo(d.time) }}</div>'}
+    ]]
+    ,skin: 'line'
+  });
+  
+  //通知
+  table.render({
+    elem: '#LAY-app-message-notice'
+    ,url: './json/message/notice.js' //模拟接口
+    ,page: true
+    ,cols: [[
+      {type: 'checkbox', fixed: 'left'}
+      ,{field: 'title', title: '标题内容', minWidth: 300, templet: tplTitle}
+      ,{field: 'time', title: '时间', width: 170, templet: '<div>{{ layui.util.timeAgo(d.time) }}</div>'}
+    ]]
+    ,skin: 'line'
+  });
+  
+  //私信
+  table.render({
+    elem: '#LAY-app-message-direct'
+    ,url: './json/message/direct.js' //模拟接口
+    ,page: true
+    ,cols: [[
+      {type: 'checkbox', fixed: 'left'}
+      ,{field: 'title', title: '标题内容', minWidth: 300, templet: tplTitle}
+      ,{field: 'time', title: '时间', width: 170, templet: '<div>{{ layui.util.timeAgo(d.time) }}</div>'}
+    ]]
+    ,skin: 'line'
+  });
+  
+  //事件处理
+  var events = {
+    del: function(othis, type){
+      var thisTabs = tabs[type]
+      ,checkStatus = table.checkStatus(thisTabs.id)
+      ,data = checkStatus.data; //获得选中的数据
+      if(data.length === 0) return layer.msg('未选中行');
+
+      layer.confirm('确定删除选中的数据吗？', function(){
+        /*
+        admin.req('url', {}, function(){ //请求接口
+          //do somethin
+        });
+        */
+        //此处只是演示，实际应用需把下述代码放入上述Ajax回调中
+        layer.msg('删除成功', {
+          icon: 1
+        });
+        table.reload(thisTabs.id); //刷新表格
+      });
+    }
+    ,ready: function(othis, type){
+      var thisTabs = tabs[type]
+      ,checkStatus = table.checkStatus(thisTabs.id)
+      ,data = checkStatus.data; //获得选中的数据
+      if(data.length === 0) return layer.msg('未选中行');
+      
+      //此处只是演示
+      layer.msg('标记已读成功', {
+        icon: 1
+      });
+      table.reload(thisTabs.id); //刷新表格
+    }
+    ,readyAll: function(othis, type){
+      var thisTabs = tabs[type];
+      
+      //do somethin
+      
+      layer.msg(thisTabs.text + '：全部已读', {
+        icon: 1
+      });
+    }
+  };
+  
+  $('.LAY-app-message-btns .layui-btn').on('click', function(){
+    var othis = $(this)
+    ,thisEvent = othis.data('events')
+    ,type = othis.data('type');
+    events[thisEvent] && events[thisEvent].call(this, othis, type);
+  });
+});
+</script>

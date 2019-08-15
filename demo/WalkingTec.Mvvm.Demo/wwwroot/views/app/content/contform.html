@@ -1,0 +1,20 @@
+
+
+<div class="layui-form" lay-filter="layuiadmin-form-comment" id="layuiadmin-form-comment">
+  <div class="layui-form-item">
+    <label class="layui-form-label">评论内容</label>
+    <div class="layui-input-block">
+      <script type="text/html" template>
+        <textarea name="content" lay-verify="required" placeholder="请输入" class="layui-textarea">
+          {{ d.params.content || '' }}
+        </textarea>
+      </script>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="layuiadmin-app-com-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+
+
+<title>工单系统</title>
+  
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>应用</cite></a>
+    <a><cite>工单系统</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">  
+  <div class="layui-card">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-workorder">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">工单号</label>
+          <div class="layui-input-block">
+            <input type="text" name="orderid" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">工单标题</label>
+          <div class="layui-input-block">
+            <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">业务性质</label>
+          <div class="layui-input-block">
+            <input type="text" name="attr" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">受理人</label>
+          <div class="layui-input-block">
+            <input type="text" name="accept" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="layui-card-body">
+      <table id="LAY-app-workorder" lay-filter="LAY-app-workorder"></table> 
+      <script type="text/html" id="progressTpl">
+        <div class="layui-progress layuiadmin-order-progress" lay-filter="progress-"+ {{ d.orderid }} +"">
+          <div class="layui-progress-bar layui-bg-blue" lay-percent= {{ d.progress }}></div>
+        </div>
+      </script>
+      <script type="text/html" id="buttonTpl">
+        {{#  if(d.state == '已处理'){ }}
+          <button class="layui-btn layui-btn-normal layui-btn-xs">已处理</button>
+        {{#  } else if(d.state == '未分配'){ }}
+          <button class="layui-btn layui-btn-primary layui-btn-xs">未分配</button>
+        {{#  } else{ }}
+          <button class="layui-btn layui-btn-warm layui-btn-xs">处理中</button>
+        {{#  } }}
+      </script>
+      <script type="text/html" id="table-system-order">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use('workorder', layui.factory('workorder')).use(['admin', 'workorder', 'table'], function(){
+  var $ = layui.$
+  ,form = layui.form
+  ,table = layui.table;
+  
+  form.render(null, 'app-content-workorder');
+  
+  //监听搜索
+  form.on('submit(LAY-app-order-search)', function(data){
+    var field = data.field;
+    
+    //执行重载
+    table.reload('LAY-app-workorder', {
+      where: field
+    });
+  });
+});
+</script>

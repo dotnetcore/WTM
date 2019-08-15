@@ -1,0 +1,48 @@
+
+
+  <title>设置初始排序 - 数据表格</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>数据表格</cite></a>
+      <a><cite>设置初始排序</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">设置初始排序</div>
+          <div class="layui-card-body">
+            <table class="layui-hide" id="test-table-initSort"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'table'], function(){
+    var table = layui.table;
+  
+    table.render({
+      elem: '#test-table-initSort'
+      ,height: 313
+      ,url: './json/table/user.js'
+      ,initSort: {
+        field: 'wealth'
+        ,type: 'desc'
+      }
+      ,cols: [[
+        {field:'id', title: 'ID', width:80}
+        ,{field:'username', title: '用户名', width:80}
+        ,{field:'score', title: '评分', width:80, sort: true}
+        ,{field:'wealth', title: '财富', sort: true, minWidth: 150}
+      ]]
+    })
+  
+  });
+  </script>

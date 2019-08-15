@@ -1,0 +1,428 @@
+<title>学校管理</title>
+
+<!-- <div class="layui-fluid"> -->
+<!-- <div class="layui-card" style="margin-bottom: 0;height: 100%;">
+  <div class="layui-card-body"> -->
+<div>
+  <form id="wtForm_e985182b89284190982aadc5fdd3f7ae" class="layui-form" method="post"
+    lay-filter="wtForm_e985182b89284190982aadc5fdd3f7aeform" action="/School/Index?v=1.2.1">
+    <div class="layui-collapse" style="margin-bottom:5px;" lay-filter="b060612cb93a4d33a9f5fdfef6a78360">
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">搜索条件
+          <div style="text-align:right;margin-top:-43px;" id="b060612cb93a4d33a9f5fdfef6a78360">
+            <a href="javascript:void(0)" class="layui-btn layui-btn-sm"
+              id="wtSearchBtn_e985182b89284190982aadc5fdd3f7ae"><i class="layui-icon">&#xe615;</i>搜索</a>
+            <button type="reset" class="layui-btn layui-btn-sm"
+              id="wtResetBtn_e985182b89284190982aadc5fdd3f7ae">重置</button>
+          </div>
+        </h2>
+        <div class="layui-colla-content layui-show">
+
+          <div class="layui-row ">
+
+            <div class="layui-col-md4">
+
+              <div class="layui-form-item">
+                <label for="SchoolListVM_Searcher_SchoolCode" class="layui-form-label">学校编码:</label>
+                <div class="layui-input-block">
+                  <input type="text" name="Searcher.SchoolCode" value="" placeholder="" class="layui-input"
+                    id="SchoolListVM_Searcher_SchoolCode" lay-filter="SchoolListVM_Searcher_SchoolCodefilter">
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="layui-col-md4">
+
+              <div class="layui-form-item">
+                <label for="SchoolListVM_Searcher_SchoolName" class="layui-form-label">学校名称:</label>
+                <div class="layui-input-block">
+                  <input type="text" name="Searcher.SchoolName" value="" placeholder="" class="layui-input"
+                    id="SchoolListVM_Searcher_SchoolName" lay-filter="SchoolListVM_Searcher_SchoolNamefilter">
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="layui-col-md4">
+
+              <div class="layui-form-item">
+                <label for="SchoolListVM_Searcher_SchoolType" class="layui-form-label">学校类型:</label>
+                <div class="layui-input-block">
+                  <select name="Searcher.SchoolType" lay-filter="Searcher.SchoolType" wtm-name="Searcher.SchoolType"
+                    id="SchoolListVM_Searcher_SchoolType">
+                    <option value=''>全部</option>
+                    <option value='0'>公立学校</option>
+                    <option value='1'>私立学校</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  layui.element.init();
+  $('#b060612cb93a4d33a9f5fdfef6a78360 .layui-btn').on('click', function (e) { e.stopPropagation(); })
+  $('#wtResetBtn_e985182b89284190982aadc5fdd3f7ae').on('click', function (btn) {
+    var hiddenAreas = $('#' + this.form.id + ' input[wtm-tag=wtmselector]')
+    if (hiddenAreas && hiddenAreas.length > 0) {
+      for (i = 0; i < hiddenAreas.length; i++) {
+        hiddenAreas[i].remove();
+      }
+    }
+  });
+
+
+  $('#wtSearchBtn_e985182b89284190982aadc5fdd3f7ae').on('click', function () {
+    /* 暂时解决 layui table首次及table.reload()无loading的bug */
+    var layer = layui.layer;
+    // var msg = layer.msg('数据请求中', {
+    //   icon: 16,
+    //   time: -1,
+    //   anim: -1,
+    //   fixed: false
+    // })
+    table.reload('wtTable_e985182b89284190982aadc5fdd3f7ae', {
+      where: $.extend(wtVar_e985182b89284190982aadc5fdd3f7ae.config.where, ff.GetSearchFormData('wtForm_e985182b89284190982aadc5fdd3f7ae', '')),
+      done: function (res, curr, count) {
+        // layer.close(msg);
+        if (this.height == undefined) {
+          var tab = $('#wtTable_e985182b89284190982aadc5fdd3f7ae + .layui-table-view'); tab.css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv'); tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height', '100px'); tab.find('.layui-table-main').addClass('donotuse_fill'); tab.find('.layui-table-header').css('min-height', '40px');
+          ff.triggerResize();
+        }
+      }
+    })
+    /* 暂时解决 layui table首次及table.reload()无loading的bug */
+  });
+
+  layui.element.on('collapse(b060612cb93a4d33a9f5fdfef6a78360)', function (data) { ff.triggerResize() });
+
+</script>
+<script>
+  layui.use(['form'], function () {
+    var form = layui.form.render(null, 'wtForm_e985182b89284190982aadc5fdd3f7aeform');
+    var comboxs = $(".layui-form[lay-filter='wtForm_e985182b89284190982aadc5fdd3f7aeform'] select[wtm-combo='MULTI_COMBO']");
+    /* 启用 ComboBox 多选 */
+    for (var i = 0; i < comboxs.length; i++) {
+      var filter = comboxs[i].attributes['lay-filter'].value, arr = [], subTag = $('input[name="' + filter + '"]');
+      for (var i = 0; i < subTag.length; i++) {
+        arr.push({ name: subTag[i].attributes['text'].value, val: subTag[i].value });
+      }
+      formSelects.on({
+        layFilter: filter, left: '', right: '', separator: ',', arr: arr,
+        selectFunc: null
+      })
+    }
+  })
+</script>
+
+<div style="text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;">
+  <a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolCreate'});"
+    class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-add-1"></i>新建</a>
+  <a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolEdit'});"
+    class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-edit"></i>修改</a>
+  <a href="javascript:void(0)"
+    onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolCreate2'});"
+    class="layui-btn layui-btn-sm"><i class=""></i>主子表新建</a>
+  <a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolEdit2'});"
+    class="layui-btn layui-btn-sm"><i class=""></i>主子表修改</a>
+  <a href="javascript:void(0)" onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolImport'});"
+    class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-templeate-1"></i>导入</a>
+  <a href="javascript:void(0)"
+    onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'_FrameworkGetExportExcel'});"
+    class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-download-circle"></i>导出Excel</a><button type="button"
+    class="layui-btn layui-btn-sm layui-unselect layui-form-select downpanel" style="z-index:10;"
+    id="btn_3d67ac05-268a-49a5-b815-a48457a5acec">
+    <div class="layui-select-title" style="padding-right:20px;">
+      批量处理
+      <i class="layui-edge"></i>
+    </div>
+    <dl class="layui-anim layui-anim-upbit" style="top: initial;padding:1px 0px 0px 0px;">
+      <dd style="padding: 0 0px;margin-bottom:1px;line-height: initial;"><a href="javascript:void(0)"
+          onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolBatchEdit'});"
+          class="layui-btn layui-btn-sm" style="width: 100%;"><i class="layui-icon layui-icon-edit"></i>批量修改</a>
+      </dd>
+      <dd style="padding: 0 0px;margin-bottom:1px;line-height: initial;"><a href="javascript:void(0)"
+          onclick="wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae({event:'SchoolBatchDelete'});"
+          class="layui-btn layui-btn-sm" style="width: 100%;"><i class="layui-icon layui-icon-delete"></i>批量删除</a>
+      </dd>
+    </dl>
+  </button>
+  <script type="text/javascript">layui.use(["form"], function () {
+      var form = layui.form, $ = layui.jquery;
+      $(".downpanel").on("click", ".layui-select-title", function (e) {
+        $(".layui-form-select").not($(this).parents(".layui-form-select")).removeClass("layui-form-selected");
+        $(this).parents(".layui-form-select").toggleClass("layui-form-selected");
+        e.stopPropagation();
+      });
+      $(document).click(function (event) {
+        var _con2 = $(".downpanel");
+        if (!_con2.is(event.target) && (_con2.has(event.target).length === 0)) {
+          _con2.removeClass("layui -form-selected");
+        }
+      });
+    });</script>
+</div>
+<table id="wtTable_e985182b89284190982aadc5fdd3f7ae" lay-filter="wtTable_e985182b89284190982aadc5fdd3f7ae"></table>
+<!-- </div>
+</div> -->
+<script>
+
+  layui.use(['table'], function () {
+
+    var table = layui.table;
+    /* 暂时解决 layui table首次及table.reload()无loading的bug */
+    var layer = layui.layer;
+    // var msg = layer.msg('数据请求中', {
+    //   icon: 16,
+    //   time: -1,
+    //   anim: -1,
+    //   fixed: false
+    // })
+    /* 暂时解决 layui table首次及table.reload()无loading的bug */
+    var wtTable_e985182b89284190982aadc5fdd3f7aeoption = {
+      elem: '#wtTable_e985182b89284190982aadc5fdd3f7ae'
+      , id: 'wtTable_e985182b89284190982aadc5fdd3f7ae'
+      , autoSort: false
+      , totalRow: false
+      , url: '/_Framework/GetPagingData'
+      , where: { "_DONOT_USE_VMNAME": "WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM, WalkingTec.Mvvm.Demo", "_DONOT_USE_CS": "default", "SearcherMode": 0, "Searcher.SchoolCode": null, "Searcher.SchoolName": null, "Searcher.SchoolType": null, "Searcher.ParentId": null, "Searcher.IsValid": null, "Searcher.Session": { "SessionId": "f558d395-5687-fd7a-ab5a-06b4d07e5677" } }
+      , method: 'post'
+      , loading: true
+      , request: { "pageName": "Searcher.Page", "limitName": "Searcher.Limit" }
+      , response: { "statusName": "Code", "statusCode": 200, "msgName": "Msg", "countName": "Count", "dataName": "Data" }
+      , page: true
+      , limit: 20
+      , limits: [10, 20, 50, 80, 100, 150, 200]
+      , height: 'full-278'
+
+      , cols: [[{ "type": "checkbox", "width": 45, "rowspan": 1, "fixed": "left", "align": "center", "totalRowText": "合计：" }, { "type": "numbers", "width": 45, "rowspan": 1, "fixed": "left", "align": "center" }, {
+        "field": "SchoolCode", "title": "学校编码", "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'SchoolCode_' + d.LAY_INDEX; if (d.SchoolCode__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.SchoolCode__bgcolor + "');</s" + "cript>"; if (d.SchoolCode__forecolor != undefined) sty = 'color:' + d.SchoolCode__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.SchoolCode.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "SchoolName", "title": "学校名称", "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'SchoolName_' + d.LAY_INDEX; if (d.SchoolName__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.SchoolName__bgcolor + "');</s" + "cript>"; if (d.SchoolName__forecolor != undefined) sty = 'color:' + d.SchoolName__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.SchoolName.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "SchoolType", "title": "学校类型", "align": "center", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'SchoolType_' + d.LAY_INDEX; if (d.SchoolType__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.SchoolType__bgcolor + "');</s" + "cript>"; if (d.SchoolType__forecolor != undefined) sty = 'color:' + d.SchoolType__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.SchoolType.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "test", "title": "测试", "align": "center", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'test_' + d.LAY_INDEX; if (d.test__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.test__bgcolor + "');</s" + "cript>"; if (d.test__forecolor != undefined) sty = 'color:' + d.test__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.test.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "Remark", "title": "备注", "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'Remark_' + d.LAY_INDEX; if (d.Remark__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.Remark__bgcolor + "');</s" + "cript>"; if (d.Remark__forecolor != undefined) sty = 'color:' + d.Remark__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.Remark.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, { "toolbar": "#wtToolBar_e985182b89284190982aadc5fdd3f7ae", "title": "操作", "width": 500, "fixed": "right", "align": "center" }]]
+
+      , even: true
+
+      , done: function (res, curr, count) {
+        // layer.close(msg);
+        // var tab = $('#wtTable_e985182b89284190982aadc5fdd3f7ae + .layui-table-view'); tab.find('table').css('border-collapse', 'separate');
+        // tab.css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv'); tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height', '100px'); tab.find('.layui-table-main').addClass('donotuse_fill'); tab.find('.layui-table-header').css('min-height', '40px'); ff.triggerResize();
+
+
+      }
+    }
+    wtVar_e985182b89284190982aadc5fdd3f7ae = table.render(wtTable_e985182b89284190982aadc5fdd3f7aeoption);
+
+
+    // 监听工具条
+    function wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+      var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
+      switch (layEvent) {
+        case 'SchoolCreate': {
+          var isPost = false;
+          var tempUrl = '/School/Create?1=1', whereStr = [];
+          ff.OpenDialog(tempUrl, 'f097c6a884a149b88ae091ec822777d6', '新建', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolEdit': {
+          var isPost = false;
+          var tempUrl = '/School/Edit?1=1', whereStr = [];
+          if (data == undefined || data == null || data.ID == undefined || data.ID == null) {
+            var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+            if (ids.length == 0) {
+              layui.layer.msg('请选择一行');
+              return;
+            } else if (ids.length > 1) {
+              layui.layer.msg('最多只能选择一行');
+              return;
+            } else {
+              tempUrl = tempUrl + '&id=' + ids[0];
+              var objs = ff.GetSelectionData('wtTable_e985182b89284190982aadc5fdd3f7ae');
+              if (objs != null && objs.length > 0) {
+                tempUrl = ff.concatWhereStr(tempUrl, whereStr, objs[0]);
+              }
+            }
+          } else {
+            tempUrl = tempUrl + '&id=' + data.ID;
+            tempUrl = ff.concatWhereStr(tempUrl, whereStr, data);
+          }
+
+          ff.OpenDialog(tempUrl, '33c75483ebc64b6f8bf5d590426ee25a', '修改', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolDelete': {
+          var isPost = false;
+          var tempUrl = '/School/Delete?1=1', whereStr = [];
+          if (data == undefined || data == null || data.ID == undefined || data.ID == null) {
+            var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+            if (ids.length == 0) {
+              layui.layer.msg('请选择一行');
+              return;
+            } else if (ids.length > 1) {
+              layui.layer.msg('最多只能选择一行');
+              return;
+            } else {
+              tempUrl = tempUrl + '&id=' + ids[0];
+              var objs = ff.GetSelectionData('wtTable_e985182b89284190982aadc5fdd3f7ae');
+              if (objs != null && objs.length > 0) {
+                tempUrl = ff.concatWhereStr(tempUrl, whereStr, objs[0]);
+              }
+            }
+          } else {
+            tempUrl = tempUrl + '&id=' + data.ID;
+            tempUrl = ff.concatWhereStr(tempUrl, whereStr, data);
+          }
+
+          ff.OpenDialog(tempUrl, '3e42feede9c647288f8107d256246c24', '删除', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolDetails': {
+          var isPost = false;
+          var tempUrl = '/School/Details?1=1', whereStr = [];
+          if (data == undefined || data == null || data.ID == undefined || data.ID == null) {
+            var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+            if (ids.length == 0) {
+              layui.layer.msg('请选择一行');
+              return;
+            } else if (ids.length > 1) {
+              layui.layer.msg('最多只能选择一行');
+              return;
+            } else {
+              tempUrl = tempUrl + '&id=' + ids[0];
+              var objs = ff.GetSelectionData('wtTable_e985182b89284190982aadc5fdd3f7ae');
+              if (objs != null && objs.length > 0) {
+                tempUrl = ff.concatWhereStr(tempUrl, whereStr, objs[0]);
+              }
+            }
+          } else {
+            tempUrl = tempUrl + '&id=' + data.ID;
+            tempUrl = ff.concatWhereStr(tempUrl, whereStr, data);
+          }
+
+          ff.OpenDialog(tempUrl, '9c08f3775a574532b66884f3dcf222bf', '详细', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolCreate2': {
+          var isPost = false;
+          var tempUrl = '/School/Create2?1=1', whereStr = [];
+          ff.OpenDialog(tempUrl, 'aeb92c2c977448d985d854a194c2c505', '主子表新建', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolEdit2': {
+          var isPost = false;
+          var tempUrl = '/School/Edit2?1=1', whereStr = [];
+          if (data == undefined || data == null || data.ID == undefined || data.ID == null) {
+            var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+            if (ids.length == 0) {
+              layui.layer.msg('请选择一行');
+              return;
+            } else if (ids.length > 1) {
+              layui.layer.msg('最多只能选择一行');
+              return;
+            } else {
+              tempUrl = tempUrl + '&id=' + ids[0];
+              var objs = ff.GetSelectionData('wtTable_e985182b89284190982aadc5fdd3f7ae');
+              if (objs != null && objs.length > 0) {
+                tempUrl = ff.concatWhereStr(tempUrl, whereStr, objs[0]);
+              }
+            }
+          } else {
+            tempUrl = tempUrl + '&id=' + data.ID;
+            tempUrl = ff.concatWhereStr(tempUrl, whereStr, data);
+          }
+
+          ff.OpenDialog(tempUrl, '4b6dcd3c53304021ab61796ce76d6479', '主子表修改', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolImport': {
+          var isPost = false;
+          var tempUrl = '/School/Import?1=1', whereStr = [];
+          ff.OpenDialog(tempUrl, '97c1c2a1857747709a78d3fbe46805dc', '导入', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case '_FrameworkGetExportExcel': {
+          var isPost = false;
+          var tempUrl = '/_Framework/GetExportExcel?1=1&_DONOT_USE_VMNAME=WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM, WalkingTec.Mvvm.Demo', whereStr = null;
+          var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+          isPost = true;
+
+          ff.DownloadExcelOrPdf(tempUrl, 'wtForm_e985182b89284190982aadc5fdd3f7ae', { "_DONOT_USE_VMNAME": "WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM, WalkingTec.Mvvm.Demo", "_DONOT_USE_CS": "default", "SearcherMode": 0, "Searcher.SchoolCode": null, "Searcher.SchoolName": null, "Searcher.SchoolType": null, "Searcher.ParentId": null, "Searcher.IsValid": null, "Searcher.Session": { "SessionId": "f558d395-5687-fd7a-ab5a-06b4d07e5677" } }, ids);
+        }; break;
+
+        case 'SchoolBatchEdit': {
+          var isPost = false;
+          var tempUrl = '/School/BatchEdit?1=1', whereStr = [];
+          isPost = true;
+          var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+          if (ids.length == 0) {
+            layui.layer.msg('请至少选择一行');
+            return;
+          }
+
+          ff.OpenDialog(tempUrl, '2b10a32ec0e849f291a083d6b12911fc', '批量修改', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case 'SchoolBatchDelete': {
+          var isPost = false;
+          var tempUrl = '/School/BatchDelete?1=1', whereStr = [];
+          isPost = true;
+          var ids = ff.GetSelections('wtTable_e985182b89284190982aadc5fdd3f7ae');
+          if (ids.length == 0) {
+            layui.layer.msg('请至少选择一行');
+            return;
+          }
+
+          ff.OpenDialog(tempUrl, 'f0a3a72d31e84fa2a7ca1c0cba3795f5', '批量删除', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+        default: break;
+      }
+      return;
+    }
+
+    table.on('tool(wtTable_e985182b89284190982aadc5fdd3f7ae)', wtToolBarFunc_wtTable_e985182b89284190982aadc5fdd3f7ae);
+
+
+    table.on('sort(wtTable_e985182b89284190982aadc5fdd3f7ae)', function (obj) {
+      var sortfilter = {};
+      sortfilter['Searcher.SortInfo.Property'] = obj.field;
+      sortfilter['Searcher.SortInfo.Direction'] = obj.type.replace(obj.type[0], obj.type[0].toUpperCase());
+      var w = $.extend(wtTable_e985182b89284190982aadc5fdd3f7aeoption.where, sortfilter);
+
+      table.reload('wtTable_e985182b89284190982aadc5fdd3f7ae', {
+        initSort: obj,
+        where: w
+      });
+    });
+  })
+</script>
+<!-- Grid 行内按钮 -->
+<script type="text/html"
+  id="wtToolBar_e985182b89284190982aadc5fdd3f7ae"><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="SchoolEdit">修改</a><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="SchoolDelete">删除</a><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="SchoolDetails">详细</a></script>
+<!-- </div>
+</div> -->

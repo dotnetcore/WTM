@@ -1,0 +1,57 @@
+
+
+<form class="layui-form" lay-filter="layuiadmin-form-list" id="layuiadmin-form-list" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="poster" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">发帖内容</label>
+    <div class="layui-input-block">
+      <textarea name="content" lay-verify="required" autocomplete="off" class="layui-textarea"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">置顶</label>
+    <div class="layui-input-block">
+      <input type="checkbox" lay-filter="switch" lay-verify="required" name="switch" lay-skin="switch" lay-text="ON|OFF">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">头像</label>
+    <div class="layui-input-inline">
+      <input type="text" name="avatar" placeholder="请上传图片" autocomplete="off" class="layui-input" >
+    </div>
+    <button style="float: left;" type="button" class="layui-btn" id="layuiadmin-upload-list">上传图片</button> 
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-block">
+      <input type="button" lay-submit lay-filter="layuiadmin-app-forum-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</form>
+
+<script>
+layui.use(['admin', 'form', 'upload'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,view = layui.view
+  ,table = layui.table
+  ,form = layui.form
+  ,upload = layui.upload;
+
+  upload.render({
+    elem: '#layuiadmin-upload-list'
+    ,url: './json/upload/demo.js'
+    ,accept: 'images'
+    ,method: 'get'
+    ,acceptMime: 'image/*'
+    ,done: function(res){
+      $(this.item).prev("div").children("input").val(res.data.src)
+    }
+  });
+})
+</script>

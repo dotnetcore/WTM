@@ -1,0 +1,63 @@
+
+
+  <title>设置单元格样式 - 数据表格</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>数据表格</cite></a>
+      <a><cite>设置单元格样式</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">设置单元格样式</div>
+          <div class="layui-card-body">
+            <table class="layui-hide" id="test-table-style"></table>
+            
+            <script type="text/html" id="test-table-usernameTpl">
+              <a href="/?table-demo-id={{d.id}}" class="layui-table-link" target="_blank">{{ d.username }}</a>
+            </script>
+            <script type="text/html" id="test-table-sexTpl">
+              {{#  if(d.sex === '女'){ }}
+                <span style="color: #F581B1;">{{ d.sex }}</span>
+              {{#  } else { }}
+                {{ d.sex }}
+              {{#  } }}
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'table'], function(){
+    var table = layui.table;
+  
+    table.render({
+      elem: '#test-table-style'
+      ,url: './json/table/user.js'
+      ,height: 310
+      ,cols: [[
+        {field:'id', title:'ID', width:80, sort: true}
+        ,{field:'username', title:'用户名', width:80, templet: '#usernameTpl'}
+        ,{field:'sex', title:'性别', width:80, sort: true, templet: '#sexTpl'}
+        ,{field:'city', title:'城市', width:80}
+        ,{field:'sign', title:'签名'}
+        ,{field:'experience', title:'积分', width:80, sort: true, style:'background-color: #eee;'}
+        ,{field:'score', title:'评分', width:80, sort: true}
+        ,{field:'classify', title:'职业', width:80, style:'background-color: #009688; color: #fff;'}
+        ,{field:'wealth', title:'财富', width:135, sort: true}
+      ]]
+      ,page: true
+      ,skin: 'row'
+      ,even: true
+    });
+  
+  });
+  </script>
