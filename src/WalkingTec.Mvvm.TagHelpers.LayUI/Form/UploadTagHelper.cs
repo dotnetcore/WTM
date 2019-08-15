@@ -89,18 +89,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var vm = context.Items["model"] as BaseVM;
             var url = "/_Framework/Upload?1=1";
-            if(UploadType == UploadTypeEnum.ImageFile)
+            if (UploadType == UploadTypeEnum.ImageFile)
             {
-                if(ShowPreview == null)
+                if (ShowPreview == null)
                 {
                     ShowPreview = true;
                 }
                 url = "/_Framework/UploadImage?1=1";
-                if(ThumbWidth != null)
+                if (ThumbWidth != null)
                 {
                     url += "&width=" + ThumbWidth;
                 }
-                if(ThumbHeight != null)
+                if (ThumbHeight != null)
                 {
                     url += "&height=" + ThumbHeight;
                 }
@@ -116,62 +116,63 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.PostElement.SetHtmlContent($@"
 <input type='hidden' id='{Id}' name='{Field.Name}' value='{Field.Model}' {(Field.Metadata.IsRequired ? " lay-verify=required" : string.Empty)} />
 <script>
-    function {Id}DoDelete(fileid){{
-        $('#{Id}').parents('form').append(""<input type='hidden' id='DeletedFileIds' name='DeletedFileIds' value='""+fileid+""' />"");
-        $('#{Id}label').html('');
-        $('#{Id}').val('');
+  function {Id}DoDelete(fileid){{
+    $('#{Id}').parents('form').append(""<input type='hidden' id='DeletedFileIds' name='DeletedFileIds' value='""+fileid+""' />"");
+    $('#{Id}label').html('');
+    $('#{Id}').val('');
+  }}
+  var index = 0;
+  var {Id}preview;
+
+layui.use(['upload'],function(){{
+  /* 普通图片上传 */
+  var uploadInst = layui.upload.render({{
+    elem: '#{Id}button'
+    ,url: '{url}'
+    ,size: {FileSize}
+    ,accept: 'file'
+    {(ext == "" ? "" : $", exts: '{ext}'")}
+    ,before: function(obj){{
+        index = layui.layer.load(2);
+        {Id}preview = obj;
     }}
-    var index = 0;
-    var {Id}preview; 
-
-    //普通图片上传
-    var uploadInst = layui.upload.render({{
-        elem: '#{Id}button'
-        ,url: '{url}'
-        ,size: {FileSize}
-        ,accept: 'file'
-        {(ext == "" ? "" :$", exts: '{ext}'")}
-        ,before: function(obj){{
-            index = layui.layer.load(2);
-            {Id}preview = obj;
-        }}
-        ,done: function(res){{
-            layui.layer.close(index);
-            if(res.Data.Id == ''){{
-                $('#{Id}label').html('');        
-                layui.layer.msg('上传失败');
-            }}
-            else{{
-                  $('#{Id}label').html('');        
-              $('#{Id}').val(res.Data.Id);
-            {(ShowPreview == true ? $@"
-             {Id}preview.preview(function(index, file, result){{
-                    $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
-                    $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64)-10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
-                    $('#{Id}del').on('click',function(){{
-                        {Id}DoDelete(res.Data.Id);
-                    }});
-                  }});       
-            " : $@"
-                    $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  删除</button>"");
-                    $('#{Id}del').on('click',function(){{
-                        {Id}DoDelete(res.Data.Id);
-                    }});
-
-            "
-            )}
-            }}
-        }}
-        ,error: function(){{
-            layui.layer.close(index);
-        }}
-    }});
+    ,done: function(res){{
+      layui.layer.close(index);
+      if(res.Data.Id == ''){{
+          $('#{Id}label').html('');
+          layui.layer.msg('上传失败');
+      }}
+      else{{
+            $('#{Id}label').html('');
+        $('#{Id}').val(res.Data.Id);
+      {(ShowPreview == true ? $@"
+       {Id}preview.preview(function(index, file, result){{
+            $('#{Id}label').append('<img src=""'+ result +'"" alt=""'+ file.name +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+            $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
+            $('#{Id}del').on('click',function(){{
+              {Id}DoDelete(res.Data.Id);
+            }});
+          }});
+      " : $@"
+          $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  删除</button>"");
+          $('#{Id}del').on('click',function(){{
+            {Id}DoDelete(res.Data.Id);
+          }});
+      "
+      )}
+      }}
+    }}
+    ,error: function(){{
+        layui.layer.close(index);
+    }}
+  }});
+}})
 </script>
 ");
             if (Field.Model != null && Field.Model.ToString() != Guid.Empty.ToString())
             {
                 var geturl = $"/_Framework/GetFileName/{Field.Model}";
-                if(vm != null)
+                if (vm != null)
                 {
                     geturl += $"?_DONOT_USE_CS={vm.CurrentCS}";
                 }
@@ -182,26 +183,26 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 output.PostElement.AppendHtml($@"
 <script>
-    $.ajax({{
-        cache: false,
-        type: 'GET',
-        url: '{geturl}',
-        async: false,
-        success: function(data) {{
-            {(ShowPreview == true ? $@"
-                $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
-                $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
-                $('#{Id}del').on('click',function(){{
-                    {Id}DoDelete('{Field.Model}');
-                }});
-            " : $@"
-                    $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"");
-                    $('#{Id}del').on('click',function(){{
-                        {Id}DoDelete('{Field.Model}');
-                    }});
-            ")}
-        }}
-    }});
+$.ajax({{
+  cache: false,
+  type: 'GET',
+  url: '{geturl}',
+  async: false,
+  success: function(data) {{
+    {(ShowPreview == true ? $@"
+      $('#{Id}label').append('<img src=""{picurl}"" alt=""'+ data +'"" class=""layui-upload-img"" width={PreviewWidth ?? 64} height={PreviewHeight ?? 64} />');
+      $('#{Id}label').append('<i class=""layui-icon layui-icon-close"" style=""font-size: 20px;position:absolute;left:{(PreviewWidth ?? 64) - 10}px;top:-10px;color: #ff0000;"" id=""{Id}del""></i> ');
+      $('#{Id}del').on('click',function(){{
+        {Id}DoDelete('{Field.Model}');
+      }});
+    " : $@"
+        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"");
+        $('#{Id}del').on('click',function(){{
+          {Id}DoDelete('{Field.Model}');
+        }});
+    ")}
+  }}
+}});
 </script>
 ");
             }

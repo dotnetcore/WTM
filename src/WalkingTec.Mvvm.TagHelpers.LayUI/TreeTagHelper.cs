@@ -28,11 +28,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 var script = $@"
 <script>
-layui.tree({{
-  elem: '#{Id}',nameField:'text',childrenField:'children',spreadField:'expended'
-  {(string.IsNullOrEmpty(ClickFunc) ? string.Empty : $",click:function(a){{{ClickFunc}(a);}}")}
-  ,nodes: {JsonConvert.SerializeObject(mm, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })}
-}});
+layui.use(['tree'],function(){{
+  layui.tree({{
+    elem: '#{Id}',nameField:'text',childrenField:'children',spreadField:'expended'
+    {(string.IsNullOrEmpty(ClickFunc) ? string.Empty : $",click:function(a){{{ClickFunc}(a);}}")}
+    ,nodes: {JsonConvert.SerializeObject(mm, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })}
+  }});
+}})
 </script>
 ";
                 output.PostElement.AppendHtml(script);

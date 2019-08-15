@@ -23,15 +23,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.SetAttribute("id", Id);
             }
-            if(output.Attributes.ContainsName("lay-filter") == false && output.Attributes.ContainsName("id") == true)
+            if (output.Attributes.ContainsName("lay-filter") == false && output.Attributes.ContainsName("id") == true)
             {
                 output.Attributes.SetAttribute("lay-filter", $"{output.Attributes["id"].Value}filter");
             }
-            if(string.IsNullOrEmpty(Class) == false)
+            if (string.IsNullOrEmpty(Class) == false)
             {
                 output.Attributes.SetAttribute("class", Class);
             }
-            if(Style == null)
+            if (Style == null)
             {
                 Style = "";
             }
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 Style += $" height:{Height}px;";
             }
-            if(string.IsNullOrEmpty(Style) == false)
+            if (string.IsNullOrEmpty(Style) == false)
             {
                 output.Attributes.SetAttribute("style", Style);
             }
@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     postHtml += @"
 </div>
 ";
-                    output.PreElement.SetHtmlContent(preHtml+output.PreElement.GetContent());
+                    output.PreElement.SetHtmlContent(preHtml + output.PreElement.GetContent());
                     output.PostElement.AppendHtml(postHtml);
                 }
             }
@@ -76,15 +76,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         if (!string.IsNullOrEmpty(item.TriggerUrl))
                         {
-
-                            //item.ChangeFunc =  $"ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.Name)}');";
                             output.PostElement.AppendHtml($@"
 <script>
-        var form = layui.form;
-        form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
-           {FormatFuncName(item.ChangeFunc)};
-           ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "."+ item.LinkField.Name)}','{item.LinkField.Name}');
-        }});
+layui.use(['form'],function(){{
+  var form = layui.form;
+  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
+    {FormatFuncName(item.ChangeFunc)};
+    ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "." + item.LinkField.Name)}','{item.LinkField.Name}');
+  }});
+}})
 </script>
 ");
                         }
@@ -95,10 +95,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             output.PostElement.AppendHtml($@"
 <script>
-        var form = layui.form;
-        form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
-            {FormatFuncName(item.ChangeFunc)};
-        }});
+layui.use(['form'],function(){{
+  var form = layui.form;
+  form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
+    {FormatFuncName(item.ChangeFunc)};
+  }});
+}})
 </script>
 ");
                         }
@@ -110,10 +112,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         output.PostContent.SetHtmlContent(output.PostContent.GetContent().Replace("type=\"checkbox\" ", $"type=\"checkbox\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
                         output.PostElement.AppendHtml($@"
 <script>
-        var form = layui.form;
-        form.on('checkbox({output.Attributes["lay-filter"].Value})', function(data){{
-            {FormatFuncName(item.ChangeFunc)};
-        }});
+layui.use(['form'],function(){{
+  var form = layui.form;
+  form.on('checkbox({output.Attributes["lay-filter"].Value})', function(data){{
+    {FormatFuncName(item.ChangeFunc)};
+  }});
+}})
 </script>
 ");
                     }
@@ -123,10 +127,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         output.PostElement.AppendHtml($@"
 <script>
-        var form = layui.form;
-        form.on('switch({output.Attributes["lay-filter"].Value})', function(data){{
-            {FormatFuncName(item.ChangeFunc)};
-        }});
+layui.use(['form'],function(){{
+  var form = layui.form;
+  form.on('switch({output.Attributes["lay-filter"].Value})', function(data){{
+    {FormatFuncName(item.ChangeFunc)};
+  }});
+}})
 </script>
 ");
                     }
@@ -137,36 +143,41 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         output.PostElement.SetHtmlContent(output.PostElement.GetContent().Replace("type=\"radio\" ", $"type=\"radio\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
                         output.PostElement.AppendHtml($@"
 <script>
-        var form = layui.form;
-        form.on('radio({output.Attributes["lay-filter"].Value})', function(data){{
-            {FormatFuncName(item.ChangeFunc)};
-        }});
+layui.use(['form'],function(){{
+  var form = layui.form;
+  form.on('radio({output.Attributes["lay-filter"].Value})', function(data){{
+    {FormatFuncName(item.ChangeFunc)};
+  }});
+}})
 </script>
 ");
                     }
                     break;
                 case TextBoxTagHelper item:
-                    if(string.IsNullOrEmpty(item.SearchUrl) == false){
+                    if (string.IsNullOrEmpty(item.SearchUrl) == false)
+                    {
                         output.PostElement.AppendHtml($@"
 <script>
-    layui.autocomplete.render({{
-        elem: $('#{item.Id}')[0],
-        url: '{item.SearchUrl}',
-        cache: false,
-        template_val: '{{{{d.Value}}}}',
-        template_txt: '{{{{d.Text}}}}',
-        onselect: function (resp) {{
-            $('#{item.Id}').val(resp.Value);
-        }}
-    }});</script>
+layui.use(['autocomplete'],function(){{
+  layui.autocomplete.render({{
+    elem: $('#{item.Id}')[0],
+    url: '{item.SearchUrl}',
+    cache: false,
+    template_val: '{{{{d.Value}}}}',
+    template_txt: '{{{{d.Text}}}}',
+    onselect: function (resp) {{
+      $('#{item.Id}').val(resp.Value);
+    }}
+  }});
+}})
+</script>
 ");
-
                     }
                     break;
             }
 
             //如果是submitbutton，则在button前面加入一个区域用来定位输出后台返回的错误
-            if (output.TagName == "button" && output.Attributes.TryGetAttribute("lay-submit",out TagHelperAttribute ta) == true)
+            if (output.TagName == "button" && output.Attributes.TryGetAttribute("lay-submit", out TagHelperAttribute ta) == true)
             {
                 output.PreElement.SetHtmlContent($"<p id='{Id}errorholder'></p>" + output.PreElement.GetContent());
             }
@@ -174,7 +185,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string FormatFuncName(string funcname)
         {
-            if(funcname == null)
+            if (funcname == null)
             {
                 return null;
             }
