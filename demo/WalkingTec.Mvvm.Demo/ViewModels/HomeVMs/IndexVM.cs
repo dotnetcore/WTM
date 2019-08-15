@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             }
             else
             {
-                var rv = AllMenu.Where(x =>x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.IsInside==true ? x.Url : "/_framework/outside?url="+x.Url, SortByName: false);
+                var rv = AllMenu.Where(x => x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.IsInside == true ? x.Url : "/_framework/outside?url=" + x.Url, SortByName: false);
                 RemoveUnAccessableMenu(rv, LoginUserInfo);
                 RemoveEmptyMenu(rv);
                 return rv;
@@ -34,10 +34,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         }
 
         /// <summary>
-        /// ÒÆ³ıÃ»ÓĞÈ¨ÏŞ·ÃÎÊµÄ²Ëµ¥
+        /// ç§»é™¤æ²¡æœ‰æƒé™è®¿é—®çš„èœå•
         /// </summary>
-        /// <param name="menus">²Ëµ¥ÁĞ±í</param>
-        /// <param name="info">ÓÃ»§ĞÅÏ¢</param>
+        /// <param name="menus">èœå•åˆ—è¡¨</param>
+        /// <param name="info">ç”¨æˆ·ä¿¡æ¯</param>
         private void RemoveUnAccessableMenu(List<TreeSelectListItem> menus, LoginUserInfo info)
         {
             if (menus == null)
@@ -46,15 +46,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             }
 
             List<TreeSelectListItem> toRemove = new List<TreeSelectListItem>();
-            //Èç¹ûÃ»ÓĞÖ¸¶¨ÓÃ»§ĞÅÏ¢£¬ÔòÓÃµ±Ç°ÓÃ»§µÄµÇÂ¼ĞÅÏ¢
+            //å¦‚æœæ²¡æœ‰æŒ‡å®šç”¨æˆ·ä¿¡æ¯ï¼Œåˆ™ç”¨å½“å‰ç”¨æˆ·çš„ç™»å½•ä¿¡æ¯
             if (info == null)
             {
                 info = LoginUserInfo;
             }
-            //Ñ­»·ËùÓĞ²Ëµ¥Ïî
+            //å¾ªç¯æ‰€æœ‰èœå•é¡¹
             foreach (var menu in menus)
             {
-                //ÅĞ¶ÏÊÇ·ñÓĞÈ¨ÏŞ£¬Èç¹ûÃ»ÓĞ£¬ÔòÌí¼Óµ½ĞèÒªÒÆ³ıµÄÁĞ±íÖĞ
+                //åˆ¤æ–­æ˜¯å¦æœ‰æƒé™ï¼Œå¦‚æœæ²¡æœ‰ï¼Œåˆ™æ·»åŠ åˆ°éœ€è¦ç§»é™¤çš„åˆ—è¡¨ä¸­
                 var url = menu.Url;
                 if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
                 {
@@ -64,13 +64,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 {
                     toRemove.Add(menu);
                 }
-                //Èç¹ûÓĞÈ¨ÏŞ£¬Ôòµİ¹éµ÷ÓÃ±¾º¯Êı¼ì²é×Ó²Ëµ¥
+                //å¦‚æœæœ‰æƒé™ï¼Œåˆ™é€’å½’è°ƒç”¨æœ¬å‡½æ•°æ£€æŸ¥å­èœå•
                 else
                 {
                     RemoveUnAccessableMenu(menu.Children, info);
                 }
             }
-            //É¾³ıÃ»ÓĞÈ¨ÏŞ·ÃÎÊµÄ²Ëµ¥
+            //åˆ é™¤æ²¡æœ‰æƒé™è®¿é—®çš„èœå•
             foreach (var remove in toRemove)
             {
                 menus.Remove(remove);
@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 
         private void RemoveEmptyMenu(List<TreeSelectListItem> menus)
         {
-            for(int i = 0; i < menus.Count; i++)
+            for (int i = 0; i < menus.Count; i++)
             {
                 if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
                 {

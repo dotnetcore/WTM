@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Mvc
                 listVM.NeedPage = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
                 Regex r = new Regex("<script>.*?</script>");
-                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");                
+                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
                 listVM.IsSearched = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Selector;
                 listVM.NeedPage = originNeedPage;
@@ -332,7 +332,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             if (height == null)
             {
-                height = width * oimage.Height /oimage.Width ;
+                height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
@@ -386,7 +386,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("获取文件")]
-        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default",int? width = null, int? height = null)
+        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             if (id == Guid.Empty)
@@ -515,6 +515,197 @@ namespace WalkingTec.Mvvm.Mvc
             else
             {
                 throw new Exception("您没有访问该页面的权限");
+            }
+        }
+
+        /// <summary>
+        /// 移除没有权限访问的菜单
+        /// </summary>
+        /// <param name="menus">菜单列表</param>
+        /// <param name="info">用户信息</param>
+        private void RemoveUnAccessableMenu(List<menuObj> menus, LoginUserInfo info)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+
+            List<menuObj> toRemove = new List<menuObj>();
+            //如果没有指定用户信息，则用当前用户的登录信息
+            if (info == null)
+            {
+                info = LoginUserInfo;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                //判断是否有权限，如果没有，则添加到需要移除的列表中
+                var url = menu.Url;
+                if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
+                {
+                    url = url.Replace("/_framework/outside?url=", "");
+                }
+                if (!string.IsNullOrEmpty(url) && info.IsAccessable(HttpUtility.UrlDecode(url)) == false)
+                {
+                    toRemove.Add(menu);
+                }
+                //如果有权限，则递归调用本函数检查子菜单
+                else
+                {
+                    RemoveUnAccessableMenu(menu.Children, info);
+                }
+            }
+            //删除没有权限访问的菜单
+            foreach (var remove in toRemove)
+            {
+                menus.Remove(remove);
+            }
+        }
+
+        private void RemoveEmptyMenu(List<menuObj> menus)
+        {
+            for (int i = 0; i < menus.Count; i++)
+            {
+                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
+                {
+                    menus.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// genreate menu
+        /// </summary>
+        private void GenerateMenuTree(List<FrameworkMenu> menus, List<menuObj> resultMenus)
+        {
+            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new menuObj()
+            {
+                Id = x.ID,
+                Title = x.PageName,
+                Url = x.Url
+            }).ToList());
+
+            foreach (var menu in resultMenus)
+            {
+                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new menuObj()
+                {
+                    Title = x.PageName,
+                    Url = x.Url
+                }).ToList();
+                if (temp.Count() > 0)
+                {
+                    menu.Children = temp;
+                    foreach (var item in menu.Children)
+                    {
+                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new menuObj()
+                        {
+                            Title = x.PageName,
+                            Url = x.Url
+                        }).ToList();
+
+                        if (item.Children.Count() == 0)
+                            item.Children = null;
+                    }
+                }
+            }
+        }
+
+        public class menuObj
+        {
+            [JsonIgnore]
+            public Guid Id { get; set; }
+
+            /// <summary>
+            /// Name
+            /// //TODO 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("name")]
+            // public string Name { get; set; }
+            public string Name => "";
+
+            /// <summary>
+            /// Title
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("title")]
+            public string Title { get; set; }
+
+            /// <summary>
+            /// 图标
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("icon")]
+            public string Icon { get; set; }
+
+            /// <summary>
+            /// 是否展开节点
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("spread")]
+            public bool? Expand { get; set; }
+
+            /// <summary>
+            /// Url
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("jump")]
+            public string Url { get; set; }
+
+            [JsonProperty("list")]
+            public List<menuObj> Children { get; set; }
+
+        }
+
+        [AllRights]
+        [HttpGet]
+        public IActionResult Menu()
+        {
+            if (ConfigInfo.IsQuickDebug == true)
+            {
+                var resultMenus = new List<menuObj>();
+                GenerateMenuTree(FFMenus, resultMenus);
+                resultMenus.Insert(0, new menuObj()
+                {
+                    Title = "Sample",
+                    Children = new List<menuObj>(){
+                        new menuObj()
+                        {
+                            Title = "学校管理",
+                            Url = "views/demo/school.html",
+                            Children = null
+                        },new menuObj()
+                        {
+                            Title = "日志",
+                            Url = "views/demo/log.html",
+                            Children = null
+                        },new menuObj()
+                        {
+                            Title = "学生管理",
+                            Url = "views/demo/student.html",
+                            Children = null
+                        }
+                    }
+                });
+                // return Json(resultMenus);
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = "", Data = resultMenus }, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), "application/json");
+            }
+            else
+            {
+                var resultMenus = new List<menuObj>();
+                GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
+                RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
+                RemoveEmptyMenu(resultMenus);
+                // return Json(resultMenus);
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = "", Data = resultMenus }, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), "application/json");
             }
         }
 

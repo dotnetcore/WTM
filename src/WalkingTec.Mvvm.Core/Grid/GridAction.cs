@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Core
         /// 是否需要弹出窗口
         /// </summary>
         public bool ShowDialog { get; set; }
-        
+
         /// <summary>
         /// 如果设定了SubActions，则代表需要用SplitButton的形式展示，主GridAction将不起作用
         /// </summary>

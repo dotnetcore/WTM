@@ -449,16 +449,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.PostElement.AppendHtml($@"
 <script>
+layui.use(['table'], function(){{
   var table = layui.table;
-  /* 暂时解决 layui table首次及table.reload()无loading的bug */
-  var layer = layui.layer;
-  var msg = layer.msg('数据请求中', {{
-    icon: 16,
-    time: -1,
-    anim: -1,
-    fixed: false
-  }})
-  /* 暂时解决 layui table首次及table.reload()无loading的bug */
  var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
@@ -487,9 +479,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
 }}
-}}
+    }}
   {TableJSVar} = table.render({Id}option);
- {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
+  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
 
   // 监听工具条
   function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
@@ -517,13 +509,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     where: w
     }});
   }});
+}})
 </script>
 <!-- Grid 行内按钮 -->
 <script type=""text/html"" id=""{ToolBarId}"">{rowBtnStrBuilder}</script>
 ");
             #endregion
 
-            output.PreElement.AppendHtml($@"<div style=""text-align:right;margin-right:15px"">{toolBarBtnStrBuilder}</div>");
+            output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
 { (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
