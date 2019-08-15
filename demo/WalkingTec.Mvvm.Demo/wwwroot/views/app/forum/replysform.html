@@ -1,0 +1,35 @@
+
+
+<form class="layui-form" lay-filter="layuiadmin-app-forum-reply" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">回帖内容</label>
+    <div class="layui-input-block">
+      <textarea name="content" lay-verify="required" autocomplete="off" class="layui-textarea" style="height: 220px;"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="layuiadmin-app-forumreply-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</form>
+
+<script>
+layui.use(['index', 'form', 'upload'], function(){
+  var $ = layui.$
+  ,form = layui.form
+  ,upload = layui.upload;
+
+  upload.render({
+    elem: '#layuiadmin-upload-replys'
+    ,url: layui.setter.base + 'json/upload/demo.js'
+    ,accept: 'images'
+    ,method: 'get'
+    ,acceptMime: 'image/*'
+    ,done: function(res){
+      $(this.item).prev("div").children("input").val(res.data.src)
+    }
+  });
+})
+</script>

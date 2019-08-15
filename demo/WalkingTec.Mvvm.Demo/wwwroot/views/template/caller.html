@@ -1,0 +1,188 @@
+
+
+<title>客户列表</title>
+  
+<script type="text/html" template>
+  <link rel="stylesheet" href="{{ layui.setter.base }}style/template.css?v={{ layui.admin.v }}-1" media="all">
+</script>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>页面</cite></a>
+    <a><cite>客户列表</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layadmin-caller">
+    <form class="layui-form caller-seach" action="">
+      <i class="layui-icon layui-icon-search caller-seach-icon caller-icon"></i>
+      <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input caller-pl32">
+      <i class="layui-icon layui-icon-close caller-dump-icon caller-icon"></i>
+    </form>
+    <div class="layui-tab layui-tab-brief caller-tab" lay-filter="docDemoTabBrief">
+      <ul class="layui-tab-title">
+        <li class="layui-this">所有联系人</li>
+        <li>联系方式</li>
+        <li>联系地址</li>
+      </ul>
+    </div>
+    <div class="caller-contar">
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm caller-fr">
+          <i class="layui-icon layui-icon-ok"></i>
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr">
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+       <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm caller-fr">
+          <i class="layui-icon layui-icon-ok"></i>
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr">
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm caller-fr">
+          <i class="layui-icon layui-icon-ok"></i>
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr">
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm caller-fr">
+          <i class="layui-icon layui-icon-ok"></i>
+          已收藏
+        </button>
+      </div>
+      <div class="caller-item">
+        <script type="text/html" template>
+          <img src="{{ layui.setter.base }}style/res/template/portrait.png" alt="" class="caller-img caller-fl">
+        </script>
+        <div class="caller-main caller-fl">       
+          <p><strong>胡歌</strong> <em>最近联系：1 小时前</em></p>
+          <p class="caller-adds"><i class="layui-icon layui-icon-location"></i>浙江省广州市越秀区中山六路109</p>
+          <div class="caller-iconset">
+            <i class="layui-icon layui-icon-login-wechat"></i>
+            <i class="layui-icon layui-icon-login-qq"></i>
+            <i class="layui-icon layui-icon-login-weibo"></i>
+          </div>
+        </div>
+        <button class="layui-btn layui-btn-sm layui-btn layui-btn-primary caller-fr">
+          已收藏
+        </button>
+      </div>
+    </div>
+    <div id="demo-template-caller1"></div>
+  </div>
+</div>
+    
+<script>
+layui.use(['admin', 'laypage'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,laypage = layui.laypage;
+  
+  laypage.render({
+    elem: 'demo-template-caller1'
+    ,count: 70 //数据总数
+  });
+});
+</script>

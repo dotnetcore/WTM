@@ -1,0 +1,310 @@
+<title>日志</title>
+
+<form id="wtForm_ecddcfb2a85d411da47e0b00ab2d1695" class="layui-form" method="post"
+  lay-filter="wtForm_ecddcfb2a85d411da47e0b00ab2d1695form" action="/_Admin/ActionLog/Index?v=1.2.1">
+
+  <div class="layui-collapse" style="margin-bottom:5px;" lay-filter="94d62ac8add34aca81c23ffbf28d7f24">
+    <div class="layui-colla-item">
+      <h2 class="layui-colla-title">搜索条件
+        <div style="text-align:right;margin-top:-43px;" id="94d62ac8add34aca81c23ffbf28d7f24">
+          <a href="javascript:void(0)" class="layui-btn layui-btn-sm"
+            id="wtSearchBtn_ecddcfb2a85d411da47e0b00ab2d1695"><i class="layui-icon">&#xe615;</i>搜索</a>
+          <button type="reset" class="layui-btn layui-btn-sm"
+            id="wtResetBtn_ecddcfb2a85d411da47e0b00ab2d1695">重置</button>
+        </div>
+      </h2>
+      <div class="layui-colla-content layui-show">
+        <div class="layui-row ">
+          <div class="layui-col-md4">
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_LogType" class="layui-form-label">类型:</label>
+              <div class="layui-input-block">
+                <select name="Searcher.LogType" lay-filter="Searcher.LogType" wtm-name="Searcher.LogType"
+                  wtm-combo="MULTI_COMBO" id="ActionLogListVM_Searcher_LogType">
+                  <option value=''>全部</option>
+                  <option value='0'>普通</option>
+                  <option value='1'>异常</option>
+                  <option value='2'>调试</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md4">
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_ITCode" class="layui-form-label">ITCode:</label>
+              <div class="layui-input-block">
+                <input type="text" name="Searcher.ITCode" value="" placeholder="" class="layui-input"
+                  id="ActionLogListVM_Searcher_ITCode" lay-filter="ActionLogListVM_Searcher_ITCodefilter">
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-md4">
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_ActionUrl" class="layui-form-label">Url:</label>
+              <div class="layui-input-block">
+                <input type="text" name="Searcher.ActionUrl" value="" placeholder="" class="layui-input"
+                  id="ActionLogListVM_Searcher_ActionUrl" lay-filter="ActionLogListVM_Searcher_ActionUrlfilter">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-row ">
+          <div class="layui-col-md4">
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_StartActionTime" class="layui-form-label">时间(起):</label>
+              <div class="layui-input-block">
+                <input type="text" name="Searcher.StartActionTime" value="" class="layui-input"
+                  id="ActionLogListVM_Searcher_StartActionTime"
+                  lay-filter="ActionLogListVM_Searcher_StartActionTimefilter">
+                <script>
+                  layui.use(['laydate'], function () {
+                    var laydate = layui.laydate;
+                    var ins1 = laydate.render({
+                      elem: '#ActionLogListVM_Searcher_StartActionTime',
+                      type: 'date'
+                      //,theme: 'molv',btns: ['clear','now','confirm']
+                    });
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-col-md4">
+
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_EndActionTime" class="layui-form-label">时间(止):</label>
+              <div class="layui-input-block">
+                <input type="text" name="Searcher.EndActionTime" value="" class="layui-input"
+                  id="ActionLogListVM_Searcher_EndActionTime" lay-filter="ActionLogListVM_Searcher_EndActionTimefilter">
+                <script>
+                  layui.use(['laydate'], function () {
+                    var laydate = layui.laydate;
+                    var ins1 = laydate.render({
+                      elem: '#ActionLogListVM_Searcher_EndActionTime',
+                      type: 'date'
+                      //,theme: 'molv',btns: ['clear','now','confirm']
+                    });
+                  })
+                </script>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="layui-col-md4">
+            <div class="layui-form-item">
+              <label for="ActionLogListVM_Searcher_IP" class="layui-form-label">IP:</label>
+              <div class="layui-input-block">
+                <input type="text" name="Searcher.IP" value="" placeholder="" class="layui-input"
+                  id="ActionLogListVM_Searcher_IP" lay-filter="ActionLogListVM_Searcher_IPfilter">
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  layui.use(['table', 'element'], function () {
+    var table = layui.table;
+    layui.element.init();
+    $('#94d62ac8add34aca81c23ffbf28d7f24 .layui-btn').on('click', function (e) { e.stopPropagation(); })
+    $('#wtResetBtn_ecddcfb2a85d411da47e0b00ab2d1695').on('click', function (btn) {
+      var hiddenAreas = $('#' + this.form.id + ' input[wtm-tag=wtmselector]')
+      if (hiddenAreas && hiddenAreas.length > 0) {
+        for (i = 0; i < hiddenAreas.length; i++) {
+          hiddenAreas[i].remove();
+        }
+      }
+    });
+
+    $('#wtSearchBtn_ecddcfb2a85d411da47e0b00ab2d1695').on('click', function () {
+      table.reload('wtTable_ecddcfb2a85d411da47e0b00ab2d1695', {
+        where: $.extend(wtVar_ecddcfb2a85d411da47e0b00ab2d1695.config.where, ff.GetSearchFormData('wtForm_ecddcfb2a85d411da47e0b00ab2d1695', '')),
+        done: function (res, curr, count) {
+          if (this.height == undefined) {
+            var tab = $('#wtTable_ecddcfb2a85d411da47e0b00ab2d1695 + .layui-table-view');
+            tab.css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv');
+            tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height', '543px');
+            tab.find('.layui-table-main').addClass('donotuse_fill');
+            tab.find('.layui-table-header').css('min-height', '40px');
+            ff.triggerResize();
+          }
+        }
+      })
+    });
+    layui.element.on('collapse(94d62ac8add34aca81c23ffbf28d7f24)', function (data) {
+      ff.triggerResize()
+    });
+  })
+</script>
+<script>
+  layui.use(['form', 'formSelects'], function () {
+    var formSelects = layui.formSelects;
+    var form = layui.form.render(null, 'wtForm_ecddcfb2a85d411da47e0b00ab2d1695form');
+    var comboxs = $(".layui-form[lay-filter='wtForm_ecddcfb2a85d411da47e0b00ab2d1695form'] select[wtm-combo='MULTI_COMBO']");
+    /* 启用 ComboBox 多选 */
+    for (var i = 0; i < comboxs.length; i++) {
+      var filter = comboxs[i].attributes['lay-filter'].value, arr = [], subTag = $('input[name="' + filter + '"]');
+      for (var i = 0; i < subTag.length; i++) {
+        arr.push({ name: subTag[i].attributes['text'].value, val: subTag[i].value });
+      }
+      formSelects.on({
+        layFilter: filter, left: '', right: '', separator: ',', arr: arr,
+        selectFunc: null
+      })
+    }
+  })
+</script>
+
+<div style="text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;">
+  <a href="javascript:void(0)"
+    onclick="wtToolBarFunc_wtTable_ecddcfb2a85d411da47e0b00ab2d1695({event:'_FrameworkGetExportExcel'});"
+    class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-download-circle"></i>导出Excel</a>
+</div>
+
+<table id="wtTable_ecddcfb2a85d411da47e0b00ab2d1695" lay-filter="wtTable_ecddcfb2a85d411da47e0b00ab2d1695"></table>
+
+<script>
+
+  layui.use(['admin', 'contlist', 'table'], function () {
+    var table = layui.table;
+    var layer = layui.layer;
+
+    var wtTable_ecddcfb2a85d411da47e0b00ab2d1695option = {
+      elem: '#wtTable_ecddcfb2a85d411da47e0b00ab2d1695'
+      , id: 'wtTable_ecddcfb2a85d411da47e0b00ab2d1695'
+      , autoSort: false
+      , totalRow: false
+      , url: '/_Framework/GetPagingData'
+      , where: { "_DONOT_USE_VMNAME": "WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM, WalkingTec.Mvvm.Mvc.Admin", "_DONOT_USE_CS": "default", "SearcherMode": 0, "Searcher.ITCode": null, "Searcher.ActionUrl": null, "Searcher.LogType": null, "Searcher.StartActionTime": null, "Searcher.EndActionTime": null, "Searcher.IP": null, "Searcher.Session": { "SessionId": "7f5d9420-dc2d-cbaa-daef-e1c301f7f29a" }, "Searcher.ParentId": null, "Searcher.IsValid": null }
+      , method: 'post'
+      , loading: true
+      , request: { "pageName": "Searcher.Page", "limitName": "Searcher.Limit" }
+      , response: { "statusName": "Code", "statusCode": 200, "msgName": "Msg", "countName": "Count", "dataName": "Data" }
+      , page: true
+      , limit: 20
+      , limits: [10, 20, 50, 80, 100, 150, 200]
+      // , height: 'full-331'
+
+
+      , cols: [[{ "type": "checkbox", "width": 45, "rowspan": 1, "fixed": "left", "align": "center", "totalRowText": "合计：" }, { "type": "numbers", "width": 45, "rowspan": 1, "fixed": "left", "align": "center" }, {
+        "field": "LogType", "title": "类型", "width": 80, "align": "center", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'LogType_' + d.LAY_INDEX; if (d.LogType__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.LogType__bgcolor + "');</s" + "cript>"; if (d.LogType__forecolor != undefined) sty = 'color:' + d.LogType__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.LogType.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "ModuleName", "title": "模块", "width": 120, "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'ModuleName_' + d.LAY_INDEX; if (d.ModuleName__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.ModuleName__bgcolor + "');</s" + "cript>"; if (d.ModuleName__forecolor != undefined) sty = 'color:' + d.ModuleName__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.ModuleName.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "ActionName", "title": "动作", "width": 120, "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'ActionName_' + d.LAY_INDEX; if (d.ActionName__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.ActionName__bgcolor + "');</s" + "cript>"; if (d.ActionName__forecolor != undefined) sty = 'color:' + d.ActionName__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.ActionName.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "ITCode", "title": "ITCode", "width": 120, "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'ITCode_' + d.LAY_INDEX; if (d.ITCode__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.ITCode__bgcolor + "');</s" + "cript>"; if (d.ITCode__forecolor != undefined) sty = 'color:' + d.ITCode__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.ITCode.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "ActionUrl", "title": "Url", "width": 200, "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'ActionUrl_' + d.LAY_INDEX; if (d.ActionUrl__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.ActionUrl__bgcolor + "');</s" + "cript>"; if (d.ActionUrl__forecolor != undefined) sty = 'color:' + d.ActionUrl__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.ActionUrl.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "ActionTime", "title": "操作时间", "width": 200, "sort": true, "align": "center", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'ActionTime_' + d.LAY_INDEX; if (d.ActionTime__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.ActionTime__bgcolor + "');</s" + "cript>"; if (d.ActionTime__forecolor != undefined) sty = 'color:' + d.ActionTime__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.ActionTime.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "Duration", "title": "耗时(s)", "width": 100, "sort": true, "align": "center", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'Duration_' + d.LAY_INDEX; if (d.Duration__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.Duration__bgcolor + "');</s" + "cript>"; if (d.Duration__forecolor != undefined) sty = 'color:' + d.Duration__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.Duration.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "IP", "title": "IP", "width": 120, "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'IP_' + d.LAY_INDEX; if (d.IP__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.IP__bgcolor + "');</s" + "cript>"; if (d.IP__forecolor != undefined) sty = 'color:' + d.IP__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.IP.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, {
+        "field": "Remark", "title": "备注", "align": "left", "templet": function (d) {
+          var sty = ''; var bg = ''; var did = 'Remark_' + d.LAY_INDEX; if (d.Remark__bgcolor != undefined) bg = "<script>$('#" + did + "').closest('td').css('background-color','" + d.Remark__bgcolor + "');</s" + "cript>"; if (d.Remark__forecolor != undefined) sty = 'color:' + d.Remark__forecolor + ';'; return '<div style="' + sty + '" id="' + did + '">' + d.Remark.replace(/\"/g, "'") + bg + '</div>';
+        }
+      }, { "toolbar": "#wtToolBar_ecddcfb2a85d411da47e0b00ab2d1695", "title": "操作", "width": 120, "fixed": "right", "align": "center" }]]
+      , even: true
+      , done: function (res, curr, count) {
+        debugger
+        var tab = $('#wtTable_ecddcfb2a85d411da47e0b00ab2d1695 + .layui-table-view');
+        var ss = tab.find('table');
+        tab.find('table').css('border-collapse', 'separate');
+        tab.css('overflow', 'hidden').addClass('donotuse_fill donotuse_pdiv');
+        tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height', '543px');
+        tab.find('.layui-table-main').addClass('donotuse_fill');
+        tab.find('.layui-table-header').css('min-height', '40px');
+        ff.triggerResize();
+      }
+    }
+    wtVar_ecddcfb2a85d411da47e0b00ab2d1695 = table.render(wtTable_ecddcfb2a85d411da47e0b00ab2d1695option);
+
+    // 监听工具条
+    function wtToolBarFunc_wtTable_ecddcfb2a85d411da47e0b00ab2d1695(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+      var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
+      switch (layEvent) {
+        case '_AdminActionLogDetails': {
+          var isPost = false;
+          var tempUrl = '/_Admin/ActionLog/Details?1=1', whereStr = [];
+          if (data == undefined || data == null || data.ID == undefined || data.ID == null) {
+            var ids = ff.GetSelections('wtTable_ecddcfb2a85d411da47e0b00ab2d1695');
+            if (ids.length == 0) {
+              layui.layer.msg('请选择一行');
+              return;
+            } else if (ids.length > 1) {
+              layui.layer.msg('最多只能选择一行');
+              return;
+            } else {
+              tempUrl = tempUrl + '&id=' + ids[0];
+              var objs = ff.GetSelectionData('wtTable_ecddcfb2a85d411da47e0b00ab2d1695');
+              if (objs != null && objs.length > 0) {
+                tempUrl = ff.concatWhereStr(tempUrl, whereStr, objs[0]);
+              }
+            }
+          } else {
+            tempUrl = tempUrl + '&id=' + data.ID;
+            tempUrl = ff.concatWhereStr(tempUrl, whereStr, data);
+          }
+
+          ff.OpenDialog(tempUrl, '9037e31379fe453d962e32e56a396cb3', '详细', 800, null, isPost === true && ids !== null && ids !== undefined ? { 'Ids': ids } : undefined);
+        }; break;
+
+        case '_FrameworkGetExportExcel': {
+          var isPost = false;
+          var tempUrl = '/_Framework/GetExportExcel?1=1&_DONOT_USE_VMNAME=WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM, WalkingTec.Mvvm.Mvc.Admin', whereStr = null;
+          var ids = ff.GetSelections('wtTable_ecddcfb2a85d411da47e0b00ab2d1695');
+          isPost = true;
+
+          ff.DownloadExcelOrPdf(tempUrl, 'wtForm_ecddcfb2a85d411da47e0b00ab2d1695', { "_DONOT_USE_VMNAME": "WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM, WalkingTec.Mvvm.Mvc.Admin", "_DONOT_USE_CS": "default", "SearcherMode": 0, "Searcher.ITCode": null, "Searcher.ActionUrl": null, "Searcher.LogType": null, "Searcher.StartActionTime": null, "Searcher.EndActionTime": null, "Searcher.IP": null, "Searcher.Session": { "SessionId": "7f5d9420-dc2d-cbaa-daef-e1c301f7f29a" }, "Searcher.ParentId": null, "Searcher.IsValid": null }, ids);
+        }; break;
+        default: break;
+      }
+      return;
+    }
+
+    table.on('tool(wtTable_ecddcfb2a85d411da47e0b00ab2d1695)', wtToolBarFunc_wtTable_ecddcfb2a85d411da47e0b00ab2d1695);
+
+
+    table.on('sort(wtTable_ecddcfb2a85d411da47e0b00ab2d1695)', function (obj) {
+      var sortfilter = {};
+      sortfilter['Searcher.SortInfo.Property'] = obj.field;
+      sortfilter['Searcher.SortInfo.Direction'] = obj.type.replace(obj.type[0], obj.type[0].toUpperCase());
+      var w = $.extend(wtTable_ecddcfb2a85d411da47e0b00ab2d1695option.where, sortfilter);
+
+      table.reload('wtTable_ecddcfb2a85d411da47e0b00ab2d1695', {
+        initSort: obj,
+        where: w
+      });
+    });
+  })
+</script>
+<!-- Grid 行内按钮 -->
+<script type="text/html"
+  id="wtToolBar_ecddcfb2a85d411da47e0b00ab2d1695"><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="_AdminActionLogDetails">详细</a></script>

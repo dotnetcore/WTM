@@ -1,0 +1,141 @@
+
+
+  <title>代码修饰</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>代码修饰</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">默认修饰</div>
+          <div class="layui-card-body">
+            <pre class="layui-code">//在里面存放任意的代码
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+            </pre>
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">notepad风格</div>
+          <div class="layui-card-body">
+            <pre class="layui-code" lay-title="JavaScript" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+            </pre>
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">代码中的代码</div>
+          <div class="layui-card-body">
+            <pre class="layui-code">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+      <pre class="layui-code">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+      </pre>
+      </pre>
+      
+      <pre class="layui-code" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+      <pre class="layui-code" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+<pre class="layui-code" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+<pre class="layui-code" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+<pre class="layui-code" lay-skin="notepad">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+  var set = (events = modName + '.'+ events).replace(filter, ''); 
+};
+            </pre>
+            </pre>
+            </pre>
+            </pre>
+            </pre>
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">固定高度</div>
+          <div class="layui-card-body">
+            <pre class="layui-code" lay-height="150px">//代码区域
+Lay.fn.event = function(modName, events, params){
+  var that = this, result = null, filter = events.match(/\(.*\)$/)||[]; //提取事件过滤器
+  var set = (events = modName + '.'+ events).replace(filter, ''); //获取事件本体名
+  var callback = function(_, item){
+    var res = item &amp;&amp; item.call(that, params);
+    res === false &amp;&amp; result === null &amp;&amp; (result = false);
+  };
+  layui.each(config.event[set], callback);
+  filter[0] &amp;&amp; layui.each(config.event[events], callback); //执行过滤器中的事件
+  return result;
+};
+            </pre>
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">XXX</div>
+          <div class="layui-card-body">
+            
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">XXX</div>
+          <div class="layui-card-body">
+            
+          </div>
+        </div>
+        
+        <div class="layui-card">
+          <div class="layui-card-header">XXX</div>
+          <div class="layui-card-body">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'code'], function(){
+  
+    layui.code({
+      elem: 'pre'
+    });
+  
+  });
+  </script>

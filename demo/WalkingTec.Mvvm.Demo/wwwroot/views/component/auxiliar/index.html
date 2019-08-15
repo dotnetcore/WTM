@@ -1,0 +1,103 @@
+
+<title>辅助元素</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>辅助</cite></a>
+  </div>
+</div>
+
+<style>
+/* 这段样式只是用于演示 */
+
+</style>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">引用区块</div>
+        <div class="layui-card-body">
+          <blockquote class="layui-elem-quote">这个貌似不用多介绍，因为你已经在太多的地方都看到</blockquote>
+          
+          <blockquote class="layui-elem-quote layui-quote-nm">
+            猿强，则国强。国强，则猿更强！ 
+            <br>——孟子（好囖。。其实这特喵的是我说的）
+          </blockquote>
+        </div>
+      </div>
+      <div class="layui-card">
+        <div class="layui-card-header">字段集区块</div>
+        <div class="layui-card-body">
+          
+          <fieldset class="layui-elem-field">
+            <legend>爱好</legend>
+            <div class="layui-field-box">
+              你可以在这里放任何内容，比如表单神马的
+            </div>
+          </fieldset>
+          
+          <br>
+          
+          <fieldset class="layui-elem-field layui-field-title">
+            <legend>带标题的横线</legend>
+          </fieldset>
+          
+        </div>
+      </div>
+      <div class="layui-card">
+        <div class="layui-card-header">分割线</div>
+        <div class="layui-card-body">
+          
+          默认分割线
+          <hr>
+           
+          赤色分割线
+          <hr class="layui-bg-red">
+           
+          橙色分割线
+          <hr class="layui-bg-orange">
+           
+          墨绿分割线
+          <hr class="layui-bg-green">
+           
+          青色分割线
+          <hr class="layui-bg-cyan">
+           
+          蓝色分割线
+          <hr class="layui-bg-blue">
+           
+          黑色分割线
+          <hr class="layui-bg-black">
+           
+          灰色分割线
+          <hr class="layui-bg-gray">
+          
+        </div>
+      </div>
+      <div class="layui-card">
+        <div class="layui-card-header">纯圆角</div>
+        <div class="layui-card-body">
+          
+          <div class="layui-inline">
+            <img src="http://cdn.layui.com/avatar/168.jpg?t=1490352249902" class="layui-circle">
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,router = layui.router();
+
+
+});
+</script>

@@ -1,0 +1,82 @@
+
+<title>客服系统</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>高级</cite></a>
+    <a><cite>通讯系统</cite></a>
+    <a><cite>客服系统</cite></a>
+  </div>
+</div>
+
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">面板外的操作示例</div>
+        <div class="layui-card-body">
+          
+          <div class="layui-btn-container LAY-senior-im-chat-demo">
+            <button class="layui-btn" data-type="kefu1">在线客服一</button>
+            <button class="layui-btn" data-type="kefu2">在线客服二</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'layim'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,router = layui.router();
+
+  
+  var layim = layui.layim;
+  
+  layim.config({
+    init: {
+      //配置客户信息
+      mine: {
+        "username": "访客" //我的昵称
+        ,"id": "100000123" //我的ID
+        ,"status": "online" //在线状态 online：在线、hide：隐身
+        ,"remark": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
+        ,"avatar": "//res.layui.com/images/fly/avatar/00.jpg" //我的头像
+      }
+    }
+    //开启客服模式
+    ,brief: true
+  });
+  
+  var active = {
+    kefu1: function(){
+      layim.chat({
+        name: '在线客服一' //名称
+        ,type: 'kefu' //聊天类型
+        ,avatar: '//tp1.sinaimg.cn/5619439268/180/40030060651/1' //头像
+        ,id: 1111111 //定义唯一的id方便你处理信息
+      })
+    }
+    ,kefu2: function(){
+      layim.chat({
+        name: '在线客服二' //名称
+        ,type: 'kefu' //聊天类型
+        ,avatar: '//tp1.sinaimg.cn/5619439268/180/40030060651/1' //头像
+        ,id: 2222222 //定义唯一的id方便你处理信息
+      });
+    }
+  }
+  
+  $('.LAY-senior-im-chat-demo .layui-btn').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+  
+});
+</script>

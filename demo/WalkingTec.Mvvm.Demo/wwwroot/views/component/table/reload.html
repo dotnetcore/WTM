@@ -1,0 +1,87 @@
+
+
+  <title>数据表格的重载 - 数据表格</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>数据表格</cite></a>
+      <a><cite>数据表格的重载</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">数据表格的重载</div>
+          <div class="layui-card-body">
+          
+            <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+              搜索ID：
+              <div class="layui-inline">
+                <input class="layui-input" name="id" id="test-table-demoReload" autocomplete="off">
+              </div>
+              <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+             
+            <table class="layui-hide" id="test-table-reload" lay-filter="user"></table> 
+            
+            <blockquote class="layui-elem-quote">此处由于是静态模拟数据，所以搜索后重载的结果没变，这并非是 BUG。实际使用时改成真实接口并根据搜索的字段筛选出对应的数据即可。</blockquote>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'table'], function(){
+    var table = layui.table;
+  
+    //方法级渲染
+    table.render({
+      elem: '#test-table-reload'
+      ,url: './json/table/user.js'
+      ,cols: [[
+        {checkbox: true, fixed: true}
+        ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}
+        ,{field:'username', title: '用户名', width:80}
+        ,{field:'sex', title: '性别', width:80, sort: true}
+        ,{field:'city', title: '城市', width:80}
+        ,{field:'sign', title: '签名'}
+        ,{field:'experience', title: '积分', sort: true, width:80}
+        ,{field:'score', title: '评分', sort: true, width:80}
+        ,{field:'classify', title: '职业', width:80}
+        ,{field:'wealth', title: '财富', sort: true, width:135}
+      ]]
+      ,page: true
+      ,height: 315
+    });
+    
+    var $ = layui.$, active = {
+      reload: function(){
+        var demoReload = $('#test-table-demoReload');
+        
+        //执行重载
+        table.reload('test-table-reload', {
+          page: {
+            curr: 1 //重新从第 1 页开始
+          }
+          ,where: {
+            key: {
+              id: demoReload.val()
+            }
+          }
+        });
+      }
+    };
+    
+    $('.test-table-reload-btn .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+  
+  });
+  </script>

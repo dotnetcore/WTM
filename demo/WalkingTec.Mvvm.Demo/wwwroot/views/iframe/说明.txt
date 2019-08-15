@@ -1,0 +1,3 @@
+
+尽管 layuiAdmin 采用的是单页面应用开发模式，但有时你可能需要 iframe 嵌入一个页面，layuiAdmin 对此做了支持。
+该目录存放的就是 iframe 页面的视图文件。

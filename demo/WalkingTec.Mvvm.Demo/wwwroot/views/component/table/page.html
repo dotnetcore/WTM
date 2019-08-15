@@ -1,0 +1,57 @@
+
+
+  <title>开启分页 - 数据表格</title>
+
+  <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+      <a lay-href="">主页</a>
+      <a><cite>组件</cite></a>
+      <a><cite>数据表格</cite></a>
+      <a><cite>开启分页</cite></a>
+    </div>
+  </div>
+  
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">开启分页</div>
+          <div class="layui-card-body">
+            <table class="layui-hide" id="test-table-page"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  layui.use(['admin', 'table'], function(){
+    var admin = layui.admin
+    ,table = layui.table;
+  
+    table.render({
+      elem: '#test-table-page'
+      ,url: './json/table/user.js'
+      ,cols: [[
+        {field:'id', width:80, title: 'ID', sort: true}
+        ,{field:'username', width:80, title: '用户名'}
+        ,{field:'sex', width:80, title: '性别', sort: true}
+        ,{field:'city', width:80, title: '城市'}
+        ,{field:'sign', title: '签名', minWidth: 150}
+        ,{field:'experience', width:80, title: '积分', sort: true}
+        ,{field:'score', width:80, title: '评分', sort: true}
+        ,{field:'classify', width:80, title: '职业'}
+        ,{field:'wealth', width:135, title: '财富', sort: true}
+      ]]
+      ,page: true
+    });
+    
+    admin.popup({
+      content: '演示数据均为静态模拟数据，因此【切换分页和条数时】发现数据未变并非 BUG。实际使用时改成真实接口即可。'
+      ,area: '300px'
+      ,offset: '15px'
+      ,shade: false
+    });
+  
+  });
+  </script>

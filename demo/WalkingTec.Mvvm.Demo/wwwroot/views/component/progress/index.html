@@ -1,0 +1,159 @@
+
+<title>进度条</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>进度条</cite></a>
+  </div>
+</div>
+
+<style>
+/* 这段样式只是用于演示 */
+.layui-progress{margin: 20px 0;}
+</style>
+
+<div class="layui-fluid" id="LAY-component-progress">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">默认进度条</div>
+        <div class="layui-card-body">
+        
+          <div class="layui-progress">
+            <div class="layui-progress-bar" lay-percent="50%"></div>
+          </div>
+          <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+              <div class="layui-progress">
+                <div class="layui-progress-bar" lay-percent="50%"></div>
+              </div>
+            </div>
+            <div class="layui-col-xs6">
+              <div class="layui-progress">
+                <div class="layui-progress-bar" lay-percent="50%"></div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">更多颜色进度条</div>
+        <div class="layui-card-body">
+        
+          <div class="layui-progress">
+            <div class="layui-progress-bar layui-bg-red" lay-percent="20%"></div>
+          </div>
+
+          <div class="layui-progress">
+            <div class="layui-progress-bar layui-bg-orange" lay-percent="30%"></div>
+          </div>
+
+          <div class="layui-progress">
+            <div class="layui-progress-bar layui-bg-green" lay-percent="40%"></div>
+          </div>
+
+          <div class="layui-progress">
+            <div class="layui-progress-bar layui-bg-blue" lay-percent="50%"></div>
+          </div>
+
+          <div class="layui-progress">
+            <div class="layui-progress-bar layui-bg-cyan" lay-percent="60%"></div>
+          </div>
+          
+          <div class="layui-progress layui-progress-big">
+            <div class="layui-progress-bar" lay-percent="20%"></div>
+          </div>
+          <div class="layui-progress layui-progress-big">
+            <div class="layui-progress-bar layui-bg-green" lay-percent="35%"></div>
+          </div>
+          <div class="layui-progress layui-progress-big">
+            <div class="layui-progress-bar layui-bg-cyan" lay-percent="75%"></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">动态改变进度</div>
+        <div class="layui-card-body">
+
+            <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="component-progress-demo">
+              <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+            </div>
+             
+            <div class="layui-btn-container" style="margin-top: 20px; margin-bottom: 0;">
+              <button class="layui-btn site-demo-active" data-type="setPercent">设置50%</button>
+              <button class="layui-btn site-demo-active" data-type="loading">模拟loading</button>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">显示进度比文本</div>
+        <div class="layui-card-body">
+
+          <div class="layui-progress" lay-showpercent="true">
+            <div class="layui-progress-bar" lay-percent="20%"></div>
+          </div>
+          <div class="layui-progress" lay-showpercent="true">
+            <div class="layui-progress-bar" lay-percent="5 / 10"></div>
+          </div>
+          <div class="layui-progress layui-progress-big" lay-showpercent="true">
+            <div class="layui-progress-bar" lay-percent="70%"></div>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,router = layui.router();
+
+  element.render('progress');
+  
+  //触发事件
+  var active = {
+    setPercent: function(){
+      //设置50%进度
+      element.progress('component-progress-demo', '50%')
+    }
+    ,loading: function(othis){
+      var DISABLED = 'layui-btn-disabled';
+      if(othis.hasClass(DISABLED)) return;
+    
+      //模拟loading
+      var n = 0, timer = setInterval(function(){
+        n = n + Math.random()*10|0;  
+        if(n>100){
+          n = 100;
+          clearInterval(timer);
+          othis.removeClass(DISABLED);
+        }
+        element.progress('component-progress-demo', n+'%');
+      }, 300+Math.random()*1000);
+      
+      othis.addClass(DISABLED);
+    }
+  };
+  
+  $('#LAY-component-progress .site-demo-active').on('click', function(){
+    var othis = $(this), type = $(this).data('type');
+    active[type] ? active[type].call(this, othis) : '';
+  });
+  
+});
+</script>

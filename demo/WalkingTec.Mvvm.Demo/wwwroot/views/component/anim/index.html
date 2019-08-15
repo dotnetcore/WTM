@@ -1,0 +1,108 @@
+
+<title>动画</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>动画</cite></a>
+  </div>
+</div>
+
+<style>
+/* 这段样式只是用于演示 */
+#component-anim .layui-card-body{padding: 15px;}
+
+#component-anim .component-anim-demo{margin-bottom: 50px; font-size: 0;}
+#component-anim .component-anim-demo li{display: inline-block; vertical-align: middle; width: 127px; line-height: 25px; padding: 20px 0; margin-right: -1px; margin-bottom: -1px; border: 1px solid #e2e2e2; font-size: 14px; text-align: center; color: #666; transition: all .3s; -webkit-transition: all .3s;}
+#component-anim .component-anim-demo li .layui-icon{display: inline-block; font-size: 36px;}
+
+#component-anim .component-anim-demo li .fontclass{display: none;}
+#component-anim .component-anim-demo li .name{color: #c2c2c2;}
+#component-anim .component-anim-demo li:hover{background-color: #f2f2f2; color: #000;}
+
+#component-anim .component-anim-demo li{width: 222px;}
+#component-anim .component-anim-demo .layui-anim{width: 150px; height: 150px; line-height: 150px; margin: 0 auto 10px; text-align: center; background-color: #009688; cursor: pointer; color: #fff; border-radius: 50%;}
+</style>
+
+<div class="layui-fluid" id="component-anim">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">点击演示动画</div>
+        <div class="layui-card-body">
+          
+          <ul class="component-anim-demo">
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-up">从最底部往上滑入</div>
+              <div class="code">layui-anim-up</div>
+            </li>
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-upbit">微微往上滑入</div>
+              <div class="code">layui-anim-upbit</div>
+            </li>
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-scale">平滑放大</div>
+              <div class="code">layui-anim-scale</div>
+            </li>
+             <li>
+              <div class="layui-anim" data-anim="layui-anim-scaleSpring">弹簧式放大</div>
+              <div class="code">layui-anim-scaleSpring</div>
+            </li>
+          </ul>
+          <ul class="component-anim-demo">
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-fadein">渐现</div>
+              <div class="code">layui-anim-fadein</div>
+            </li>
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-fadeout">渐隐</div>
+              <div class="code">layui-anim-fadeout</div>
+            </li>
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-rotate">360度旋转</div>
+              <div class="code">layui-anim-rotate</div>
+            </li>
+            <li>
+              <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">循环动画</div>
+              <div class="code">追加：layui-anim-loop</div>
+            </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,router = layui.router();
+
+  /* 演示动画 */
+  $('#component-anim .component-anim-demo .layui-anim').on('click', function(){
+    var othis = $(this), anim = othis.data('anim');
+ 
+    /* 停止循环 */
+    if(othis.hasClass('layui-anim-loop')){
+      return othis.removeClass(anim);
+    }
+    
+    othis.removeClass(anim);
+    
+    setTimeout(function(){
+      othis.addClass(anim);
+    });
+    
+    /* 恢复渐隐 */
+    if(anim === 'layui-anim-fadeout'){
+      setTimeout(function(){
+        othis.removeClass(anim);
+      }, 1300);
+    }
+  });
+});
+</script>
