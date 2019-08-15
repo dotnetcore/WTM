@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool Tips { get; set; } = true;
 
         /// <summary>
-        /// 是否显示输入框（注意：若 Field1 绑定到属性上了 则强制无效） 
+        /// 是否显示输入框（注意：若 Field1 绑定到属性上了 则强制无效）
         /// 点击输入框的上下按钮，以及输入任意数字后回车或失去焦点，均可动态改变滑块
         /// 默认 false
         /// </summary>
@@ -152,38 +152,38 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <input type='hidden' name='{Field.Name}' value='{value0}' class='layui-input'>
 {(Field1 == null ? string.Empty : $"<input type='hidden' name='{Field1.Name}' value='{value1}' class='layui-input'>")}
 <script>
-;!function(){{
-    var $ = layui.$;
-    var _id = '{_idPrefix}{Id}';
-    var slider = layui.slider;
-    function defaultFunc(value,sliderIns) {{
-        {(range ? $"$('input[name=\"{Field.Name}\"]').val(value[0]);$('input[name=\"{Field1.Name}\"]').val(value[1]);" : $"$('input[name=\"{Field.Name}\"]').val(value);")}
+layui.use(['slider'],function(){{
+  var $ = layui.$;
+  var _id = '{_idPrefix}{Id}';
+  var slider = layui.slider;
+  function defaultFunc(value,sliderIns) {{
+    {(range ? $"$('input[name=\"{Field.Name}\"]').val(value[0]);$('input[name=\"{Field1.Name}\"]').val(value[1]);" : $"$('input[name=\"{Field.Name}\"]').val(value);")}
+  }}
+  var sliderIns = slider.render({{
+    elem: '#'+_id
+    {(SliderType == null ? string.Empty : $",type:'{SliderType.Value.ToString().ToLower()}'")}
+    {(Min == null ? string.Empty : $",min:{Min.Value}")}
+    {(Max == null ? string.Empty : $",max:{Max.Value}")}
+    {(!range ? string.Empty : $",range:true")}
+    {(DefaultValue == null ? string.Empty : $",value:{DefaultValue}")}
+    ,step:{Step}
+    {(!Disabled ? string.Empty : ",disabled:true")}
+    ,showstep:{ShowStep.ToString().ToLower()}
+    ,tips:{Tips.ToString().ToLower()}
+    ,input:{Input.ToString().ToLower()}
+    {(SliderType == null || SliderType.Value == SliderTypeEnum.Default ? string.Empty : (SliderHeight == null ? string.Empty : $",height:{SliderHeight.Value}"))}
+    {(string.IsNullOrEmpty(Theme) ? string.Empty : $",theme: '{Theme}'")}
+    ,change: function(value){{defaultFunc(value,sliderIns);
+    {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(value,sliderIns)")}
     }}
-    var sliderIns = slider.render({{
-        elem: '#'+_id
-        {(SliderType == null ? string.Empty : $",type:'{SliderType.Value.ToString().ToLower()}'")}
-        {(Min == null ? string.Empty : $",min:{Min.Value}")}
-        {(Max == null ? string.Empty : $",max:{Max.Value}")}
-        {(!range ? string.Empty : $",range:true")}
-        {(DefaultValue == null ? string.Empty : $",value:{DefaultValue}")}
-        ,step:{Step}
-        {(!Disabled ? string.Empty : ",disabled:true")}
-        ,showstep:{ShowStep.ToString().ToLower()}
-        ,tips:{Tips.ToString().ToLower()}
-        ,input:{Input.ToString().ToLower()}
-        {(SliderType == null || SliderType.Value == SliderTypeEnum.Default ? string.Empty : (SliderHeight == null ? string.Empty : $",height:{SliderHeight.Value}"))}
-        {(string.IsNullOrEmpty(Theme) ? string.Empty : $",theme: '{Theme}'")}
-        ,change: function(value){{defaultFunc(value,sliderIns);
-        {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(value,sliderIns)")}
-        }}
-        {(string.IsNullOrEmpty(OnTipsFunc) ? string.Empty : $",setTips: function(value){{return {OnTipsFunc}(value,sliderIns);}}")}
-    }});
-    {
-        (SliderType == SliderTypeEnum.Vertical ?
-            (Input ? "$('#'+_id+' .layui-slider-input').attr('style','right:unset;top:-40px');" : string.Empty) :
-            $"$('#'+_id).attr('style','min-height: 18px;padding-top: 18px;');{(Input ? "$('#'+_id+' .layui-slider-input').attr('style','top:3px;');" : string.Empty)}")
-    }
-}}();
+    {(string.IsNullOrEmpty(OnTipsFunc) ? string.Empty : $",setTips: function(value){{return {OnTipsFunc}(value,sliderIns);}}")}
+  }});
+  {
+    (SliderType == SliderTypeEnum.Vertical ?
+      (Input ? "$('#'+_id+' .layui-slider-input').attr('style','right:unset;top:-40px');" : string.Empty) :
+      $"$('#'+_id).attr('style','min-height: 18px;padding-top: 18px;');{(Input ? "$('#'+_id+' .layui-slider-input').attr('style','top:3px;');" : string.Empty)}")
+  }
+}})
 </script>
 ";
 

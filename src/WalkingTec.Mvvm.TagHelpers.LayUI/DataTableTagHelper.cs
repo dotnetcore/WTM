@@ -449,9 +449,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.PostElement.AppendHtml($@"
 <script>
+/* 监听工具条 */
+function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
+var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
+{(gridBtnEventStrBuilder.Length == 0 ? string.Empty : $@"switch(layEvent){{{gridBtnEventStrBuilder}default:break;}}")}
+return;
+}}
 layui.use(['table'], function(){{
   var table = layui.table;
- var {Id}option = {{
+  var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
     ,autoSort: false
@@ -473,7 +479,7 @@ layui.use(['table'], function(){{
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
-,done: function(res,curr,count){{layer.close(msg);
+,done: function(res,curr,count){{
     var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
     {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
     {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
@@ -483,12 +489,6 @@ layui.use(['table'], function(){{
   {TableJSVar} = table.render({Id}option);
   {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
 
-  // 监听工具条
-  function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
-    var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
-    {(gridBtnEventStrBuilder.Length == 0 ? string.Empty : $@"switch(layEvent){{{gridBtnEventStrBuilder}default:break;}}")}
-    return;
-  }}
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
       var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
       $.post(""/_Framework/UpdateModelProperty"",data,function(a,b,c){{

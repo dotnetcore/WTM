@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             if (context.Items.ContainsKey("model") == true)
             {
                 var bvm = context.Items["model"] as BaseVM;
-                if(bvm?.CurrentCS != null)
+                if (bvm?.CurrentCS != null)
                 {
                     url += $"?_DONOT_USE_CS={bvm.CurrentCS}";
                 }
@@ -46,12 +46,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 <script>
 layui.use('layedit', function(){{
   var layedit = layui.layedit;
-layedit.set({{
-  uploadImage: {{
-    url: '{url}'
-  }}
-}});
-  var index = layedit.build('{Id}'); 
+  layedit.set({{
+    uploadImage: {{
+      url: '{url}'
+    }}
+  }});
+  var index = layedit.build('{Id}');
   $('#{Id}').attr('layeditindex',index);
 }});
 </script>

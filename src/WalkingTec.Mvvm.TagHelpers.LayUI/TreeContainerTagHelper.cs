@@ -66,18 +66,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
 
                 var script = $@"
-<div id=""div_{Id}"" style=""position:absolute;left:200px;right:0;top:0;bottom:0;z-index:998;width:auto;overflow:hidden;overflow-y:auto;box-sizing:border-box""></div>                
+<div id=""div_{Id}"" style=""position:absolute;left:200px;right:0;top:0;bottom:0;z-index:998;width:auto;overflow:hidden;overflow-y:auto;box-sizing:border-box""></div>
 <script>
-layui.tree({{
-  elem: '#{Id}',nameField:'text',childrenField:'children',spreadField:'expended'
-  ,click:function(a){{
-  {(string.IsNullOrEmpty(BeforeLoadEvent) ? string.Empty : $"{BeforeLoadEvent}(a);")}
-  if(typeof(a.url)==""string""&&a.url){{ff.LoadPage1(a.url,'div_{Id}');}}
-  {(string.IsNullOrEmpty(AfterLoadEvent) ? string.Empty : $"{AfterLoadEvent}(a);")}
-  }}
-  ,nodes: {JsonConvert.SerializeObject(mm, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })}
-}});
-{(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
+layui.use(['tree'],function(){{
+  layui.tree({{
+    elem: '#{Id}',nameField:'text',childrenField:'children',spreadField:'expended'
+    ,click:function(a){{
+    {(string.IsNullOrEmpty(BeforeLoadEvent) ? string.Empty : $"{BeforeLoadEvent}(a);")}
+    if(typeof(a.url)==""string""&&a.url){{ff.LoadPage1(a.url,'div_{Id}');}}
+    {(string.IsNullOrEmpty(AfterLoadEvent) ? string.Empty : $"{AfterLoadEvent}(a);")}
+    }}
+    ,nodes: {JsonConvert.SerializeObject(mm, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() })}
+  }});
+  {(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
+}})
 </script>
 ";
                 output.PostElement.AppendHtml(script);

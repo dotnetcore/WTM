@@ -95,9 +95,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.PostElement.AppendHtml($@"
 <script>
-    $('#{Id}').on('click',function(){{
-        {Click};
-        return false;
+  $('#{Id}').on('click',function(){{
+    {Click};
+    return false;
 }});
 </script>
 ");

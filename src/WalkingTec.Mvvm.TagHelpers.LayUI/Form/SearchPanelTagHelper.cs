@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 </div>
 ");
             output.PostElement.AppendHtml($@"
-<script type=""text/javascript"">
+<script>
   layui.use(['table'], function () {{
     const table = layui.table;
     layui.element.init();
