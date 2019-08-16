@@ -624,7 +624,7 @@ namespace WalkingTec.Mvvm.Mvc
             /// <value></value>
             [JsonProperty("name")]
             // public string Name { get; set; }
-            public string Name => "";
+            public string Name => Title;
 
             /// <summary>
             /// Title
