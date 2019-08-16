@@ -1,5 +1,13 @@
 <title>日志</title>
 
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>Sample</cite></a>
+    <a><cite>日志</cite></a>
+  </div>
+</div>
+
 <form id="wtForm_ecddcfb2a85d411da47e0b00ab2d1695" class="layui-form" method="post"
   lay-filter="wtForm_ecddcfb2a85d411da47e0b00ab2d1695form" action="/_Admin/ActionLog/Index?v=1.2.1">
 
@@ -233,7 +241,6 @@
       }, { "toolbar": "#wtToolBar_ecddcfb2a85d411da47e0b00ab2d1695", "title": "操作", "width": 120, "fixed": "right", "align": "center" }]]
       , even: true
       , done: function (res, curr, count) {
-        debugger
         var tab = $('#wtTable_ecddcfb2a85d411da47e0b00ab2d1695 + .layui-table-view');
         var ss = tab.find('table');
         tab.find('table').css('border-collapse', 'separate');
