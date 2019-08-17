@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,10 +30,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "input";
-            output.TagMode = TagMode.StartTagOnly;
-            output.Attributes.Add("type", "radio");
-            output.Attributes.Add("name", Field.Name);
+            output.TagName = "div";
+            output.TagMode = TagMode.StartTagAndEndTag;
+            output.Attributes.Clear();
+            output.Attributes.Add("div-for", "radio");
 
             var modeltype = Field.Metadata.ModelType;
             var listitems = new List<ComboSelectListItem>();
@@ -78,20 +78,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                 }
             }
-            if (listitems.Count > 0)
-            {
-                output.Attributes.Add("value", listitems[0].Value);
-                output.Attributes.Add(new TagHelperAttribute("title", listitems[0].Text));
-                if (listitems[0].Selected)
-                {
-                    output.Attributes.Add("checked", null);
-                }
-            }
-            for (int i = 1; i < listitems.Count; i++)
+
+            for (int i = 0; i < listitems.Count; i++)
             {
                 var item = listitems[i];
                 var selected = item.Selected ? " checked" : " ";
-                output.PostElement.AppendHtml($@"
+                output.PostContent.AppendHtml($@"
         <input type=""radio"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} />");
             }
 

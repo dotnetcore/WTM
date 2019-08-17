@@ -162,10 +162,10 @@ window.ff = {
                             var child = window.open("/Home/PIndex#/_framework/redirect");
                             child.document.close();
                             $(child.document).ready(function () {
-                                setTimeout(function () { 
+                                setTimeout(function () {
                                     $('#DONOTUSE_MAINPANEL', child.document).html(data);
                                     $(child.document).attr("title", title);
-                               }, 500);
+                                }, 500);
                             });
                         }
                         else {
@@ -176,7 +176,7 @@ window.ff = {
                 }
                 layer.close(index);
             },
-            error: function (a,b,c) {
+            error: function (a, b, c) {
                 layer.close(index);
                 if (a.responseText !== undefined && a.responseText !== "") {
                     layer.alert(a.responseText);
@@ -228,7 +228,7 @@ window.ff = {
 
         var datastr = $('#' + formid).serialize();
         var checkboxes = $('#' + formid + ' :checkbox');
-        for ( i = 0; i < checkboxes.length; i++) {
+        for (i = 0; i < checkboxes.length; i++) {
             var ck = checkboxes[i];
             if (ck.checked === false && (ck.value === 'true' || ck.value === 'false')) {
                 datastr += "&" + ck.name + "=false";
@@ -450,16 +450,42 @@ window.ff = {
         layer.closeAll();
     },
 
-    LinkedChange: function (url, target,targetname) {
+    LinkedChange: function (url, target, targetname) {
         $.get(url, {}, function (data, status) {
             if (status === "success") {
                 var i = 0;
                 var item = null;
                 var form = layui.form;
-               if ($('#' + target)[0].localName === "select") {
+                var controltype = "";
+                var ele = $('#' + target);
+                if (ele.length > 0) {
+                    if (ele[0].localName === "select") {
+                        controltype = "combo";
+                    }
+                    if (ele.attr("div-for") === "checkbox") {
+                        controltype = "checkbox";
+                    }
+                    if (ele.attr("div-for") === "radio") {
+                        controltype = "radio";
+                    }
+                }
+                else {
+                    if ($('#div' + target).length > 0) {
+                        controltype = "tree";
+                    }
+                }
+
+                if (controltype === "tree") {
+                    layui.tree.reload('tree' + target, {
+                        data: ff.getTreeItems(data.Data)
+                    });
+                }
+
+
+                if (controltype === "combo") {
                     $('#' + target).html('<option value = "">请选择</option>');
-                    for ( i = 0; i < data.Data.length; i++) {
-                         item = data.Data[i];
+                    for (i = 0; i < data.Data.length; i++) {
+                        item = data.Data[i];
                         if (item.Selected === true) {
                             $('#' + target).append('<option value = "' + item.Value + '" selected>' + item.Text + '</option>');
                         }
@@ -469,20 +495,33 @@ window.ff = {
                     }
                     form.render('select');
                 }
-               else {
-                   $('#' + target).html('');
-                   for ( i = 0; i < data.Data.length; i++) {
-                         item = data.Data[i];
+                if (controltype === "checkbox") {
+                    $('#' + target).html('');
+                    for (i = 0; i < data.Data.length; i++) {
+                        item = data.Data[i];
                         if (item.Selected === true) {
-                            $('#' + target).append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text+"' checked />");
+                            $('#' + target).append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
                         }
                         else {
                             $('#' + target).append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
                         }
                     }
-                   form.render('checkbox');
-
+                    form.render('checkbox');
                 }
+                if (controltype === "radio") {
+                    $('#' + target).html('');
+                    for (i = 0; i < data.Data.length; i++) {
+                        item = data.Data[i];
+                        if (item.Selected === true) {
+                            $('#' + target).append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                        }
+                        else {
+                            $('#' + target).append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                        }
+                    }
+                    form.render('radio');
+                }
+
             }
             else {
                 layer.alert('获取数据失败');
@@ -602,7 +641,7 @@ window.ff = {
         var loaddata = layui.table.cache[gridid];
         for (val in data) {
             if (val === "ID") {
-                data[val] = ff.guid()+"<script>alert('test');</script>";
+                data[val] = ff.guid() + "<script>alert('test');</script>";
             }
         }
         for (val in data) {
@@ -732,5 +771,24 @@ window.ff = {
             }
         }
         return rv;
+    },
+
+    getTreeItems: function (data) {
+        var rv = [];
+        for (var i = 0; i < data.length; i++) {
+            var item = {};
+            item.id = data[i].Id;
+            item.title = data[i].Text;
+            item.href = data[i].Url;
+            item.spread = data[i].Expended;
+            item.checked = data[i].Checked;
+
+            if (data[i].Children != null && data[i].Children.length > 0) {
+                item.children = this.getTreeItems(data[i].Children);
+            }
+            rv.push(item);
+        }
+        return rv;
+
     }
 };
