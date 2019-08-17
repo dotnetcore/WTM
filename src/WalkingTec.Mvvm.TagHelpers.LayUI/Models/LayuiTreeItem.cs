@@ -25,5 +25,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         [JsonProperty("checked")]
         public bool Checked { get; set; }
 
+        [JsonProperty("level")]
+        public int Level { get; set; }
     }
 }

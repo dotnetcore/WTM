@@ -119,12 +119,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         foreach (var item in Field.Model as dynamic)
                         {
-                            vals.Add(item.ToString());
+                            vals.Add(item.ToString().ToLower());
                         }
                     }
                     else
                     {
-                        vals.Add(Field.Model.ToString());
+                        vals.Add(Field.Model.ToString().ToLower());
                     }
                 }
                 List<LayuiTreeItem> treeitems = GetLayuiTree(mm, vals);
@@ -156,7 +156,6 @@ loaded{Id} = true;
                         hidden += $"<input type='hidden' name='{Field?.Name}' value='{Field.Model}'/>";
                         hidden += $@"
 <script>
-    alert('start');
     var selected = $(""div[data-id='{Field.Model.ToString()}']"");
     var selected2 = selected.find('.layui-tree-entry:first');
     selected2.css('background-color','#5fb878');
@@ -185,13 +184,13 @@ loaded{Id} = true;
             {
                 var news = new LayuiTreeItem
                 {
-                    Id = s.Id,
+                    Id = s.Id.ToLower(),
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
                     //Children = new List<LayuiTreeItem>()
                 };
-                if (values.Contains(s.Id.ToString()))
+                if (values.Contains(s.Id.ToString().ToLower()))
                 {
                     news.Checked = true;
                 }
