@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -89,5 +89,8 @@ namespace WalkingTec.Mvvm.Doc.Models
 
         [Display(Name = "专业")]
         public List<StudentMajor> Majors { get; set; }
+
+        public Department Department { get; set; }
+        public Guid? DepartmentId { get; set; }
     }
 }
