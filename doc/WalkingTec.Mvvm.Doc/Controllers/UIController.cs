@@ -131,10 +131,17 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("Slider")]
+        [ActionDescription("Tree")]
         public IActionResult Tree()
         {
             var vm = CreateVM<DepartmentVM>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("TreeContainer")]
+        public IActionResult TreeContainer()
+        {
+            var vm = CreateVM<StudentListVm3>();
             return PartialView(vm);
         }
 

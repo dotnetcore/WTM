@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ";
 
                     }
-                    else
+                    else if(string.IsNullOrEmpty(insideContent))
                     {
                         cusmtomclick = $"if(data.data.href!=null && data.data.href!=''){{ff.LoadPage1(data.data.href,'div_{Id}');}}";
                     }
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 var script = $@"
 <div id=""div{Id}"" class=""layui-col-md2 donotuse_pdiv"" style=""padding-right:10px;border-right:solid 1px #aaa;""></div>
-<div id=""div_{Id}"" style=""overflow:hidden;overflow-y:auto;box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>                
+<div id=""div_{Id}"" style=""overflow:auto;box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>                
 <script>
 var last{Id} = null;
 layui.tree.render({{

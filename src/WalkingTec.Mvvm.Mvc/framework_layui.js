@@ -197,22 +197,28 @@ window.ff = {
 
 
     LoadPage1: function (url, where) {
-        var layer = layui.layer, index = layer.load(2);
-        $.ajax({
-            url: decodeURIComponent(url),
-            type: 'GET',
-            success: function (data) {
-                $('#' + where).html(data);
-                layer.close(index);
-            },
-            error: function (xhr, status, error) {
-                layer.close(index);
-                layer.alert('加载失败');
-            },
-            complete: function () {
-                ff.SetCookie("windowids", null);
-            }
-        });
+        url = url.toLowerCase();
+        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) {
+            $('#' + where).html("<iframe frameborder='no' border='0' height='100%' src='"+url+"'></iframe>");
+        }
+        else {
+            var layer = layui.layer, index = layer.load(2);
+            $.ajax({
+                url: decodeURIComponent(url),
+                type: 'GET',
+                success: function (data) {
+                    $('#' + where).html(data);
+                    layer.close(index);
+                },
+                error: function (xhr, status, error) {
+                    layer.close(index);
+                    layer.alert('加载失败');
+                },
+                complete: function () {
+                    ff.SetCookie("windowids", null);
+                }
+            });
+        }
     },
 
     GetPostData: function (formid) {
