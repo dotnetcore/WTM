@@ -1,13 +1,9 @@
 import { Component, Vue } from "vue-property-decorator";
+import { dialogType } from "@/config/enum";
 
 @Component
 export default class BaseMixins extends Vue {
-    formData = {
-        testname: "aaa"
-    };
-    test() {
-        console.log("fldls");
-    }
+    dialogType = dialogType;
     // 跳转
     onPath(path) {
         this.$router.push({

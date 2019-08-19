@@ -56,14 +56,23 @@ const service = (option, serverHost?) => {
         data: {},
         params: {},
         headers: {
-            "Content-Type": contentType.json
+            "Content-Type": option.contentType || contentType.json
         }
     };
     const data = getData(option.data);
     if (option.method === "post") {
-        // 针对参数类型是对象（包含数组）
         req.data = data;
-        req.headers["Content-Type"] = contentType.form;
+    } else {
+        req.params = data;
+    }
+    // 返回图片
+    if (option.isBuffer) {
+        req["responseType"] = "arraybuffer";
+    }
+    // formdata格式
+    if (option.contentType === contentType.multipart) {
+        return serviceFormData(url, option, req.headers);
+    } else if (option.contentType === contentType.form) {
         req["transformRequest"] = [
             function(data) {
                 let ret = "";
@@ -80,16 +89,6 @@ const service = (option, serverHost?) => {
                 return ret;
             }
         ];
-    } else {
-        req.params = data;
-    }
-    if (option.isBuffer) {
-        req["responseType"] = "arraybuffer";
-    }
-    // formdata格式
-    if (option.contentType === contentType.multipart) {
-        req.headers["Content-Type"] = contentType.multipart;
-        return serviceFormData(url, option, req.headers);
     }
     return axios({ ...req })
         .then((res: AxiosType) => {
@@ -97,14 +96,6 @@ const service = (option, serverHost?) => {
             if (option.isBuffer) {
                 return response;
             }
-            // if (response.result_code !== "success") {
-            //     //session 过期刷新页面
-            //     if (response.result_code === "authentication_fail") {
-            //         location.reload();
-            //         return Promise.resolve({});
-            //     }
-            //     return Promise.reject(res);
-            // }
             return response;
         })
         .catch(res => {

@@ -22,6 +22,7 @@ Vue.filter(
         return date.toFormat(value, customFormat);
     }
 );
+
 const nprogress = new NProgress({ parent: ".app-nprogress" });
 createRouter().then(router => {
     const app = new Vue({

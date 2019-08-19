@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import dataMenuItems from "./menu/menu-items";
 import reqIndex from "../service/index";
 import createStore from "./base/index";
+import config from "@/config/index";
+import cache from "@/util/cache";
 
 Vue.use(Vuex);
 const newStore = createStore(reqIndex);
@@ -37,7 +39,7 @@ const actions = {
                         path: "",
                         component: () => {}
                     };
-                    ret.path = menuItem.url || menuItem.path;
+                    ret.path = menuItem.path;
                     ret.component = () => import("@/views" + ret.path + ".vue");
                     ret.children = fnMenus(menuItem.children);
                     return ret;
@@ -50,6 +52,27 @@ const actions = {
     // 本地菜单配置
     localMenus({ dispatch, commit }) {
         return dispatch("genMenus", dataMenuItems).then(res => {
+            const menus = cache.getStorage(config.tokenKey, true);
+            let systemMenus = [];
+            if (menus.Attributes && menus.Attributes.Menus) {
+                // 优化
+                systemMenus = menus.Attributes.Menus.map(item => {
+                    return {
+                        name: item.Text,
+                        path: item.Url,
+                        meta: {
+                            icon: item.Icon
+                        },
+                        component: () =>
+                            import("@/views/system" + item.Url + "/index.vue")
+                    };
+                });
+            }
+            res.forEach(item => {
+                if (item.path === "system") {
+                    item.children = systemMenus;
+                }
+            });
             commit("setMenuItems", res);
             return res;
         });

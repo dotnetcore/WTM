@@ -2,28 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store/index";
 Vue.use(VueRouter);
-// 结构
-const fnMenus = menuItems => {
-    let menus = [];
-    if (menuItems && menuItems.length > 0) {
-        menus = menuItems.map(menuItem => {
-            const ret = {
-                name: menuItem.name,
-                meta: {
-                    icon: menuItem.icon
-                },
-                children: [],
-                url: menuItem.url,
-                path: menuItem.path || menuItem.url,
-                //component: () => import(`${vueFile}`)
-                component: () => import("@/views" + menuItem.url + ".vue")
-            };
-            ret.children = fnMenus(menuItem.children);
-            return ret;
-        });
-    }
-    return menus;
-};
 interface routerItem {
     children: [];
     path: string;
@@ -57,7 +35,6 @@ export default function createRouter() {
         .dispatch("localMenus")
         .then(res => {
             // 数据结构不同，此处重新维护
-            // res = fnMenus(res.data.list);
             store.commit("setMenuItems", res);
             const routers = new VueRouter({
                 mode: "hash", // 'history',

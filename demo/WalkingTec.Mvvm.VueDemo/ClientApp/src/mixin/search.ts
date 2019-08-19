@@ -34,9 +34,8 @@ function mixinFunc(tempSearch: any = {}) {
             pageTotal: 0
         };
         loading: boolean = false;
-        test() {
-            console.log("tempSearch.no", tempSearch.no);
-        }
+        tableData: [] = [];
+
         fetch(changePage?: boolean) {
             this.loading = true;
             // 翻页的时候，请求参数不变。
@@ -45,9 +44,8 @@ function mixinFunc(tempSearch: any = {}) {
             }
             const params = {
                 ...this.searchFormClone,
-                offset:
-                    (this.pageDate.currentPage - 1) * this.pageDate.pageSize,
-                count: this.pageDate.pageSize
+                Page: this.pageDate.currentPage,
+                Limit: this.pageDate.pageSize
             };
             for (const key in params) {
                 if (
@@ -61,29 +59,26 @@ function mixinFunc(tempSearch: any = {}) {
                     params[key] = params[key].toString();
                 }
             }
+            if (params["isAsc"]) {
+                params["SortInfo"] = {
+                    Direction: params["isAsc"],
+                    Property: params["orderByColumn"]
+                };
+            }
             // 组件查询中方法
-            this.privateRequest(params, this.pageDate.currentPage)
+            this["privateRequest"](params, this.pageDate.currentPage)
                 .then(repData => {
-                    console.log("repData", repData);
                     this.loading = false;
-                    this.pageDate.pageTotal = repData.total || 0;
+                    this.pageDate.pageTotal = repData.Count || 0;
+                    this.tableData = repData.Data || [];
                 })
                 .catch(err => {
                     console.log(err);
                     this.loading = false;
-                    // this.$message.error(err && err.message);
                 });
         }
-        onSearch(fuzzyField = {}) {
+        onSearch() {
             this.pageDate.currentPage = 1;
-            if (
-                fuzzyField instanceof Object &&
-                JSON.stringify(fuzzyField) !== "{}"
-            ) {
-                //模糊查询传入字段
-                const fuzzyKey = Object.keys(fuzzyField)[0];
-                this.searchForm[fuzzyKey] = fuzzyField[fuzzyKey];
-            }
             Object.keys(tempSearch).forEach(key => {
                 this.searchForm[key] = tempSearch[key];
             });

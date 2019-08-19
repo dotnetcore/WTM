@@ -45,13 +45,12 @@ type optionsType = {
     export_count: number;
     [property: string]: any;
 };
-const exportUrl =
-    "http://uds-test.nioapis.com/uds/in/nsp/v1/car-orders/export/orders.xlsx";
+const exportUrl = "/export/orders.xlsx";
 @Component({
     store,
     mixins: [mixin],
     components: { FlexBox }
-})
+    })
 export default class ExportExcel extends Vue {
     @Prop({ default: "导出" })
     btnName!: string;
