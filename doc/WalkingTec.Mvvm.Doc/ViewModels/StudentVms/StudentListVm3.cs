@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Doc.Models;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
 {
-    public class StudentListVm3 : BasePagedListVM<Student,StudentSearcher>
+    public class StudentListVm3 : BasePagedListVM<Student, StudentSearcher>
     {
         public List<TreeSelectListItem> AllDeps { get; set; }
         public List<TreeSelectListItem> UrlTree { get; set; }
@@ -22,24 +23,27 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 new TreeSelectListItem
                 {
                   Text = "部门1",
-                          Id = "00000000-0000-0000-0000-000000000001",
+                  Id = "00000000-0000-0000-0000-000000000001",
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
                           Text = "部门1-1",
                           Id = "00000000-0000-0000-0000-000000000002",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
                           Children = new List<TreeSelectListItem>
                           {
                               new TreeSelectListItem
                               {
-                                  Text = "部门1-1-1",
-                          Id = "00000000-0000-0000-0000-000000000003",
+                                    Text = "部门1-1-1",
+                                    Id = "00000000-0000-0000-0000-000000000003",
+                                    ParentId = "00000000-0000-0000-0000-000000000002",
                               },
                               new TreeSelectListItem
                               {
-                                  Text = "部门1-1-2",
-                          Id = "00000000-0000-0000-0000-000000000004",
+                                    Text = "部门1-1-2",
+                                    Id = "00000000-0000-0000-0000-000000000004",
+                                    ParentId = "00000000-0000-0000-0000-000000000002",
                               }
 
                           }
@@ -48,36 +52,40 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                       {
                           Text = "部门1-2",
                           Id = "00000000-0000-0000-0000-000000000005",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
                       },
                       new TreeSelectListItem
                       {
                           Text = "部门1-3",
                           Id = "00000000-0000-0000-0000-000000000006",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
                       }
                   }
                 },
                 new TreeSelectListItem
                 {
                   Text = "部门2",
-                          Id = "00000000-0000-0000-0000-000000000007",
+                  Id = "00000000-0000-0000-0000-000000000007",
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
                           Text = "部门2-1",
                           Id = "00000000-0000-0000-0000-000000000008",
+                          ParentId = "00000000-0000-0000-0000-000000000007",
                       },
                       new TreeSelectListItem
                       {
                           Text = "部门2-2",
                           Id = "00000000-0000-0000-0000-000000000009",
+                          ParentId = "00000000-0000-0000-0000-000000000007",
                       }
                   }
                 },
                 new TreeSelectListItem
                 {
                   Text = "部门3",
-                          Id = "00000000-0000-0000-0000-000000000010",
+                  Id = "00000000-0000-0000-0000-000000000010",
                 }
 
             };
@@ -149,11 +157,20 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
         }
 
         public override IOrderedQueryable<Student> GetSearchQuery()
-        {            
+        {
+            var flat = AllDeps.FlatTreeSelectList();
+            var current = flat.Where(x => x.Id == Searcher.DepId?.ToString()).FirstOrDefault();
+            List<Guid?> depids = new List<Guid?>();
+            depids.Add(Searcher.DepId);
+            if (current != null)
+            {
+                var temp = current.GetTreeSelectChildren().Select(x => x.Id).ToList();
+                temp.ForEach(x => depids.Add(new Guid(x)));
+            }
             List<Student> data = new List<Student>
             {
-                 new Student{ LoginName = "dingyi", Name="丁一", Sex= Models.SexEnum.Male, ExcelIndex = 0, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Id), DepName = AllDeps[0].Text} },
-               new Student{ LoginName = "liuer", Name="刘二", Sex= Models.SexEnum.Male,  ExcelIndex = 1, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Id), DepName = AllDeps[0].Children[0].Text} },
+                new Student{ LoginName = "dingyi", Name="丁一", Sex= Models.SexEnum.Male, ExcelIndex = 0, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Id), DepName = AllDeps[0].Text} },
+                new Student{ LoginName = "liuer", Name="刘二", Sex= Models.SexEnum.Male,  ExcelIndex = 1, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Id), DepName = AllDeps[0].Children[0].Text} },
                 new Student{ LoginName = "zhangsan", Name="张三", Sex= Models.SexEnum.Male,  ExcelIndex = 2, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[0].Id), DepName = AllDeps[0].Children[0].Children[0].Text} },
                 new Student{ LoginName = "lisi", Name="李四", Sex= Models.SexEnum.Male,  ExcelIndex = 3, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[1].Id), DepName = AllDeps[1].Text} },
                 new Student{ LoginName = "wangwu", Name="王五", Sex= Models.SexEnum.Male,  ExcelIndex = 4, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[1].Id), DepName = AllDeps[0].Children[1].Text} },
@@ -164,10 +181,10 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 new Student{ LoginName = "wushi", Name="吴十", Sex= Models.SexEnum.Female,  ExcelIndex = 9, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[2].Id), DepName = AllDeps[2].Text} },
             };
 
-            var query = data.AsQueryable().Where(x=>
+            var query = data.AsQueryable().Where(x =>
                     (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
                     (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
-                    (x.Department.ID == Searcher.DepId) 
+                    (depids.Contains(x.Department.ID))
                 )
                 .OrderBy(x => x.ExcelIndex);
             return query;
