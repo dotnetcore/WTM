@@ -25,7 +25,7 @@
 <script lang='ts'>
 import { Component, Vue, Watch } from "vue-property-decorator";
 import mixinFunc from "@/mixin/search";
-import FuzzySearch from "@/components/common/fuzzy-search.vue";
+import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import { Action, Getter } from "vuex-class";
 import store from "@/store/manage/user-manage";
 import { validate } from "@/util/decorators/validator/validate";

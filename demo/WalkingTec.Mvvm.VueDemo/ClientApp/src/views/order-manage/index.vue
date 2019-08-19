@@ -41,7 +41,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import mixinFunc from "@/mixin/search";
-import FuzzySearch from "@/components/common/fuzzy-search.vue";
+import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import SearchForm from "./search-form.vue";
 import { Action, Getter } from "vuex-class";
 import store from "@/store/manage/order-manage";

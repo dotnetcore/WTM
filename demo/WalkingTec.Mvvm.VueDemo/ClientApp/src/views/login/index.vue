@@ -1,12 +1,12 @@
 <template>
-    <div class="app-login-form">
-        <h1>WalkingTec MVVM</h1>
-        <el-input v-model="formData.username" class="form-item" placeholder="请输入账号" prefix-icon="el-icon-user" size="mini" />
-        <el-input v-model="formData.password" class="form-item" placeholder="请输入密码" prefix-icon="el-icon-lock" size="mini" show-password />
-        <el-button class="form-item" size="mini" type="primary" :loading="isloading" @click="onSubmit">
-            Log in
-        </el-button>
-    </div>
+  <div class="app-login-form">
+    <h1>WalkingTec MVVM</h1>
+    <el-input v-model="formData.username" class="form-item" placeholder="请输入账号" prefix-icon="el-icon-user" size="mini" />
+    <el-input v-model="formData.password" class="form-item" placeholder="请输入密码" prefix-icon="el-icon-lock" size="mini" show-password />
+    <el-button class="form-item" size="mini" type="primary" :loading="isloading" @click="onSubmit">
+      Log in
+    </el-button>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
@@ -17,7 +17,7 @@ import baseMixin from "@/mixin/base";
 
 @Component({
     mixins: [baseMixin]
-    })
+})
 export default class Login extends Vue {
     formData = {
         username: "admin",

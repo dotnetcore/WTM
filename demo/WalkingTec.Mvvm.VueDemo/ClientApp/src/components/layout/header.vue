@@ -2,12 +2,12 @@
   <header class="app-navbar animated slideInDown">
     <nprogress-container />
     <div class="title-container">
-      <!-- <i :class="[collapse?'el-icon-s-fold':'el-icon-s-unfold' ,collapse?'fold-icon':'unfold-icon','collapse-icon']" @click="toggleFold" /> -->
+      <i :class="[collapse?'el-icon-s-unfold':'el-icon-s-fold' ,collapse?'fold-icon':'unfold-icon','collapse-icon']" @click="toggleFold" />
       <div class="title">
-        NSP
+        WTM
       </div>
       <div class="user-panel">
-        <span class="user-btn"><i class="fa fa-mobile-phone nav-btn" />17988837649</span>
+        <span class="user-btn"><i class="fa fa-mobile-phone nav-btn" />{{ userName }}</span>
         <span class="user-btn able"><i class="fa fa-power-off nav-btn" />退出</span>
       </div>
     </div>
@@ -19,17 +19,23 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Mutation, Getter } from "vuex-class";
 import NprogressContainer from "./nprogress.vue";
+import cache from "@/util/cache";
+import config from "@/config/index";
+
 @Component({
     components: { NprogressContainer }
 })
 export default class NavBar extends Vue {
-    show: boolean = false;
+    show: Boolean = false;
+    userName: String = "";
     @Mutation("toggleIsFold")
     toggleFold;
     @Getter("isCollapse")
     collapse;
+
     mounted() {
         this.show = true;
+        this.userName = cache.getStorage(config.tokenKey, true).Name || "";
     }
 }
 </script>

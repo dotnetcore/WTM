@@ -30,13 +30,13 @@ import config from "@/config/index";
 
 @Component({
     components: {
-    AppMain,
-    Header,
-    Footer,
-    LeftMenu,
-    Nprogress
+        AppMain,
+        Header,
+        Footer,
+        LeftMenu,
+        Nprogress
     }
-    })
+})
 export default class App extends Vue {
     // 菜单
     @Action

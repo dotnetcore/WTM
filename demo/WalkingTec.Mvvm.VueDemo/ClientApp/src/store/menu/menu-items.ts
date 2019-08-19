@@ -13,41 +13,24 @@ const dataManageItems = [
             {
                 name: "用户管理",
                 meta: {},
-                path: "/userManage",
-                url: "/user-manage/index",
+                path: "/user-manage/index",
                 component: () => import("@/views/user-manage/index.vue")
             },
             {
                 name: "订单管理",
                 meta: {},
-                path: "/orderManage",
-                url: "/order-manage/index",
+                path: "/order-manage/index",
                 component: () => import("@/views/order-manage/index.vue")
             }
         ]
     },
     {
-        name: "设置",
+        name: "系统管理",
         meta: {
             icon: "el-icon-setting"
         },
-        path: "",
-        children: [
-            {
-                name: "平台信息",
-                meta: {},
-                path: "/shopManage",
-                url: "/shop-manage/index",
-                component: () => import("@/views/shop-manage/index.vue")
-            },
-            {
-                name: "二维码",
-                meta: {},
-                path: "/qrCode",
-                url: "/qr-code/index",
-                component: () => import("@/views/qr-code/index.vue")
-            }
-        ]
+        path: "system", // System
+        children: []
     }
 ];
 
