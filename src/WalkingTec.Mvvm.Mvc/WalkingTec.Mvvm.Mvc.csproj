@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
@@ -13,11 +13,13 @@
     <None Remove="echarts.common.min.js" />
     <None Remove="framework_layui.js" />
     <None Remove="GeneratorFiles\ApiTest.txt" />
+    <None Remove="GeneratorFiles\ApiTestTopPoco.txt" />
     <None Remove="GeneratorFiles\BatchDeleteView.txt" />
     <None Remove="GeneratorFiles\BatchEditView.txt" />
     <None Remove="GeneratorFiles\BatchVM.txt" />
     <None Remove="GeneratorFiles\Controller.txt" />
     <None Remove="GeneratorFiles\ControllerTest.txt" />
+    <None Remove="GeneratorFiles\ControllerTestTopPoco.txt" />
     <None Remove="GeneratorFiles\CreateView.txt" />
     <None Remove="GeneratorFiles\CrudVM.txt" />
     <None Remove="GeneratorFiles\DeleteView.txt" />
@@ -69,7 +71,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ControllerTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ControllerTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
