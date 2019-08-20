@@ -5,7 +5,7 @@
       <el-table-column v-for="(item, index) of columnList" :key="index" :sortable="item.sortable" :prop="item.prop" :label="item.label" align="center" />
       <el-table-column v-if="isOperate" align="center" label="操作">
         <template slot-scope="scope">
-          <slot name="operate" :rowData="{...scope}" />
+          <slot name="operate" :row="{...scope.row}" />
         </template>
       </el-table-column>
     </el-table>
