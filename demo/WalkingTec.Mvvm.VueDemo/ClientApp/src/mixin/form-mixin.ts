@@ -17,46 +17,50 @@ import DialogFooter from "@/components/common/dialog/dialog-footer.vue";
  * }
  */
 interface formdata {
-    refName?: String;
-    formData: Object;
+    refName?: string;
+    formData: object;
 }
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     @Component({
-        directives: {
-        display: {
-        inserted: (el, binding) => {
-        if (binding.modifiers["status"] === dialogType.add) {
-        el.innerHTML = binding.value;
-        }
-        }
-        }
-        },
         components: { DialogFooter }
         })
     class editMixins extends Vue {
         @Prop({ type: Object, default: {} })
-        dialogData;
+        dialogData; // 表单传入数据
         @Prop({ type: String, default: "" })
-        status;
+        status; // 表单类型
+        @Prop({ type: Boolean, default: false })
+        isShow; // 弹框显示
         dialogType = dialogType;
-        // 表单
+        // 表单数据
         formData = {
             ...defaultFormData.formData
         };
         refName = defaultFormData.refName;
-        @Watch("dialogData")
-        setDialogData(val) {
-            this.formData = { ...val };
-            if (this.status === dialogType.detail) {
-            } else if (this.status === dialogType.add) {
+        // 是否列表
+        whether = [
+            {
+                value: true,
+                label: "是"
+            },
+            {
+                value: false,
+                label: "否"
+            }
+        ];
+        @Watch("isShow")
+        setIsShow(val) {
+            if (val) {
+                if (this.status !== dialogType.add) {
+                    this.formData = { ...this.dialogData };
+                }
                 this.onReset();
-            } else {
             }
         }
         // 关闭
         onClear() {
             this.$emit("update:isShow", false);
-            this.onReset();
+            // this.onReset();
         }
         // 重置&清除验证
         onReset() {
@@ -65,9 +69,9 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                     this.formData[key] = defaultFormData.formData[key];
                 }
             });
-            if (defaultFormData.refName) {
-                //去除搜索中的error信息
-                _.get(this, `$refs[${defaultFormData.refName}]`).resetFields();
+            if (this.refName) {
+                // 去除搜索中的error信息
+                _.get(this, `$refs[${this.refName}]`).resetFields();
             }
         }
     }
