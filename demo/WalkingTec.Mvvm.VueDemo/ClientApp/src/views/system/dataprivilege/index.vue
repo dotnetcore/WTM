@@ -38,7 +38,7 @@
       </table-box>
     </article>
     <dialog-box :is-show.sync="detailShow">
-      <dialog-form :is-show.sync="detailShow" :dialog-data="dialogBase.dialogData" :status="dialogBase.dialogStatus" />
+      <dialog-form :is-show.sync="detailShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
     </dialog-box>
   </div>
 </template>
@@ -55,7 +55,7 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import ExportExcel from "@/components/common/export/export-excel.vue";
 import DialogForm from "./dialog-form.vue";
-
+// 查询参数
 const defaultSearchData = {
     DpType: "0",
     DomainID: ""
@@ -82,7 +82,7 @@ export default class Index extends Vue {
     exportParams = {};
     detailShow: Boolean = false;
     // 弹出框内容
-    dialogBase = {
+    dialogInfo = {
         dialogData: {},
         dialogStatus: ""
     };
@@ -95,14 +95,15 @@ export default class Index extends Vue {
         this.getPrivilegesList();
         this["onSearch"]();
     }
+    // 查询接口
     privateRequest(params) {
         return this.postDataprivilegeSearchList(params);
     }
     openDialog(status, data?) {
         this.detailShow = true;
-        this.dialogBase.dialogStatus = status;
+        this.dialogInfo.dialogStatus = status;
         if (data) {
-            this.dialogBase.dialogData = data;
+            this.dialogInfo.dialogData = data;
         }
     }
     // toDelete() {}
