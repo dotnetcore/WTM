@@ -48,19 +48,20 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                 label: "否"
             }
         ];
-        @Watch("isShow")
+        @Watch("dialogData", { immediate: true })
         setIsShow(val) {
             if (val) {
                 if (this.status !== dialogType.add) {
-                    this.formData = { ...this.dialogData };
+                    Object.keys(this.formData).forEach(key => {
+                        key in val && (this.formData[key] = val[key]);
+                    });
                 }
-                this.onReset();
             }
         }
         // 关闭
         onClear() {
             this.$emit("update:isShow", false);
-            // this.onReset();
+            this.onReset();
         }
         // 重置&清除验证
         onReset() {
