@@ -7,7 +7,7 @@
           <div class="layui-card">
             <div class="layui-card-header">快捷方式</div>
             <div class="layui-card-body">
-              
+
               <div class="layui-carousel layadmin-carousel layadmin-shortcut">
                 <div carousel-item>
                   <ul class="layui-row layui-col-space10">
@@ -110,10 +110,10 @@
                         </a>
                       </li>
                     </ul>
-                  
+
                 </div>
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -167,7 +167,7 @@
           <div class="layui-card">
             <div class="layui-card-header">数据概览</div>
             <div class="layui-card-body">
-              
+
               <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-dataview">
                 <div carousel-item id="LAY-index-dataview">
                   <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
@@ -175,7 +175,7 @@
                   <div></div>
                 </div>
               </div>
-              
+
             </div>
           </div>
           <div class="layui-card">
@@ -197,7 +197,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="layui-col-md4">
       <div class="layui-card">
         <div class="layui-card-header">版本信息</div>
@@ -242,7 +242,7 @@
           </table>
         </div>
       </div>
-      
+
       <div class="layui-card">
         <div class="layui-card-header">效果报告</div>
         <div class="layui-card-body layadmin-takerates">
@@ -256,7 +256,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="layui-card">
         <div class="layui-card-header">实时监控</div>
         <div class="layui-card-body layadmin-takerates">
@@ -270,14 +270,14 @@
           </div>
         </div>
       </div>
-      
+
       <div class="layui-card">
         <div class="layui-card-header">产品动态</div>
         <div class="layui-card-body">
           <div class="layui-carousel layadmin-carousel layadmin-news" data-autoplay="true" data-anim="fade" lay-filter="news">
             <div carousel-item>
               <div><a href="http://fly.layui.com/docs/2/" target="_blank" class="layui-bg-red">layuiAdmin 快速上手文档</a></div>
-              <div><a href="http://fly.layui.com/vipclub/list/layuiadmin/" target="_blank" class="layui-bg-green">layuiAdmin 会员讨论专区</a></div> 
+              <div><a href="http://fly.layui.com/vipclub/list/layuiadmin/" target="_blank" class="layui-bg-green">layuiAdmin 会员讨论专区</a></div>
               <div><a href="http://www.layui.com/admin/#get" target="_blank" class="layui-bg-blue">获得 layui 官方后台模板系统</a></div>
             </div>
           </div>
@@ -297,7 +297,7 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </div>
 
@@ -311,12 +311,12 @@
     然而该页面的视图则是重新插入到容器，那如何保证能重新来控制视图？有两种方式：
       1): 借助 layui.factory 方法获取 console 模块的工厂（回调函数）给 layui.use
       2): 直接在 layui.use 方法的回调中书写业务代码，即:
-          layui.use('console', function(){ 
-            //同 console.js 中的 layui.define 回调中的代码 
+          layui.use('console', function(){
+            //同 console.js 中的 layui.define 回调中的代码
           });
-          
+
   这里我们采用的是方式1。其它很多视图中采用的其实都是方式2，因为更简单些，也减少了一个请求数。
-  
+
 */
 layui.use('console', layui.factory('console'));
 </script>

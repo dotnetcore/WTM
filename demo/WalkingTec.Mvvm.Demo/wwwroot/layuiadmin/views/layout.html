@@ -13,7 +13,7 @@
         </a>
       </li>-->
       <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+        <a href="https://wtmdoc.walkingtec.cn" target="_blank" title="WTM文档">
           <i class="layui-icon layui-icon-website"></i>
         </a>
       </li>
@@ -23,18 +23,19 @@
         </a>
       </li>
       <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search/keywords=">
+        <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search"
+          layadmin-event="serach" lay-action="layuiadmin/views/template/search.html/keywords=">
       </li>
     </ul>
     <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
       <li class="layui-nav-item" lay-unselect>
-        <a lay-href="app/message/" layadmin-event="message">
+        <a lay-href="layuiadmin/views/app/message/index.html" layadmin-event="message">
           <i class="layui-icon layui-icon-notice"></i>
 
           <!-- 如果有新消息，则显示小圆点 -->
           <script type="text/html" template lay-url="./json/message/new.js">
-          {{# if(d.data.newmsg){ }}
+          {{# if(d.Data.newmsg){ }}
             <span class="layui-badge-dot"></span>
           {{# } }}
           </script>
@@ -58,13 +59,13 @@
       </li>
       <li class="layui-nav-item" lay-unselect>
         <script type="text/html" template lay-url="./json/user/session.js"
-        lay-done="layui.element.render('nav', 'layadmin-layout-right');">
+          lay-done="layui.element.render('nav', 'layadmin-layout-right');">
           <a href="javascript:;">
-            <cite>{{ d.data.username }}</cite>
+            <cite>{{ d.Data.username }}</cite>
           </a>
           <dl class="layui-nav-child">
-            <dd><a lay-href="set/user/info">基本资料</a></dd>
-            <dd><a lay-href="set/user/password">修改密码</a></dd>
+            <dd><a lay-href="layuiadmin/views/set/user/info.html">基本资料</a></dd>
+            <dd><a lay-href="layuiadmin/views/set/user/password.html">修改密码</a></dd>
             <hr>
             <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
           </dl>
@@ -83,8 +84,9 @@
   <!-- 侧边菜单 -->
   <div class="layui-side layui-side-menu">
     <div class="layui-side-scroll">
-      <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}"
-      lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
+      <!-- <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}" -->
+      <script type="text/html" template lay-url="/_Framework/Menu"
+        lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
 
         <div class="layui-logo" lay-href="">
           <span>{{ layui.setter.name || 'layuiAdmin' }}</span>
