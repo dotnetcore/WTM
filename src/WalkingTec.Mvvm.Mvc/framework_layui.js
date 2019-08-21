@@ -132,9 +132,9 @@ window.ff = {
                         if ($.cookie("tabmode") === 'Simple') {
                             tabmode = "layui-tab-brief";
                         }
-                        $('#DONOTUSE_MAINPANEL').css('overflow', 'hidden');
+                        $('#LAY_app_body').css('overflow', 'hidden');
                         if ($('#DONOTUSE_MAINTAB').length === 0) {
-                            $('#DONOTUSE_MAINPANEL').html('<div class="layui-tab donotuse_pdiv ' + tabmode + '" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
+                            $('#LAY_app_body').html('<div class="layui-tab donotuse_pdiv ' + tabmode + '" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
                             layui.element.on('tab(maintab)', function (xdata) {
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
                                 $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
@@ -163,14 +163,14 @@ window.ff = {
                             child.document.close();
                             $(child.document).ready(function () {
                                 setTimeout(function () {
-                                    $('#DONOTUSE_MAINPANEL', child.document).html(data);
+                                    $('#LAY_app_body', child.document).html(data);
                                     $(child.document).attr("title", title);
                                 }, 500);
                             });
                         }
                         else {
-                            $('#DONOTUSE_MAINPANEL').html(data);
-                            $('#DONOTUSE_MAINPANEL').scrollTop(0);
+                            $('#LAY_app_body').html(data);
+                            $('#LAY_app_body').scrollTop(0);
                         }
                     }
                 }
@@ -437,7 +437,7 @@ window.ff = {
         }
         else {
             if ($('#DONOTUSE_MAINTAB') === 0) {
-                $('#DONOTUSE_MAINPANEL').html('');
+                $('#LAY_app_body').html('');
             }
             else {
                 layui.element.tabDelete("maintab", DONOTUSE_TABLAYID);
@@ -583,12 +583,12 @@ window.ff = {
             index = 0;
         }
         var tab = "";
-        if (DONOTUSE_TABLAYID !== undefined && dialogid == "DONOTUSE_MAINPANEL") {
+        if (DONOTUSE_TABLAYID !== undefined && dialogid == "LAY_app_body") {
             tab = " .layui-tab-item.layui-show";
         }
         var tables = $('#' + dialogid + tab + ' table[id]');
         if (tables.length > index) {
-            table.reload(tables[index].id);
+            layui.table.reload(tables[index].id);
         }
         else {
             var searchBtns = $('#' + dialogid + tab + ' form a[class*=layui-btn]');
