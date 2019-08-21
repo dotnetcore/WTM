@@ -35,7 +35,6 @@ export default class Login extends Vue {
         };
         this["postLogin"](params)
             .then(res => {
-                console.log(res, "ok");
                 this.isloading = false;
                 // this["onHref"]("/index.html");
                 cache.setStorage(config.tokenKey, res);

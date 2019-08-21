@@ -20,15 +20,15 @@ export default class FuzzySearch extends Vue {
     @Prop(Boolean)
     loading;
     @Prop({ type: Boolean, default: false })
-    isSelection;
+    isSelection; // 是否多选
     @Prop({ type: Boolean, default: false })
-    isOperate;
+    isOperate; // 是否展示操作
     @Prop({ type: Object, default: {} })
-    tbColumn;
+    tbColumn; // 列字段数据
     @Prop(Array)
-    tableData;
+    tableData; // 列表数据
     @Prop({ type: Object, default: {} })
-    pageDate;
+    pageDate; // 分页数据
 
     created() {
         console.log("$slots", this);
@@ -45,15 +45,18 @@ export default class FuzzySearch extends Vue {
             };
         });
     }
-
-    handleSizeChange() {
-        this.$emit("handleSizeChange");
+    // 切换页码
+    handleSizeChange(size) {
+        this.$emit("handleSizeChange", size);
     }
-    handleCurrentChange() {
-        this.$emit("handleCurrentChange");
+    // 翻页
+    handleCurrentChange(currentpage) {
+        this.$emit("handleCurrentChange", currentpage);
     }
+    // 选中数据
     onSelectionChange(selectData) {
-        console.log("selectData", selectData);
+        this.$emit("onSelectionChange", selectData);
+        // console.log("selectData", selectData);
     }
 }
 </script>

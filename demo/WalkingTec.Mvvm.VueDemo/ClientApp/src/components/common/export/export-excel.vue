@@ -1,33 +1,37 @@
 <template>
-    <div class="export-excel">
-        <el-button :type="btnType" @click="onExport">
-            <i v-if="isShowIcon" class="fa fa-sign-out" />{{ btnName }}
-        </el-button>
-        <el-dialog :title="title" :visible="dialogVisible" width="40%" :append-to-body="appendToBody" @close="onClose">
-            <!-- <div class="text-title">
+  <div class="export-excel">
+    <el-button :type="btnType" icon="el-icon-download" @click="onExport">
+      <i v-if="isShowIcon" class="fa fa-sign-out" />{{ btnName }}
+    </el-button>
+    <el-dialog :title="title" :visible="dialogVisible" width="40%" :append-to-body="appendToBody" @close="onClose">
+      <!-- <div class="text-title">
                 如果导出的数据过多会导致导出时间稍长，请您耐心等待
             </div> -->
-            <div v-show="!isFinish" class="text-title">
-                正在导出中，请耐心等待...{{ animatedNumber }}%
-            </div>
-            <div v-if="isFinish" class="text-title">
-                <p class="success-title"><i class="el-icon-check success-icon" />成功导出{{position}}条订单</p>
-                <p class="success-text">请在电脑的下载文件夹中查看</p>
-            </div>
+      <div v-show="!isFinish" class="text-title">
+        正在导出中，请耐心等待...{{ animatedNumber }}%
+      </div>
+      <div v-if="isFinish" class="text-title">
+        <p class="success-title">
+          <i class="el-icon-check success-icon" />成功导出{{ position }}条订单
+        </p>
+        <p class="success-text">
+          请在电脑的下载文件夹中查看
+        </p>
+      </div>
 
-            <el-progress v-show="!isFinish" class="progress-class" :text-inside="true" :stroke-width="18" :percentage="animatedNumber" />
+      <el-progress v-show="!isFinish" class="progress-class" :text-inside="true" :stroke-width="18" :percentage="animatedNumber" />
 
-            <flex-box justify="space-between">
-                <el-button type="primary" :disabled="isExporting" :loading="btnLoading" @click="onBegin">
-                    导出
-                </el-button>
+      <flex-box justify="space-between">
+        <el-button type="primary" :disabled="isExporting" :loading="btnLoading" @click="onBegin">
+          导出
+        </el-button>
 
-                <el-button @click="onClose">
-                    {{ textTips }}
-                </el-button>
-            </flex-box>
-        </el-dialog>
-    </div>
+        <el-button @click="onClose">
+          {{ textTips }}
+        </el-button>
+      </flex-box>
+    </el-dialog>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
@@ -45,35 +49,36 @@ type optionsType = {
     export_count: number;
     [property: string]: any;
 };
-const exportUrl = "/export/orders.xlsx";
 @Component({
     store,
     mixins: [mixin],
     components: { FlexBox }
-    })
+})
 export default class ExportExcel extends Vue {
-    @Prop({ default: "导出" })
-    btnName!: string;
-    @Prop({ default: "primary" })
-    btnType!: string;
-    @Prop({ default: true })
-    isShowIcon!: boolean;
-    @Prop({ default: "" })
-    querySession!: string;
-    @Prop({ default: "" })
-    batchType!: string;
-    @Prop({ default: "提示" })
-    title!: string;
-    @Prop({ default: "./" })
-    postParam!: string;
-    @Prop({ default: "" })
-    type!: string;
-    @Prop({ default: true })
-    needModal!: boolean;
-    @Prop({ default: () => ({}) })
-    params!: Object;
-    @Prop({ default: true })
-    appendToBody!: boolean;
+    @Prop({ type: String, default: "/export/orders.xlsx" })
+    exportUrl;
+    @Prop({ type: String, default: "导出" })
+    btnName;
+    @Prop({ type: String, default: "primary" })
+    btnType;
+    @Prop({ type: Boolean, default: true })
+    isShowIcon;
+    @Prop({ type: String, default: "" })
+    querySession;
+    @Prop({ type: String, default: "" })
+    batchType;
+    @Prop({ type: String, default: "提示" })
+    title;
+    @Prop({ type: String, default: "./" })
+    postParam;
+    @Prop({ type: String, default: "" })
+    type;
+    @Prop({ type: Boolean, default: true })
+    needModal;
+    @Prop({ type: Object, default: () => ({}) })
+    params;
+    @Prop({ type: Boolean, default: true })
+    appendToBody;
     dialogVisible: boolean = false;
     maxNum: number = 5000;
     num: number = 0;
@@ -158,7 +163,7 @@ export default class ExportExcel extends Vue {
     }
     download() {
         const link: any = document.createElement("a");
-        link.href = getUrlByParamArr(exportUrl, this.params);
+        link.href = getUrlByParamArr(this.exportUrl, this.params);
         link.style = "visibility:hidden";
         // link.download = this.session + ".xlsx";
         document.body.appendChild(link);

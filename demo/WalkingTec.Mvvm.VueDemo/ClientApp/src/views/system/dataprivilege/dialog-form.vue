@@ -48,7 +48,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <dialog-footer @onClear="onClear" @onSubmit="onSubmitForm" />
+    <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
   </div>
 </template>
 
@@ -79,6 +79,8 @@ const defaultFormData = {
 export default class Index extends Vue {
     @Action
     postDataprivilegeAdd;
+    @Action
+    putDataprivilegeEdit;
     // 用户组
     groups = [];
     // 验证
@@ -86,7 +88,7 @@ export default class Index extends Vue {
         if (this["status"] !== this["dialogType"].detail) {
             // 动态验证会走遍验证，需要清除验证
             this.$nextTick(function() {
-                _.get(this, `$refs[${this["refName"]}]`).resetFields();
+                _.get(this, `$refs[${defaultFormData.refName}]`).resetFields();
             });
             return {
                 DpType: [
@@ -124,10 +126,35 @@ export default class Index extends Vue {
     onSubmitForm() {
         _.get(this, `$refs[${this["refName"]}]`).validate(valid => {
             if (valid) {
-                this.postDataprivilegeAdd(this["formData"]);
+                if (this["status"] === this["dialogType"].add) {
+                    this.onAdd();
+                } else if (this["status"] === this["dialogType"].edit) {
+                    this.onEdit();
+                }
             } else {
                 return false;
             }
+        });
+    }
+    onAdd() {
+        const parameters = { ...this["formData"] };
+        delete parameters.id;
+        this.postDataprivilegeAdd(parameters).then(res => {
+            this["$notify"]({
+                title: "添加成功",
+                type: "success"
+            });
+            this["onClear"]();
+        });
+    }
+    onEdit() {
+        const parameters = { ...this["formData"] };
+        this.putDataprivilegeEdit(parameters).then(res => {
+            this["$notify"]({
+                title: "修改成功",
+                type: "success"
+            });
+            this["onClear"]();
         });
     }
 }

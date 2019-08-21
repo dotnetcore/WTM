@@ -99,7 +99,6 @@ const service = (option, serverHost?) => {
             return response;
         })
         .catch(res => {
-            console.log("error", res);
             let msg = "接口错误";
             if (res.response && res.response.data.Message) {
                 msg = res.response.data.Message[0];
