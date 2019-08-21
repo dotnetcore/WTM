@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
                 var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
+                var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                 if (mainAction != null)
                 {
                     var test = DC.Set<FrameworkMenu>().Where(x => x.Url == mainAction.Url && x.ID != Entity.ID).FirstOrDefault();

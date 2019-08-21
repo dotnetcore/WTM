@@ -197,22 +197,28 @@ window.ff = {
 
 
     LoadPage1: function (url, where) {
-        var layer = layui.layer, index = layer.load(2);
-        $.ajax({
-            url: decodeURIComponent(url),
-            type: 'GET',
-            success: function (data) {
-                $('#' + where).html(data);
-                layer.close(index);
-            },
-            error: function (xhr, status, error) {
-                layer.close(index);
-                layer.alert('加载失败');
-            },
-            complete: function () {
-                ff.SetCookie("windowids", null);
-            }
-        });
+        url = url.toLowerCase();
+        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) {
+            $('#' + where).html("<iframe frameborder='no' border='0' height='100%' src='" + url + "'></iframe>");
+        }
+        else {
+            var layer = layui.layer, index = layer.load(2);
+            $.ajax({
+                url: decodeURIComponent(url),
+                type: 'GET',
+                success: function (data) {
+                    $('#' + where).html(data);
+                    layer.close(index);
+                },
+                error: function (xhr, status, error) {
+                    layer.close(index);
+                    layer.alert('加载失败');
+                },
+                complete: function () {
+                    ff.SetCookie("windowids", null);
+                }
+            });
+        }
     },
 
     GetPostData: function (formid) {
@@ -456,7 +462,33 @@ window.ff = {
                 var i = 0;
                 var item = null;
                 var form = layui.form;
-                if ($('#' + target)[0].localName === "select") {
+                var controltype = "";
+                var ele = $('#' + target);
+                if (ele.length > 0) {
+                    if (ele[0].localName === "select") {
+                        controltype = "combo";
+                    }
+                    if (ele.attr("div-for") === "checkbox") {
+                        controltype = "checkbox";
+                    }
+                    if (ele.attr("div-for") === "radio") {
+                        controltype = "radio";
+                    }
+                }
+                else {
+                    if ($('#div' + target).length > 0) {
+                        controltype = "tree";
+                    }
+                }
+
+                if (controltype === "tree") {
+                    layui.tree.reload('tree' + target, {
+                        data: ff.getTreeItems(data.Data)
+                    });
+                }
+
+
+                if (controltype === "combo") {
                     $('#' + target).html('<option value = "">请选择</option>');
                     for (i = 0; i < data.Data.length; i++) {
                         item = data.Data[i];
@@ -469,7 +501,7 @@ window.ff = {
                     }
                     form.render('select');
                 }
-                else {
+                if (controltype === "checkbox") {
                     $('#' + target).html('');
                     for (i = 0; i < data.Data.length; i++) {
                         item = data.Data[i];
@@ -481,8 +513,21 @@ window.ff = {
                         }
                     }
                     form.render('checkbox');
-
                 }
+                if (controltype === "radio") {
+                    $('#' + target).html('');
+                    for (i = 0; i < data.Data.length; i++) {
+                        item = data.Data[i];
+                        if (item.Selected === true) {
+                            $('#' + target).append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                        }
+                        else {
+                            $('#' + target).append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                        }
+                    }
+                    form.render('radio');
+                }
+
             }
             else {
                 layer.alert('获取数据失败');
@@ -719,5 +764,37 @@ window.ff = {
                 }
             }
         }, 10);
+    },
+
+    getTreeChecked: function (items) {
+        var rv = [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].children == null || items[i].children.length == 0) {
+                rv.push(items[i].id);
+            }
+            else {
+                rv = rv.concat(this.getTreeChecked(items[i].children));
+            }
+        }
+        return rv;
+    },
+
+    getTreeItems: function (data) {
+        var rv = [];
+        for (var i = 0; i < data.length; i++) {
+            var item = {};
+            item.id = data[i].Id;
+            item.title = data[i].Text;
+            item.href = data[i].Url;
+            item.spread = data[i].Expended;
+            item.checked = data[i].Checked;
+
+            if (data[i].Children != null && data[i].Children.length > 0) {
+                item.children = this.getTreeItems(data[i].Children);
+            }
+            rv.push(item);
+        }
+        return rv;
+
     }
 };

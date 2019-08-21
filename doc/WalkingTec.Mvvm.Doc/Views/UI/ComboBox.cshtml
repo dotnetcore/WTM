@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="Combobox">
     <p>Combobox的常用属性有：</p>
@@ -150,8 +150,9 @@
 <wt:fieldset field-set-style="Simple" title="联动">
     <wt:quote>
         <p>ComboBox可以开启联动功能，方法是设置LinkedField和TriggerUrl</p>
-        <p>LinkField指向vm中的某个字段，框架会寻找是否有其他Combobox绑定了这个字段，并把找到的Combobox作为联动的目标</p>
-        <p>TriggerUrl接受一个名为id的参数，返回Text,Value数组形式的json</p>
+        <p>LinkField指向vm中的某个字段，框架会寻找是否有其他Combobox,CheckBox,Radio,Tree控件绑定了这个字段，并把找到的控件作为联动的目标</p>
+        <p>TriggerUrl接受一个名为id的参数，返回Text,Value数组形式的json，如果联动的是Tree控件，则需要返会TreeSelectListItem格式的json</p>
+        <p>框架提供了GetSelectListItems，以及GetTreeSelectListItems函数，可以方便的从数据库读取数据并生成两种格式的数据</p>
     </wt:quote>
     <wt:tab>
         <wt:tabheaders>

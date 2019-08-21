@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -45,6 +45,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Style) == false)
             {
+                if(this is TreeTagHelper)
+                {
+                    Style += " overflow:auto;";
+                }
                 output.Attributes.SetAttribute("style", Style);
             }
 
@@ -140,7 +144,7 @@ layui.use(['form'],function(){{
                 case RadioTagHelper item:
                     if (string.IsNullOrEmpty(item.ChangeFunc) == false)
                     {
-                        output.PostElement.SetHtmlContent(output.PostElement.GetContent().Replace("type=\"radio\" ", $"type=\"radio\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
+                        output.PostContent.SetHtmlContent(output.PostContent.GetContent().Replace("type=\"radio\" ", $"type=\"radio\" lay-filter=\"{output.Attributes["lay-filter"].Value}\""));
                         output.PostElement.AppendHtml($@"
 <script>
 layui.use(['form'],function(){{
