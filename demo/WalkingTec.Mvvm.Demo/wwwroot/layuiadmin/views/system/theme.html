@@ -1,8 +1,4 @@
-
-<!-- 主题设置模板 -->
-
-<script type="text/html" template lay-done="layui.data.theme();">
-  {{# 
+<script type="text/html" template lay-done="layui.data.theme();">{{# 
     var local = layui.data(layui.setter.tableName)
     ,theme = local.theme || {}
     ,themeColorIndex =  parseInt((theme && theme.color) ? theme.color.index : 0) || 0;
@@ -23,21 +19,4 @@
         </li>
       {{# }); }}
     </ul>
-  </div>
-</script>
-
-<script>
-layui.data.theme = function(){
-  layui.use('form', function(){
-    var form = layui.form
-    ,admin = layui.admin;
-    
-    //监听隐藏开关
-    form.on('switch(system-theme-sideicon)', function(){
-      admin.theme({
-        hideSideIcon: this.checked
-      })
-    });
-  });
-};
-</script>
+  </div></script><script>layui.data.theme=function(){layui.use("form",function(){var i=layui.form,e=layui.admin;i.on("switch(system-theme-sideicon)",function(){e.theme({hideSideIcon:this.checked})})})}</script>
