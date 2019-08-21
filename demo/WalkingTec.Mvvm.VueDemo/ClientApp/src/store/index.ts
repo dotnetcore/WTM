@@ -52,6 +52,7 @@ const actions = {
     // 本地菜单配置
     localMenus({ dispatch, commit }) {
         return dispatch("genMenus", dataMenuItems).then(res => {
+            // 读取缓存
             const menus = cache.getStorage(config.tokenKey, true);
             let systemMenus = [];
             if (menus.Attributes && menus.Attributes.Menus) {

@@ -38,31 +38,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         };
         // 表单ref name
         refName = defaultFormData.refName;
-        // 是否列表
-        whether = [
-            {
-                value: true,
-                label: "是"
-            },
-            {
-                value: false,
-                label: "否"
-            }
-        ];
-        // 监听数据变化
-        @Watch("dialogData", { immediate: true })
-        setDialogData(val) {
-            if (!!val && this.status !== dialogType.add) {
-                Object.keys(this.formData).forEach(key => {
-                    // 不存在 赋 默认值
-                    if (key in val) {
-                        this.formData[key] = val[key];
-                    } else {
-                        this.formData[key] = defaultFormData[key];
-                    }
-                });
-            }
-        }
         // 关闭
         onClear() {
             this.$emit("update:isShow", false);
@@ -70,15 +45,19 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         }
         // 重置&清除验证
         onReset() {
-            Object.keys(defaultFormData.formData).forEach(key => {
-                if (key !== "SelectedItemsID") {
-                    this.formData[key] = defaultFormData.formData[key];
-                }
-            });
+            this.setFormData(defaultFormData.formData);
+            // if (key !== "SelectedItemsID") {}
             if (this.refName) {
                 // 去除搜索中的error信息
                 _.get(this, `$refs[${this.refName}]`).resetFields();
             }
+        }
+        // 表单数据 赋值
+        setFormData(params) {
+            Object.keys(defaultFormData.formData).forEach(key => {
+                // if (key in params) {}
+                this.formData[key] = params[key];
+            });
         }
     }
     return editMixins;

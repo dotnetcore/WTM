@@ -40,6 +40,7 @@ export default function createRouter() {
                 mode: "hash", // 'history',
                 routes: generateRoutesFromMenu(res)
             });
+            console.log("routers", routers);
             return routers;
         })
         .catch(error => {
