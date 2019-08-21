@@ -41,10 +41,17 @@ const getDownLoadUrl = base64str => {
     const blob = new Blob([uInt8Array], { type: contentType });
     return URL.createObjectURL(blob);
 };
+
+const listToString = (list: Array<any>, key: string) => {
+    list.map(item => {
+        return item[key];
+    }).join(",");
+};
 export {
     firstUpperCase,
     urlStringify,
     strStringify,
     getBase64Str,
-    getDownLoadUrl
+    getDownLoadUrl,
+    listToString
 };

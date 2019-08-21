@@ -11,10 +11,15 @@ interface StoreType {
     actions: {};
     mutations: {};
 }
-
+interface serviceItemInter {
+    url: string;
+    method: string;
+    isBuffer?: boolean;
+    contentType?: string;
+}
 /**
  * 根据service 创建store
- * @param {*} serviceUnit
+ * @param {*} serviceUnit: service接口列表
  */
 export default (serviceUnit, callback?: Function) => {
     const store: StoreType = {
@@ -23,12 +28,12 @@ export default (serviceUnit, callback?: Function) => {
         mutations: {}
     };
     for (const key in serviceUnit) {
-        // 参数
-        const request = serviceUnit[key];
-        let serviceItem = {
-            action: "",
+        // 判断结构是否 方法还是对象
+        let serviceItem: serviceItemInter = {
+            url: "",
             method: ""
         };
+        const request = serviceUnit[key];
         if (typeof request === "function") {
             serviceItem = request({});
         } else {
@@ -36,13 +41,10 @@ export default (serviceUnit, callback?: Function) => {
         }
         const upperKey = firstUpperCase(key);
         const mutationsKey = `set${upperKey}_mutations`;
-        const actionsKey =
-            (serviceItem.action ? serviceItem.action : serviceItem.method) +
-            upperKey;
-        // （state，mutations）get定义，post不定义
-        if (serviceItem.method === "get" || serviceItem.action === "get") {
-            // state
-            store.state[key] = { obj: "" };
+        const actionsKey = serviceItem.method + upperKey;
+        //  get定义（state，mutations），post/put 不定义
+        if (serviceItem.method === "get") {
+            // service接口列表的名称作为state的key，并判断是否包含List，如果包含List定位数据
             if (key.indexOf("List") > -1) {
                 store.state[key] = [];
             } else {
@@ -50,7 +52,7 @@ export default (serviceUnit, callback?: Function) => {
             }
             // mutations
             store.mutations[mutationsKey] = (state, data) => {
-                // console.log('data', key, data);
+                // 接口返回数据结构 如果:{data: {}}
                 state[key] = data.data || data;
             };
         }
@@ -64,16 +66,12 @@ export default (serviceUnit, callback?: Function) => {
                 Object.assign(option, request);
             }
             return service(option, null).then(result => {
-                if (
-                    serviceItem.method === "get" ||
-                    serviceItem.action === "get"
-                ) {
+                if (serviceItem.method === "get") {
                     commit(mutationsKey, result || {});
                     // 判断是否回调方法
                     callback && callback(result, commit);
-                    return result || {};
                 }
-                return result;
+                return result || {};
             });
         };
     }

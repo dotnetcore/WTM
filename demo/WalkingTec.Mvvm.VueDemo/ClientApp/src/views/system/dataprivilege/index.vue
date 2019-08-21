@@ -18,12 +18,9 @@
             </el-radio>
           </el-form-item>
         </el-form>
-        <span slot="operation">
-          <export-excel :params="exportParams" btn-name="导出当前结果" batch-type="EXPORT_REPLACEMENT" />
-        </span>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit']" @onAdd="openDialog(dialogType.add)" />
-      <table-box :is-operate="true" :tb-column="tableCols" :table-data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
+      <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" />
+      <table-box :is-operate="true" :is-selection="true" :tb-column="tableCols" :table-data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange">
         <template #operate="rowData">
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -31,7 +28,7 @@
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
             修改
           </el-button>
-          <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.add)">
+          <el-button type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
             删除
           </el-button>
         </template>
@@ -53,8 +50,8 @@ import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
-import ExportExcel from "@/components/common/export/export-excel.vue";
 import DialogForm from "./dialog-form.vue";
+import { listToString } from "@/util/string";
 // 查询参数
 const defaultSearchData = {
     DpType: "0",
@@ -64,19 +61,22 @@ const defaultSearchData = {
     mixins: [baseMixin, mixinFunc(defaultSearchData)],
     store,
     components: {
-        FuzzySearch,
-        ExportExcel,
-        TableBox,
-        DialogBox,
-        DialogForm,
-        ButBox
+    FuzzySearch,
+    TableBox,
+    DialogBox,
+    DialogForm,
+    ButBox
     }
-})
+    })
 export default class Index extends Vue {
     @Action
     getPrivilegesList;
     @Action
     postDataprivilegeSearchList;
+    @Action
+    getDataprivilegeDelete;
+    @Action
+    postDataprivilegeBatchDelete;
     @State
     privilegesList;
     exportParams = {};
@@ -99,6 +99,7 @@ export default class Index extends Vue {
     privateRequest(params) {
         return this.postDataprivilegeSearchList(params);
     }
+    // 弹框
     openDialog(status, data?) {
         this.detailShow = true;
         this.dialogInfo.dialogStatus = status;
@@ -106,6 +107,27 @@ export default class Index extends Vue {
             this.dialogInfo.dialogData = data;
         }
     }
-    // toDelete() {}
+    onDelete(params) {
+        const parameters = {
+            id: params.id
+        };
+        this.getDataprivilegeDelete(parameters).then(res => {
+            this["$notify"]({
+                title: "删除成功",
+                type: "success"
+            });
+        });
+    }
+    onBatchDelete() {
+        const parameters = {
+            ids: listToString(this["selectedList"], "id")
+        };
+        this.getDataprivilegeDelete(parameters).then(res => {
+            this["$notify"]({
+                title: "删除成功",
+                type: "success"
+            });
+        });
+    }
 }
 </script>

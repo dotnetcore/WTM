@@ -6,8 +6,8 @@
  */
 import { Component, Vue, Prop } from "vue-property-decorator";
 type searchFormType = {
-    orderByColumn: string | null;
-    isAsc: string | null;
+    orderByColumn: string | null; // 排序字段
+    isAsc: string | null; // 排序
     [property: string]: any; //其他属性
 };
 declare module "vue/types/vue" {
@@ -26,16 +26,18 @@ function mixinFunc(tempSearch: any = {}) {
             isAsc: null, // asc desc
             ...tempSearch
         };
-        searchFormClone: Object = {};
+        // elementui 分页参数
         pageDate = {
             pageSizes: [10, 25, 50, 100],
             pageSize: 10,
             currentPage: 1,
             pageTotal: 0
         };
-        loading: boolean = false;
-        tableData: [] = [];
-
+        searchFormClone: Object = {}; // 克隆数据
+        loading: boolean = false; // 加载中
+        tableData: Array<any> = []; // 列表数据
+        selectedList: Array<any> = []; // 列表选中数据
+        // 查询
         fetch(changePage?: boolean) {
             this.loading = true;
             // 翻页的时候，请求参数不变。
@@ -128,6 +130,9 @@ function mixinFunc(tempSearch: any = {}) {
                 this.searchForm.isAsc = null;
             }
             this.fetch();
+        }
+        onSelectionChange(selectData: Array<any>) {
+            this.selectedList = selectData;
         }
     }
     return Component(mixin);

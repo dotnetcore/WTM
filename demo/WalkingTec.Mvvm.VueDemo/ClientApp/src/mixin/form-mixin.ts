@@ -30,12 +30,13 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         @Prop({ type: String, default: "" })
         status; // 表单类型
         @Prop({ type: Boolean, default: false })
-        isShow; // 弹框显示
-        dialogType = dialogType;
+        isShow; // 弹框是否显示
+        dialogType = dialogType; // 弹框类型 add/edit/detail
         // 表单数据
         formData = {
             ...defaultFormData.formData
         };
+        // 表单ref name
         refName = defaultFormData.refName;
         // 是否列表
         whether = [
@@ -48,14 +49,18 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                 label: "否"
             }
         ];
+        // 监听数据变化
         @Watch("dialogData", { immediate: true })
-        setIsShow(val) {
-            if (val) {
-                if (this.status !== dialogType.add) {
-                    Object.keys(this.formData).forEach(key => {
-                        key in val && (this.formData[key] = val[key]);
-                    });
-                }
+        setDialogData(val) {
+            if (!!val && this.status !== dialogType.add) {
+                Object.keys(this.formData).forEach(key => {
+                    // 不存在 赋 默认值
+                    if (key in val) {
+                        this.formData[key] = val[key];
+                    } else {
+                        this.formData[key] = defaultFormData[key];
+                    }
+                });
             }
         }
         // 关闭
