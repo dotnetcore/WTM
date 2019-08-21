@@ -674,17 +674,17 @@ namespace WalkingTec.Mvvm.Mvc
                         new menuObj()
                         {
                             Title = "学校管理",
-                            Url = "views/demo/school.html",
+                            Url = "layuiadmin/views/demo/school.html",
                             Children = null
                         },new menuObj()
                         {
                             Title = "日志",
-                            Url = "views/demo/log.html",
+                            Url = "layuiadmin/views/demo/log.html",
                             Children = null
                         },new menuObj()
                         {
                             Title = "学生管理",
-                            Url = "views/demo/student.html",
+                            Url = "layuiadmin/views/demo/student.html",
                             Children = null
                         }
                     }
