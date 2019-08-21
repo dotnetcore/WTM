@@ -60,7 +60,7 @@ const service = (option, serverHost?) => {
         }
     };
     const data = getData(option.data);
-    if (option.method === "post") {
+    if (option.method === "post" || option.method === "put") {
         req.data = data;
     } else {
         req.params = data;

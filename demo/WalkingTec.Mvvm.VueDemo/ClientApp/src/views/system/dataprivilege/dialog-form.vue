@@ -58,6 +58,7 @@ import { Action } from "vuex-class";
 import mixinDialogForm from "@/mixin/form-mixin";
 import cache from "@/util/cache";
 import config from "@/config/index";
+import { whether } from "@/config/entity";
 // 表单结构
 const defaultFormData = {
     // 表单名称
@@ -83,6 +84,8 @@ export default class Index extends Vue {
     putDataprivilegeEdit;
     // 用户组
     groups = [];
+    // 是否列表
+    whether = whether;
     // 验证
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {

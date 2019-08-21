@@ -16,6 +16,7 @@ interface serviceItemInter {
     method: string;
     isBuffer?: boolean;
     contentType?: string;
+    dataType?: string;
 }
 /**
  * 根据service 创建store
@@ -45,7 +46,7 @@ export default (serviceUnit, callback?: Function) => {
         //  get定义（state，mutations），post/put 不定义
         if (serviceItem.method === "get") {
             // service接口列表的名称作为state的key，并判断是否包含List，如果包含List定位数据
-            if (key.indexOf("List") > -1) {
+            if (key.indexOf("List") > -1 || serviceItem.dataType === "array") {
                 store.state[key] = [];
             } else {
                 store.state[key] = { obj: {} };
@@ -53,7 +54,8 @@ export default (serviceUnit, callback?: Function) => {
             // mutations
             store.mutations[mutationsKey] = (state, data) => {
                 // 接口返回数据结构 如果:{data: {}}
-                state[key] = data.data || data;
+                console.log("----", key, data.Entity || data);
+                state[key] = data.Entity || data;
             };
         }
 
@@ -66,6 +68,7 @@ export default (serviceUnit, callback?: Function) => {
                 Object.assign(option, request);
             }
             return service(option, null).then(result => {
+                console.log(option["url"], result);
                 if (serviceItem.method === "get") {
                     commit(mutationsKey, result || {});
                     // 判断是否回调方法

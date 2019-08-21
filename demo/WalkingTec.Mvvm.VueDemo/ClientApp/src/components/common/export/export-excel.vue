@@ -1,7 +1,7 @@
 <template>
   <div class="export-excel">
     <el-button :type="btnType" icon="el-icon-download" @click="onExport">
-      <i v-if="isShowIcon" class="fa fa-sign-out" />{{ btnName }}
+      {{ btnName }}
     </el-button>
     <el-dialog :title="title" :visible="dialogVisible" width="40%" :append-to-body="appendToBody" @close="onClose">
       <!-- <div class="text-title">
@@ -61,8 +61,6 @@ export default class ExportExcel extends Vue {
     btnName;
     @Prop({ type: String, default: "primary" })
     btnType;
-    @Prop({ type: Boolean, default: true })
-    isShowIcon;
     @Prop({ type: String, default: "" })
     querySession;
     @Prop({ type: String, default: "" })
@@ -180,6 +178,10 @@ export default class ExportExcel extends Vue {
 }
 </script>
 <style lang="less" scoped>
+.export-excel {
+    display: inline-block;
+    margin-left: 10px;
+}
 .success-title {
     color: #606266;
     font-size: 14px;

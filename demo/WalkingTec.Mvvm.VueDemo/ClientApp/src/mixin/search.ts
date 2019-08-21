@@ -36,7 +36,7 @@ function mixinFunc(tempSearch: any = {}) {
         searchFormClone: Object = {}; // 克隆数据
         loading: boolean = false; // 加载中
         tableData: Array<any> = []; // 列表数据
-        selectedList: Array<any> = []; // 列表选中数据
+        selectData: Array<any> = []; // 列表选中数据
         // 查询
         fetch(changePage?: boolean) {
             this.loading = true;
@@ -132,7 +132,7 @@ function mixinFunc(tempSearch: any = {}) {
             this.fetch();
         }
         onSelectionChange(selectData: Array<any>) {
-            this.selectedList = selectData;
+            this.selectData = selectData;
         }
     }
     return Component(mixin);

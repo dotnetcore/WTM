@@ -6,7 +6,7 @@
     <el-button v-assembly:[assembly]="butTypes.edit" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
       修改
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.delete" icon="el-icon-delete" @click="onDelete">
+    <el-button v-assembly:[assembly]="butTypes.delete" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
       删除
     </el-button>
     <el-button v-assembly:[assembly]="butTypes.import" icon="el-icon-upload" @click="onImport">
@@ -62,6 +62,12 @@ export default class ButBox extends Vue {
         }
         return true;
     }
+    get isDisabledEelete() {
+        if (this.selectedData.length > 0) {
+            return false;
+        }
+        return true;
+    }
     onAdd() {
         this.$emit("onAdd");
     }
@@ -71,7 +77,9 @@ export default class ButBox extends Vue {
         }
     }
     onDelete() {
-        this.$emit("onDelete", this.selectedData);
+        if (!this.isDisabledEelete) {
+            this.$emit("onDelete", this.selectedData);
+        }
     }
     onImport() {
         this.$emit("onImport");

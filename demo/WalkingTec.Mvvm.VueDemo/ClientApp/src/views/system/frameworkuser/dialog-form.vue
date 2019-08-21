@@ -1,0 +1,299 @@
+<template>
+  <div class="frameworkuser-form">
+    <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="账号" prop="ITCode">
+            <el-input v-model="formData.ITCode" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="密码" prop="Password">
+            <el-input v-model="formData.Password" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="邮箱">
+            <el-input v-model="formData.Email" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="姓名" prop="Name">
+            <el-input v-model="formData.Name" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="性别">
+            <el-select v-model="formData.Sex" v-edit:[status]="{list: sexList, key:'value', label: 'label'}">
+              <el-option v-for="(item, index) of sexList" :key="index" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="手机号">
+            <el-input v-model="formData.CellPhone" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="座机">
+            <el-input v-model="formData.HomePhone" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="住址">
+            <el-input v-model="formData.Address" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="邮编">
+            <el-input v-model="formData.ZipCode" v-edit:[status] />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="头像">
+            <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <img v-if="formData.PhotoId" :src="formData.PhotoId" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="是否有效" prop="IsValid">
+            <el-switch v-model="formData.IsValid" active-value="true" inactive-value="false" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="角色">
+            <el-transfer v-model="formData.UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="用户组">
+            <el-transfer v-model="formData.UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
+  </div>
+</template>
+
+<script lang='ts'>
+import { Component, Vue } from "vue-property-decorator";
+import { Action, State } from "vuex-class";
+import mixinDialogForm from "@/mixin/form-mixin";
+import cache from "@/util/cache";
+import config from "@/config/index";
+import { sexList } from "@/config/entity";
+// 表单结构
+const defaultFormData = {
+    // 表单名称
+    refName: "refName",
+    // 表单数据
+    formData: {
+        ID: "",
+        ITCode: "",
+        Password: "",
+        Email: "",
+        Name: "",
+        Sex: 0,
+        CellPhone: "",
+        HomePhone: "",
+        Address: "",
+        ZipCode: "",
+        PhotoId: "",
+        IsValid: "true",
+        UserRoles: [],
+        UserGroups: []
+    }
+};
+
+@Component({ mixins: [mixinDialogForm(defaultFormData)] })
+export default class Index extends Vue {
+    @Action
+    postFrameworkuserAdd;
+    @Action
+    putFrameworkuserEdit;
+    @Action
+    getFrameworkuser;
+    @Action
+    getFrameworkuserGetFrameworkRoles;
+    @Action
+    getFrameworkuserGetFrameworkGroups;
+    @State
+    frameworkuserGetFrameworkRoles;
+    @State
+    frameworkuserGetFrameworkGroups;
+    // 用户组
+    groups = [];
+    sexList = sexList;
+    filterMethod = (query, item) => {
+        return item.label.indexOf(query) > -1;
+    };
+    // 验证
+    get rules() {
+        if (this["status"] !== this["dialogType"].detail) {
+            // 动态验证会走遍验证，需要清除验证
+            this.$nextTick(() => {
+                this.$refs[defaultFormData.refName].resetFields();
+            });
+            return {
+                ITCode: [
+                    {
+                        required: true,
+                        message: "请输入账号",
+                        trigger: "blur"
+                    }
+                ],
+                Password: [
+                    {
+                        required: true,
+                        message: "请输入密码",
+                        trigger: "blur"
+                    }
+                ],
+                Name: [
+                    {
+                        required: true,
+                        message: "请输入姓名",
+                        trigger: "blur"
+                    }
+                ]
+            };
+        } else {
+            return {};
+        }
+    }
+    get userRolesData() {
+        return this.frameworkuserGetFrameworkRoles.map(item => {
+            return {
+                key: item.Value,
+                label: item.Text
+            };
+        });
+    }
+    get userGroupsData() {
+        return this.frameworkuserGetFrameworkGroups.map(item => {
+            return {
+                key: item.Value,
+                label: item.Text
+            };
+        });
+    }
+
+    created() {
+        this.getFrameworkuserGetFrameworkRoles();
+        this.getFrameworkuserGetFrameworkGroups();
+    }
+
+    onGetFormData() {
+        if (!this["dialogData"]) {
+            console.error("dialogData 没有id数据");
+        }
+        if (this["status"] !== this["dialogType"].add) {
+            const parameters = { ID: this["dialogData"].ID };
+            this.getFrameworkuser(parameters).then(res => {
+                this["setFormData"](res.Entity);
+                this.updDataToTransfer("UserRoles");
+                this.updDataToTransfer("UserGroups");
+            });
+        }
+    }
+    // 提交
+    onSubmitForm() {
+        this.$refs[defaultFormData.refName].validate(valid => {
+            if (valid) {
+                this.updTransferToData("UserRoles");
+                this.updTransferToData("UserGroups");
+                if (this["status"] === this["dialogType"].add) {
+                    this.onAdd();
+                } else if (this["status"] === this["dialogType"].edit) {
+                    this.onEdit();
+                }
+            }
+        });
+    }
+    onAdd() {
+        const parameters = { ...this["formData"] };
+        delete parameters.ID;
+        this.postFrameworkuserAdd({ Entity: parameters }).then(res => {
+            this["$notify"]({
+                title: "添加成功",
+                type: "success"
+            });
+            this["onClear"]();
+            this.$emit("onSearch");
+        });
+    }
+    onEdit() {
+        const parameters = { ...this["formData"] };
+        this.putFrameworkuserEdit({ Entity: parameters }).then(res => {
+            this["$notify"]({
+                title: "修改成功",
+                type: "success"
+            });
+            this["onClear"]();
+            this.$emit("onSearch");
+        });
+    }
+    // 上传图片
+    handleAvatarSuccess(res, file) {
+        this["formData"].PhotoId = URL.createObjectURL(file.raw);
+    }
+    beforeAvatarUpload(file) {
+        const isJPG = file.type.search("image") !== -1;
+        const isLt2M = file.size / 1024 / 1024 < 3;
+        if (!isJPG) {
+            this["$message"].error("上传只能图片格式!");
+        }
+        if (!isLt2M) {
+            this["$message"].error("上传图片大小不能超过 3MB!");
+        }
+        return isJPG && isLt2M;
+    }
+    // Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式
+    updDataToTransfer(field) {
+        this["formData"][field] = this["formData"][field].map(item => {
+            if (field === "UserGroups") {
+                return item.GroupId;
+            } else {
+                return item.RoleId;
+            }
+        });
+    }
+    // Roles&Groups数据格式与穿梭框格式不符，穿梭框格式 >>> 数据格式
+    updTransferToData(field) {
+        this["formData"][field] = this["formData"][field].map(item => {
+            if (field === "UserGroups") {
+                return {
+                    GroupId: item
+                };
+            } else {
+                return {
+                    RoleId: item
+                };
+            }
+        });
+    }
+}
+</script>
+<style lang='less'>
+</style>
