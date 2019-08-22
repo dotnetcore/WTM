@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Core
@@ -26,6 +26,8 @@ namespace WalkingTec.Mvvm.Core
         IEnumerable<string> Keys { get; }
 
         void Clear();
+
+        string GetFirstError();
     }
 
 

@@ -1,30 +1,61 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.HomeVMs.LoginVM
+@model WalkingTec.Mvvm.Demo.ViewModels.HomeVMs.LoginVM
 
 @{
-    Layout = null;
+  Layout = null;
 }
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>请登录</title>
-    <link rel="stylesheet" href="/layui/css/layui.css">
-    <script src="/jquery.min.js"></script>
-    <script src="/jquery.haschange.js"></script>
-    <script src="/jquery.cookie.js"></script>
-    <script src="/layui/layui.all.js"></script>
-    <script src="/_js/framework_layui.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/jquery.min.js"></script>
+  <link rel="stylesheet" href="~/sitecss/logincss.css">
+  <title>WTM</title>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+    });
+    function verify() {
+      $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+    }
+
+  </script>
 </head>
-<body class="layui-layout-body">
-    <div id="DONOTUSE_MAINPANEL">
-        <wt:form vm="@Model" old-post="true">
-            <wt:textbox field="ITCode" />
-            <wt:textbox field="Password" is-password="true" />
-            <wt:row align="AlignEnum.Center">
-                <wt:submitbutton text="登录" />
-            </wt:row>
-        </wt:form>
-    </div>
+
+<body class="loginBody">
+  <div class="loginDiv">
+    <h4>WTM</h4>
+    <form action="/Login/Login" method="post">
+      <ul class="loginForm">
+        <li>
+          <i><img src="~/images/icon-login04.png" /></i>
+          <input type="text" name="ITCode" placeholder="请输入用户名" class="login-input" autocomplete="off" value="@Model.ITCode">
+        </li>
+        <li>
+          <i style="width: 16px;"><img src="~/images/icon-login01.png" /></i>
+          <input type="password" name="Password" placeholder="请输入密码" class="login-input" value="@Model.Password">
+        </li>
+        <li>
+          <i><img src="~/images/icon-login03.png" /></i>
+          <input type="text" name="VerifyCode" placeholder="请输入验证码" class="login-input">
+          <p class="login-code">
+
+
+          </p>
+          <img class="login-codeImg" id="verify_code_img">
+          <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()"/></i>
+        </li>
+        <li>
+          <span class="login-error">@Model.MSD.GetFirstError()</span>
+          <button type="submit" class="login-button">登 录</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+
+
 </body>
+
 </html>
