@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public ComboBoxTagHelper()
         {
             EmptyText = "请选择";
+            EnableSearch = GlobalServices.GetRequiredService<Configs>().ComboBoxEnableSearch;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)

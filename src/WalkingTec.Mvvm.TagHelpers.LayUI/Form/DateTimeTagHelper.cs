@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -179,6 +180,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
+            if (GlobalServices.GetRequiredService<Configs>().DateTimeReadOnly)
+                output.Attributes.Add("readonly", "readonly");
 
             if (Range.HasValue && Range.Value && string.IsNullOrEmpty(RangeSplit))
             {
