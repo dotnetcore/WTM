@@ -13,14 +13,8 @@ const dataManageItems = [
             {
                 name: "用户管理",
                 meta: {},
-                path: "/user-manage/index",
-                component: () => import("@/views/user-manage/index.vue")
-            },
-            {
-                name: "订单管理",
-                meta: {},
-                path: "/order-manage/index",
-                component: () => import("@/views/order-manage/index.vue")
+                path: "/test"
+                // component: () => import("@/views/test.vue")
             }
         ]
     },
