@@ -261,16 +261,16 @@ window.ff = {
             },
             success: function (data, textStatus, request) {
                 var wid = ff.GetCookie("windowids");
-                if (wid == null || wid === "") {
-                    DONOTUSE_IGNOREHASH = true;
-                    window.location.hash = '#' + url;
-                }
+                //if (wid == null || wid === "") {
+                //    DONOTUSE_IGNOREHASH = true;
+                //    window.location.hash = '#' + url;
+                //}
                 layer.close(index);
                 if (request.getResponseHeader('IsScript') === 'true') {
                     eval(data);
                 }
                 else {
-                    data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
+                    data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
                     $("#" + divid).parent().html(data);
                 }
             }
@@ -333,6 +333,7 @@ window.ff = {
             success: function (str, textStatus, request) {
                 layer.close(index);
                 if (request.getResponseHeader('IsScript') === 'true') {
+                    ff.SetCookie("windowids", owid);
                     eval(str);
                 }
                 else {
@@ -388,7 +389,8 @@ window.ff = {
             data: para,
             async: true,
             error: function (request) {
-                layer.close(index);
+               layer.close(index);
+                ff.SetCookie("windowids", owid);
                 alert("加载失败");
             },
             success: function (str) {
@@ -628,8 +630,8 @@ window.ff = {
             index = 0;
         }
         var tab = "";
-        if (DONOTUSE_TABLAYID !== undefined && dialogid == "LAY_app_body") {
-            tab = " .layui-tab-item.layui-show";
+        if (layui.setter.pageTabs === true && dialogid == "LAY_app_body") {
+            tab = " .layadmin-tabsbody-item.layui-show";
         }
         var tables = $('#' + dialogid + tab + ' table[id]');
         if (tables.length > index) {
