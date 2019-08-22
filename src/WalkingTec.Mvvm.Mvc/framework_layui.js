@@ -328,6 +328,7 @@ window.ff = {
             async: true,
             error: function (request) {
                 layer.close(index);
+                ff.SetCookie("windowids", owid);
                 alert("加载失败");
             },
             success: function (str, textStatus, request) {
