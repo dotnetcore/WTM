@@ -202,18 +202,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string CheckedFunc { get; set; }
 
         /// <summary>
-        /// 是否开启分页 默认 true
-        /// </summary>
-        public bool? Page { get; set; }
-
-        /// <summary>
         /// 每页数据量可选项
-        /// <para>默认值：[10,20,30,40,50,70,80,90]</para>
+        /// <para>默认值：[10, 20, 50, 80, 100, 150, 200]</para>
         /// </summary>
         public int[] Limits { get; set; }
 
         /// <summary>
-        /// 默认每页数量 50
+        /// 默认每页数量 20
         /// </summary>
         public int? Limit { get; set; }
 
@@ -324,13 +319,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Limits = list.OrderBy(x => x).ToArray();
                 }
             }
-            // TODO 转换有问题
-            Page = ListVM.NeedPage;
-            if (UseLocalData)
+            if (UseLocalData) // 不需要分页
             {
-                // 不需要分页
                 ListVM.NeedPage = false;
-
             }
             else if (string.IsNullOrEmpty(Url))
             {
@@ -359,19 +350,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
 
-            var request = new Dictionary<string, object>
-            {
-                {"pageName","Searcher.Page" },   //页码的参数名称，默认：page
-                {"limitName","Searcher.Limit" }, //每页数据量的参数名，默认：limit
-            };
-            var response = new Dictionary<string, object>
-            {
-                {"statusName","Code" }, //数据状态的字段名称，默认：code
-                {"statusCode",200 },    //成功的状态码，默认：0
-                {"msgName","Msg" },     //状态信息的字段名称，默认：msg
-                {"countName","Count" }, //数据总数的字段名称，默认：count
-                {"dataName","Data" }    //数据列表的字段名称，默认：data
-            };
+            // 是否需要分页
+            var page = ListVM.NeedPage;
 
             #region 生成 Layui 所需的表头
             var rawCols = ListVM?.GetHeaders();
@@ -460,31 +440,31 @@ layui.use(['table'], function(){{
   var {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
-    ,autoSort: false
-    ,totalRow: {NeedShowTotal.ToString().ToLower()}
+    {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
-    {(!Loading.HasValue ? string.Empty : $",loading: {Loading.Value.ToString().ToLower()}")}
-    ,request: {JsonConvert.SerializeObject(request)}
-    ,response: {JsonConvert.SerializeObject(response)}
-    {(Page ?? true ? ",page:true" : ",page:{layout:['count']}")}
-    ,limit: {(Page ?? true ? $"{Limit ?? 50}" : $"{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
-    {(Page ?? true ?
-        (Limits == null || Limits.Length == 0 ? ",limits:[10,20,50,80,100,150,200]" : $",limits:{JsonConvert.SerializeObject(Limits)}")
+    {(Loading ?? true ? string.Empty : ",loading:false")}
+    {(page ? string.Empty : ",page:{layout:['count']}")}
+    {(page ? string.Empty : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
+    {(page
+        ? (Limits == null || Limits.Length == 0
+            ? string.Empty
+            : $",limits:[{string.Join(',', Limits)}]"
+        )
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
     ,cols:{JsonConvert.SerializeObject(layuiCols, _jsonSerializerSettings)}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
-    {(!Even.HasValue ? ",even: true" : $",even: {Even.Value.ToString().ToLower()}")}
+    {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
-,done: function(res,curr,count){{
-    var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
-    {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
-    {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
-    {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
-}}
+    ,done: function(res,curr,count){{
+      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
+      {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
+      {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
+      {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
+    }}
     }}
   {TableJSVar} = table.render({Id}option);
   {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
@@ -518,7 +498,7 @@ layui.use(['table'], function(){{
 
             output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
-{ (string.IsNullOrEmpty(ListVM.DetailGridPrix) ? "" : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
+{(string.IsNullOrEmpty(ListVM.DetailGridPrix) ? string.Empty : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
             base.Process(context, output);
         }
@@ -562,7 +542,7 @@ layui.use(['table'], function(){{
                     Hide = item.Hide,
                     ShowTotal = item.ShowTotal
                 };
-                //非编辑状态且有字段名的情况下，设置template
+                // 非编辑状态且有字段名的情况下，设置template
                 if ((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
                     tempCol.Templet = new JRaw(getTemplate(item.Field));
 
