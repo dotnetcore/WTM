@@ -161,77 +161,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 默认列表行数
-
-        private int? _rpp;
-
-        /// <summary>
-        /// 默认列表行数
-        /// </summary>
-        public int RPP
-        {
-            get
-            {
-                if (_rpp == null)
-                {
-                    _rpp = DefaultConfigConsts.DEFAULT_RPP;
-                }
-                return _rpp.Value;
-            }
-            set
-            {
-                _rpp = value;
-            }
-        }
-
-        #endregion
-
-        #region 默认允许ComboBox搜索
-
-        private bool? _comboBoxEnableSearch;
-
-        /// <summary>
-        /// 默认允许ComboBox搜索
-        /// </summary>
-        public bool ComboBoxEnableSearch
-        {
-            get
-            {
-                if (_comboBoxEnableSearch == null)
-                {
-                    _comboBoxEnableSearch = DefaultConfigConsts.DEFAULT_COMBOBOX_ENABLE_SEARCH;
-                }
-                return _comboBoxEnableSearch.Value;
-            }
-            set => _comboBoxEnableSearch = value;
-        }
-
-        #endregion
-
-        #region 默认开启DateTime只读
-
-
-
-        private bool? _dateTimeReadOnly;
-
-        /// <summary>
-        /// 默认开启DateTime只读
-        /// </summary>
-        public bool DateTimeReadOnly
-        {
-            get
-            {
-                if (_dateTimeReadOnly == null)
-                {
-                    _dateTimeReadOnly = DefaultConfigConsts.DEFAULT_DATETIME_READONLY;
-                }
-                return _dateTimeReadOnly.Value;
-            }
-            set => _dateTimeReadOnly = value;
-        }
-
-        #endregion
-
         #region 自动更新数据库
 
         private bool? _syncdb;
@@ -461,6 +390,36 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _fileUploadOptions = value;
+            }
+        }
+
+        #endregion
+
+        #region 界面相关设置
+
+        private UIOptions _uiOptions;
+
+        /// <summary>
+        /// 文件相关设置
+        /// </summary>
+        public UIOptions UiOptions
+        {
+            get
+            {
+                if (_uiOptions == null)
+                {
+                    _uiOptions = new UIOptions()
+                    {
+                        RPP = DefaultConfigConsts.DEFAULT_RPP,
+                        ComboBoxEnableSearch = DefaultConfigConsts.DEFAULT_COMBOBOX_ENABLE_SEARCH,
+                        DateTimeReadOnly = DefaultConfigConsts.DEFAULT_DATETIME_READONLY
+                    };
+                }
+                return _uiOptions;
+            }
+            set
+            {
+                _uiOptions = value;
             }
         }
 
