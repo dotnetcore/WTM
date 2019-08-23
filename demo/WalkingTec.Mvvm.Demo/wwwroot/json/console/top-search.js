@@ -1,7 +1,7 @@
 {
   "Code": 200
   ,"Msg": ""
-  ,"count": "100"
+  ,"Count": "100"
   ,"Data": [{
     "keywords": "贤心是男是女"
     ,"frequency": 8520
