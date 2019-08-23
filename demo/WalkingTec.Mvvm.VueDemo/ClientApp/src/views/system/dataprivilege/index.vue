@@ -34,8 +34,8 @@
         </template>
       </table-box>
     </article>
-    <dialog-box :is-show.sync="detailShow">
-      <dialog-form :is-show.sync="detailShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
+    <dialog-box :is-show.sync="dialogInfo.isShow">
+      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
     </dialog-box>
   </div>
 </template>
@@ -80,9 +80,9 @@ export default class Index extends Vue {
     @State
     privilegesList;
     exportParams = {};
-    detailShow: Boolean = false;
     // 弹出框内容
     dialogInfo = {
+        isShow: false,
         dialogData: {},
         dialogStatus: ""
     };
@@ -100,13 +100,14 @@ export default class Index extends Vue {
     privateRequest(params) {
         return this.postDataprivilegeSearchList(params);
     }
-    // 弹框
-    openDialog(status, data?) {
-        this.detailShow = true;
+    // 打开详情弹框 ★★★★☆
+    openDialog(status, data = {}) {
+        this.dialogInfo.isShow = true;
         this.dialogInfo.dialogStatus = status;
-        if (data) {
-            this.dialogInfo.dialogData = data;
-        }
+        this.dialogInfo.dialogData = data;
+        this.$nextTick(() => {
+            this.$refs["dialogform"].onGetFormData();
+        });
     }
     onDelete(params) {
         const parameters = {

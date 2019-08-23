@@ -56,9 +56,14 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         // 表单数据 赋值
         setFormData(params) {
             Object.keys(defaultFormData.formData).forEach(key => {
-                // if (key in params) {}
                 this.formData[key] = params[key];
             });
+            console.log(
+                "params",
+                params,
+                defaultFormData.formData,
+                this.formData
+            );
         }
     }
     return editMixins;

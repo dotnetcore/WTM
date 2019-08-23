@@ -3,28 +3,25 @@
     <article>
       <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
-          <el-form-item label="账号">
-            <el-input v-model="searchForm.ITCode" />
+          <el-form-item label="角色编号">
+            <el-input v-model="searchForm.RoleCode" />
           </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="searchForm.Name" />
+          <el-form-item label="角色名称">
+            <el-input v-model="searchForm.RoleName" />
           </el-form-item>
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
       <table-box :is-selection="true" :tb-column="tableCols" :table-data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange">
-        <template #PhotoId="rowData">
-          <el-image style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
-        </template>
-        <template #IsValid="rowData">
-          <el-switch v-model="rowData.row.IsValid" active-value="true" inactive-value="false" disabled />
-        </template>
         <template #operate="rowData">
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
           </el-button>
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
             修改
+          </el-button>
+          <el-button type="text" size="small" class="view-btn">
+            分配权限
           </el-button>
           <el-button type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
             删除
@@ -49,11 +46,11 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
 import { listToString, exportXlsx } from "@/util/string";
-import store from "@/store/system/frameworkuser";
+import store from "@/store/system/frameworkrole";
 // 查询参数 ★★★★★
 const defaultSearchData = {
-    ITCode: "",
-    Name: ""
+    RoleCode: "",
+    RoleName: ""
 };
 @Component({
     mixins: [baseMixin, mixinFunc(defaultSearchData)],
@@ -68,19 +65,19 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkuserSearchList;
+    postFrameworkroleSearchList;
     @Action
-    getFrameworkuserGetFrameworkRoles;
+    getFrameworkroleGetFrameworkRoles;
     @Action
-    getFrameworkuserGetFrameworkGroups;
+    getFrameworkroleGetFrameworkGroups;
     @Action
-    postFrameworkuserBatchDelete;
+    postFrameworkroleBatchDelete;
     @Action
-    getFrameworkuserDelete;
+    getFrameworkroleDelete;
     @Action
-    postFrameworkuserExportExcel;
+    postFrameworkroleExportExcel;
     @Action
-    postFrameworkuserExportExcelByIds;
+    postFrameworkroleExportExcelByIds;
 
     @State
     fameworkuserSearchList;
@@ -93,13 +90,9 @@ export default class Index extends Vue {
     };
     // ★★★★★
     tableCols = [
-        { key: "ITCode", sortable: true, label: "账号" },
-        { key: "Name", sortable: true, label: "姓名" },
-        { key: "Sex", sortable: true, label: "性别" },
-        { key: "PhotoId", label: "照片", isSlot: true },
-        { key: "IsValid", label: "是否生效", isSlot: true },
-        { key: "RoleName_view", label: "角色" },
-        { key: "GroupName_view", label: "用户组" },
+        { key: "RoleCode", sortable: true, label: "角色编号" },
+        { key: "RoleName", sortable: true, label: "角色姓名" },
+        { key: "RoleRemark", sortable: true, label: "备注" },
         { key: "operate", label: "操作", isSlot: true }
     ];
     // 查询 ★★★★★
@@ -108,7 +101,7 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkuserSearchList(params);
+        return this.postFrameworkroleSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -124,7 +117,7 @@ export default class Index extends Vue {
         const parameters = {
             ids: [params.ID]
         };
-        this.postFrameworkuserBatchDelete(parameters).then(res => {
+        this.postFrameworkroleBatchDelete(parameters).then(res => {
             this["$notify"]({
                 title: "删除成功",
                 type: "success"
@@ -137,7 +130,7 @@ export default class Index extends Vue {
         const parameters = {
             ids: listToString(this["selectData"], "ID")
         };
-        this.postFrameworkuserBatchDelete(parameters).then(res => {
+        this.postFrameworkroleBatchDelete(parameters).then(res => {
             this["$notify"]({
                 title: "删除成功",
                 type: "success"
@@ -152,8 +145,8 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkuserExportExcel(parameters).then(res => {
-            exportXlsx(res, "frameworkuserExportExcel");
+        this.postFrameworkroleExportExcel(parameters).then(res => {
+            exportXlsx(res, "FrameworkroleExportExcel");
             this["$notify"]({
                 title: "导出成功",
                 type: "success"
@@ -163,8 +156,8 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkuserExportExcelByIds(parameters).then(res => {
-            exportXlsx(res, "frameworkuserExportExcelByIds");
+        this.postFrameworkroleExportExcelByIds(parameters).then(res => {
+            exportXlsx(res, "FrameworkroleExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",
                 type: "success"

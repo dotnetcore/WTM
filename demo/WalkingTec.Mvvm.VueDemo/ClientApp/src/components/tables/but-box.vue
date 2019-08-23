@@ -12,7 +12,20 @@
     <el-button v-assembly:[assembly]="butTypes.import" icon="el-icon-upload" @click="onImport">
       导入
     </el-button>
-    <export-excel v-assembly:[assembly]="butTypes.export" :params="exportOption.params" :export-url="exportOption.url" btn-name="导出" batch-type="EXPORT_REPLACEMENT" />
+    <el-dropdown class="dropdown-box" @command="onCommand">
+      <el-button v-assembly:[assembly]="butTypes.export">
+        <i class="el-icon-download" /> <span>导出</span> <i class="el-icon-arrow-down el-icon--right" />
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="onExportAll">
+          导出全部
+        </el-dropdown-item>
+        <el-dropdown-item command="onExport">
+          导出勾选
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <!-- <export-excel v-assembly:[assembly]="butTypes.export" :params="exportOption.params" :export-url="exportOption.url" btn-name="导出" batch-type="EXPORT_REPLACEMENT" /> -->
   </el-card>
 </template>
 
@@ -84,9 +97,16 @@ export default class ButBox extends Vue {
     onImport() {
         this.$emit("onImport");
     }
-    onExport() {
-        this.$emit("onExport", this.selectedData);
+    onCommand(command) {
+        this.$emit(command);
     }
+    // onExportAll() {
+    //     console.log("onExportAll");
+    //     this.$emit("onExportAll");
+    // }
+    // onExport() {
+    //     this.$emit("onExport", this.selectedData);
+    // }
 }
 </script>
 <style lang="less" rel="stylesheet/less">
@@ -94,5 +114,8 @@ export default class ButBox extends Vue {
 .but-box {
     .flexbox(row, flex-end);
     margin-top: 30px;
+    .dropdown-box {
+        margin-left: 10px;
+    }
 }
 </style>
