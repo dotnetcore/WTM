@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
 
@@ -14,7 +12,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [AllRights]
         public IActionResult Index()
         {
-            ViewData["title"] = "WalkingTec MVVM Framework";
+            ViewData["title"] = "WTM";
             var vm = CreateVM<IndexVM>();
             vm.AllMenu = FFMenus;
             return View(vm);
@@ -35,7 +33,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             foreach (var area in areas)
             {
                 var controllers = GlobaInfo.AllModule.Where(x => x.Area == area);
-                cd1.Add(new ChartData { Category = "控制器", Value = controllers.Count(), Series = area?.AreaName??"默认" });
+                cd1.Add(new ChartData { Category = "控制器", Value = controllers.Count(), Series = area?.AreaName ?? "默认" });
                 cd1.Add(new ChartData { Category = "动作", Value = controllers.SelectMany(x => x.Actions).Count(), Series = area?.AreaName ?? "默认" });
             }
 
@@ -49,6 +47,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             ViewData["cd"] = cd1;
             ViewData["cd2"] = cd2;
             ViewData["debug"] = ConfigInfo.IsQuickDebug;
+            return PartialView();
+        }
+
+        [AllRights]
+        [ActionDescription("Layout")]
+        public IActionResult Layout()
+        {
             return PartialView();
         }
 
