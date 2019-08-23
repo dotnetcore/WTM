@@ -15,13 +15,8 @@
  */
 
 import axios from "axios";
-import config from "@/config/index";
 import { Notification } from "element-ui"; // Message,
-import cookie from "@/util/cookie.js";
 import { contentType } from "@/config/enum";
-type AxiosType = AxiosResponse & {
-    result_code?: string;
-};
 // 返回参数数据类型
 function getData(originalData) {
     const data = {};
@@ -35,6 +30,24 @@ function getData(originalData) {
         }
     }
     return data;
+}
+function getTransformRequest() {
+    return [
+        function(data) {
+            let ret = "";
+            for (const it in data) {
+                ret +=
+                    encodeURIComponent(it) +
+                    "=" +
+                    encodeURIComponent(data[it]) +
+                    "&";
+            }
+            if (ret !== "") {
+                ret = ret.substr(0, ret.length - 1);
+            }
+            return ret;
+        }
+    ];
 }
 // formdata请求
 function serviceFormData(url, option, configs) {
@@ -69,29 +82,18 @@ const service = (option, serverHost?) => {
     if (option.isBuffer) {
         req["responseType"] = "arraybuffer";
     }
+    if (option.contentType === contentType.stream) {
+        req["responseType"] = "blob";
+        req.data = option.data;
+    }
     // formdata格式
     if (option.contentType === contentType.multipart) {
         return serviceFormData(url, option, req.headers);
     } else if (option.contentType === contentType.form) {
-        req["transformRequest"] = [
-            function(data) {
-                let ret = "";
-                for (const it in data) {
-                    ret +=
-                        encodeURIComponent(it) +
-                        "=" +
-                        encodeURIComponent(data[it]) +
-                        "&";
-                }
-                if (ret !== "") {
-                    ret = ret.substr(0, ret.length - 1);
-                }
-                return ret;
-            }
-        ];
+        req["transformRequest"] = getTransformRequest();
     }
     return axios({ ...req })
-        .then((res: AxiosType) => {
+        .then(res => {
             const response = res.data;
             if (option.isBuffer) {
                 return response;

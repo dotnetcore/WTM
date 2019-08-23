@@ -42,10 +42,22 @@ const getDownLoadUrl = base64str => {
     return URL.createObjectURL(blob);
 };
 
-const listToString = (list: Array<any>, key: string) => {
-    list.map(item => {
+const listToString = (list: Array<any> = [], key: string) => {
+    return list.map(item => {
         return item[key];
-    }).join(",");
+    });
+};
+
+const exportXlsx = (data, name) => {
+    let b = new Blob([data], {
+        type: "application/vnd.ms-excel;charset=utf-8"
+    });
+    let url = URL.createObjectURL(b);
+    let link = document.createElement("a");
+    link.download = name + ".xls";
+    link.href = url;
+    link.click();
+    window.URL.revokeObjectURL(url); //释放掉blob对象
 };
 export {
     firstUpperCase,
@@ -53,5 +65,6 @@ export {
     strStringify,
     getBase64Str,
     getDownLoadUrl,
-    listToString
+    listToString,
+    exportXlsx
 };

@@ -147,10 +147,11 @@ export default class Index extends Vue {
     // 用户组
     groups = [];
     sexList = sexList;
+    // ★★
     filterMethod = (query, item) => {
         return item.label.indexOf(query) > -1;
     };
-    // 验证
+    // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
             // 动态验证会走遍验证，需要清除验证
@@ -184,29 +185,33 @@ export default class Index extends Vue {
             return {};
         }
     }
+    // ★★
     get userRolesData() {
         return this.frameworkuserGetFrameworkRoles.map(item => {
             return {
                 key: item.Value,
                 label: item.Text,
-                disabled: this["state"] !== this["dialogType"].detail
+                // 判断是否修改
+                disabled: this["status"] === this["dialogType"].detail
             };
         });
     }
+    // ★★
     get userGroupsData() {
         return this.frameworkuserGetFrameworkGroups.map(item => {
             return {
                 key: item.Value,
-                label: item.Text
+                label: item.Text,
+                disabled: this["status"] === this["dialogType"].detail
             };
         });
     }
-
+    // ★★★★★
     created() {
         this.getFrameworkuserGetFrameworkRoles();
         this.getFrameworkuserGetFrameworkGroups();
     }
-
+    // 打开详情 ★★★★★
     onGetFormData() {
         if (!this["dialogData"]) {
             console.log(this["dialogData"]);
@@ -219,9 +224,11 @@ export default class Index extends Vue {
                 this.updDataToTransfer("UserRoles");
                 this.updDataToTransfer("UserGroups");
             });
+        } else {
+            this["onReset"]();
         }
     }
-    // 提交
+    // 提交 ★★★★★
     onSubmitForm() {
         this.$refs[defaultFormData.refName].validate(valid => {
             if (valid) {
@@ -235,6 +242,7 @@ export default class Index extends Vue {
             }
         });
     }
+    // ★★★★★
     onAdd() {
         const parameters = { ...this["formData"] };
         delete parameters.ID;
@@ -247,6 +255,7 @@ export default class Index extends Vue {
             this.$emit("onSearch");
         });
     }
+    // ★★★★★
     onEdit() {
         const parameters = { ...this["formData"] };
         this.putFrameworkuserEdit({ Entity: parameters }).then(res => {
@@ -258,10 +267,11 @@ export default class Index extends Vue {
             this.$emit("onSearch");
         });
     }
-    // 上传图片
+    // 上传图片 ★★★
     handleAvatarSuccess(res, file) {
         this["formData"].PhotoId = URL.createObjectURL(file.raw);
     }
+    // ★★★
     beforeAvatarUpload(file) {
         const isJPG = file.type.search("image") !== -1;
         const isLt2M = file.size / 1024 / 1024 < 3;
@@ -273,7 +283,7 @@ export default class Index extends Vue {
         }
         return isJPG && isLt2M;
     }
-    // Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式
+    // Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式 ★★
     updDataToTransfer(field) {
         this["formData"][field] = this["formData"][field].map(item => {
             if (field === "UserGroups") {
@@ -283,7 +293,7 @@ export default class Index extends Vue {
             }
         });
     }
-    // Roles&Groups数据格式与穿梭框格式不符，穿梭框格式 >>> 数据格式
+    // Roles&Groups数据格式与穿梭框格式不符，穿梭框格式 >>> 数据格式 ★★
     updTransferToData(field) {
         this["formData"][field] = this["formData"][field].map(item => {
             if (field === "UserGroups") {

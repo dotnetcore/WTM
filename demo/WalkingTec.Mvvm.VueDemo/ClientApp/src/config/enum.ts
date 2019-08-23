@@ -2,7 +2,8 @@
 export enum contentType {
     form = "application/x-www-form-urlencoded; charset=UTF-8",
     json = "application/json",
-    multipart = "multipart/form-data"
+    multipart = "multipart/form-data",
+    stream = "application/json"
 }
 // 弹出框类型
 export enum dialogType {

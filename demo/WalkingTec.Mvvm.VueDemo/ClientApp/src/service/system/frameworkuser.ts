@@ -1,4 +1,5 @@
 import config from "@/config/index";
+import { contentType } from "@/config/enum";
 const reqPath = config.headerApi + "/_FrameworkUserBase/";
 
 // 列表
@@ -37,11 +38,13 @@ const frameworkuser = ({ ID }) => {
 };
 const frameworkuserExportExcel = {
     url: reqPath + "ExportExcel",
-    method: "post"
+    method: "post",
+    contentType: contentType.stream
 };
 const frameworkuserExportExcelByIds = {
     url: reqPath + "ExportExcelByIds",
-    method: "post"
+    method: "post",
+    contentType: contentType.stream
 };
 const frameworkuserGetExcelTemplate = {
     url: reqPath + "GetExcelTemplate",

@@ -18,7 +18,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="用户组" prop="GroupId">
-            <el-select v-model="formData.Entity.GroupId" v-edit:[status] placeholder="请选择用户组">
+            <el-select v-model="formData.Entity.GroupId" v-edit:[status]="{list: groups, key:'value', label: 'label'}" placeholder="请选择用户组">
               <el-option v-for="(item,index) of groups" :key="index" :label="item.GroupName" :value="item.ID" />
             </el-select>
           </el-form-item>
@@ -65,6 +65,7 @@ const defaultFormData = {
     refName: "refName",
     // 表单数据
     formData: {
+        ID: "",
         DpType: "0",
         Entity: {
             GroupId: "",
@@ -123,6 +124,24 @@ export default class Index extends Vue {
 
     created() {
         this.groups = cache.getStorage(config.tokenKey, true).Groups || [];
+    }
+
+    // 打开详情 ★★★★★
+    onGetFormData() {
+        if (!this["dialogData"]) {
+            console.log(this["dialogData"]);
+            console.error("dialogData 没有id数据");
+        }
+        console.log('this["dialogData"]', this["dialogData"]);
+        if (this["status"] !== this["dialogType"].add) {
+            const tempformData = {
+                Entity: { ...defaultFormData.formData.Entity },
+                ...this["dialogData"]
+            };
+            this["setFormData"](tempformData);
+        } else {
+            this["onReset"]();
+        }
     }
 
     // 提交
