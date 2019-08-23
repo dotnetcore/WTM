@@ -72,11 +72,15 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="是否有效" prop="IsValid">
-            <el-switch v-model="formData.IsValid" active-value="true" inactive-value="false" />
+            <edit-box :is-edit="status !== dialogType.detail">
+              <el-switch v-model="formData.IsValid" active-value="true" inactive-value="false" />
+              <template #editValue>
+                {{ formData.IsValid==='true' ? "是" : "否" }}
+              </template>
+            </edit-box>
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row>
         <el-col :span="24">
           <el-form-item label="角色">
@@ -100,8 +104,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinDialogForm from "@/mixin/form-mixin";
-import cache from "@/util/cache";
-import config from "@/config/index";
 import { sexList } from "@/config/entity";
 // 表单结构
 const defaultFormData = {
@@ -186,7 +188,8 @@ export default class Index extends Vue {
         return this.frameworkuserGetFrameworkRoles.map(item => {
             return {
                 key: item.Value,
-                label: item.Text
+                label: item.Text,
+                disabled: this["state"] !== this["dialogType"].detail
             };
         });
     }
@@ -206,6 +209,7 @@ export default class Index extends Vue {
 
     onGetFormData() {
         if (!this["dialogData"]) {
+            console.log(this["dialogData"]);
             console.error("dialogData 没有id数据");
         }
         if (this["status"] !== this["dialogType"].add) {

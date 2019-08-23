@@ -1,11 +1,13 @@
 import config from "@/config/index";
+import { contentType } from "@/config/enum";
 /**
  * 接口
  */
 // 登陆
 const login = {
     url: config.headApi + "/_login/login",
-    method: "post"
+    method: "post",
+    contentType: contentType.form
 };
 // 发送验证码
 const verificationCode = {

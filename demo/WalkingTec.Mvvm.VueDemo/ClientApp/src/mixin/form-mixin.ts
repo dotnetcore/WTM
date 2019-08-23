@@ -1,6 +1,7 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { dialogType } from "@/config/enum";
 import DialogFooter from "@/components/common/dialog/dialog-footer.vue";
+import EditBox from "@/components/common/edit-box.vue";
 
 /**
  * 弹出框（详情/编辑/创建）
@@ -22,7 +23,7 @@ interface formdata {
 }
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     @Component({
-        components: { DialogFooter }
+        components: { DialogFooter, EditBox }
         })
     class editMixins extends Vue {
         @Prop({ type: Object, default: {} })
