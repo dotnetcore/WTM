@@ -312,7 +312,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Limit == null)
             {
-                Limit = GlobalServices.GetRequiredService<Configs>()?.UiOptions.RPP;
+                Limit = GlobalServices.GetRequiredService<Configs>()?.UiOptions.DataTable.RPP;
             }
             if (Limits == null)
             {

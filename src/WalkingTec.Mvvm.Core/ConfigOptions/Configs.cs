@@ -408,12 +408,24 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_uiOptions == null)
                 {
-                    _uiOptions = new UIOptions()
-                    {
-                        RPP = DefaultConfigConsts.DEFAULT_RPP,
-                        ComboBoxEnableSearch = DefaultConfigConsts.DEFAULT_COMBOBOX_ENABLE_SEARCH,
-                        DateTimeReadOnly = DefaultConfigConsts.DEFAULT_DATETIME_READONLY
-                    };
+                    _uiOptions = new UIOptions();
+                    if (_uiOptions.DataTable == null)
+                        _uiOptions.DataTable = new UIOptions.DataTableOptions
+                        {
+                            RPP = DefaultConfigConsts.DEFAULT_RPP
+                        };
+
+                    if (_uiOptions.ComboBox == null)
+                        _uiOptions.ComboBox = new UIOptions.ComboBoxOptions
+                        {
+                            DefaultEnableSearch = DefaultConfigConsts.DEFAULT_COMBOBOX_DEFAULT_ENABLE_SEARCH
+                        };
+
+                    if (_uiOptions.DateTime == null)
+                        _uiOptions.DateTime = new UIOptions.DateTimeOptions
+                        {
+                            DefaultReadonly = DefaultConfigConsts.DEFAULT_DATETIME_DEFAULT_READONLY
+                        };
                 }
                 return _uiOptions;
             }

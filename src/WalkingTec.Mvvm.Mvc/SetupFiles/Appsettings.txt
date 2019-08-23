@@ -10,9 +10,17 @@
   "EnableLog": $enablelog$, //是否启用日志
   "LogExceptionOnly": $logexception$, //当启用日志的时候，是否只记录错误信息
   "IsQuickDebug": true, //是否启用debug模式
-  "RPP": $rpp$, //默认列表每页行数
-  "ComboBoxEnableSearch": true, //默认允许ComboBox搜索
-  "DateTimeReadOnly": true, //默认开启DateTime只读
+  "UIOptions": {
+    "DataTable": {
+      "RPP": $rpp$, //默认列表每页行数
+    },
+    "ComboBox": {
+      "DefaultEnableSearch": true, //默认允许ComboBox搜索
+    },
+    "DateTime": {
+      "DefaultReadonly": true //默认开启DateTime只读
+    }
+  },
   "SyncDb": true, //是否自动同步数据库
   "EncryptKey": "", //加密密钥
   "PageMode": "$pagemode$", //页面显示模式，Single或者Tab

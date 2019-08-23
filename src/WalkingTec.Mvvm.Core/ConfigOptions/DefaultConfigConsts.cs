@@ -23,11 +23,11 @@
         /// <summary>
         /// 默认允许ComboBox搜索
         /// </summary>
-        public const bool DEFAULT_COMBOBOX_ENABLE_SEARCH = true;
+        public const bool DEFAULT_COMBOBOX_DEFAULT_ENABLE_SEARCH = true;
 
         /// <summary>
         /// 默认开启DateTime只读
         /// </summary>
-        public const bool DEFAULT_DATETIME_READONLY = true;
+        public const bool DEFAULT_DATETIME_DEFAULT_READONLY = true;
     }
 }

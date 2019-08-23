@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
-            if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTimeReadOnly)
+            if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTime.DefaultReadonly)
                 output.Attributes.Add("readonly", "readonly");
 
             if (Range.HasValue && Range.Value && string.IsNullOrEmpty(RangeSplit))

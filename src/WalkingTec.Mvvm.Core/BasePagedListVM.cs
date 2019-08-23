@@ -634,7 +634,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (Searcher.Limit == 0)
                         {
-                            Searcher.Limit = ConfigInfo?.UiOptions.RPP ?? 20;
+                            Searcher.Limit = ConfigInfo?.UiOptions.DataTable.RPP ?? 20;
                         }
                         //根据返回数据的数量，以及预先设定的每页行数来设定数据量和总页数
                         Searcher.Count = count;
