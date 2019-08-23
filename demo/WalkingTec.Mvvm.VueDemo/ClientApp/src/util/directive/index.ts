@@ -14,12 +14,13 @@ const domStyleFn = (el, binding, vnode) => {
     const modelVal = vnode.data.model.value; // v-model 值
     let htmlVal: string = modelVal; // 内容value
     let elPre = el.previousSibling || {}; // el前dom，insert添加的dom
-    if (value) {
+    if (value && modelVal) {
         try {
             const { list, key, label } = value;
             // 参数判断
             htmlVal = list.filter(res => res[key] === modelVal)[0][label];
         } catch (error) {
+            console.log("value", value, modelVal);
             console.error("结构不符合要求", error);
         }
     }

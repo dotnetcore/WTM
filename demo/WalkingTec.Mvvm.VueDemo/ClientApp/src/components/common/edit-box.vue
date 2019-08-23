@@ -20,10 +20,10 @@ import { Component, Vue, Prop } from "vue-property-decorator";
  */
 @Component
 export default class EditBox extends Vue {
-    @Prop({ type: String, default: "" })
-    value;
     @Prop({ type: Boolean })
     isEdit;
+    @Prop({ type: String, default: "" })
+    value;
     @Prop({ type: Boolean })
     isImg;
 }

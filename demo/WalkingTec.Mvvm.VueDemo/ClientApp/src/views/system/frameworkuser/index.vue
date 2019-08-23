@@ -108,7 +108,7 @@ export default class Index extends Vue {
         return this.postFrameworkuserSearchList(params);
     }
     // 弹框
-    openDialog(status, data?) {
+    openDialog(status, data = {}) {
         this.detailShow = true;
         this.dialogInfo.dialogStatus = status;
         this.dialogInfo.dialogData = data;
