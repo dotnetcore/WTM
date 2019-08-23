@@ -140,7 +140,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             }
             output.PostElement.AppendHtml($@"
 <script>
-  var {Id}Chart = echarts.init(document.getElementById('{Id}'), { (Theme == null ? "'default'" : $"'{Theme.ToString()}'")});
+var {Id}Chart;
+layui.use(['echarts'],function(){{
+  var echarts = layui.echarts;
+  {Id}Chart = echarts.init(document.getElementById('{Id}'), {(Theme == null ? "'default'" : $"'{Theme.ToString()}'")});
   window.onresize = function(){{
     $(""div[ischart='1']"").each(function(index){{ eval($( this ).attr('id')+'Chart.resize();'); }});
   }};
@@ -154,6 +157,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
     {s}
   }};
   {Id}Chart.setOption({Id}option);
+}});
 </script>
 ");
             base.Process(context, output);
