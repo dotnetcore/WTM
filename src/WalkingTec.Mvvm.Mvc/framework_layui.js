@@ -296,7 +296,13 @@ window.ff = {
             },
             success: function (str, textStatus, request) {
                 layer.close(index);
-                eval(str);
+                if (request.getResponseHeader('IsScript') === 'true') {
+                    eval(str);
+                }
+                else {
+                    var did = $.cookie("divid");
+                    $("#" + did).html(str);
+                }
             }
         });
 
@@ -328,11 +334,13 @@ window.ff = {
             async: true,
             error: function (request) {
                 layer.close(index);
+                ff.SetCookie("windowids", owid);
                 alert("加载失败");
             },
             success: function (str, textStatus, request) {
                 layer.close(index);
                 if (request.getResponseHeader('IsScript') === 'true') {
+                    ff.SetCookie("windowids", owid);
                     eval(str);
                 }
                 else {
@@ -389,6 +397,7 @@ window.ff = {
             async: true,
             error: function (request) {
                 layer.close(index);
+                ff.SetCookie("windowids", owid);
                 alert("加载失败");
             },
             success: function (str) {
