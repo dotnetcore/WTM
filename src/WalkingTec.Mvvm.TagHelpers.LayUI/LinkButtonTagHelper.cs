@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -69,7 +69,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else if(Target == ButtonTargetEnum.self)
             {
-                Click = $"ff.LoadPage('{Url}')";
+                if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
+                {
+                    Click = $"ff.BgRequest('{Url}',ff.GetFormData('{context.Items["formid"]}'))";
+                }
+                else
+                {
+                    Click = $"ff.BgRequest('{Url}')";
+                }
             }
             else if(Target == ButtonTargetEnum.newwindow)
             {
