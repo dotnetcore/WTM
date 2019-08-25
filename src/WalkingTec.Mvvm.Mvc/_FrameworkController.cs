@@ -777,6 +777,19 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Public]
         [ResponseCache(Duration = 3600)]
+        public ActionResult GetGithubInfo()
+        {
+            var rv = ReadFromCache<string>("githubinfo", () =>
+            {
+                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+                return JsonConvert.SerializeObject(s);
+            }, 1800);
+            return Content(rv, "application/json");
+        }
+
+
+        [Public]
+        [ResponseCache(Duration = 3600)]
         public string Redirect()
         {
             return "";
@@ -785,6 +798,9 @@ namespace WalkingTec.Mvvm.Mvc
         private class github
         {
             public int stargazers_count { get; set; }
+            public int forks_count { get; set; }
+            public int subscribers_count { get; set; }
+            public int open_issues_count { get; set; }
         }
 
         [Public]
