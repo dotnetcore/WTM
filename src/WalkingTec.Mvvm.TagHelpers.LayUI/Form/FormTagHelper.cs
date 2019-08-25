@@ -129,11 +129,13 @@ layui.use(['form','formSelects'],function(){{
             if (OldPost == false && !(this is SearchPanelTagHelper))
             {
                 output.PostElement.AppendHtml($@"
+layui.use(['form','formSelects'],function(){{
   layui.form.on('submit({Id}filter)', function(data){{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
     ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
     return false;
   }});
+}})
 ");
             }
 
