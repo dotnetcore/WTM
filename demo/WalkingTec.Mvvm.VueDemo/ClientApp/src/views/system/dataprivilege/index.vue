@@ -20,7 +20,7 @@
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" />
-      <table-box :is-selection="true" :tb-column="tableCols" :table-data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange">
+      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
