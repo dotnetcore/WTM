@@ -3,10 +3,10 @@
 }
 
 <div class="layui-layout">
-    <div class="layui-body" style="left:0px" id="DONOTUSE_MAINPANEL">
-        <!-- 内容主体区域 -->
-    </div>
+  <div class="layui-body" style="left:0px" id="LAY_app_body">
+    <div class="layadmin-tabsbody-item layui-show" style="height:100%"></div>
+  </div>
 </div>
 <script>
-  layui.use('index')
+  layui.use('index', function () { layui.admin.pageType = "console";})
 </script>
