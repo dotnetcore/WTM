@@ -12,7 +12,7 @@
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
-      <table-box :is-selection="true" :tb-column="tableCols" :table-data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange">
+      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -107,28 +107,32 @@ export default class Index extends Vue {
     }
     // ★★★★★
     onDelete(params) {
-        const parameters = {
-            ids: [params.ID]
-        };
-        this.postFrameworkgroupBatchDelete(parameters).then(res => {
-            this["$notify"]({
-                title: "删除成功",
-                type: "success"
+        this["onConfirm"]().then(() => {
+            const parameters = {
+                ids: [params.ID]
+            };
+            this.postFrameworkgroupBatchDelete(parameters).then(res => {
+                this["$notify"]({
+                    title: "删除成功",
+                    type: "success"
+                });
+                this["onHoldSearch"]();
             });
-            this["onHoldSearch"]();
         });
     }
     // ★★★★★
     onBatchDelete() {
-        const parameters = {
-            ids: listToString(this["selectData"], "ID")
-        };
-        this.postFrameworkgroupBatchDelete(parameters).then(res => {
-            this["$notify"]({
-                title: "删除成功",
-                type: "success"
+        this["onConfirm"]().then(() => {
+            const parameters = {
+                ids: listToString(this["selectData"], "ID")
+            };
+            this.postFrameworkgroupBatchDelete(parameters).then(res => {
+                this["$notify"]({
+                    title: "删除成功",
+                    type: "success"
+                });
+                this["onHoldSearch"]();
             });
-            this["onHoldSearch"]();
         });
     }
     // ★★★★☆

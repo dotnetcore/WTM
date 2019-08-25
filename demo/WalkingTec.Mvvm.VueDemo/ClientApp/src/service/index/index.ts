@@ -1,14 +1,22 @@
 import config from "@/config/index";
-/**
- * 接口
- */
-
-// 列表
-const resourcesList = {
-    url: config.serverHost + "/api/nsp/v1/resources",
-    method: "get"
+// import { contentType } from "@/config/enum";
+const reqPath = config.headerApi + "/_login/";
+// 验证登陆
+const loginCheckLogin = ({ ID }) => {
+    return {
+        url: reqPath + "CheckLogin/" + ID,
+        method: "get"
+    };
+};
+// 验证登出
+const loginLogout = ({ ID }) => {
+    return {
+        url: reqPath + "Logout/" + ID,
+        method: "get"
+    };
 };
 
 export default {
-    resourcesList
+    loginCheckLogin,
+    loginLogout
 };

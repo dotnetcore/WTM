@@ -1,27 +1,14 @@
 <template>
   <div class="dataprivilege">
     <article>
-      <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
-        <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
-          <el-form-item label="角色编号">
-            <el-input v-model="searchForm.RoleCode" />
-          </el-form-item>
-          <el-form-item label="角色名称">
-            <el-input v-model="searchForm.RoleName" />
-          </el-form-item>
-        </el-form>
-      </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :tree-props="{children: 'Children', hasChildren: 'hasChildren'}" row-key="ID" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
           </el-button>
           <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
             修改
-          </el-button>
-          <el-button type="text" size="small" class="view-btn">
-            分配权限
           </el-button>
           <el-button type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
             删除
@@ -46,11 +33,11 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
 import { listToString, exportXlsx } from "@/util/string";
-import store from "@/store/system/frameworkrole";
+import store from "@/store/system/frameworkmenu";
 // 查询参数 ★★★★★
 const defaultSearchData = {
-    RoleCode: "",
-    RoleName: ""
+    menuCode: "",
+    menuName: ""
 };
 @Component({
     mixins: [baseMixin, mixinFunc(defaultSearchData)],
@@ -65,19 +52,15 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkroleSearchList;
+    postFrameworkmenuSearchList;
     @Action
-    getFrameworkroleGetFrameworkRoles;
+    postFrameworkmenuBatchDelete;
     @Action
-    getFrameworkroleGetFrameworkGroups;
+    getFrameworkmenuDelete;
     @Action
-    postFrameworkroleBatchDelete;
+    postFrameworkmenuExportExcel;
     @Action
-    getFrameworkroleDelete;
-    @Action
-    postFrameworkroleExportExcel;
-    @Action
-    postFrameworkroleExportExcelByIds;
+    postFrameworkmenuExportExcelByIds;
 
     @State
     fameworkuserSearchList;
@@ -90,9 +73,9 @@ export default class Index extends Vue {
     };
     // ★★★★★
     tableCols = [
-        { key: "RoleCode", sortable: true, label: "角色编号" },
-        { key: "RoleName", sortable: true, label: "角色姓名" },
-        { key: "RoleRemark", sortable: true, label: "备注" },
+        { key: "PageName", sortable: true, label: "页面名称", align: "left" },
+        { key: "DisplayOrder", sortable: true, label: "顺序" },
+        { key: "ICon", sortable: true, label: "图标" },
         { key: "operate", label: "操作", isSlot: true }
     ];
     // 查询 ★★★★★
@@ -101,7 +84,7 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkroleSearchList(params);
+        return this.postFrameworkmenuSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -118,7 +101,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.postFrameworkroleBatchDelete(parameters).then(res => {
+            this.postFrameworkmenuBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -133,7 +116,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.postFrameworkroleBatchDelete(parameters).then(res => {
+            this.postFrameworkmenuBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -149,8 +132,8 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkroleExportExcel(parameters).then(res => {
-            exportXlsx(res, "FrameworkroleExportExcel");
+        this.postFrameworkmenuExportExcel(parameters).then(res => {
+            exportXlsx(res, "FrameworkmenuExportExcel");
             this["$notify"]({
                 title: "导出成功",
                 type: "success"
@@ -160,8 +143,8 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkroleExportExcelByIds(parameters).then(res => {
-            exportXlsx(res, "FrameworkroleExportExcelByIds");
+        this.postFrameworkmenuExportExcelByIds(parameters).then(res => {
+            exportXlsx(res, "FrameworkmenuExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",
                 type: "success"

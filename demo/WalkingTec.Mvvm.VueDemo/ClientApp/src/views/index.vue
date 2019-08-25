@@ -40,25 +40,20 @@ import config from "@/config/index";
 export default class App extends Vue {
     // 菜单
     @Action
-    getResourcesList;
+    getLoginCheckLogin;
     @Action
     localMenus;
 
     created() {
         const uData = cache.getStorage(config.tokenKey, true);
-        if (!uData) {
-            location.href = "/login.html";
-        }
-        // this.localMenus().then(res => {
-        //     this.$router["options"].routes = res;
-        //     this.$router.addRoutes(res);
-        // });
-        // this.getResourcesList().then(res => {
-        //     if (res.result_code !== "success") {
-        //         this.$message.error(res.message);
-        //         // this["onHref"]("/login.html");
-        //     }
-        // });
+        this.getLoginCheckLogin({ ID: uData.Id })
+            .then(res => {
+                return res;
+            })
+            .catch(err => {
+                console.log(err);
+                location.href = "/login.html";
+            });
     }
 }
 </script>
