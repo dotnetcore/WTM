@@ -11,7 +11,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -620,11 +619,10 @@ namespace WalkingTec.Mvvm.Mvc
 
             /// <summary>
             /// Name
-            /// //TODO 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
+            /// 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
             /// </summary>
             /// <value></value>
             [JsonProperty("name")]
-            // public string Name { get; set; }
             public string Name => Title;
 
             /// <summary>
@@ -668,30 +666,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var resultMenus = new List<menuObj>();
                 GenerateMenuTree(FFMenus, resultMenus);
-                resultMenus.Insert(0, new menuObj()
-                {
-                    Title = "Sample",
-                    Children = new List<menuObj>(){
-                        new menuObj()
-                        {
-                            Title = "学校管理",
-                            Url = "layuiadmin/views/demo/school.html",
-                            Children = null
-                        },new menuObj()
-                        {
-                            Title = "日志",
-                            Url = "layuiadmin/views/demo/log.html",
-                            Children = null
-                        },new menuObj()
-                        {
-                            Title = "学生管理",
-                            Url = "layuiadmin/views/demo/student.html",
-                            Children = null
-                        }
-                    }
-                });
-                // return Json(resultMenus);
-                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = "", Data = resultMenus }, new JsonSerializerSettings()
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 }), "application/json");
@@ -702,8 +677,7 @@ namespace WalkingTec.Mvvm.Mvc
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
-                // return Json(resultMenus);
-                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = "", Data = resultMenus }, new JsonSerializerSettings()
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 }), "application/json");
