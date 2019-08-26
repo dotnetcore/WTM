@@ -46,19 +46,19 @@ const defaultFormData = {
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
     @Action
-    postFrameworkroleAdd;
+    frameworkroleAdd;
     @Action
-    putFrameworkroleEdit;
+    frameworkroleEdit;
     @Action
-    getFrameworkrole;
+    frameworkrole;
     @Action
-    getFrameworkroleGetFrameworkRoles;
-    @Action
-    getFrameworkroleGetFrameworkGroups;
-    @State
     frameworkroleGetFrameworkRoles;
-    @State
+    @Action
     frameworkroleGetFrameworkGroups;
+    @State
+    frameworkroleGetFrameworkRolesData;
+    @State
+    frameworkroleGetFrameworkGroupsData;
     // 用户组
     groups = [];
     sexList = sexList;
@@ -103,10 +103,8 @@ export default class Index extends Vue {
         }
         if (this["status"] !== this["dialogType"].add) {
             const parameters = { ID: this["dialogData"].ID };
-            this.getFrameworkrole(parameters).then(res => {
+            this.frameworkrole(parameters).then(res => {
                 this["setFormData"](res.Entity);
-                this.updDataToTransfer("UserRoles");
-                this.updDataToTransfer("UserGroups");
             });
         } else {
             this["onReset"]();
@@ -128,7 +126,7 @@ export default class Index extends Vue {
     onAdd() {
         const parameters = { ...this["formData"] };
         delete parameters.ID;
-        this.postFrameworkroleAdd({ Entity: parameters }).then(res => {
+        this.frameworkroleAdd({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "添加成功",
                 type: "success"
@@ -140,7 +138,7 @@ export default class Index extends Vue {
     // ★★★★★
     onEdit() {
         const parameters = { ...this["formData"] };
-        this.putFrameworkroleEdit({ Entity: parameters }).then(res => {
+        this.frameworkroleEdit({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "修改成功",
                 type: "success"

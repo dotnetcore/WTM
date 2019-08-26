@@ -45,11 +45,11 @@ const defaultFormData = {
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
     @Action
-    postFrameworkgroupAdd;
+    frameworkgroupAdd;
     @Action
-    putFrameworkgroupEdit;
+    frameworkgroupEdit;
     @Action
-    getFrameworkgroup;
+    frameworkgroup;
     // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
@@ -87,7 +87,7 @@ export default class Index extends Vue {
         }
         if (this["status"] !== this["dialogType"].add) {
             const parameters = { ID: this["dialogData"].ID };
-            this.getFrameworkgroup(parameters).then(res => {
+            this.frameworkgroup(parameters).then(res => {
                 this["setFormData"](res.Entity);
             });
         } else {
@@ -110,7 +110,7 @@ export default class Index extends Vue {
     onAdd() {
         const parameters = { ...this["formData"] };
         delete parameters.ID;
-        this.postFrameworkgroupAdd({ Entity: parameters }).then(res => {
+        this.frameworkgroupAdd({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "添加成功",
                 type: "success"
@@ -122,7 +122,7 @@ export default class Index extends Vue {
     // ★★★★★
     onEdit() {
         const parameters = { ...this["formData"] };
-        this.putFrameworkgroupEdit({ Entity: parameters }).then(res => {
+        this.frameworkgroupEdit({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "修改成功",
                 type: "success"

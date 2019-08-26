@@ -60,9 +60,22 @@ function serviceFormData(url, option, configs) {
         .then(response => response.data)
         .catch(errors => console.log(errors));
 }
+// 替换模块{}
+function parameterTemplate(url, param) {
+    if (
+        _.isObject(param) &&
+        typeof param === "object" &&
+        /{([\s\S]+?)}/g.test(url)
+    ) {
+        url = _.template(url, { interpolate: /{([\s\S]+?)}/g })(param);
+    }
+    return url;
+}
+
 const service = (option, serverHost?) => {
     // config.serverHost
-    const url = serverHost ? serverHost : "" + option.url;
+    let url = serverHost ? serverHost : "" + option.url;
+    url = parameterTemplate(url, option.data);
     const req = {
         method: option.method,
         url: url,

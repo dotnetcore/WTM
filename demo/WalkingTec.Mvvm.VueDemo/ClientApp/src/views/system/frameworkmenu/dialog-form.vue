@@ -3,8 +3,8 @@
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="用户组编码" prop="GroupCode">
-            <el-input v-model="formData.GroupCode" v-edit:[status] />
+          <el-form-item label="地址类型" prop="IsInside">
+            <el-input v-model="formData.IsInside" v-edit:[status] />
           </el-form-item>
         </el-col>
         <el-col :span="12">

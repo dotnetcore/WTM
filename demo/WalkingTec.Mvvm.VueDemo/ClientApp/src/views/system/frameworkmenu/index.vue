@@ -52,18 +52,18 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkmenuSearchList;
+    frameworkmenuSearchList;
     @Action
-    postFrameworkmenuBatchDelete;
+    frameworkmenuBatchDelete;
     @Action
-    getFrameworkmenuDelete;
+    frameworkmenuDelete;
     @Action
-    postFrameworkmenuExportExcel;
+    frameworkmenuExportExcel;
     @Action
-    postFrameworkmenuExportExcelByIds;
+    frameworkmenuExportExcelByIds;
 
     @State
-    fameworkuserSearchList;
+    fameworkuserSearchListData;
 
     // 弹出框内容 ★★★★☆
     dialogInfo = {
@@ -84,7 +84,7 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkmenuSearchList(params);
+        return this.frameworkmenuSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -101,7 +101,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.postFrameworkmenuBatchDelete(parameters).then(res => {
+            this.frameworkmenuBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -116,7 +116,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.postFrameworkmenuBatchDelete(parameters).then(res => {
+            this.frameworkmenuBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -132,7 +132,7 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkmenuExportExcel(parameters).then(res => {
+        this.frameworkmenuExportExcel(parameters).then(res => {
             exportXlsx(res, "FrameworkmenuExportExcel");
             this["$notify"]({
                 title: "导出成功",
@@ -143,7 +143,7 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkmenuExportExcelByIds(parameters).then(res => {
+        this.frameworkmenuExportExcelByIds(parameters).then(res => {
             exportXlsx(res, "FrameworkmenuExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",

@@ -32,6 +32,7 @@
         </template>
       </table-box>
     </article>
+    {{ Actions }}
     <dialog-box :is-show.sync="dialogInfo.isShow">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
@@ -68,23 +69,24 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkuserSearchList;
+    frameworkuserSearch;
     @Action
-    getFrameworkuserGetFrameworkRoles;
+    frameworkuserGetFrameworkRoles;
     @Action
-    getFrameworkuserGetFrameworkGroups;
+    frameworkuserGetFrameworkGroups;
     @Action
-    postFrameworkuserBatchDelete;
+    frameworkuserBatchDelete;
     @Action
-    getFrameworkuserDelete;
+    frameworkuserDelete;
     @Action
-    postFrameworkuserExportExcel;
+    frameworkuserExportExcel;
     @Action
-    postFrameworkuserExportExcelByIds;
+    frameworkuserExportExcelByIds;
 
     @State
-    fameworkuserSearchList;
-
+    fameworkuserSearchData;
+    @State
+    Actions;
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,
@@ -105,10 +107,11 @@ export default class Index extends Vue {
     // 查询 ★★★★★
     created() {
         this["onSearch"]();
+        console.log("Actions", this, this.Actions);
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkuserSearchList(params);
+        return this.frameworkuserSearch(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -125,7 +128,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.postFrameworkuserBatchDelete(parameters).then(res => {
+            this.frameworkuserBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -140,7 +143,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.postFrameworkuserBatchDelete(parameters).then(res => {
+            this.frameworkuserBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -156,7 +159,7 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkuserExportExcel(parameters).then(res => {
+        this.frameworkuserExportExcel(parameters).then(res => {
             exportXlsx(res, "frameworkuserExportExcel");
             this["$notify"]({
                 title: "导出成功",
@@ -167,7 +170,7 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkuserExportExcelByIds(parameters).then(res => {
+        this.frameworkuserExportExcelByIds(parameters).then(res => {
             exportXlsx(res, "frameworkuserExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",
