@@ -161,31 +161,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 默认列表行数
-
-        private int? _rpp;
-
-        /// <summary>
-        /// 默认列表行数
-        /// </summary>
-        public int RPP
-        {
-            get
-            {
-                if (_rpp == null)
-                {
-                    _rpp = DefaultConfigConsts.DEFAULT_RPP;
-                }
-                return _rpp.Value;
-            }
-            set
-            {
-                _rpp = value;
-            }
-        }
-
-        #endregion
-
         #region 自动更新数据库
 
         private bool? _syncdb;
@@ -415,6 +390,48 @@ namespace WalkingTec.Mvvm.Core
             set
             {
                 _fileUploadOptions = value;
+            }
+        }
+
+        #endregion
+
+        #region 界面相关设置
+
+        private UIOptions _uiOptions;
+
+        /// <summary>
+        /// 文件相关设置
+        /// </summary>
+        public UIOptions UiOptions
+        {
+            get
+            {
+                if (_uiOptions == null)
+                {
+                    _uiOptions = new UIOptions();
+                    if (_uiOptions.DataTable == null)
+                        _uiOptions.DataTable = new UIOptions.DataTableOptions
+                        {
+                            RPP = DefaultConfigConsts.DEFAULT_RPP
+                        };
+
+                    if (_uiOptions.ComboBox == null)
+                        _uiOptions.ComboBox = new UIOptions.ComboBoxOptions
+                        {
+                            DefaultEnableSearch = DefaultConfigConsts.DEFAULT_COMBOBOX_DEFAULT_ENABLE_SEARCH
+                        };
+
+                    if (_uiOptions.DateTime == null)
+                        _uiOptions.DateTime = new UIOptions.DateTimeOptions
+                        {
+                            DefaultReadonly = DefaultConfigConsts.DEFAULT_DATETIME_DEFAULT_READONLY
+                        };
+                }
+                return _uiOptions;
+            }
+            set
+            {
+                _uiOptions = value;
             }
         }
 

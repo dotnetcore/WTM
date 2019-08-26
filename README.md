@@ -54,13 +54,24 @@ Package name                              | Version                     | Downlo
 
 WTM框架的前后端分离模式同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
 
-框架文档地址：http://wtmdoc.walkingtec.cn  文档还在不断完善中。。。
-框架QQ交流群：694148336
 
 
-![WTM框架二维码](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5xOOlS26GZTfk9Hs2uzHiaMXG4df96849seoGFiatGrqODTWPr7SsOqoA/0?wx_fmt=jpeg)
+![WTM框架微信公众号](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5xOOlS26GZTfk9Hs2uzHiaMXG4df96849seoGFiatGrqODTWPr7SsOqoA/0?wx_fmt=jpeg)
 
 关注WTM微信公众号，及时了解框架更新，公众号还会定期发布视频教程
 
+框架文档地址：http://wtmdoc.walkingtec.cn  文档还在不断完善中。。。
+框架QQ交流群：694148336
+
 您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
+
+
+****
+
+
+最后感谢各位老板的支持和捐赠，具体捐赠信息请见 https://wtmdoc.walkingtec.cn/#/Home/DonateList 
+
+如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
+
+<img src="https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5A834WX1RcXAPytEdtUgniaRnVoW9e2HPBGiaibXOru3MfvWylLunMeFBg/0?wx_fmt=jpeg"  height="300" width="300">
 
