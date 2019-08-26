@@ -449,14 +449,9 @@ window.ff = {
                 $('#LAY_app_body').html('');
             }
             else {
-                layui.element.tabDelete("maintab", DONOTUSE_TABLAYID);
+                layui.admin.closeThisTabs();
             }
         }
-    },
-
-    CloseAllDialog: function () {
-        var layer = layui.layer;
-        layer.closeAll();
     },
 
     LinkedChange: function (url, target, targetname) {
