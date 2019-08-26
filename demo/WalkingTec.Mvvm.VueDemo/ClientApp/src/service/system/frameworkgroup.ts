@@ -4,14 +4,13 @@ const reqPath = config.headerApi + "/_FrameworkGroup/";
 // 列表
 const frameworkgroupSearchList = {
     url: reqPath + "Search",
-    method: "post"
+    method: "post",
+    dataType: "array"
 };
 // 详情
-const frameworkgroup = ({ ID }) => {
-    return {
-        url: reqPath + ID,
-        method: "get"
-    };
+const frameworkgroup = {
+    url: reqPath + "{ID}",
+    method: "get"
 };
 // 添加
 const frameworkgroupAdd = {
@@ -28,11 +27,9 @@ const frameworkgroupBatchDelete = {
     method: "post"
 };
 // 删除 -------
-const frameworkgroupDelete = ({ ID }) => {
-    return {
-        url: reqPath + "Delete/" + ID,
-        method: "get"
-    };
+const frameworkgroupDelete = {
+    url: reqPath + "Delete/{ID}",
+    method: "get"
 };
 // 导出
 const frameworkgroupExportExcel = {

@@ -10,8 +10,8 @@ import validator from "@/util/validator";
 
 @Component
 export default class Verification extends Vue {
-    @Prop({ default: "" })
-    mobile: string;
+    @Prop({ type: String, default: "" })
+    mobile;
     disable: boolean = false;
     msg: string = "获取验证码";
     seconds: number = 60;

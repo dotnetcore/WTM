@@ -3,9 +3,10 @@ import { contentType } from "@/config/enum";
 const reqPath = config.headerApi + "/_FrameworkUserBase/";
 
 // 列表
-const frameworkuserSearchList = {
+const frameworkuserSearch = {
     url: reqPath + "search",
-    method: "post"
+    method: "post",
+    dataType: "array"
 };
 // 添加
 const frameworkuserAdd = {
@@ -13,11 +14,9 @@ const frameworkuserAdd = {
     method: "post"
 };
 // 删除
-const frameworkuserDelete = ({ ID }) => {
-    return {
-        url: reqPath + "Delete/" + ID,
-        method: "get"
-    };
+const frameworkuserDelete = {
+    url: reqPath + "Delete/{ID}",
+    method: "get"
 };
 // 批量删除
 const frameworkuserBatchDelete = {
@@ -30,11 +29,9 @@ const frameworkuserEdit = {
     method: "put"
 };
 // 详情
-const frameworkuser = ({ ID }) => {
-    return {
-        url: reqPath + ID,
-        method: "get"
-    };
+const frameworkuser = {
+    url: reqPath + "{ID}",
+    method: "get"
 };
 const frameworkuserExportExcel = {
     url: reqPath + "ExportExcel",
@@ -63,7 +60,7 @@ const frameworkuserGetFrameworkGroups = {
     dataType: "array"
 };
 export default {
-    frameworkuserSearchList,
+    frameworkuserSearch,
     frameworkuserAdd,
     frameworkuserDelete,
     frameworkuserBatchDelete,

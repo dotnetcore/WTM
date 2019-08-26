@@ -25,15 +25,20 @@ export default class Login extends Vue {
     };
     isloading: boolean = false;
     // 登陆
-    @Action postLogin;
-
+    @Action login;
+    mounted() {
+        // const url = "sdfsdf{id}";
+        // const body = { id: "00000" };
+        // const aaa = _.template(url, { interpolate: /{([\s\S]+?)}/g })(body);
+        // console.log("aaa", aaa);
+    }
     onSubmit() {
         this.isloading = true;
         const params = {
             userid: this.formData.username,
             password: this.formData.password
         };
-        this["postLogin"](params)
+        this["login"](params)
             .then(res => {
                 this.isloading = false;
                 cache.setStorage(config.tokenKey, res);

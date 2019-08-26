@@ -70,15 +70,15 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    getPrivilegesList;
-    @Action
-    postDataprivilegeSearchList;
-    @Action
-    getDataprivilegeDelete;
-    @Action
-    postDataprivilegeBatchDelete;
-    @State
     privilegesList;
+    @Action
+    dataprivilegeSearchList;
+    @Action
+    dataprivilegeDelete;
+    @Action
+    dataprivilegeBatchDelete;
+    @State
+    privilegesListData;
     exportParams = {};
     // 弹出框内容
     dialogInfo = {
@@ -93,12 +93,12 @@ export default class Index extends Vue {
         { key: "operate", label: "操作", isSlot: true }
     ];
     created() {
-        this.getPrivilegesList();
+        this.privilegesList();
         this["onSearch"]();
     }
     // 查询接口
     privateRequest(params) {
-        return this.postDataprivilegeSearchList(params);
+        return this.dataprivilegeSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -113,7 +113,7 @@ export default class Index extends Vue {
         const parameters = {
             id: params.id
         };
-        this.getDataprivilegeDelete(parameters).then(res => {
+        this.dataprivilegeDelete(parameters).then(res => {
             this["$notify"]({
                 title: "删除成功",
                 type: "success"
@@ -124,7 +124,7 @@ export default class Index extends Vue {
         const parameters = {
             ids: listToString(this["selectData"], "id")
         };
-        this.getDataprivilegeDelete(parameters).then(res => {
+        this.dataprivilegeDelete(parameters).then(res => {
             this["$notify"]({
                 title: "删除成功",
                 type: "success"

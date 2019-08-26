@@ -3,7 +3,8 @@ const reqPath = config.headerApi + "/_DataPrivilege/";
 // 下啦列表
 const privilegesList = {
     url: reqPath + "GetPrivileges",
-    method: "get"
+    method: "get",
+    dataType: "array"
 };
 // 添加
 const dataprivilegeAdd = {
@@ -13,15 +14,14 @@ const dataprivilegeAdd = {
 // 列表
 const dataprivilegeSearchList = {
     url: reqPath + "search",
-    method: "post"
+    method: "post",
+    dataType: "array"
 };
 
 // 删除
-const dataprivilegeDelete = ({ id }) => {
-    return {
-        url: reqPath + "Delete/" + id,
-        method: "get"
-    };
+const dataprivilegeDelete = {
+    url: reqPath + "Delete/{ID}",
+    method: "get"
 };
 // 批量删除
 const dataprivilegeBatchDelete = {

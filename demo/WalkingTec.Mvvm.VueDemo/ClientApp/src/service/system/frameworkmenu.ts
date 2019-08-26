@@ -4,14 +4,13 @@ const reqPath = config.headerApi + "/_FrameworkMenu/";
 // 列表
 const frameworkmenuSearchList = {
     url: reqPath + "Search",
-    method: "post"
+    method: "post",
+    dataType: "array"
 };
 // 详情
-const frameworkmenu = ({ ID }) => {
-    return {
-        url: reqPath + ID,
-        method: "get"
-    };
+const frameworkmenu = {
+    url: reqPath + "{ID}",
+    method: "get"
 };
 // 添加
 const frameworkmenuAdd = {
@@ -28,11 +27,9 @@ const frameworkmenuBatchDelete = {
     method: "post"
 };
 // 删除 -------
-const frameworkmenuDelete = ({ ID }) => {
-    return {
-        url: reqPath + "Delete/" + ID,
-        method: "get"
-    };
+const frameworkmenuDelete = {
+    url: reqPath + "Delete/{ID}",
+    method: "get"
 };
 // 导出
 const frameworkmenuExportExcel = {

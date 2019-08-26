@@ -12,7 +12,9 @@ const newStore = createStore(reqIndex);
 const state = {
     isFold: false,
     // 菜单
-    menuItems: []
+    menuItems: [],
+    Actions: [],
+    Menus: []
 };
 const mutations = {
     toggleIsFold(states) {
@@ -20,6 +22,12 @@ const mutations = {
     },
     setMenuItems(states, data) {
         states.menuItems = data;
+    },
+    setActions(states, data) {
+        states.Actions = _.map(data, _.toLower);
+    },
+    setMenus(states, data) {
+        states.Menus = data;
     }
 };
 const actions = {

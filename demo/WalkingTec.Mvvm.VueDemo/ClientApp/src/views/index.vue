@@ -24,7 +24,7 @@ import {
     Nprogress
 } from "@/components/layout/index";
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, Mutation } from "vuex-class";
 import cache from "@/util/cache";
 import config from "@/config/index";
 
@@ -40,14 +40,19 @@ import config from "@/config/index";
 export default class App extends Vue {
     // 菜单
     @Action
-    getLoginCheckLogin;
+    loginCheckLogin;
     @Action
     localMenus;
-
+    @Mutation
+    setActions;
+    @Mutation
+    setMenus;
     created() {
         const uData = cache.getStorage(config.tokenKey, true);
-        this.getLoginCheckLogin({ ID: uData.Id })
+        this.loginCheckLogin({ ID: uData.Id })
             .then(res => {
+                this.setActions(_.get(res, "Attributes.Actions", []));
+                this.setMenus(_.get(res, "Attributes.Menus", []));
                 return res;
             })
             .catch(err => {

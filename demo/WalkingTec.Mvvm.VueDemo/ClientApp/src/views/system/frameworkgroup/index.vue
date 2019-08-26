@@ -62,18 +62,18 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkgroupSearchList;
+    frameworkgroupSearchList;
     @Action
-    postFrameworkgroupBatchDelete;
+    frameworkgroupBatchDelete;
     @Action
-    getFrameworkgroupDelete;
+    frameworkgroupDelete;
     @Action
-    postFrameworkgroupExportExcel;
+    frameworkgroupExportExcel;
     @Action
-    postFrameworkgroupExportExcelByIds;
+    frameworkgroupExportExcelByIds;
 
     @State
-    fameworkuserSearchList;
+    fameworkuserSearchListData;
 
     // 弹出框内容 ★★★★☆
     dialogInfo = {
@@ -94,7 +94,7 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkgroupSearchList(params);
+        return this.frameworkgroupSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -111,7 +111,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.postFrameworkgroupBatchDelete(parameters).then(res => {
+            this.frameworkgroupBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -126,7 +126,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.postFrameworkgroupBatchDelete(parameters).then(res => {
+            this.frameworkgroupBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -142,7 +142,7 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkgroupExportExcel(parameters).then(res => {
+        this.frameworkgroupExportExcel(parameters).then(res => {
             exportXlsx(res, "FrameworkgroupExportExcel");
             this["$notify"]({
                 title: "导出成功",
@@ -153,7 +153,7 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkgroupExportExcelByIds(parameters).then(res => {
+        this.frameworkgroupExportExcelByIds(parameters).then(res => {
             exportXlsx(res, "FrameworkgroupExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",

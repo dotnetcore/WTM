@@ -65,22 +65,22 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    postFrameworkroleSearchList;
+    frameworkroleSearchList;
     @Action
-    getFrameworkroleGetFrameworkRoles;
+    frameworkroleGetFrameworkRoles;
     @Action
-    getFrameworkroleGetFrameworkGroups;
+    frameworkroleGetFrameworkGroups;
     @Action
-    postFrameworkroleBatchDelete;
+    frameworkroleBatchDelete;
     @Action
-    getFrameworkroleDelete;
+    frameworkroleDelete;
     @Action
-    postFrameworkroleExportExcel;
+    frameworkroleExportExcel;
     @Action
-    postFrameworkroleExportExcelByIds;
+    frameworkroleExportExcelByIds;
 
     @State
-    fameworkuserSearchList;
+    fameworkuserSearchListData;
 
     // 弹出框内容 ★★★★☆
     dialogInfo = {
@@ -101,7 +101,7 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.postFrameworkroleSearchList(params);
+        return this.frameworkroleSearchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
@@ -118,7 +118,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.postFrameworkroleBatchDelete(parameters).then(res => {
+            this.frameworkroleBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -133,7 +133,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.postFrameworkroleBatchDelete(parameters).then(res => {
+            this.frameworkroleBatchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -149,7 +149,7 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.postFrameworkroleExportExcel(parameters).then(res => {
+        this.frameworkroleExportExcel(parameters).then(res => {
             exportXlsx(res, "FrameworkroleExportExcel");
             this["$notify"]({
                 title: "导出成功",
@@ -160,7 +160,7 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.postFrameworkroleExportExcelByIds(parameters).then(res => {
+        this.frameworkroleExportExcelByIds(parameters).then(res => {
             exportXlsx(res, "FrameworkroleExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",

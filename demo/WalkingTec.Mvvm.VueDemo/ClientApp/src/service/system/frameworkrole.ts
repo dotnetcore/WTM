@@ -4,7 +4,8 @@ const reqPath = config.headerApi + "/_FrameworkRole/";
 // 列表
 const frameworkroleSearchList = {
     url: reqPath + "Search",
-    method: "post"
+    method: "post",
+    dataType: "array"
 };
 // 添加
 const frameworkroleAdd = {
@@ -12,11 +13,9 @@ const frameworkroleAdd = {
     method: "post"
 };
 // 删除
-const frameworkroleDelete = ({ ID }) => {
-    return {
-        url: reqPath + "Delete/" + ID,
-        method: "get"
-    };
+const frameworkroleDelete = {
+    url: reqPath + "Delete/{ID}",
+    method: "get"
 };
 // 批量删除
 const frameworkroleBatchDelete = {
@@ -29,11 +28,9 @@ const frameworkroleEdit = {
     method: "put"
 };
 // 详情
-const frameworkrole = ({ ID }) => {
-    return {
-        url: reqPath + ID,
-        method: "get"
-    };
+const frameworkrole = {
+    url: reqPath + "{ID}",
+    method: "get"
 };
 const frameworkroleExportExcel = {
     url: reqPath + "ExportExcel",
