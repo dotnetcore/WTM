@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
             var validpostonly = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ValidateFormItemOnlyAttribute), false).Cast<ValidateFormItemOnlyAttribute>().FirstOrDefault();
             var crossDomain = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
-            if (crossDomain == null) {
+            if (crossDomain == null)
+            {
                 crossDomain = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
             }
             if (crossDomain != null)
@@ -130,94 +131,114 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
 
                     }
-
-
-
-                    //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
-                    if (model is IBaseBatchVM<BaseVM>)
+                    if (model is IBaseCRUDVM<TopBasePoco> crud)
                     {
-                        var temp = model as IBaseBatchVM<BaseVM>;
-                        if (temp.ListVM != null)
+                        var pros = crud.Entity.GetType().GetProperties();
+                        foreach (var pro in pros)
                         {
-                            temp.ListVM.CopyContext(model);
-                            temp.ListVM.Ids = temp.Ids == null ? new List<Guid>() : temp.Ids.ToList();
-                            temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
-                            temp.ListVM.NeedPage = false;
-                        }
-                        if (temp.LinkedVM != null)
-                        {
-                            temp.LinkedVM.CopyContext(model);
-                        }
-                        if (temp.ListVM != null)
-                        {
-                            //绑定ListVM的OnAfterInitList事件，当ListVM的InitList完成时，自动将操作列移除
-                            temp.ListVM.OnAfterInitList += (self) =>
+                            //找到类型为List<xxx>的字段
+                            if (pro.PropertyType.GenericTypeArguments.Count() > 0)
                             {
-                                self.RemoveActionColumn();
-                                self.RemoveAction();
-                                //if (temp.ErrorMessage.Count > 0)
-                                //{
-                                self.AddErrorColumn();
-                                //}
-                            };
-                            if (temp.ListVM.Searcher != null)
-                            {
-                                var searcher = temp.ListVM.Searcher;
-                                searcher.CopyContext(model);
-                                //searcher.DoReInit();
-                            }
-                            temp.ListVM.DoInitListVM();
-                        }
-                        temp.LinkedVM?.DoInit();
-                    }
-                    if (model is IBaseImport<BaseTemplateVM>)
-                    {
-                        var template = (model as IBaseImport<BaseTemplateVM>).Template;
-                        template.CopyContext(model);
-                        template.DoReInit();
-                    }
-                    model.Validate();
-                    //SetReinit
-                    var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
-                    if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
-                    {
-                        foreach (var v in invalid)
-                        {
-                            if (model.FC.ContainsKey(v) == false)
-                            {
-                                ctrl.ModelState.Remove(v);
+                                //获取xxx的类型
+                                var ftype = pro.PropertyType.GenericTypeArguments.First();
+                                //如果xxx继承自TopBasePoco
+                                if (ftype.IsSubclassOf(typeof(TopBasePoco)))
+                                {
+                                    //界面传过来的子表数据
+
+                                    if (pro.GetValue(crud.Entity) is IEnumerable<TopBasePoco> list && list.Count() == 0)
+                                    {
+                                        pro.SetValue(crud.Entity, null);
+                                    }
+                                }
                             }
                         }
-                    }
-                    if (ctrl is BaseController)
-                    {
-                        var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
-                        if (ctrl.ModelState.IsValid)
+                        //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
+                        if (model is IBaseBatchVM<BaseVM>)
                         {
-                            if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                            var temp = model as IBaseBatchVM<BaseVM>;
+                            if (temp.ListVM != null)
                             {
-                                model.DoReInit();
+                                temp.ListVM.CopyContext(model);
+                                temp.ListVM.Ids = temp.Ids == null ? new List<Guid>() : temp.Ids.ToList();
+                                temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
+                                temp.ListVM.NeedPage = false;
+                            }
+                            if (temp.LinkedVM != null)
+                            {
+                                temp.LinkedVM.CopyContext(model);
+                            }
+                            if (temp.ListVM != null)
+                            {
+                                //绑定ListVM的OnAfterInitList事件，当ListVM的InitList完成时，自动将操作列移除
+                                temp.ListVM.OnAfterInitList += (self) =>
+                                {
+                                    self.RemoveActionColumn();
+                                    self.RemoveAction();
+                                    //if (temp.ErrorMessage.Count > 0)
+                                    //{
+                                    self.AddErrorColumn();
+                                    //}
+                                };
+                                if (temp.ListVM.Searcher != null)
+                                {
+                                    var searcher = temp.ListVM.Searcher;
+                                    searcher.CopyContext(model);
+                                    //searcher.DoReInit();
+                                }
+                                temp.ListVM.DoInitListVM();
+                            }
+                            temp.LinkedVM?.DoInit();
+                        }
+                        if (model is IBaseImport<BaseTemplateVM>)
+                        {
+                            var template = (model as IBaseImport<BaseTemplateVM>).Template;
+                            template.CopyContext(model);
+                            template.DoReInit();
+                        }
+                        model.Validate();
+                        //SetReinit
+                        var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
+                        if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
+                        {
+                            foreach (var v in invalid)
+                            {
+                                if (model.FC.ContainsKey(v) == false)
+                                {
+                                    ctrl.ModelState.Remove(v);
+                                }
                             }
                         }
-                        else
+                        if (ctrl is BaseController)
                         {
-                            if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                            var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
+                            if (ctrl.ModelState.IsValid)
                             {
-                                model.DoReInit();
+                                if (reinit != null && (reinit.ReInitMode == ReInitModes.SUCCESSONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                                {
+                                    model.DoReInit();
+                                }
+                            }
+                            else
+                            {
+                                if (reinit == null || (reinit.ReInitMode == ReInitModes.FAILEDONLY || reinit.ReInitMode == ReInitModes.ALWAYS))
+                                {
+                                    model.DoReInit();
+                                }
                             }
                         }
-                    }
 
-                    //如果是子表外键验证错误，例如Entity.Majors[0].SchoolId为空这种错误，则忽略。因为框架会在添加修改的时候自动给外键赋值
-                    var toremove = ctrl.ModelState.Select(x => x.Key).Where(x => Regex.IsMatch(x, ".*?\\[.*?\\]\\..*?id", RegexOptions.IgnoreCase));
-                    foreach (var r in toremove)
-                    {
-                        ctrl.ModelState.Remove(r);
+                        //如果是子表外键验证错误，例如Entity.Majors[0].SchoolId为空这种错误，则忽略。因为框架会在添加修改的时候自动给外键赋值
+                        var toremove = ctrl.ModelState.Select(x => x.Key).Where(x => Regex.IsMatch(x, ".*?\\[.*?\\]\\..*?id", RegexOptions.IgnoreCase));
+                        foreach (var r in toremove)
+                        {
+                            ctrl.ModelState.Remove(r);
+                        }
                     }
                 }
-            }
 
-            base.OnActionExecuting(context);
+                base.OnActionExecuting(context);
+            }
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)
@@ -312,7 +333,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;
-                    if(string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                    if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
                     {
                         log.Remark = log.Remark.Substring(0, 1000);
                     }

@@ -113,86 +113,47 @@ window.ff = {
         url = url.replace(re, function (match, p1, p2) {
             return p1 + encodeURIComponent(p2);
         });
-        var getpost = "GET";
-        if (para !== undefined) {
-            getpost = "Post";
-        }
-        $.ajax({
-            type: getpost,
-            url: url,
-            data: para,
-            success: function (data, textStatus, request) {
-                if (request.getResponseHeader('IsScript') === 'true') {
-                    eval(data);
-                }
-                else {
-                    data = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + data + "</div>";
-                    if ($.cookie("pagemode") === 'Tab' && window.location.href.toLowerCase().indexOf("/home/pindex#/") === -1 && newwindow !== true) {
-                        var tabmode = "";
-                        if ($.cookie("tabmode") === 'Simple') {
-                            tabmode = "layui-tab-brief";
-                        }
-                        $('#LAY_app_body').css('overflow', 'hidden');
-                        if ($('#DONOTUSE_MAINTAB').length === 0) {
-                            $('#LAY_app_body').html('<div class="layui-tab donotuse_pdiv ' + tabmode + '" id="DONOTUSE_MAINTAB" lay-filter="maintab" lay-allowclose="true"><ul class="layui-tab-title"></ul><div class= "layui-tab-content donotuse_pdiv donotuse_fill" ></div ></div>');
-                            layui.element.on('tab(maintab)', function (xdata) {
-                                $('#DONOTUSE_MAINTAB .layui-tab-content > div:not(.layui-show)').css('overflow', 'auto').removeClass("donotuse_fill donotuse_pdiv");
-                                $('#DONOTUSE_MAINTAB .layui-tab-content > .layui-show').css('overflow', 'auto').addClass('donotuse_fill donotuse_pdiv');
-                                ff.triggerResize();
-                                if (xdata.elem.context !== undefined && xdata.elem.context.attributes !== undefined && xdata.elem.context.attributes !== null) {
-                                    var surl = xdata.elem.context.attributes['lay-id'].value;
-                                    if (surl !== undefined && surl !== null && surl !== '') {
-                                        DONOTUSE_IGNOREHASH = true;
-                                        window.location.hash = '#' + surl;
-                                        DONOTUSE_TABLAYID = surl;
-                                    }
-                                }
-                            });
-                        }
-                        if ($('li[lay-id="' + url + '"]').length === 0) {
-                            if (title === undefined || title === '')
-                                title = $.cookie("pagetitle");
-                            layui.element.tabAdd('maintab', { title: title, content: data, id: url });
-                        }
-                        layui.element.tabChange('maintab', url);
-                        DONOTUSE_TABLAYID = url;
+
+        if (newwindow === true || para !== undefined) {
+            var getpost = "GET";
+            if (para !== undefined) {
+                getpost = "Post";
+            }
+            $.ajax({
+                type: getpost,
+                url: url,
+                data: para,
+                success: function (data, textStatus, request) {
+                    if (request.getResponseHeader('IsScript') === 'true') {
+                        eval(data);
                     }
                     else {
-                        if (newwindow === true) {
-                            var child = window.open("/Home/PIndex#/_framework/redirect");
-                            child.document.close();
-                            $(child.document).ready(function () {
-                                setTimeout(function () {
-                                    $('#LAY_app_body', child.document).html(data);
-                                    $(child.document).attr("title", title);
-                                }, 500);
-                            });
+                        data = '<div class="layui-card donotuse_pdiv"><div class="layui-card-body donotuse_pdiv" id=\"' + $.cookie("divid") + '\" >' + data + "</div></div>";
+                                var child = window.open("/Home/PIndex#/_framework/redirect");
+                                child.document.close();
+                                $(child.document).ready(function () {
+                                    setTimeout(function () {
+                                        $('#Lay_app_body_main', child.document).html(data);
+                                        $(child.document).attr("title", title);
+                                    }, 500);
+                                });
                         }
-                        else {
-                            $('#LAY_app_body').html(data);
-                            $('#LAY_app_body').scrollTop(0);
-                        }
+                    layer.close(index);
+                },
+                error: function (a, b, c) {
+                    layer.close(index);
+                    if (a.responseText !== undefined && a.responseText !== "") {
+                        layer.alert(a.responseText);
+                    }
+                    else {
+                        layer.alert('加载失败');
                     }
                 }
-                layer.close(index);
-            },
-            error: function (a, b, c) {
-                layer.close(index);
-                if (a.responseText !== undefined && a.responseText !== "") {
-                    layer.alert(a.responseText);
-                }
-                else {
-                    layer.alert('加载失败');
-                }
-            },
-            complete: function () {
-                if (window.location.hash !== "#" + furl) {
-                    DONOTUSE_IGNOREHASH = true;
-                    window.location.hash = '#' + furl;
-                }
-
-            }
-        });
+            });
+        }
+        else {
+            location.hash = url;
+        }
     },
 
 
