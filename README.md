@@ -67,4 +67,5 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 最后感谢各位老板的支持和捐赠，具体捐赠信息请见 https://wtmdoc.walkingtec.cn/#/Home/DonateList 
 如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
-![WTM框架赞赏码](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5xOOlS26GZTfk9Hs2uzHiaMXG4df96849seoGFiatGrqODTWPr7SsOqoA/0?wx_fmt=jpeg)
+
+![WTM框架赞赏码](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5A834WX1RcXAPytEdtUgniaRnVoW9e2HPBGiaibXOru3MfvWylLunMeFBg/0?wx_fmt=jpeg)
