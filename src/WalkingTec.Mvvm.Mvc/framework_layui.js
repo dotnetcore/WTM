@@ -406,7 +406,7 @@ window.ff = {
             this.SetCookie("windowids", wid);
         }
         else {
-            if ($('#DONOTUSE_MAINTAB') === 0) {
+            if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {
                 $('#LAY_app_body').html('');
             }
             else {

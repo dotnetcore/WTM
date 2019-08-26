@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().CloseDialog().Alert("生成成功！");
+            return FFResult().Alert("生成成功！").AddCustomScript("window.close();");
         }
 
         [ActionDescription("预览")]
