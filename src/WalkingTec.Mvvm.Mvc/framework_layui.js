@@ -326,7 +326,7 @@ window.ff = {
           eval(str);
         }
         else {
-          str = "<div id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + str + "</div>";
+          str = "<div  id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + str + "</div>";
           var area = 'auto';
           if (width !== undefined && width !== null && height !== undefined && height !== null) {
             area = [width + 'px', height + 'px'];
@@ -339,9 +339,11 @@ window.ff = {
           }
           layer.open({
             type: 1
-            , title: title //不显示标题栏
-            , area: area
+            , title: title 
+              , area: area
+              , maxmin:true
             , shade: 0.8
+              , btn: []
             , id: windowid //设定一个id，防止重复弹出
             , content: str
             , end: function () {
@@ -396,7 +398,7 @@ window.ff = {
           //替换grid参数变量
           template = template.replace(/\$.extend\((.*)[.]config[.]where,/img, '$.extend(' + gridVar + '.config.where,');
           str = str.replace('$$SearchPanel$$', template);
-        }
+       }
         layer.close(index);
         var area = 'auto';
         if (width !== undefined && width !== null && height !== undefined && height !== null) {
@@ -410,8 +412,10 @@ window.ff = {
         }
         layer.open({
           type: 1
-          , title: title //不显示标题栏
+          , title: title
           , area: area
+            , maxmin: true
+            , btn: []
           , shade: 0.8
           , id: windowid //设定一个id，防止重复弹出
           , content: str

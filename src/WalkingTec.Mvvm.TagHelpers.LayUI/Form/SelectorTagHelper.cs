@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
 using System;
@@ -313,7 +313,7 @@ $('#{Id}_Select').on('click',function(){{
     filter.Ids.push(vals[i].value);
   }};
   var ffilter = $.extend(filter, {Id}filter)
-  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? string.Empty}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"},'#Temp{Id}', ffilter);
+  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? "请选择"}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "500"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}
