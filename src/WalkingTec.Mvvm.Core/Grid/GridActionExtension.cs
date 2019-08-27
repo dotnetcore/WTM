@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core
                 ActionName = "GetExportExcel",
                 ParameterType = GridActionParameterTypesEnum.MultiIdWithNull,
 
-                IconCls = "layui-icon-download-circle",
+                IconCls = "layui-icon layui-icon-download-circle",
                 ShowInRow = false,
                 ShowDialog = false,
                 HideOnToolBar = false
