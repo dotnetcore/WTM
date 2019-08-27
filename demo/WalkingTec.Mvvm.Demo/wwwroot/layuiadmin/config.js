@@ -21,7 +21,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
     // , entry: 'index11' //默认视图文件名
     // , engine: '.html' //视图文件后缀名
 
-    , pageTabs: true //是否开启页面选项卡功能。单页版不推荐开启
+      , pageTabs: $.cookie("pagemode") === 'Tab' //是否开启页面选项卡功能。单页版不推荐开启
 
 
     , name: 'WTM'
