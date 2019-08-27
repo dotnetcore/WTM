@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().Alert("生成成功！").AddCustomScript("window.close();");
+            return FFResult().Alert("生成成功！请关闭调试重新编译运行。");
         }
 
         [ActionDescription("预览")]
