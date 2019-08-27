@@ -174,6 +174,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
         {
+            IconFontsHelper.GenerateIconFont();
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
 
@@ -240,7 +241,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
                         }
-                        if (u!= null && u.EndsWith("/0"))
+                        if (u != null && u.EndsWith("/0"))
                         {
                             u = u.Substring(0, u.Length - 2);
                             u = u + "/{id}";

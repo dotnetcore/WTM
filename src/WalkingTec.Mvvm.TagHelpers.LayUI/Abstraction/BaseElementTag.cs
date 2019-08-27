@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Style) == false)
             {
-                if(this is TreeTagHelper)
+                if (this is TreeTagHelper)
                 {
                     Style += " overflow:auto;";
                 }
@@ -87,6 +87,7 @@ layui.use(['form'],function(){{
   form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
     {FormatFuncName(item.ChangeFunc)};
     ff.LinkedChange('{item.TriggerUrl}/'+data.value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "." + item.LinkField.Name)}','{item.LinkField.Name}');
+    ff.changeComboIcon(data);
   }});
 }})
 </script>
@@ -95,19 +96,17 @@ layui.use(['form'],function(){{
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(item.ChangeFunc) == false)
-                        {
-                            output.PostElement.AppendHtml($@"
+                        output.PostElement.AppendHtml($@"
 <script>
 layui.use(['form'],function(){{
   var form = layui.form;
   form.on('select({output.Attributes["lay-filter"].Value})', function(data){{
     {FormatFuncName(item.ChangeFunc)};
+    ff.changeComboIcon(data);
   }});
 }})
 </script>
 ");
-                        }
                     }
                     break;
                 case CheckBoxTagHelper item:
