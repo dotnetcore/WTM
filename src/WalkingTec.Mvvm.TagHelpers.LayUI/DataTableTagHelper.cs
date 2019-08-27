@@ -429,6 +429,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.PostElement.AppendHtml($@"
 <script>
+var {Id}option = null;
 /* 监听工具条 */
 function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
 var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
@@ -437,7 +438,7 @@ return;
 }}
 layui.use(['table'], function(){{
   var table = layui.table;
-  var {Id}option = {{
+  {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
