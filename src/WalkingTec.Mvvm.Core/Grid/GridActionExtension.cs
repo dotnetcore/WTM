@@ -53,55 +53,55 @@ namespace WalkingTec.Mvvm.Core
             switch (standardType)
             {
                 case GridActionStandardTypesEnum.Create:
-                    iconcls = "layui-icon-add-1";
+                    iconcls = "layui-icon layui-icon-add-1";
                     gridname = "新建";
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
                 case GridActionStandardTypesEnum.AddRow:
-                    iconcls = "layui-icon-add-1";
+                    iconcls = "layui-icon layui-icon-add-1";
                     gridname = "新建";
                     paraType = GridActionParameterTypesEnum.AddRow;
                     break;
                 case GridActionStandardTypesEnum.Edit:
-                    iconcls = "layui-icon-edit";
+                    iconcls = "layui-icon layui-icon-edit";
                     gridname = "修改";
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Delete:
-                    iconcls = "layui-icon-delete";
+                    iconcls = "layui-icon layui-icon-delete";
                     gridname = "删除";
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.RemoveRow:
-                    iconcls = "layui-icon-delete";
+                    iconcls = "layui-icon layui-icon-delete";
                     gridname = "删除";
                     paraType = GridActionParameterTypesEnum.RemoveRow;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Details:
-                    iconcls = "layui-icon-form";
+                    iconcls = "layui-icon layui-icon-form";
                     gridname = "详细";
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.BatchEdit:
-                    iconcls = "layui-icon-edit";
+                    iconcls = "layui-icon layui-icon-edit";
                     gridname = "批量修改";
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.BatchDelete:
-                    iconcls = "layui-icon-delete";
+                    iconcls = "layui-icon layui-icon-delete";
                     gridname = "批量删除";
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.Import:
-                    iconcls = "layui-icon-templeate-1";
+                    iconcls = "layui-icon layui-icon-templeate-1";
                     gridname = "导入";
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core
                 ActionName = "GetExportExcel",
                 ParameterType = GridActionParameterTypesEnum.MultiIdWithNull,
 
-                IconCls = "layui-icon-download-circle",
+                IconCls = "layui-icon layui-icon-download-circle",
                 ShowInRow = false,
                 ShowDialog = false,
                 HideOnToolBar = false

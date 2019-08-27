@@ -204,6 +204,32 @@ window.ff = {
     return datastr;
   },
 
+  RenderForm: function (formid) {
+    var comboxs = $(".layui-form[lay-filter=" + formid + "] select[wtm-combo='MULTI_COMBO']");
+    if (comboxs.length === 0) {
+      layui.use(['form'], function () {
+        var form = layui.form.render(null, formid);
+      });
+    }
+    else {
+      layui.use(['form', 'formSelects'], function () {
+        var formSelects = layui.formSelects;
+        var form = layui.form.render(null, formid);
+        /* 启用 ComboBox 多选 */
+        for (var i = 0; i < comboxs.length; i++) {
+          var filter = comboxs[i].attributes['lay-filter'].value, arr = [], subTag = $('input[name=""' + filter + '""]');
+          for (var a = 0; a < subTag.length; a++) {
+            arr.push({ name: subTag[a].attributes['text'].value, val: subTag[a].value });
+          }
+          formSelects.on({
+            layFilter: filter, left: '', right: '', separator: ',', arr: arr,
+            selectFunc: null
+          });
+        }
+      });
+    }
+  },
+
   PostForm: function (url, formid, divid) {
     var layer = layui.layer;
     var index = layer.load(2);
@@ -607,7 +633,7 @@ window.ff = {
     var loaddata = layui.table.cache[gridid];
     for (val in data) {
       if (val === "ID") {
-        data[val] = ff.guid() + "<script>alert('test');</script>";
+        data[val] = ff.guid();
       }
     }
     for (val in data) {
@@ -616,10 +642,10 @@ window.ff = {
         data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
         var re = /(<input .*?)\s*\/>/ig;
         var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
-        var re3 = /(.*?)<input hidden name=\"(.*?)\.id\" .*?\/>(.*?)/ig;
+        var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
         data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
         data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
-        data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value=\"" + data["ID"] + "\"/> $3");
+        data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value='" + data["ID"] + "'/> $3");
       }
     }
     loaddata.push(data);
@@ -665,7 +691,7 @@ window.ff = {
   gridcellchange: function (ele, gridid, row, col, celltype) {
     var loaddata = layui.table.cache[gridid];
     if (celltype === 0) {
-      loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*\".*?\"/i, "value=\"" + ele.value + "\"");
+      loaddata[row][col] = loaddata[row][col].replace(/value\s*=\s*'.*?'/i, "value='" + ele.value + "'");
     }
     if (celltype === 1) {
       loaddata[row][col] = loaddata[row][col].replace(/(<option .*?) selected\s*>/ig, "$1>");
@@ -755,8 +781,8 @@ window.ff = {
       rv.push(item);
     }
     return rv;
-
   },
+
   changeComboIcon: function (data) {
     for (var i = 0; i < data.elem.length; i++) {
       if (data.elem[i].value === data.value) {

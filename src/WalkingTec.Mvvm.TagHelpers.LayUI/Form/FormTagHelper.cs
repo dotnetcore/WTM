@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
 
@@ -107,29 +107,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             output.PostElement.AppendHtml($@"
 <script>
-layui.use(['form','formSelects'],function(){{
-  var formSelects = layui.formSelects;
-  var form = layui.form.render(null,'{Id}form');
-  var comboxs = $("".layui-form[lay-filter='{Id}form'] select[wtm-combo='MULTI_COMBO']"");
-  /* 启用 ComboBox 多选 */
-  for(var i=0;i<comboxs.length;i++){{
-    var filter = comboxs[i].attributes['lay-filter'].value,arr = [],subTag = $('input[name=""' + filter + '""]');
-    for (var i = 0; i < subTag.length; i++) {{
-      arr.push({{name:subTag[i].attributes['text'].value,val:subTag[i].value}});
-    }}
-    formSelects.on({{
-      layFilter:filter,left:'',right:'',separator:',',arr:arr,
-      selectFunc: null
-    }})
-  }}
-}})
+ff.RenderForm('{Id}form');
 ");
             // 使用传统表单提交方式提交，而不使用 AJAX 提交
             // 比如登陆页面，提交后校验成功会跳转其他页面，而不是返会 PartialView
             if (OldPost == false && !(this is SearchPanelTagHelper))
             {
                 output.PostElement.AppendHtml($@"
-layui.use(['form','formSelects'],function(){{
+layui.use(['form'],function(){{
   layui.form.on('submit({Id}filter)', function(data){{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
     ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
