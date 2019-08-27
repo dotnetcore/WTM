@@ -10,6 +10,7 @@ Layout = null;
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>@ViewData["title"]</title>
   <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/sitecss/wtm.css">
   <script src="/jquery.min.js"></script>
   <script src="/jquery.cookie.js"></script>
   <script src="/layui/layui.js"></script>
@@ -19,31 +20,6 @@ Layout = null;
     var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
     var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
   </script>
-  <style>
-    .donotuse_pdiv {
-      height: 100%;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      -webkit-flex-direction: column;
-      -moz-box-orient: vertical;
-      -moz-box-direction: normal;
-      -ms-flex-direction: column;
-      flex-direction: column;
-    }
-
-    .donotuse_fill {
-      -webkit-box-flex: 1;
-      -webkit-flex: auto;
-      -moz-box-flex: 1;
-      -ms-flex: auto;
-      flex: auto;
-    }
-  </style>
 </head>
 <script>
   layui.config({

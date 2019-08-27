@@ -5,9 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Core.Extensions;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
@@ -66,14 +63,14 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                 .Select(x => x.MenuItem)
                 .Where(x => x.MethodName == null)
-                .OrderBy(x=>x.DisplayOrder)
+                .OrderBy(x => x.DisplayOrder)
                 .Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
-                    Icon = (x.IConId == null ? x.CustumIcon : x.IConId.ToString())
+                    Icon = x.ICon
                 });
             ms.AddRange(menus);
 
@@ -84,7 +81,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .Where(x => x.MethodName != null)
                 .Select(x => x.Url)
                 );
-            urls.AddRange(GlobaInfo.AllModule.Where(x=>x.IsApi == true).SelectMany(x=>x.Actions).Where(x=>(x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x=>x.Url));
+            urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             forapi.Attributes = new Dictionary<string, object>();
             forapi.Attributes.Add("Menus", menus);
             forapi.Attributes.Add("Actions", urls);
@@ -94,7 +91,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("CheckLogin/{id}")]
         public IActionResult CheckLogin(Guid id)
         {
-            if(LoginUserInfo?.Id != id)
+            if (LoginUserInfo?.Id != id)
             {
                 return BadRequest();
             }
@@ -116,13 +113,13 @@ namespace WalkingTec.Mvvm.Admin.Api
                     .Where(x => x.MethodName == null)
                   .OrderBy(x => x.DisplayOrder)
                   .Select(x => new SimpleMenu
-                    {
-                        Id = x.ID.ToString().ToLower(),
-                        ParentId = x.ParentId.ToString().ToLower(),
-                        Text = x.PageName,
-                        Url = x.Url,
-                        Icon = (x.IConId == null ? x.CustumIcon : x.IConId.ToString())
-                    });
+                  {
+                      Id = x.ID.ToString().ToLower(),
+                      ParentId = x.ParentId.ToString().ToLower(),
+                      Text = x.PageName,
+                      Url = x.Url,
+                      Icon = x.ICon
+                  });
                 ms.AddRange(menus);
 
                 List<string> urls = new List<string>();
