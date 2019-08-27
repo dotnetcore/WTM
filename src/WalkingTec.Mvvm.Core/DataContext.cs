@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -306,6 +306,9 @@ namespace WalkingTec.Mvvm.Core
                     break;
                 case DBTypeEnum.Memory:
                     optionsBuilder.UseInMemoryDatabase(CSName);
+                    break;
+                case DBTypeEnum.SQLite:
+                    optionsBuilder.UseSqlite(CSName);
                     break;
                 default:
                     break;
