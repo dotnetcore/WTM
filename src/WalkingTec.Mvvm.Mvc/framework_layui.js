@@ -71,7 +71,8 @@ window.ff = {
   },
 
   GetNonSelectionData: function (gridId) {
-    var nums = 0 // 未选中个数
+    var table = layui.table
+      , nums = 0 // 未选中个数
       , invalidNum = 0
       , arr = [] // 未选中数据
       , data = table.cache[gridId] || [];
