@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.SetAttribute("class", btnclass);
                 if (string.IsNullOrEmpty(Icon) == false)
                 {
-                    output.Content.SetHtmlContent($"<i class=\"layui-icon\">{Icon}</i> {Text ?? ""}");
+                    output.Content.SetHtmlContent($@"<i class=""{Icon}""></i> {Text ?? ""}");
                 }
                 else
                 {

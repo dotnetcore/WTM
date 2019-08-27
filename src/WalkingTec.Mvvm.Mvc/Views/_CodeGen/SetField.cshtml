@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Mvc.CodeGenVM
+@model WalkingTec.Mvvm.Mvc.CodeGenVM
 @{
 Layout = null;
 }
@@ -14,7 +14,7 @@ Layout = null;
   <link rel="stylesheet" href="/sitecss/wtm.css">
   <script src="/jquery.min.js"></script>
   <script src="/jquery.cookie.js"></script>
-  <script src="/layui/layui.js"></script>
+  <script src="/layui/layui.all.js"></script>
   <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
   <script>
     var DONOTUSE_IGNOREHASH = false;
@@ -22,11 +22,7 @@ Layout = null;
     var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
   </script>
 </head>
-<script>
-  layui.config({
-    base: '/layuiadmin/component/'
-  });
-</script>
+
 
 <body class="layui-layout-body">
   <div class="layui-layout">
@@ -48,6 +44,9 @@ Layout = null;
             <wt:closebutton />
           </wt:row>
         </wt:form>
+        <script>
+          layui.element.init();
+        </script>
       </div>
     </div>
   </div>

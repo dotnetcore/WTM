@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -73,7 +73,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else if(Target == ButtonTargetEnum.newwindow)
             {
-                Click = $"ff.SetCookie('#{Url}','{WindowTitle??""}',true);window.open('/Home/PIndex#{Url}')";
+                if (Url.StartsWith("~"))
+                {
+                    Url = Url.TrimStart('~');
+                    Click = $"ff.SetCookie('#{Url}','{WindowTitle ?? ""}',true);window.open('{Url}')";
+                }
+                else
+                {
+                    Click = $"ff.SetCookie('#{Url}','{WindowTitle ?? ""}',true);window.open('/Home/PIndex#{Url}')";
+                }
             }
             base.Process(context, output);
         }
