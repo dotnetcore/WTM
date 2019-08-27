@@ -584,16 +584,25 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 Id = x.ID,
                 Title = x.PageName,
-                Url = x.Url
-            }).ToList());
+                Url = x.Url,
+                Order = x.DisplayOrder,
+                ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+            })
+            .OrderBy(x => x.Order)
+            .ToList());
 
             foreach (var menu in resultMenus)
             {
                 var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new menuObj()
                 {
+                    Id = x.ID,
                     Title = x.PageName,
-                    Url = x.Url
-                }).ToList();
+                    Url = x.Url,
+                    Order = x.DisplayOrder,
+                    ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+                })
+                .OrderBy(x => x.Order)
+                .ToList();
                 if (temp.Count() > 0)
                 {
                     menu.Children = temp;
@@ -602,8 +611,12 @@ namespace WalkingTec.Mvvm.Mvc
                         item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new menuObj()
                         {
                             Title = x.PageName,
-                            Url = x.Url
-                        }).ToList();
+                            Url = x.Url,
+                            Order = x.DisplayOrder,
+                            ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+                        })
+                        .OrderBy(x => x.Order)
+                        .ToList();
 
                         if (item.Children.Count() == 0)
                             item.Children = null;
@@ -637,7 +650,7 @@ namespace WalkingTec.Mvvm.Mvc
             /// </summary>
             /// <value></value>
             [JsonProperty("icon")]
-            public string Icon { get; set; }
+            public string ICon { get; set; }
 
             /// <summary>
             /// 是否展开节点
@@ -655,6 +668,13 @@ namespace WalkingTec.Mvvm.Mvc
 
             [JsonProperty("list")]
             public List<menuObj> Children { get; set; }
+
+            /// <summary>
+            /// order
+            /// </summary>
+            /// <value></value>
+            [JsonIgnore]
+            public int? Order { get; set; }
 
         }
 
@@ -836,6 +856,19 @@ namespace WalkingTec.Mvvm.Mvc
                 g.Dispose();
                 bmp.Dispose();
             }
+        }
+
+        /// <summary>
+        /// get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [AllRights]
+        [HttpGet]
+        [ResponseCache(Duration = 3600)]
+        public IActionResult GetIconFonts(string id)
+        {
+            return Json(IconFontsHelper.IconFontDicItems[id]);
         }
 
     }

@@ -22,11 +22,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         {
             if (ConfigInfo.IsQuickDebug == true)
             {
-                return AllMenu.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.Url, SortByName: false); ;
+                return AllMenu.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.ICon, x => x.Url, SortByName: false); ;
             }
             else
             {
-                var rv = AllMenu.Where(x => x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.IsInside == true ? x.Url : "/_framework/outside?url=" + x.Url, SortByName: false);
+                var rv = AllMenu.Where(x => x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.ICon, x => x.IsInside == true ? x.Url : "/_framework/outside?url=" + x.Url, SortByName: false);
                 RemoveUnAccessableMenu(rv, LoginUserInfo);
                 RemoveEmptyMenu(rv);
                 return rv;

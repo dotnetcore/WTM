@@ -1,63 +1,70 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
-<wt:form vm="@Model">
-    <wt:row items-per-row=" ItemsPerRowEnum.Two">
-        <wt:radio field="Entity.IsInside" yes-text="内部" no-text="外部" change-func="MenuTypeChange(data)" />
-    </wt:row>
-    <wt:row id="modelrow">
-        <wt:combobox field="SelectedModule" items="AllModules" link-field="SelectedActionIDs" trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)" />
-        <wt:checkbox field="SelectedActionIDs" items="AllActions" />
-    </wt:row>
-    <wt:row id="urlrow">
-        <wt:textbox field="Entity.Url" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:textbox field="Entity.PageName" />
-        <wt:combobox field="Entity.ParentId" items="AllParents" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:textbox field="Entity.DisplayOrder" />
-        <wt:upload field="Entity.IConId" upload-type="ImageFile" />
-    </wt:row>
-    <wt:row items-per-row="ItemsPerRowEnum.Four">
-        <wt:switch field="Entity.ShowOnMenu" lay-text="是|否" />
-        <wt:switch field="Entity.FolderOnly" lay-text="是|否" />
-        <wt:switch field="Entity.IsPublic" lay-text="是|否" />
-    </wt:row>
-    <wt:selector list-vm="RoleListVM" field="SelectedRolesIDs" text-bind="RoleListVM.EntityList[0].RoleName">
-        <wt:searchpanel vm="RoleListVM">
-            <wt:row items-per-row=" ItemsPerRowEnum.Two">
-                <wt:textbox field="RoleListVM.Searcher.RoleCode" />
-                <wt:textbox field="RoleListVM.Searcher.RoleName" />
-            </wt:row>
-        </wt:searchpanel>
-    </wt:selector>
-    <wt:hidden field="Entity.ID" />
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
-</wt:form>
-<script>
-    DoMenuTypeChange('@Model.Entity.IsInside.ToString().ToLower()');
-    function MenuTypeChange(data) {
-        DoMenuTypeChange(data.value);
-    }
-    function DoMenuTypeChange(inside) {
-        var url = $('#urlrow');
-        var model = $('#modelrow');
-        if (inside == "true") {
-            url.css('display', 'none');
-            model.css('display', 'block');
-        }
-        else {
-            url.css('display', 'block');
-            model.css('display', 'none');
+@using WalkingTec.Mvvm.Mvc;
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
 
-        }
+<wt:form vm="@Model">
+  <wt:row items-per-row=" ItemsPerRowEnum.Two">
+    <wt:radio field="Entity.IsInside" yes-text="内部" no-text="外部" change-func="MenuTypeChange(data)" />
+  </wt:row>
+  <wt:row id="modelrow">
+    <wt:combobox field="SelectedModule" items="AllModules" link-field="SelectedActionIDs"
+      trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)" />
+    <wt:checkbox field="SelectedActionIDs" items="AllActions" />
+  </wt:row>
+  <wt:row id="urlrow">
+    <wt:textbox field="Entity.Url" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.PageName" />
+    <wt:combobox field="Entity.ParentId" items="AllParents" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.DisplayOrder" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="_Framework/GetIconFonts"/>
+    <wt:combobox field="IconFontItem" enable-search="true" />
+  </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Four">
+    <wt:switch field="Entity.ShowOnMenu" lay-text="是|否" />
+    <wt:switch field="Entity.FolderOnly" lay-text="是|否" />
+    <wt:switch field="Entity.IsPublic" lay-text="是|否" />
+  </wt:row>
+  <wt:selector list-vm="RoleListVM" field="SelectedRolesIDs" text-bind="RoleListVM.EntityList[0].RoleName">
+    <wt:searchpanel vm="RoleListVM">
+      <wt:row items-per-row=" ItemsPerRowEnum.Two">
+        <wt:textbox field="RoleListVM.Searcher.RoleCode" />
+        <wt:textbox field="RoleListVM.Searcher.RoleName" />
+      </wt:row>
+    </wt:searchpanel>
+  </wt:selector>
+  <wt:hidden field="Entity.ID" />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
+</wt:form>
+
+<script>
+  DoMenuTypeChange('@Model.Entity.IsInside.ToString().ToLower()');
+  function MenuTypeChange(data) {
+    DoMenuTypeChange(data.value);
+  }
+  function DoMenuTypeChange(inside) {
+    var url = $('#urlrow');
+    var model = $('#modelrow');
+    if (inside == "true") {
+      url.css('display', 'none');
+      model.css('display', 'block');
     }
-    function ModelChange(data) {
-        var st = $('#FrameworkMenuVM_SelectedModule').find('option:selected').text();
-        $('#FrameworkMenuVM_Entity_PageName').val(st);
+    else {
+      url.css('display', 'block');
+      model.css('display', 'none');
+
     }
+  }
+  function ModelChange(data) {
+    var st = $('#FrameworkMenuVM_SelectedModule').find('option:selected').text();
+    $('#FrameworkMenuVM_Entity_PageName').val(st);
+  }
 
 </script>

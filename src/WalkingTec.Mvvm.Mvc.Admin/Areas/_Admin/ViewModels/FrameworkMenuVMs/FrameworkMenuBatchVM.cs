@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override bool DoBatchDelete()
         {
-            if(Ids != null)
+            if (Ids != null)
             {
                 foreach (var item in Ids)
                 {
@@ -44,6 +44,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public Guid? ParentID { get; set; }
         public List<ComboSelectListItem> AllParents { get; set; }
         [Display(Name = "图标")]
-        public Guid? IconID { get; set; }
+        public string ICon { get; set; }
     }
 }
