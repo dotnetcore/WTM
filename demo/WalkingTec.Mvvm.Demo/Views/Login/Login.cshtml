@@ -24,9 +24,10 @@
   </script>
 </head>
 
-<body class="loginBody">
+<body style="overflow:hidden;width:100%">
+  <div class="loginBody"></div>
   <div class="loginDiv">
-    <h4>WTM</h4>
+    <h4><img src="~/images/logo.png" /><img src="~/images/slogen.png" /></h4>
     <form action="/Login/Login" method="post">
       <ul class="loginForm">
         <li>
@@ -45,7 +46,7 @@
 
           </p>
           <img class="login-codeImg" id="verify_code_img">
-          <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()"/></i>
+          <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()" /></i>
         </li>
         <li>
           <span class="login-error">@Model.MSD.GetFirstError()</span>
