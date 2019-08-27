@@ -5,15 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Extensions;
 using System.Collections.Generic;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Implement;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -57,8 +56,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
                 context.HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-
             }
+
             log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
             log.ModuleName = ctrlDes?.Description ?? ctrlActDesc.ControllerName;
@@ -176,16 +175,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             {
                                 self.RemoveActionColumn();
                                 self.RemoveAction();
-                                //if (temp.ErrorMessage.Count > 0)
-                                //{
                                 self.AddErrorColumn();
-                                //}
                             };
                             if (temp.ListVM.Searcher != null)
                             {
                                 var searcher = temp.ListVM.Searcher;
                                 searcher.CopyContext(model);
-                                //searcher.DoReInit();
                             }
                             temp.ListVM.DoInitListVM();
                         }
@@ -198,7 +193,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         template.DoReInit();
                     }
                     model.Validate();
-                    //SetReinit
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
                     if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
                     {
@@ -240,7 +234,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             base.OnActionExecuting(context);
         }
-    
+
 
 
         public override void OnActionExecuted(ActionExecutedContext context)
@@ -264,7 +258,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
-                    string pagetitle = "";
+                    string pagetitle = string.Empty;
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path);
                     if (menu == null)
                     {
@@ -291,9 +285,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                         pagetitle += menu.PageName;
                     }
-                    context.HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
+                    context.HttpContext.Response.Headers.Add("X-wtm-PageTitle", Convert.ToBase64String(Encoding.UTF8.GetBytes(pagetitle)));
                     context.HttpContext.Response.Cookies.Append("divid", model.ViewDivId);
-
                 }
             }
             if (context.Result is ViewResult)
