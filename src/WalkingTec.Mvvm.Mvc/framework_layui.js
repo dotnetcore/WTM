@@ -204,6 +204,32 @@ window.ff = {
         return datastr;
     },
 
+    RenderForm: function (formid) {
+        var comboxs = $(".layui-form[lay-filter=" + formid + "] select[wtm-combo='MULTI_COMBO']");
+        if (comboxs.length === 0) {
+            layui.use(['form'], function () {
+                var form = layui.form.render(null, formid);
+            });
+        }
+        else {
+            layui.use(['form', 'formSelects'], function () {
+                var formSelects = layui.formSelects;
+                var form = layui.form.render(null, formid);
+                /* 启用 ComboBox 多选 */
+                for (var i = 0; i < comboxs.length; i++) {
+                    var filter = comboxs[i].attributes['lay-filter'].value, arr = [], subTag = $('input[name=""' + filter + '""]');
+                    for (var a = 0; a < subTag.length; a++) {
+                        arr.push({ name: subTag[a].attributes['text'].value, val: subTag[a].value });
+                    }
+                    formSelects.on({
+                        layFilter: filter, left: '', right: '', separator: ',', arr: arr,
+                        selectFunc: null
+                    });
+                }
+            });
+        }
+    },
+
     PostForm: function (url, formid, divid) {
         var layer = layui.layer;
         var index = layer.load(2);
