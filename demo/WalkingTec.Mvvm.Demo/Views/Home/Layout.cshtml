@@ -83,7 +83,7 @@
             }}
               <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}" class="layui-nav-item {{ classSelected() }}">
                 <a href="javascript:;" {{ hasChildren ? '' : 'lay-href="'+ url +'"' }} lay-tips="{{ item.title }}" lay-direction="2">
-                  <i class="layui-icon {{ item.icon }}"></i>
+                  <i class="{{ item.icon }}"></i>
                   <cite>{{ item.title }}</cite>
                 </a>
                 {{# if(hasChildren){ }}
@@ -104,7 +104,10 @@
                   }}
                     <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}"
                     {{ classSelected2() ? ('class="'+ classSelected2() +'"') : '' }}>
-                      <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>{{ item2.title }}</a>
+                      <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>
+                        <i class="{{ item2.icon }}"></i>
+                        <cite>{{ item2.title }}</cite>
+                      </a>
                       {{# if(hasChildren2){ }}
                         <dl class="layui-nav-child">
                           {{# layui.each(item2.list, function(index3, item3){
@@ -116,7 +119,10 @@
                           }}
                             <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}"
                             {{ match ? 'class="layui-this"' : '' }}>
-                              <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>{{ item3.title }}</a>
+                              <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>
+                                <i class="{{ item3.icon }}"></i>
+                                <cite>{{ item3.title }}</cite>
+                              </a>
                             </dd>
                           {{# }); }}
                         </dl>

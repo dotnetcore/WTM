@@ -33,6 +33,12 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string ParentId { get; set; }
 
+        /// <summary>
+        /// ICon
+        /// </summary>
+        /// <value></value>
+        public string ICon { get; set; }
+
     }
 
     /// <summary>
