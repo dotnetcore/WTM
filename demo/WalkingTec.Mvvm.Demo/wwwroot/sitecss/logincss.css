@@ -24,25 +24,28 @@ input:-webkit-autofill {
 
 /* login */
 .loginBody {
-    background: url(../images/login-bj.png) no-repeat top center #9BBCF3;
-    position: relative;
-    z-index: 0;
+    background: url(../images/login-bj.png) no-repeat center left #ffffff;
+    position: absolute;
     width: 100%;
-    height: 100%;
-    background-size: cover;
-    overflow: hidden;
+    height: 768px;
+    top: 50%;
+    margin-top: -380px;
+    border: 1px solid #2f4282
 }
 
 .loginDiv {
     background-color: #fff;
-    position: relative;
     border-radius: 6px;
-    margin: 10% auto;
     width: 425px;
     padding: 60px;
     box-sizing: border-box;
     overflow: hidden;
     font-size: 14px;
+    position: fixed;
+    height: 600px;
+    top: 50%;
+    margin-top: -300px;
+    right:100px;
 }
 
 .loginDiv h4 {
@@ -52,13 +55,12 @@ input:-webkit-autofill {
     font-size: 18px;
     color: #333;
     width: 100%;
-    padding-top: 50px;
+    padding-top: 30px;
 }
 
 .loginDiv h4::before {
     content: "";
     position: absolute;
-    background: url(../images/logo.png) no-repeat top center;
     width: 56px;
     height: 52px;
     background-size: 100%;
