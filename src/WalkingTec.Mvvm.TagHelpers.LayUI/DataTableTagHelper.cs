@@ -623,14 +623,8 @@ layui.use(['table'], function(){{
                 if (!item.HideOnToolBar)
                 {
                     var icon = string.Empty;
-                    if (item.IconCls?.StartsWith("layui-icon-") == true)
-                    {
-                        icon = $@"<i class=""layui-icon {item.IconCls}""></i>";
-                    }
-                    else
-                    {
-                        icon = $@"<i class=""{item.IconCls}""></i>";
-                    }
+                    icon = $@"<i class=""{item.IconCls}""></i>";
+
                     //如果是按钮组容器，加载子按钮
                     if (item.ActionName?.Equals("ActionsGroup") == true
                         && item.SubActions != null &&
