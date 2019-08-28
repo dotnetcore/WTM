@@ -1,8 +1,8 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="CheckBox">
     <p>CheckBox的常用属性有：</p>
-        <table lay-filter="parse-table-demo">
+        <table lay-filter="parse-table-demo" >
             <thead>
                 <tr>
                     <th lay-data="{field:'username', width:200}">属性</th>
@@ -88,7 +88,7 @@
 
     <script>
     layui.use('code',function(){layui.code({ about: false })})
-        layui.table.init('parse-table-demo', {
-            limit: 100
+      layui.table.init('parse-table-demo', {
+        limit: 100, page: false
         });
     </script>

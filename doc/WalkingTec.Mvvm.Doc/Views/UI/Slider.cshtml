@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 <style>
     .layui-table-cell {
         height: auto;
@@ -204,7 +204,7 @@
 
 <script>layui.code({ about: false });
     layui.table.init('parse-table-demo', {
-        limit: 100
+        limit: 100, page: false
     });
     function onTipsCallback(value, sliderIns) {
         return '-' + value + '-';

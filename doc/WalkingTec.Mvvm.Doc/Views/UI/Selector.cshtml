@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
+@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="Selector">
     <p>Selector用于处理那些需要另外弹出页面进行搜索才能选定数据的场景，常用属性有：</p>
@@ -176,6 +176,6 @@
     <script>
     layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
-            limit: 100
+        limit: 100, page: false
         });
     </script>
