@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
+@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
 <wt:fieldset field-set-style="Simple" title="Row">
     <p>使用Row控件是最简单的控制表单布局的方式，Row的主要属性有</p>
     <table lay-filter="rowtable">
@@ -219,6 +219,6 @@ layui.use('code',function(){layui.code({ about: false })})
 </script>
 <script>
     layui.table.init('rowtable',{
-            limit: 100
+        limit: 100, page: false
         });
 </script>

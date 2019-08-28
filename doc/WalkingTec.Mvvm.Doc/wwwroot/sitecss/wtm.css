@@ -29,6 +29,10 @@
   margin-top: -19px;
 }
 
+.layui-elem-quote {
+    margin-top: 10px !important;
+}
+
 /* 下拉框 Text 图标 */
 
 .layui-form-select ._wtm-combo-icon {

@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
+@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="RichTextbox">
     <p>富文本框的常用属性有：</p>
@@ -87,6 +87,6 @@
     <script>
     layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
-            limit: 100
+        limit: 100, page: false
         });
     </script>

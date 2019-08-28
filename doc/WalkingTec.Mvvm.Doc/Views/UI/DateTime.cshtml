@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 @{
     var mark = new Dictionary<string, string>()
@@ -264,7 +264,7 @@ layui.use('code',function(){layui.code({ about: false })})
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})
-    layui.table.init('parse-table-demo', { limit: 100, height: 'full-400' });
+    layui.table.init('parse-table-demo', { limit: 100, height: 'full-400',page:false });
 
     function readyFunc(value, _this) {
         console.log("readyFunc");

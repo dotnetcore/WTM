@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <style>
     .layui-table-cell {
@@ -166,7 +166,7 @@
 <script>
 layui.use('code',function(){layui.code({ about: false })})
     layui.table.init('parse-table-demo', {
-        limit: 100
+        limit: 100, page: false
     });
     function onChangeCallback(data, index, transferIns) {
         ff.Alert((index == 0 ? '左到右：' : '右到左：') + '<br/>Title=' + data[0].title + '<br/> Value=' + data[0].value);
