@@ -1,4 +1,4 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col } from 'antd';
+import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
@@ -115,22 +115,10 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
-            /** 自定义Icon */
-            "CustumIcon": {
-                label: "自定义Icon",
-                rules: [],
-                formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
-            },
-            "Entity.CustumIcon": {
+            "Entity.Icon": {
                 label: "图标",
                 rules: [],
                 formItem: <IConId />
-            },
-            /** 图标 */
-            "Entity.IConId": {
-                label: "图标",
-                rules: [],
-                formItem: <WtmUploadImg />
             },
             /** 父目录 */
             "Entity.ParentId": {

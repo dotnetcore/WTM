@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -134,6 +134,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.Url = action.Url;
                             menu.ClassName = action.Module.ClassName;
                             menu.MethodName = action.MethodName;
+                            Entity.Children = new List<FrameworkMenu>();
                             Entity.Children.Add(menu);
                         }
                     }
@@ -217,6 +218,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.Url = action.Url;
                             menu.ClassName = action.Module.ClassName;
                             menu.MethodName = action.MethodName;
+                            Entity.Children = new List<FrameworkMenu>();
                             Entity.Children.Add(menu);
                         }
                     }

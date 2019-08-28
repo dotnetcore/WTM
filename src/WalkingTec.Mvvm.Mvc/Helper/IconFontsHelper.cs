@@ -24,7 +24,10 @@ namespace WalkingTec.Mvvm.Mvc
             var IconFontDic = new Dictionary<string, string[]>();
             foreach (var dir in baseDirs)
             {
-                RecursiveDir(dir, iconFontHashSet, IconFontDic);
+                if (Directory.Exists(dir))
+                {
+                    RecursiveDir(dir, iconFontHashSet, IconFontDic);
+                }
             }
             var iconFonts = iconFontHashSet.ToArray();
 
