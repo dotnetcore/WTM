@@ -318,7 +318,8 @@ window.ff = {
         alert("加载失败");
       },
       success: function (str, textStatus, request) {
-        layer.close(index);
+          layer.close(index);
+          max = true;
         if (request.getResponseHeader('IsScript') === 'true') {
           ff.SetCookie("windowids", owid);
           eval(str);
@@ -333,13 +334,14 @@ window.ff = {
             area = width + 'px';
           }
           if (title === undefined || title === null || title === '') {
-            title = false;
+              title = false;
+              max = false;
           }
           layer.open({
             type: 1
             , title: title
             , area: area
-            , maxmin: true
+              , maxmin: max
             , shade: 0.8
             , btn: []
             , id: windowid //设定一个id，防止重复弹出
