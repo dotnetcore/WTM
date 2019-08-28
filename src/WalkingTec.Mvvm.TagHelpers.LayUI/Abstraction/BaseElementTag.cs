@@ -159,7 +159,9 @@ layui.use(['form'],function(){{
                 case TextBoxTagHelper item:
                     if (string.IsNullOrEmpty(item.SearchUrl) == false)
                     {
-                        output.PostElement.AppendHtml($@"
+                        if (!string.IsNullOrEmpty(item.TriggerUrl))
+                        {
+                            output.PostElement.AppendHtml($@"
 <script>
 layui.use(['autocomplete'],function(){{
   layui.autocomplete.render({{
@@ -168,13 +170,37 @@ layui.use(['autocomplete'],function(){{
     cache: false,
     template_val: '{{{{d.Value}}}}',
     template_txt: '{{{{d.Text}}}}',
-    onselect: function (resp) {{
-      $('#{item.Id}').val(resp.Value);
+    onselect: function (data) {{
+      $('#{item.Id}').val(data.Value);
+     {FormatFuncName(item.ChangeFunc)};
+    ff.LinkedChange('{item.TriggerUrl}/'+data.Value,'{Core.Utils.GetIdByName(item.LinkField.ModelExplorer.Container.ModelType.Name + "." + item.LinkField.Name)}','{item.LinkField.Name}');
     }}
   }});
 }})
 </script>
 ");
+                        }
+                        else
+                        {
+                            output.PostElement.AppendHtml($@"
+<script>
+layui.use(['autocomplete'],function(){{
+  layui.autocomplete.render({{
+    elem: $('#{item.Id}')[0],
+    url: '{item.SearchUrl}',
+    cache: false,
+    template_val: '{{{{d.Value}}}}',
+    template_txt: '{{{{d.Text}}}}',
+    onselect: function (data) {{
+      $('#{item.Id}').val(data.Value);
+     {FormatFuncName(item.ChangeFunc)};
+    }}
+  }});
+}})
+</script>
+");
+
+                        }
                     }
                     break;
             }

@@ -218,7 +218,9 @@ window.ff = {
         var form = layui.form.render(null, formid);
         /* 启用 ComboBox 多选 */
         for (var i = 0; i < comboxs.length; i++) {
-          var filter = comboxs[i].attributes['lay-filter'].value, arr = [], subTag = $('input[name=""' + filter + '""]');
+            var filter = comboxs[i].attributes['lay-filter'].value;
+            var arr = [];
+            var subTag = $('input[name="' + filter + '"]');
           for (var a = 0; a < subTag.length; a++) {
             arr.push({ name: subTag[a].attributes['text'].value, val: subTag[a].value });
           }
