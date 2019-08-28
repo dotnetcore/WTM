@@ -126,7 +126,9 @@
           <div class="layui-card">
             <div class="layui-card-header">控制器</div>
             <div class="layui-card-body layadmin-takerates">
-              <wt:chart field="@ViewData[" cd"]" height="300" is-horizontal="true" title="控制器" />
+              <div ischart="1" id="chartdff2e7bfd0824aaba3e0ce97127de1ee"
+                  lay-filter="chartdff2e7bfd0824aaba3e0ce97127de1eefilter" style=" height:300px;">
+              </div>
             </div>
           </div>
         </div>
@@ -134,7 +136,9 @@
           <div class="layui-card">
             <div class="layui-card-header">其他</div>
             <div class="layui-card-body layadmin-takerates">
-              <wt:chart field="@ViewData[" cd2"]" height="300" is-horizontal="true" title="控制器" />
+              <div ischart="1" id="chartf0caec3f857e46d292e80821c8bbbd14"
+                  lay-filter="chartf0caec3f857e46d292e80821c8bbbd14filter" style=" height:300px;">
+              </div>
             </div>
           </div>
         </div>
@@ -212,7 +216,6 @@
 
   </div>
 </div>
-
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
   $.get("/_framework/GetGithubInfo", function (r) {
@@ -223,6 +226,44 @@
     $("#githubissue").html(r.open_issues_count);
   });
 
+  // 控制器
+  var chartdff2e7bfd0824aaba3e0ce97127de1eeChart;
+  layui.use(['echarts'], function () {
+      var echarts = layui.echarts;
+      chartdff2e7bfd0824aaba3e0ce97127de1eeChart = echarts.init(document.getElementById('chartdff2e7bfd0824aaba3e0ce97127de1ee'), 'default');
+      window.onresize = function () {
+          $("div[ischart='1']").each(function (index) { eval($(this).attr('id') + 'Chart.resize();'); });
+      };
+      var chartdff2e7bfd0824aaba3e0ce97127de1eeoption = {
+          title: { text: '控制器' },
+          tooltip: {},
+          legend: {},
+          xAxis: {},
+          yAxis: { type: 'category' },
+          dataset: { source: [['product', '_Admin', '默认'], ['控制器', 6,], ['动作', 41,], ['控制器', , 14], ['动作', , 105]] },
+          series: [{ type: 'bar' }, { type: 'bar' }]
+      };
+      chartdff2e7bfd0824aaba3e0ce97127de1eeChart.setOption(chartdff2e7bfd0824aaba3e0ce97127de1eeoption);
+  });
+  // 其他
+  var chartf0caec3f857e46d292e80821c8bbbd14Chart;
+  layui.use(['echarts'], function () {
+      var echarts = layui.echarts;
+      chartf0caec3f857e46d292e80821c8bbbd14Chart = echarts.init(document.getElementById('chartf0caec3f857e46d292e80821c8bbbd14'), 'default');
+      window.onresize = function () {
+          $("div[ischart='1']").each(function (index) { eval($(this).attr('id') + 'Chart.resize();'); });
+      };
+      var chartf0caec3f857e46d292e80821c8bbbd14option = {
+          title: { text: '控制器' },
+          tooltip: {},
+
+          xAxis: {},
+          yAxis: { type: 'category' },
+          dataset: { source: [['product', '数据'], ['模型', 4], ['Dll文件', 6], ['数据权限', 2], ['连接字符串', 1], ['App Settings', 0]] },
+          series: [{ type: 'bar' }]
+      };
+      chartf0caec3f857e46d292e80821c8bbbd14Chart.setOption(chartf0caec3f857e46d292e80821c8bbbd14option);
+  });
   //区块轮播切换
   layui.use(['admin', 'carousel'], function () {
     var $ = layui.$
