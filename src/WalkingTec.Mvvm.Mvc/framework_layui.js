@@ -214,7 +214,6 @@ window.ff = {
     }
     else {
       layui.use(['form', 'formSelects'], function () {
-        debugger
         var formSelects = layui.formSelects;
         var form = layui.form.render(null, formId);
         /* 启用 ComboBox 多选 */
