@@ -10,11 +10,6 @@
           <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
         </a>
       </li>
-      <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="https://wtmdoc.walkingtec.cn" target="_blank" title="WTM文档">
-          <i class="layui-icon layui-icon-website"></i>
-        </a>
-      </li>
       <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;" layadmin-event="refresh" title="刷新">
           <i class="layui-icon layui-icon-refresh-3"></i>
@@ -42,9 +37,9 @@
       <script type="text/html" template lay-url="/json/menu.js?v={{ layui.admin.v }}"
         lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
 
-            <div class="layui-logo" lay-href="">
-              <span>{{ layui.setter.name || 'layuiAdmin' }}</span>
-            </div>
+        <div class="layui-logo" lay-href="">
+          <span><img src="~/layuiadmin/style/res/logo.png" style="margin-right:5px" />{{ layui.setter.name || 'layuiAdmin' }}</span>
+        </div>
 
             <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
             {{#

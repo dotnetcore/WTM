@@ -22,19 +22,19 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
-        [ActionDescription("PagedListVM")]
+        [ActionDescription("列表介绍")]
         public IActionResult List()
         {
             return PartialView();
         }
 
-        [ActionDescription("ListVMAction")]
+        [ActionDescription("动作配置")]
         public IActionResult ListAction()
         {
             return PartialView();
         }
 
-        [ActionDescription("ListVMColumn")]
+        [ActionDescription("列配置")]
         public IActionResult ListColumn()
         {
             return PartialView();
