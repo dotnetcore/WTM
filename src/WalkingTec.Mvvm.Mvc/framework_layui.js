@@ -153,7 +153,8 @@ window.ff = {
       });
     }
     else {
-      location.hash = url;
+        layer.close(index);
+        location.hash = url;
     }
   },
 
