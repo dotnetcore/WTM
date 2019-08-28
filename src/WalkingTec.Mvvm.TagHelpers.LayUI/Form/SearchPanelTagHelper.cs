@@ -133,24 +133,19 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     layui.element.init();
     $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
     $('#{ResetBtnId}').on('click', function (btn) {{
-      var hiddenAreas = $('#'+this.form.id +' input[wtm-tag=wtmselector]')
-      if(hiddenAreas && hiddenAreas.length>0){{
-        for(i=0;i<hiddenAreas.length;i++){{
-          hiddenAreas[i].remove();
-        }}
-      }}
+      ff.resetForm(this.form.id);
     }});
 {(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
-    var layer = layui.layer;
-    table.reload('{GridId}',{{where: $.extend({TableJSVar}.config.where,ff.GetSearchFormData('{Id}','{Vm.Name}')),
-        done: function(res,curr,count){{
-            if(this.height == undefined){{
-                var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
-                ff.triggerResize();
-            }}
-        }}
-    }})
+  var layer = layui.layer;
+  table.reload('{GridId}',{{where: $.extend(JSON.parse(JSON.stringify({TableJSVar}.config.where)),ff.GetSearchFormData('{Id}','{Vm.Name}')),
+    done: function(res,curr,count){{
+      if(this.height == undefined){{
+        var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
+        ff.triggerResize();
+      }}
+    }}
+  }})
 }});
     ")}
 layui.element.on('collapse({tempSearchTitleId})', function(data){{ff.triggerResize()}});

@@ -184,8 +184,8 @@ window.ff = {
     }
   },
 
-  GetPostData: function (formid) {
-    var richtextbox = $("#" + formid + " textarea");
+  GetPostData: function (formId) {
+    var richtextbox = $("#" + formId + " textarea");
     for (var i = 0; i < richtextbox.length; i++) {
       var ra = richtextbox[i].attributes['layeditindex'];
       if (ra !== undefined && ra != null) {
@@ -195,8 +195,8 @@ window.ff = {
     }
 
 
-    var datastr = $('#' + formid).serialize();
-    var checkboxes = $('#' + formid + ' :checkbox');
+    var datastr = $('#' + formId).serialize();
+    var checkboxes = $('#' + formId + ' :checkbox');
     for (i = 0; i < checkboxes.length; i++) {
       var ck = checkboxes[i];
       if (ck.checked === false && (ck.value === 'true' || ck.value === 'false')) {
@@ -206,22 +206,22 @@ window.ff = {
     return datastr;
   },
 
-  RenderForm: function (formid) {
-    var comboxs = $(".layui-form[lay-filter=" + formid + "] select[wtm-combo='MULTI_COMBO']");
+  RenderForm: function (formId) {
+    var comboxs = $(".layui-form[lay-filter=" + formId + "] select[wtm-combo='MULTI_COMBO']");
     if (comboxs.length === 0) {
       layui.use(['form'], function () {
-        var form = layui.form.render(null, formid);
+        var form = layui.form.render(null, formId);
       });
     }
     else {
       layui.use(['form', 'formSelects'], function () {
         var formSelects = layui.formSelects;
-        var form = layui.form.render(null, formid);
+        var form = layui.form.render(null, formId);
         /* 启用 ComboBox 多选 */
         for (var i = 0; i < comboxs.length; i++) {
-            var filter = comboxs[i].attributes['lay-filter'].value;
-            var arr = [];
-            var subTag = $('input[name="' + filter + '"]');
+          var filter = comboxs[i].attributes['lay-filter'].value,
+            arr = [],
+            subTag = $('input[name="' + filter + '"]');
           for (var a = 0; a < subTag.length; a++) {
             arr.push({ name: subTag[a].attributes['text'].value, val: subTag[a].value });
           }
@@ -234,28 +234,23 @@ window.ff = {
     }
   },
 
-  PostForm: function (url, formid, divid) {
+  PostForm: function (url, formId, divid) {
     var layer = layui.layer;
     var index = layer.load(2);
     if (url === undefined || url === "") {
-      url = $("#" + formid).attr("action");
+      url = $("#" + formId).attr("action");
     }
     $.ajax({
       cache: false,
       type: "POST",
       url: url,
-      data: ff.GetPostData(formid),
+      data: ff.GetPostData(formId),
       async: true,
       error: function (request) {
         layer.close(index);
         alert("提交失败");
       },
       success: function (data, textStatus, request) {
-        var wid = ff.GetCookie("windowids");
-        //if (wid == null || wid === "") {
-        //    DONOTUSE_IGNOREHASH = true;
-        //    window.location.hash = '#' + url;
-        //}
         layer.close(index);
         if (request.getResponseHeader('IsScript') === 'true') {
           eval(data);
@@ -342,11 +337,11 @@ window.ff = {
           }
           layer.open({
             type: 1
-            , title: title 
-              , area: area
-              , maxmin:true
+            , title: title
+            , area: area
+            , maxmin: true
             , shade: 0.8
-              , btn: []
+            , btn: []
             , id: windowid //设定一个id，防止重复弹出
             , content: str
             , end: function () {
@@ -401,7 +396,7 @@ window.ff = {
           //替换grid参数变量
           template = template.replace(/\$.extend\((.*)[.]config[.]where,/img, '$.extend(' + gridVar + '.config.where,');
           str = str.replace('$$SearchPanel$$', template);
-       }
+        }
         layer.close(index);
         var area = 'auto';
         if (width !== undefined && width !== null && height !== undefined && height !== null) {
@@ -417,8 +412,8 @@ window.ff = {
           type: 1
           , title: title
           , area: area
-            , maxmin: true
-            , btn: []
+          , maxmin: true
+          , btn: []
           , shade: 0.8
           , id: windowid //设定一个id，防止重复弹出
           , content: str
@@ -810,6 +805,26 @@ window.ff = {
           $(comboInput).css({ "padding-left": "30px" });
         }
         break;
+      }
+    }
+  },
+
+  resetForm: function (formId) {
+    var hidAreas = [' input[wtm-tag=wtmselector]'];
+    // 多选下拉框
+    var multiCombos = $('#' + formId + ' select[wtm-combo=MULTI_COMBO]');
+    if (multiCombos && multiCombos.length > 0) {
+      for (i = 0; i < multiCombos.length; i++) {
+        var name = multiCombos.attr('lay-filter');
+        hidAreas.push(" input[name='" + name + "']");
+      }
+    }
+    for (var i = 0; i < hidAreas.length; i++) {
+      var hiddenAreas = $('#' + formId + hidAreas[i]);
+      if (hiddenAreas && hiddenAreas.length > 0) {
+        for (j = 0; j < hiddenAreas.length; j++) {
+          hiddenAreas[j].remove();
+        }
       }
     }
   }
