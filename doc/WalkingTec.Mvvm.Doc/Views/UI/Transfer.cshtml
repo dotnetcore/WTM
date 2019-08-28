@@ -164,7 +164,7 @@
 </wt:fieldset>
 
 <script>
-    layui.code({ about: false });
+layui.use('code',function(){layui.code({ about: false })})
     layui.table.init('parse-table-demo', {
         limit: 100
     });

@@ -41,10 +41,10 @@ public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
     <p>如果只是更新了很少的字段，可以手工将数据库对应的表修改成跟model对应的结构就可以了</p>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
         layui.table.init('parse-table-demo', {
-            limit: 100 
+            limit: 100
         });
     </script>
