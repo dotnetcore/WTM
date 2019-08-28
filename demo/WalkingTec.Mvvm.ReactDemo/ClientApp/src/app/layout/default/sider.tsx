@@ -105,10 +105,6 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
 }
 export function renderIconTitle(menu) {
   let icon = null;
-  if (menu.Icon && menu.Icon.length === 36) {
-    icon = <img className='ant-menu-item-img' src={RequestFiles.onFileDownload(menu.Icon)} alt="" />
-  } else {
-    icon = <Icon type={menu.Icon || 'appstore'} />
-  }
+  icon = <Icon type={menu.Icon || 'appstore'} />
   return <>{icon}<span>{menu.Text}</span> </>
 }
