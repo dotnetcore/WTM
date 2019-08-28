@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
     public enum ChartTypeEnum { Bar, Pie, Line }
 
+    [Obsolete("废弃，预计将在下个大版本中移除 wt:chart")]
     [HtmlTargetElement("wt:chart", TagStructure = TagStructure.WithoutEndTag)]
     public class ChartTagHelper : BaseElementTag
     {
