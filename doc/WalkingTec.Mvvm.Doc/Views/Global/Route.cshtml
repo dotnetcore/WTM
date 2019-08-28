@@ -14,7 +14,7 @@ public class Program
         BuildWebHost(args).Run();
     }
 
-    public static IWebHost BuildWebHost(string[] args) =>            
+    public static IWebHost BuildWebHost(string[] args) =>
         WebHost.CreateDefaultBuilder(args)
             .ConfigureServices(x =>
             {
@@ -39,6 +39,6 @@ public class Program
     </wt:code>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
 
