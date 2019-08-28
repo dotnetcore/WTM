@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,18 +22,54 @@ namespace $vmnamespace$
         }
 
         public override void DoAdd()
-        {$add$           
-            base.DoAdd();
+        {
+            using (var transaction = DC.BeginTransaction())
+            {
+                try
+                {$add$           
+                    base.DoAdd();
+
+                    transaction.Commit();
+                }
+                catch (Exception exception)
+                {
+                    transaction.Rollback();
+                }
+            }
         }
 
         public override void DoEdit(bool updateAllFields = false)
-        {$edit$
-            base.DoEdit(updateAllFields);
+        {
+            using (var transaction = DC.BeginTransaction())
+            {
+                try
+                {$edit$
+                    base.DoEdit(updateAllFields);
+
+                    transaction.Commit();
+                }
+                catch (Exception exception)
+                {
+                    transaction.Rollback();
+                }
+            }
         }
 
         public override void DoDelete()
         {
-            base.DoDelete();
+            using (var transaction = DC.BeginTransaction())
+            {
+                try
+                {
+                    base.DoDelete();
+
+                    transaction.Commit();
+                }
+                catch (Exception exception)
+                {
+                    transaction.Rollback();
+                }
+            }
         }
     }
 }
