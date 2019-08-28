@@ -29,6 +29,10 @@
   margin-top: -19px;
 }
 
+/* 列表中chebox样式*/
+[lay-skin=primary].layui-form-checkbox span {
+    padding-left: 22px !important
+}   
 /* 下拉框 Text 图标 */
 
 .layui-form-select ._wtm-combo-icon {
