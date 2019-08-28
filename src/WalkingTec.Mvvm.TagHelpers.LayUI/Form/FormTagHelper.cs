@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
             output.Attributes.SetAttribute("method", "post");
-            output.Attributes.SetAttribute("lay-filter", Id + "form");
+            output.Attributes.SetAttribute("lay-filter", Id);
             if (LabelWidth != null)
             {
                 context.Items.Add("formlabelwidth", LabelWidth.Value);
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             output.PostElement.AppendHtml($@"
 <script>
-ff.RenderForm('{Id}form');
+ff.RenderForm('{Id}');
 ");
             // 使用传统表单提交方式提交，而不使用 AJAX 提交
             // 比如登陆页面，提交后校验成功会跳转其他页面，而不是返会 PartialView
