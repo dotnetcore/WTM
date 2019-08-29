@@ -24,28 +24,6 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
-    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
-    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
-    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
-    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
-    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
-    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
-    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
-    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="framework_layui.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\HeaderFormat.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\BatchDeleteView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\BatchEditView.txt" />
@@ -61,14 +39,22 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
+    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
+    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
-    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
-    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
@@ -85,6 +71,16 @@
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="framework_layui.js" />
+    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
+    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
