@@ -40,6 +40,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
 
+        public List<ComboSelectListItem> IConSelectItems { get; set; }
+
         public FrameworkMenuVM()
         {
             UserListVM = new FrameworkUserBaseListVM();
@@ -48,16 +50,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             AllModules = new List<ComboSelectListItem>();
 
             SelectedRolesIDs = new List<Guid>();
-            if (!string.IsNullOrEmpty(Entity.Url))
-            {
-                var res = Entity.Url.Split(' ');
-                IconFont = res[0];
-                IconFontItem = res[1];
-            }
         }
 
         protected override void InitVM()
         {
+            if (!string.IsNullOrEmpty(Entity.ICon))
+            {
+                var res = Entity.ICon.Split(' ');
+                IconFont = res[0];
+                IconFontItem = res[1];
+            }
+            IConSelectItems = !string.IsNullOrEmpty(IconFont) && IconFontsHelper
+                                .IconFontDicItems
+                                .ContainsKey(IconFont)
+                                ? IconFontsHelper
+                                    .IconFontDicItems[IconFont]
+                                    .Select(x => new ComboSelectListItem()
+                                    {
+                                        Text = x.Text,
+                                        Value = x.Value,
+                                        ICon = x.ICon
+                                    }).ToList()
+                                : new List<ComboSelectListItem>();
+
             SelectedRolesIDs.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == true).Select(x => x.RoleId.Value).ToList());
 
             var data = DC.Set<FrameworkMenu>().ToList();

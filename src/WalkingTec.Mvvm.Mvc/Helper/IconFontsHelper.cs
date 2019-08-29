@@ -8,13 +8,19 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class IconFontsHelper
     {
-        // public class Result
-        // {
-        //     public string Text { get; set; }
-        //     public string Value { get; set; }
-        // }
-        public static List<ComboSelectListItem> IconFontItems { get; set; }
-        public static Dictionary<string, List<ComboSelectListItem>> IconFontDicItems { get; set; }
+        private static List<ComboSelectListItem> _iconFontItems;
+        public static List<ComboSelectListItem> IconFontItems
+        {
+            get
+            {
+                foreach (var item in _iconFontItems.Where(x => x.Selected == true))
+                    item.Selected = false;
+                return _iconFontItems;
+            }
+        }
+
+        private static Dictionary<string, List<MenuItem>> _iconFontDicItems;
+        public static Dictionary<string, List<MenuItem>> IconFontDicItems => _iconFontDicItems;
 
         public static void GenerateIconFont()
         {
@@ -31,16 +37,16 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var iconFonts = iconFontHashSet.ToArray();
 
-
-            IconFontItems = iconFontHashSet.Select(x => new ComboSelectListItem
+            _iconFontItems = iconFontHashSet.Select(x => new ComboSelectListItem
             {
                 Text = x,
                 Value = x
             }).ToList();
-            IconFontDicItems = new Dictionary<string, List<ComboSelectListItem>>();
+
+            _iconFontDicItems = new Dictionary<string, List<MenuItem>>();
             foreach (var key in IconFontDic.Keys)
             {
-                IconFontDicItems.Add(key, IconFontDic[key].Select(x => new ComboSelectListItem
+                IconFontDicItems.Add(key, IconFontDic[key].Select(x => new MenuItem
                 {
                     Text = x,
                     Value = x,

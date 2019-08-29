@@ -2,22 +2,34 @@
 
 namespace WalkingTec.Mvvm.Core
 {
-    /// <summary>
-    /// 下拉菜单项
-    /// </summary>
-    public class ComboSelectListItem
+    public class ListItem
     {
         /// <summary>
         /// The value to display
         /// </summary>
         public string Text { get; set; }
 
-
         /// <summary>
         /// The value to be submitted
         /// </summary>
         public string Value { get; set; }
 
+    }
+
+    public class MenuItem : ListItem
+    {
+        /// <summary>
+        /// ICon
+        /// </summary>
+        /// <value></value>
+        public string ICon { get; set; }
+    }
+
+    /// <summary>
+    /// 下拉菜单项
+    /// </summary>
+    public class ComboSelectListItem : ListItem
+    {
         /// <summary>
         /// Whether it is selected
         /// </summary>
