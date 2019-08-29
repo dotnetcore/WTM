@@ -1,3 +1,8 @@
+<style>
+  .donotuse_pdiv {
+    height: inherit !important;
+  }
+</style>
 <div class="layui-fluid" id="frontpage" style="padding:0px;">
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md8">
@@ -95,7 +100,7 @@
         <div class="layui-col-md12">
           <div class="layui-card">
             <div class="layui-card-header">传说中的墙</div>
-            <div class="layui-card-body">
+            <div class="layui-card-body layadmin-takerates">
               <table id="WTM-donate"></table>
             </div>
           </div>
@@ -186,7 +191,7 @@
 </div>
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
-  $("#frontpage").parents('.layadmin-tabsbody-item').css("background-color", "#eee");
+
   $.get("/_framework/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);
     $("#githubstars").html(r.stargazers_count);
@@ -244,8 +249,8 @@
               }
       }
       , skin: 'line'
-      , height: 840,
-      initSort: {
+      , height: 840
+      ,initSort: {
         field: 'date'
         ,type: 'desc'
       }
