@@ -317,6 +317,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.ModuleName = mainAction.Module.ModuleName;
                     Entity.ClassName = mainAction.Module.ClassName;
                     Entity.MethodName = "Index";
+                    Entity.Children = new List<FrameworkMenu>();
 
                     otherActions = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
                     int order = 1;
