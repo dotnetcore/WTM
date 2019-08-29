@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
@@ -13,7 +13,7 @@ namespace $ns$.Controllers
         public IActionResult Login()
         {
             LoginVM vm = CreateVM<LoginVM>();
-            vm.Redirect = HttpContext?.Request?.Query["rd"];
+            vm.Redirect = HttpContext.Request.Query["rd"];
             if (ConfigInfo.IsQuickDebug == true)
             {
                 vm.ITCode = "admin";
@@ -25,6 +25,16 @@ namespace $ns$.Controllers
         [HttpPost]
         public ActionResult Login(LoginVM vm)
         {
+            if (ConfigInfo.IsQuickDebug == false)
+            {
+                var verifycode = HttpContext.Session.Get<string>("verify_code");
+                if (verifycode.ToLower() != vm.VerifyCode.ToLower())
+                {
+                    vm.MSD.AddModelError("", "验证码不正确");
+                    return View(vm);
+                }
+            }
+
             var user = vm.DoLogin();
             if (user == null)
             {
@@ -79,5 +89,4 @@ namespace $ns$.Controllers
         }
 
     }
-
 }
