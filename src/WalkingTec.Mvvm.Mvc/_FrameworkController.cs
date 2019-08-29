@@ -586,7 +586,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Title = x.PageName,
                 Url = x.Url,
                 Order = x.DisplayOrder,
-                ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+                ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
             })
             .OrderBy(x => x.Order)
             .ToList());
@@ -599,7 +599,7 @@ namespace WalkingTec.Mvvm.Mvc
                     Title = x.PageName,
                     Url = x.Url,
                     Order = x.DisplayOrder,
-                    ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+                    ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
                 })
                 .OrderBy(x => x.Order)
                 .ToList();
@@ -613,7 +613,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Title = x.PageName,
                             Url = x.Url,
                             Order = x.DisplayOrder,
-                            ICon = x.ICon ?? $"_wtmicon _wtmicon-wenjian{(string.IsNullOrEmpty(x.Url) ? "jia" : string.Empty)}"
+                            ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
                         })
                         .OrderBy(x => x.Order)
                         .ToList();
