@@ -41,11 +41,16 @@
           <dd>
             <wt:linkbutton url="/Login/ChangePassword" window-width="400" text="修改密码" is-link="true" />
           </dd>
-          <dd><a href="javascript:;" lay-href="/">返回首页</a></dd>
-          <dd>
-            <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="代码生成器"
-              window-title="代码生成器" />
-          </dd>
+          <dd><a href="javascript:;" lay-href="/">返回首页@(ViewData["debug"])</a></dd>
+          @{
+            if(ViewData["debug"] is bool debug && debug)
+            {
+              <dd>
+                <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="代码生成器"
+                  window-title="代码生成器" />
+              </dd>
+            }
+          }
         </dl>
       </li>
       <li class="layui-nav-item"><a href="/Login/Logout">退出</a></li>
