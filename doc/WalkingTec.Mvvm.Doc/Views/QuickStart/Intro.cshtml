@@ -4,7 +4,7 @@
       <div class="layui-row layui-col-space15">
         <div class="layui-col-md6">
           <div class="layui-card">
-            <div class="layui-card-header">WTM由来</div>
+            <div class="layui-card-header">WTM——立志成为最好的.netcore开源框架</div>
             <div class="layui-card-body">
 
               <div class="layui-carousel layadmin-carousel " data-autoplay="true" data-anim="fade">
@@ -86,9 +86,9 @@
           <div class="layui-card">
             <div class="layui-card-header">WTM解决的问题</div>
             <div class="layui-card-body layadmin-takerates">
-              对于一个Web应用程序，20%的功能是简单的增删改查，50%的功能是稍微复杂一些的增删改查，只有30%的功能是真正具有复杂逻辑的，但其实也是增删改查。。。WTM框架把常规编码结构化，重复编码自动化，大大提高了开发效率
-              如果你要开发的是一个面向内部人员的后台管理程序，WTM框架绝对是你的最佳选择，它连通了前台UI和后台代码。你不需要前后台分离，不需要两个人配合，减少成本，缩短工期。
-              当然你也可以使用WTM框架来编写服务，只是不使用框架提供的前端UI功能而已，对于后端代码还是可以提高效率
+              WTM框架把常规编码结构化，重复编码自动化，极大地提高了开发效率<br />
+              在不分离的模式下，它连通了前台UI和后台代码。你不需要前后台分离，不需要两个人配合，减少成本，缩短工期。<br />
+              在前后端分离的模式下，同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
             </div>
           </div>
         </div>
@@ -244,7 +244,11 @@
               }
       }
       , skin: 'line'
-      , height: 840
+      , height: 840,
+      initSort: {
+        field: 'date' 
+        ,type: 'desc' 
+      }
     });
 
   });
