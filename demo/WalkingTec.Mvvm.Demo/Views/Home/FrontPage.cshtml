@@ -127,8 +127,10 @@
         <div class="layui-col-md6">
           <div class="layui-card">
             <div class="layui-card-header">控制器</div>
-            <div class="layui-card-body layadmin-takerates">
-              <div id="chart_Controller" style=" height:300px;">
+            <div class="layui-carousel layadmin-carousel layadmin-dataview">
+              <div carousel-item>
+                <div id="chart_Controller" style=" height:300px;">
+                </div>
               </div>
             </div>
           </div>
@@ -136,12 +138,14 @@
         <div class="layui-col-md6">
           <div class="layui-card">
             <div class="layui-card-header">其他</div>
-            <div class="layui-card-body layadmin-takerates">
-              <div id="chart_Other" style=" height:300px;">
-              </div>
+            <div class="layui-carousel layadmin-carousel layadmin-dataview">
+              <div carousel-item>
+                <div id="chart_Other" style=" height:300px;">
+                </div>
+              </div>             
             </div>
-          </div>
         </div>
+          </div>
         <div class="layui-col-md12">
           <div class="layui-card">
             <div class="layui-card-header">模拟数据</div>
@@ -225,36 +229,32 @@
     $("#githubwatch").html(r.subscribers_count);
     $("#githubissue").html(r.open_issues_count);
   });
-
-  layui.use(['echarts'], function () {
-
-  })
+  var control, other;
   layui.use(['echarts'], function () {
     var echarts = layui.echarts;
 
     var controlFunc = function(){
       // 控制器
-      var control = echarts.init(document.getElementById('chart_Controller'), 'default');
+      control = echarts.init(document.getElementById('chart_Controller'), 'default');
       var controlOption = {
         title: { text: '控制器' },
         tooltip: {},
-        legend: {
+         legend: {
           data: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.legend"]))
         },
-        xAxis: {},
+       xAxis: {},
         yAxis: {
           data: ['控制器', '动作']
         },
         series: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.series"]))
       };
       control.setOption(controlOption);
-      window.onresize = control.resize;
     };
     controlFunc();
 
     var otherFunc = function(){
       // 其他
-      var other = echarts.init(document.getElementById('chart_Other'), 'default');
+      other = echarts.init(document.getElementById('chart_Other'), 'default');
       var otherOption = {
         title: { text: '其他' },
         tooltip: {},
@@ -265,7 +265,6 @@
         series: @Html.Raw(JsonConvert.SerializeObject(ViewData["other.series"]))
       };
       other.setOption(otherOption);
-      window.onresize = other.resize;
     }
     otherFunc();
 
@@ -409,6 +408,8 @@
         //window.onresize = echartsApp[index].resize;
         admin.resize(function () {
           echartsApp[index].resize();
+          control.resize();
+          other.resize();
         });
       };
 
