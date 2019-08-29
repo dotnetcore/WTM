@@ -229,46 +229,6 @@
     $("#githubwatch").html(r.subscribers_count);
     $("#githubissue").html(r.open_issues_count);
   });
-  var control, other;
-  layui.use(['echarts'], function () {
-    var echarts = layui.echarts;
-
-    var controlFunc = function(){
-      // 控制器
-      control = echarts.init(document.getElementById('chart_Controller'), 'default');
-      var controlOption = {
-        title: { text: '控制器' },
-        tooltip: {},
-         legend: {
-          data: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.legend"]))
-        },
-       xAxis: {},
-        yAxis: {
-          data: ['控制器', '动作']
-        },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.series"]))
-      };
-      control.setOption(controlOption);
-    };
-    controlFunc();
-
-    var otherFunc = function(){
-      // 其他
-      other = echarts.init(document.getElementById('chart_Other'), 'default');
-      var otherOption = {
-        title: { text: '其他' },
-        tooltip: {},
-        xAxis: {},
-        yAxis: {
-          data: ['模型', 'Dll文件', '数据权限', '连接字符串', 'App Settings']
-        },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["other.series"]))
-      };
-      other.setOption(otherOption);
-    }
-    otherFunc();
-
-  });
 
   //区块轮播切换
   layui.use(['admin', 'carousel'], function () {
@@ -302,6 +262,33 @@
       , admin = layui.admin
       , carousel = layui.carousel
       , echarts = layui.echarts;
+
+      var control = echarts.init(document.getElementById('chart_Controller'), 'default');
+      var controlOption = {
+        title: { text: '控制器' },
+        tooltip: {},
+         legend: {
+          data: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.legend"]))
+        },
+       xAxis: {},
+        yAxis: {
+          data: ['控制器', '动作']
+        },
+        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.series"]))
+      };
+      control.setOption(controlOption);
+
+      var other = echarts.init(document.getElementById('chart_Other'), 'default');
+      var otherOption = {
+        title: { text: '其他' },
+        tooltip: {},
+        xAxis: {},
+        yAxis: {
+          data: ['模型', 'Dll文件', '数据权限', '连接字符串', 'App Settings']
+        },
+        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["other.series"]))
+      };
+      other.setOption(otherOption);
 
     var echartsApp = [], options = [
       //今日流量趋势
