@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
@@ -8,65 +8,6 @@
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
-
-  <ItemGroup>
-    <None Remove="echarts.common.min.js" />
-    <None Remove="framework_layui.js" />
-    <None Remove="GeneratorFiles\ApiTest.txt" />
-    <None Remove="GeneratorFiles\ApiTestTopPoco.txt" />
-    <None Remove="GeneratorFiles\BatchDeleteView.txt" />
-    <None Remove="GeneratorFiles\BatchEditView.txt" />
-    <None Remove="GeneratorFiles\BatchVM.txt" />
-    <None Remove="GeneratorFiles\Controller.txt" />
-    <None Remove="GeneratorFiles\ControllerTest.txt" />
-    <None Remove="GeneratorFiles\ControllerTestTopPoco.txt" />
-    <None Remove="GeneratorFiles\CreateView.txt" />
-    <None Remove="GeneratorFiles\CrudVM.txt" />
-    <None Remove="GeneratorFiles\DeleteView.txt" />
-    <None Remove="GeneratorFiles\EditView.txt" />
-    <None Remove="GeneratorFiles\ImportView.txt" />
-    <None Remove="GeneratorFiles\ImportVM.txt" />
-    <None Remove="GeneratorFiles\ListView.txt" />
-    <None Remove="GeneratorFiles\Searcher.txt" />
-    <None Remove="GeneratorFiles\Spa\Controller.txt" />
-    <None Remove="GeneratorFiles\Spa\React\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\store\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\style.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\action.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\forms.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\models.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
-    <None Remove="SetupFiles\DefaultProj.txt" />
-    <None Remove="SetupFiles\DefaultSolution.txt" />
-    <None Remove="SetupFiles\MockController.txt" />
-    <None Remove="SetupFiles\MockHttpSession.txt" />
-    <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
-    <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
-    <None Remove="SetupFiles\Mvc\home\Index.txt" />
-    <None Remove="SetupFiles\Mvc\home\layout.txt" />
-    <None Remove="SetupFiles\Mvc\home\Login.txt" />
-    <None Remove="SetupFiles\Mvc\home\PIndex.txt" />
-    <None Remove="SetupFiles\Mvc\layui\Layout.txt" />
-    <None Remove="SetupFiles\Mvc\layui\Program.txt" />
-    <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
-    <None Remove="SetupFiles\SetupIndex.txt" />
-    <None Remove="SetupFiles\SetupIndex1.txt" />
-    <None Remove="SetupFiles\Spa\Launch.txt" />
-    <None Remove="SetupFiles\Spa\Program.txt" />
-    <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
-    <None Remove="SetupFiles\Spa\React\Program.txt" />
-    <None Remove="SetupFiles\Spa\React\Proj.txt" />
-    <None Remove="SetupFiles\TestProj.txt" />
-    <None Remove="SetupFiles\test\HomeControllerTest.txt" />
-    <None Remove="SetupFiles\test\LoginControllerTest.txt" />
-    <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
-    <None Remove="SetupFiles\vms\IndexVM.txt" />
-    <None Remove="SetupFiles\vms\LoginVM.txt" />
-    <None Remove="Views\_CodeGen\SetField.cshtml" />
-    <None Remove="Views\_ViewImports.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
@@ -99,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="echarts.common.min.js" />
     <EmbeddedResource Include="framework_layui.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </EmbeddedResource>
@@ -157,13 +97,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="ValidationMsg.zh-cn.resx">
-      <LastGenOutput>ValidationMsg.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
