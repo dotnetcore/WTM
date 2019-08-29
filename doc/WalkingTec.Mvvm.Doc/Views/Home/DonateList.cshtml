@@ -1,9 +1,9 @@
-<table id="WTM-donate"></table>
+<table id="WTM-donate-List"></table>
 <script>
   layui.use(['table'],function(){
     const table = layui.table;
-    table.render({
-      elem: '#WTM-donate'
+    const tableIns = table.render({
+      elem: '#WTM-donate-List'
       , url: '/json/donate.js'
       , page: true
       , autoSort: true
@@ -15,9 +15,9 @@
         , { field: 'from', title: '来源', width: 60 }
         , { field: 'comment', title: '留言' }
       ]]
-      , parseData:function(res){
-        var pageIndex = this.page.curr===undefined?this.index:this.page.curr;
-        var result = res.Data.slice(this.limit*(pageIndex-1),this.limit*pageIndex);
+      , parseData: function(res){
+        var pageIndex = tableIns.config.page.curr===undefined?1:tableIns.config.page.curr;
+        var result = res.Data.slice(tableIns.config.limit*(pageIndex-1),tableIns.config.limit*pageIndex);
         return {
                 "Code": 200,
                 "Msg":"",

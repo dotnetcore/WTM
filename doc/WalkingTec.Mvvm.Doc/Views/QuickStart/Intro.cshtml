@@ -220,7 +220,7 @@
 
     element.render('progress');
 
-    table.render({
+    const tableIns = table.render({
       elem: '#WTM-donate'
       , url: '/json/donate.js'
       , page: true
@@ -229,13 +229,13 @@
         { type: 'numbers', fixed: 'left' }
         , { field: 'date', title: '日期', width: 120, sort: true }
         , { field: 'name', title: '姓名', width: 150, sort: true }
-        , { field: 'amount', title: '金额', width: 120, sort: true }
+        , { field: 'amount', title: '金额', width: 120, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
         , { field: 'from', title: '来源', width: 60 }
         , { field: 'comment', title: '留言' }
       ]]
-      , parseData:function(res){
-        var pageIndex = this.page.curr===undefined?this.index:this.page.curr;
-        var result = res.Data.slice(this.limit*(pageIndex-1),this.limit*pageIndex);
+      , parseData: function(res){
+        var pageIndex = tableIns.config.page.curr===undefined?1:tableIns.config.page.curr;
+        var result = res.Data.slice(tableIns.config.limit*(pageIndex-1),tableIns.config.limit*pageIndex);
         return {
                 "Code": 200,
                 "Msg":"",
@@ -246,8 +246,8 @@
       , skin: 'line'
       , height: 840,
       initSort: {
-        field: 'date' 
-        ,type: 'desc' 
+        field: 'date'
+        ,type: 'desc'
       }
     });
 
