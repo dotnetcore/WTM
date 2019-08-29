@@ -686,6 +686,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var resultMenus = new List<menuObj>();
                 GenerateMenuTree(FFMenus, resultMenus);
+                RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -696,7 +697,6 @@ namespace WalkingTec.Mvvm.Mvc
                 var resultMenus = new List<menuObj>();
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
-                RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
