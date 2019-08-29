@@ -7,7 +7,7 @@
 本次更新是一个大版本的更新，彻底重构了不分离模式的前端UI，大家可以愉快且免费的使用LayuiAdmin了
 
 老项目更新说明：
-本次更新全面支持了图标字体，放弃了使用图片作为菜单图表。FrameworkMenu表去掉了IconId和CustomIcon字段，新加入了字符串格式的Icon字段
+本次更新全面支持了图标字体，放弃了使用图片附件作为菜单图标。FrameworkMenu表去掉了IconId和CustomIcon字段，新加入了字符串格式的Icon字段
 老用户最快的升级方法是线上生成一个同名的新LayUI的项目，然后把你的model，viewmodel，controller考过去。。。
 
 #### 前后端不分离模式
