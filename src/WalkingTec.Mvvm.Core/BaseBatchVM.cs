@@ -195,7 +195,7 @@ namespace WalkingTec.Mvvm.Core
             bool rv = true;
             List<Guid> idsData = new List<Guid>(Ids);
             //找到对应的BaseCRUDVM，并初始化
-            var vmtype = Assembly.GetExecutingAssembly().GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>))).FirstOrDefault();
+            var vmtype = this.GetType().Assembly.GetExportedTypes().Where(x => x.IsSubclassOf(typeof(BaseCRUDVM<TModel>))).FirstOrDefault();
             IBaseCRUDVM<TModel> vm = null;
             if (vmtype != null)
             {
@@ -209,14 +209,10 @@ namespace WalkingTec.Mvvm.Core
                 {
                     //如果找不到对应数据，则输出错误
                     TModel entity = null;
+                    entity = DC.Set<TModel>().Find(idsData[i]);
                     if (vm == null)
                     {
-                        entity = DC.Set<TModel>().Find(idsData[i]);
-                    }
-                    else
-                    {
-                        vm.SetEntityById(idsData[i]);
-                        entity = vm.Entity;
+                        vm.SetEntity(entity);
                     }
                     if (entity == null)
                     {
@@ -236,12 +232,24 @@ namespace WalkingTec.Mvvm.Core
                     //如果有对应的BaseCRUDVM则使用其进行数据验证
                     if (vm != null)
                     {
-                        var errors = (vm as IValidatableObject).Validate(null);
-                        if (errors != null && errors.Count() > 0)
+                        vm.Validate();
+                        var errors = vm.MSD;
+                        if (errors != null && errors.Count > 0)
                         {
-                            ErrorMessage.Add(idsData[i], errors.ToSpratedString(x => x.ErrorMessage));
-                            rv = false;
-                            break;
+                            var error = "";
+                            foreach (var key in errors.Keys)
+                            {
+                                if(errors[key].Count > 0)
+                                {
+                                    error += errors[key].Select(x => x.ErrorMessage).ToSpratedString();
+                                }
+                            }
+                            if (error != "")
+                            {
+                                ErrorMessage.Add(idsData[i], error);
+                                rv = false;
+                                break;
+                            }
                         }
                     }
                     if (typeof(TModel).IsSubclassOf(typeof(BasePoco)))

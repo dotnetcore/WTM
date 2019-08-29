@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     a {
         color: #01aaed
     }
@@ -181,8 +181,10 @@ public class SchoolVM : BaseCRUDVM&ltSchool&gt
     </wt:quote>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
     </script>

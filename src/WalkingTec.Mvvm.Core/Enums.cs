@@ -1,4 +1,4 @@
-﻿namespace WalkingTec.Mvvm.Core
+namespace WalkingTec.Mvvm.Core
 {
     /// <summary>
     /// 列表操作列类型
@@ -26,7 +26,7 @@
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DBTypeEnum { SqlServer, MySql, PgSql,Memory }
+    public enum DBTypeEnum { SqlServer, MySql, PgSql,Memory, SQLite }
 
     /// <summary>
     /// 页面显示方式

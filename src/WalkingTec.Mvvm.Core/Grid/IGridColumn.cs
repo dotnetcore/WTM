@@ -121,6 +121,11 @@ namespace WalkingTec.Mvvm.Core
         bool? Hide { get; set; }
 
         /// <summary>
+        /// 是否显示汇总
+        /// </summary>
+        bool? ShowTotal { get; set; }
+
+        /// <summary>
         /// 子列
         /// </summary>
         IEnumerable<IGridColumn<T>> Children { get; }
@@ -150,6 +155,11 @@ namespace WalkingTec.Mvvm.Core
         /// 最下层列
         /// </summary>
         IEnumerable<IGridColumn<T>> BottomChildren { get; }
+
+        /// <summary>
+        /// 最大深度
+        /// </summary>
+        int MaxDepth { get; }
 
         #endregion
 

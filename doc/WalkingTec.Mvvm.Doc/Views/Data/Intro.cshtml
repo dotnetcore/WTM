@@ -1,4 +1,4 @@
-﻿WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，只是提供FrameworkContext作为基类并定义了一些辅助函数
+WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，只是提供FrameworkContext作为基类并定义了一些辅助函数
 
 <wt:fieldset field-set-style="Simple" title="方法说明">
     <table lay-filter="parse-table-demo">
@@ -106,6 +106,6 @@
 </wt:fieldset>
 <script>
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
 </script>

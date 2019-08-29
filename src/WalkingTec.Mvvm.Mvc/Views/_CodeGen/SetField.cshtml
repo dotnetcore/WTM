@@ -1,81 +1,53 @@
-﻿@model WalkingTec.Mvvm.Mvc.CodeGenVM
+@model WalkingTec.Mvvm.Mvc.CodeGenVM
 @{
-    Layout = null;
+Layout = null;
 }
 
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>@ViewData["title"]</title>
-    <link rel="stylesheet" href="/layui/css/layui.css">
-    <script src="/jquery.min.js"></script>
-    <script src="/jquery.haschange.js"></script>
-    <script src="/jquery.cookie.js"></script>
-    <script src="/layui/layui.all.js"></script>
-    <script src="/layui/formSelects.js"></script>
-    <script src="/layui/autocomplete.js"></script>
-    <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
-    <script src="/_js/echarts.common.min.js"></script>
-    <script>
-        var DONOTUSE_IGNOREHASH = false;
-        var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
-        var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
-    </script>
-    <style>
-        .donotuse_pdiv {
-            height: 100%;
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -webkit-flex-direction: column;
-            -moz-box-orient: vertical;
-            -moz-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-        }
-
-        .donotuse_fill {
-            -webkit-box-flex: 1;
-            -webkit-flex: auto;
-            -moz-box-flex: 1;
-            -ms-flex: auto;
-            flex: auto;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>@ViewData["title"]</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/sitecss/wtm.css">
+  <script src="/jquery.min.js"></script>
+  <script src="/jquery.cookie.js"></script>
+  <script src="/layui/layui.js"></script>
+  <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
+  <script>
+    var DONOTUSE_IGNOREHASH = false;
+    var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
+    var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
+  </script>
 </head>
+
+
 <body class="layui-layout-body">
-    <div class="layui-layout">
-        <div class="layui-body" style="left:0px" id="DONOTUSE_MAINPANEL">
-            <div class='donotuse_pdiv'>
+  <div class="layui-layout">
+    <div class="layui-body" style="left:0px" id="DONOTUSE_MAINPANEL">
+      <div class='donotuse_pdiv'>
 
-                <wt:form vm="@Model" url="/_CodeGen/Gen" label-width="150" class="donotuse_pdiv donotuse_fill" old-post="true">
-                    <wt:quote>
-                        请进行字段配置<br />
-                    </wt:quote>
-                    <wt:hidden field="SelectedModel" />
-                    <wt:hidden field="Area" />
-                    <wt:hidden field="ModuleName" />
-                    <wt:hidden field="MainDir" />
-                    <wt:hidden field="UI" />
-                    <wt:grid vm="FieldList" use-local-data="true" hidden-checkbox="true" hidden-panel="true" />
-                    <wt:row align="AlignEnum.Right">
-                        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="确定生成代码" />
-                        <wt:closebutton />
-                    </wt:row>
-
-                </wt:form>
-                <script>
-                    layui.element.init();
-                </script>
-            </div>
-        </div>
-        </div>
+        <wt:form vm="@Model" url="/_CodeGen/Gen" label-width="150" class="donotuse_pdiv donotuse_fill" old-post="true">
+          <wt:quote>
+            请进行字段配置<br />
+          </wt:quote>
+          <wt:hidden field="SelectedModel" />
+          <wt:hidden field="Area" />
+          <wt:hidden field="ModuleName" />
+          <wt:hidden field="MainDir" />
+          <wt:hidden field="UI" />
+          <wt:grid vm="FieldList" use-local-data="true" hidden-checkbox="true" hidden-panel="true" />
+          <wt:row align="AlignEnum.Right">
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="确定生成代码" />
+            <wt:closebutton />
+          </wt:row>
+        </wt:form>
+      </div>
+    </div>
+  </div>
 
 </body>
+
 </html>

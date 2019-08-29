@@ -25,6 +25,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Login(LoginVM vm)
         {
+            if (ConfigInfo.IsQuickDebug == false)
+            {
+                var verifycode = HttpContext.Session.Get<string>("verify_code");
+                if (verifycode.ToLower() != vm.VerifyCode.ToLower())
+                {
+                    vm.MSD.AddModelError("", "验证码不正确");
+                    return View(vm);
+                }
+            }
+
             var user = vm.DoLogin();
             if (user == null)
             {

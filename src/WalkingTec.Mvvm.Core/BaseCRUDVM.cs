@@ -60,6 +60,7 @@ namespace WalkingTec.Mvvm.Core
         bool ByPassBaseValidation { get; set; }
 
         void Validate();
+        IModelStateService MSD { get; set; }
     }
 
     /// <summary>

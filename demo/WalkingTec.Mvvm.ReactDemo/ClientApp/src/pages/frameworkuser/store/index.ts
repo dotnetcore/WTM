@@ -1,5 +1,6 @@
 ﻿import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
+import { observable, action } from 'mobx';
 @BindAll()
 export class Store extends DataSource {
     constructor() {

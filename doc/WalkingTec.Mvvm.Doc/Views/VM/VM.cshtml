@@ -154,5 +154,5 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
     <p>当手工通过new的方式建立vm时，需要手动调用InitVM和/或ReInitVM，并使用CopyContext方法从其他VM中复制DataContext,Session,ModelState等值</p>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>

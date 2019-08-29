@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +18,6 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
         [Display(Name = "性别")]
         public Models.SexEnum? Sex { get; set; }
 
+        public Guid? DepId { get; set; }
     }
 }

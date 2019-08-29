@@ -1,6 +1,7 @@
 import { FormItem, InfoShellLayout } from 'components/dataView';
 import { DesForm } from 'components/decorators';
-import { WtmEditor, WtmDatePicker, WtmRangePicker } from 'components/form';
+import { WtmEditor, WtmDatePicker, WtmRangePicker, WtmSelect } from 'components/form';
+import Request from 'utils/Request';
 import * as React from 'react';
 import { Button, DatePicker } from 'antd';
 // @DialogFormDes({
@@ -49,6 +50,16 @@ export default class App extends React.Component<any, any> {
             rules: [],
             formItem: <WtmRangePicker showTime />
         },
+        "Select": {
+            label: "Select",
+            rules: [],
+            formItem: <WtmSelect dataSource={Request.cache({ url: "/api/_DataPrivilege/GetPrivileges" })} />
+        },
+        "Select2": {
+            label: "Select",
+            rules: [],
+            formItem: <WtmSelect mode="multiple" dataSource={Request.cache({ url: "/api/_DataPrivilege/GetPrivileges" })} />
+        },
     }
     onSubmit() {
         this.props.form.validateFields((err, values) => {
@@ -66,12 +77,14 @@ export default class App extends React.Component<any, any> {
                     <Button onClick={this.onSubmit.bind(this)}>打印数据（控制台）</Button>
                 </div>
                 <InfoShellLayout>
-                    <FormItem fieId="WtmDatePicker" {...props} value="2018-01-01"/>
+                    <FormItem fieId="WtmDatePicker" {...props} value="2018-01-01" />
                     <FormItem fieId="WtmDatePicker2" {...props} />
                     <FormItem fieId="DatePicker" {...props} />
                     <FormItem fieId="DatePicker2" {...props} />
                     <FormItem fieId="WtmRangePicker" {...props} />
                     <FormItem fieId="WtmRangePicker2" {...props} />
+                    <FormItem fieId="Select" {...props} value={'School'} />
+                    <FormItem fieId="Select2" {...props} value={['School']} />
                     <FormItem fieId="WtmEditor" {...props} layout="row" />
                 </InfoShellLayout>
             </div>

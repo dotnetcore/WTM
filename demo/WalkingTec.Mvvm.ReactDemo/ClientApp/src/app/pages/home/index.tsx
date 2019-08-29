@@ -1,9 +1,9 @@
 import { Card, Col, Row } from 'antd';
 import * as React from 'react';
 import Github from 'components/other/githubStar';
-import Antv1 from './antv1';
-import Antv2 from './antv2';
-import Antv3 from './antv3';
+import Antv1 from './echarts/link';
+import Antv2 from './echarts/lunar';
+import Antv3 from './echarts/pie';
 import Colendar from './colendar';
 
 import globalConfig from 'global.config';

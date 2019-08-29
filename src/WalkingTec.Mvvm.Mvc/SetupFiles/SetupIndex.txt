@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <style>
     body{
         margin:0px;
@@ -98,6 +98,7 @@
                         <option value="SqlServer">SqlServer</option>
                         <option value="MySql">MySql</option>
                         <option value="PgSql">PgSql</option>
+                        <option value="PgSql">SQLite</option>
                     </select>
                 </td>
             </tr>
@@ -144,8 +145,8 @@
                 <td>页面显示：</td>
                 <td>
                     <select name="PageMode">
-                        <option value="Single">单页面</option>
                         <option value="Tab">Tab页</option>
+                        <option value="Single">单页面</option>
                     </select>
                 </td>
             </tr>
