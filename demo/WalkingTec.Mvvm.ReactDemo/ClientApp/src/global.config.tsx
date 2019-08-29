@@ -31,7 +31,7 @@ class ConfigStore {
     /**
     * 开发环境
     */
-    development = true;
+    development = development;
     /**
      * 默认配置
      */
@@ -75,7 +75,7 @@ class ConfigStore {
     /** 列表 行  */
     @persist
     @observable
-    Limit = 20;
+    Limit = 50;
     /** 
      * 详情信息 展示类型 
      */
@@ -154,7 +154,14 @@ class ConfigStore {
     @persist
     @observable
     staticPage = "@StaticPage";
-
+    /**
+     * AgGrid 主题
+     * ag-theme-balham
+     * ag-theme-material
+     */
+    @persist
+    @observable
+    agGridTheme = "ag-theme-balham";
 }
 const GlobalConfig = new ConfigStore();
 

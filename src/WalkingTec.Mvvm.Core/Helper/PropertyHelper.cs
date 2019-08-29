@@ -358,6 +358,21 @@ namespace WalkingTec.Mvvm.Core
                         catch { }
                         fproperty.SetMemberValue(temp, list, null);
                     }
+                    else if (propertyType.IsArray)
+                    {
+                        try
+                        {
+                            var strVals = (StringValues)value;
+                            var eletype = propertyType.GetElementType();
+                            var arr = Array.CreateInstance(eletype, strVals.Count);
+                            for (int i = 0; i < arr.Length; i++)
+                            {
+                                arr.SetValue(strVals[i].ConvertValue(eletype), i);
+                            }
+                            fproperty.SetMemberValue(temp, arr, null);
+                        }
+                        catch { }
+                    }
                     else
                     {
                         if (isArray)

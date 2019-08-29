@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
+@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="Textbox">
     <p>Textbox的常用属性有：</p>
@@ -56,6 +56,7 @@
                 </tr>
             </tbody>
         </table>
+    <div style="height:10px;">&nbsp;</div>
         <wt:tab>
             <wt:tabheaders>
                 <wt:tabheader title="效果" />
@@ -145,8 +146,8 @@ public IActionResult GetSchool(string keywords)
 
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
     </script>

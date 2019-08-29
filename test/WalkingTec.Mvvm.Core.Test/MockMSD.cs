@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +40,19 @@ namespace WalkingTec.Mvvm.Core.Test
         public void Clear()
         {
             _states.Clear();
+        }
+
+        public string GetFirstError()
+        {
+            string rv = "";
+            foreach (var key in Keys)
+            {
+                if (this[key].Count > 0)
+                {
+                    rv = this[key].First().ErrorMessage;
+                }
+            }
+            return rv;
         }
 
         public int Count => _states.Count;

@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string Format { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
-        {            
+        {
             bool isFile = false;
             if (Field?.Name?.ToLower().EndsWith("id") == true)
             {

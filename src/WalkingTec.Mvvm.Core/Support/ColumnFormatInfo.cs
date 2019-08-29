@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -98,6 +98,10 @@ namespace WalkingTec.Mvvm.Core
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Html;
             rv.Html = html;
+            if (string.IsNullOrEmpty(rv.Html) == false)
+            {
+                rv.Html += "<script></script>";
+            }
             return rv;
         }
     }

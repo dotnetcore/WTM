@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -355,16 +355,14 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}_ViewStart.cshtml", GetResource("ViewStart.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}Index.cshtml", GetResource("home.Index.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}ChangePassword.cshtml", GetResource("home.ChangePassword.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}Header.cshtml", GetResource("home.Header.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}Layout.cshtml", GetResource("home.layout.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}Login.cshtml", GetResource("home.Login.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}Menu.cshtml", GetResource("home.Menu.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}PIndex.cshtml", GetResource("home.PIndex.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}FrontPage.cshtml", GetResource("home.FrontPage.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}IndexVM.cs", GetResource("vms.IndexVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Shared{Path.DirectorySeparatorChar}_Layout.cshtml", GetResource("layui.Layout.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Shared{Path.DirectorySeparatorChar}_PLayout.cshtml", GetResource("layui.PLayout.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Areas{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);

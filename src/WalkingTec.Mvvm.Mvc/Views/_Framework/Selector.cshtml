@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Core.IBasePagedListVM<WalkingTec.Mvvm.Core.TopBasePoco,WalkingTec.Mvvm.Core.BaseSearcher>
+@model WalkingTec.Mvvm.Core.IBasePagedListVM<WalkingTec.Mvvm.Core.TopBasePoco,WalkingTec.Mvvm.Core.BaseSearcher>
 @using WalkingTec.Mvvm.Core.Extensions;
 @using Newtonsoft.Json;
 @{
@@ -92,9 +92,10 @@
     }
 </script>
 
-<wt:container style="margin:10px;">
+<wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv'>
+    <div style="height:10px">&nbsp;</div>
     $$SearchPanel$$
-    <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" height="400" />
+    <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" />
     <wt:row align="AlignEnum.Right">
         <wt:button click="submitSelect();" text="确定" size="ButtonSizeEnum.Normal" />
     </wt:row>

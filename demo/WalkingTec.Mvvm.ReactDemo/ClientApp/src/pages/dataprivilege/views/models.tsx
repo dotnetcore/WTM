@@ -1,4 +1,4 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
+﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
@@ -33,19 +33,22 @@ export default {
                 label: "权限名称",
                 rules: [],
                 formItem: <WtmSelect placeholder="选择权限作"
-                    dataSource={Request.cache({ url: "/api/_DataPrivilege/GetPrivileges"})}
+                    dataSource={Request.cache({ url: "/api/_DataPrivilege/GetPrivileges" })}
                 />
             },
-           /** 允许访问 */
-           "SelectedItemsID": {
-               label: "允许访问",
+            /** 允许访问 */
+            "SelectedItemsID": {
+                label: "允许访问",
                 rules: [],
-               formItem: <WtmSelect placeholder="选择允许访问的权限"
-                    multiple
-                   linkageModels="Entity.TableName"
-                    dataSource={(parentid) => Request.cache({
-                        url: "/api/_DataPrivilege/GetPrivilegeByTableName", body: { table: parentid }
-                    })}
+                formItem: <WtmSelect placeholder="选择允许访问的权限"
+                    mode="multiple"
+                    linkage={['Entity.TableName']}
+                    dataSource={(props) => {
+                        const table = lodash.get(props, 'Entity.TableName')
+                        return table && Request.cache({
+                            url: "/api/_DataPrivilege/GetPrivilegeByTableName", body: { table }
+                        })
+                    }}
                 />
             },
             /** 备注 */
@@ -72,7 +75,7 @@ export default {
                     dataSource={Request.cache({ url: "/api/_DataPrivilege/GetUserGroups" })}
                 />
             }
-       }
+        }
     },
     /**
      * 搜索 模型 
@@ -108,7 +111,7 @@ export default {
             return <FormItem {...props} fieId={key} key={key} />
         })
     },
-    
+
     getValue(props: WTM.FormProps, fieId, defaultvalue = undefined) {
         var rv = lodash.toString(props.form.getFieldValue(fieId) || lodash.get(props.defaultValues, fieId));
         console.log("rv=" + rv);

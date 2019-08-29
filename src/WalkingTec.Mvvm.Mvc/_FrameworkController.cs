@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Mvc
                 listVM.NeedPage = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Batch;
                 Regex r = new Regex("<script>.*?</script>");
-                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");                
+                ViewBag.SelectData = r.Replace((listVM as IBasePagedListVM<TopBasePoco, BaseSearcher>).GetDataJson(), "");
                 listVM.IsSearched = false;
                 listVM.SearcherMode = ListVMSearchModeEnum.Selector;
                 listVM.NeedPage = originNeedPage;
@@ -259,6 +259,10 @@ namespace WalkingTec.Mvvm.Mvc
                 log.ActionUrl = ex.Path;
                 log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
                 log.Remark = ex.Error.ToString();
+                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                {
+                    log.Remark = log.Remark.Substring(0, 1000);
+                }
                 DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
                 if (starttime != null)
                 {
@@ -328,7 +332,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             if (height == null)
             {
-                height = width * oimage.Height /oimage.Width ;
+                height = width * oimage.Height / oimage.Width;
             }
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
@@ -382,7 +386,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("获取文件")]
-        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default",int? width = null, int? height = null)
+        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             if (id == Guid.Empty)
@@ -514,6 +518,192 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 移除没有权限访问的菜单
+        /// </summary>
+        /// <param name="menus">菜单列表</param>
+        /// <param name="info">用户信息</param>
+        private void RemoveUnAccessableMenu(List<menuObj> menus, LoginUserInfo info)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+
+            List<menuObj> toRemove = new List<menuObj>();
+            //如果没有指定用户信息，则用当前用户的登录信息
+            if (info == null)
+            {
+                info = LoginUserInfo;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                //判断是否有权限，如果没有，则添加到需要移除的列表中
+                var url = menu.Url;
+                if (!string.IsNullOrEmpty(url) && url.StartsWith("/_framework/outside?url="))
+                {
+                    url = url.Replace("/_framework/outside?url=", "");
+                }
+                if (!string.IsNullOrEmpty(url) && info.IsAccessable(HttpUtility.UrlDecode(url)) == false)
+                {
+                    toRemove.Add(menu);
+                }
+                //如果有权限，则递归调用本函数检查子菜单
+                else
+                {
+                    RemoveUnAccessableMenu(menu.Children, info);
+                }
+            }
+            //删除没有权限访问的菜单
+            foreach (var remove in toRemove)
+            {
+                menus.Remove(remove);
+            }
+        }
+
+        private void RemoveEmptyMenu(List<menuObj> menus)
+        {
+            for (int i = 0; i < menus.Count; i++)
+            {
+                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
+                {
+                    menus.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// genreate menu
+        /// </summary>
+        private void GenerateMenuTree(List<FrameworkMenu> menus, List<menuObj> resultMenus)
+        {
+            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new menuObj()
+            {
+                Id = x.ID,
+                Title = x.PageName,
+                Url = x.Url,
+                Order = x.DisplayOrder,
+                ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+            })
+            .OrderBy(x => x.Order)
+            .ToList());
+
+            foreach (var menu in resultMenus)
+            {
+                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new menuObj()
+                {
+                    Id = x.ID,
+                    Title = x.PageName,
+                    Url = x.Url,
+                    Order = x.DisplayOrder,
+                    ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                })
+                .OrderBy(x => x.Order)
+                .ToList();
+                if (temp.Count() > 0)
+                {
+                    menu.Children = temp;
+                    foreach (var item in menu.Children)
+                    {
+                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new menuObj()
+                        {
+                            Title = x.PageName,
+                            Url = x.Url,
+                            Order = x.DisplayOrder,
+                            ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                        })
+                        .OrderBy(x => x.Order)
+                        .ToList();
+
+                        if (item.Children.Count() == 0)
+                            item.Children = null;
+                    }
+                }
+            }
+        }
+
+        public class menuObj
+        {
+            [JsonIgnore]
+            public Guid Id { get; set; }
+
+            /// <summary>
+            /// Name
+            /// 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("name")]
+            public string Name => Title;
+
+            /// <summary>
+            /// Title
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("title")]
+            public string Title { get; set; }
+
+            /// <summary>
+            /// 图标
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("icon")]
+            public string ICon { get; set; }
+
+            /// <summary>
+            /// 是否展开节点
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("spread")]
+            public bool? Expand { get; set; }
+
+            /// <summary>
+            /// Url
+            /// </summary>
+            /// <value></value>
+            [JsonProperty("jump")]
+            public string Url { get; set; }
+
+            [JsonProperty("list")]
+            public List<menuObj> Children { get; set; }
+
+            /// <summary>
+            /// order
+            /// </summary>
+            /// <value></value>
+            [JsonIgnore]
+            public int? Order { get; set; }
+
+        }
+
+        [AllRights]
+        [HttpGet]
+        public IActionResult Menu()
+        {
+            if (ConfigInfo.IsQuickDebug == true)
+            {
+                var resultMenus = new List<menuObj>();
+                GenerateMenuTree(FFMenus, resultMenus);
+                RemoveEmptyMenu(resultMenus);
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), "application/json");
+            }
+            else
+            {
+                var resultMenus = new List<menuObj>();
+                GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
+                RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
+                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), "application/json");
+            }
+        }
+
         [Public]
         [HttpPost]
         [CrossDomain]
@@ -579,9 +769,106 @@ namespace WalkingTec.Mvvm.Mvc
             }, 1800);
         }
 
+        [Public]
+        [ResponseCache(Duration = 3600)]
+        public ActionResult GetGithubInfo()
+        {
+            var rv = ReadFromCache<string>("githubinfo", () =>
+            {
+                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+                return JsonConvert.SerializeObject(s);
+            }, 1800);
+            return Content(rv, "application/json");
+        }
+
+
+        [Public]
+        [ResponseCache(Duration = 3600)]
+        public string Redirect()
+        {
+            return "";
+        }
+
         private class github
         {
             public int stargazers_count { get; set; }
+            public int forks_count { get; set; }
+            public int subscribers_count { get; set; }
+            public int open_issues_count { get; set; }
+        }
+
+        [Public]
+        public ActionResult GetVerifyCode()
+        {
+            int codeW = 80;
+            int codeH = 30;
+            int fontSize = 16;
+            string chkCode = string.Empty;
+            Color[] color = { Color.Black, Color.Red, Color.Blue, Color.Green, Color.Orange, Color.Brown, Color.DarkBlue, Color.PaleGreen };
+            string[] font = { "Times New Roman" };
+            char[] character = { '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'd', 'e', 'f', 'h', 'k', 'm', 'n', 'r', 'x', 'y', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'W', 'X', 'Y' };
+            //生成验证码字符串
+            Random rnd = new Random();
+            for (int i = 0; i < 4; i++)
+            {
+                chkCode += character[rnd.Next(character.Length)];
+            }
+            //写入Session用于验证码校验，可以对校验码进行加密，提高安全性
+            HttpContext.Session.Set<string>("verify_code", chkCode);
+
+            //创建画布
+            Bitmap bmp = new Bitmap(codeW, codeH);
+            Graphics g = Graphics.FromImage(bmp);
+            g.Clear(Color.Linen);
+
+            //画噪线
+            for (int i = 0; i < 3; i++)
+            {
+                int x1 = rnd.Next(codeW);
+                int y1 = rnd.Next(codeH);
+                int x2 = rnd.Next(codeW);
+                int y2 = rnd.Next(codeH);
+
+                Color clr = color[rnd.Next(color.Length)];
+                g.DrawLine(new Pen(clr), x1, y1, x2, y2);
+            }
+            //画验证码
+            for (int i = 0; i < chkCode.Length; i++)
+            {
+                string fnt = font[rnd.Next(font.Length)];
+                Font ft = new Font(fnt, fontSize);
+                Color clr = color[rnd.Next(color.Length)];
+                g.DrawString(chkCode[i].ToString(), ft, new SolidBrush(clr), (float)i * 18, (float)0);
+            }
+            //将验证码写入图片内存流中，以image/png格式输出
+            MemoryStream ms = new MemoryStream();
+            try
+            {
+                bmp.Save(ms, ImageFormat.Png);
+                return File(ms.ToArray(), "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                g.Dispose();
+                bmp.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [AllRights]
+        [HttpGet]
+        [ResponseCache(Duration = 3600)]
+        public IActionResult GetIconFonts(string id)
+        {
+            return Json(IconFontsHelper.IconFontDicItems[id]);
         }
 
     }
