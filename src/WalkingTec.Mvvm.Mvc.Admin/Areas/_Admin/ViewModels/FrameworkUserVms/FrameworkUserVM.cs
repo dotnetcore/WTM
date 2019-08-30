@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -61,6 +61,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
+                Entity.UserRoles = new List<FrameworkUserRole>();
+                Entity.UserGroups = new List<FrameworkUserGroup>();
                 if (SelectedRolesIDs != null)
                 {
                     foreach (var roleid in SelectedRolesIDs)
@@ -85,20 +87,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                if (SelectedRolesIDs == null || SelectedRolesIDs.Count == 0)
+                Entity.UserRoles = new List<FrameworkUserRole>();
+                Entity.UserGroups = new List<FrameworkUserGroup>();
+                if (SelectedRolesIDs != null)
                 {
-                    FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
-                }
-                else
-                {
-                    Entity.UserRoles = new List<FrameworkUserRole>();
                     SelectedRolesIDs.ForEach(x => Entity.UserRoles.Add(new FrameworkUserRole { ID = Guid.NewGuid(), UserId = Entity.ID, RoleId = x }));
                 }
-                if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
-                {
-                    FC.Add("Entity.SelectedGroupIDs.DONOTUSECLEAR", "true");
-                }
-                else
+                if (SelectedGroupIDs != null)
                 {
                     SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
                 }

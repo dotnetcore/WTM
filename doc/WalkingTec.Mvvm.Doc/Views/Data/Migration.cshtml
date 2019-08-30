@@ -19,7 +19,7 @@
     <p>这种情况下，我们可以使用Design-time DbContext来手工指定需要同步的数据库，具体可以参考<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dbcontext-creation">微软文档</a></p>
     <p>简单来说，就是在代码中创建一个继承IDesignTimeDbContextFactory的类，例如：</p>
     <wt:code title="DataContextFactory.cs">
-public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
+public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
 {
     public DataContext CreateDbContext(string[] args)
     {

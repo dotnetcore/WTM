@@ -5,6 +5,7 @@
 </style>
 <p>BasePagedListVM是框架中负责分页展示数据和导出的VM，它继承自BaseVM</p>
 <wt:fieldset field-set-style="Simple" title="建立一个BasePagedListVM">
+</wt:fieldset>
     <p>建立BasePagedListVM主要有以下几部</p>
     <p>1. 定义继承自BasePagedListVM的类，将关联的Model作为泛型变量</p>
     <p>2. 重写GetSearchQuery函数，将查询语句和逻辑写在这个函数里</p>
@@ -176,7 +177,6 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
         </tbody>
     </table>
 
-</wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="使用BasePagedListVM">
     <p>在Controller中使用BasePagedListVM的步骤也是一目了然，请看下面的例子</p>
     <wt:code title="SchoolController.cs">
@@ -235,7 +235,7 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
     <p>在项目中，我们还经常遇到使用grid来批量编辑数据的情况，</p>
     <p>请看下面的例子</p>
     <wt:code title="SchoolListVM2.cs">
-    public class StudentListVm : BasePagedListVM&ltStudent,StudentSearcher&gt
+    public class StudentListVm : BasePagedListVM&ltStudent, StudentSearcher&gt
     {
         public StudentListVm()
         {
@@ -246,8 +246,8 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         {
             return new List&ltGridAction&gt
             {
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.AddRow, ""),
-                this.MakeStandardAction("Employee", GridActionStandardTypesEnum.RemoveRow, ""),
+                this.MakeStandardAction( "Employee", GridActionStandardTypesEnum.AddRow, ""),
+                this.MakeStandardAction( "Employee", GridActionStandardTypesEnum.RemoveRow, ""),
 
             };
         }
@@ -255,11 +255,12 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         protected override IEnumerable&ltIGridColumn&ltStudent&gt&gt InitGridHeader()
         {
             return new List&ltGridColumn&ltStudent&gt&gt{
-                this.MakeGridHeader(x =&gt x.LoginName).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x =&gt x.Name).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x =&gt x.Sex).SetEditType(EditTypeEnum.ComboBox, typeof(Models.SexEnum).ToListItems(pleaseSelect:true)),
-                this.MakeGridHeader(x =&gt x.CellPhone).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x=&gtx.IsValid).SetEditType(EditTypeEnum.CheckBox)
+                this.MakeGridHeader( x =&gt x.LoginName).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x =&gt x.Name).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x =&gt x.Sex)
+      .SetEditType( EditTypeEnum.ComboBox, typeof( Models.SexEnum).ToListItems( pleaseSelect:true)),
+                this.MakeGridHeader( x =&gt x.CellPhone).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x=&gtx.IsValid).SetEditType( EditTypeEnum.CheckBox)
             };
         }
 
@@ -274,8 +275,8 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
             };
 
             var query = data.AsQueryable().Where(x=&gt
-                    (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
-                    (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
+                    (string.IsNullOrEmpty( Searcher.LoginName) || x.LoginName.Contains( Searcher.LoginName)) &&
+                    (string.IsNullOrEmpty( Searcher.Name) || x.Name.Contains( Searcher.Name)) &&
                     (Searcher.Sex == null || x.Sex == Searcher.Sex)
                 )
                 .OrderBy(x =&gt x.ExcelIndex);
@@ -292,15 +293,16 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="使用存储过程">
+  </wt:fieldset>
 
     <p>有时我们需要使用sql语句或者存储过程来查询数据</p>
     <p>请看下面的例子</p>
     <wt:code title="SchoolListVM2.cs">
-    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
+    public class ActionLogListVM : BasePagedListVM<ActionLog,BaseSearcher>
     {
-        protected override List&lt;GridAction&gt; InitGridAction()
+        protected override List<GridAction> InitGridAction()
         {
-            var actions = new List&lt;GridAction&gt;
+            var actions = new List<GridAction>
             {
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel)
@@ -308,19 +310,19 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
             return actions;
         }
 
-        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
+        protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
         {
-            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
+            var header = new List<GridColumn<ActionLog>>();
 
-            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
-            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
-            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
-            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
-            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
-            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
-            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
-            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
-            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
+            header.Add(this.MakeGridHeader(x => x.LogType, 80));
+            header.Add(this.MakeGridHeader(x => x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x => x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x => x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x => x.IP, 120));
+            header.Add(this.MakeGridHeader(x => x.Remark));
             header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;
@@ -387,10 +389,10 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         <p>使用存储过程比较繁琐，绝大部分需求时可以使用lambda或者linq来写的，不到万不得已尽量别用存储过程</p>
     </wt:quote>
 
-</wt:fieldset>
 
 
 <wt:fieldset field-set-style="Simple" title="主要属性">
+</wt:fieldset>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -422,9 +424,9 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
 
         </tbody>
     </table>
-</wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="主要函数">
-    <table lay-filter="parse-table-demo">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">函数</th>
@@ -470,7 +472,6 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
             </tr>
         </tbody>
     </table>
-</wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>

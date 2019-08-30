@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -21,9 +21,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.SetAttribute("class", "layui-elem-field layui-field-title");
             }
-
+            string content = $@"<legend>{Title}</legend>";
             var innerContent = output.GetChildContentAsync().Result.GetContent();
-            output.Content.SetHtmlContent($@"<legend>{Title}</legend><div class=""layui-field-box"">{innerContent}</div>");
+            if (string.IsNullOrEmpty(innerContent?.Trim()) == false)
+            {
+                content += $@"<div class=""layui-field-box"">{innerContent}</div>";
+            }
+            output.Content.SetHtmlContent(content);
             base.Process(context, output);
         }
     }
