@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="Selector">
-    <p>Selector用于处理那些需要另外弹出页面进行搜索才能选定数据的场景，常用属性有：</p>
+ </wt:fieldset>
+   <p>Selector用于处理那些需要另外弹出页面进行搜索才能选定数据的场景，常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -94,7 +95,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:textbox field="Entity.MajorName" />
                         <wt:selector field="Entity.Students"  list-vm="StudentList" text-bind="StudentList.EntityList[0].Name">
                         </wt:selector>
@@ -120,7 +121,6 @@
                 </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="搜索">
     <p>Selector弹出的列表中，也可以加入搜索条件，例如：</p>
@@ -131,7 +131,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:textbox field="Entity.MajorName" />
                     <wt:selector field="Entity.Students2" list-vm="StudentList" text-bind="StudentList.EntityList[0].Name" select-button-text="条件">
                         <wt:searchpanel vm="StudentList">

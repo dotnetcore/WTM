@@ -5,7 +5,8 @@
 </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="TreeContainer">
-  <p>TreeContainer的常用属性有：</p>
+ </wt:fieldset>
+ <p>TreeContainer的常用属性有：</p>
   <table lay-filter="parse-table-demo">
     <thead>
       <tr>
@@ -70,7 +71,6 @@
     <p>比如 DC.Set<Department>().GetTreeSelectListItems(LoginUserInfo.DataPrivileges,null,x=>x.DepName) 直接读库并生成一个List&lt;TreeSelectListItem&gt;</p>
   </wt:quote>
 
-</wt:fieldset>
 
 <wt:quote>
   <p>TreeContainer主要有三种用法</p>
@@ -180,7 +180,7 @@
 </wt:fieldset>
 
 <script>
-  layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
   layui.table.init('parse-table-demo', {
         limit: 100, page: false
   });

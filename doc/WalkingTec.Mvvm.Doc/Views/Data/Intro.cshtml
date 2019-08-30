@@ -1,7 +1,8 @@
 WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，只是提供FrameworkContext作为基类并定义了一些辅助函数
 
 <wt:fieldset field-set-style="Simple" title="方法说明">
-    <table lay-filter="parse-table-demo">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">方法</th>
@@ -43,10 +44,10 @@ WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，�
             </tr>
         </tbody>
     </table>
-</wt:fieldset>
 
 <p>另外框架本身定义了一些列的表，用以支撑框架内部操作，它们是</p>
 <wt:fieldset field-set-style="Simple" title="内置数据表">
+</wt:fieldset>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -103,7 +104,6 @@ WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，�
 
         </tbody>
     </table>
-</wt:fieldset>
 <script>
         layui.table.init('parse-table-demo', {
         limit: 100, page: false

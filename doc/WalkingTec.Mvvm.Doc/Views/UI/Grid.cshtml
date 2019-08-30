@@ -5,7 +5,8 @@
     }
 </style>
 <wt:fieldset field-set-style="Simple" title="Grid">
-    <p>使用框架提供的grid控件可以快速输出列表</p>
+ </wt:fieldset>
+   <p>使用框架提供的grid控件可以快速输出列表</p>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -92,9 +93,9 @@
     <wt:quote>
         <p>显示Grid的前台代码非常简单，复杂的逻辑都在它绑定的ListVM中，比如设定列表显示的列，列表的按钮，列表是否可编辑等等都要在ListVM中设置，具体请参考<a href="/#/VM/List">ListVM</a></p>
     </wt:quote>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="SearchPanel">
+</wt:fieldset>
     <p>SearchPanel是和Grid配套的，用于展示搜索条件的Panel</p>
     <table lay-filter="parse-table-demo">
         <thead>
@@ -165,7 +166,6 @@
         <p>SearchPanel内部和普通Form一样，可以使用各种控件和排版，它的作用就是通过绑定ListVM中Searcher里面的各种查询条件，将查询条件传递给后台方法</p>
         <p>如果在页面展现之前，在后台已经给ListVM的Searcher里面的某些变量赋值了，那么在前台不需要写SearchPanel，Grid就会按照已赋值的搜索条件进行搜索。这种方法非常适合展示搜索条件固定的列表。</p>
     </wt:quote>
-</wt:fieldset>
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})
