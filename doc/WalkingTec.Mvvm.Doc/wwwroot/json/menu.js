@@ -108,7 +108,8 @@
                         },
                         { "name": "/Grid", "title": "数据表格", "jump": "/UI/Grid" },
                         { "name": "/TreeContainer", "title": "TreeContainer", "jump": "/UI/TreeContainer" },
-                        { "name": "/Others", "title": "其他", "jump": "/UI/Others" }
+                        { "name": "/Others", "title": "其他", "jump": "/UI/Others" },
+                        { "name": "/layuiadmin", "title": "LayuiAdmin", "jump": "/views/iframe/layuiadmin.html" }
                     ]
                 },
                 {
