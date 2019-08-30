@@ -10,7 +10,8 @@
 }
 
 <wt:fieldset field-set-style="Simple" title="DateTime">
-    <p>DateTime的常用属性有：</p>
+ </wt:fieldset>
+   <p>DateTime的常用属性有：</p>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -153,7 +154,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" />
                     <wt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" />
                     <wt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" />
@@ -260,7 +261,6 @@ layui.use('code',function(){layui.code({ about: false })})
             </wt:tabcontent>
         </wt:tabcontents>
     </wt:tab>
-</wt:fieldset>
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})

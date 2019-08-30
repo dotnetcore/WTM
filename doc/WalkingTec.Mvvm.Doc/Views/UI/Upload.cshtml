@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="Upload">
-    <p>Upload控件用于文件上传，常用属性有：</p>
+ </wt:fieldset>
+   <p>Upload控件用于文件上传，常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -84,7 +85,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:upload field="Entity.PhotoId" upload-type="ImageFile" />
                         <wt:row align="AlignEnum.Right">
                             <wt:submitbutton disabled="true" />
@@ -106,7 +107,6 @@
                 </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
     <script>
     layui.use('code',function(){layui.code({ about: false })})

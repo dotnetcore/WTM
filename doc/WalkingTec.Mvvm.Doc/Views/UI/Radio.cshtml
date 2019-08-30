@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="Radio">
-    <p>Radio的常用属性有：</p>
+ </wt:fieldset>
+   <p>Radio的常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -72,7 +73,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:radio field="Entity.Sex" />
                         <wt:radio field="Entity.IsValid" yes-text="真的是" no-text="真不是" />
                         <wt:radio field="SelectedSchool" label-text="学校" items="AllSchools" />
@@ -98,7 +99,6 @@
                 </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
     <script>
     layui.use('code',function(){layui.code({ about: false })})

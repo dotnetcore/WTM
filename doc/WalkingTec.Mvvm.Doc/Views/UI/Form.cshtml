@@ -12,7 +12,8 @@
 </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="Form">
-    <p>一个表单通常由一个Form控件来代表，Form控件内部嵌套了其他表单控件，并包含提交按钮</p>
+ </wt:fieldset>
+   <p>一个表单通常由一个Form控件来代表，Form控件内部嵌套了其他表单控件，并包含提交按钮</p>
     <p>Form的常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
@@ -56,7 +57,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:textbox field="Entity.SchoolCode" />
                         <wt:textbox field="Entity.SchoolName" />
                         <wt:combobox field="Entity.SchoolType" />
@@ -83,7 +84,6 @@
         </wt:tab>
 
 
-</wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
