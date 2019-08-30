@@ -80,15 +80,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 string cusmtomclick = "";
                 if (string.IsNullOrEmpty(ClickFunc))
                 {
-                    Regex r = new Regex("var (.*?)option = {");
+                    Regex r = new Regex("(.*?)option = {");
                     var m = r.Match(insideContent);
                     if (m.Success)
                     {
                         var gridid = m.Groups[1].Value.Trim();
                         Regex r2 = new Regex($"(.*?) = table.render\\({gridid}option\\);");
                         var m2 = r2.Match(insideContent);
-                        var gridvar = m2.Groups[1].Value.Trim();
-                        cusmtomclick = $@"
+                        if (m2.Success)
+                        {
+                            var gridvar = m2.Groups[1].Value.Trim();
+                            cusmtomclick = $@"
     layui.table.reload('{gridid}',{{where: $.extend({gridvar}.config.where,{{'{IdField?.Name ?? "notsetid"}':data.data.id, '{LevelField?.Name ?? "notsetlevel"}':data.data.level }}),
         done: function(res,curr,count){{
             layer.close(msg);
@@ -99,7 +101,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }}
     }})
 ";
-
+                        }
                     }
                     else if(string.IsNullOrEmpty(insideContent))
                     {
