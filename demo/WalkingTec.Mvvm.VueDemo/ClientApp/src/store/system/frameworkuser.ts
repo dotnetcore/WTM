@@ -9,5 +9,6 @@ export default new Vuex.Store({
     state: { ...newStore.state },
     actions: { ...newStore.actions },
     getters: {},
-    mutations: { ...newStore.mutations }
+    mutations: { ...newStore.mutations },
+    modules: newStore.modules
 });

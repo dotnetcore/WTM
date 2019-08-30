@@ -68,25 +68,17 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action
-    frameworkuserSearch;
-    @Action
-    frameworkuserGetFrameworkRoles;
-    @Action
-    frameworkuserGetFrameworkGroups;
-    @Action
-    frameworkuserBatchDelete;
-    @Action
-    frameworkuserDelete;
-    @Action
-    frameworkuserExportExcel;
-    @Action
-    frameworkuserExportExcelByIds;
+    @Action frameworkuserSearch;
+    @Action frameworkuserGetFrameworkRoles;
+    @Action frameworkuserGetFrameworkGroups;
+    @Action frameworkuserBatchDelete;
+    @Action frameworkuserDelete;
+    @Action frameworkuserExportExcel;
+    @Action frameworkuserExportExcelByIds;
 
-    @State
-    fameworkuserSearchData;
-    @State
-    Actions;
+    @State fameworkuserSearchData;
+    // 权限动作
+    @State(state => state.user.Actions) Actions;
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,

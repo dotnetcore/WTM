@@ -47,3 +47,9 @@ export const dirEdit = {
     },
     update: (el, binding, vnode) => domStyleFn(el, binding, vnode)
 };
+// // 按钮action权限
+// export const visible = {
+//     inserted: (el, binding, vnode) => {
+//         binding.value
+//     }
+// }
