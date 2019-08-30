@@ -48,11 +48,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 });
             }
 
-            var otherLegend = new List<string>() { "legendName" };
+            var otherLegend = new List<string>() { "相关信息" };
             var otherSeries = new List<object>()
             {
                 new {
-                    name = "legendName",
+                    name = "相关信息",
                     type = "bar",
                     data = new int[] {
                         GlobaInfo.AllModels.Count(),
