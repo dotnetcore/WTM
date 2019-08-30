@@ -672,6 +672,7 @@ namespace WalkingTec.Mvvm.Mvc
                         initstr += $@"
             Selected{pro.FieldName}IDs = Entity.{pro.FieldName}.Select(x => x.{pro.SubIdField}).ToList();";
                         addstr += $@"
+            Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if (Selected{pro.FieldName}IDs != null)
             {{
                 foreach (var id in Selected{pro.FieldName}IDs)
@@ -681,9 +682,9 @@ namespace WalkingTec.Mvvm.Mvc
             }}
 ";
                         editstr += $@"
+            Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if(Selected{pro.FieldName}IDs != null )
             {{
-                Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
                 Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ ID = Guid.NewGuid(), {pro.SubIdField} = x }}));
             }}
 ";
