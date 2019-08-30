@@ -258,7 +258,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
-                    string pagetitle = string.Empty;
+                    string pagetitle = " ";
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path);
                     if (menu == null)
                     {
