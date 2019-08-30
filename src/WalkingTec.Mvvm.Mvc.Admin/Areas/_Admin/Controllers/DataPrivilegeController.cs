@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -15,6 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult Index()
         {
             var vm = CreateVM<DataPrivilegeListVM>();
+            vm.Searcher.TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
 

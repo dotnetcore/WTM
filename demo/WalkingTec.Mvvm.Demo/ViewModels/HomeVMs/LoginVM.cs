@@ -22,6 +22,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 
         public string Redirect { get; set; }
 
+        [Display(Name = "验证码")]
+        public string VerifyCode { get; set; }
+
         /// <summary>
         /// 进行登录
         /// </summary>

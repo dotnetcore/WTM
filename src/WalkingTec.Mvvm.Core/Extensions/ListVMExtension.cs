@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -111,6 +111,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             sb.Append("{");
             bool containsID = false;
             bool addHiddenID = false;
+            Dictionary<string, (string, string)> colorcolumns = new Dictionary<string, (string, string)>();
             foreach (var baseCol in self.GetHeaders())
             {
                 foreach (var col in baseCol.BottomChildren)
@@ -135,19 +136,22 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         foreColor = RowColor;
                     }
-                    var style = string.Empty;
+                    (string bgcolor, string forecolor) colors = (null,null);
                     if (backColor != string.Empty)
                     {
-
-                        style += $"background-color:#{backColor};";
+                        colors.bgcolor = backColor;
                     }
                     if (foreColor != string.Empty)
                     {
-                        style += $"color:#{foreColor};";
+                        colors.forecolor = foreColor;
+                    }
+                    if( string.IsNullOrEmpty(colors.bgcolor) == false || string.IsNullOrEmpty(colors.forecolor) == false)
+                    {
+                        colorcolumns.Add(col.Field, colors);
                     }
                     //设定列名，如果是主键ID，则列名为id，如果不是主键列，则使用f0，f1,f2...这种方式命名，避免重复
                     var ptype = col.FieldType;
-                    if (col.Field.ToLower() == "children" && typeof(IEnumerable<T>).IsAssignableFrom(ptype))
+                    if (col.Field?.ToLower() == "children" && typeof(IEnumerable<T>).IsAssignableFrom(ptype))
                     {
                         var children = ((IEnumerable<T>)col.GetObject(obj))?.ToList();
                         if (children == null || children.Count() == 0)
@@ -213,7 +217,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 }
                             }
 
-                            //如果列是布尔值，直接返回true或false，让ExtJS生成CheckBox
+                            //如果列是布尔值，直接返回true或false，让前台生成CheckBox
                             if (ptype == typeof(bool) || ptype == typeof(bool?))
                             {
                                 if (returnColumnObject == false)
@@ -243,11 +247,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                     html = PropertyHelper.GetEnumDisplayName(ptype, enumvalue);
                                 }
                             }
-                            if (style != string.Empty)
-                            {
-                                string uid = Guid.NewGuid().ToString().Replace("-", "");
-                                html = $"<div style='{style}' id='{uid}'>{html}<script>$('#{uid}').closest('td').css('background-color','#{backColor}');</script></div>";
-                            }
                         }
                     }
                     else
@@ -272,7 +271,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
                     {
-                        html += $@"<input hidden name=""{self.DetailGridPrix}[{index}].ID"" value=""{sou.ID}""/>";
+                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.ID}'/>";
                         addHiddenID = true;
                     }
                     if (inner == false)
@@ -284,6 +283,27 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
             }
             sb.Append($"\"TempIsSelected\":\"{ (isSelected == true ? "1" : "0") }\"");
+            foreach (var cc in colorcolumns)
+            {
+                if(string.IsNullOrEmpty(cc.Value.Item1) == false)
+                {
+                    string bg = cc.Value.Item1;
+                    if (bg.StartsWith("#") == false)
+                    {
+                        bg = "#" + bg;
+                    }
+                    sb.Append($",\"{cc.Key}__bgcolor\":\"{bg}\"");
+                }
+                if (string.IsNullOrEmpty(cc.Value.Item2) == false)
+                {
+                    string fore = cc.Value.Item2;
+                    if (fore.StartsWith("#") == false)
+                    {
+                        fore = "#" + fore;
+                    }
+                    sb.Append($",\"{cc.Key}__forecolor\":\"{fore}\"");
+                }
+            }
             if (containsID == false)
             {
                 sb.Append($",\"ID\":\"{sou.ID}\"");

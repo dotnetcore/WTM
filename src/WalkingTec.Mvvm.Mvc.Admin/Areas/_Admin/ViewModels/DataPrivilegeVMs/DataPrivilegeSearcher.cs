@@ -29,8 +29,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         protected override void InitVM()
         {
             TableNames = new List<ComboSelectListItem>();
-            //AllDomains = DC.Set<FrameworkDomain>().GetSelectListItemsForML(null, x => x, y => y.DomainName, LoginUserInfo.DataPrivileges);
-            //AllDomains.Insert(0, new ComboSelectListItem { Text = Language.SelfDomain, Value = "-1" });
         }
     }
 }

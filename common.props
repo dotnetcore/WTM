@@ -1,22 +1,19 @@
 <Project>
   <Import Project=".\version.props" />
   <PropertyGroup>
-    <Product>WalkingTec.Mvvm</Product>
+    <Product>WTM</Product>
+    <PackageId>$(ProjectName)</PackageId>
     <Authors>Michael,Vito</Authors>
     <Company>Michael,Vito</Company>
-    <Copyright>Copyright © WalkingTec 2018</Copyright>
-    <PackageId>$(ProjectName)</PackageId>
+    <Copyright>Copyright © Michael,Vito 2019</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/WalkingTec/WalkingTec.Mvvm.git</RepositoryUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/WalkingTec/WalkingTec.Mvvm/master/LICENSE</PackageLicenseUrl>
-    <PackageLicense>https://raw.githubusercontent.com/WalkingTec/WalkingTec.Mvvm/master/LICENSE</PackageLicense>
-    <PackageProjectUrl>http://wtmdoc.walkingtec.cn</PackageProjectUrl>
-    <PackageIconUrl>http://imgs.walkingtec.cn/logo.png</PackageIconUrl>
-    <PackageTags>aspnetcore, mvc, mvvm, layui</PackageTags>
-    <NeutralLanguage>zh-CN</NeutralLanguage>
-    <PackageReleaseNotes>框架文档地址：http://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
-    <PackageOutputPath></PackageOutputPath>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/dotnetcore/WTM</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dotnetcore/WTM</PackageProjectUrl>
+    <PackageIconUrl>https://wtmdoc.walkingtec.cn/logo.png</PackageIconUrl>
+    <PackageTags>aspnetcore, mvc, mvvm, layui, wtm</PackageTags>
+    <PackageReleaseNotes>框架文档地址：https://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
     <IncludeSymbols>false</IncludeSymbols>
     <IncludeSource>false</IncludeSource>
     <MinClientVersion>4.1.0</MinClientVersion>
@@ -34,5 +31,9 @@
     <DocumentationFile>bin\Debug\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;0809;1587;1570</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../LICENSE" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
 </Project>

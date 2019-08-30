@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
@@ -40,10 +40,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (controller is BaseApiController)
             {
                 var lg = GlobalServices.GetRequiredService<LinkGenerator>();
-                var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName);
+                var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
                 if (u == null)
                 {
-                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { id = 0 });
+                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"], id = 0 });
                 }
                 if (u.EndsWith("/0"))
                 {

@@ -134,11 +134,11 @@
                         </wt:tabcontents>
                     </wt:tab>
                     <wt:row align="AlignEnum.Right">
-                        
+
                         <wt:submitbutton disabled="true"/>
                         <wt:closebutton disabled="true"/>
                     </wt:row>
-                </wt:form>   
+                </wt:form>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
@@ -186,5 +186,5 @@
     </wt:tab>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>

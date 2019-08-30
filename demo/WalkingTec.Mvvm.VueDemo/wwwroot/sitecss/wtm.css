@@ -1,0 +1,44 @@
+.donotuse_pdiv {
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-box-orient: vertical;
+  -moz-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.donotuse_fill {
+  -webkit-box-flex: 1;
+  -webkit-flex: auto;
+  -moz-box-flex: 1;
+  -ms-flex: auto;
+  flex: auto;
+}
+
+.layui-side-menu .layui-nav .layui-nav-item ._wtmicon {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  margin-top: -19px;
+}
+
+/* 列表中chebox样式*/
+[lay-skin=primary].layui-form-checkbox span {
+    padding-left: 22px !important
+}   
+/* 下拉框 Text 图标 */
+
+.layui-form-select ._wtm-combo-icon {
+  left: 10px;
+  position: absolute;
+  top: 30%;
+  transition: all .3s;
+  -webkit-transition: all .3s;
+}

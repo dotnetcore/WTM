@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentListVm
+@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentListVm
 <style>
     a {
         color: #01aaed
@@ -79,12 +79,12 @@
             <wt:tabheader title="代码" />
         </wt:tabheaders>
         <wt:tabcontents>
-            <wt:tabcontent>
-                <wt:grid vm="@Model" use-local-data="true" />
+            <wt:tabcontent >
+                <wt:grid vm="@Model" use-local-data="true" height="300"/>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
-&ltwt:grid vm="@Model" use-local-data="true" /&gt
+&ltwt:grid vm="@@Model" use-local-data="true" /&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -137,26 +137,26 @@
             <wt:tabheader title="代码" />
         </wt:tabheaders>
         <wt:tabcontents>
-            <wt:tabcontent>
-                <wt:searchpanel vm="@Model" reset-btn="true">
+            <wt:tabcontent >
+                <wt:searchpanel vm="@Model" reset-btn="true" grid-id="gg2">
                     <wt:row items-per-row="ItemsPerRowEnum.Three">
                         <wt:textbox field="Searcher.LoginName" />
                         <wt:textbox field="Searcher.Name" />
                         <wt:combobox field="Searcher.IsValid" empty-text="全部" />
                     </wt:row>
                 </wt:searchpanel>
-                <wt:grid vm="@Model" use-local-data="true" />
+                <wt:grid vm="@Model"  id="gg2" height="400"/>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
-&ltwt:searchpanel vm="@Model" reset-btn="true"&gt
+&ltwt:searchpanel vm="@@Model" reset-btn="true"&gt
     &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
         &ltwt:textbox field="Searcher.LoginName" /&gt
         &ltwt:textbox field="Searcher.Name" /&gt
         &ltwt:combobox field="Searcher.IsValid" empty-text="全部" /&gt
     &lt/wt:row&gt
 &lt/wt:searchpanel&gt
-&ltwt:grid vm="@Model" use-local-data="true" /&gt
+&ltwt:grid vm="@@Model"  /&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -168,8 +168,8 @@
 </wt:fieldset>
 
 <script>
-    layui.code({ about: false });
+layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
 </script>

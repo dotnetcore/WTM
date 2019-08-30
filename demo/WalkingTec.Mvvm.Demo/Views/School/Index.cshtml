@@ -1,28 +1,6 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM
-<style type="text/css">
-    /*.layui-colla-title {
-        overflow: visible;
-    }
-     .downpanel:hover {
-        opacity: initial;
-    }*/ 
-    /*.downpanel .layui-select-title {
-        padding-right: 20px;
-    }*/
-    /*.layui-form-select dl {
-        top: initial;
-        padding:1px 0px 0px 0px;
-    }
-        .layui-form-select dl dd {
-            padding: 0 0px;
-            margin-bottom:1px;
-            line-height: initial;
-        }*/
-        /*.layui-form-select dl a {
-            width: 100%;
-        }*/
-</style>
-<wt:searchpanel vm="@Model" reset-btn="true">
+
+<wt:searchpanel vm="@Model" reset-btn="true" old-post="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
         <wt:textbox field="Searcher.SchoolCode" />
         <wt:textbox field="Searcher.SchoolName" />
@@ -30,5 +8,4 @@
     </wt:row>
 </wt:searchpanel>
 
-
-<wt:grid vm="@Model" /> 
+<wt:grid vm="@Model" />

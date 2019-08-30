@@ -1,19 +1,19 @@
-﻿<style>
+<style>
     a {
         color: #01aaed
     }
 </style>
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
 <wt:code title="appsettings.json">
-    {
+ {
     "ConnectionStrings": [
     {
         "Key": "default",
-        "Value": "Server=(localdb)\\mssqllocaldb;Database=demo;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
     },
     {
         "Key": "test",
-        "Value": "Server=(localdb)\\mssqllocaldb;Database=test;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
     }
     ],
     "DBType": "SqlServer",
@@ -21,12 +21,22 @@
     "EnableLog": true,
     "LogExceptionOnly": false,
     "IsQuickDebug": true,
-    "RPP": 20,
     "PageMode": "Tab",
+    "UIOptions": {
+      "DataTable": {
+        "RPP": 20, 
+      },
+      "ComboBox": {
+        "DefaultEnableSearch": true, 
+      },
+      "DateTime": {
+        "DefaultReadonly": true 
+      }
+    },
     "FileUploadOptions": {
         "UploadLimit": 20971520,
-        "SaveFileMode": "Database", //上传文件的保存方式，可选Database,local,dfs
-        "UploadDir": "D:\\" //当上传文件选择Local时，指定硬盘目录
+        "SaveFileMode": "Database", 
+        "UploadDir": "D:\\" 
     },
     "DFSServer": {
         "StorageMaxConnection": 100,
@@ -50,7 +60,7 @@
             "Value": "ddd"
         }
     ]
-    }
+}
 </wt:code>
 
 <wt:fieldset field-set-style="Simple" title="配置说明">
@@ -62,54 +72,54 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>ConnectionStrings</td>
-                <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default</td>
-            </tr>
-            <tr>
-                <td>DBType</td>
-                <td>连接字符串对应的数据库类型，可选mysql或sqlserver</td>
-            </tr>
-            <tr>
-                <td>CookiePre</td>
-                <td>生成Cookie的前缀</td>
-            </tr>
-            <tr>
-                <td>EnableLog</td>
-                <td>是否启用日志</td>
-            </tr>
-            <tr>
-                <td>LogExceptionOnly</td>
-                <td>当启用日志时，是否只记录异常</td>
-            </tr>
-            <tr>
-                <td>IsQuickDebug</td>
-                <td>是否为调试模式，调试模式下会跳过页面权限和数据权限的验证，直接反射所有Controller下的所有方法作为菜单项</td>
-            </tr>
-            <tr>
-                <td>RPP</td>
-                <td>列表默认分页行数</td>
-            </tr>
-            <tr>
-                <td>SaveFileMode</td>
-                <td>框架附件储存模式，可选Database，local和dfs</td>
-            </tr>
-            <tr>
-                <td>UploadDir</td>
-                <td>当附件储存模式选择Local时，指定硬盘目录</td>
-            </tr>
-            <tr>
-                <td>PageMode</td>
-                <td>多页面的展现方式，可选Single或者Tab</td>
-            </tr>
-            <tr>
-                <td>DFSServer</td>
-                <td>当附件储存模式选择DFS时，指定DFS服务器的信息</td>
-            </tr>
-            <tr>
-                <td>AppSettings</td>
-                <td>key，value形式，可配置多个</td>
-            </tr>
+          <tr>
+            <td>ConnectionStrings</td>
+            <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default</td>
+          </tr>
+          <tr>
+            <td>DBType</td>
+            <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite</td>
+          </tr>
+          <tr>
+            <td>CookiePre</td>
+            <td>生成Cookie的前缀</td>
+          </tr>
+          <tr>
+            <td>EnableLog</td>
+            <td>是否启用日志</td>
+          </tr>
+          <tr>
+            <td>LogExceptionOnly</td>
+            <td>当启用日志时，是否只记录异常</td>
+          </tr>
+          <tr>
+            <td>IsQuickDebug</td>
+            <td>是否为调试模式，调试模式下会跳过页面权限和数据权限的验证，直接反射所有Controller下的所有方法作为菜单项</td>
+          </tr>
+          <tr>
+            <td>RPP</td>
+            <td>默认列表行数</td>
+          </tr>
+          <tr>
+            <td>FileUploadOptions.SaveFileMode</td>
+            <td>框架附件储存模式，可选Database，local和dfs</td>
+          </tr>
+          <tr>
+            <td>FileUploadOptions.UploadDir</td>
+            <td>当附件储存模式选择Local时，指定硬盘目录</td>
+          </tr>
+          <tr>
+            <td>PageMode</td>
+            <td>多页面的展现方式，可选Single或者Tab</td>
+          </tr>
+          <tr>
+            <td>DFSServer</td>
+            <td>当附件储存模式选择DFS时，指定DFS服务器的信息</td>
+          </tr>
+          <tr>
+            <td>AppSettings</td>
+            <td>key，value形式，可配置多个</td>
+          </tr>
         </tbody>
     </table>
     <wt:quote>
@@ -117,10 +127,10 @@
     </wt:quote>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
     </script>

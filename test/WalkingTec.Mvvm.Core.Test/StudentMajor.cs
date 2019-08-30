@@ -17,4 +17,5 @@ namespace WalkingTec.Mvvm.Core.Test
 
         public Guid StudentId { get; set; }
     }
+
 }

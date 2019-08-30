@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string NoText { get; set; }
 
         /// <summary>
-        /// 弃用搜索
+        /// 启用搜索
         /// 注意：多选与搜索不能同时启用
         /// </summary>
         public bool EnableSearch { get; set; }
@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string TriggerUrl { get; set; }
 
         /// <summary>
-        /// 是否多选 
+        /// 是否多选
         /// 默认根据Field 绑定的值类型进行判断。Array or List 即多选，否则单选
         /// 注意：多选与搜索不能同时启用
         /// </summary>
@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public ComboBoxTagHelper()
         {
             EmptyText = "请选择";
+            EnableSearch = GlobalServices.GetRequiredService<Configs>().UiOptions.ComboBox.DefaultEnableSearch;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -163,7 +164,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 foreach (var item in listItems)
                 {
-                    contentBuilder.Append($"<option value='{item.Value}'>{item.Text}</option>");
+                    contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")}>{item.Text}</option>");
                 }
 
                 // 添加默认选中项
@@ -180,12 +181,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (item.Selected == true)
                     {
-                        contentBuilder.Append($"<option value='{item.Value}' selected>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} selected>{item.Text}</option>");
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}' {(Disabled ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
-
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }

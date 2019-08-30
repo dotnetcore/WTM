@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
 using System;
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         public int? WindowHeight { get; set; }
 
         /// <summary>
-        /// 是否多选 
+        /// 是否多选
         /// 默认根据Field 绑定的值类型进行判断。Array or List 即多选，否则单选
         /// </summary>
         public bool? MultiSelect { get; set; }
@@ -275,7 +275,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     foreach (var item in p)
                     {
                         var s = Regex.Split(item, "=");
-                        if (s != null && s.Length ==2)
+                        if (s != null && s.Length == 2)
                         {
                             if (Filter.ContainsKey(s[0]))
                             {
@@ -296,7 +296,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     sb.Append($"<input type='hidden' name='{Field.Name}' value='{item.ToString()}' />");
                 }
                 hiddenStr = sb.ToString();
-                output.PreElement.AppendHtml($@"<div id=""{Id}_Container"" style=""position:absolute;right:{SelectButtonWidth?.ToString()??"50"}px;left:0px;width:auto"">");
+                output.PreElement.AppendHtml($@"<div id=""{Id}_Container"" style=""position:absolute;right:{SelectButtonWidth?.ToString() ?? "50"}px;left:0px;width:auto"">");
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
@@ -305,16 +305,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 <script>
 var {Id}filter = {{}};
 $('#{Id}_Select').on('click',function(){{
-    {(string.IsNullOrEmpty(BeforeOnpenDialogFunc)==true?"":"var data={};"+ FormatFuncName(BeforeOnpenDialogFunc) + ";")}
-    var filter = {JsonConvert.SerializeObject(Filter)};
-    var vals = $('#{Id}_Container input[type=hidden]');
-    filter.Ids = [];
-    for(var i=0;i<vals.length;i++){{
-        filter.Ids.push(vals[i].value);
-    }};
-    var ffilter = $.extend(filter, {Id}filter)
-
-    ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? string.Empty}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"},'#Temp{Id}', ffilter);
+  {(string.IsNullOrEmpty(BeforeOnpenDialogFunc) == true ? "" : "var data={};" + FormatFuncName(BeforeOnpenDialogFunc) + ";")}
+  var filter = {JsonConvert.SerializeObject(Filter)};
+  var vals = $('#{Id}_Container input[type=hidden]');
+  filter.Ids = [];
+  for(var i=0;i<vals.length;i++){{
+    filter.Ids.push(vals[i].value);
+  }};
+  var ffilter = $.extend(filter, {Id}filter)
+  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? "请选择"}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "500"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}

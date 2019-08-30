@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -8,6 +9,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string EmptyText { get; set; }
 
         public string SearchUrl { get; set; }
+
+        public ModelExpression LinkField { get; set; }
+
+        public string TriggerUrl { get; set; }
+
+
+        /// <summary>
+        /// 改变选择时触发的js函数，func(data)格式;
+        /// <para>
+        /// data.Text得到选中文本;
+        /// </para>
+        /// <para>
+        /// data.Value得到被选中的值;
+        /// </para>
+        /// </summary>
+        public string ChangeFunc { get; set; }
 
 
         public bool IsPassword { get; set; }
