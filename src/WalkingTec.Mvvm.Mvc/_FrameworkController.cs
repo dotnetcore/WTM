@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -523,14 +524,14 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         /// <param name="menus">菜单列表</param>
         /// <param name="info">用户信息</param>
-        private void RemoveUnAccessableMenu(List<menuObj> menus, LoginUserInfo info)
+        private void RemoveUnAccessableMenu(List<Menu> menus, LoginUserInfo info)
         {
             if (menus == null)
             {
                 return;
             }
 
-            List<menuObj> toRemove = new List<menuObj>();
+            List<Menu> toRemove = new List<Menu>();
             //如果没有指定用户信息，则用当前用户的登录信息
             if (info == null)
             {
@@ -562,7 +563,11 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        private void RemoveEmptyMenu(List<menuObj> menus)
+        /// <summary>
+        /// RemoveEmptyMenu
+        /// </summary>
+        /// <param name="menus"></param>
+        private void RemoveEmptyMenu(List<Menu> menus)
         {
             for (int i = 0; i < menus.Count; i++)
             {
@@ -574,32 +579,34 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-
         /// <summary>
         /// genreate menu
         /// </summary>
-        private void GenerateMenuTree(List<FrameworkMenu> menus, List<menuObj> resultMenus)
+        /// <param name="menus"></param>
+        /// <param name="resultMenus"></param>
+        /// <param name="quickDebug"></param>
+        private void GenerateMenuTree(List<FrameworkMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
         {
-            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new menuObj()
+            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new Menu()
             {
                 Id = x.ID,
                 Title = x.PageName,
                 Url = x.Url,
                 Order = x.DisplayOrder,
-                ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
             })
             .OrderBy(x => x.Order)
             .ToList());
 
             foreach (var menu in resultMenus)
             {
-                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new menuObj()
+                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new Menu()
                 {
                     Id = x.ID,
                     Title = x.PageName,
                     Url = x.Url,
                     Order = x.DisplayOrder,
-                    ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                    ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
                 })
                 .OrderBy(x => x.Order)
                 .ToList();
@@ -608,12 +615,12 @@ namespace WalkingTec.Mvvm.Mvc
                     menu.Children = temp;
                     foreach (var item in menu.Children)
                     {
-                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new menuObj()
+                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new Menu()
                         {
                             Title = x.PageName,
                             Url = x.Url,
                             Order = x.DisplayOrder,
-                            ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                            ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
                         })
                         .OrderBy(x => x.Order)
                         .ToList();
@@ -625,67 +632,14 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public class menuObj
-        {
-            [JsonIgnore]
-            public Guid Id { get; set; }
-
-            /// <summary>
-            /// Name
-            /// 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("name")]
-            public string Name => Title;
-
-            /// <summary>
-            /// Title
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("title")]
-            public string Title { get; set; }
-
-            /// <summary>
-            /// 图标
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("icon")]
-            public string ICon { get; set; }
-
-            /// <summary>
-            /// 是否展开节点
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("spread")]
-            public bool? Expand { get; set; }
-
-            /// <summary>
-            /// Url
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("jump")]
-            public string Url { get; set; }
-
-            [JsonProperty("list")]
-            public List<menuObj> Children { get; set; }
-
-            /// <summary>
-            /// order
-            /// </summary>
-            /// <value></value>
-            [JsonIgnore]
-            public int? Order { get; set; }
-
-        }
-
         [AllRights]
         [HttpGet]
         public IActionResult Menu()
         {
             if (ConfigInfo.IsQuickDebug == true)
             {
-                var resultMenus = new List<menuObj>();
-                GenerateMenuTree(FFMenus, resultMenus);
+                var resultMenus = new List<Menu>();
+                GenerateMenuTree(FFMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
@@ -694,9 +648,10 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                var resultMenus = new List<menuObj>();
+                var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
+                RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -875,4 +830,5 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
     }
+
 }
