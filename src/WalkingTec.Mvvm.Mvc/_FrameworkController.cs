@@ -868,7 +868,10 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public IActionResult GetIconFonts(string id)
         {
-            return Json(IconFontsHelper.IconFontDicItems[id]);
+            if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
+                return Json(IconFontsHelper.IconFontDicItems[id]);
+            else
+                return Json(null);
         }
 
     }
