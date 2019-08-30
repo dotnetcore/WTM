@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             output.TagName = "pre";
             output.Attributes.SetAttribute("class", "layui-code");
+            output.Attributes.SetAttribute("encode", true);
             if (Height.HasValue)
             {
                 output.Attributes.SetAttribute("lay-height", $"{Height}px");

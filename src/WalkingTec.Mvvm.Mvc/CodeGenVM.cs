@@ -681,11 +681,7 @@ namespace WalkingTec.Mvvm.Mvc
             }}
 ";
                         editstr += $@"
-            if(Selected{pro.FieldName}IDs == null || Selected{pro.FieldName}IDs.Count == 0)
-            {{
-                FC.Add(""Entity.Selected{pro.FieldName}IDs.DONOTUSECLEAR"", ""true"");
-            }}
-            else
+            if(Selected{pro.FieldName}IDs != null )
             {{
                 Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
                 Selected{pro.FieldName}IDs.ForEach(x => Entity.{pro.FieldName}.Add(new {protype.PropertyType.GetGenericArguments()[0].Name} {{ ID = Guid.NewGuid(), {pro.SubIdField} = x }}));
