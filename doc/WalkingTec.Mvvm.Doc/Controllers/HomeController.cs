@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
@@ -12,8 +10,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult Index()
         {
             LoginUserInfo = new LoginUserInfo { ITCode = "admin" };
-            ViewData["title"] = "WalkingTec MVVM Framework";
-            ViewData["menu"] = FFMenus?.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null,null, x => x.Url, SortByName: false);
+            ViewData["title"] = "WTM";
             return View();
         }
 
@@ -27,6 +24,20 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         public IActionResult FrontPage()
         {
             return Redirect("/QuickStart/Intro");
+        }
+
+        [Public]
+        [ActionDescription("捐赠名单")]
+        public IActionResult DonateList()
+        {
+            return PartialView();
+        }
+
+        [Public]
+        [ActionDescription("Layout")]
+        public IActionResult Layout()
+        {
+            return PartialView();
         }
     }
 }

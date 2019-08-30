@@ -42,12 +42,12 @@ export default AuthorizeStore
  * @param PageParams 
  */
 export function AuthorizeDecorator(PageParams: { PageStore: PageStore }) {
-    return function (Component: React.ComponentClass<any, any>): any {
-        return class extends Component {
-            constructor(props) {
-                super(props);
-                // PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
-            }
+    return function <T extends { new(...args: any[]): React.Component<any, any> }>(constructor: T) {
+        return class extends constructor {
+            // constructor(props) {
+            //     super(props);
+            //     // PageParams.PageStore.defaultSearchParams = lodash.get(this.props, "defaultSearchParams", {});
+            // }
             // // shouldComponentUpdate() {
             // //     return false
             // // }

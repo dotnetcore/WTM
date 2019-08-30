@@ -1,4 +1,4 @@
-﻿import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
+﻿import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row, Checkbox } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';

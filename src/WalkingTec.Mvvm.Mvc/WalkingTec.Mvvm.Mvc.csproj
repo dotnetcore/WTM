@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
@@ -10,66 +10,9 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <None Remove="echarts.common.min.js" />
-    <None Remove="framework_layui.js" />
-    <None Remove="GeneratorFiles\ApiTest.txt" />
-    <None Remove="GeneratorFiles\BatchDeleteView.txt" />
-    <None Remove="GeneratorFiles\BatchEditView.txt" />
-    <None Remove="GeneratorFiles\BatchVM.txt" />
-    <None Remove="GeneratorFiles\Controller.txt" />
-    <None Remove="GeneratorFiles\ControllerTest.txt" />
-    <None Remove="GeneratorFiles\CreateView.txt" />
-    <None Remove="GeneratorFiles\CrudVM.txt" />
-    <None Remove="GeneratorFiles\DeleteView.txt" />
-    <None Remove="GeneratorFiles\EditView.txt" />
-    <None Remove="GeneratorFiles\ImportView.txt" />
-    <None Remove="GeneratorFiles\ImportVM.txt" />
-    <None Remove="GeneratorFiles\ListView.txt" />
-    <None Remove="GeneratorFiles\Searcher.txt" />
-    <None Remove="GeneratorFiles\Spa\Controller.txt" />
-    <None Remove="GeneratorFiles\Spa\React\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\store\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\style.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\action.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\forms.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\models.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
-    <None Remove="SetupFiles\DefaultProj.txt" />
-    <None Remove="SetupFiles\DefaultSolution.txt" />
-    <None Remove="SetupFiles\MockController.txt" />
-    <None Remove="SetupFiles\MockHttpSession.txt" />
-    <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
-    <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
-    <None Remove="SetupFiles\Mvc\home\Header.txt" />
-    <None Remove="SetupFiles\Mvc\home\Index.txt" />
-    <None Remove="SetupFiles\Mvc\home\Login.txt" />
-    <None Remove="SetupFiles\Mvc\home\Menu.txt" />
-    <None Remove="SetupFiles\Mvc\home\PIndex.txt" />
-    <None Remove="SetupFiles\Mvc\layui\Layout.txt" />
-    <None Remove="SetupFiles\Mvc\layui\PLayout.txt" />
-    <None Remove="SetupFiles\Mvc\layui\Program.txt" />
-    <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
-    <None Remove="SetupFiles\SetupIndex.txt" />
-    <None Remove="SetupFiles\SetupIndex1.txt" />
-    <None Remove="SetupFiles\Spa\Launch.txt" />
-    <None Remove="SetupFiles\Spa\Program.txt" />
-    <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
-    <None Remove="SetupFiles\Spa\React\Program.txt" />
-    <None Remove="SetupFiles\Spa\React\Proj.txt" />
-    <None Remove="SetupFiles\TestProj.txt" />
-    <None Remove="SetupFiles\test\HomeControllerTest.txt" />
-    <None Remove="SetupFiles\test\LoginControllerTest.txt" />
-    <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
-    <None Remove="SetupFiles\vms\IndexVM.txt" />
-    <None Remove="SetupFiles\vms\LoginVM.txt" />
-    <None Remove="Views\_CodeGen\SetField.cshtml" />
-    <None Remove="Views\_ViewImports.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
+    <EmbeddedResource Include="GeneratorFiles\ControllerTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ControllerTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
@@ -81,28 +24,6 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
-    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
-    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
-    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
-    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
-    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
-    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
-    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
-    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="echarts.common.min.js" />
-    <EmbeddedResource Include="framework_layui.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\HeaderFormat.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\BatchDeleteView.txt" />
     <EmbeddedResource Include="GeneratorFiles\Mvc\BatchEditView.txt" />
@@ -118,26 +39,31 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
+    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
+    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
-    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
-    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\home\Header.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\home\Menu.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\PIndex.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\layui.zip" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Layout.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\layui\PLayout.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
@@ -145,22 +71,28 @@
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="framework_layui.js" />
+    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
+    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
+    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
     <EmbeddedResource Include="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App">
+      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="ValidationMsg.zh-cn.resx">
-      <LastGenOutput>ValidationMsg.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

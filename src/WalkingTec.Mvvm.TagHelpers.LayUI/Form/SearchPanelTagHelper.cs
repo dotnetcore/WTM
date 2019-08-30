@@ -108,6 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
@@ -126,39 +127,29 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 </div>
 ");
             output.PostElement.AppendHtml($@"
-<script type=""text/javascript"">
-layui.element.init();
-$('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
-$('#{ResetBtnId}').on('click', function (btn) {{
-    var hiddenAreas = $('#'+this.form.id +' input[wtm-tag=wtmselector]')
-    if(hiddenAreas && hiddenAreas.length>0){{
-        for(i=0;i<hiddenAreas.length;i++){{
-            hiddenAreas[i].remove();
-        }}
-    }}
-}});
+<script>
+  layui.use(['table'], function () {{
+    const table = layui.table;
+    layui.element.init();
+    $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
+    $('#{ResetBtnId}').on('click', function (btn) {{
+      ff.resetForm(this.form.id);
+    }});
+{(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
-  /* 暂时解决 layui table首次及table.reload()无loading的bug */
-    var layer = layui.layer;
-    var msg = layer.msg('数据请求中', {{
-        icon: 16,
-        time: -1,
-        anim: -1,
-        fixed: false
-    }})
-    table.reload('{GridId}',{{where: $.extend({TableJSVar}.config.where,ff.GetSearchFormData('{Id}','{Vm.Name}')),
-        done: function(res,curr,count){{
-            layer.close(msg);
-            if(this.height == undefined){{
-                var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
-                ff.triggerResize();
-            }}
-        }}
-    }})
-  /* 暂时解决 layui table首次及table.reload()无loading的bug */
+  var layer = layui.layer;
+  table.reload('{GridId}',{{where: $.extend(JSON.parse(JSON.stringify({TableJSVar}.config.where)),ff.GetSearchFormData('{Id}','{Vm.Name}')),
+    done: function(res,curr,count){{
+      if(this.height == undefined){{
+        var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
+        ff.triggerResize();
+      }}
+    }}
+  }})
 }});
+    ")}
 layui.element.on('collapse({tempSearchTitleId})', function(data){{ff.triggerResize()}});
-
+}})
 </script>");
             return base.ProcessAsync(context, output);
         }

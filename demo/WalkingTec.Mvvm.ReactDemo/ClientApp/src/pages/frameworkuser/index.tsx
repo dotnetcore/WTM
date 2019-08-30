@@ -4,8 +4,7 @@ import Store from './store';
 import Action from './views/action';
 import Other from './views/other';
 import Search from './views/search';
-// import Table from './views/table';
-import Table from './views/agGrid';
+import Table from './views/table';
 /**
  * 页面入口
  *  Action：页面动作
@@ -18,7 +17,7 @@ import Table from './views/agGrid';
 export default class App extends React.Component<any, any> {
   render() {
     return (
-        <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
+      <div className="app-page-frameworkuserbase" key="app-page-frameworkuserbase">
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />

@@ -1,19 +1,19 @@
-﻿#DONOTUSE_MAINPANEL {
-    margin: 10px;
-    font-family: "segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif";
-    line-height: 160%
+#DONOTUSE_MAINPANEL {
+  margin: 10px;
+  font-family: "segoe-ui_normal,Segoe UI,Segoe,Segoe WP,Helvetica Neue,Helvetica,sans-serif";
+  line-height: 160%
 }
 
 ul.doc {
-    margin-left: 30px;
-    list-style-type: disc;
+  margin-left: 30px;
+  list-style-type: disc;
 }
 
 ol.doc {
-    margin-left: 30px;
-    list-style-type: decimal;
+  margin-left: 30px;
+  list-style-type: decimal;
 }
 
 .doc li {
-    list-style: unset;
+  list-style: unset;
 }

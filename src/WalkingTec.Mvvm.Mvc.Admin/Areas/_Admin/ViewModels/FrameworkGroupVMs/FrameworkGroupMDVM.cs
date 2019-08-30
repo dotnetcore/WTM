@@ -32,12 +32,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             foreach (var item in DpLists)
             {
                 var select = alldp.Where(x => x.TableName == item.List.Searcher.TableName).Select(x => x.RelateId).ToList();
-                if (select.Contains(null))
+                if(select.Count == 0)
+                {
+                    item.IsAll = null;
+                }
+                else if (select.Contains(null))
                 {
                     item.IsAll = true;
                 }
                 else
                 {
+                    item.IsAll = false;
                     item.SelectedIds = select;
                 }
             }
@@ -64,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     dp.DomainId = null;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
-                else
+                if (item.IsAll == false)
                 {
                     foreach (var id in item.SelectedIds)
                     {
@@ -91,6 +96,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         public List<Guid?> SelectedIds { get; set; }
 
-        public bool IsAll { get; set; }
+        public bool? IsAll { get; set; }
     }
 }

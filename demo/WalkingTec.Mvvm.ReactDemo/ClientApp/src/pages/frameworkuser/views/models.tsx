@@ -84,7 +84,9 @@ export default {
             /** 是否有效 */
             "Entity.IsValid":{
                 label: "是否有效",
-                rules: [{ "required": true, "message": "是否有效不能为空" }],
+                rules: [
+                    // { "required": true, "message": "是否有效不能为空" }
+                ],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 角色 */
@@ -93,7 +95,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
-                    dataKey="RoleId"
+                    // dataKey="RoleId" 废弃
                 /> 
             },
             /** 用户组 */
@@ -102,7 +104,7 @@ export default {
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
-                    dataKey="GroupId"
+                    // dataKey="GroupId" 废弃
                 /> 
             }
 

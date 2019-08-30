@@ -3,26 +3,24 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@antv/data-set": "^0.10.2",
-    "@antv/g2": "^3.5.7",
-    "@babel/core": "^7.5.0",
-    "ag-grid-community": "^21.0.1",
-    "ag-grid-enterprise": "^21.0.1",
-    "ag-grid-react": "^21.0.1",
-    "antd": "3.20.0",
+    "ag-grid-community": "^21.1.1",
+    "ag-grid-enterprise": "^21.1.1",
+    "ag-grid-react": "^21.1.0",
+    "antd": "3.21.2",
     "braft-editor": "^2.3.7",
     "core-js": "^3.1.4",
-    "lodash": "^4.17.11",
+    "echarts": "^4.2.1",
+    "echarts-for-react": "2.0.14",
+    "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",
-    "mobx": "^4.12.0",
+    "mobx": "^4.13.0",
     "mobx-persist": "^0.4.1",
     "mobx-react": "^6.1.1",
     "moment": "^2.24.0",
     "nprogress": "^0.2.0",
-    "rc-animate": "^2.8.3",
+    "rc-animate": "^2.9.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-loadable": "^5.5.0",
     "react-resizable": "^1.8.0",
     "react-router-config": "^5.0.1",
     "react-router-dom": "^5.0.1",
@@ -35,30 +33,41 @@
     "start:api": "cd .. && dotnet run --launch-profile ApiOnly",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
+    "init": "yarn install",
+    "clean": "rimraf node_modules package-lock.json yarn.lock",
+    "merge_to_dev": " git checkout develop && npm run merge_react && git checkout feature/React",
+    "merge_react": "git pull && git merge feature/React --no-edit ",
+    "merge_dev": "git pull && git merge develop --no-edit ",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [],
-    "development": []
+    "production": [
+      "last 1 version",
+      "maintained node versions",
+      "ie 10-11"
+    ],
+    "development": [
+      "last 1 version",
+      "maintained node versions",
+      "ie 10-11"
+    ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.4.5",
-    "@types/jest": "24.0.13",
-    "@types/lodash": "^4.14.129",
-    "@types/node": "^12.0.2",
-    "@types/react": "16.8.17",
-    "@types/react-dom": "16.8.4",
+    "@types/jest": "24.0.16",
+    "@types/lodash": "^4.14.136",
+    "@types/node": "^12.6.9",
+    "@types/react": "16.8.24",
+    "@types/react-dom": "16.8.5",
     "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "8.0.5",
-    "cache-loader": "^4.0.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
-    "react-app-rewired": "^2.1.3",
+    "mockjs": "^1.0.0",
+    "react-app-rewired": "2.1.3",
     "react-scripts": "3.0.1",
-    "typescript": "3.5.2",
-    "webpack-bundle-analyzer": "^3.3.2"
+    "typescript": "3.5.3",
+    "webpack-bundle-analyzer": "^3.4.1"
   }
 }

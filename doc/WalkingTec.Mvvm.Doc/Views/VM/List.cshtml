@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     a {
         color: #01aaed
     }
@@ -137,11 +137,11 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
         <tbody>
             <tr>
                 <td>SetBackGroundFunc</td>
-                <td>设置背景色</td>
+                <td>设置背景色,返回类似FF0000这种格式的字符串代表颜色</td>
             </tr>
             <tr>
                 <td>SetForeGroundFunc</td>
-                <td>设置前景色</td>
+                <td>设置前景色,返回类似FF0000这种格式的字符串代表颜色</td>
             </tr>
             <tr>
                 <td>SetChildren</td>
@@ -165,6 +165,12 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
                 <td>SetSort</td>
                 <td>
                     设置是否需要动态排序
+                </td>
+            </tr>
+            <tr>
+                <td>SetShowTotal</td>
+                <td>
+                    设置是否显示汇总
                 </td>
             </tr>
         </tbody>
@@ -224,88 +230,6 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
 
 </wt:fieldset>
 
-<wt:fieldset field-set-style="Simple" title="自定义输出">
-    <p>实际情况中，我们并不总是输出数据库中的原始数据，很多时候我们需要对原有数据进行加工，转换，或者显示数据库中并不存在的新列</p>
-    <p>请看下面的例子</p>
-    <wt:code title="SchoolListVM.cs">
-public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
-{
-    protected override List&ltGridAction&gt InitGridAction()
-    {
-        return new List&ltGridAction&gt
-        {
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
-        };
-    }
-
-    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
-    {
-        return new List&ltGridColumn&ltSchool_View&gt&gt{
-            this.MakeGridHeader(x =&gt x.SchoolCode),
-            this.MakeGridHeader(x =&gt x.SchoolName),
-            this.MakeGridHeader(x =&gt x.SchoolType),
-            this.MakeGridHeader(x =&gt x.Total).SetFormat(TotalFormat),
-            this.MakeGridHeaderAction(width: 200)
-        };
-    }
-
-    private string TotalFormat(School_View entity, object val)
-    {
-        return entity.SchoolCode + "," + entity.SchoolName + "," + entity.SchoolType;
-    }
-
-    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
-    {
-        var query = DC.Set&ltSchool&gt()
-            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
-            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
-            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
-            .Select(x =&gt new School_View
-            {
-                ID = x.ID,
-                SchoolCode = x.SchoolCode,
-                SchoolName = x.SchoolName,
-                SchoolType = x.SchoolType
-            })
-            .OrderBy(x =&gt x.ID);
-        return query;
-    }
-
-}
-
-public class School_View : School{
-
-    public string Total {get;set;}
-}
-
-    </wt:code>
-    <p>上面代码中，我们新建了School_View类，用于扩展School来显示模型中并不存在的字段</p>
-    <p>然后我们通过在列上调用SetFormat方法来指定一个函数用于返回这列需要显示的数据</p>
-    <wt:quote>
-        <p>SetFormat接受的方法可以直接返回string，也可以返回List&ltColumnFormatInfo&gt</p>
-        <p>ColumnFormatInfo的作用主要是方便我们生成一些按钮显示在列表中，如果返回string的话，比如我们需要根据某列数据生成一个按钮，点击按钮后弹出指定url的窗口，可能需要开发人员编写大量js</p>
-        <p>ColumnFormatInfo提供了很多扩展函数方便开发人员生成各种按钮，比如MakeDialogButton，MakeScriptButton，MakeDownloadButton等</p>
-    </wt:quote>
-    <p>以下例子演示了一个SetFormat的函数，它根据用户的照片ID，生成两个按钮，一个用来下载，一个用来弹出窗口直接显示照片</p>
-    <wt:code>
-private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, object val)
-{
-    return new List&ltColumnFormatInfo&gt
-    {
-        ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
-        ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
-    };
-}
-
-    </wt:code>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="表格中使用控件">
     <p>在项目中，我们还经常遇到使用grid来批量编辑数据的情况，</p>
@@ -352,7 +276,7 @@ private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, obje
             var query = data.AsQueryable().Where(x=&gt
                     (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
                     (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
-                    (Searcher.Sex == null || x.Sex == Searcher.Sex) 
+                    (Searcher.Sex == null || x.Sex == Searcher.Sex)
                 )
                 .OrderBy(x =&gt x.ExcelIndex);
             return query;
@@ -548,8 +472,10 @@ private List&ltColumnFormatInfo&gt PhotoIdFormat(FrameworkUser_View entity, obje
     </table>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
     </script>

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        int ChildrenDepth { get; set; }
+        int ChildrenDepth { get; }
 
         /// <summary>
         /// GetHeaders
@@ -40,6 +40,7 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>Excel文件</returns>
         byte[] GenerateExcel();
 
+        string TotalText { get; set; }
         #region Old
         event Action<IBasePagedListVM<T, S>> OnAfterInitList;
         /// <summary>

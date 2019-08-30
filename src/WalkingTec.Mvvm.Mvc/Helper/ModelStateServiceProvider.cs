@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,10 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="errorMessage">错误信息</param>
         public void AddModelError(string key, string errorMessage)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                key = Guid.NewGuid().ToString();
+            }
             _states.AddModelError(key, errorMessage);
         }
 
@@ -50,6 +54,18 @@ namespace WalkingTec.Mvvm.Mvc
         public int Count => _states.Count;
 
         public IEnumerable<string> Keys => _states.Keys;
+
+        public string GetFirstError()
+        {
+            string rv = "";
+            foreach (var key in Keys)
+            {
+                if(this[key].Count > 0){
+                    rv = this[key].First().ErrorMessage;
+                }
+            }
+            return rv;
+        }
     }
 
 }

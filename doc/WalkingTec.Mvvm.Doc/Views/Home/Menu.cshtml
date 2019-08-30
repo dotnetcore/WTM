@@ -1,4 +1,4 @@
-﻿<div class="layui-side-scroll">
+<div class="layui-side-scroll">
     <ul class="layui-nav layui-nav-tree">
         <li class="layui-nav-item">
             <a class="" href="javascript:;">快速开始</a>
@@ -8,6 +8,7 @@
                 <dd><a href="javascript:;ff.LoadPage('/QuickStart/FirstModule')">第一个模块</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/QuickStart/CustomUser')">自定义用户</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/Spa/Intro')">前后端分离模式</a></dd>
+                <dd><a href="javascript:;ff.LoadPage('/Home/DonateList')">捐赠</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/QuickStart/FAQ')">FAQ</a></dd>
             </dl>
         </li>
@@ -33,11 +34,13 @@
         <li class="layui-nav-item">
             <a class="" href="javascript:;">视图模型层</a>
             <dl class="layui-nav-child">
-                <dd><a href="javascript:;ff.LoadPage('/VM/VM')">基础VM</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/VM/CRUD')">数据操作VM</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/VM/List')">列表&导出VM</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/VM/Import')">导入VM</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/VM/Batch')">批量操作VM</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/VM')">基础VM</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/CRUD')">数据操作VM</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/List')">列表&导出VM</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/ListAction')">&nbsp;&nbsp;&nbsp;&nbsp;列表动作按钮</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/ListColumn')">&nbsp;&nbsp;&nbsp;&nbsp;列表列配置</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/Import')">导入VM</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/VM/Batch')">批量操作VM</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">
@@ -66,20 +69,24 @@
         <li class="layui-nav-item">
             <a class="" href="javascript:;">页面层(LayUI)</a>
             <dl class="layui-nav-child">
-                <dd><a href="javascript:;ff.LoadPage('/UI/Intro')">介绍</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Layout')">布局</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Form')">表单</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/TextBox')">&nbsp;&nbsp;&nbsp;&nbsp;TextBox</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/ComboBox')">&nbsp;&nbsp;&nbsp;&nbsp;ComboBox</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/CheckBox')">&nbsp;&nbsp;&nbsp;&nbsp;CheckBox</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Radio')">&nbsp;&nbsp;&nbsp;&nbsp;Radio</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/DateTime')">&nbsp;&nbsp;&nbsp;&nbsp;DateTime</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Upload')">&nbsp;&nbsp;&nbsp;&nbsp;Upload</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Selector')">&nbsp;&nbsp;&nbsp;&nbsp;Selector</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Rich')">&nbsp;&nbsp;&nbsp;&nbsp;RichTextBox</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Others')">&nbsp;&nbsp;&nbsp;&nbsp;其他</a></dd>
-                <dd><a href="javascript:;ff.LoadPage('/UI/Grid')">数据表格</a></dd>
-                @*<dd><a href="javascript:;ff.LoadPage('/UI/Js')">JS函数</a></dd>*@
+              <dd><a href="javascript:;ff.LoadPage('/UI/Intro')">介绍</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Layout')">布局</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Form')">表单</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/TextBox')">&nbsp;&nbsp;&nbsp;&nbsp;TextBox</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/ComboBox')">&nbsp;&nbsp;&nbsp;&nbsp;ComboBox</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Transfer')">&nbsp;&nbsp;&nbsp;&nbsp;Transfer</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Tree')">&nbsp;&nbsp;&nbsp;&nbsp;Tree</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/TreeContainer')">&nbsp;&nbsp;&nbsp;&nbsp;TreeContainer</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Slider')">&nbsp;&nbsp;&nbsp;&nbsp;Slider</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/CheckBox')">&nbsp;&nbsp;&nbsp;&nbsp;CheckBox</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Radio')">&nbsp;&nbsp;&nbsp;&nbsp;Radio</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/DateTime')">&nbsp;&nbsp;&nbsp;&nbsp;DateTime</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Upload')">&nbsp;&nbsp;&nbsp;&nbsp;Upload</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Selector')">&nbsp;&nbsp;&nbsp;&nbsp;Selector</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Rich')">&nbsp;&nbsp;&nbsp;&nbsp;RichTextBox</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Others')">&nbsp;&nbsp;&nbsp;&nbsp;其他</a></dd>
+              <dd><a href="javascript:;ff.LoadPage('/UI/Grid')">数据表格</a></dd>
+              @*<dd><a href="javascript:;ff.LoadPage('/UI/Js')">JS函数</a></dd>*@
             </dl>
         </li>
         <li class="layui-nav-item">
@@ -89,7 +96,6 @@
                 <dd><a href="javascript:;ff.LoadPage('/Admin/Log')">日志管理</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/Admin/User')">用户管理</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/Admin/Role')">角色管理</a></dd>
-                @*<dd><a href="javascript:;ff.LoadPage('/Admin/Group')">用户组管理</a></dd>*@
                 <dd><a href="javascript:;ff.LoadPage('/Admin/Menu')">菜单管理</a></dd>
                 <dd><a href="javascript:;ff.LoadPage('/Admin/Dp')">数据权限管理</a></dd>
             </dl>

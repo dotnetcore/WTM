@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     fieldset img {
         width:800px;
         border:1px solid black
@@ -30,7 +30,7 @@ public class SchoolTemplateVM : BaseTemplateVM
 public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 {
 
-}    
+}
         </wt:code>
     <p>对于简单的导入，以上代码就足够了，只是继承基类并定义需要导入的字段，框架会完成导入工作</p>
     <wt:quote>
@@ -108,7 +108,7 @@ public class SchoolTemplateVM : BaseTemplateVM
 public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 {
 
-}    
+}
     </wt:code>
     <p>如上所示，我们将SchoolName列的DataType设定为ComboBox，并指定其ListItems就可以了，框架会在生成模板的时候自动在Excel里生成下拉菜单</p>
 </wt:fieldset>
@@ -145,7 +145,7 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
             //调用父类方法进行保存，如果还有特殊需求，可以自己操作DC进行数据保存
             return base.BatchSaveData();
         }
-}    
+}
     </wt:code>
 </wt:fieldset>
 
@@ -176,7 +176,7 @@ public class SchoolTemplateVM : BaseTemplateVM
 
 public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 {
-}    
+}
     </wt:code>
     <p>如上所示，我们在定义字段的时候，可以使用x.Majors[0].MajorCode这种写法指定他是一个子表的字段</p>
     <p>主子表导入的时候，使用下图所示的形式填写模板</p><br />
@@ -210,8 +210,10 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
     </table>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
-        layui.table.init('parse-table-demo');
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
     </script>

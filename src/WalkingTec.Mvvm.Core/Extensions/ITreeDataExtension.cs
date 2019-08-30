@@ -5,18 +5,18 @@ using System.Linq;
 namespace WalkingTec.Mvvm.Core.Extensions
 {
     /// <summary>
-    /// Ê÷ĞÎ½á¹¹ModelµÄÀ©Õ¹º¯Êı
+    /// æ ‘å½¢ç»“æ„Modelçš„æ‰©å±•å‡½æ•°
     /// </summary>
     public static class ITreeDataExtension
     {
 
         /// <summary>
-        /// »ñÈ¡Ò»¸ö¸¸½ÚµãÏÂµÄËùÓĞ×Ó½Úµã£¬°üÀ¨×Ó½ÚµãµÄ×Ó½Úµã
+        /// è·å–ä¸€ä¸ªçˆ¶èŠ‚ç‚¹ä¸‹çš„æ‰€æœ‰å­èŠ‚ç‚¹ï¼ŒåŒ…æ‹¬å­èŠ‚ç‚¹çš„å­èŠ‚ç‚¹
         /// </summary>
-        /// <typeparam name="T">Ê÷ĞÎ½á¹¹Àà</typeparam>
-        /// <param name="self">Ê÷ĞÎ½á¹¹ÊµÀı</param>
-        /// <param name="order">ÅÅĞò×Ö¶Î£¬¿ÉÎª¿Õ</param>
-        /// <returns>Ê÷ĞÎ½á¹¹ÁĞ±í£¬°üº¬ËùÓĞ×Ó½Úµã</returns>
+        /// <typeparam name="T">æ ‘å½¢ç»“æ„ç±»</typeparam>
+        /// <param name="self">æ ‘å½¢ç»“æ„å®ä¾‹</param>
+        /// <param name="order">æ’åºå­—æ®µï¼Œå¯ä¸ºç©º</param>
+        /// <returns>æ ‘å½¢ç»“æ„åˆ—è¡¨ï¼ŒåŒ…å«æ‰€æœ‰å­èŠ‚ç‚¹</returns>
         public static List<T> GetAllChildren<T>(this T self, Func<T, object> order = null)
             where T : TopBasePoco, ITreeData<T>
         {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 foreach (var item in dictinct)
                 {
                     rv.Add(item);
-                    //µİ¹éÌí¼Ó×Ó½ÚµãµÄ×Ó½Úµã
+                    //é€’å½’æ·»åŠ å­èŠ‚ç‚¹çš„å­èŠ‚ç‚¹
                     rv.AddRange(item.GetAllChildren(order));
                 }
             }
@@ -52,13 +52,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
         /// <summary>
-        /// ²éÑ¯Êı¾İ¿â£¬¸ù¾İÄ³¸ö½ÚµãIDµİ¹é»ñÈ¡ÆäÏÂËùÓĞ¼¶±ğµÄ×Ó½ÚµãID
+        /// æŸ¥è¯¢æ•°æ®åº“ï¼Œæ ¹æ®æŸä¸ªèŠ‚ç‚¹IDé€’å½’è·å–å…¶ä¸‹æ‰€æœ‰çº§åˆ«çš„å­èŠ‚ç‚¹ID
         /// </summary>
-        /// <typeparam name="T">Ê÷ĞÎ½á¹¹Àà</typeparam>
-        /// <param name="self">Ê÷ĞÎ½á¹¹ÊµÀı</param>
+        /// <typeparam name="T">æ ‘å½¢ç»“æ„ç±»</typeparam>
+        /// <param name="self">æ ‘å½¢ç»“æ„å®ä¾‹</param>
         /// <param name="dc">dc</param>
-        /// <param name="subids">×Ó½ÚµãIDÁĞ±í</param>
-        /// <returns>ËùÓĞ¼¶±ğ×Ó½ÚµãID</returns>
+        /// <param name="subids">å­èŠ‚ç‚¹IDåˆ—è¡¨</param>
+        /// <returns>æ‰€æœ‰çº§åˆ«å­èŠ‚ç‚¹ID</returns>
         public static List<Guid> GetAllChildrenIDs<T>(this T self
             , IDataContext dc
             , List<Guid> subids = null)
@@ -83,12 +83,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
         /// <summary>
-        /// ½«Ê÷ĞÎ½á¹¹ÁĞ±í×ª±äÎª±ê×¼ÁĞ±í
+        /// å°†æ ‘å½¢ç»“æ„åˆ—è¡¨è½¬å˜ä¸ºæ ‡å‡†åˆ—è¡¨
         /// </summary>
-        /// <typeparam name="T">Ê÷ĞÎ½á¹¹Àà</typeparam>
-        /// <param name="self">Ê÷ĞÎ½á¹¹ÊµÀı</param>
-        /// <param name="order">ÅÅĞò×Ö¶Î£¬¿ÉÒÔÎª¿Õ</param>
-        /// <returns>·µ»Ø±ê×¼ÁĞ±í£¬ËùÓĞ½Úµã¶¼ÔÚÍ¬Ò»¼¶ÉÏ</returns>
+        /// <typeparam name="T">æ ‘å½¢ç»“æ„ç±»</typeparam>
+        /// <param name="self">æ ‘å½¢ç»“æ„å®ä¾‹</param>
+        /// <param name="order">æ’åºå­—æ®µï¼Œå¯ä»¥ä¸ºç©º</param>
+        /// <returns>è¿”å›æ ‡å‡†åˆ—è¡¨ï¼Œæ‰€æœ‰èŠ‚ç‚¹éƒ½åœ¨åŒä¸€çº§ä¸Š</returns>
         public static List<T> FlatTree<T>(this List<T> self, Func<T,object> order = null)
             where T : TopBasePoco, ITreeData<T>
         {
@@ -104,5 +104,60 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             return rv;
         }
+
+        /// <summary>
+        /// å°†æ ‘å½¢ç»“æ„åˆ—è¡¨è½¬å˜ä¸ºæ ‡å‡†åˆ—è¡¨
+        /// </summary>
+        /// <typeparam name="T">æ ‘å½¢ç»“æ„ç±»</typeparam>
+        /// <param name="self">æ ‘å½¢ç»“æ„å®ä¾‹</param>
+        /// <param name="order">æ’åºå­—æ®µï¼Œå¯ä»¥ä¸ºç©º</param>
+        /// <returns>è¿”å›æ ‡å‡†åˆ—è¡¨ï¼Œæ‰€æœ‰èŠ‚ç‚¹éƒ½åœ¨åŒä¸€çº§ä¸Š</returns>
+        public static List<TreeSelectListItem> FlatTreeSelectList(this List<TreeSelectListItem> self, Func<TreeSelectListItem, object> order = null)
+        {
+            List<TreeSelectListItem> rv = new List<TreeSelectListItem>();
+            if (order != null)
+            {
+                self = self.OrderBy(order).ToList();
+            }
+            foreach (var item in self)
+            {
+                rv.Add(item);
+                if (item.Children != null)
+                {
+                    rv.AddRange(item.GetTreeSelectChildren(order));
+                }
+            }
+            return rv;
+        }
+
+        /// <summary>
+        /// è·å–TreeSelectèŠ‚ç‚¹ä¸‹æ‰€æœ‰å­èŠ‚ç‚¹
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public static List<TreeSelectListItem> GetTreeSelectChildren(this TreeSelectListItem self, Func<TreeSelectListItem, object> order = null)
+        {
+            List<TreeSelectListItem> rv = new List<TreeSelectListItem>();
+            var children = self.Children;
+            if (order != null && children != null)
+            {
+                children = children.OrderBy(order).ToList();
+            }
+            if (children != null && children.Count() > 0)
+            {
+                var dictinct = children.Where(x => x.Id != self.Id).ToList();
+                foreach (var item in dictinct)
+                {
+                    rv.Add(item);
+                    //é€’å½’æ·»åŠ å­èŠ‚ç‚¹çš„å­èŠ‚ç‚¹
+                    rv.AddRange(item.GetTreeSelectChildren(order));
+                }
+            }
+            return rv;
+        }
+
+
     }
 }

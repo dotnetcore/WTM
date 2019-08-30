@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import Regular from 'utils/Regular';
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, computed } from "mobx";
 import lodash from 'lodash';
 import User from './user';
 import globalConfig from 'global.config';
@@ -14,7 +14,7 @@ class Store {
     constructor() {
     }
     /** 菜单展开 收起 */
-    @observable collapsed = false;
+    @observable collapsed = lodash.get(globalConfig, 'collapsed', true);
     /** 菜单 */
     @observable subMenu: any[] = [];
     // 平行数据菜单
@@ -60,11 +60,18 @@ class Store {
         console.log(menu)
         this.subMenu = menu
     }
-    /** 菜单收起 展开 */
-    @action.bound
-    toggleCollapsed() {
-        this.collapsed = !this.collapsed;
+    /**
+   * 菜单 展开收起
+   */
+    @action
+    onCollapsed(collapsed = !this.collapsed) {
+        this.collapsed = collapsed;
+        // 主动触发 浏览器 resize 事件
         dispatchEvent(new CustomEvent('resize'));
+    }
+    @computed
+    get collapsedWidth() {
+        return this.collapsed ? 80 : 250;
     }
 
 }

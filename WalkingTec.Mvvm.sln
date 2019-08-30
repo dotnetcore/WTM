@@ -1,15 +1,16 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4B8AF76-3B9F-4D3E-BA9B-F5C157F20B25}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		CHANGELOG.md = CHANGELOG.md
 		common.props = common.props
 		deploy.sh = deploy.sh
 		LICENSE = LICENSE
+		NuGet.Config = NuGet.Config
 		QA.md = QA.md
 		README.md = README.md
 		version.props = version.props
@@ -29,19 +30,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Mvc.Admin",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Demo", "demo\WalkingTec.Mvvm.Demo\WalkingTec.Mvvm.Demo.csproj", "{3B4F66AE-D208-4E51-BDD7-396FAF3226C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{11643068-5E89-44F5-BF68-BA52D9EDFDE6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{8D8985E4-8178-41CA-ADAE-2B239156E820}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Doc", "doc\WalkingTec.Mvvm.Doc\WalkingTec.Mvvm.Doc.csproj", "{685CDB69-B873-45F8-AA41-5CBBDB6AE011}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{99C28EA9-9826-4384-AE82-BAE317E7670E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Core.Test", "test\WalkingTec.Mvvm.Core.Test\WalkingTec.Mvvm.Core.Test.csproj", "{72432B21-E5E4-4DD9-B062-8235FBF619D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Admin.Test", "test\WalkingTec.Mvvm.Admin.Test\WalkingTec.Mvvm.Admin.Test.csproj", "{B1A6773F-A9F2-42A6-806C-07B175AF4165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Admin.Test", "test\WalkingTec.Mvvm.Admin.Test\WalkingTec.Mvvm.Admin.Test.csproj", "{B1A6773F-A9F2-42A6-806C-07B175AF4165}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{93064FB9-6CAB-46D0-9F17-154B9517429A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{D6A25BAD-2519-4594-953D-7A6F1311E5F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,18 +70,10 @@ Global
 		{3B4F66AE-D208-4E51-BDD7-396FAF3226C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B4F66AE-D208-4E51-BDD7-396FAF3226C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B4F66AE-D208-4E51-BDD7-396FAF3226C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11643068-5E89-44F5-BF68-BA52D9EDFDE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11643068-5E89-44F5-BF68-BA52D9EDFDE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11643068-5E89-44F5-BF68-BA52D9EDFDE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11643068-5E89-44F5-BF68-BA52D9EDFDE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99C28EA9-9826-4384-AE82-BAE317E7670E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72432B21-E5E4-4DD9-B062-8235FBF619D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -89,6 +82,14 @@ Global
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93064FB9-6CAB-46D0-9F17-154B9517429A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93064FB9-6CAB-46D0-9F17-154B9517429A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93064FB9-6CAB-46D0-9F17-154B9517429A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93064FB9-6CAB-46D0-9F17-154B9517429A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,11 +100,11 @@ Global
 		{4207C275-FDCD-4681-AAAC-23228294EC27} = {46CFCDC6-4358-48EB-A901-5618B6530CEE}
 		{DAE04C09-7042-4F9C-A9EA-73129C28DE2C} = {46CFCDC6-4358-48EB-A901-5618B6530CEE}
 		{3B4F66AE-D208-4E51-BDD7-396FAF3226C4} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
-		{11643068-5E89-44F5-BF68-BA52D9EDFDE6} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{685CDB69-B873-45F8-AA41-5CBBDB6AE011} = {8D8985E4-8178-41CA-ADAE-2B239156E820}
-		{99C28EA9-9826-4384-AE82-BAE317E7670E} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{72432B21-E5E4-4DD9-B062-8235FBF619D5} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
+		{93064FB9-6CAB-46D0-9F17-154B9517429A} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{D6A25BAD-2519-4594-953D-7A6F1311E5F3} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D25EAAD-E43A-466A-95DA-ECE1F3C462DC}

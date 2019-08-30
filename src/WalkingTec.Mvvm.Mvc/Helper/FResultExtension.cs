@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Mvc
                 winId = self.Controller.ParentWindowId;
                 if (string.IsNullOrEmpty(winId))
                 {
-                    winId = "DONOTUSE_MAINPANEL";
+                    winId = "LAY_app_body";
                 }
             }
             self.ContentBuilder.Append($"ff.RefreshGrid('{winId}',{index});");

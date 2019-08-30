@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -174,6 +174,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
         {
+            IconFontsHelper.GenerateIconFont();
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
 
@@ -240,7 +241,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
                         }
-                        if (u!= null && u.EndsWith("/0"))
+                        if (u != null && u.EndsWith("/0"))
                         {
                             u = u.Substring(0, u.Length - 2);
                             u = u + "/{id}";
@@ -314,30 +315,24 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.IsQuickDebug)
             {
                 menus = new List<FrameworkMenu>();
-                foreach (var model in allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api"))
+                var areas = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").Select(x => x.Area?.AreaName).Distinct().ToList();
+                foreach (var area in areas)
                 {
                     var modelmenu = new FrameworkMenu
                     {
                         //ID = Guid.NewGuid(),
-                        PageName = model.ModuleName
+                        PageName = area ?? "默认区域"
                     };
                     menus.Add(modelmenu);
-                    foreach (var action in model.Actions)
+                    var pages = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).SelectMany(x => x.Actions).Where(x => x.MethodName.ToLower() == "index").ToList();
+                    foreach (var page in pages)
                     {
-                        var url = string.Empty;
-                        if (model.Area == null)
-                        {
-                            url = $"/{model.ClassName}/{action.MethodName}";
-                        }
-                        else
-                        {
-                            url = $"/{model.Area.Prefix}/{model.ClassName}/{action.MethodName}";
-                        }
+                        var url = page.Url;
                         menus.Add(new FrameworkMenu
                         {
                             ID = Guid.NewGuid(),
                             ParentId = modelmenu.ID,
-                            PageName = action.ActionName,
+                            PageName = page.Module.ModuleName,
                             Url = url
                         });
                     }

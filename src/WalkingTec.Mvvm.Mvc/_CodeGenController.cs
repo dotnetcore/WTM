@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -22,6 +22,14 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("配置字段")]
         public IActionResult SetField(CodeGenVM vm)
         {
+            if (vm.SelectedModel != null)
+            {
+                Type modeltype = Type.GetType(vm.SelectedModel);
+                if(modeltype.IsSubclassOf(typeof(TopBasePoco)) == false)
+                {
+                    ModelState.AddModelError("SelectedModel", "所选模型必须继承TopBasePoco基类");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
@@ -47,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().CloseDialog().Alert("生成成功！");
+            return FFResult().Alert("生成成功！请关闭调试重新编译运行。");
         }
 
         [ActionDescription("预览")]
