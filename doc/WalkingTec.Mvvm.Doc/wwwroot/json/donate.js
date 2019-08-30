@@ -19,6 +19,7 @@
         {"date":"2019-08-26","name":"Void","amount":6.66,"from":"微信","comment":"虽然没怎么用这个框架，但是很期待"},
         {"date":"2019-08-26","name":"安安","amount":99.99,"from":"微信","comment":"谢谢，解决急用数据，棒了大忙！"},
         {"date":"2019-08-28","name":"安安 <sup>2</sup>","amount":9.99,"from":"微信","comment":"感谢亮哥的耐心帮助，略表心意"},
-        {"date":"2019-08-29","name":"DL1024","amount":100.00,"from":"QQ","comment":"没什么，支持一下"}
+        {"date":"2019-08-29","name":"DL1024","amount":100.00,"from":"QQ","comment":"没什么，支持一下"},
+        {"date":"2019-08-30","name":"旋风小伙","amount":6.66,"from":"微信","comment":"-"}
     ]
 }
