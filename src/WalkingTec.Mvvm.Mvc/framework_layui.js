@@ -483,17 +483,18 @@ window.ff = {
           });
         }
 
-
         if (controltype === "combo") {
           $('#' + target).html('<option value = "">请选择</option>');
-          for (i = 0; i < data.Data.length; i++) {
-            item = data.Data[i];
-            var icon = item.ICon !== undefined && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
-            if (item.Selected === true) {
-              $('#' + target).append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
-            }
-            else {
-              $('#' + target).append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
+          if (data.Data !== undefined && data.Data !== null) {
+            for (i = 0; i < data.Data.length; i++) {
+              item = data.Data[i];
+              var icon = item.ICon !== undefined && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
+              if (item.Selected === true) {
+                $('#' + target).append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
+              }
+              else {
+                $('#' + target).append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
+              }
             }
           }
           form.render('select');
