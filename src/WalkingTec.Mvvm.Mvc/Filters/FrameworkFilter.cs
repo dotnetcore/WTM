@@ -258,7 +258,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 // 为所有 PartialView 加上最外层的 Div
                 if (model != null)
                 {
-                    string pagetitle = " ";
+                    string pagetitle = string.Empty;
                     var menu = Utils.FindMenu(context.HttpContext.Request.Path);
                     if (menu == null)
                     {
@@ -285,7 +285,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                         pagetitle += menu.PageName;
                     }
-                    context.HttpContext.Response.Headers.Add("X-wtm-PageTitle", Convert.ToBase64String(Encoding.UTF8.GetBytes(pagetitle)));
+                    if (string.IsNullOrEmpty(pagetitle) == false)
+                    {
+                        context.HttpContext.Response.Headers.Add("X-wtm-PageTitle", Convert.ToBase64String(Encoding.UTF8.GetBytes(pagetitle)));
+                    }
                     context.HttpContext.Response.Cookies.Append("divid", model.ViewDivId);
                 }
             }
