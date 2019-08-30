@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
@@ -41,7 +37,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 
         public override DbCommand GetSearchCommand()
         {
-            var sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs");
+            string sql = string.Empty;
+            switch (ConfigInfo.DbType)
+            {
+                case DBTypeEnum.MySql:
+                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs limit 10"); break;
+                case DBTypeEnum.SqlServer:
+                    sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs"); break;
+            }
 
             var cmd = DC.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql;
@@ -54,7 +57,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
         }
     }
 
-    public class CustomView: TopBasePoco
+    public class CustomView : TopBasePoco
     {
         public string test1 { get; set; }
         public string test2 { get; set; }
