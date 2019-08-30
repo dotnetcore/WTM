@@ -1,12 +1,12 @@
-﻿@model WalkingTec.Mvvm.Mvc.CodeGenVM
+@model WalkingTec.Mvvm.Mvc.CodeGenVM
 
 
 <wt:form vm="@Model">
-    <wt:code title="@(ViewData["filename"])" height="600">
-@ViewData["code"]
-    </wt:code>
-    <wt:row align="AlignEnum.Right">
-        <wt:closebutton />
-    </wt:row>
+  <wt:code title="@(ViewData[" filename"])" height="600">
+    @ViewData["code"]
+  </wt:code>
+  <wt:row align="AlignEnum.Right">
+    <wt:closebutton />
+  </wt:row>
 
 </wt:form>

@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     var checkData = layui.tree.getChecked('tree{Id}');
                     var ids = ff.getTreeChecked(checkData);
                     $('#tree{Id}hidden').html('');
-                    for(var i=0;i<ids.length;i++){{                    
+                    for(var i=0;i<ids.length;i++){{
                         $('#tree{Id}hidden').append(""<input type='hidden' name='{Field?.Name}' value='""+ids[i]+""'/>"");
                     }}
                     {FormatFuncName(CheckFunc)};
@@ -130,13 +130,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 List<LayuiTreeItem> treeitems = GetLayuiTree(mm, vals);
                 var script = $@"
 <script>
-var last{Id} = null;
-var loaded{Id} = false;
-layui.tree.render({{
-  id:'tree{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
-  ,data: {JsonConvert.SerializeObject(treeitems)} {oncheck} {onclick}
-}});
-loaded{Id} = true;
+layui.use(['tree'],function(){{
+  var last{Id} = null;
+  var loaded{Id} = false;
+  layui.tree.render({{
+    id:'tree{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
+    ,data: {JsonConvert.SerializeObject(treeitems)} {oncheck} {onclick}
+  }});
+  loaded{Id} = true;
+}})
 </script>
 ";
                 output.PostElement.AppendHtml(script);

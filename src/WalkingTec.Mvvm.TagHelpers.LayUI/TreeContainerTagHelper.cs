@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -133,15 +131,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 var script = $@"
 <div id=""div{Id}"" class=""layui-col-md2 donotuse_pdiv"" style=""padding-right:10px;border-right:solid 1px #aaa;""></div>
-<div id=""div_{Id}"" style=""overflow:auto;box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>                
+<div id=""div_{Id}"" style=""overflow:auto;box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>
 <script>
-var last{Id} = null;
-layui.tree.render({{
-  id:'tree{Id}',elem: '#div{Id}',onlyIconControl:true, showCheckbox:false,showLine:{ShowLine.ToString().ToLower()}
-  {onclick}
-  ,data: {JsonConvert.SerializeObject(treeitems)}
-}});
-{(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
+layui.use(['tree'],function(){{
+  var last{Id} = null;
+  layui.tree.render({{
+    id:'tree{Id}',elem: '#div{Id}',onlyIconControl:true, showCheckbox:false,showLine:{ShowLine.ToString().ToLower()}
+    {onclick}
+    ,data: {JsonConvert.SerializeObject(treeitems)}
+  }});
+  {(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
+}})
 </script>
 ";
                 output.Content.SetHtmlContent(script);

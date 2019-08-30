@@ -1,10 +1,9 @@
-﻿<wt:fieldset field-set-style="Simple" title="数据权限-模块截图">
-    <img width="1200" height="600" src="~/imgs/admin-dataprivilege.png" />
+<wt:fieldset field-set-style="Simple" title="数据权限-模块截图">
+    <img src="~/imgs/admin-dataprivilege.png" />
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="数据权限-功能介绍">
     数据权限从名字来看，很容易理解，即具有查看和操作某些数据的权限。
-    举个例子，有公司表和员工表，业务场景中，通常逻辑时各个公司的管理员，只能够管理自己公司的员工，然而可能某些人的权力比较大，可以管理其中的两个公司，这就涉及到数据权限问题了，这里的数据权限为公司权限。
-    因为公司是业务数据，会不断变化，怎样才能做到根据公司来过滤员工数据呢？下面就为大家介绍，框架如何实现数据权限的过滤。
+    假设我们需要不同的学校只能维护自己的学生，下面就为大家介绍，框架如何实现数据权限的过滤。
     <ol class="doc">
         <li>添加数据权限</li>
         <wt:quote>
@@ -16,7 +15,7 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
     .ConfigureServices(x =&gt;
     {
         List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-        pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
+        pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
         x.AddFrameworkService(dataPrivilegeSettings: pris);
         x.AddLayui();
     })
@@ -29,51 +28,31 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
         配置如下代码：
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
 x.AddFrameworkService(dataPrivilegeSettings: pris);
         </wt:code>
         <p>当数据权限有多个的时候，继续在此添加即可，例如：</p>
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;Company&gt;("公司权限", m =&gt; m.Name));
-pris.Add(new DataPrivilegeInfo&lt;Department&gt;("部门权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;Major&gt;("专业权限", m =&gt; m.Name));
 x.AddFrameworkService(dataPrivilegeSettings: pris);
         </wt:code>
         <p>
-        通过上述配置后，系统可以知道有哪些数据权限。在新建数据权限过程中，"数据权限"字段的下拉列表中，会显示出配置的数据权限的内容。如图：<br />
-        <img src="~/imgs/admin-dataprivilege-create.png" />
+        通过上述配置后，系统可以知道有哪些数据权限。在新建数据权限过程中，"数据权限"字段的下拉列表中，会显示出配置的数据权限的内容。<br />
         </p>
         <p>
-            选择公司权限后，系统会将所有公司表中的数据显示到"允许访问"字段中，所以，需要在公司表中添加业务数据，之后可以通过勾选"允许访问"中的业务数据，从而达到分配数据权限的目的。如图：<br />
-            <img src="~/imgs/admin-dataprivilege-create2-1.png" width="1200" height="600"  />
-            <img src="~/imgs/admin-dataprivilege-create2.png" />
+            选择学校权限后，可以选择全部权限或者部分权限，如果选择部分权限，系统会列出来学校表中的数据让你选择有哪个学校的权限。如图：<br />
         </p>
         <p>
-        分配数据权限可以分配到用户组，也可以分配到单个用户。"权限类别"上选择用户组权限，即可分配到用户组上，选择用户权限，即可分配到用户上。<br />
-        用户组和用户的输入框具有模糊查询的功能，便于用户进行选择。如图：<br />
-        <img src="~/imgs/admin-dataprivilege-create3.png" />
+          <img src="~/imgs/admin-dataprivilege-create3.png" /> <br/><br/>
+          分配数据权限可以分配到用户组，也可以分配到单个用户。"权限类别"上选择用户组权限，即可分配到用户组上，选择用户权限，即可分配到用户上。<br />
+          用户组和用户的输入框具有模糊查询的功能，便于用户进行选择。<br />
         </p>
-        <li>使用数据权限</li>
-        查询条件中通过LoginUserInfo.DataPrivileges使用数据权限
-        <wt:code>
-public class EmployeeSearcher : BaseSearcher
-{
-    public List&lt;ComboSelectListItem&gt;
-        AllCompanys { get; set; }
-        [Display(Name = "所属公司")]
-        public Guid CompanyID { get; set; }
-        [Display(Name = "员工姓名")]
-        public String Name { get; set; }
-        [Display(Name = "员工性别")]
-        public SexEnum Sex { get; set; }
+      <br /><br />
 
-        protected override void InitVM()
-        {
-            AllCompanys = DC.Set&lt;Company&gt;().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y =&gt; y.Name);
-        }
-}
-        </wt:code>
-        查询的数据列表通过DPWhere(LoginUserInfo.DataPrivileges,x=>x.CompanyID)方式根据数据权限过滤数据
+        <li>使用数据权限</li>
+        假设你有一个员工表通过SchoolID关联了学校，在查询的数据列表通过DPWhere(LoginUserInfo.DataPrivileges,x=>x.SchoolID)就可以根据当前登陆用户所配置的数据权限过滤数据
         <wt:code>
 public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
 {
@@ -81,7 +60,7 @@ public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
         .CheckEqual(Searcher.CompanyID, x=&gt;x.CompanyID)
         .CheckContain(Searcher.Name, x=&gt;x.Name)
         .CheckEqual(Searcher.Sex, x=&gt;x.Sex)
-        .DPWhere(LoginUserInfo.DataPrivileges,x=&gt;x.CompanyID)
+        .DPWhere(LoginUserInfo.DataPrivileges,x=&gt;x.SchoolID)
         .Select(x =&gt; new Employee_View
         {
             ID = x.ID,

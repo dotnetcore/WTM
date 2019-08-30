@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WalkingTec.Mvvm.Core;
@@ -22,11 +22,11 @@ namespace $vmns$.HomeVMs
         {
             if (ConfigInfo.IsQuickDebug == true)
             {
-                return AllMenu.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.Url, SortByName: false); ;
+                return AllMenu.AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.ICon, x => x.Url, SortByName: false); ;
             }
             else
             {
-                var rv = AllMenu.Where(x =>x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.IConId.ToString(), x => x.IsInside==true ? x.Url : "/_framework/outside?url="+x.Url, SortByName: false);
+                var rv = AllMenu.Where(x => x.ShowOnMenu == true).AsQueryable().GetTreeSelectListItems(null, null, x => x.PageName, null, x => x.ICon, x => x.IsInside == true ? x.Url : "/_framework/outside?url=" + x.Url, SortByName: false);
                 RemoveUnAccessableMenu(rv, LoginUserInfo);
                 RemoveEmptyMenu(rv);
                 return rv;
@@ -79,9 +79,9 @@ namespace $vmns$.HomeVMs
 
         private void RemoveEmptyMenu(List<TreeSelectListItem> menus)
         {
-            for(int i = 0; i < menus.Count; i++)
+            for (int i = 0; i < menus.Count; i++)
             {
-                if((menus[i].Children == null || menus[i].Children.Count == 0) &&( menus[i].Url == null))
+                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
                 {
                     menus.RemoveAt(i);
                     i--;

@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.ViewModels.SchoolVms.SchoolVm
+@model WalkingTec.Mvvm.Doc.ViewModels.SchoolVms.SchoolVm
 
 <wt:quote>
     <p>WTM提供了10多种表单控件，涵盖了绝大部分后台管理类型程序的需要</p>
@@ -48,6 +48,7 @@
                 </tr>
             </tbody>
         </table>
+    <div style="height:10px;">&nbsp;</div>
         <wt:tab>
             <wt:tabheaders>
                 <wt:tabheader title="效果" />
@@ -84,8 +85,8 @@
 
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
    </script>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
 
@@ -44,7 +44,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string BeforeSubmit { get; set; }
 
         /// <summary>
-        /// 使用传统的提交整个页面的方式，而不使用ajax提交
+        /// 使用传统表单提交方式提交，而不使用 AJAX 提交
+        /// 比如登陆页面，提交后校验成功会跳转其他页面，而不是返会 PartialView
         /// </summary>
         public bool OldPost { get; set; }
 
@@ -76,7 +77,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
             output.Attributes.SetAttribute("method", "post");
-            output.Attributes.SetAttribute("lay-filter", Id + "form");
+            output.Attributes.SetAttribute("lay-filter", Id);
             if (LabelWidth != null)
             {
                 context.Items.Add("formlabelwidth", LabelWidth.Value);
@@ -103,37 +104,28 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.Attributes.SetAttribute("action", baseVM?.CurrentUrl ?? "#");
                 }
             }
-            //await output.GetChildContentAsync();
+
             output.PostElement.AppendHtml($@"
 <script>
-  var form = layui.form.render(null,'{Id}form');
-  var comboxs = $("".layui-form[lay-filter='{Id}form'] select[wtm-combo='MULTI_COMBO']"");
-  /* 启用 ComboBox 多选 */
-  for(var i=0;i<comboxs.length;i++){{
-    var filter = comboxs[i].attributes['lay-filter'].value,arr = [],subTag = $('input[name=""' + filter + '""]');
-    for (var i = 0; i < subTag.length; i++) {{
-      arr.push({{name:subTag[i].attributes['text'].value,val:subTag[i].value}});
-    }}
-    formSelects.on({{
-      layFilter:filter,left:'',right:'',separator:',',arr:arr,
-      selectFunc: null
-    }})
-  }}
+ff.RenderForm('{Id}');
 ");
-            //如果是普通表单并且没有设置oldpost，则使用ajax方式提交
-            //如果普通表单设置了oldpost，则用传统form提交
+            // 使用传统表单提交方式提交，而不使用 AJAX 提交
+            // 比如登陆页面，提交后校验成功会跳转其他页面，而不是返会 PartialView
             if (OldPost == false && !(this is SearchPanelTagHelper))
             {
                 output.PostElement.AppendHtml($@"
+layui.use(['form'],function(){{
   layui.form.on('submit({Id}filter)', function(data){{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
     ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
     return false;
   }});
+}})
 ");
             }
-            //如果是SearchPanel，并且指定了oldpost，则提交整个表单，而不是只刷新grid数据
-            if( OldPost == true && this is SearchPanelTagHelper search)
+
+            //如果是 SearchPanel，并且指定了 OldPost，则提交整个表单，而不是只刷新 Grid 数据
+            if (OldPost == true && this is SearchPanelTagHelper search)
             {
                 output.PostElement.AppendHtml($@"
 $('#{search.SearchBtnId}').on('click', function () {{
@@ -144,6 +136,7 @@ $('#{search.SearchBtnId}').on('click', function () {{
 ");
 
             }
+
             //输出后台返回的错误信息
             if (baseVM?.MSD?.Count > 0)
             {
@@ -164,12 +157,12 @@ $(""#{Id}submiterrorholder"").before(""<div class='layui-input-block' style='tex
                     }
                     if (haserror == true)
                     {
-                        output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(baseVM.GetType().Name+"."+key)}"").addClass('layui-form-danger');");
+                        output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(baseVM.GetType().Name + "." + key)}"").addClass('layui-form-danger');");
                     }
                 }
                 if (firstkey != null)
                 {
-                    output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(baseVM.GetType().Name + "."+firstkey)}"").focus();");
+                    output.PostElement.AppendHtml($@"$(""#{Utils.GetIdByName(baseVM.GetType().Name + "." + firstkey)}"").focus();");
                 }
             }
             output.PostElement.AppendHtml($@"</script>");

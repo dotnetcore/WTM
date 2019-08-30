@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("TreeContainer")]
+        [ActionDescription("树形容器")]
         public IActionResult TreeContainer()
         {
             var vm = CreateVM<StudentListVm3>();

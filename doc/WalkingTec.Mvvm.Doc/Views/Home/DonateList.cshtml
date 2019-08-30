@@ -1,134 +1,32 @@
-
-<style>
-    .layui-table-cell {
-        height: auto;
-        white-space: normal;
-        word-break: break-all;
-        overflow: hidden;
-    }
-</style>
-<wt:fieldset field-set-style="Simple" title="捐赠名单">
-    <table lay-filter="parse-table-demo" lay-size="lg" lay-even>
-        <thead>
-            <tr>
-                <th lay-data="{field:'username1', width:115}">日期</th>
-                <th lay-data="{field:'username2', width:130}">姓名</th>
-                <th lay-data="{field:'username3', width:115}">金额</th>
-                <th lay-data="{field:'username4', width:60}">来源</th>
-                <th lay-data="{field:'username5', width:600}">留言</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>2018-10-21</td>
-                <td>新月无眠</td>
-                <td>¥166.00</td>
-                <td>QQ</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>2019-04-24</td>
-                <td>Snappy</td>
-                <td>¥100.00</td>
-                <td>QQ</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>2019-07-24</td>
-                <td>勇</td>
-                <td>¥2.22</td>
-                <td>微信</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>2019-07-30</td>
-                <td>super斌</td>
-                <td>¥6.66</td>
-                <td>微信</td>
-                <td>点赞，加油</td>
-            </tr>
-            <tr>
-                <td>2019-07-30</td>
-                <td>蜗牛</td>
-                <td>¥99.99</td>
-                <td>微信</td>
-                <td>感谢各位大佬</td>
-            </tr>
-            <tr>
-                <td>2019-07-30</td>
-                <td>Snappy <sup>2</sup></td>
-                <td>¥66.60</td>
-                <td>微信</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>2019-07-31</td>
-                <td>路加</td>
-                <td>¥9.99</td>
-                <td>微信</td>
-                <td>收入微薄，聊表寸心</td>
-            </tr>
-            <tr>
-                <td>2019-08-02</td>
-                <td>时代一周</td>
-                <td>¥8.88</td>
-                <td>微信</td>
-                <td>vue前后端分离 期望出来</td>
-            </tr>
-            <tr>
-                <td>2019-08-11</td>
-                <td>小浪</td>
-                <td>¥66.66</td>
-                <td>微信</td>
-                <td>用过最好的core框架，加油！</td>
-            </tr>
-            <tr>
-                <td>2019-08-15</td>
-                <td>擅长弯道超车</td>
-                <td>¥2.22</td>
-                <td>微信</td>
-                <td>感谢感谢！来自net core 程序员</td>
-            </tr>
-            <tr>
-                <td>2019-08-19</td>
-                <td>董工@goldarch</td>
-                <td>¥99.99</td>
-                <td>微信</td>
-                <td>我是董工@goldarch.刚入群的</td>
-            </tr>
-            <tr>
-                <td>2019-08-20</td>
-                <td>村西一棵草</td>
-                <td>¥9.99</td>
-                <td>微信</td>
-                <td>就是忍不住要捐几块</td>
-            </tr>
-            <tr>
-                <td>2019-08-26</td>
-                <td>随风</td>
-                <td>¥6.66</td>
-                <td>微信</td>
-                <td>我是随风，我要上墙</td>
-            </tr>
-            <tr>
-                <td>2019-08-26</td>
-                <td>Void</td>
-                <td>¥6.66</td>
-                <td>微信</td>
-                <td>虽然没怎么用这个框架，但是很期待</td>
-            </tr>
-            <tr>
-                <td>2019-08-26</td>
-                <td>安安</td>
-                <td>¥99.99</td>
-                <td>微信</td>
-                <td>谢谢，解决急用数据，棒了大忙！</td>
-            </tr>
-        </tbody>
-    </table>
-</wt:fieldset>
+<table id="WTM-donate-List"></table>
 <script>
-    layui.table.init('parse-table-demo', {
-        limit: 100
+  layui.use(['table'],function(){
+    const table = layui.table;
+    const tableIns = table.render({
+      elem: '#WTM-donate-List'
+      , url: '/json/donate.js'
+      , page: true
+      , autoSort: true
+      , cols: [[
+        { type: 'numbers', fixed: 'left' }
+        , { field: 'date', title: '日期', width: 120, sort: true }
+        , { field: 'name', title: '姓名', width: 150, sort: true }
+        , { field: 'amount', title: '金额', width: 120, sort: true }
+        , { field: 'from', title: '来源', width: 60 }
+        , { field: 'comment', title: '留言' }
+      ]]
+      , parseData: function(res){
+        var pageIndex = tableIns.config.page.curr===undefined?1:tableIns.config.page.curr;
+        var result = res.Data.slice(tableIns.config.limit*(pageIndex-1),tableIns.config.limit*pageIndex);
+        return {
+                "Code": 200,
+                "Msg":"",
+                "Count": res.Data.length,
+                "Data": result
+              }
+      }
+      , skin: 'line'
+      , height: 'full-110'
     });
+  })
 </script>

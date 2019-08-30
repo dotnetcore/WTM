@@ -212,24 +212,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var content = $@"
 <script>
-    var laydate = layui.laydate;
-    var ins1 = laydate.render({{
-        elem: '#{Id}',
-        type: '{Type.ToString().ToLower()}'
-        {(string.IsNullOrEmpty(RangeSplit) ? string.Empty : $",range:'{RangeSplit}'")}
-        {(string.IsNullOrEmpty(Format) ? string.Empty : $",format: '{Format}'")}
-        {(string.IsNullOrEmpty(Min) ? string.Empty : $",min: {Min}")}
-        {(string.IsNullOrEmpty(Max) ? string.Empty : $",max: {Max}")}
-        {(!ZIndex.HasValue ? string.Empty : $",zIndex: {ZIndex.Value}")}
-        {(!ShowBottom.HasValue ? string.Empty : $",showBottom: {ShowBottom.Value.ToString().ToLower()}")}
-        {(!Calendar.HasValue ? string.Empty : $",calendar: {Calendar.Value.ToString().ToLower()}")}
-        {(!Lang.HasValue ? string.Empty : $",lang: '{Lang.Value.ToString().ToLower()}'")}
-        {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonConvert.SerializeObject(Mark)}")}
-        {(string.IsNullOrEmpty(ReadyFunc) ? string.Empty : $",ready: function(value){{{ReadyFunc}(value,ins1)}}")}
-        {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $",change: function(value,date,endDate){{{ChangeFunc}(value,date,endDate,ins1)}}")}
-        {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $",done: function(value,date,endDate){{{DoneFunc}(value,date,endDate,ins1)}}")}
-        //,theme: 'molv',btns: ['clear','now','confirm']
-    }});
+layui.use(['laydate'],function(){{
+  var laydate = layui.laydate;
+  var dateIns = laydate.render({{
+    elem: '#{Id}',
+    type: '{Type.ToString().ToLower()}'
+    {(string.IsNullOrEmpty(RangeSplit) ? string.Empty : $",range:'{RangeSplit}'")}
+    {(string.IsNullOrEmpty(Format) ? string.Empty : $",format: '{Format}'")}
+    {(string.IsNullOrEmpty(Min) ? string.Empty : $",min: {Min}")}
+    {(string.IsNullOrEmpty(Max) ? string.Empty : $",max: {Max}")}
+    {(!ZIndex.HasValue ? string.Empty : $",zIndex: {ZIndex.Value}")}
+    {(!ShowBottom.HasValue ? string.Empty : $",showBottom: {ShowBottom.Value.ToString().ToLower()}")}
+    {(!Calendar.HasValue ? string.Empty : $",calendar: {Calendar.Value.ToString().ToLower()}")}
+    {(!Lang.HasValue ? string.Empty : $",lang: '{Lang.Value.ToString().ToLower()}'")}
+    {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonConvert.SerializeObject(Mark)}")}
+    {(string.IsNullOrEmpty(ReadyFunc) ? string.Empty : $",ready: function(value){{{ReadyFunc}(value,dateIns)}}")}
+    {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $",change: function(value,date,endDate){{{ChangeFunc}(value,date,endDate,dateIns)}}")}
+    {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $",done: function(value,date,endDate){{{DoneFunc}(value,date,endDate,dateIns)}}")}
+  }});
+}})
 </script>
 ";
             output.PostElement.AppendHtml(content);

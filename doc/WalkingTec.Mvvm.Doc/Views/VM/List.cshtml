@@ -276,7 +276,7 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
             var query = data.AsQueryable().Where(x=&gt
                     (string.IsNullOrEmpty(Searcher.LoginName) || x.LoginName.Contains(Searcher.LoginName)) &&
                     (string.IsNullOrEmpty(Searcher.Name) || x.Name.Contains(Searcher.Name)) &&
-                    (Searcher.Sex == null || x.Sex == Searcher.Sex) 
+                    (Searcher.Sex == null || x.Sex == Searcher.Sex)
                 )
                 .OrderBy(x =&gt x.ExcelIndex);
             return query;
@@ -472,10 +472,10 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
     </table>
 </wt:fieldset>
     <script>
-        layui.code({ about: false });
+    layui.use('code',function(){layui.code({ about: false })})
     </script>
     <script>
         layui.table.init('parse-table-demo', {
-            limit: 100 
+        limit: 100, page: false
         });
     </script>

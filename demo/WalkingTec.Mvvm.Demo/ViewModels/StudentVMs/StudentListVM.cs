@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +17,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+                 this.MakeAction("Student","Index2","多列表","多列表", GridActionParameterTypesEnum.NoId,dialogWidth:800).SetShowDialog(false).SetIsRedirect
+                (true),
+               this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),

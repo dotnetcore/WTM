@@ -130,52 +130,52 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var content = $@"
 <script>
-;!function(){{
-    var $ = layui.$;
-    var transfer = layui.transfer;
-    var name = '{Field.Name}';
-    var _id = '{_idPrefix}{Id}';
-    var container = $('#'+_id);
-    function defaultFunc(data,index,transferIns) {{
-        var selectVals = transfer.getData('{Id}');
-        // remove old values
-        var inputs = $('#'+_id+' input[name='+name+']')
-        if(inputs!=null && inputs.length>0){{
-            for (var i = 0; i < inputs.length; i++) {{
-                inputs[i].remove();
-            }}
-        }}
-        // add new values
-        for (var i = 0; i < selectVals.length; i++) {{
-            container.append('<input type=""hidden"" name=""'+name+'"" value=""'+selectVals[i].value+'""/>');
-        }}
+layui.use(['transfer'],function(){{
+  var $ = layui.$;
+  var transfer = layui.transfer;
+  var name = '{Field.Name}';
+  var _id = '{_idPrefix}{Id}';
+  var container = $('#'+_id);
+  function defaultFunc(data,index,transferIns) {{
+    var selectVals = transfer.getData('{Id}');
+    /* remove old values */
+    var inputs = $('#'+_id+' input[name='+name+']')
+    if(inputs!=null && inputs.length>0){{
+      for (var i = 0; i < inputs.length; i++) {{
+        inputs[i].remove();
+      }}
     }}
-    var defaultVal = {(string.IsNullOrEmpty(DefaultValue) ? "[]" : DefaultValue)};
-    var transferIns = transfer.render({{
-        elem: '#'+_id
-        ,title:{title}
-        ,data:{JsonConvert.SerializeObject(data, _jsonSerializerSettings)}
-        {(string.IsNullOrEmpty(DefaultValue) ? string.Empty : $",value:defaultVal")}
-        ,id:'{Id}'
-        ,text:{{none:'{NonePlaceholder}',searchNone:'{SearchNonePlaceholder}'}}
-        {(!EnableSearch ? string.Empty : ",showSearch:true")}
-        {(!Width.HasValue ? string.Empty : $",width:{Width}")}
-        {(!Height.HasValue ? string.Empty : $",height:{Height}")}
-        ,onchange: function(data,index){{defaultFunc(data,index,transferIns);
-        {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(data, index,transferIns);")}
-        }}
-    }});
-    // init default value
-    if(defaultVal!=null && defaultVal.length>0){{
-        for (var i = 0; i < defaultVal.length; i++) {{
-            container.append('<input type=""hidden"" name=""'+name+'"" value=""'+defaultVal[i]+'""/>');
-        }}
+    /* add new values */
+    for (var i = 0; i < selectVals.length; i++) {{
+      container.append('<input type=""hidden"" name=""'+name+'"" value=""'+selectVals[i].value+'""/>');
     }}
-    {(!Disabled?string.Empty: $@"
-        $('#'+_id).find(':checkbox').prop('disabled',true)
-        $('#'+_id).find(':input').prop('disabled',true)
-        transfer.render();")}
-}}();
+  }}
+  var defaultVal = {(string.IsNullOrEmpty(DefaultValue) ? "[]" : DefaultValue)};
+  var transferIns = transfer.render({{
+    elem: '#'+_id
+    ,title:{title}
+    ,data:{JsonConvert.SerializeObject(data, _jsonSerializerSettings)}
+    {(string.IsNullOrEmpty(DefaultValue) ? string.Empty : $",value:defaultVal")}
+    ,id:'{Id}'
+    ,text:{{none:'{NonePlaceholder}',searchNone:'{SearchNonePlaceholder}'}}
+    {(!EnableSearch ? string.Empty : ",showSearch:true")}
+    {(!Width.HasValue ? string.Empty : $",width:{Width}")}
+    {(!Height.HasValue ? string.Empty : $",height:{Height}")}
+    ,onchange: function(data,index){{defaultFunc(data,index,transferIns);
+    {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(data, index,transferIns);")}
+    }}
+  }});
+  /*s init default value */
+  if(defaultVal!=null && defaultVal.length>0){{
+    for (var i = 0; i < defaultVal.length; i++) {{
+      container.append('<input type=""hidden"" name=""'+name+'"" value=""'+defaultVal[i]+'""/>');
+    }}
+  }}
+  {(!Disabled?string.Empty: $@"
+    $('#'+_id).find(':checkbox').prop('disabled',true)
+    $('#'+_id).find(':input').prop('disabled',true)
+    transfer.render();")}
+}})
 </script>
 ";
             output.PostElement.AppendHtml(content);

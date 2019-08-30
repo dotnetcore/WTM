@@ -1,4 +1,4 @@
-﻿import { DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
+import { DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
@@ -20,7 +20,6 @@ export class InsertForm extends React.Component<any, any> {
             models: this.models,
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
-        const IsCustumIcon = Help.FormValueEqual(props, 'CustumIcon', true, false);
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" value={true} />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
@@ -32,9 +31,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" value={true} />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="CustumIcon" layout="row" />
-            <FormItem {...props} fieId="Entity.CustumIcon" hidden={IsCustumIcon} />
-            <FormItem {...props} fieId="Entity.IConId" hidden={!IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.Icon" />
         </InfoShellLayout>
     }
 }
@@ -61,7 +58,6 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             models: this.models,
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
-        const IsCustumIcon = Help.FormValueEqual(props, 'CustumIcon', true, !!Help.GetFormValue(props, 'Entity.IConId'));
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.ID" hidden />
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
@@ -74,9 +70,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="CustumIcon" layout="row" value={IsCustumIcon} />
-            <FormItem {...props} fieId="Entity.CustumIcon" hidden={IsCustumIcon} />
-            <FormItem {...props} fieId="Entity.IConId" hidden={!IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.Icon" />
         </InfoShellLayout>
     }
 }
@@ -98,7 +92,6 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             display: true,
         }
         const IsInside = Help.FormValueEqual(props, 'Entity.IsInside', true, true);
-        const IsCustumIcon = Help.FormValueEqual(props, 'CustumIcon', true, !!Help.GetFormValue(props, 'Entity.IConId'));
         return <InfoShellLayout>
             <FormItem {...props} fieId="Entity.IsInside" layout="row" />
             <FormItem {...props} fieId="Entity.Url" layout="row" hidden={IsInside} />
@@ -110,8 +103,7 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.CustumIcon" hidden={IsCustumIcon} />
-            <FormItem {...props} fieId="Entity.IConId" hidden={!IsCustumIcon} />
+            <FormItem {...props} fieId="Entity.Icon"  />
         </InfoShellLayout>
     }
 }

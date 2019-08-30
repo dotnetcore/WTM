@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -113,6 +113,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                     var otherActions = mo.Actions;
                     int order = 1;
+                    Entity.Children = new List<FrameworkMenu>();
                     foreach (var action in otherActions)
                     {
                         if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))
@@ -196,6 +197,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                     var otherActions = mo.Actions;
                     int order = 1;
+                    Entity.Children = new List<FrameworkMenu>();
                     foreach (var action in otherActions)
                     {
                         if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))

@@ -1,8 +1,5 @@
-﻿<style>
-    fieldset img {
-        width: 800px;
-        border: 1px solid black
-    }
+<style>
+
     a {
         color: #01aaed
     }
@@ -77,5 +74,5 @@ public class DataContext : FrameworkContext
     </ul>
 </wt:fieldset>
 <script>
-    layui.code({ about: false });
+layui.use('code',function(){layui.code({ about: false })})
 </script>
