@@ -23,8 +23,7 @@
                         { "name": "/Global", "title": "全局变量", "jump": "/Global/Global" },
                         { "name": "/CS", "title": "数据库分库", "jump": "/Global/CS" },
                         { "name": "/DP", "title": "数据权限", "jump": "/Global/DP" },
-                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" },
-                        { "name": "/Publish", "title": "发布", "jump": "/Global/Publish" }
+                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" }
                     ]
                 },
                 {
