@@ -5,19 +5,15 @@
  */
 import service from "@/service/service";
 import { firstUpperCase } from "@/util/string";
+import attributes from "@/store/common/attributes";
 
 interface StoreType {
     state: {};
     actions: {};
     mutations: {};
+    modules: {};
 }
-// interface serviceItemInter {
-//     url: string;
-//     method: string;
-//     isBuffer?: boolean;
-//     contentType?: string;
-//     dataType?: string;
-// }
+
 /**
  * 根据service 创建store
  * @param {*} serviceUnit: service接口列表
@@ -26,7 +22,8 @@ export default (serviceUnit, callback?: Function) => {
     const store: StoreType = {
         state: {},
         actions: {},
-        mutations: {}
+        mutations: {},
+        modules: {}
     };
     for (const key in serviceUnit) {
         const serviceItem = serviceUnit[key];
@@ -45,11 +42,9 @@ export default (serviceUnit, callback?: Function) => {
             // mutations
             store.mutations[mutationsKey] = (state, data) => {
                 // 接口返回数据结构 如果:{data: {}}
-                console.log("----", key, data.Entity || data);
                 state[stateKey] = data.Entity || data;
             };
         }
-
         // actions instanceof
         store.actions[key] = ({ commit }, params) => {
             const option = Object.assign({ data: params }, serviceItem);
@@ -63,5 +58,9 @@ export default (serviceUnit, callback?: Function) => {
             });
         };
     }
+    // 公共模块添加
+    store.modules = {
+        attributes
+    };
     return store;
 };
