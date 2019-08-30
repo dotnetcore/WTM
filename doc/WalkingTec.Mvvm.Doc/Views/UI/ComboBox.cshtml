@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="Combobox">
-    <p>Combobox的常用属性有：</p>
+ </wt:fieldset>
+   <p>Combobox的常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -113,7 +114,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:combobox field="Entity.Sex" />
                         <wt:combobox field="Entity.IsValid" />
                         <wt:combobox field="Entity.IsValid" yes-text="真的是" no-text="真不是" />
@@ -145,7 +146,6 @@
                 </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="联动">
     <wt:quote>
@@ -161,7 +161,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:combobox field="SelectedSchool3" label-text="学校" items="AllSchools" link-field="SelectedMajor" trigger-url="/UI/GetMajorBySchool"/>
                     <wt:combobox field="SelectedMajor" label-text="专业"/>
                     <wt:row align="AlignEnum.Right">

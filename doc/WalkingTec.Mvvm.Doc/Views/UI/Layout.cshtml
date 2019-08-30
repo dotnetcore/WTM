@@ -1,5 +1,6 @@
 @model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
   <wt:fieldset field-set-style="Simple" title="Row">
+  </wt:fieldset>
     <p>使用Row控件是最简单的控制表单布局的方式，Row的主要属性有</p>
     <table lay-filter="rowtable">
       <thead>
@@ -31,7 +32,7 @@
       </wt:tabheaders>
       <wt:tabcontents>
         <wt:tabcontent>
-          <wt:form vm="@Model.Vm" width="600">
+          <wt:form vm="@Model.Vm" style="max-width:600px;">
             <wt:row items-per-row="ItemsPerRowEnum.Three">
               <wt:textbox field="Vm.Entity.LoginName" />
               <wt:textbox field="Vm.Entity.Password" is-password="true" />
@@ -64,10 +65,10 @@
         </wt:tabcontent>
       </wt:tabcontents>
     </wt:tab>
-  </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Tab">
-    <p>使用Tab进行选项卡的布局，主要属性有</p>
+ </wt:fieldset>
+   <p>使用Tab进行选项卡的布局，主要属性有</p>
     <table lay-filter="rowtable">
         <thead>
             <tr>
@@ -104,12 +105,12 @@
                         <wt:tabheader title="附加信息" />
                     </wt:tabheaders>
                     <wt:tabcontents>
-                        <wt:tabcontent width="600">
+                        <wt:tabcontent style="max-width:600px;">
                             <p>可嵌套任何组件</p>
                             <wt:textbox field="Vm.Entity.LoginName" />
                             <wt:textbox field="Vm.Entity.Password" is-password="true" />
                         </wt:tabcontent>
-                        <wt:tabcontent width="600">
+                        <wt:tabcontent style="max-width:600px;">
                             <p>可嵌套任何组件</p>
                             <wt:row items-per-row="ItemsPerRowEnum.Two">
                                 <wt:textbox field="Vm.Entity.CellPhone" />
@@ -146,9 +147,9 @@
         </wt:tabcontents>
     </wt:tab>
 
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Panel">
+</wt:fieldset>
   <p>使用Panel进行面板布局，主要属性有</p>
   <table lay-filter="rowtable">
     <thead>
@@ -176,7 +177,7 @@
     </wt:tabheaders>
     <wt:tabcontents>
       <wt:tabcontent>
-        <wt:panel width="500" title="这是一个Panel">
+        <wt:panel style="max-width:600px;" title="这是一个Panel">
           <div style="height:300px">
             <p>内部可嵌套任何组件</p>
           </div>
@@ -194,7 +195,6 @@
     </wt:tabcontents>
   </wt:tab>
 
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Dialog">
     <p>您可以使用多种方式弹出新层，比如使用LinkButton控件，或者ListVM中的Action，或者在页面中直接调用框架提供的OpenDialog的javascript方法</p>
@@ -205,7 +205,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:linkbutton window-title="这是一个弹出窗" target=" ButtonTargetEnum.Layer" window-width="800" window-height="600" url="/QuickStart/Intro" text="点我弹框" />
+                <wt:linkbutton window-title="这是一个弹出窗" target=" ButtonTargetEnum.Layer"  url="/QuickStart/Intro" text="点我弹框" />
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>

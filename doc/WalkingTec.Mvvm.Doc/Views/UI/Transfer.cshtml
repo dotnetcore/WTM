@@ -10,7 +10,8 @@
 </style>
 
 <wt:fieldset field-set-style="Simple" title="Transfer 穿梭框">
-    <p>Transfer的常用属性有：</p>
+ </wt:fieldset>
+   <p>Transfer的常用属性有：</p>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -127,7 +128,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:transfer items="AllSchools" field="TransferSelectedSchools"
                                  left-title="自定义Title1" right-title="自定义Title2"
                                  none-placeholder="没有选中的数据" disabled="false"
@@ -161,7 +162,6 @@
             </wt:tabcontent>
         </wt:tabcontents>
     </wt:tab>
-</wt:fieldset>
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})

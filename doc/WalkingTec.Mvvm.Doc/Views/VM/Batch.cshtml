@@ -58,7 +58,10 @@ public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
     }
     else
     {
-        return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
     }
 }
 #endregion
@@ -82,7 +85,10 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
     }
     else
     {
-        return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
     }
 }
 #endregion
@@ -103,7 +109,8 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="主要属性">
-    <table lay-filter="parse-table-demo">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">属性</th>
@@ -121,9 +128,9 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
             </tr>
         </tbody>
     </table>
-</wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="主要函数">
-    <table lay-filter="parse-table-demo">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">函数</th>
@@ -145,7 +152,6 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
             </tr>
         </tbody>
     </table>
-</wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>
