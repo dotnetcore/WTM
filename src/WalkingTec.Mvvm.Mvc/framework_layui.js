@@ -278,7 +278,12 @@ window.ff = {
       async: true,
       error: function (request) {
         layer.close(index);
-        alert("加载失败");
+          if (request.responseText !== undefined && request.responseText !== "") {
+              layer.alert(request.responseText);
+          }
+          else {
+              layer.alert('加载失败');
+          }
       },
       success: function (str, textStatus, request) {
         layer.close(index);
@@ -321,7 +326,12 @@ window.ff = {
       error: function (request) {
         layer.close(index);
         ff.SetCookie("windowids", owid);
-        alert("加载失败");
+          if (request.responseText !== undefined && request.responseText !== "") {
+              layer.alert(request.responseText);
+          }
+          else {
+              layer.alert('加载失败');
+          }
       },
       success: function (str, textStatus, request) {
         layer.close(index);
@@ -388,7 +398,12 @@ window.ff = {
       error: function (request) {
         layer.close(index);
         ff.SetCookie("windowids", owid);
-        alert("加载失败");
+          if (request.responseText !== undefined && request.responseText !== "") {
+              layer.alert(request.responseText);
+          }
+          else {
+              layer.alert('加载失败');
+          }
       },
       success: function (str) {
         var regGridId = /<\s{0,}table\s+.*\s+id\s{0,}=\s{0,}"(.*)"\s+lay-filter="\1"\s{0,}>\s{0,}<\s{0,}\/\s{0,}table\s{0,}>/im;
