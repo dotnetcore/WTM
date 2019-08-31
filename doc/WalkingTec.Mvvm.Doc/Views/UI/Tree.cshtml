@@ -8,149 +8,152 @@
   <p>实现树形结构的Model，最简单的做法是继承框架提供的ITreeData接口</p>
   <p>下面展示了一个部门的Model，他是一个树形结构，每个部门都有可能有父级部门</p>
   <wt:code>
-public class Department : BasePoco,ITreeData<Department>
-{
-    [Display(Name = "部门名称")]
-    [Required(ErrorMessage = "{0}是必填项")]
-    public string DepName { get; set; }
+    public class Department : BasePoco,ITreeData<Department>
+      {
+      [Display(Name = "部门名称")]
+      [Required(ErrorMessage = "{0}是必填项")]
+      public string DepName { get; set; }
 
-    public List<Department> Children { get; set; }
+      public List<Department>
+        Children { get; set; }
 
-    [Display(Name = "上级部门")]
-    public Department Parent { get; set; }
+        [Display(Name = "上级部门")]
+        public Department Parent { get; set; }
 
-    [Display(Name = "上级部门")]
-    public Guid? ParentId { get; set; }
-}
+        [Display(Name = "上级部门")]
+        public Guid? ParentId { get; set; }
+        }
   </wt:code>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Tree">
-  <p>Tree的常用属性有：</p>
-  <table lay-filter="parse-table-demo">
-    <thead>
-      <tr>
-        <th lay-data="{field:'username', width:200}">属性</th>
-        <th lay-data="{field:'required', width:60}">必填</th>
-        <th lay-data="{field:'joinTime', width:600}">描述</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Id</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>控件Id，默认根据绑定字段名称生成</td>
-      </tr>
-      <tr>
-        <td>Field</td>
-        <td><i class="layui-icon layui-icon-ok"></i></td>
-        <td>绑定字段</td>
-      </tr>
-      <tr>
-        <td>ShowLine</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>是否显示连线，默认为true</td>
-      </tr>
-      <tr>
-        <td>Name</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>控件Name，默认根据绑定字段名称生成</td>
-      </tr>
-      <tr>
-        <td>LabelText</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>标签内容</td>
-      </tr>
-      <tr>
-        <td>LabelWidth</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>标签的长度，默认为80</td>
-      </tr>
-      <tr>
-        <td>HideLabel</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>是否隐藏标签</td>
-      </tr>
-      <tr>
-        <td>Items</td>
-        <td><i class="layui-icon layui-icon-ok"></i></td>
-        <td>列表数据源，类型为List<TreeSelectListItem></td>
-      </tr>
-      <tr>
-        <td>ClickFunc</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>点击节点触发的js方法名，框架会给js方法传递一个包含节点信息的参数。比如你自己写的js方法是 func OnClick(data){...}, 那么在控件上设定 click-func="OnClick"即可</td>
-      </tr>
-      <tr>
-        <td>CheckFunc</td>
-        <td><i class="layui-icon layui-icon-close"></i></td>
-        <td>勾选节点触发的js方法名，框架会给js方法传递一个包含节点信息的参数。比如你自己写的js方法是 func OnCheck(data){...}, 那么在控件上设定 check-func="OnCheck"即可</td>
-      </tr>
-    </tbody>
-  </table>
-  <wt:quote>
-    <p>Tree可以根据绑定Field字段的类型判断是单选模式还是多选模式，通过 Items 属性设置数据源，Items需要绑定一个List<TreeSelectListItem></p>
-    <p>TreeSelectListItem 是框架提供的辅助类，有 Id，Text，Url，Children等属性</p>
-    <p>继承了ITreeData接口的模型，可以方便的调用框架提供的函数生成Tree控件需要的数据格式,</p>
-    <p>比如 DC.Set<Department>().GetTreeSelectListItems(LoginUserInfo.DataPrivileges,null,x=>x.DepName) 直接读库并生成一个List<TreeSelectListItem></p>
-  </wt:quote>
-  <wt:tab>
-    <wt:tabheaders>
-      <wt:tabheader title="效果" />
-      <wt:tabheader title="代码" />
-    </wt:tabheaders>
-    <wt:tabcontents>
-      <wt:tabcontent>
-        <wt:form vm="@Model" width="600">
-          <wt:textbox field="Entity.DepName" />
-          <wt:tree field="Entity.ParentId" items="AllDeps" height="300" />
-          <wt:row align="AlignEnum.Right">
-            <wt:submitbutton disabled="true" />
-            <wt:closebutton disabled="true" />
-          </wt:row>
-        </wt:form>
-      </wt:tabcontent>
-      <wt:tabcontent>
-        <wt:code>
-  <wt:form vm="@Model" width="600">
-  <wt:textbox field="Entity.DepName" />
-  <wt:tree field="Entity.ParentId" items="AllDeps" height="300" />
-  <wt:row align="AlignEnum.Right">
-  <wt:submitbutton disabled="true" />
-  <wt:closebutton disabled="true" />
-  </wt:row>
-  </wt:form>
-        </wt:code>
-      </wt:tabcontent>
-    </wt:tabcontents>
-  </wt:tab>
-
-  <p>上面因为Tree绑定的EntityParentId是单一的Guid类型，所以Tree自动使用了单选模式</p>
-  <p>如果绑定的字段是一个List，Tree会使用多选模式，如下：</p>
-
-  <wt:tab>
-    <wt:tabheaders>
-      <wt:tabheader title="多选效果" />
-    </wt:tabheaders>
-    <wt:tabcontents>
-      <wt:tabcontent>
-        <wt:form vm="@Model" width="600">
-          <wt:textbox field="Entity.DepName" />
-          <wt:tree field="SelectedIds" items="AllDeps" height="300" label-text="多选" />
-          <wt:row align="AlignEnum.Right">
-            <wt:submitbutton disabled="true" />
-            <wt:closebutton disabled="true" />
-          </wt:row>
-        </wt:form>
-      </wt:tabcontent>
-    </wt:tabcontents>
-  </wt:tab>
-
-
 </wt:fieldset>
+<p>Tree的常用属性有：</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'required', width:60}">必填</th>
+      <th lay-data="{field:'joinTime', width:600}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Id</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>控件Id，默认根据绑定字段名称生成</td>
+    </tr>
+    <tr>
+      <td>Field</td>
+      <td><i class="layui-icon layui-icon-ok"></i></td>
+      <td>绑定字段</td>
+    </tr>
+    <tr>
+      <td>ShowLine</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>是否显示连线，默认为true</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>控件Name，默认根据绑定字段名称生成</td>
+    </tr>
+    <tr>
+      <td>LabelText</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>标签内容</td>
+    </tr>
+    <tr>
+      <td>LabelWidth</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>标签的长度，默认为80</td>
+    </tr>
+    <tr>
+      <td>HideLabel</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>是否隐藏标签</td>
+    </tr>
+    <tr>
+      <td>Items</td>
+      <td><i class="layui-icon layui-icon-ok"></i></td>
+      <td>列表数据源，类型为List<TreeSelectListItem></td>
+    </tr>
+    <tr>
+      <td>ClickFunc</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>点击节点触发的js方法名，框架会给js方法传递一个包含节点信息的参数。比如你自己写的js方法是 func OnClick(data){...}, 那么在控件上设定 click-func="OnClick"即可</td>
+    </tr>
+    <tr>
+      <td>CheckFunc</td>
+      <td><i class="layui-icon layui-icon-close"></i></td>
+      <td>勾选节点触发的js方法名，框架会给js方法传递一个包含节点信息的参数。比如你自己写的js方法是 func OnCheck(data){...}, 那么在控件上设定 check-func="OnCheck"即可</td>
+    </tr>
+  </tbody>
+</table>
+<wt:quote>
+  <p>Tree可以根据绑定Field字段的类型判断是单选模式还是多选模式，通过 Items 属性设置数据源，Items需要绑定一个List<TreeSelectListItem></p>
+  <p>TreeSelectListItem 是框架提供的辅助类，有 Id，Text，Url，Children等属性</p>
+  <p>继承了ITreeData接口的模型，可以方便的调用框架提供的函数生成Tree控件需要的数据格式,</p>
+  <p>比如 DC.Set<Department>().GetTreeSelectListItems( LoginUserInfo.DataPrivileges, null, x=>x.DepName) 直接读库并生成一个List<TreeSelectListItem></p>
+</wt:quote>
+<wt:tab>
+  <wt:tabheaders>
+    <wt:tabheader title="效果" />
+    <wt:tabheader title="代码" />
+  </wt:tabheaders>
+  <wt:tabcontents>
+    <wt:tabcontent>
+      <wt:form vm="@Model" style="max-width:600px;">
+        <wt:textbox field="Entity.DepName" />
+        <wt:tree field="Entity.ParentId" items="AllDeps" height="300" />
+        <wt:row align="AlignEnum.Right">
+          <wt:submitbutton disabled="true" />
+          <wt:closebutton disabled="true" />
+        </wt:row>
+      </wt:form>
+    </wt:tabcontent>
+    <wt:tabcontent>
+      <wt:code>
+        &lt;wt:form vm="@Model" style="max-width:600px;">
+          &lt;wt:textbox field="Entity.DepName" />
+          &lt;wt:tree field="Entity.ParentId" items="AllDeps" height="300" />
+          &lt;wt:row align="AlignEnum.Right">
+            &lt;wt:submitbutton disabled="true" />
+            &lt;wt:closebutton disabled="true" />
+          &lt;/wt:row>
+        &lt;/wt:form>
+      </wt:code>
+    </wt:tabcontent>
+  </wt:tabcontents>
+</wt:tab>
+
+<p>上面因为Tree绑定的EntityParentId是单一的Guid类型，所以Tree自动使用了单选模式</p>
+<p>如果绑定的字段是一个List，Tree会使用多选模式，如下：</p>
+
+<wt:tab>
+  <wt:tabheaders>
+    <wt:tabheader title="多选效果" />
+  </wt:tabheaders>
+  <wt:tabcontents>
+    <wt:tabcontent>
+      <wt:form vm="@Model" style="max-width:600px;">
+        <wt:textbox field="Entity.DepName" />
+        <wt:tree field="SelectedIds" items="AllDeps" height="300" label-text="多选" />
+        <wt:row align="AlignEnum.Right">
+          <wt:submitbutton disabled="true" />
+          <wt:closebutton disabled="true" />
+        </wt:row>
+      </wt:form>
+    </wt:tabcontent>
+  </wt:tabcontents>
+</wt:tab>
+
+
 
 <script>
-  layui.code({ about: false });
+  layui.use('code', function () { layui.code({ about: false }) })
   layui.table.init('parse-table-demo', {
-        limit: 100, page: false
+    limit: 100, page: false
   });
 </script>
+
+
