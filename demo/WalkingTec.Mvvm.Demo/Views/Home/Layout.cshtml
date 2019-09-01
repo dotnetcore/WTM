@@ -62,7 +62,7 @@
     <div class="layui-side-scroll">
       <!-- <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}" -->
       <script type="text/html" template lay-url="/_Framework/Menu"
-        lay-done="layui.element.render('nav', 'layadmin-system-side-menu');" id="TPL_layout">
+        lay-done="layui.element.render('nav', 'layadmin-system-side-menu');layui.event.call(this, layui.setter.MOD_NAME, 'hash({*})', layui.router());" id="TPL_layout">
 
             <div class="layui-logo" lay-href="">
               <span><img src="~/layuiadmin/style/res/logo.png" style="margin-right:5px"/>{{ layui.setter.name || 'layuiAdmin' }}</span>
@@ -76,17 +76,9 @@
 
               layui.each(d[dataName], function(index, item){
                 var hasChildren = typeof item.list === 'object' && item.list.length > 0
-                ,classSelected = function(){
-                  var match = path[0] == item.name || (index == 0 && !path[0])
-                  || (item.jump && pathURL == layui.admin.correctRouter(item.jump)) || item.spread;
-                  if(match){
-                    return hasChildren ? 'layui-nav-itemed' : 'layui-this';
-                  }
-                  return '';
-                }
                 ,url = (item.jump && typeof item.jump === 'string') ? item.jump : item.name;
             }}
-              <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}" class="layui-nav-item {{ classSelected() }}">
+              <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}" class="layui-nav-item ">
                 <a href="javascript:;" {{ hasChildren ? '' : 'lay-href="'+ url +'"' }} lay-tips="{{ item.title }}" lay-direction="2">
                   <i class="{{ item.icon }}"></i>
                   <cite>{{ item.title }}</cite>
@@ -95,20 +87,11 @@
                   <dl class="layui-nav-child">
                   {{# layui.each(item.list, function(index2, item2){
                     var hasChildren2 = typeof item2.list == 'object' && item2.list.length > 0
-                    ,classSelected2 = function(){
-                      var match = (path[0] == item.name && path[1] == item2.name)
-                      || (item2.jump && pathURL == layui.admin.correctRouter(item2.jump)) || item2.spread;
-                      if(match){
-                        return hasChildren2 ? 'layui-nav-itemed' : 'layui-this';
-                      }
-                      return '';
-                    }
                     ,url2 = (item2.jump && typeof item2.jump === 'string')
                       ? item2.jump
                     : [item.name, item2.name, ''].join('/');
                   }}
-                    <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}"
-                    {{ classSelected2() ? ('class="'+ classSelected2() +'"') : '' }}>
+                    <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}">
                       <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>
                         <i class="{{ item2.icon }}"></i>
                         <cite>{{ item2.title }}</cite>
@@ -116,9 +99,7 @@
                       {{# if(hasChildren2){ }}
                         <dl class="layui-nav-child">
                           {{# layui.each(item2.list, function(index3, item3){
-                            var match = (path[0] == item.name && path[1] == item2.name && path[2] == item3.name)
-                            || (item3.jump && pathURL == layui.admin.correctRouter(item3.jump))
-                            ,url3 = (item3.jump && typeof item3.jump === 'string')
+                            var url3 = (item3.jump && typeof item3.jump === 'string')
                               ? item3.jump
                             : [item.name, item2.name, item3.name].join('/')
                           }}
@@ -178,3 +159,6 @@
   <!-- 辅助元素，一般用于移动设备下遮罩 -->
   <div class="layadmin-body-shade" layadmin-event="shade"></div>
 </div>
+<script>
+  
+</script>
