@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public override void DoEdit(bool updateAllFields = false)
         {
             Entity.ICon = $"{IconFont} {IconFontItem}";
-            DC.UpdateProperty(Entity, x => x.ICon);
+            FC.Add("Entity.ICon", " ");
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "")
