@@ -7,6 +7,7 @@ const config = {
     headerApi: "/api",
     // token 名称
     tokenKey: "token",
-    userInfo: "userinfo"
+    userInfo: "userinfo",
+    development: true
 };
 export default config;

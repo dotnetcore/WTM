@@ -45,20 +45,15 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action
-    frameworkroleAdd;
-    @Action
-    frameworkroleEdit;
-    @Action
-    frameworkrole;
-    @Action
-    frameworkroleGetFrameworkRoles;
-    @Action
-    frameworkroleGetFrameworkGroups;
+    @Action add;
+    @Action edit;
+    @Action detail;
+    @Action getFrameworkRoles;
+    @Action getFrameworkGroups;
     @State
-    frameworkroleGetFrameworkRolesData;
+    getFrameworkRolesData;
     @State
-    frameworkroleGetFrameworkGroupsData;
+    getFrameworkGroupsData;
     // 用户组
     groups = [];
     sexList = sexList;
@@ -95,7 +90,9 @@ export default class Index extends Vue {
     }
     // ★★★★★
     created() {}
-    // 打开详情 ★★★★★
+    /**
+     * 打开详情 ★★★★★
+     */
     onGetFormData() {
         if (!this["dialogData"]) {
             console.log(this["dialogData"]);
@@ -103,16 +100,18 @@ export default class Index extends Vue {
         }
         if (this["status"] !== this["dialogType"].add) {
             const parameters = { ID: this["dialogData"].ID };
-            this.frameworkrole(parameters).then(res => {
+            this["detail"](parameters).then(res => {
                 this["setFormData"](res.Entity);
             });
         } else {
             this["onReset"]();
         }
     }
-    // 提交 ★★★★★
+    /**
+     * 提交 ★★★★★
+     */
     onSubmitForm() {
-        this.$refs[defaultFormData.refName].validate(valid => {
+        this.$refs[this["refName"]].validate(valid => {
             if (valid) {
                 if (this["status"] === this["dialogType"].add) {
                     this.onAdd();
@@ -122,11 +121,13 @@ export default class Index extends Vue {
             }
         });
     }
-    // ★★★★★
-    onAdd() {
+    /**
+     * 添加 ★★★★★
+     */
+    onAdd(delID: string = "ID") {
         const parameters = { ...this["formData"] };
-        delete parameters.ID;
-        this.frameworkroleAdd({ Entity: parameters }).then(res => {
+        delete parameters[delID];
+        this["add"]({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "添加成功",
                 type: "success"
@@ -135,10 +136,12 @@ export default class Index extends Vue {
             this.$emit("onSearch");
         });
     }
-    // ★★★★★
+    /**
+     * 编辑 ★★★★★
+     */
     onEdit() {
         const parameters = { ...this["formData"] };
-        this.frameworkroleEdit({ Entity: parameters }).then(res => {
+        this["edit"]({ Entity: parameters }).then(res => {
             this["$notify"]({
                 title: "修改成功",
                 type: "success"

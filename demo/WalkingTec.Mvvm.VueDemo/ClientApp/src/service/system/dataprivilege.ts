@@ -7,38 +7,38 @@ const privilegesList = {
     dataType: "array"
 };
 // 添加
-const dataprivilegeAdd = {
+const add = {
     url: reqPath + "add",
     method: "post"
 };
 // 列表
-const dataprivilegeSearchList = {
+const search = {
     url: reqPath + "search",
     method: "post",
     dataType: "array"
 };
 
 // 删除
-const dataprivilegeDelete = {
+const deleted = {
     url: reqPath + "Delete/{ID}",
     method: "get"
 };
 // 批量删除
-const dataprivilegeBatchDelete = {
+const batchDelete = {
     url: reqPath + "BatchDelete",
     method: "post"
 };
 // 修改
-const dataprivilegeEdit = {
+const edit = {
     url: reqPath + "Edit",
     method: "put"
 };
 
 export default {
-    privilegesList,
-    dataprivilegeSearchList,
-    dataprivilegeAdd,
-    dataprivilegeDelete,
-    dataprivilegeBatchDelete,
-    dataprivilegeEdit
+    search,
+    add,
+    deleted,
+    batchDelete,
+    edit,
+    privilegesList
 };

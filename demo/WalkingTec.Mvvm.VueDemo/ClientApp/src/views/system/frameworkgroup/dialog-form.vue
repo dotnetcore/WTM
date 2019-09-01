@@ -44,12 +44,9 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action
-    frameworkgroupAdd;
-    @Action
-    frameworkgroupEdit;
-    @Action
-    frameworkgroup;
+    @Action add;
+    @Action edit;
+    @Action detail;
     // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
@@ -76,60 +73,6 @@ export default class Index extends Vue {
         } else {
             return {};
         }
-    }
-    // ★★★★★
-    created() {}
-    // 打开详情 ★★★★★
-    onGetFormData() {
-        if (!this["dialogData"]) {
-            console.log(this["dialogData"]);
-            console.error("dialogData 没有id数据");
-        }
-        if (this["status"] !== this["dialogType"].add) {
-            const parameters = { ID: this["dialogData"].ID };
-            this.frameworkgroup(parameters).then(res => {
-                this["setFormData"](res.Entity);
-            });
-        } else {
-            this["onReset"]();
-        }
-    }
-    // 提交 ★★★★★
-    onSubmitForm() {
-        this.$refs[defaultFormData.refName].validate(valid => {
-            if (valid) {
-                if (this["status"] === this["dialogType"].add) {
-                    this.onAdd();
-                } else if (this["status"] === this["dialogType"].edit) {
-                    this.onEdit();
-                }
-            }
-        });
-    }
-    // ★★★★★
-    onAdd() {
-        const parameters = { ...this["formData"] };
-        delete parameters.ID;
-        this.frameworkgroupAdd({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "添加成功",
-                type: "success"
-            });
-            this["onClear"]();
-            this.$emit("onSearch");
-        });
-    }
-    // ★★★★★
-    onEdit() {
-        const parameters = { ...this["formData"] };
-        this.frameworkgroupEdit({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "修改成功",
-                type: "success"
-            });
-            this["onClear"]();
-            this.$emit("onSearch");
-        });
     }
 }
 </script>

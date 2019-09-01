@@ -46,9 +46,6 @@ export default class FuzzySearch extends Vue {
     @Prop({ type: String, default: "total, sizes, prev, pager, next, jumper" })
     layout;
 
-    created() {
-        console.log("$slots", this);
-    }
     // 剔除table重复事件
     get tableListeners() {
         const envList = Object.assign({}, this.$listeners);

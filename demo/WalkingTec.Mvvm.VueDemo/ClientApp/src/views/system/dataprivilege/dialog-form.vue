@@ -79,10 +79,9 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action
-    postDataprivilegeAdd;
-    @Action
-    putDataprivilegeEdit;
+    @Action add;
+    @Action edit;
+    @Action detail;
     // 用户组
     groups = [];
     // 是否列表
@@ -124,60 +123,6 @@ export default class Index extends Vue {
 
     created() {
         this.groups = cache.getStorage(config.tokenKey, true).Groups || [];
-    }
-
-    // 打开详情 ★★★★★
-    onGetFormData() {
-        if (!this["dialogData"]) {
-            console.log(this["dialogData"]);
-            console.error("dialogData 没有id数据");
-        }
-        console.log('this["dialogData"]', this["dialogData"]);
-        if (this["status"] !== this["dialogType"].add) {
-            const tempformData = {
-                Entity: { ...defaultFormData.formData.Entity },
-                ...this["dialogData"]
-            };
-            this["setFormData"](tempformData);
-        } else {
-            this["onReset"]();
-        }
-    }
-
-    // 提交
-    onSubmitForm() {
-        _.get(this, `$refs[${this["refName"]}]`).validate(valid => {
-            if (valid) {
-                if (this["status"] === this["dialogType"].add) {
-                    this.onAdd();
-                } else if (this["status"] === this["dialogType"].edit) {
-                    this.onEdit();
-                }
-            } else {
-                return false;
-            }
-        });
-    }
-    onAdd() {
-        const parameters = { ...this["formData"] };
-        delete parameters.id;
-        this.postDataprivilegeAdd(parameters).then(res => {
-            this["$notify"]({
-                title: "添加成功",
-                type: "success"
-            });
-            this["onClear"]();
-        });
-    }
-    onEdit() {
-        const parameters = { ...this["formData"] };
-        this.putDataprivilegeEdit(parameters).then(res => {
-            this["$notify"]({
-                title: "修改成功",
-                type: "success"
-            });
-            this["onClear"]();
-        });
     }
 }
 </script>

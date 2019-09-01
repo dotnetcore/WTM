@@ -1,26 +1,26 @@
 <template>
   <el-card class="but-box">
-    <el-button v-assembly:[assembly]="butTypes.add" icon="el-icon-plus" @click="onAdd">
+    <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList.add" icon="el-icon-plus" @click="onAdd">
       添加
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.edit" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
+    <el-button v-assembly:[assembly]="butTypes.edit" v-visible="actionList.edit" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
       修改
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.delete" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
+    <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList.batchDelete" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
       删除
     </el-button>
     <el-button v-assembly:[assembly]="butTypes.import" icon="el-icon-upload" @click="onImport">
       导入
     </el-button>
-    <el-dropdown class="dropdown-box" @command="onCommand">
+    <el-dropdown v-visible="[actionList.exportExcel,actionList.exportExcelByIds]" class="dropdown-box" @command="onCommand">
       <el-button v-assembly:[assembly]="butTypes.export">
         <i class="el-icon-download" /> <span>导出</span> <i class="el-icon-arrow-down el-icon--right" />
       </el-button>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="onExportAll">
+        <el-dropdown-item v-visible="actionList.exportExcel" command="onExportAll">
           导出全部
         </el-dropdown-item>
-        <el-dropdown-item command="onExport">
+        <el-dropdown-item v-visible="actionList.exportExcelByIds" command="onExport">
           导出勾选
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -67,6 +67,14 @@ export default class ButBox extends Vue {
         }
     })
     exportOption; // 导出参数 url地址
+    // 权限列表
+    @Prop({
+        type: Object,
+        default: () => {
+            return {};
+        }
+    })
+    actionList;
 
     butTypes = butType;
     get isDisabledEdit() {

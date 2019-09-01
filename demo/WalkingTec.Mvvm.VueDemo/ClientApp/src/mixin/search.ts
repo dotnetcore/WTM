@@ -37,6 +37,11 @@ function mixinFunc(tempSearch: any = {}) {
         loading: boolean = false; // 加载中
         tableData: Array<any> = []; // 列表数据
         selectData: Array<any> = []; // 列表选中数据
+
+        // 查询 ★★★★★
+        created() {
+            this.onSearch();
+        }
         // 查询
         fetch(changePage?: boolean) {
             this.loading = true;

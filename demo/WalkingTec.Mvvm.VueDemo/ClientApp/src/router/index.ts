@@ -1,46 +1,27 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
+import VueRouter, { RouteConfig } from "vue-router";
 import store from "@/store/index";
+import userStore from "@/store/common/user";
+import cache from "@/util/cache";
+import config from "@/config/index";
 Vue.use(VueRouter);
-interface routerItem {
-    children: [];
-    path: string;
-    meta: {};
-}
-// 打平一级
-function generateRoutesFromMenu(
-    menu,
-    routes: Array<routerItem> = [],
-    parentMenu?: routerItem
-) {
-    for (let i = 0, l = menu.length; i < l; i++) {
-        const item: routerItem = menu[i];
-        if (item.path) {
-            item.meta["parentMenu"] = parentMenu;
-            const itemClone = { ...item };
-            delete itemClone.children;
-            routes.push(itemClone);
-        }
-        if (item.children) {
-            generateRoutesFromMenu(item.children, routes, item);
-        }
-    }
-    return routes;
-}
 
 // 等待接口
 export default function createRouter() {
+    const uData = cache.getStorage(config.tokenKey, true);
     // 接口路由
     return store
-        .dispatch("localMenus")
+        .dispatch("loginCheckLogin", { ID: uData.Id })
         .then(res => {
+            userStore.setAction(res.Attributes.Actions);
+            const treeMenus = userStore.setTreeMenus(res.Attributes.Menus);
+            const menus = userStore.setParallelMenus(res.Attributes.Menus);
             // 数据结构不同，此处重新维护
-            store.commit("setMenuItems", res);
+            store.commit("setMenuItems", treeMenus);
             const routers = new VueRouter({
                 mode: "hash", // 'history',
-                routes: generateRoutesFromMenu(res)
+                routes: menus
             });
-            console.log("routers", routers);
             return routers;
         })
         .catch(error => {

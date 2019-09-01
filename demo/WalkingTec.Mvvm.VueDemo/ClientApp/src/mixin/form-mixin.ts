@@ -24,8 +24,8 @@ interface formdata {
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     @Component({
         components: { DialogFooter, EditBox }
-        })
-    class editMixins extends Vue {
+    })
+    class formMixins extends Vue {
         @Prop({ type: Object, default: {} })
         dialogData; // 表单传入数据
         @Prop({ type: String, default: "" })
@@ -38,7 +38,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
             ...defaultFormData.formData
         };
         // 表单ref name
-        refName = defaultFormData.refName;
+        refName = defaultFormData.refName || "";
         // 关闭
         onClear() {
             this.$emit("update:isShow", false);
@@ -65,8 +65,70 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                 this.formData
             );
         }
+        // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
+        /**
+         * 打开详情 ★★★★★
+         */
+        onGetFormData() {
+            if (!this["dialogData"]) {
+                console.log(this["dialogData"]);
+                console.error("dialogData 没有id数据");
+            }
+            if (this["status"] !== this["dialogType"].add) {
+                const parameters = { ID: this["dialogData"].ID };
+                this["detail"](parameters).then(res => {
+                    this["setFormData"](res.Entity);
+                });
+            } else {
+                this["onReset"]();
+            }
+        }
+        /**
+         * 提交 ★★★★★
+         */
+        onSubmitForm() {
+            this.$refs[this.refName].validate(valid => {
+                if (valid) {
+                    if (this["status"] === this["dialogType"].add) {
+                        this.onAdd();
+                    } else if (this["status"] === this["dialogType"].edit) {
+                        this.onEdit();
+                    }
+                }
+            });
+        }
+        /**
+         * 添加 ★★★★★
+         */
+        onAdd(delID: string = "ID") {
+            const parameters = { ...this["formData"] };
+            delete parameters[delID];
+            this["add"]({ Entity: parameters }).then(res => {
+                this["$notify"]({
+                    title: "添加成功",
+                    type: "success"
+                });
+                this["onClear"]();
+                this.$emit("onSearch");
+            });
+        }
+        /**
+         * 编辑 ★★★★★
+         */
+        onEdit() {
+            const parameters = { ...this["formData"] };
+            this["edit"]({ Entity: parameters }).then(res => {
+                this["$notify"]({
+                    title: "修改成功",
+                    type: "success"
+                });
+                this["onClear"]();
+                this.$emit("onSearch");
+            });
+        }
+        // ---------------------------vue组件重新定义 end---------------------------------
     }
-    return editMixins;
+    return formMixins;
 }
 
 export default mixinFunc;
