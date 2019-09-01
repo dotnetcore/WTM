@@ -4,6 +4,7 @@ import service from "@/service/system/frameworkuser";
 import createStore from "../base/index";
 Vue.use(Vuex);
 const newStore = createStore(service);
+
 export default new Vuex.Store({
     strict: true,
     state: { ...newStore.state },

@@ -1,8 +1,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import { dialogType } from "@/config/enum";
+import { State } from "vuex-class";
 
 @Component
 export default class BaseMixins extends Vue {
+    @State actionList;
     dialogType = dialogType;
     // 跳转
     onPath(path) {

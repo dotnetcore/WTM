@@ -19,16 +19,16 @@
           </el-form-item>
         </el-form>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" />
+      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" />
       <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
-          <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
+          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
           </el-button>
-          <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
+          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
             修改
           </el-button>
-          <el-button type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
+          <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
             删除
           </el-button>
         </template>
@@ -45,20 +45,20 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import baseMixin from "@/mixin/base";
 import mixinFunc from "@/mixin/search";
+import actionMixin from "@/mixin/action-mixin";
 import store from "@/store/system/dataprivilege";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
-import { listToString } from "@/util/string";
 // 查询参数
 const defaultSearchData = {
     DpType: "0",
     DomainID: ""
 };
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData)],
+    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -69,14 +69,12 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action
-    privilegesList;
-    @Action
-    dataprivilegeSearchList;
-    @Action
-    dataprivilegeDelete;
-    @Action
-    dataprivilegeBatchDelete;
+    @Action search;
+    @Action batchDelete;
+    @Action delete;
+    @Action exportExcel;
+    @Action exportExcelByIds;
+    @Action privilegesList;
     @State
     privilegesListData;
     exportParams = {};
@@ -96,10 +94,6 @@ export default class Index extends Vue {
         this.privilegesList();
         this["onSearch"]();
     }
-    // 查询接口
-    privateRequest(params) {
-        return this.dataprivilegeSearchList(params);
-    }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
         this.dialogInfo.isShow = true;
@@ -107,28 +101,6 @@ export default class Index extends Vue {
         this.dialogInfo.dialogData = data;
         this.$nextTick(() => {
             this.$refs["dialogform"].onGetFormData();
-        });
-    }
-    onDelete(params) {
-        const parameters = {
-            id: params.id
-        };
-        this.dataprivilegeDelete(parameters).then(res => {
-            this["$notify"]({
-                title: "删除成功",
-                type: "success"
-            });
-        });
-    }
-    onBatchDelete() {
-        const parameters = {
-            ids: listToString(this["selectData"], "id")
-        };
-        this.dataprivilegeDelete(parameters).then(res => {
-            this["$notify"]({
-                title: "删除成功",
-                type: "success"
-            });
         });
     }
 }

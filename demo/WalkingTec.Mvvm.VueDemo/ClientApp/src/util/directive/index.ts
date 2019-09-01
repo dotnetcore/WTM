@@ -1,3 +1,5 @@
+import user from "@/store/common/user";
+import config from "@/config/index";
 /**
  * 1. 文本字段
  * dirEdit 指令-是否编辑
@@ -47,9 +49,23 @@ export const dirEdit = {
     },
     update: (el, binding, vnode) => domStyleFn(el, binding, vnode)
 };
-// // 按钮action权限
-// export const visible = {
-//     inserted: (el, binding, vnode) => {
-//         binding.value
-//     }
-// }
+// 按钮action权限
+export const visible = {
+    inserted: (el, binding, vnode) => {
+        if (config.development) {
+            return;
+        }
+        if (_.isArray(binding.value)) {
+            const fslist = _.filter(binding.value, item =>
+                user.Actions.includes(item)
+            );
+            if (fslist.length < 1) {
+                el.parentNode.removeChild(el);
+            }
+        } else {
+            if (!user.Actions.includes(_.toLower(binding.value))) {
+                el.parentNode.removeChild(el);
+            }
+        }
+    }
+};

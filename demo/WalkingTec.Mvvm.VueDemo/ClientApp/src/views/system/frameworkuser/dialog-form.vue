@@ -130,20 +130,13 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action
-    frameworkuserAdd;
-    @Action
-    frameworkuserEdit;
-    @Action
-    frameworkuser;
-    @Action
-    frameworkuserGetFrameworkRoles;
-    @Action
-    frameworkuserGetFrameworkGroups;
-    @State
-    frameworkuserGetFrameworkRolesData;
-    @State
-    frameworkuserGetFrameworkGroupsData;
+    @Action add;
+    @Action edit;
+    @Action detail;
+    @Action getFrameworkRoles;
+    @Action getFrameworkGroups;
+    @State getFrameworkRolesData;
+    @State getFrameworkGroupsData;
     // 用户组
     groups = [];
     sexList = sexList;
@@ -187,7 +180,12 @@ export default class Index extends Vue {
     }
     // ★★
     get userRolesData() {
-        return this.frameworkuserGetFrameworkRolesData.map(item => {
+        console.log(
+            "this.getFrameworkRolesData",
+            this.getFrameworkRolesData,
+            this
+        );
+        return this.getFrameworkRolesData.map(item => {
             return {
                 key: item.Value,
                 label: item.Text,
@@ -198,7 +196,7 @@ export default class Index extends Vue {
     }
     // ★★
     get userGroupsData() {
-        return this.frameworkuserGetFrameworkGroupsData.map(item => {
+        return this.getFrameworkGroupsData.map(item => {
             return {
                 key: item.Value,
                 label: item.Text,
@@ -208,8 +206,8 @@ export default class Index extends Vue {
     }
     // ★★★★★
     created() {
-        this.frameworkuserGetFrameworkRoles();
-        this.frameworkuserGetFrameworkGroups();
+        this.getFrameworkRoles();
+        this.getFrameworkGroups();
     }
     // 打开详情 ★★★★★
     onGetFormData() {
@@ -219,7 +217,7 @@ export default class Index extends Vue {
         }
         if (this["status"] !== this["dialogType"].add) {
             const parameters = { ID: this["dialogData"].ID };
-            this.frameworkuser(parameters).then(res => {
+            this.detail(parameters).then(res => {
                 this["setFormData"](res.Entity);
                 this.updDataToTransfer("UserRoles");
                 this.updDataToTransfer("UserGroups");
@@ -240,31 +238,6 @@ export default class Index extends Vue {
                     this.onEdit();
                 }
             }
-        });
-    }
-    // ★★★★★
-    onAdd() {
-        const parameters = { ...this["formData"] };
-        delete parameters.ID;
-        this.frameworkuserAdd({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "添加成功",
-                type: "success"
-            });
-            this["onClear"]();
-            this.$emit("onSearch");
-        });
-    }
-    // ★★★★★
-    onEdit() {
-        const parameters = { ...this["formData"] };
-        this.frameworkuserEdit({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "修改成功",
-                type: "success"
-            });
-            this["onClear"]();
-            this.$emit("onSearch");
         });
     }
     // 上传图片 ★★★

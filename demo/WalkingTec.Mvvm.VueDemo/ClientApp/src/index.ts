@@ -2,7 +2,7 @@ import Vue from "vue";
 import createRouter from "@/router/index";
 import store from "@/store/index";
 import App from "@/views/index.vue";
-import { dirEdit } from "@/util/directive/index";
+import { dirEdit, visible } from "@/util/directive/index";
 import "@/assets/css/index.less";
 import "font-awesome/css/font-awesome.min.css";
 // import "element-ui/lib/theme-chalk/index.css";
@@ -23,9 +23,11 @@ Vue.filter(
         return date.toFormat(value, customFormat);
     }
 );
-Vue.directive("edit", dirEdit);
 const nprogress = new NProgress({ parent: ".app-nprogress" });
 createRouter().then(router => {
+    // 指令
+    Vue.directive("edit", dirEdit);
+    Vue.directive("visible", visible);
     const app = new Vue({
         nprogress,
         router,

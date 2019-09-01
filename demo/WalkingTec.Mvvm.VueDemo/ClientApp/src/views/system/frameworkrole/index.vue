@@ -11,33 +11,33 @@
           </el-form-item>
         </el-form>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
+      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
       <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
-          <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
+          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
           </el-button>
-          <el-button type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
+          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
             修改
           </el-button>
           <el-button type="text" size="small" class="view-btn">
             分配权限
           </el-button>
-          <el-button type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
+          <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
             删除
           </el-button>
         </template>
       </table-box>
     </article>
     <dialog-box :is-show.sync="dialogInfo.isShow">
-      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
+      <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
+import { Action } from "vuex-class";
 import baseMixin from "@/mixin/base";
 import mixinFunc from "@/mixin/search";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
@@ -64,24 +64,18 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action
-    frameworkroleSearchList;
-    @Action
-    frameworkroleGetFrameworkRoles;
-    @Action
-    frameworkroleGetFrameworkGroups;
-    @Action
-    frameworkroleBatchDelete;
-    @Action
-    frameworkroleDelete;
-    @Action
-    frameworkroleExportExcel;
-    @Action
-    frameworkroleExportExcelByIds;
+    @Action("search") searchList;
+    @Action("getFrameworkRoles") getFrameworkRoles;
+    @Action("getFrameworkGroups") getFrameworkGroups;
+    @Action("batchDelete") deleteIDs;
+    @Action("deleted") deleteAll;
+    @Action("exportExcel") exportExcel;
+    @Action("exportExcelByIds") exportExcelByIds;
 
-    @State
-    fameworkuserSearchListData;
-
+    // 表单弹框ref名称
+    formRefName: string = "dialogform";
+    // 表单数据的key，下方相同，主要用在dialog-form组件中 传入数据，在action-mixin的方法openDialog有用到
+    formDialogKey: string = "dialogInfo";
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,
@@ -101,15 +95,15 @@ export default class Index extends Vue {
     }
     // 查询接口 ★★★★★
     privateRequest(params) {
-        return this.frameworkroleSearchList(params);
+        return this.searchList(params);
     }
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
-        this.dialogInfo.isShow = true;
-        this.dialogInfo.dialogStatus = status;
-        this.dialogInfo.dialogData = data;
+        this[this.formDialogKey].isShow = true;
+        this[this.formDialogKey].dialogStatus = status;
+        this[this.formDialogKey].dialogData = data;
         this.$nextTick(() => {
-            this.$refs["dialogform"].onGetFormData();
+            this.$refs[this.formRefName].onGetFormData();
         });
     }
     // ★★★★★
@@ -118,7 +112,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: [params.ID]
             };
-            this.frameworkroleBatchDelete(parameters).then(res => {
+            this.deleteAll(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -133,7 +127,7 @@ export default class Index extends Vue {
             const parameters = {
                 ids: listToString(this["selectData"], "ID")
             };
-            this.frameworkroleBatchDelete(parameters).then(res => {
+            this.deleteIDs(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
                     type: "success"
@@ -149,7 +143,7 @@ export default class Index extends Vue {
             Page: this["pageDate"].currentPage,
             Limit: this["pageDate"].pageSize
         };
-        this.frameworkroleExportExcel(parameters).then(res => {
+        this.exportExcel(parameters).then(res => {
             exportXlsx(res, "FrameworkroleExportExcel");
             this["$notify"]({
                 title: "导出成功",
@@ -160,7 +154,7 @@ export default class Index extends Vue {
     // ★★★★☆
     onExport() {
         const parameters = listToString(this["selectData"], "ID");
-        this.frameworkroleExportExcelByIds(parameters).then(res => {
+        this.exportExcelByIds(parameters).then(res => {
             exportXlsx(res, "FrameworkroleExportExcelByIds");
             this["$notify"]({
                 title: "导出成功",

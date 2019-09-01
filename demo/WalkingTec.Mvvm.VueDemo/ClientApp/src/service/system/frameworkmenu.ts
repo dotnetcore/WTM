@@ -2,87 +2,87 @@ import config from "@/config/index";
 import { contentType } from "@/config/enum";
 const reqPath = config.headerApi + "/_FrameworkMenu/";
 // 列表
-const frameworkmenuSearchList = {
+const search = {
     url: reqPath + "Search",
     method: "post",
     dataType: "array"
 };
-// 详情
-const frameworkmenu = {
-    url: reqPath + "{ID}",
-    method: "get"
-};
 // 添加
-const frameworkmenuAdd = {
+const add = {
     url: reqPath + "add",
     method: "post"
 };
-const frameworkmenuEdit = {
+const edit = {
     url: reqPath + "Edit",
     method: "put"
 };
+// 详情
+const detail = {
+    url: reqPath + "{ID}",
+    method: "get"
+};
 // 批量删除
-const frameworkmenuBatchDelete = {
+const batchDelete = {
     url: reqPath + "BatchDelete",
     method: "post"
 };
 // 删除 -------
-const frameworkmenuDelete = {
+const deleted = {
     url: reqPath + "Delete/{ID}",
     method: "get"
 };
 // 导出
-const frameworkmenuExportExcel = {
+const exportExcel = {
     url: reqPath + "ExportExcel",
     method: "post",
     contentType: contentType.stream
 };
 // 多选导出
-const frameworkmenuExportExcelByIds = {
+const exportExcelByIds = {
     url: reqPath + "ExportExcelByIds",
     method: "post",
     contentType: contentType.stream
 };
 // 获取模版
-const frameworkmenuGetExcelTemplate = {
+const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
     method: "get"
 };
 
-const frameworkmenuSyncModel = {
+const syncModel = {
     url: reqPath + "SyncModel",
     method: "get"
 };
-const frameworkmenuUnsetPages = {
+const unsetPages = {
     url: reqPath + "UnsetPages",
     method: "get"
 };
-const frameworkmenuRefreshMenu = {
+const refreshMenu = {
     url: reqPath + "RefreshMenu",
     method: "get"
 };
-const frameworkmenuGetActionsByModel = {
+const getActionsByModel = {
     url: reqPath + "GetActionsByModel",
     method: "get"
 };
-const frameworkmenuGetFolders = {
+const getFolders = {
     url: reqPath + "GetFolders",
     method: "get"
 };
 
 export default {
-    frameworkmenuSearchList,
-    frameworkmenuAdd,
-    frameworkmenuDelete,
-    frameworkmenuBatchDelete,
-    frameworkmenuEdit,
-    frameworkmenu,
-    frameworkmenuExportExcel,
-    frameworkmenuExportExcelByIds,
-    frameworkmenuGetExcelTemplate,
-    frameworkmenuSyncModel,
-    frameworkmenuUnsetPages,
-    frameworkmenuRefreshMenu,
-    frameworkmenuGetActionsByModel,
-    frameworkmenuGetFolders
+    search,
+    add,
+    deleted,
+    batchDelete,
+    edit,
+    detail,
+    exportExcel,
+    exportExcelByIds,
+    getExcelTemplate,
+    syncModel,
+    unsetPages,
+    refreshMenu,
+    getActionsByModel,
+    getFolders
 };

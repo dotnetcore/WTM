@@ -3,72 +3,72 @@ import { contentType } from "@/config/enum";
 const reqPath = config.headerApi + "/_FrameworkUserBase/";
 
 // 列表
-const frameworkuserSearch = {
+const search = {
     url: reqPath + "search",
     method: "post",
     dataType: "array"
 };
 // 添加
-const frameworkuserAdd = {
+const add = {
     url: reqPath + "add",
     method: "post"
 };
 // 删除
-const frameworkuserDelete = {
+const deleted = {
     url: reqPath + "Delete/{ID}",
     method: "get"
 };
 // 批量删除
-const frameworkuserBatchDelete = {
+const batchDelete = {
     url: reqPath + "BatchDelete",
     method: "post"
 };
 // 修改
-const frameworkuserEdit = {
+const edit = {
     url: reqPath + "Edit",
     method: "put"
 };
 // 详情
-const frameworkuser = {
+const detail = {
     url: reqPath + "{ID}",
     method: "get"
 };
-const frameworkuserExportExcel = {
+const exportExcel = {
     url: reqPath + "ExportExcel",
     method: "post",
     contentType: contentType.stream
 };
-const frameworkuserExportExcelByIds = {
+const exportExcelByIds = {
     url: reqPath + "ExportExcelByIds",
     method: "post",
     contentType: contentType.stream
 };
-const frameworkuserGetExcelTemplate = {
+const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
     method: "get"
 };
 // 角色
-const frameworkuserGetFrameworkRoles = {
+const getFrameworkRoles = {
     url: reqPath + "GetFrameworkRoles",
     method: "get",
     dataType: "array"
 };
 // 用户组
-const frameworkuserGetFrameworkGroups = {
+const getFrameworkGroups = {
     url: reqPath + "GetFrameworkGroups",
     method: "get",
     dataType: "array"
 };
 export default {
-    frameworkuserSearch,
-    frameworkuserAdd,
-    frameworkuserDelete,
-    frameworkuserBatchDelete,
-    frameworkuserEdit,
-    frameworkuser,
-    frameworkuserExportExcel,
-    frameworkuserExportExcelByIds,
-    frameworkuserGetExcelTemplate,
-    frameworkuserGetFrameworkRoles,
-    frameworkuserGetFrameworkGroups
+    search,
+    add,
+    deleted,
+    batchDelete,
+    edit,
+    detail,
+    exportExcel,
+    exportExcelByIds,
+    getExcelTemplate,
+    getFrameworkRoles,
+    getFrameworkGroups
 };

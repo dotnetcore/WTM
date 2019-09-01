@@ -2,67 +2,67 @@ import config from "@/config/index";
 import { contentType } from "@/config/enum";
 const reqPath = config.headerApi + "/_FrameworkGroup/";
 // 列表
-const frameworkgroupSearchList = {
+const search = {
     url: reqPath + "Search",
     method: "post",
     dataType: "array"
 };
 // 详情
-const frameworkgroup = {
+const detail = {
     url: reqPath + "{ID}",
     method: "get"
 };
 // 添加
-const frameworkgroupAdd = {
+const add = {
     url: reqPath + "add",
     method: "post"
 };
-const frameworkgroupEdit = {
+const edit = {
     url: reqPath + "Edit",
     method: "put"
 };
 // 批量删除
-const frameworkgroupBatchDelete = {
+const batchDelete = {
     url: reqPath + "BatchDelete",
     method: "post"
 };
 // 删除 -------
-const frameworkgroupDelete = {
+const deleted = {
     url: reqPath + "Delete/{ID}",
     method: "get"
 };
 // 导出
-const frameworkgroupExportExcel = {
+const exportExcel = {
     url: reqPath + "ExportExcel",
     method: "post",
     contentType: contentType.stream
 };
 // 多选导出
-const frameworkgroupExportExcelByIds = {
+const exportExcelByIds = {
     url: reqPath + "ExportExcelByIds",
     method: "post",
     contentType: contentType.stream
 };
 // 获取模版
-const frameworkgroupGetExcelTemplate = {
+const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
     method: "get"
 };
 
-const frameworkgroupImport = {
+const imported = {
     url: reqPath + "Import",
     method: "post"
 };
 
 export default {
-    frameworkgroupSearchList,
-    frameworkgroupAdd,
-    frameworkgroupDelete,
-    frameworkgroupBatchDelete,
-    frameworkgroupEdit,
-    frameworkgroup,
-    frameworkgroupExportExcel,
-    frameworkgroupExportExcelByIds,
-    frameworkgroupGetExcelTemplate,
-    frameworkgroupImport
+    search,
+    add,
+    deleted,
+    batchDelete,
+    edit,
+    detail,
+    exportExcel,
+    exportExcelByIds,
+    getExcelTemplate,
+    imported
 };
