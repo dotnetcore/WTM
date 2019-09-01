@@ -670,7 +670,7 @@ namespace WalkingTec.Mvvm.Mvc
         [Display(Name = ""{protype.GetPropertyDisplayName()}"")]
         public List<Guid> Selected{pro.FieldName}IDs {{ get; set; }}";
                         initstr += $@"
-            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}.Select(x => x.{pro.SubIdField}).ToList();";
+            Selected{pro.FieldName}IDs = Entity.{pro.FieldName}?.Select(x => x.{pro.SubIdField}).ToList();";
                         addstr += $@"
             Entity.{pro.FieldName} = new List<{protype.PropertyType.GetGenericArguments()[0].Name}>();
             if (Selected{pro.FieldName}IDs != null)
