@@ -428,7 +428,6 @@ namespace WalkingTec.Mvvm.Core
                                         }
                                         DC.UpdateProperty(i, "UpdateTime");
                                         DC.UpdateProperty(i, "UpdateBy");
-                                        DC.UpdateEntity(i);
                                     }
                                 }
                             }
