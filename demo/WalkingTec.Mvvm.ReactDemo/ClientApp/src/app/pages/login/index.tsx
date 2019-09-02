@@ -52,7 +52,7 @@ export default class LoginDemo extends React.Component<any, any>{
     const disabled = hasErrors(getFieldsError())
     return (
       <LayoutLogin>
-        <Form onSubmit={this.onSubmit.bind(this)} className="app-login-form" >
+        <Form onSubmit={this.onSubmit.bind(this)} >
           <h1>{GlobalConfig.default.title}</h1>
           <Form.Item
             validateStatus={userNameError ? 'error' : ''}

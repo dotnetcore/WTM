@@ -7,11 +7,11 @@
 @black-6:#666666;
 @font-family-PingFangSC:'PingFangSC';
 
-.lenovo-layout-login {
+.app-layout-login {
     min-height: 100vh;
     height: auto;
 
-    &>.ant-layout {
+    & > .ant-layout {
         background-image: url("./images/background.png");
         // background-attachment: fixed;
         background-size: cover;
@@ -33,7 +33,7 @@
         }
     }
 
-    .lenovo-login-form {
+    .app-login-form {
         padding: 40px;
         box-sizing: border-box;
         min-width: 500px;
@@ -61,7 +61,7 @@
         letter-spacing: normal;
         padding: 24px 0 0;
 
-        .lenovo-login-links {
+        .app-login-links {
             padding: 0 80px;
 
             .ant-typography {
@@ -71,15 +71,16 @@
                     font-size: @font-size-lg;
                 }
 
-                .ant-col-lg-6 {
+                a {
+                    color: @black-6;
                     font-size: @font-size-md;
                     line-height: 44px;
                 }
             }
 
-            .lenovo-login-codeimg {
+            .app-login-codeimg {
                 position: relative;
-                // height: 88px;
+                min-height: 88px;
                 overflow: hidden;
                 padding: 8px 0;
                 padding-left: 120px;
@@ -106,13 +107,13 @@
             @media (max-width: 644px) {
                 padding: 0 20px 15px;
 
-                .lenovo-login-codeimg {
+                .app-login-codeimg {
                     margin-top: 0;
                 }
             }
         }
 
-        .lenovo-login-record {
+        .app-login-record {
             // margin-top: 10px;
             color: @black-3;
             font-size: @font-size-md;
@@ -120,6 +121,12 @@
             min-height: 40px;
             line-height: 40px;
             background-color: @bg-f8;
+
+            a {
+                color: @black-6;
+                font-size: @font-size-md;
+                line-height: 44px;
+            }
         }
 
         .ant-descriptions-item-label::after {
