@@ -8,7 +8,7 @@
 .app-nprogress {
     position: fixed !important;
     width: 100%;
-    height: 50px;
+    height: 100%;
     z-index: @maxZindex*2;
     pointer-events: none;
     // 进度条

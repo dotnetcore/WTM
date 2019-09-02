@@ -1,5 +1,5 @@
 <template>
-  <header class="app-navbar animated slideInDown">
+  <div class="app-navbar animated slideInDown">
     <nprogress-container />
     <div class="title-container">
       <i :class="[collapse?'el-icon-s-unfold':'el-icon-s-fold' ,collapse?'fold-icon':'unfold-icon','collapse-icon']" @click="toggleFold" />
@@ -11,7 +11,7 @@
         <span class="user-btn able"><i class="fa fa-power-off nav-btn" />退出</span>
       </div>
     </div>
-  </header>
+  </div>
 </template>
 
 
@@ -43,21 +43,14 @@ export default class NavBar extends Vue {
 @import "../../assets/css/variable";
 @import "../../assets/css/mixin";
 .app-navbar {
-    position: fixed;
     min-width: 100%;
     z-index: @maxZindex + 2;
-    height: @navbarHeight;
-
+    color: #fff;
     .title-container {
-        font-size: 17px;
-        font-weight: bolder;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        background: #fff;
-        box-shadow: 0 -1px 3px #eee;
-        border-bottom: 1px solid #eee;
+        .flexbox(space-between);
+        .flexjustify(space-between);
         .collapse-icon {
+            .centerBox(@navbarHeight);
             cursor: pointer;
             transition: all 500ms ease;
         }
@@ -69,16 +62,11 @@ export default class NavBar extends Vue {
             margin-left: @foldWith;
         }
         .title {
-            display: inline-block;
-            margin-left: 50%;
-            height: 100%;
+            font-size: 20px;
             .centerBox(@navbarHeight);
         }
         .user-panel {
-            position: absolute;
-            right: 100px;
             .centerBox(@navbarHeight);
-            display: inline-block;
             .user-btn {
                 font-size: 13px;
                 margin-left: 20px;
@@ -87,13 +75,11 @@ export default class NavBar extends Vue {
                 &.able {
                     transition: all 500ms;
                     &:hover {
-                        color: #303133;
+                        color: #fff;
                     }
                 }
                 .nav-btn {
                     margin-right: 15px;
-
-                    // font-size: 18px;
                 }
             }
         }
