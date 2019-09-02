@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Transactions;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -795,6 +796,20 @@ where S : struct
                 return "";
             }
         }
+
+        /// <summary>
+        /// 开始一个事务，当使用同一IDataContext时，嵌套的两个事务不会引起冲突，当嵌套的事务执行时引起的异常会通过回滚方法向上层抛出异常
+        /// </summary>
+        /// <param name="self">DataContext</param>
+        /// <returns>可用的事务实例</returns>
+        public static Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction BeginTransaction(this IDataContext self)
+        {
+            if (self == null)
+                throw new ArgumentNullException(nameof(self));
+            if (self.Database == null)
+                throw new ArgumentNullException(nameof(self.Database));
+            return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
+        }
     }
 
     public static class DbCommandExtension
@@ -803,5 +818,27 @@ where S : struct
         {
             
         }
+    }
+
+    internal class FakeNestedTransaction : Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction
+    {
+        internal static readonly FakeNestedTransaction DefaultTransaction = new FakeNestedTransaction();
+
+        private FakeNestedTransaction() { }
+
+        public void Dispose()
+        {
+        }
+
+        public void Commit()
+        {
+        }
+
+        public void Rollback()
+        {
+            throw new TransactionInDoubtException("an exception occurs while executing the nested transaction or processing the results");
+        }
+
+        public Guid TransactionId => Guid.Empty;
     }
 }
