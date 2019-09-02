@@ -1,8 +1,10 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -310,6 +312,9 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.SQLite:
                     optionsBuilder.UseSqlite(CSName);
                     break;
+                case DBTypeEnum.Oracle:
+                    optionsBuilder.UseOracle(CSName);
+                    break;
                 default:
                     break;
             }
@@ -600,7 +605,34 @@ namespace WalkingTec.Mvvm.Core
                         npgCon.Close();
                     }
                     break;
-
+                case DBTypeEnum.SQLite:
+                case DBTypeEnum.Oracle:
+                    var connection = this.Database.GetDbConnection();
+                    var isClosed = connection.State == ConnectionState.Closed;
+                    if (isClosed)
+                    {
+                        connection.Open();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandTimeout = 2400;
+                        command.CommandType = commandType;
+                        if (paras != null)
+                        {
+                            foreach (var param in paras)
+                                command.Parameters.Add(param);
+                        }
+                        using (var reader = command.ExecuteReader())
+                        {
+                            table.Load(reader);
+                        }
+                    }
+                    if (isClosed)
+                    {
+                        connection.Close();
+                    }
+                    break;
             }
             return table;
         }
@@ -629,6 +661,12 @@ namespace WalkingTec.Mvvm.Core
                     break;
                 case DBTypeEnum.PgSql:
                     rv = new NpgsqlParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.SQLite:
+                    rv = new SqliteParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.Oracle:
+                    rv = new OracleParameter(name, value) { Direction = dir };
                     break;
             }
             return rv;
