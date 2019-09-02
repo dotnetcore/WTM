@@ -148,10 +148,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
             const refTable = this.refTableBody.current;//ReactDOM.findDOMNode(this.ref.current) as HTMLDivElement;
             // 60 是头部 标题栏 高度
             let height = window.innerHeight - refTable.offsetTop - 60 - 100;
-            // // 全屏 加回 60 高度
-            // if (refFullscreen) {
-            //     height += 60;
-            // }
+            if (!globalConfig.tabsPage) {
+                height += 90;
+            }
             height = height < this.minHeight ? this.minHeight : height;
             if (this.state.height !== height) {
                 this.gridApi.sizeColumnsToFit();
