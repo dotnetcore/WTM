@@ -10,11 +10,12 @@ WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 
 
 ## CI Build Status
 
-| Platform | Build Server | Master Status  | Develop Status  |
-|--------- |------------- |---------|---------|
-| Azure Pipelines |  Windows/Linux/OSX |[![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=15&branchName=master) |[![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop)|
-| AppVeyor |  Windows/Linux | - | - |
-| Travis   | Linux/OSX | - | - |
+| Platform | Build Server | SDK | Master Status  | Develop Status  |
+| -------- | ------------ | ---- |---------|---------|
+| Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 |[![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=15&branchName=master) |[![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop)|
+| Azure Pipelines |  Windows/Linux/OSX |  v3.0.100-preview8-013656 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master-sdk_v3.0?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=19&branchName=master) |[![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-develop-sdk_v3.0?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=18&branchName=develop)|
+| AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
+| Travis   | Linux/OSX |  v2.2.300 | - | - |
 
 ## Nuget Packages
 
