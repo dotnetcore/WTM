@@ -200,8 +200,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
     onColumnRowGroupChanged(event: ColumnRowGroupChangedEvent) {
         // this.setState({ sortable: event.columns.length > 0 })
     }
-    componentDidMount() {
-        this.props.Store.onSearch();
+    async componentDidMount() {
         this.onUpdateHeight();
 
         this.resizeEvent = fromEvent(window, "resize").subscribe(e => {
@@ -210,6 +209,8 @@ export class AgGrid extends React.Component<ITableProps, any> {
             }
             this.gridApi.sizeColumnsToFit();
         });
+        await this.props.Store.onSearch();
+        this.gridApi.sizeColumnsToFit();
     }
     componentWillUnmount() {
         this.resizeEvent && this.resizeEvent.unsubscribe()
@@ -268,7 +269,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
         })
         return (
             <>
-                <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`lenovo-ag-grid ${className} ${theme}`}>
+                <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid ${className} ${theme}`}>
                     {/* <Spin spinning={loading} > */}
                     <AgGridReact
                         // 内置 翻译 替换

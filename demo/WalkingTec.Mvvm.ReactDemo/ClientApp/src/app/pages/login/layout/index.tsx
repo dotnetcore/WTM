@@ -11,42 +11,49 @@ export class LayoutLogin extends React.Component<{
   code?: string;
 }, any>{
   render() {
+    const isIe = "ActiveXObject" in window;
     return (
-      <Layout className="lenovo-layout-login lenovo-fade-enter">
-        <Layout>
+      <Layout className="app-layout-login app-fade-enter">
+        <Layout style={isIe ? { minHeight: window.innerHeight - 197 } : {}}>
           <Header>
-            <img className='lenovo-login-logo' src={logo} alt="" height="48" />
+            <img className='app-login-logo' src={logo} alt="" height="48" />
           </Header>
           <Content>
-            <div className='lenovo-login-form'>
+            <div className='app-login-form'>
               {this.props.children}
             </div>
           </Content>
         </Layout>
         <Footer>
-          <Row type="flex" align="top" className='lenovo-login-links'>
+          <Row type="flex" align="top" className='app-login-links'>
             <Col lg={18} md={24}>
               <Typography>
                 <Typography.Title>Quick Links</Typography.Title>
                 <Typography.Paragraph>
                   <Row type="flex" align="top">
-                    {lodash.get(this.props as any, 'links', ['IT Support', 'IDMC', 'BT/IT T2.0', 'User Case Testing', 'Assitant', ' Support', 'Web VPN', 'IT Service']).map((value, index) => (
+                    {lodash.get(this.props as any, 'links', [
+                      { name: 'GitHub', url: 'https://github.com/dotnetcore/WTM' },
+                      { name: "React", url: 'https://reactjs.org/' },
+                      { name: "Ant Design", url: 'https://ant.design/' },
+                      { name: "Rxjs", url: 'https://rxjs.dev/' },
+                      { name: "Mobx", url: 'https://mobx.js.org/' },
+                      { name: "Lodash", url: ' https://lodash.com/' },
+                    ]).map((value, index) => (
                       <Col key={index} lg={6} md={8} xs={8} sm={12}>
-                        {value}
+                        <a href={value.url} target="_blank" >    {value.name}</a>
                       </Col>
                     ))}
                   </Row>
                 </Typography.Paragraph>
               </Typography>
             </Col>
-            <Col lg={6} md={24} className='lenovo-login-codeimg'>
+            <Col lg={6} md={24} className='app-login-codeimg'>
               <img src={lodash.get(this.props, 'code', code)} alt="" width="88" height="88" />
-              <p>IT Service everywhere</p>
-              <p>Scan to download</p>
+              <p>QR code</p>
             </Col>
           </Row>
-          <div className="lenovo-login-record">
-            Help    Contact us    @2019 WTM rights reserved
+          <div className="app-login-record">
+            Help      @2019 WTM rights reserved
           </div>
         </Footer>
       </Layout>
