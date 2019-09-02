@@ -2,7 +2,7 @@
 import { Col, Layout, Row, Typography } from 'antd';
 import * as React from 'react';
 import lodash from 'lodash';
-import logo from './images/logo.png';
+import logo from '../../../../assets/img/logo.png';
 import code from './images/code.png';
 import './style.less';
 const { Header, Content, Sider, Footer } = Layout;
@@ -15,7 +15,7 @@ export class LayoutLogin extends React.Component<{
       <Layout className="lenovo-layout-login lenovo-fade-enter">
         <Layout>
           <Header>
-            {/* <img className='lenovo-login-logo' src={logo} alt="" width="144" height="48" /> */}
+            <img className='lenovo-login-logo' src={logo} alt="" height="48" />
           </Header>
           <Content>
             <div className='lenovo-login-form'>
