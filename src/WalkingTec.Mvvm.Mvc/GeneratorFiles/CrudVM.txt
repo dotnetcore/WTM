@@ -22,54 +22,18 @@ namespace $vmnamespace$
         }
 
         public override void DoAdd()
-        {
-            using (var transaction = DC.BeginTransaction())
-            {
-                try
-                {$add$           
-                    base.DoAdd();
-
-                    transaction.Commit();
-                }
-                catch (Exception exception)
-                {
-                    transaction.Rollback();
-                }
-            }
+        {$add$           
+            base.DoAdd();
         }
 
         public override void DoEdit(bool updateAllFields = false)
-        {
-            using (var transaction = DC.BeginTransaction())
-            {
-                try
-                {$edit$
-                    base.DoEdit(updateAllFields);
-
-                    transaction.Commit();
-                }
-                catch (Exception exception)
-                {
-                    transaction.Rollback();
-                }
-            }
+        {$edit$
+            base.DoEdit(updateAllFields);
         }
 
         public override void DoDelete()
         {
-            using (var transaction = DC.BeginTransaction())
-            {
-                try
-                {
-                    base.DoDelete();
-
-                    transaction.Commit();
-                }
-                catch (Exception exception)
-                {
-                    transaction.Rollback();
-                }
-            }
+            base.DoDelete();
         }
     }
 }
