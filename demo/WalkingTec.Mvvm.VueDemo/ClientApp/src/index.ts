@@ -3,10 +3,10 @@ import createRouter from "@/router/index";
 import store from "@/store/index";
 import App from "@/views/index.vue";
 import { dirEdit, visible } from "@/util/directive/index";
-import "@/assets/css/index.less";
 import "font-awesome/css/font-awesome.min.css";
-// import "element-ui/lib/theme-chalk/index.css";
-import "@/assets/theme/index.css";
+import "element-ui/lib/theme-chalk/index.css";
+import "@/assets/css/index.less";
+// import "@/assets/theme/index.css";
 import date from "@/util/date.js";
 // 饿了吗ui
 import ElementUI from "element-ui";

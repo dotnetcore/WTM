@@ -1,6 +1,6 @@
 <template>
   <div class="dataprivilege">
-    <article>
+    <Card>
       <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
           <el-form-item label="账号">
@@ -31,7 +31,7 @@
           </el-button>
         </template>
       </table-box>
-    </article>
+    </Card>
     <dialog-box :is-show.sync="dialogInfo.isShow">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
@@ -50,6 +50,7 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkuser";
+import Card from "@/components/layout/card";
 // 查询参数 ★★★★★
 const defaultSearchData = {
     ITCode: "",
@@ -63,7 +64,8 @@ const defaultSearchData = {
         TableBox,
         DialogBox,
         DialogForm,
-        ButBox
+        ButBox,
+        Card
     }
 })
 export default class Index extends Vue {

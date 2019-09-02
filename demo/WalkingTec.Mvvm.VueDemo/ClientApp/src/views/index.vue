@@ -1,18 +1,30 @@
 <template>
-  <div id="app" class="app-layout">
-    <!--顶部导航-->
-    <Header />
-    <LeftMenu :default-path="defaultPath" :menu-items="menuItems" :collapse="collapse" />
-    <article class="main-container">
-      <!--页面内容-->
-      <AppMain />
-      <!-- copyright -->
-      <!-- <Footer class="copyright" :style="[]"></Footer> -->
-    </article>
-  </div>
+  <el-container id="app" class="app-layout">
+    <el-header>
+      <app-header />
+    </el-header>
+    <el-container>
+      <el-aside width="220px">
+        <LeftMenu :default-path="defaultPath" :menu-items="menuItems" :collapse="collapse" />
+      </el-aside>
+      <el-main>
+        <AppMain />
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <style lang="less">
+.app-layout {
+    .el-header {
+        background: #000;
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+    }
+    .el-main {
+    }
+}
 </style>
 
 <script lang="ts">
@@ -31,8 +43,8 @@ import { Action, Mutation, Getter } from "vuex-class";
 @Component({
     components: {
         AppMain,
-        Header,
-        Footer,
+        "app-header": Header,
+        "app-footer": Footer,
         LeftMenu,
         Nprogress
     }

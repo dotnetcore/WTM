@@ -1,5 +1,5 @@
 <template>
-  <el-card class="but-box">
+  <div class="but-box">
     <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList.add" icon="el-icon-plus" @click="onAdd">
       添加
     </el-button>
@@ -25,8 +25,7 @@
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <!-- <export-excel v-assembly:[assembly]="butTypes.export" :params="exportOption.params" :export-url="exportOption.url" btn-name="导出" batch-type="EXPORT_REPLACEMENT" /> -->
-  </el-card>
+  </div>
 </template>
 
 <script lang='ts'>
@@ -121,7 +120,9 @@ export default class ButBox extends Vue {
 @import "../../assets/css/mixin.less";
 .but-box {
     .flexbox(row, flex-end);
-    margin-top: 30px;
+    background-color: #f5f5f5;
+    // margin-top: 30px;
+    padding: 15px;
     .dropdown-box {
         margin-left: 10px;
     }

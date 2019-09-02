@@ -1,6 +1,6 @@
 <template>
   <aside class="app-sidebar animated slideInLeft" :class="{ 'slide-toggle-left': !showLevelbar }">
-    <el-menu class="el-menu-vertical-demo" :default-active="defaultPath" :router="true" :default-openeds="defaultOpen" :collapse="collapse">
+    <el-menu class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :default-active="defaultPath" :router="true" :default-openeds="defaultOpen" :collapse="collapse">
       <div v-for="(item, index) in menuItems" :key="index">
         <el-submenu v-if="item.children && item.children.length" :index="item.path || index + ''">
           <template slot="title">
@@ -45,17 +45,14 @@ export default class Menu extends Vue {
 <style lang="less" scoped>
 @import "../../assets/css/variable";
 .app-sidebar {
+    background-color: #545c64;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    // width: @sidebarWidth;
-    margin-top: @navbarHeight;
-    z-index: @maxZindex + 1;
-    background: #fff;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0 0 15px;
+    height: 100%;
+    margin-top: 60px;
+
     .el-menu-vertical-demo:not(.el-menu--collapse) {
         width: @sidebarWidth;
     }

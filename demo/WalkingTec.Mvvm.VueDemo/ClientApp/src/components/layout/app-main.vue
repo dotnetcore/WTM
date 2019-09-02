@@ -1,10 +1,8 @@
 <template>
   <section :class="[collapse?'folder':'','app-main']" :style="[]">
-    <div class="app-content">
-      <Breadcrumd />
-      <div class="content-com">
-        <router-view class="animated fadeIn" />
-      </div>
+    <Breadcrumd />
+    <div class="content-com">
+      <router-view class="animated fadeIn" />
     </div>
   </section>
 </template>
@@ -28,19 +26,15 @@ export default class AppMain extends Vue {
     position: absolute;
     left: 220px;
     width: 100%;
-    // height: 100%;
     min-height: 650px;
     right: 0;
     top: 60px;
-    // bottom: 44px;
-    // z-index: 998;
     width: auto;
     overflow: hidden;
     overflow-y: auto;
     box-sizing: border-box;
-    transition: left 400ms ease;
-    padding: 20px;
-    padding-bottom: 0;
+    transition: left 200ms ease;
+    padding: 16px;
     .content-com {
         margin-top: 20px;
     }

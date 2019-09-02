@@ -1,5 +1,5 @@
 <template>
-  <el-card v-loading="loading" class="table-card">
+  <div v-loading="loading" class="table-card">
     <el-table class="list-table" v-bind="$attrs" stripe border element-loading-text="拼命加载中" v-on="tableListeners">
       <el-table-column v-if="isSelection" type="selection" align="center" width="55" />
       <!-- 判断是否需要插槽,自定义列内容 -->
@@ -13,7 +13,7 @@
       </template>
     </el-table>
     <el-pagination v-if="isPagination" :current-page="parseInt(pageDate.currentPage)" :page-sizes="pageDate.pageSizes" :page-size="pageDate.pageSize" :layout="pageDate.layout || layout" :total="pageDate.pageTotal" v-on="$listeners" />
-  </el-card>
+  </div>
 </template>
 
 <script lang='ts'>

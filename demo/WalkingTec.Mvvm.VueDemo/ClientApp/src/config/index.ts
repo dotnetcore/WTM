@@ -8,6 +8,7 @@ const config = {
     // token 名称
     tokenKey: "token",
     userInfo: "userinfo",
+    // debugger调试
     development: true
 };
 export default config;
