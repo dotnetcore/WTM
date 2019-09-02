@@ -98,8 +98,9 @@
                         <option value="SqlServer">SqlServer</option>
                         <option value="MySql">MySql</option>
                         <option value="PgSql">PgSql</option>
-                        <option value="PgSql">SQLite</option>
-                    </select>
+                        <option value="SQLite">SQLite</option>
+                         <option value="Oracle">Oracle</option>
+                   </select>
                 </td>
             </tr>
             <tr>
