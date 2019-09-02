@@ -107,6 +107,16 @@ body ::-webkit-scrollbar-track:horizontal {
 body ::-webkit-scrollbar-corner {
     background-color: #fafafa;
 }
+.app-fade-enter {
+    opacity: 0;
+    animation-duration: .2s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+    animation-play-state: paused;
+    animation-name: fadeIn;
+    animation-play-state: running;
+}
+
 /* 过度动画 */
 .fade-enter {
     opacity: 0;
