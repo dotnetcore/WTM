@@ -12,13 +12,16 @@
   "IsQuickDebug": true, //是否启用debug模式
   "UIOptions": {
     "DataTable": {
-      "RPP": $rpp$, //默认列表每页行数
+      "RPP": $rpp$ //默认列表每页行数
     },
     "ComboBox": {
-      "DefaultEnableSearch": true, //默认允许ComboBox搜索
+      "DefaultEnableSearch": true //默认允许ComboBox搜索
     },
     "DateTime": {
       "DefaultReadonly": true //默认开启DateTime只读
+    },
+    "SearchPanel": {
+      "DefaultExpand": true //默认展开SearchPanel内容
     }
   },
   "SyncDb": true, //是否自动同步数据库

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
@@ -425,6 +425,12 @@ namespace WalkingTec.Mvvm.Core
                         _uiOptions.DateTime = new UIOptions.DateTimeOptions
                         {
                             DefaultReadonly = DefaultConfigConsts.DEFAULT_DATETIME_DEFAULT_READONLY
+                        };
+
+                    if (_uiOptions.SearchPanel == null)
+                        _uiOptions.SearchPanel = new UIOptions.SearchPanelOptions
+                        {
+                            DefaultExpand = DefaultConfigConsts.DEFAULT_SEARCHPANEL_DEFAULT_EXPAND
                         };
                 }
                 return _uiOptions;
