@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -48,6 +48,8 @@ namespace $ns$.Test
             LoginVM vm = rv.Model as LoginVM;
             vm.ITCode = "itcode";
             vm.Password = "password";
+            vm.VerifyCode = "abcd";
+            _controller.HttpContext.Session.Set("verify_code","abcd");
             var rv2 = _controller.Login(vm);
 
             //测试当前登陆用户是否正确设定
