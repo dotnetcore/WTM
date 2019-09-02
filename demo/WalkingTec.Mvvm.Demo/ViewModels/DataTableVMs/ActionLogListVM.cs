@@ -41,11 +41,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
             switch (ConfigInfo.DbType)
             {
                 case DBTypeEnum.MySql:
+                case DBTypeEnum.PgSql:
+                case DBTypeEnum.SQLite:
                     sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs limit 10"); break;
                 case DBTypeEnum.SqlServer:
                     sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs"); break;
+                case DBTypeEnum.Oracle:
+                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs fetch next 10 rows only"); break;
             }
-
             var cmd = DC.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql;
             cmd.CommandType = CommandType.Text;

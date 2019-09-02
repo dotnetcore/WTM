@@ -19,7 +19,7 @@
     <p>这种情况下，我们可以使用Design-time DbContext来手工指定需要同步的数据库，具体可以参考<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dbcontext-creation">微软文档</a></p>
     <p>简单来说，就是在代码中创建一个继承IDesignTimeDbContextFactory的类，例如：</p>
     <wt:code title="DataContextFactory.cs">
-public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
+public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
 {
     public DataContext CreateDbContext(string[] args)
     {
@@ -29,6 +29,9 @@ public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
 
     </wt:code>
     <p>加入上面这个类之后，我们就可以使用add-migration等方法了,EF会使用上面这个类中指定的数据库进行操作</p>
+    <wt:quote>
+      2.5.2之后生成的项目会自动在DataContext.cs里添加这个类
+    </wt:quote>
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="3. 使用数据库比较工具">

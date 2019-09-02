@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public override void DoEdit(bool updateAllFields = false)
         {
             Entity.ICon = $"{IconFont} {IconFontItem}";
-            DC.UpdateProperty(Entity, x => x.ICon);
+            FC.Add("Entity.ICon", " ");
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "")
@@ -198,25 +198,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         mainAction.Module = model;
                         mainAction.MethodName = "Index";
                     }
-                    var ndc = DC.ReCreate();
-                    var oldIDs = ndc.Set<FrameworkMenu>()
-                                    .Where(x => x.ParentId == Entity.ID)
-                                    .Select(x => x.ID)
-                                    .ToList();
-                    foreach (var oldid in oldIDs)
-                    {
-                        try
-                        {
-                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
-                            ndc.Set<FrameworkMenu>().Attach(fp);
-                            ndc.DeleteEntity(fp);
-                        }
-                        catch { }
-                    }
-                    ndc.SaveChanges();
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
+                    Entity.ActionName = mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.ClassName;
                     Entity.MethodName = "Index";
 
@@ -224,12 +209,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                             .SelectMany(x => x.Actions)
                                             .Where(x => x.MethodName != "Index")
                                             .ToList();
+                    var actionsInDB = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.ParentId == Entity.ID).ToList();
                     int order = 1;
                     Entity.Children = new List<FrameworkMenu>();
                     foreach (var action in otherActions)
                     {
                         if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.Url))
                         {
+                            Guid aid = action.ID;
+                            var adb = actionsInDB.Where(x => x.Url.ToLower() == action.Url.ToLower()).FirstOrDefault();
+                            if(adb != null)
+                            {
+                                aid = adb.ID;
+                            }
                             var menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -244,7 +236,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.PageName = action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
+                            menu.ClassName = action.Module.ClassName;
+                            menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
+                            menu.ID = aid;
                             Entity.Children.Add(menu);
                         }
                     }
@@ -315,6 +310,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
+                    Entity.ActionName = mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.ClassName;
                     Entity.MethodName = "Index";
                     Entity.Children = new List<FrameworkMenu>();
@@ -339,6 +335,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.PageName = action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
+                            menu.ClassName = action.Module.ClassName;
+                            menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
                             Entity.Children.Add(menu);
                         }

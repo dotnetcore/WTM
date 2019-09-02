@@ -75,7 +75,7 @@ const frameworkRender = {
     columnsRenderBoolean: (props) => {
         return (props.value === true || props.value === 'true') ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />
     },
-    // 下载 
+    // 下载
     columnsRenderDownload: (props) => {
         if (props.value) {
             return <div style={{ textAlign: "center" }} >
@@ -135,8 +135,8 @@ export class AgGrid extends React.Component<ITableProps, any> {
         height: this.minHeight
     }
     /**
-     * 修改 高度 
-     * @param refFullscreen 
+     * 修改 高度
+     * @param refFullscreen
      */
     @Debounce(200)
     onUpdateHeight(refFullscreen = false) {
@@ -170,8 +170,8 @@ export class AgGrid extends React.Component<ITableProps, any> {
     // }
     /**
      * 分页 参数 改变回调
-     * @param current 
-     * @param pageSize 
+     * @param current
+     * @param pageSize
      */
     onChangePagination(current: number, pageSize: number) {
         console.log("TCL: App -> onChangePagination -> ", current, pageSize)
@@ -190,7 +190,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
     }
     /**
      * 选择的 行 数据 回调
-     * @param event 
+     * @param event
      */
     onSelectionChanged(event: SelectionChangedEvent) {
         // console.log("TCL: App -> onSelectionChanged -> event", event.api.getSelectedRows())
