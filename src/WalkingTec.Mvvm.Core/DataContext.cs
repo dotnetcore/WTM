@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext CreateNew()
         {
-           return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
         }
 
         public IDataContext ReCreate()
@@ -296,7 +296,7 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    optionsBuilder.UseSqlServer(CSName,op=>op.UseRowNumberForPaging());
+                    optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
                     break;
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);
@@ -321,19 +321,16 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
-        /// <returns>返回true即数据新建完成，进入初始化操作，返回false即数据库已经存在</returns>
+        /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
         public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
         {
-            if (await Database.EnsureCreatedAsync())
+            bool rv = await Database.EnsureCreatedAsync();
+            //判断是否存在初始数据
+            bool emptydb =  Set<FrameworkUserBase>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
+
+            if (emptydb == true)
             {
                 var AllModules = allModules as List<FrameworkModule>;
-                //foreach (var module in AllModules)
-                //{
-                //    module.CreateTime = DateTime.Now;
-                //    module.CreateBy = "admin";
-                //    Set<FrameworkModule>().Add(module);
-                //}
-
                 var roles = new FrameworkRole[]
                 {
                     new FrameworkRole{ RoleCode = "001", RoleName = "超级管理员"}
@@ -351,7 +348,7 @@ namespace WalkingTec.Mvvm.Core
                 if (Set<FrameworkMenu>().Any() == false)
                 {
                     var systemManagement = GetFolderMenu("系统管理", new List<FrameworkRole> { adminRole }, null);
-                    var logList = IsSpa ? GetMenu2(AllModules,"ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
+                    var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
                     var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", new List<FrameworkRole> { adminRole }, null, 2);
                     var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", new List<FrameworkRole> { adminRole }, null, 3);
                     var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", new List<FrameworkRole> { adminRole }, null, 4);
@@ -367,9 +364,9 @@ namespace WalkingTec.Mvvm.Core
                 Set<FrameworkUserBase>().AddRange(users);
                 Set<FrameworkUserRole>().AddRange(userroles);
                 await SaveChangesAsync();
-                return true;
+                rv = false;
             }
-            return false;
+            return rv;
         }
 
         private FrameworkMenu GetFolderMenu(string FolderText, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, bool isShowOnMenu = true, bool isInherite = false)
