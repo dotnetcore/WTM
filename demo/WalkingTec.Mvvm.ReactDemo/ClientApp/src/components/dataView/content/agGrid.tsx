@@ -5,7 +5,7 @@
  * @modify date 2019-06-26 16:55:28
  * @desc [description]
  */
-import { ColDef, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent, ColumnRowGroupChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -36,7 +36,7 @@ interface ITableProps extends AgGridReactProps {
     /**
      * 行 操作
      */
-    rowAction?: React.ReactNode;
+    rowAction?: any;
     /**
      * 行 操作列配置
      */
@@ -131,6 +131,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
     resizeEvent: Subscription;
     minHeight = 400;
     state = {
+        sortable: true,
         height: this.minHeight
     }
     /**
@@ -196,12 +197,17 @@ export class AgGrid extends React.Component<ITableProps, any> {
         // event.api.getSelectedNodesById()
         this.props.Store.DataSource.selectedRowKeys = lodash.map(event.api.getSelectedRows(), 'key');
     }
-
+    onColumnRowGroupChanged(event: ColumnRowGroupChangedEvent) {
+        // this.setState({ sortable: event.columns.length > 0 })
+    }
     componentDidMount() {
         this.props.Store.onSearch();
         this.onUpdateHeight();
+
         this.resizeEvent = fromEvent(window, "resize").subscribe(e => {
-            this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
+            if (!globalConfig.tabsPage) {
+                this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
+            }
             this.gridApi.sizeColumnsToFit();
         });
     }
@@ -216,7 +222,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
     public render() {
         let {
             Store,
-            rowAction,
+            rowAction: RowAction,
             rowActionCol,
             paginationProps,
             style,
@@ -283,7 +289,12 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         {...props}
                         frameworkComponents={
                             {
-                                RowAction: rowAction,
+                                RowAction: (rowProps) => {
+                                    if (rowProps.data) {
+                                        return <RowAction {...rowProps} />;
+                                    }
+                                    return null;
+                                },
                                 ...frameworkRender,
                                 ...frameworkComponents,
                             }
@@ -294,6 +305,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
                             sortable: true,
                             minWidth: 100,
                             ...defaultColDef
+                        }}
+                        autoGroupColumnDef={{
+                            sortable: false
                         }}
                         columnDefs={[
                             checkboxSelection && {
@@ -310,7 +324,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                             },
                             ...columnDefs,
                             // 固定右侧 操作列
-                            rowAction && {
+                            RowAction && {
                                 headerName: "操作",
                                 field: "RowAction",
                                 cellRenderer: 'RowAction',
@@ -320,7 +334,11 @@ export class AgGrid extends React.Component<ITableProps, any> {
                                 ...rowActionCol,
                             }
                         ].filter(Boolean)}
+                        // 分组改变
+                        onColumnRowGroupChanged={this.onColumnRowGroupChanged}
+                        // 选择框
                         onSelectionChanged={this.onSelectionChanged}
+                        // 排序
                         onSortChanged={this.onSortChanged}
                         onGridReady={event => {
                             onGridReady && onGridReady(event);
