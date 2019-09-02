@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -110,6 +110,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
+            var layuiShow = GlobalServices.GetRequiredService<Configs>().UiOptions.SearchPanel.DefaultExpand ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
   <div class=""layui-colla-item"">
@@ -119,7 +120,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {(!ResetBtn ? string.Empty : $@"<button type=""reset"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">重置</button>")}
       </div>
     </h2>
-    <div class=""layui-colla-content layui-show"" >
+    <div class=""layui-colla-content{layuiShow}"" >
 ");
             output.PostContent.AppendHtml($@"
     </div>
