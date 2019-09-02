@@ -49,12 +49,12 @@ export class LayoutLogin extends React.Component<{
             </Col>
             <Col lg={6} md={24} className='app-login-codeimg'>
               <img src={lodash.get(this.props, 'code', code)} alt="" width="88" height="88" />
-              <p>QR code</p>
+              <p></p>
             </Col>
           </Row>
-          <div className="app-login-record">
-            Help      @2019 WTM rights reserved
-          </div>
+                <div className="app-login-record">
+                    <a href="https://wtmdoc.walkingtec.cn/" target="_blank"> Help</a> © 2019 WTM all rights reserved
+                </div>
         </Footer>
       </Layout>
     );
