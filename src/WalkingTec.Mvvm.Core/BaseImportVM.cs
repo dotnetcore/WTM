@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
@@ -908,10 +908,12 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 验证数据重复
+
         /// <summary>
         /// 判断数据是否在库中存在重复数据
         /// </summary>
         /// <param name="Entity">要验证的数据</param>
+        /// <param name="checkCondition">验证表达式</param>
         /// <returns>null代表没有重复</returns>
         protected P IsDuplicateData(P Entity, DuplicatedInfo<P> checkCondition)
         {

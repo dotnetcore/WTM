@@ -41,7 +41,7 @@
           <dd>
             <wt:linkbutton url="/Login/ChangePassword" window-width="400" text="修改密码" is-link="true" />
           </dd>
-          <dd><a href="javascript:;" lay-href="/">返回首页</a></dd>
+          <dd><a href="javascript:;" lay-href="/">返回首页@{if(ViewData["debug"] is bool debug1 && debug1){<span>(调式)</span>}}</a></dd>
           @{
             if(ViewData["debug"] is bool debug && debug)
             {
