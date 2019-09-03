@@ -1,10 +1,16 @@
 import { Component, Vue } from "vue-property-decorator";
 import { listToString, exportXlsx } from "@/util/string";
+import { createBlob } from "@/util/files";
+import UploadBox from "@/components/common/upload/index.vue";
 
 /**
  * 首页中的按钮部分，添加/修改/删除/导出/导出
  */
-@Component
+@Component({
+    components: {
+        UploadBox
+    }
+})
 export default class actionMixins extends Vue {
     // 表单弹框ref名称
     formRefName: string = "dialogForm";
@@ -17,6 +23,8 @@ export default class actionMixins extends Vue {
         dialogData: {},
         dialogStatus: ""
     };
+    // 导入
+    uploadIsShow = false;
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
         this[this.formDialogKey].isShow = true;
@@ -94,6 +102,35 @@ export default class actionMixins extends Vue {
                 title: "导出成功",
                 type: "success"
             });
+        });
+    }
+    /**
+     * open importbox
+     */
+    onImported() {
+        console.log("onImported");
+        this.uploadIsShow = true;
+    }
+    /**
+     * 下载
+     */
+    onDownload() {
+        this["getExcelTemplate"]().then(res => createBlob(res));
+    }
+    /**
+     * 导入★★★★☆
+     * @param fileData
+     */
+    onImport(fileData) {
+        const parameters = {
+            UploadFileId: fileData.Id
+        };
+        this["imported"](parameters).then(res => {
+            this["$notify"]({
+                title: "导入成功",
+                type: "success"
+            });
+            this["onHoldSearch"]();
         });
     }
 }

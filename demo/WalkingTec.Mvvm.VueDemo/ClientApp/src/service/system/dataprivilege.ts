@@ -34,11 +34,17 @@ const edit = {
     method: "put"
 };
 
+// 导入
+const imported = {
+    url: reqPath + "import",
+    method: "post"
+};
 export default {
     search,
     add,
     deleted,
     batchDelete,
     edit,
-    privilegesList
+    privilegesList,
+    imported
 };

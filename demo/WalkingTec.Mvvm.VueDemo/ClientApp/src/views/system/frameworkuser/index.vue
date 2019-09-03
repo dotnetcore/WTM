@@ -1,6 +1,6 @@
 <template>
   <div class="dataprivilege">
-    <Card>
+    <card>
       <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
           <el-form-item label="账号">
@@ -11,7 +11,7 @@
           </el-form-item>
         </el-form>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" />
+      <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
       <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #PhotoId="rowData">
           <el-image style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
@@ -31,10 +31,11 @@
           </el-button>
         </template>
       </table-box>
-    </Card>
+    </card>
     <dialog-box :is-show.sync="dialogInfo.isShow">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
+    <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
 
@@ -47,10 +48,9 @@ import actionMixin from "@/mixin/action-mixin";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
-import DialogBox from "@/components/common/dialog/dialog-box.vue";
+import UploadBox from "@/components/common/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkuser";
-import Card from "@/components/layout/card";
 // 查询参数 ★★★★★
 const defaultSearchData = {
     ITCode: "",
@@ -62,10 +62,9 @@ const defaultSearchData = {
     components: {
         FuzzySearch,
         TableBox,
-        DialogBox,
         DialogForm,
         ButBox,
-        Card
+        UploadBox
     }
 })
 export default class Index extends Vue {
@@ -76,6 +75,8 @@ export default class Index extends Vue {
     @Action exportExcelByIds;
     @Action getFrameworkRoles;
     @Action getFrameworkGroups;
+    @Action imported;
+    @Action getExcelTemplate;
 
     @State searchData;
     // 弹出框内容 ★★★★☆

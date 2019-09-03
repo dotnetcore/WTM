@@ -46,7 +46,8 @@ const exportExcelByIds = {
 // 获取模版
 const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
-    method: "get"
+    method: "get",
+    contentType: contentType.stream
 };
 
 const syncModel = {
@@ -70,6 +71,11 @@ const getFolders = {
     method: "get"
 };
 
+// 导入
+const imported = {
+    url: reqPath + "import",
+    method: "post"
+};
 export default {
     search,
     add,
@@ -84,5 +90,6 @@ export default {
     unsetPages,
     refreshMenu,
     getActionsByModel,
-    getFolders
+    getFolders,
+    imported
 };
