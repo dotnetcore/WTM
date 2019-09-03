@@ -1,6 +1,6 @@
 <template>
   <div class="dataprivilege">
-    <article>
+    <card>
       <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
           <el-form-item label="权限名称" prop="car_model">
@@ -33,10 +33,11 @@
           </el-button>
         </template>
       </table-box>
-    </article>
+    </card>
     <dialog-box :is-show.sync="dialogInfo.isShow">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
     </dialog-box>
+    <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
 
@@ -75,6 +76,7 @@ export default class Index extends Vue {
     @Action exportExcel;
     @Action exportExcelByIds;
     @Action privilegesList;
+    @Action getExcelTemplate;
     @State
     privilegesListData;
     exportParams = {};

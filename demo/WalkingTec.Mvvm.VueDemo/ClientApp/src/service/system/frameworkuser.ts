@@ -45,7 +45,8 @@ const exportExcelByIds = {
 };
 const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
-    method: "get"
+    method: "get",
+    contentType: contentType.stream
 };
 // 角色
 const getFrameworkRoles = {
@@ -59,6 +60,12 @@ const getFrameworkGroups = {
     method: "get",
     dataType: "array"
 };
+
+// 导入
+const imported = {
+    url: reqPath + "import",
+    method: "post"
+};
 export default {
     search,
     add,
@@ -70,5 +77,6 @@ export default {
     exportExcelByIds,
     getExcelTemplate,
     getFrameworkRoles,
-    getFrameworkGroups
+    getFrameworkGroups,
+    imported
 };

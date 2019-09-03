@@ -46,11 +46,12 @@ const exportExcelByIds = {
 // 获取模版
 const getExcelTemplate = {
     url: reqPath + "GetExcelTemplate",
-    method: "get"
+    method: "get",
+    contentType: contentType.stream
 };
 
 const imported = {
-    url: reqPath + "Import",
+    url: reqPath + "import",
     method: "post"
 };
 

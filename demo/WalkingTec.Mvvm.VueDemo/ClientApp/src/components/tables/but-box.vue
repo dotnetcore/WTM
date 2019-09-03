@@ -9,7 +9,7 @@
     <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList.batchDelete" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
       删除
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.import" icon="el-icon-upload" @click="onImport">
+    <el-button v-assembly:[assembly]="butTypes.imported" icon="el-icon-upload" @click="onImported">
       导入
     </el-button>
     <el-dropdown v-visible="[actionList.exportExcel,actionList.exportExcelByIds]" class="dropdown-box" @command="onCommand">
@@ -101,8 +101,8 @@ export default class ButBox extends Vue {
             this.$emit("onDelete", this.selectedData);
         }
     }
-    onImport() {
-        this.$emit("onImport");
+    onImported() {
+        this.$emit("onImported");
     }
     onCommand(command) {
         this.$emit(command);

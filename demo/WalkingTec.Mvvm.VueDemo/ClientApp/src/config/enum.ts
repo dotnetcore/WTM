@@ -17,6 +17,6 @@ export enum butType {
     add = "add",
     delete = "delete",
     deleted = "delete",
-    import = "import",
+    imported = "imported",
     export = "export"
 }
