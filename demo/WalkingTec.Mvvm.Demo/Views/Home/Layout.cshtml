@@ -103,8 +103,7 @@
                               ? item3.jump
                             : [item.name, item2.name, item3.name].join('/')
                           }}
-                            <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}"
-                            {{ match ? 'class="layui-this"' : '' }}>
+                            <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}" >
                               <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>
                                 <i class="{{ item3.icon }}"></i>
                                 <cite>{{ item3.title }}</cite>

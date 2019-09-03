@@ -16,7 +16,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
     , entry: 'Home/FrontPage' //默认视图文件名
     , engine: '' //视图文件后缀名
 
-    , pageTabs: false //是否开启页面选项卡功能。单页版不推荐开启
+    , pageTabs: $.cookie("pagemode") === 'Tab' //是否开启页面选项卡功能。单页版不推荐开启
 
 
     , name: 'WTM'
