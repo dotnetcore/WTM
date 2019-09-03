@@ -1,4 +1,4 @@
-﻿using NPOI.HSSF.Util;
+using NPOI.HSSF.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +10,7 @@ using System.Runtime.Loader;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using WalkingTec.Mvvm.Core.Support;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -689,12 +690,8 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetNugetVersion()
         {
-            string v = APIHelper.CallAPI("https://api.nuget.org/v3-flatcontainer/walkingtec.mvvm.mvc/index.json").Result;
-            var i = v.LastIndexOf("\"");
-            v = v.Substring(0, i);
-            i = v.LastIndexOf("\"");
-            v = v.Substring(i+1);
-            return v;
+            NugetInfo v = APIHelper.CallAPI<NugetInfo>("https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease=false").Result;
+            return v.data[0]?.version;
         }
     }
 }
