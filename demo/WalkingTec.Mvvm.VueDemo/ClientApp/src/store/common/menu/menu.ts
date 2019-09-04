@@ -87,7 +87,7 @@ class Menu {
     /**
      * tree打平一级菜单
      */
-    private generateRoutesFromMenu(
+    generateRoutesFromMenu(
         menu,
         routes: Array<routerItem> = [],
         parentMenu?: routerItem

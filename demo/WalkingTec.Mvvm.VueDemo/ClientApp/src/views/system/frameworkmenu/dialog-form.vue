@@ -2,21 +2,86 @@
   <div class="frameworkmenu-form">
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="地址类型" prop="IsInside">
-            <el-input v-model="formData.IsInside" v-edit:[status] />
+            <edit-box :is-edit="status !== dialogType.detail">
+              <el-radio-group v-model="formData.Entity.IsInside">
+                <el-radio label="内部地址" :value="true" />
+                <el-radio label="外部地址" :value="false" />
+              </el-radio-group>
+              <template #editValue>
+                {{ formData.IsValid==='true' ? "是" : "否" }}
+              </template>
+            </edit-box>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="模块名称">
+            <el-select v-model="formData.Entity.DomainId" v-edit:[status]="{list: pageNameList, key:'id', label: 'name'}" filterable placeholder="请选择">
+              <el-option v-for="item in pageNameList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用户组名称" prop="GroupName">
-            <el-input v-model="formData.GroupName" v-edit:[status] />
+          <el-form-item label="动作名称">
+            <edit-box :is-edit="status !== dialogType.detail">
+              <el-select v-model="formData.Privileges" v-edit:[status] multiple placeholder="请选择">
+                <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
+              </el-select>
+              <template #editValue>
+                动作名称 value
+              </template>
+            </edit-box>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="页面名称">
+            <el-input v-model="formData.Entity.PageName" v-edit:[status] placeholder="请输入内容" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="父目录">
+            <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: ParentList, key:'id', label: 'name'}" filterable placeholder="请选择">
+              <el-option v-for="item in ParentList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="目录">
+            <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] active-value="true" inactive-value="false" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="菜单显示">
+            <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] active-value="true" inactive-value="false" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="公开">
+            <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] active-value="true" inactive-value="false" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="顺序">
+            <el-input v-model="formData.Entity.DisplayOrder" v-edit:[status] placeholder="请输入顺序" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input v-model="formData.GroupRemark" v-edit:[status] />
+          <el-form-item label="图标">
+            <el-select v-model="formData" v-edit:[status]="{list: sexList, key:'value', label: 'label'}" filterable placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -27,18 +92,26 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
 import mixinDialogForm from "@/mixin/form-mixin";
+import user from "@/store/common/user";
 // 表单结构
 const defaultFormData = {
     // 表单名称
     refName: "refName",
     // 表单数据
     formData: {
-        ID: "",
-        GroupCode: "",
-        GroupName: "",
-        GroupRemark: ""
+        SelectedModule: "",
+        SelectedActionIDs: [],
+        Entity: {
+            ParentId: "",
+            DomainId: "",
+            PageName: "",
+            DisplayOrder: 0,
+            IsInside: true,
+            ShowOnMenu: false,
+            IsPublic: false
+        }
     }
 };
 
@@ -47,6 +120,32 @@ export default class Index extends Vue {
     @Action add;
     @Action edit;
     @Action detail;
+    @Action getActionsByModel;
+    @State getActionsByModelData;
+    options: string[] = [];
+    // 模版集合
+    get pageNameList() {
+        return user.parallelMenus
+            .filter(item => item.meta.ParentId)
+            .map(item => {
+                return {
+                    name: item.name,
+                    id: item.meta.Id
+                };
+            });
+    }
+    // 父级集合
+    get ParentList() {
+        return user.parallelMenus
+            .filter(item => !item.meta.ParentId)
+            .map(item => {
+                return {
+                    name: item.name,
+                    id: item.meta.Id
+                };
+            });
+    }
+
     // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
@@ -73,6 +172,9 @@ export default class Index extends Vue {
         } else {
             return {};
         }
+    }
+    created() {
+        this.getActionsByModel({ ModelName: "FrameworkUser" });
     }
 }
 </script>

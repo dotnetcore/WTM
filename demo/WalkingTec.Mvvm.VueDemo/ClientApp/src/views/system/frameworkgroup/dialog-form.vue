@@ -28,7 +28,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import mixinDialogForm from "@/mixin/form-mixin";
+import mixinForm from "@/mixin/form-mixin";
 // 表单结构
 const defaultFormData = {
     // 表单名称
@@ -42,7 +42,7 @@ const defaultFormData = {
     }
 };
 
-@Component({ mixins: [mixinDialogForm(defaultFormData)] })
+@Component({ mixins: [mixinForm(defaultFormData)] })
 export default class Index extends Vue {
     @Action add;
     @Action edit;
