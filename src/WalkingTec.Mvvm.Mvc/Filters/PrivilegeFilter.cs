@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     else if (controller is ControllerBase c2)
                     {
-                        context.Result = c2.Forbid();
+                        context.Result = c2.Unauthorized();
                     }
                     return;
                 }

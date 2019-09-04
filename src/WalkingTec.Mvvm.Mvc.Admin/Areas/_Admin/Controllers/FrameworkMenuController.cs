@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -173,7 +173,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public JsonResult GetActionsByModelId(string Id)
         {
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-            var m = modules.Where(x => x.FullName == Id && x.IsApi == false).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
+            var m = modules.Where(x => x.ClassName == Id).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
             var AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
             AllActions.ForEach(x => x.Selected = true);
             return Json(AllActions);

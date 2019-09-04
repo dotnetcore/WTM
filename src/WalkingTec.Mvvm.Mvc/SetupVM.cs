@@ -188,6 +188,7 @@ namespace WalkingTec.Mvvm.Mvc
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
  </ItemGroup>
 </Project>
 ");

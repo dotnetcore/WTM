@@ -483,7 +483,7 @@ layui.use(['table'], function(){{
     var sortfilter = {{}};
     sortfilter['Searcher.SortInfo.Property'] = obj.field;
     sortfilter['Searcher.SortInfo.Direction'] = obj.type.replace(obj.type[0],obj.type[0].toUpperCase());
-    var w = $.extend({Id}option.where,sortfilter);
+    var w = $.extend({Id}option.where,sortfilter,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}'));
 
     table.reload('{Id}', {{
     initSort: obj,
