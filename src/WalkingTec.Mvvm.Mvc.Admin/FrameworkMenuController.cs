@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("菜单管理")]
     [ApiController]
     [Route("api/_FrameworkMenu")]
-	public class FrameworkMenuController : BaseApiController
+	public class _FrameworkMenuController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]

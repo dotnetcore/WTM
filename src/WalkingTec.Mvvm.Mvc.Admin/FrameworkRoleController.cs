@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("角色管理")]
     [ApiController]
     [Route("api/_FrameworkRole")]
-	public class FrameworkRoleController : BaseApiController
+	public class _FrameworkRoleController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]

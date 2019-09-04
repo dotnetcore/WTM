@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 {
     [ApiController]
     [Route("api/_login")]
+    [ActionDescription("登陆")]
     [Public]
-    public class LoginController : BaseApiController
+    public class _LoginController : BaseApiController
     {
         [HttpPost("login")]
         [ActionDescription("登录")]

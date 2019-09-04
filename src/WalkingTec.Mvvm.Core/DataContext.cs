@@ -364,6 +364,24 @@ namespace WalkingTec.Mvvm.Core
                         systemManagement.Children.AddRange(new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList });
                         Set<FrameworkMenu>().Add(systemManagement);
                     }
+
+                    if(IsSpa == false)
+                    {
+                        var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole }, null);
+                        apifolder.ShowOnMenu = false;
+                        apifolder.DisplayOrder = 100;
+                        var logList2 = GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) ;
+                        var userList2 = GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2);
+                        var roleList2 = GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3);
+                        var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
+                        var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
+                        var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
+                        var login2 = GetMenu2(AllModules, "Login", new List<FrameworkRole> { adminRole }, null, 7);
+                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2,login2 };
+                        apis.ToList().ForEach(x => { x.MethodName = "Index"; x.ShowOnMenu = false;x.PageName += "Api"; });
+                        apifolder.Children.AddRange(apis);
+                        Set<FrameworkMenu>().Add(apifolder);
+                    }
                 }
                 Set<FrameworkRole>().AddRange(roles);
                 Set<FrameworkUserBase>().AddRange(users);
@@ -429,7 +447,7 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
-            var acts = allModules.Where(x => x.ClassName == controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => x.ClassName == "_"+controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
