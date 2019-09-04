@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
@@ -48,9 +48,22 @@ namespace WalkingTec.Mvvm.Demo
                         };
                         x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx);
                         x.AddLayui();
+                        x.AddSwaggerGen(c =>
+                        {
+                            c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        });
                     })
                     .Configure(x =>
                     {
+                        var configs = x.ApplicationServices.GetRequiredService<Configs>();
+                        if (configs.IsQuickDebug == true)
+                        {
+                            x.UseSwagger();
+                            x.UseSwaggerUI(c =>
+                            {
+                                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                            });
+                        }
                         x.UseFrameworkService();
                     })
                     .UseUrls(globalConfig.ApplicationUrl);

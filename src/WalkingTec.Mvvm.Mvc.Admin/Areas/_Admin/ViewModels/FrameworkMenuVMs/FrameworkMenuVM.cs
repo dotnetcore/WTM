@@ -103,41 +103,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             }
             m.AddRange(m2);
             AllModules = m.ToListItems(y => y.ModuleName, y => y.ClassName);
-            if (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true)
+            if (string.IsNullOrEmpty(SelectedModule) == false || ( string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
             {
-                SelectedModule = modules.Where(x => (x.ClassName == Entity.ClassName)).FirstOrDefault()?.ClassName;
+                if (string.IsNullOrEmpty(SelectedModule))
+                {
+                    SelectedModule = modules.Where(x => (x.ClassName == Entity.ClassName)).FirstOrDefault()?.ClassName;
+                }
                 var mm = modules.Where(x => x.ClassName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
                 AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
-                SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToList();
-            }
-        }
-
-        protected override void ReInitVM()
-        {
-            var data = DC.Set<FrameworkMenu>().ToList();
-            var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
-            var pids = Entity.GetAllChildrenIDs(DC);
-            AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-
-            var m = modules.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
-            List<FrameworkModule> toremove = new List<FrameworkModule>();
-            foreach (var item in m)
-            {
-                var f = modules.Where(x => x.ClassName == item.ClassName && x.Area?.AreaName == item.Area?.AreaName).FirstOrDefault();
-                if (f?.IgnorePrivillege == true)
+                if (SelectedActionIDs == null)
                 {
-                    toremove.Add(item);
+                    SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => AllActions.Select(y => y.Value).Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.Url).ToList();
                 }
             }
-            toremove.ForEach(x => m.Remove(x));
-            AllModules = m.ToListItems(y => y.ModuleName, y => y.ClassName);
-            if (string.IsNullOrEmpty(SelectedModule) == false)
-            {
-                var mm = modules.Where(x => x.ClassName == SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
-                AllActions = mm.ToListItems(y => y.ActionName, y => y.Url);
-            }
-
         }
 
         public override void Validate()
@@ -145,7 +123,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
                 var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && x.MethodName== "Index" && x.ID != Entity.ID).FirstOrDefault();
+                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName== null || x.MethodName=="Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
                     MSD.AddModelError(" error", "该模块已经配置过了");
@@ -202,14 +180,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                             .FirstOrDefault();
                         mainAction = new FrameworkAction();
                         mainAction.Module = model;
-                        mainAction.MethodName = "Index";
+                        mainAction.MethodName = null;
                     }
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
                     Entity.ActionName = mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.ClassName;
-                    Entity.MethodName = "Index";
+                    Entity.MethodName = null;
 
                     otherActions = modules.Where(x => x.ClassName == this.SelectedModule)
                                             .SelectMany(x => x.Actions)
@@ -312,13 +290,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         var model = modules.Where(x => x.ClassName == this.SelectedModule).FirstOrDefault();
                         mainAction = new FrameworkAction();
                         mainAction.Module = model;
-                        mainAction.MethodName = "Index";
+                        mainAction.MethodName = null;
                     }
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
                     Entity.ActionName = mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.ClassName;
-                    Entity.MethodName = "Index";
+                    Entity.MethodName = null;
                     Entity.Children = new List<FrameworkMenu>();
 
                     otherActions = modules.Where(x => x.ClassName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index").ToList();
