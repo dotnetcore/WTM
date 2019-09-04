@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Drawing;
 using System.IO;
@@ -13,7 +13,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ApiController]
     [Route("api/_file")]
     [AllRights]
-    public class FileApiController : BaseApiController
+    [ActionDescription("文件操作")]
+    public class _FileApiController : BaseApiController
     {
         [HttpPost("upload")]
         [ActionDescription("上传文件")]
