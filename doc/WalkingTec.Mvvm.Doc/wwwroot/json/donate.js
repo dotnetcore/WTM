@@ -20,6 +20,12 @@
         {"date":"2019-08-26","name":"安安","amount":99.99,"from":"微信","comment":"谢谢，解决急用数据，棒了大忙！"},
         {"date":"2019-08-28","name":"安安 <sup>2</sup>","amount":9.99,"from":"微信","comment":"感谢亮哥的耐心帮助，略表心意"},
         {"date":"2019-08-29","name":"DL1024","amount":100.00,"from":"QQ","comment":"没什么，支持一下"},
-        {"date":"2019-08-30","name":"旋风小伙","amount":6.66,"from":"微信","comment":"-"}
+        {"date":"2019-08-30","name":"旋风小伙","amount":6.66,"from":"微信","comment":"-"},
+        {"date":"2019-08-31","name":"疯人院零号病人","amount":2.22,"from":"微信","comment":"二嘎子"},
+        {"date":"2019-09-04","name":"张立国","amount":6.66,"from":"微信","comment":"感谢各位的涞源贡献，为.net的生态越来越好，一起努力"},
+        {"date":"2019-09-04","name":"Anymous","amount":20.00,"from":"微信","comment":"祝wtm越来越好"},
+        {"date":"2019-09-04","name":"清风惹寂寥","amount":8.88,"from":"微信","comment":"支持一下加油"},
+  {"date":"2019-09-04","name":"peterpc","amount":200.00,"from":"微信","comment":"小小支持，期待vue前后端分离，ids4集成"},
+  {"date":"2019-09-05","name":"顽强的灰太狼","amount":9.99,"from":"微信","comment":"支持开源"}
     ]
 }
