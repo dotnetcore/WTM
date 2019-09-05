@@ -10,7 +10,7 @@
                 <el-radio label="外部地址" :value="false" />
               </el-radio-group>
               <template #editValue>
-                {{ formData.IsValid==='true' ? "是" : "否" }}
+                {{ formData.Entity.IsValid==='true' ? "内部地址" : "外部地址" }}
               </template>
             </edit-box>
           </el-form-item>
@@ -19,7 +19,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="模块名称">
-            <el-select v-model="formData.Entity.DomainId" v-edit:[status]="{list: pageNameList, key:'id', label: 'name'}" filterable placeholder="请选择">
+            <el-select v-model="formData.SelectedModule" v-edit:[status]="{list: pageNameList, key:'id', label: 'name'}" filterable placeholder="请选择">
               <el-option v-for="item in pageNameList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -27,7 +27,7 @@
         <el-col :span="12">
           <el-form-item label="动作名称">
             <edit-box :is-edit="status !== dialogType.detail">
-              <el-select v-model="formData.Privileges" v-edit:[status] multiple placeholder="请选择">
+              <el-select v-model="formData.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
                 <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
               </el-select>
               <template #editValue>
@@ -45,8 +45,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="父目录">
-            <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: ParentList, key:'id', label: 'name'}" filterable placeholder="请选择">
-              <el-option v-for="item in ParentList" :key="item.id" :label="item.name" :value="item.id" />
+            <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: getFoldersData, key:'Value', label: 'Text'}" filterable placeholder="请选择">
+              <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -79,7 +79,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="图标">
-            <el-select v-model="formData" v-edit:[status]="{list: sexList, key:'value', label: 'label'}" filterable placeholder="请选择">
+            <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: options, key:'value', label: 'label'}" filterable placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
@@ -107,6 +107,7 @@ const defaultFormData = {
             ParentId: "",
             DomainId: "",
             PageName: "",
+            ICon: "",
             DisplayOrder: 0,
             IsInside: true,
             ShowOnMenu: false,
@@ -121,23 +122,14 @@ export default class Index extends Vue {
     @Action edit;
     @Action detail;
     @Action getActionsByModel;
+    @Action getFolders;
     @State getActionsByModelData;
+    @State getFoldersData;
     options: string[] = [];
     // 模版集合
     get pageNameList() {
         return user.parallelMenus
             .filter(item => item.meta.ParentId)
-            .map(item => {
-                return {
-                    name: item.name,
-                    id: item.meta.Id
-                };
-            });
-    }
-    // 父级集合
-    get ParentList() {
-        return user.parallelMenus
-            .filter(item => !item.meta.ParentId)
             .map(item => {
                 return {
                     name: item.name,
@@ -175,6 +167,7 @@ export default class Index extends Vue {
     }
     created() {
         this.getActionsByModel({ ModelName: "FrameworkUser" });
+        this.getFolders();
     }
 }
 </script>
