@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using Npgsql;
 using NpgsqlTypes;
 using NPOI.HSSF.UserModel;
@@ -72,6 +73,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// GridHeaders
         /// </summary>
+        [JsonIgnore]
         public IEnumerable<IGridColumn<TModel>> GridHeaders { get; set; }
 
         /// <summary>
@@ -101,6 +103,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 页面动作
         /// </summary>
+        [JsonIgnore]
         public List<GridAction> GridActions
         {
             get
@@ -419,6 +422,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 替换查询条件，如果被赋值，则列表会使用里面的Lambda来替换原有Query里面的Where条件
         /// </summary>
+        [JsonIgnore()]
         public Expression<Func<TopBasePoco, bool>> ReplaceWhere { get; set; }
 
         /// <summary>
