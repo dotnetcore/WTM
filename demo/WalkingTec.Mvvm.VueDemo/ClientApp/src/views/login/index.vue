@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import cache from "@/util/cache";
+import { setCookie } from "@/util/cookie";
 import config from "@/config/index";
 import baseMixin from "@/mixin/base";
 
@@ -41,7 +41,7 @@ export default class Login extends Vue {
         this["login"](params)
             .then(res => {
                 this.isloading = false;
-                cache.setStorage(config.tokenKey, res);
+                setCookie(config.tokenKey, res.Id);
                 this["onHref"]("/index.html");
             })
             .catch(() => {
