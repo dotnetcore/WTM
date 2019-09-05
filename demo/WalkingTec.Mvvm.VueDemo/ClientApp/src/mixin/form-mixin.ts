@@ -56,14 +56,14 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         // 表单数据 赋值
         setFormData(params) {
             Object.keys(defaultFormData.formData).forEach(key => {
-                this.formData[key] = params[key];
+                if (_.isPlainObject(this.formData[key])) {
+                    Object.keys(this.formData[key]).forEach(item => {
+                        this.formData[key][item] = _.get(params, item);
+                    });
+                } else {
+                    this.formData[key] = params[key];
+                }
             });
-            console.log(
-                "params",
-                params,
-                defaultFormData.formData,
-                this.formData
-            );
         }
         // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
         /**

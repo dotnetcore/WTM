@@ -22,8 +22,8 @@ const domStyleFn = (el, binding, vnode) => {
             // 参数判断
             htmlVal = list.filter(res => res[key] === modelVal)[0][label];
         } catch (error) {
-            console.log("value", value, modelVal);
-            console.error("结构不符合要求", error);
+            console.warn("dirEdit,指令结构不符合要求", error);
+            htmlVal = modelVal;
         }
     }
     // 添加&修改 展示组件
