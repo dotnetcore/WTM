@@ -33,7 +33,7 @@ module.exports = (config, env) => {
           loader: 'awesome-typescript-loader',
           options: {
             useCache: true,
-            configFileName: "tsconfig.compile.json",
+            configFileName: "tsconfig.app.json",
             cacheDirectory: "node_modules/.cache/awcache",
             // transpileOnly: true,
             errorsAsWarnings: true,
