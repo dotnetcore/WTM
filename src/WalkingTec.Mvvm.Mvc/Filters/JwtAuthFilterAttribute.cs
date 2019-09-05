@@ -44,31 +44,24 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                 try
                 {
-                    string key;
+                    string userId;
                     if (user != null)
                     {
-                        key = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                        userId = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
                     }
                     else
                     {
                         var jwtHandler = new JwtSecurityTokenHandler();
                         var token = jwtHandler.ReadJwtToken(tokenHeader);
-                        key = token.Id;
+                        userId = token.Id;
                     }
-                    if (string.IsNullOrEmpty(key))
+                    if (string.IsNullOrEmpty(userId))
                     {
                         base.OnActionExecuting(context);
                         return;
                     }
 
-                    var memoryCache = GlobalServices.GetRequiredService<Microsoft.Extensions.Caching.Memory.IMemoryCache>();
-                    if (memoryCache.TryGetValue(key, out object cacheObj))
-                    {
-                        if (cacheObj is LoginUserInfo loginUser)
-                        {
-                            context.HttpContext.Session?.Set("UserInfo", loginUser);
-                        }
-                    }
+                    JwtHelper.Signin(userId, context.HttpContext);
                 }
                 catch
                 {
