@@ -10,12 +10,12 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public partial class $modelname$BatchVM : BaseBatchVM<$modelname$, $modelname$_BatchEdit>
+    public partial class $classname$BatchVM : BaseBatchVM<$modelname$, $classname$_BatchEdit>
     {
-        public $modelname$BatchVM()
+        public $classname$BatchVM()
         {
-            ListVM = new $modelname$ListVM();
-            LinkedVM = new $modelname$_BatchEdit();
+            ListVM = new $classname$ListVM();
+            LinkedVM = new $classname$_BatchEdit();
         }
 
         protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
@@ -28,7 +28,7 @@ namespace $vmnamespace$
 	/// <summary>
     /// 批量编辑字段类
     /// </summary>
-    public class $modelname$_BatchEdit : BaseVM
+    public class $classname$_BatchEdit : BaseVM
     {$pros$
 
         protected override void InitVM()
