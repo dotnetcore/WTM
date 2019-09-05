@@ -64,12 +64,12 @@ namespace WalkingTec.Mvvm.Mvc
         {
             if (vm.PreviewFile == "Controller")
             {
-                ViewData["filename"] = vm.ModelName + "Controller.cs";
+                ViewData["filename"] = $"{vm.ModelName}{(vm.IsApi == true ? "Api" : "")}Controller.cs";
                 ViewData["code"] = vm.GenerateController();
             }
             else if(vm.PreviewFile == "Searcher" || vm.PreviewFile.EndsWith("VM"))
             {
-                ViewData["filename"] = vm.ModelName + vm.PreviewFile.Replace("CrudVM","VM") + ".cs";
+                ViewData["filename"] = vm.ModelName + $"{(vm.IsApi == true ? "Api" : "")}" + vm.PreviewFile.Replace("CrudVM","VM") + ".cs";
                 ViewData["code"] = vm.GenerateVM(vm.PreviewFile);
             }
             else if(vm.UI == UIEnum.React)
