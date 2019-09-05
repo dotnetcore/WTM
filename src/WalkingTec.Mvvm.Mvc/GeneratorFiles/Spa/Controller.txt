@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +14,28 @@ namespace $namespace$
     [ActionDescription("$des$")]
     [ApiController]
     [Route("api/$modelname$")]
-	public partial class $modelname$Controller : BaseApiController
+	public partial class $controllername$Controller : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
-		public string Search($modelname$Searcher searcher)
+		public string Search($controllername$Searcher searcher)
         {
-            var vm = CreateVM<$modelname$ListVM>();
+            var vm = CreateVM<$controllername$ListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public $modelname$VM Get(Guid id)
+        public $controllername$VM Get(Guid id)
         {
-            var vm = CreateVM<$modelname$VM>(id);
+            var vm = CreateVM<$controllername$VM>(id);
             return vm;
         }
 
         [ActionDescription("新建")]
         [HttpPost("Add")]
-        public IActionResult Add($modelname$VM vm)
+        public IActionResult Add($controllername$VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace $namespace$
 
         [ActionDescription("修改")]
         [HttpPut("Edit")]
-        public IActionResult Edit($modelname$VM vm)
+        public IActionResult Edit($controllername$VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace $namespace$
         [ActionDescription("删除")]
         public IActionResult BatchDelete(Guid[] ids)
         {
-            var vm = CreateVM<$modelname$BatchVM>();
+            var vm = CreateVM<$controllername$BatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -104,9 +104,9 @@ namespace $namespace$
 
         [ActionDescription("导出")]
         [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel($modelname$Searcher searcher)
+        public IActionResult ExportExcel($controllername$Searcher searcher)
         {
-            var vm = CreateVM<$modelname$ListVM>();
+            var vm = CreateVM<$controllername$ListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
@@ -117,7 +117,7 @@ namespace $namespace$
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(Guid[] ids)
         {
-            var vm = CreateVM<$modelname$ListVM>();
+            var vm = CreateVM<$controllername$ListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<Guid>(ids);
@@ -131,7 +131,7 @@ namespace $namespace$
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<$modelname$ImportVM>();
+            var vm = CreateVM<$controllername$ImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -144,7 +144,7 @@ namespace $namespace$
 
         [ActionDescription("导入")]
         [HttpPost("Import")]
-        public ActionResult Import($modelname$ImportVM vm)
+        public ActionResult Import($controllername$ImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
