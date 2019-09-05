@@ -124,7 +124,7 @@ class TabsPages extends React.Component<any, any> {
         <Menu id='TabPane' animation="pop" style={{ minWidth: 100 }}>
           <Item disabled={this.getDisabled} onClick={this.onClose.bind(this, 'Current')}><span><Icon type="close" /></span> 关闭当前</Item>
           <Item onClick={this.onClose.bind(this, 'Other')}><span><Icon type="close" /></span> 关闭其他</Item>
-          <Item onClick={this.onClose.bind(this, 'All')}><span><Icon type="close" /></span> 关闭关闭</Item>
+          <Item onClick={this.onClose.bind(this, 'All')}><span><Icon type="close" /></span> 关闭全部</Item>
         </Menu>
       </Content>
     );
