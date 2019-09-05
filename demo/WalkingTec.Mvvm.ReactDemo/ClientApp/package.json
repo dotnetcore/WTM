@@ -20,6 +20,7 @@
     "nprogress": "^0.2.0",
     "rc-animate": "^2.10.0",
     "react": "16.8.6",
+    "react-contexify": "^4.1.1",
     "react-dom": "16.8.6",
     "react-resizable": "^1.8.0",
     "react-router-config": "^5.0.1",

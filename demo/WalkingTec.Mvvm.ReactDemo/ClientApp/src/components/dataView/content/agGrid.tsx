@@ -206,10 +206,10 @@ export class AgGrid extends React.Component<ITableProps, any> {
             if (!globalConfig.tabsPage) {
                 this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
             }
-            this.gridApi.sizeColumnsToFit();
+            this.gridApi && this.gridApi.sizeColumnsToFit();
         });
         await this.props.Store.onSearch();
-        this.gridApi.sizeColumnsToFit();
+        this.gridApi && this.gridApi.sizeColumnsToFit();
     }
     componentWillUnmount() {
         this.resizeEvent && this.resizeEvent.unsubscribe()
