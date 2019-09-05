@@ -201,18 +201,23 @@ export class AgGrid extends React.Component<ITableProps, any> {
     }
     async componentDidMount() {
         this.onUpdateHeight();
-
         this.resizeEvent = fromEvent(window, "resize").subscribe(e => {
-            if (!globalConfig.tabsPage) {
-                this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
+            // 获取当前高度 ，高度 为 0 说明页面属于隐藏状态
+            if (lodash.get(this.refTableBody.current, 'clientHeight', 0) > 0) {
+                if (!globalConfig.tabsPage) {
+                    this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
+                }
+                this.sizeColumnsToFit();
             }
-            this.gridApi && this.gridApi.sizeColumnsToFit();
         });
         await this.props.Store.onSearch();
-        this.gridApi && this.gridApi.sizeColumnsToFit();
+        this.sizeColumnsToFit()
     }
     componentWillUnmount() {
         this.resizeEvent && this.resizeEvent.unsubscribe()
+    }
+    sizeColumnsToFit() {
+        lodash.get(this.refTableBody.current, 'clientHeight', 0) && this.gridApi && this.gridApi.sizeColumnsToFit();
     }
     onGridReady(event: GridReadyEvent) {
         this.gridApi = event.api;
