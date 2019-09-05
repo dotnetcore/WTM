@@ -23,6 +23,9 @@ namespace WalkingTec.Mvvm.Mvc
 
         public UIEnum UI { get; set; }
 
+        [Display(Name = "生成Api")]
+        public bool IsApi { get; set; }
+
         public string ModelName
         {
             get
@@ -272,11 +275,11 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         if (string.IsNullOrEmpty(Area))
                         {
-                            _vmNs = MainNS +  $".ViewModels.{ModelName}VMs";
+                            _vmNs = MainNS + $".ViewModels.{ModelName}VMs";
                         }
                         else
                         {
-                            _vmNs = MainNS +  $".{Area}.ViewModels.{ModelName}VMs";
+                            _vmNs = MainNS + $".{Area}.ViewModels.{ModelName}VMs";
                         }
                     }
                     else
@@ -315,53 +318,55 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public void DoGen()
         {
-            File.WriteAllText($"{ControllerDir}{Path.DirectorySeparatorChar}{ModelName}Controller.cs", GenerateController(), Encoding.UTF8);
+            File.WriteAllText($"{ControllerDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}Controller.cs", GenerateController(), Encoding.UTF8);
 
-            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}VM.cs", GenerateVM("CrudVM"), Encoding.UTF8);
-            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}ListVM.cs", GenerateVM("ListVM"), Encoding.UTF8);
-            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}BatchVM.cs", GenerateVM("BatchVM"), Encoding.UTF8);
-            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}ImportVM.cs", GenerateVM("ImportVM"), Encoding.UTF8);
-            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}Searcher.cs", GenerateVM("Searcher"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}VM.cs", GenerateVM("CrudVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}ListVM.cs", GenerateVM("ListVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}BatchVM.cs", GenerateVM("BatchVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}ImportVM.cs", GenerateVM("ImportVM"), Encoding.UTF8);
+            File.WriteAllText($"{VmDir}{Path.DirectorySeparatorChar}{ModelName}{(IsApi == true ? "Api" : "")}Searcher.cs", GenerateVM("Searcher"), Encoding.UTF8);
 
-            if (UI == UIEnum.LayUI)
+            if (IsApi == false)
             {
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Create.cshtml", GenerateView("CreateView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Edit.cshtml", GenerateView("EditView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Delete.cshtml", GenerateView("DeleteView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Details.cshtml", GenerateView("DetailsView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Import.cshtml", GenerateView("ImportView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
-                File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
-            }
-            if (UI == UIEnum.React)
-            {
-                if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}") == false)
+                if (UI == UIEnum.LayUI)
                 {
-                    Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}");
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Index.cshtml", GenerateView("ListView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Create.cshtml", GenerateView("CreateView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Edit.cshtml", GenerateView("EditView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Delete.cshtml", GenerateView("DeleteView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Details.cshtml", GenerateView("DetailsView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}Import.cshtml", GenerateView("ImportView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchEdit.cshtml", GenerateView("BatchEditView"), Encoding.UTF8);
+                    File.WriteAllText($"{ViewDir}{Path.DirectorySeparatorChar}BatchDelete.cshtml", GenerateView("BatchDeleteView"), Encoding.UTF8);
                 }
-                if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views") == false)
+                if (UI == UIEnum.React)
                 {
-                    Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views");
-                }
-                if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store") == false)
-                {
-                    Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store");
-                }
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}action.tsx", GenerateReactView("action"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}forms.tsx", GenerateReactView("forms"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}models.tsx", GenerateReactView("models"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}other.tsx", GenerateReactView("other"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}search.tsx", GenerateReactView("search"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}table.tsx", GenerateReactView("table"), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}index.ts", GetResource("index.txt", "Spa.React.store").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.tsx", GetResource("index.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}style.less", GetResource("style.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
+                    if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}") == false)
+                    {
+                        Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}");
+                    }
+                    if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views") == false)
+                    {
+                        Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views");
+                    }
+                    if (Directory.Exists($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store") == false)
+                    {
+                        Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store");
+                    }
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}action.tsx", GenerateReactView("action"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}forms.tsx", GenerateReactView("forms"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}models.tsx", GenerateReactView("models"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}other.tsx", GenerateReactView("other"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}search.tsx", GenerateReactView("search"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}table.tsx", GenerateReactView("table"), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}index.ts", GetResource("index.txt", "Spa.React.store").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.tsx", GetResource("index.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
+                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}style.less", GetResource("style.txt", "Spa.React").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
 
-                var index = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts");
-                if (index.Contains($"path: '/{ModelName.ToLower()}'") == false)
-                {
-                    index = index.Replace("/**WTM**/", $@"
+                    var index = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts");
+                    if (index.Contains($"path: '/{ModelName.ToLower()}'") == false)
+                    {
+                        index = index.Replace("/**WTM**/", $@"
 , {ModelName.ToLower()}: {{
         name: '{ModuleName.ToLower()}',
         path: '/{ModelName.ToLower()}',
@@ -370,14 +375,14 @@ namespace WalkingTec.Mvvm.Mvc
     }}
 /**WTM**/
  ");
-                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts", index, Encoding.UTF8);
-                }
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts", index, Encoding.UTF8);
+                    }
 
-                var menu = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}subMenu.json");
-                if (menu.Contains($@"""Path"": ""/{ModelName.ToLower()}""") == false)
-                {
-                    var i = menu.LastIndexOf("}");
-                    menu = menu.Insert(i + 1, $@"
+                    var menu = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}subMenu.json");
+                    if (menu.Contains($@"""Path"": ""/{ModelName.ToLower()}""") == false)
+                    {
+                        var i = menu.LastIndexOf("}");
+                        menu = menu.Insert(i + 1, $@"
 ,{{
         ""Id"": ""{Guid.NewGuid().ToString()}"",
         ""ParentId"": null,
@@ -385,8 +390,9 @@ namespace WalkingTec.Mvvm.Mvc
         ""Url"": ""/{ModelName.ToLower()}""
     }}
 ");
-                    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}subMenu.json", menu, Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}subMenu.json", menu, Encoding.UTF8);
 
+                    }
                 }
             }
             var test = GenerateTest();
@@ -406,15 +412,15 @@ namespace WalkingTec.Mvvm.Mvc
         public string GenerateController()
         {
             string dir = "";
-            if (UI == UIEnum.LayUI)
+            if (UI == UIEnum.LayUI && IsApi == false)
             {
                 dir = "Mvc";
             }
-            if (UI == UIEnum.React)
+            if (UI == UIEnum.React || IsApi == true)
             {
                 dir = "Spa";
             }
-            var rv = GetResource("Controller.txt", dir).Replace("$vmnamespace$", VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName).Replace("$modelnamespace$", ModelNS);
+            var rv = GetResource("Controller.txt", dir).Replace("$vmnamespace$", VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName).Replace("$modelnamespace$", ModelNS).Replace("$controllername$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
             if (string.IsNullOrEmpty(Area))
             {
                 rv = rv.Replace("$area$", "");
@@ -423,7 +429,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 rv = rv.Replace("$area$", $"[Area(\"{Area}\")]");
             }
-            if (UI == UIEnum.React)
+            if (UI == UIEnum.React || IsApi == true)
             {
                 StringBuilder other = new StringBuilder();
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsSearcherField == true || x.IsFormField == true).ToList();
@@ -451,12 +457,12 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 rv = rv.Replace("$other$", other.ToString());
             }
-                return rv;
+            return rv;
         }
 
         public string GenerateVM(string name)
         {
-            var rv = GetResource($"{name}.txt").Replace("$modelnamespace$", ModelNS).Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName).Replace("$area$", $"{Area ?? ""}");
+            var rv = GetResource($"{name}.txt").Replace("$modelnamespace$", ModelNS).Replace("$vmnamespace$", VMNs).Replace("$modelname$", ModelName).Replace("$area$", $"{Area ?? ""}").Replace("$classname$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
             if (name == "Searcher" || name == "BatchVM")
             {
                 string prostring = "";
@@ -555,7 +561,7 @@ namespace WalkingTec.Mvvm.Mvc
                 this.MakeGridHeader(x => x.{filefk}).SetFormat({filefk}Format),";
                             selectstring += $@"
                     {filefk} = x.{filefk},";
-                            formatstring += GetResource("HeaderFormat.txt").Replace("$modelname$", ModelName).Replace("$field$", filefk);
+                            formatstring += GetResource("HeaderFormat.txt").Replace("$modelname$", ModelName).Replace("$field$", filefk).Replace("$classname$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
                         }
                         else
                         {
@@ -563,7 +569,7 @@ namespace WalkingTec.Mvvm.Mvc
                             existSubPro.Add(subpro);
                             string prefix = "";
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
-                            if(count > 1)
+                            if (count > 1)
                             {
                                 prefix = count + "";
                             }
@@ -575,7 +581,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                             var subdisplay = subpro.GetCustomAttribute<DisplayAttribute>();
                             headerstring += $@"
-                this.MakeGridHeader(x => x.{pro.SubField + "_view"+ prefix}),";
+                this.MakeGridHeader(x => x.{pro.SubField + "_view" + prefix}),";
                             if (string.IsNullOrEmpty(pro.SubIdField) == true)
                             {
                                 selectstring += $@"
@@ -600,7 +606,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var wherepros = FieldInfos.Where(x => x.IsSearcherField == true).ToList();
                 foreach (var pro in wherepros)
                 {
-                    if(pro.SubField == "`file")
+                    if (pro.SubField == "`file")
                     {
                         continue;
                     }
@@ -662,7 +668,7 @@ namespace WalkingTec.Mvvm.Mvc
                     includestr += $@"
             SetInclude(x => x.{pro.FieldName});";
 
-                    if(string.IsNullOrEmpty(pro.SubIdField) == false)
+                    if (string.IsNullOrEmpty(pro.SubIdField) == false)
                     {
                         Type modelType = Type.GetType(SelectedModel);
                         var protype = modelType.GetProperty(pro.FieldName);
@@ -690,11 +696,11 @@ namespace WalkingTec.Mvvm.Mvc
 ";
                     }
                 }
-                if (UI == UIEnum.LayUI)
+                if (UI == UIEnum.LayUI && IsApi == false)
                 {
                     rv = rv.Replace("$pros$", prostr).Replace("$init$", initstr).Replace("$include$", includestr).Replace("$add$", addstr).Replace("$edit$", editstr);
                 }
-                if(UI == UIEnum.React)
+                if (UI == UIEnum.React || IsApi == true)
                 {
                     rv = rv.Replace("$pros$", "").Replace("$init$", "").Replace("$include$", includestr).Replace("$add$", "").Replace("$edit$", "");
                 }
@@ -722,7 +728,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var proType = modelType.GetProperty(pro.FieldName);
                     var display = proType.GetCustomAttribute<DisplayAttribute>();
                     var filefk = DC.GetFKName2(modelType, pro.FieldName);
-                   if (display != null)
+                    if (display != null)
                     {
                         prostring += $@"
         [Display(Name = ""{display.Name}"")]";
@@ -794,7 +800,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
                             var filefk = DC.GetFKName2(modelType, item.FieldName);
-                            if (item.SubField == "`file" )
+                            if (item.SubField == "`file")
                             {
                                 if (name != "BatchEditView")
                                 {
@@ -864,7 +870,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (string.IsNullOrEmpty(item.RelatedField) == false)
                     {
-                        if(item.SubField == "`file")
+                        if (item.SubField == "`file")
                         {
                             continue;
                         }
@@ -915,7 +921,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (TestDir != null)
             {
                 Type modelType = Type.GetType(SelectedModel);
-                if (UI == UIEnum.LayUI)
+                if (UI == UIEnum.LayUI && IsApi == false)
                 {
                     if (modelType.IsSubclassOf(typeof(BasePoco)))
                     {
@@ -947,63 +953,63 @@ namespace WalkingTec.Mvvm.Mvc
                 string fc = "";
                 string add = "";
 
-            foreach (var pro in modelprops)
-            {
-                if (pro.Value == "$fk$")
+                foreach (var pro in modelprops)
                 {
-                    var fktype = modelType.GetProperty(pro.Key.Substring(0, pro.Key.Length - 2)).PropertyType;
-                    add += GenerateAddFKModel(fktype);
+                    if (pro.Value == "$fk$")
+                    {
+                        var fktype = modelType.GetProperty(pro.Key.Substring(0, pro.Key.Length - 2)).PropertyType;
+                        add += GenerateAddFKModel(fktype);
+                    }
                 }
-            }
 
-            foreach (var pro in modelprops)
+                foreach (var pro in modelprops)
                 {
-                if (pro.Value == "$fk$")
-                {
-                    cpros += $@"
-            v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length-2)}();";
-                    pros += $@"
+                    if (pro.Value == "$fk$")
+                    {
+                        cpros += $@"
+            v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                        pros += $@"
                 v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
-                    mpros += $@"
+                        mpros += $@"
                 v1.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
-                    fc += $@"
+                        fc += $@"
             vm.FC.Add(""Entity.{pro.Key}"", """");";
 
-                }
-                else
-                {
-                    cpros += $@"
+                    }
+                    else
+                    {
+                        cpros += $@"
             v.{pro.Key} = {pro.Value};";
-                    pros += $@"
+                        pros += $@"
                 v.{pro.Key} = {pro.Value};";
-                    mpros += $@"
+                        mpros += $@"
                 v1.{pro.Key} = {pro.Value};";
-                    assert += $@"
+                        assert += $@"
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
-                    fc += $@"
+                        fc += $@"
             vm.FC.Add(""Entity.{pro.Key}"", """");";
-                }
+                    }
                 }
 
                 var modelpros2 = modelType.GetRandomValues();
-            foreach (var pro in modelpros2)
-            {
-                if (pro.Value == "$fk$")
+                foreach (var pro in modelpros2)
                 {
-                    mpros += $@"
+                    if (pro.Value == "$fk$")
+                    {
+                        mpros += $@"
                 v2.{ pro.Key} = v1.{pro.Key}; ";
 
-                }
-                else
-                {
-                    epros += $@"
+                    }
+                    else
+                    {
+                        epros += $@"
             v.{pro.Key} = {pro.Value};";
-                    mpros += $@"
+                        mpros += $@"
                 v2.{pro.Key} = {pro.Value};";
-                    eassert += $@"
+                        eassert += $@"
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
+                    }
                 }
-            }
                 rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add);
             }
             return rv;
@@ -1079,7 +1085,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var subpro = subtype.GetProperty(item.SubField);
                             existSubPro.Add(subpro);
-                            newname = item.SubField  + "_view" + prefix;
+                            newname = item.SubField + "_view" + prefix;
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                             if (count > 1)
                             {
@@ -1092,7 +1098,7 @@ namespace WalkingTec.Mvvm.Mvc
         field: ""{newname}"",
         headerName: ""{label}""");
 
-                    if(render != "")
+                    if (render != "")
                     {
                         fieldstr.Append($@",
         cellRenderer: ""{render}"" ");
@@ -1122,7 +1128,7 @@ namespace WalkingTec.Mvvm.Mvc
                     string label = property.GetPropertyDisplayName();
                     bool isrequired = property.IsPropertyRequired();
                     var fktest = DC.GetFKName2(modelType, item.FieldName);
-                    if(string.IsNullOrEmpty(fktest) == false)
+                    if (string.IsNullOrEmpty(fktest) == false)
                     {
                         isrequired = modelType.GetProperty(fktest).IsPropertyRequired();
                     }
@@ -1184,11 +1190,11 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var es = checktype.ToListItems();
                             fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" dataSource={{[  ");
-                            for(int a=0;a<es.Count;a++)
+                            for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
                                 fieldstr.Append($@"                    {{ Text: ""{e.Text}"", Value: {e.Value} }}");
-                                if(a < es.Count - 1)
+                                if (a < es.Count - 1)
                                 {
                                     fieldstr.Append(",");
                                 }
@@ -1221,7 +1227,7 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros2.Count; i++)
                 {
                     var item = pros2[i];
-                    if(item.SubField == "`file")
+                    if (item.SubField == "`file")
                     {
                         continue;
                     }
