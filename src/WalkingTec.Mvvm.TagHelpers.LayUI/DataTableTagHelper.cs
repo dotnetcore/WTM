@@ -370,7 +370,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Rowspan = maxDepth,
                     Fixed = GridColumnFixedEnum.Left,
                     UnResize = true,
-                    Width = 45
+                    //Width = 45
                 };
                 tempCols.Add(checkboxHeader);
             }
@@ -383,7 +383,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Rowspan = maxDepth,
                     Fixed = GridColumnFixedEnum.Left,
                     UnResize = true,
-                    Width = 45
+                    //Width = 45
                 };
                 tempCols.Add(gridIndex);
             }
