@@ -46,6 +46,12 @@
       }
     ]
   },
+  "JwtConfig": {
+    "SecurityKey": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    "Issuer": "WTM", //发行人
+    "Audience": "WTM", //订阅人
+    "Expiration": 1800 //过期时间（秒）
+  },
   "AppSettings": [
   ]
 }

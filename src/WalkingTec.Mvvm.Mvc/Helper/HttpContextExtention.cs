@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System.Linq;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -23,5 +23,22 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        /// <summary>
+        /// 授权头
+        /// </summary>
+        public const string AUTHORIZATION_HEADER = "Authorization";
+
+        /// <summary>
+        /// Jwt 前缀
+        /// </summary>
+        public const string BEARER_PREFIX = "Bearer ";
+
+        public static string GetJwtToken(this HttpContext self)
+        {
+           var token = self.Request?.Headers?[AUTHORIZATION_HEADER].FirstOrDefault();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith(BEARER_PREFIX))
+                token = token.Substring(BEARER_PREFIX.Length).Trim();
+            return token;
+        }
     }
 }
