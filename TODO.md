@@ -2,8 +2,8 @@
 
 ## LayUI
 
-- [ ] Jwt (2019年8月)
-- [ ] layuiAdmin (2019年9月)
+- [ ] Jwt (2019年9月)
+- [x] layuiAdmin (2019年8月)
 - [ ] Others...
 
 ## React
@@ -16,7 +16,7 @@
 
 ## VUE
 
-- [ ] Element UI (2019年8月)
+- [ ] Element UI (2019年9月)
 - [ ] Others...
 
 ## Others
