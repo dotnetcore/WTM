@@ -26,6 +26,7 @@
         {"date":"2019-09-04","name":"Anymous","amount":20.00,"from":"微信","comment":"祝wtm越来越好"},
         {"date":"2019-09-04","name":"清风惹寂寥","amount":8.88,"from":"微信","comment":"支持一下加油"},
   {"date":"2019-09-04","name":"peterpc","amount":200.00,"from":"微信","comment":"小小支持，期待vue前后端分离，ids4集成"},
-  {"date":"2019-09-05","name":"顽强的灰太狼","amount":9.99,"from":"微信","comment":"支持开源"}
+  {"date":"2019-09-05","name":"顽强的灰太狼","amount":9.99,"from":"微信","comment":"支持开源"},
+  {"date":"2019-09-05","name":"恩熙先生、（Mr.Nexe）","amount":9.99,"from":"微信","comment":"开源的框架，作者不容易。希望c#国内崛起！！！"}
     ]
 }
