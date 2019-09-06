@@ -174,8 +174,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [HttpPost("signin")]
-        [ActionDescription("登录")]
+        [HttpPost("get_token")]
+        [ActionDescription("获取Token")]
         public IActionResult GetToken(SigninRequest request)
         {
             if (request.UserId == null)
@@ -228,6 +228,20 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("心跳")]
         [Authorize]
         public IActionResult Heartbeat()
+        {
+            if (LoginUserInfo == null)
+                return NoContent();
+
+            JwtHelper.Signin(LoginUserInfo.Id.ToString(), HttpContext);
+
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
+            return new JsonResult(token);
+        }
+
+        [HttpPost("refresh_token")]
+        [ActionDescription("刷新Token")]
+        [Authorize]
+        public IActionResult RefreshToken()
         {
             if (LoginUserInfo == null)
                 return NoContent();
