@@ -210,6 +210,11 @@ namespace WalkingTec.Mvvm.Mvc
             return services;
         }
 
+        /// <summary>
+        /// 调用前请先调用services.AddJwtAuth方法，并且确保在application.UseFrameworkService方法前调用（在这之后调用不会起作用）
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseJwtAuth(this IApplicationBuilder app)
         {
             app.UseAuthentication();
