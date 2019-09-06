@@ -331,7 +331,13 @@ namespace WalkingTec.Mvvm.Core
         {
             bool rv = await Database.EnsureCreatedAsync();
             //判断是否存在初始数据
-            bool emptydb =  Set<FrameworkUserBase>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
+            bool emptydb = false;
+
+            try
+            {
+                emptydb = Set<FrameworkUserBase>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
+            }
+            catch { }
 
             if (emptydb == true)
             {
