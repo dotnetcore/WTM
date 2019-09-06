@@ -104,11 +104,18 @@ namespace WalkingTec.Mvvm.Mvc
                 return null;
 
             var configs = GlobalServices.GetRequiredService<Configs>();
-            var gd = GlobalServices.GetRequiredService<GlobalData>();
-            var cs = configs.ConnectionStrings.Select(x => x.Value);
-            foreach (var item in cs)
+            var globalData = GlobalServices.GetRequiredService<GlobalData>();
+            // 尝试 default
+            var csName = Utils.GetCS("default", "Read", configs);
+            var connectionStrings = configs.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value);
+            if (!connectionStrings.Any()) //default 不存在，遍历所有配置库
             {
-                var dataContext = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
+                connectionStrings = configs.ConnectionStrings.Select(x => x.Value);
+            }
+
+            foreach (var connectionString in connectionStrings)
+            {
+                var dataContext = (IDataContext)globalData.DataContextCI.Invoke(new object[] { connectionString, configs.DbType });
 
                 var user = dataContext.Set<Core.FrameworkUserBase>()
                     .Include(x => x.UserRoles).Include(x => x.UserGroups)
@@ -147,7 +154,6 @@ namespace WalkingTec.Mvvm.Mvc
 
                 return userInfo;
             }
-
             return null;
         }
     }
