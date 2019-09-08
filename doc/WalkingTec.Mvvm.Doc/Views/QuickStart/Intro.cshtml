@@ -1,8 +1,4 @@
-<style>
-  .donotuse_pdiv {
-    height: inherit !important;
-  }
-</style>
+
   <div class="layui-row layui-col-space15" id="frontpage">
     <div class="layui-col-md8">
       <div class="layui-row layui-col-space15">
@@ -188,6 +184,7 @@
   </div>
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
+  $("#frontpage").parent().css("height", "auto");
 
   $.get("/_framework/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);
