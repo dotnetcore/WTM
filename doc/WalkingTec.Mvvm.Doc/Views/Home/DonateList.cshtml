@@ -1,9 +1,22 @@
-<table id="WTM-donate-List"></table>
+<table id="WTM-donate-List" lay-filter="WTM-donate-List"></table>
 <script>
   layui.use(['table'],function(){
     const table = layui.table;
+    var compareFunc = function (p){ //这是比较函数
+        return function(m,n){
+            var a = m[p.field];
+            var b = n[p.field];
+            if(p.type==='desc'){
+              return a > b?-1:1; // 降序
+            }
+            else{
+              return a > b?1:-1; //升序
+            }
+        }
+    }
     const tableIns = table.render({
       elem: '#WTM-donate-List'
+      , id: 'WTM-donate-List'
       , url: '/json/donate.js'
       , page: true
       , autoSort: true
@@ -16,17 +29,24 @@
         , { field: 'comment', title: '留言' }
       ]]
       , parseData: function(res){
-        var pageIndex = tableIns.config.page.curr===undefined?1:tableIns.config.page.curr;
-        var result = res.Data.slice(tableIns.config.limit*(pageIndex-1),tableIns.config.limit*pageIndex);
+        var list = res.Data;
+        if(this.initSort){
+          list = list.sort(compareFunc(this.initSort))
+        }
+        var pageIndex = this.page.curr===undefined?1:this.page.curr;
+        var result = list.slice(this.limit*(pageIndex-1),this.limit*pageIndex);
         return {
                 "Code": 200,
                 "Msg":"",
-                "Count": res.Data.length,
+                "Count": list.length,
                 "Data": result
               }
       }
       , skin: 'line'
       , height: 'full-110'
+    });
+    table.on('sort(WTM-donate-List)', function(obj){
+      table.reload('WTM-donate-List',{initSort: obj});
     });
   })
 </script>

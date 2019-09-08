@@ -58,6 +58,8 @@
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\alpine.Dockerfile.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\Dockerfile.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />

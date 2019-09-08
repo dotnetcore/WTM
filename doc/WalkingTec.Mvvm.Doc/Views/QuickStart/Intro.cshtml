@@ -100,7 +100,7 @@
           <div class="layui-card">
             <div class="layui-card-header">传说中的墙</div>
             <div class="layui-card-body layadmin-takerates">
-              <table id="WTM-donate"></table>
+              <table id="WTM-donate" lay-filter="WTM-donate"></table>
             </div>
           </div>
         </div>
@@ -222,8 +222,21 @@
 
     element.render('progress');
 
+    var compareFunc = function (p){ //这是比较函数
+        return function(m,n){
+            var a = m[p.field];
+            var b = n[p.field];
+            if(p.type==='desc'){
+              return a > b?-1:1; // 降序
+            }
+            else{
+              return a > b?1:-1; //升序
+            }
+        }
+    }
     const tableIns = table.render({
       elem: '#WTM-donate'
+      , id: 'WTM-donate'
       , url: '/json/donate.js'
       , page: true
       , autoSort: true
@@ -236,8 +249,12 @@
         , { field: 'comment', title: '留言' }
       ]]
       , parseData: function(res){
-        var pageIndex = tableIns.config.page.curr===undefined?1:tableIns.config.page.curr;
-        var result = res.Data.slice(tableIns.config.limit*(pageIndex-1),tableIns.config.limit*pageIndex);
+        var list = res.Data;
+        if(this.initSort){
+          list = list.sort(compareFunc(this.initSort))
+        }
+        var pageIndex = this.page.curr===undefined?1:this.page.curr;
+        var result = list.slice(this.limit*(pageIndex-1),this.limit*pageIndex);
         return {
                 "Code": 200,
                 "Msg":"",
@@ -252,7 +269,9 @@
         ,type: 'desc'
       }
     });
-
+    table.on('sort(WTM-donate)', function(obj){
+      table.reload('WTM-donate',{initSort: obj});
+    });
   });
 
 </script>
