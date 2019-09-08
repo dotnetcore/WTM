@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Style) == false)
             {
-                if (this is TreeTagHelper)
+                if (this is TreeTagHelper )
                 {
                     Style += " overflow:auto;";
                 }
