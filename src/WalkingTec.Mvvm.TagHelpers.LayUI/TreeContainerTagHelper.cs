@@ -91,14 +91,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             var gridvar = m2.Groups[1].Value.Trim();
                             cusmtomclick = $@"
-    layui.table.reload('{gridid}',{{where: $.extend({gridvar}.config.where,{{'{IdField?.Name ?? "notsetid"}':data.data.id, '{LevelField?.Name ?? "notsetlevel"}':data.data.level }}),
-        done: function(res,curr,count){{
-            layer.close(msg);
-            if(this.height == undefined){{
-                var tab = $('#{gridid} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
-                ff.triggerResize();
-            }}
-        }}
+    layui.table.reload('{gridid}',{{where: $.extend({gridvar}.config.where,{{'{IdField?.Name ?? "notsetid"}':data.data.id, '{LevelField?.Name ?? "notsetlevel"}':data.data.level }})
     }})
 ";
                         }
@@ -132,8 +125,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                   }}";
 
                 var script = $@"
-<div id=""div{Id}"" class=""layui-col-md2 donotuse_pdiv"" style=""padding-right:10px;border-right:solid 1px #aaa;""></div>
-<div id=""div_{Id}"" style=""overflow:auto;box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>
+<div id=""div{Id}outer"" class=""layui-col-md2 donotuse_pdiv"" style=""padding-right:10px;border-right:solid 1px #aaa;"">
+<div id=""div{Id}"" class=""donotuse_fill"" style=""overflow:auto;height:10px;"">
+</div>
+</div>
+<div id=""div_{Id}"" style=""box-sizing:border-box"" class=""layui-col-md10 donotuse_pdiv"">{insideContent}</div>
 <script>
 layui.use(['tree'],function(){{
   var last{Id} = null;
