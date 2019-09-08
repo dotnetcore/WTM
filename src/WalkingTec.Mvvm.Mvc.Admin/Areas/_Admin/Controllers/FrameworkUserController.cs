@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -164,7 +164,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        public ActionResult BatchDelete(object[] IDs)
         {
             var vm = CreateVM<FrameworkUserBatchVM>(Ids: IDs);
             return PartialView(vm);

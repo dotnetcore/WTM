@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             #region Display Value
 
             var modelType = Field.Metadata.ModelType;
-            var list = new List<Guid>();
+            var list = new List<string>();
             if (Field.Model != null)
             {
                 // 数组 or 泛型集合
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 }
                 else
                 {
-                    list.Add(Guid.Parse(Field.Model.ToString()));
+                    list.Add(Field.Model.ToString());
                 }
             }
             if (ListVM == null || ListVM.Model == null)

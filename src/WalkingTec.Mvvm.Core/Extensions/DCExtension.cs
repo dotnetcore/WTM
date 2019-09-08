@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            Expression peid = Expression.PropertyOrField(pe, "Id");
+            Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x=>x.Name.ToLower() == "id").FirstOrDefault());
             //循环数据权限，加入到where条件中，达到自动过滤的效果
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
@@ -305,7 +305,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="dps">数据权限</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, params Expression<Func<T, Guid?>>[] IdFields)
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, params Expression<Func<T, object>>[] IdFields)
         {
             //循环所有关联外键
             List<string> tableNameList = new List<string>();
@@ -344,7 +344,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, List<string> tableName, params Expression<Func<T, Guid?>>[] IdFields)
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, List<string> tableName, params Expression<Func<T, object>>[] IdFields)
         {
             // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -543,6 +543,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
             }
             return rv;
+        }
+
+        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            Expression peid = Expression.Property(pe, idproperty);
+            var convertid = Convert.ChangeType(val, idproperty.PropertyType);
+            return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
+                       
         }
 
         public static IQueryable<T> CheckWhere<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, bool>> where)

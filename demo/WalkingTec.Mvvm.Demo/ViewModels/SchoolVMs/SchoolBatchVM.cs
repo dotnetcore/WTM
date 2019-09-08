@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,11 +18,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             LinkedVM = new School_BatchEdit();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
-        {
-            errorMessage = null;
-			return true;
-        }
     }
 
 	/// <summary>
@@ -32,6 +27,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
     {
         [Display(Name = "学校类型")]
         public SchoolTypeEnum? SchoolType { get; set; }
+
+        public string SchoolCode { get; set; }
 
         protected override void InitVM()
         {

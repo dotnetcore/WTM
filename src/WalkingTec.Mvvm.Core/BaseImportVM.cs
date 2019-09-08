@@ -180,6 +180,7 @@ namespace WalkingTec.Mvvm.Core
                     subValString.Add(sub.Key, subVal);
                 }
 
+
                 P entity = null;
                 //说明主表信息为空
                 if (string.IsNullOrEmpty(mainValString))
@@ -520,15 +521,16 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
             }
-            //todo: RedoValidation
-            //BaseController bc = new BaseController();
+            //调用controller方法验证model
+            var vmethod = Controller?.GetType().GetMethod("RedoValidation");
             foreach (var entity in EntityList)
             {
-                //bool check = bc.RedoValidation(entity);
-                //if (check == false)
-                //{
-                //    ErrorListVM.ErrorList.Add(new ErrorMessage { Message = bc.ModelState.Where(x => x.Value.Errors != null && x.Value.Errors.Count > 0).SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).FirstOrDefault(), Index = entity.ExcelIndex });
-                //}
+                try
+                {
+                    vmethod.Invoke(Controller, new object[] { entity });
+                }
+                catch { }
+
                 if (vm != null)
                 {
                     vm.SetEntity(entity);

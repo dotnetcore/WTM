@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -230,7 +231,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values"></param>
         /// <param name="passInit"></param>
         /// <returns>创建的ViewModel</returns>
-        private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
         {
             //通过反射创建ViewModel并赋值
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
@@ -251,6 +252,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.WindowIds = this.WindowIds;
             rv.UIService = this.UIService;
             rv.Log = this.Log;
+            rv.Controller = this;
             rv.ControllerName = this.GetType().FullName;
             if (HttpContext != null && HttpContext.Request != null)
             {
@@ -288,16 +290,25 @@ namespace WalkingTec.Mvvm.Mvc
             //如果ViewModel T继承自BaseCRUDVM<>且Id有值，那么自动调用ViewModel的GetById方法
             if (Id != null && rv is IBaseCRUDVM<TopBasePoco> cvm)
             {
-                cvm.SetEntityById(Id.Value);
+                cvm.SetEntityById(Id);
             }
             //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
-                temp.Ids = Ids;
+                temp.Ids = new string[] { };
+                if(Ids != null)
+                {
+                    var tempids = new List<string>();
+                    foreach (var iid in Ids)
+                    {
+                        tempids.Add(iid.ToString());
+                    }
+                    temp.Ids = tempids.ToArray();
+                }
                 if (temp.ListVM != null)
                 {
                     temp.ListVM.CopyContext(rv);
-                    temp.ListVM.Ids = Ids == null ? new List<Guid>() : Ids.ToList();
+                    temp.ListVM.Ids = Ids == null ? new List<string>() : temp.Ids.ToList();
                     temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
                     temp.ListVM.NeedPage = false;
                 }
@@ -357,7 +368,21 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return rv;
         }
+        public T CreateVM<T>(Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, new object[] { }, dir, passInit) as T;
+        }
 
+
+
+        public T CreateVM<T>(object Id, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), Id, new object[] { }, dir, passInit) as T;
+        }
         /// <summary>
         /// 初始化一个新的ViewModel
         /// </summary>
@@ -367,14 +392,42 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
         /// <param name="passInit"></param>
         /// <returns></returns>
-        public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        public T CreateVM<T>(object[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
             var dir = p.Parse(values);
-            return CreateVM(typeof(T), Id, Ids, dir, passInit) as T;
+            return CreateVM(typeof(T), null, Ids, dir, passInit) as T;
         }
 
-        public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = false)
+
+        public T CreateVM<T>( Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        public T CreateVM<T>(int[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        public T CreateVM<T>(long[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+        public T CreateVM<T>(string[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
         {
             return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
         }
@@ -423,13 +476,10 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region 验证mode
-        public bool RedoValidation(object item)
+        public Dictionary<string,string> RedoValidation(object item)
         {
-            if (ControllerContext == null)
-            {
-                ControllerContext = new ControllerContext();
-            }
-            bool rv = TryValidateModel(item);
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            TryValidateModel(item);
             var pros = item.GetType().GetProperties();
             foreach (var pro in pros)
             {
@@ -437,7 +487,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (pro.GetValue(item) is TopBasePoco bp)
                     {
-                        rv = TryValidateModel(bp);
+                        TryValidateModel(bp);
                     }
                 }
                 if (pro.PropertyType.GenericTypeArguments.Count() > 0)
@@ -449,12 +499,24 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             foreach (var li in list)
                             {
-                                rv = RedoValidation(li);
+                                var temp = RedoValidation(li);
+                                foreach (var e in temp)
+                                {
+                                    rv.Add(e.Key, e.Value);
+                                }
                             }
                         }
                     }
                 }
             }
+            foreach (var e in ControllerContext.ModelState)
+            {
+                if(e.Value.ValidationState == ModelValidationState.Invalid)
+                {
+                    rv.Add(e.Key, e.Value.Errors.Select(x=>x.ErrorMessage).ToSpratedString());
+                }
+            }
+
             return rv;
         }
         #endregion

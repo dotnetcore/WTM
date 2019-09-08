@@ -375,7 +375,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
-        public List<Guid> Ids { get; set; }
+        public List<string> Ids { get; set; }
 
         /// <summary>
         /// 每页行数
@@ -530,7 +530,8 @@ namespace WalkingTec.Mvvm.Core
             var baseQuery = GetExportQuery();
             if (ReplaceWhere == null)
             {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => Ids.Contains(x.ID));
+
+                WhereReplaceModifier mod = new WhereReplaceModifier(x => Ids.Cast<object>().Contains(x.ID));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
@@ -548,10 +549,10 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetBatchQuery()
         {
             var baseQuery = GetSearchQuery();
-            var ids = Ids ?? new List<Guid>();
+            var ids = Ids ?? new List<string>();
             if (ReplaceWhere == null)
             {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => ids.Contains(x.ID));
+                WhereReplaceModifier mod = new WhereReplaceModifier(x => ids.Cast<object>().Contains(x.ID));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
@@ -838,9 +839,11 @@ namespace WalkingTec.Mvvm.Core
         {
             if (SearcherMode == ListVMSearchModeEnum.Selector && Ids != null && Ids.Count > 0 && EntityList != null && EntityList.Count > 0)
             {
+                var idpro =  typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
                 foreach (var item in EntityList)
                 {
-                    if (Ids.Contains(item.ID))
+                    var id = idpro.GetValue(item);
+                    if (Ids.Contains(id))
                     {
                         item.Checked = true;
                     }

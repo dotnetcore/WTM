@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (containsID == false)
             {
-                sb.Append($",\"ID\":\"{sou.ID}\"");
+                sb.Append($",\"ID\":\"{(sou as dynamic).ID}\"");
             }
             // 标识当前行数据是否被选中
             sb.Append($@",""LAY_CHECKED"":{sou.Checked.ToString().ToLower()}");

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id获取Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        void SetEntityById(Guid id);
+        void SetEntityById(object id);
 
         /// <summary>
         /// 设置Entity
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id设定Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        public void SetEntityById(Guid id)
+        public void SetEntityById(object id)
         {
             this.Entity = GetById(id);
         }
@@ -139,7 +139,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="Id">主键Id</param>
         /// <returns>Entity</returns>
-        protected virtual TModel GetById(Guid Id)
+        protected virtual TModel GetById(object Id)
         {
             TModel rv = null;
             //建立基础查询
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             //获取数据
-            rv = query.Where(x => x.ID == Id).SingleOrDefault();
+            rv = query.CheckID(Id).SingleOrDefault();
             if (rv == null)
             {
                 throw new Exception("数据不存在");
@@ -252,7 +252,9 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.ID);
+                                            var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                                            var id = idpro.GetValue(Entity);
+                                            itempro.SetValue(newitem, id);
                                             found = true;
                                         }
                                     }
@@ -369,7 +371,9 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.ID);
+                                            var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                                            var id = idpro.GetValue(Entity);
+                                            itempro.SetValue(newitem, id);
                                             found = true;
                                         }
                                     }

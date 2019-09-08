@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             ListVM = new FrameworkRoleListVM();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
+        protected override bool CheckIfCanDelete(object id, out string errorMessage)
         {
-            var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == id);
+            var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == id as Guid?);
             if (check == true)
             {
                 errorMessage = "角色已被使用，无法删除";
