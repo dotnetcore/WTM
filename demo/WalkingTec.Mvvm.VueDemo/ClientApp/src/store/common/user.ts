@@ -19,10 +19,18 @@ class user {
         this.Actions = _.map(data, item => _.toLower(item));
         return this.Actions;
     }
+    /**
+     * 返回tree格式菜单 async
+     * @param data
+     */
     setTreeMenus(data: any[]) {
         this.treeMenus = Menu.getTreeMenu(data);
         return this.treeMenus;
     }
+    /**
+     * 返回同一级别
+     * @param data
+     */
     setParallelMenus(data: any[]) {
         this.parallelMenus = Menu.getParallelMenu(data);
         return this.parallelMenus;

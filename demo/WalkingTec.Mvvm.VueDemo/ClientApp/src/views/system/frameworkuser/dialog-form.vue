@@ -73,9 +73,9 @@
         <el-col :span="24">
           <el-form-item label="是否有效" prop="IsValid">
             <edit-box :is-edit="status !== dialogType.detail">
-              <el-switch v-model="formData.IsValid" active-value="true" inactive-value="false" />
+              <el-switch v-model="formData.IsValid" />
               <template #editValue>
-                {{ formData.IsValid==='true' ? "是" : "否" }}
+                {{ formData.IsValid===true ? "是" : "否" }}
               </template>
             </edit-box>
           </el-form-item>

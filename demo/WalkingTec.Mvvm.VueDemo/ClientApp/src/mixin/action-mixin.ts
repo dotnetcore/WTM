@@ -31,6 +31,7 @@ export default class actionMixins extends Vue {
         this[this.formDialogKey].dialogStatus = status;
         this[this.formDialogKey].dialogData = data;
         this.$nextTick(() => {
+            // onGetFormData在form-mixin.tx中
             this.$refs[this.formRefName].onGetFormData();
         });
     }
