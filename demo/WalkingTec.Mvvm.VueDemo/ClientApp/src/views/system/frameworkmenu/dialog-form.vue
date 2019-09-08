@@ -6,21 +6,25 @@
           <el-form-item label="地址类型" prop="IsInside">
             <edit-box :is-edit="status !== dialogType.detail">
               <el-radio-group v-model="formData.Entity.IsInside">
-                <el-radio label="内部地址" :value="true" />
-                <el-radio label="外部地址" :value="false" />
+                <el-radio :label="true">
+                  内部地址
+                </el-radio>
+                <el-radio :label="false">
+                  外部地址
+                </el-radio>
               </el-radio-group>
               <template #editValue>
-                {{ formData.Entity.IsValid==='true' ? "内部地址" : "外部地址" }}
+                {{ formData.Entity.IsInside==='true' ? "内部地址" : "外部地址" }}
               </template>
             </edit-box>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-show="formData.Entity.IsInside">
         <el-col :span="12">
           <el-form-item label="模块名称">
-            <el-select v-model="formData.SelectedModule" v-edit:[status]="{list: pageNameList, key:'id', label: 'name'}" filterable placeholder="请选择">
-              <el-option v-for="item in pageNameList" :key="item.id" :label="item.name" :value="item.id" />
+            <el-select v-model="SelectedModule" v-edit:[status]="{list: pageNameList, key:'modelName', label: 'name'}" filterable placeholder="请选择" @change="onSelectedAction">
+              <el-option v-for="item in pageNameList" :key="item.modelName" :label="item.name" :value="item.modelName" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -34,6 +38,13 @@
                 动作名称 value
               </template>
             </edit-box>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-show="!formData.Entity.IsInside">
+        <el-col :span="24">
+          <el-form-item label="Url">
+            <el-input v-model="formData.Entity.Url" v-edit:[status] />
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,19 +66,19 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="目录">
-            <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] active-value="true" inactive-value="false" />
+            <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="菜单显示">
-            <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] active-value="true" inactive-value="false" />
+            <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="公开">
-            <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] active-value="true" inactive-value="false" />
+            <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -79,8 +90,8 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="图标">
-            <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: options, key:'value', label: 'label'}" filterable placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: [], key:'value', label: 'label'}" filterable placeholder="请选择">
+              <el-option v-for="item in []" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -95,6 +106,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinDialogForm from "@/mixin/form-mixin";
 import user from "@/store/common/user";
+
 // 表单结构
 const defaultFormData = {
     // 表单名称
@@ -104,6 +116,7 @@ const defaultFormData = {
         SelectedModule: "",
         SelectedActionIDs: [],
         Entity: {
+            ID: "",
             ParentId: "",
             DomainId: "",
             PageName: "",
@@ -111,7 +124,9 @@ const defaultFormData = {
             DisplayOrder: 0,
             IsInside: true,
             ShowOnMenu: false,
-            IsPublic: false
+            IsPublic: false,
+            Url: "",
+            FolderOnly: false
         }
     }
 };
@@ -125,18 +140,6 @@ export default class Index extends Vue {
     @Action getFolders;
     @State getActionsByModelData;
     @State getFoldersData;
-    options: string[] = [];
-    // 模版集合
-    get pageNameList() {
-        return user.parallelMenus
-            .filter(item => item.meta.ParentId)
-            .map(item => {
-                return {
-                    name: item.name,
-                    id: item.meta.Id
-                };
-            });
-    }
 
     // 验证 ★★★★★
     get rules() {
@@ -165,9 +168,49 @@ export default class Index extends Vue {
             return {};
         }
     }
+    /**
+     * 模版集合
+     */
+    get pageNameList() {
+        return user.parallelMenus
+            .filter(item => item.meta.ParentId)
+            .map(item => {
+                return {
+                    name: item.name,
+                    id: item.meta.Id,
+                    modelName: item.path.substr(1).toLowerCase()
+                };
+            });
+    }
+    /**
+     * 列表数据 区分大小写 无法对应，增加get，set
+     * formData.SelectedModule
+     */
+    get SelectedModule() {
+        const val = this["formData"].SelectedModule;
+        return val ? val.toLowerCase() : "";
+    }
+    set SelectedModule(newValue) {
+        this["formData"].SelectedModule = newValue;
+    }
     created() {
-        this.getActionsByModel({ ModelName: "FrameworkUser" });
         this.getFolders();
+    }
+    /**
+     * 查询详情-end-调用
+     */
+    endFormData() {
+        this["formData"].SelectedModule &&
+            this.getActionsByModel({
+                ModelName: this["formData"].SelectedModule
+            });
+    }
+    /**
+     * 动作名称
+     */
+    onSelectedAction() {
+        this["formData"].SelectedActionIDs = [];
+        this.getActionsByModel({ ModelName: this["formData"].SelectedModule });
     }
 }
 </script>

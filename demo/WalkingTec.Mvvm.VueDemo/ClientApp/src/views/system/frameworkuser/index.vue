@@ -17,7 +17,7 @@
           <el-image style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
         </template>
         <template #IsValid="rowData">
-          <el-switch v-model="rowData.row.IsValid" active-value="true" inactive-value="false" disabled />
+          <el-switch v-model="rowData.row.IsValid" disabled />
         </template>
         <template #operate="rowData">
           <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">

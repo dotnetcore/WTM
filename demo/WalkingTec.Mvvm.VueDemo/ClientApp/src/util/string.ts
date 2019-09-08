@@ -1,5 +1,7 @@
 // 大写首字母
 const firstUpperCase = str => {
+    // 转换字符串首字母为大写，剩下为小写。
+    //_.capitalize([string=''])
     return str.replace(/( |^)[a-z]/g, L => L.toUpperCase());
 };
 // params 返回 string

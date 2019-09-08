@@ -86,6 +86,7 @@ const service = (option, serverHost?) => {
         }
     };
     const data = getData(option.data);
+    console.log("datadatadata", data);
     if (option.method === "post" || option.method === "put") {
         req.data = data;
     } else {
