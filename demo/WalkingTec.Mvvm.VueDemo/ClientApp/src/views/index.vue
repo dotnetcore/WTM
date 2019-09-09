@@ -8,6 +8,8 @@
         <LeftMenu :default-path="defaultPath" :menu-items="menuItems" :collapse="collapse" />
       </el-aside>
       <el-main>
+        <Tabs v-if="isTab" />
+        <BreadCrumb v-else />
         <AppMain />
       </el-main>
     </el-container>
@@ -23,6 +25,7 @@
         z-index: 100;
     }
     .el-main {
+        padding: 60px 0;
     }
 }
 </style>
@@ -33,9 +36,11 @@ import {
     Footer,
     Header,
     LeftMenu,
-    Nprogress
+    Nprogress,
+    BreadCrumb,
+    Tabs
 } from "@/components/layout/index";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Action, Mutation, Getter } from "vuex-class";
 // import cache from "@/util/cache";
 // import config from "@/config/index";
@@ -46,7 +51,9 @@ import { Action, Mutation, Getter } from "vuex-class";
         "app-header": Header,
         "app-footer": Footer,
         LeftMenu,
-        Nprogress
+        Nprogress,
+        BreadCrumb,
+        Tabs
     }
 })
 export default class App extends Vue {
@@ -60,21 +67,14 @@ export default class App extends Vue {
     @Mutation
     setMenus;
 
-    defaultPath: string = "";
-
     @Getter("isCollapse")
     collapse;
     @Getter("menuItems")
     menuItems;
 
-    @Watch("$route")
-    routeChange() {
-        const matched = this["$route"];
-        const menuAll = this["$router"].options.routes;
-        const ps = _.filter(menuAll, ["meta.Id", matched.meta.ParentId]);
-        if (ps.length > 0) {
-            this.defaultPath = matched.path || ps[0].path;
-        }
+    isTab: Boolean = true;
+    get defaultPath() {
+        return this["$route"].path;
     }
 
     created() {}
