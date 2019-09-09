@@ -480,7 +480,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             url = HttpUtility.UrlDecode(url);
             var ctrlActDesc = this.ControllerContext.ActionDescriptor as ControllerActionDescriptor;
-            string pagetitle = "";
+            string pagetitle = string.Empty;
             var menu = Utils.FindMenu(url);
             if (menu == null)
             {
@@ -507,11 +507,10 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 pagetitle += menu.PageName;
             }
-            HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
-
-            if (LoginUserInfo.IsAccessable(url) == true)
+            if (LoginUserInfo.IsAccessable(url))
             {
-                return Content($"<iframe width='100%' height='100%' frameborder=0 border=0 src='{url}'></iframe>");
+                return Content($@"<title>{pagetitle}</title>
+<iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
             }
             else
             {
