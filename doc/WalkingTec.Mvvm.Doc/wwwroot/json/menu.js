@@ -89,6 +89,7 @@
                     "list": [
                         { "name": "/Intro", "title": "介绍", "jump": "/UI/Intro" },
                         { "name": "/Layout", "title": "布局", "jump": "/UI/Layout" },
+                        { "name": "/Button", "title": "按钮", "jump": "/UI/Button" },
                         { "name": "/Form", "title": "表单", "jump": "/UI/Form" },
                         {
                             "name": "/Form", "title": "表单控件", "jump": "", "list": [
