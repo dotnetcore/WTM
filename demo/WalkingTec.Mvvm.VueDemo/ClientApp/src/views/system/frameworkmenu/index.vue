@@ -2,7 +2,7 @@
   <div class="dataprivilege">
     <card>
       <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :tree-props="{children: 'Children', hasChildren: 'hasChildren'}" row-key="ID" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableCols" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -82,6 +82,22 @@ export default class Index extends Vue {
         this.$nextTick(() => {
             this.$refs["dialogform"].onGetFormData();
         });
+    }
+    // tabledata返回tree
+    get treeData() {
+        const list = this["tableData"];
+        const tree = list.filter(parent => {
+            if (!parent.ParentID) {
+                const branchArr = list.filter(child => {
+                    return parent.ID === child.ParentID;
+                });
+                if (branchArr.length > 0) {
+                    parent.children = branchArr;
+                }
+            }
+            return !parent.ParentID;
+        });
+        return tree;
     }
 }
 </script>

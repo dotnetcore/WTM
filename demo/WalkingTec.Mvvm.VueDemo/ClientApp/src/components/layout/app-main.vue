@@ -1,19 +1,17 @@
 <template>
   <section :class="[collapse?'folder':'','app-main']" :style="[]">
-    <Breadcrumd />
     <div class="content-com">
-      <router-view class="animated fadeIn" />
+      <keep-alive>
+        <router-view class="animated fadeIn" />
+      </keep-alive>
     </div>
   </section>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import Breadcrumd from "./bread-crumb.vue";
 import { Getter } from "vuex-class";
-@Component({
-    components: { Breadcrumd }
-})
+@Component
 export default class AppMain extends Vue {
     @Getter("isCollapse")
     collapse;
@@ -28,7 +26,7 @@ export default class AppMain extends Vue {
     width: 100%;
     min-height: 650px;
     right: 0;
-    top: 60px;
+    top: 80px;
     width: auto;
     overflow: hidden;
     overflow-y: auto;

@@ -1,23 +1,21 @@
 <template>
-  <div>
-    <el-breadcrumb class="app-breadcrumb" separator="/">
-      <transition-group name="breadcrumb">
-        <el-breadcrumb-item v-for="(item,index) in levelList" :key="index">
-          <span v-if="item.name">
-            <span v-if="index==0" class="no-direct">
-              {{ item.name }}
-            </span>
-            <span v-else-if="index=== levelList.length - 1" class="no-direct current">
-              {{ item.name }}
-            </span>
-            <router-link v-else :to="item.path" class="click-router">
-              {{ item.name }}
-            </router-link>
+  <el-breadcrumb class="app-breadcrumb" separator="/">
+    <transition-group name="breadcrumb">
+      <el-breadcrumb-item v-for="(item,index) in levelList" :key="index">
+        <span v-if="item.name">
+          <span v-if="index==0" class="no-direct">
+            {{ item.name }}
           </span>
-        </el-breadcrumb-item>
-      </transition-group>
-    </el-breadcrumb>
-  </div>
+          <span v-else-if="index=== levelList.length - 1" class="no-direct current">
+            {{ item.name }}
+          </span>
+          <router-link v-else :to="item.path" class="click-router">
+            {{ item.name }}
+          </router-link>
+        </span>
+      </el-breadcrumb-item>
+    </transition-group>
+  </el-breadcrumb>
 </template>
 <script lang='ts'>
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -63,7 +61,7 @@ export default class Breadcrumd extends Vue {
 <style lang="less" scoped>
 @import "../../assets/css/transition";
 .app-breadcrumb {
-    padding-bottom: 15px;
+    padding: 16px;
     .no-direct {
         color: #c0c4cc;
         &.current {

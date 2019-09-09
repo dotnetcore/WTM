@@ -62,10 +62,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="头像">
-            <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              <img v-if="formData.PhotoId" :src="formData.PhotoId" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
-            </el-upload>
+            <edit-box :is-edit="status !== dialogType.detail">
+              <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+              <template #editValue>
+                <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
+              </template>
+            </edit-box>
           </el-form-item>
         </el-col>
       </el-row>
@@ -242,7 +247,7 @@ export default class Index extends Vue {
     }
     // 上传图片 ★★★
     handleAvatarSuccess(res, file) {
-        this["formData"].PhotoId = URL.createObjectURL(file.raw);
+        this["formData"].PhotoId = res.Id; // URL.createObjectURL(file.raw);
     }
     // ★★★
     beforeAvatarUpload(file) {
