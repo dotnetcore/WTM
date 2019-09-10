@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
-                valueField = x => x.ID.ToString().ToLower();
+                valueField = x => x.GetID().ToString().ToLower();
             }
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
@@ -285,9 +285,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         if (!ids.Contains(null))
                         {
-                            List<Guid> finalIds = new List<Guid>();
-                            ids.ForEach(x => finalIds.Add(x.Value));
-                            Expression dpleft = Expression.Constant(finalIds, typeof(List<Guid>));
+                            List<string> finalIds = new List<string>();
+                            ids.ForEach(x => finalIds.Add(x));
+                            Expression dpleft = Expression.Constant(finalIds, typeof(List<string>));
                             Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
                             query = query.Where(Expression.Lambda<Func<T, bool>>(dpcondition, pe));
                         }
@@ -423,13 +423,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             Expression dpleft = null;
                             if (peid.Type == typeof(Guid))
                             {
-                                List<Guid> templist = new List<Guid>();
-                                ids.ForEach(x => templist.Add(x.Value));
+                                List<string> templist = new List<string>();
+                                ids.ForEach(x => templist.Add(x));
                                 dpleft = Expression.Constant(templist, typeof(List<Guid>));
                             }
                             else
                             {
-                                dpleft = Expression.Constant(ids, typeof(List<Guid?>));
+                                dpleft = Expression.Constant(ids, typeof(List<string>));
                             }
                             Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
                             exp = dpcondition;

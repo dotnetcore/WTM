@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Core
         [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
         [Display(Name = "数据权限" )]
         public string TableName { get; set; }
-        public Guid? RelateId { get; set; }
+        public string RelateId { get; set; }
 
         [Display(Name = "域" )]
         public Guid? DomainId { get; set; }

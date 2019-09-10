@@ -842,7 +842,7 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var item in EntityList)
                 {
                     var id = item.GetID();
-                    if (Ids.Contains(id))
+                    if (Ids.Contains(id.ToString()))
                     {
                         item.Checked = true;
                     }

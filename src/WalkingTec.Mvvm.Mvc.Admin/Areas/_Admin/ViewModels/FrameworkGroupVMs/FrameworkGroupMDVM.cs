@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 DpListVM list = new DpListVM();
                 list.Searcher = new DpSearcher();
                 list.Searcher.TableName = item.ModelName;
-                DpLists.Add(new GroupDp { DpName = item.PrivillegeName, List = list, SelectedIds = new List<Guid?>() });
+                DpLists.Add(new GroupDp { DpName = item.PrivillegeName, List = list, SelectedIds = new List<string>() });
             }
             var alldp = DC.Set<DataPrivilege>().Where(x => x.GroupId == GroupId).ToList();
             foreach (var item in DpLists)
@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         public DpListVM List { get; set; }
         public string DpName { get; set; }
 
-        public List<Guid?> SelectedIds { get; set; }
+        public List<string> SelectedIds { get; set; }
 
         public bool? IsAll { get; set; }
     }
