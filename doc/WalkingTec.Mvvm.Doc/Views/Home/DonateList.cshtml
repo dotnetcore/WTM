@@ -20,11 +20,12 @@
       , url: '/json/donate.js'
       , page: true
       , autoSort: true
+      , totalRow: true
       , cols: [[
         { type: 'numbers', fixed: 'left' }
         , { field: 'date', title: '日期', width: 120, sort: true }
         , { field: 'name', title: '姓名', width: 150, sort: true }
-        , { field: 'amount', title: '金额', width: 120, sort: true }
+        , { field: 'amount', title: '金额', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
         , { field: 'from', title: '来源', width: 60 }
         , { field: 'comment', title: '留言' }
       ]]
