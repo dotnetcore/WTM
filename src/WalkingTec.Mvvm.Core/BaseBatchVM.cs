@@ -320,9 +320,7 @@ namespace WalkingTec.Mvvm.Core
                 ListVM.DoSearch();
                 foreach (var item in ListVM.GetEntityList())
                 {
-                    var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
-                    var id = idpro.GetValue(item);
-                    item.BatchError = ErrorMessage.Where(x => x.Key == id.ToString()).Select(x => x.Value).FirstOrDefault();
+                    item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
                 }
             }
             return rv;

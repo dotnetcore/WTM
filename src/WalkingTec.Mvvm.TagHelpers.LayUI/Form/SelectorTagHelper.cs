@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
-                        list.Add(item);
+                        list.Add(item.ToString());
                     }
                 }
                 else

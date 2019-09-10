@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -212,7 +213,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 //子表
                                 var subList = entity.GetType().GetProperty(pro.Name).GetValue(entity);
-
+                                string fk = DC.GetFKName<P>(pro.Name);
                                 //如果子表不为空
                                 if (!string.IsNullOrEmpty(subValString.Where(x => x.Key == sub.Key).FirstOrDefault().Value))
                                 {
@@ -236,6 +237,10 @@ namespace WalkingTec.Mvvm.Core
                                         ExcelPropety ep = typeof(T).GetField(field.Name).GetValue(item) as ExcelPropety;
                                         //PropertyHelper.SetPropertyValue(obj, field.Name, ep.Value, stringBasedValue: true);
                                         SetEntityFieldValue(obj, ep, rowIndex, ep.FieldName, item);
+                                    }
+                                    if(string.IsNullOrEmpty(fk) == false)
+                                    {                                        
+                                        PropertyHelper.SetPropertyValue(obj, fk, entity.GetID());
                                     }
                                     //将付好值得SubTableType实例添加到List中
                                     list.Add(obj);

@@ -839,10 +839,9 @@ namespace WalkingTec.Mvvm.Core
         {
             if (SearcherMode == ListVMSearchModeEnum.Selector && Ids != null && Ids.Count > 0 && EntityList != null && EntityList.Count > 0)
             {
-                var idpro =  typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
                 foreach (var item in EntityList)
                 {
-                    var id = idpro.GetValue(item);
+                    var id = item.GetID();
                     if (Ids.Contains(id))
                     {
                         item.Checked = true;

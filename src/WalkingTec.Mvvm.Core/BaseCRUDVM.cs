@@ -252,9 +252,7 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
-                                            var id = idpro.GetValue(Entity);
-                                            itempro.SetValue(newitem, id);
+                                            itempro.SetValue(newitem, Entity.GetID());
                                             found = true;
                                         }
                                     }
@@ -371,9 +369,7 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
-                                            var id = idpro.GetValue(Entity);
-                                            itempro.SetValue(newitem, id);
+                                            itempro.SetValue(newitem, Entity.GetID());
                                             found = true;
                                         }
                                     }

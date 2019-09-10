@@ -480,35 +480,35 @@ namespace WalkingTec.Mvvm.Mvc
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
             TryValidateModel(item);
-            var pros = item.GetType().GetProperties();
-            foreach (var pro in pros)
-            {
-                if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
-                {
-                    if (pro.GetValue(item) is TopBasePoco bp)
-                    {
-                        TryValidateModel(bp);
-                    }
-                }
-                if (pro.PropertyType.GenericTypeArguments.Count() > 0)
-                {
-                    var ftype = pro.PropertyType.GenericTypeArguments.First();
-                    if (ftype.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
-                    {
-                        if (pro.GetValue(item) is IEnumerable<TopBasePoco> list)
-                        {
-                            foreach (var li in list)
-                            {
-                                var temp = RedoValidation(li);
-                                foreach (var e in temp)
-                                {
-                                    rv.Add(e.Key, e.Value);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //var pros = item.GetType().GetProperties();
+            //foreach (var pro in pros)
+            //{
+            //    if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+            //    {
+            //        if (pro.GetValue(item) is TopBasePoco bp)
+            //        {
+            //            TryValidateModel(bp);
+            //        }
+            //    }
+            //    if (pro.PropertyType.GenericTypeArguments.Count() > 0)
+            //    {
+            //        var ftype = pro.PropertyType.GenericTypeArguments.First();
+            //        if (ftype.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+            //        {
+            //            if (pro.GetValue(item) is IEnumerable<TopBasePoco> list)
+            //            {
+            //                foreach (var li in list)
+            //                {
+            //                    var temp = RedoValidation(li);
+            //                    foreach (var e in temp)
+            //                    {
+            //                        rv.Add(e.Key, e.Value);
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             foreach (var e in ControllerContext.ModelState)
             {
                 if(e.Value.ValidationState == ModelValidationState.Invalid)
