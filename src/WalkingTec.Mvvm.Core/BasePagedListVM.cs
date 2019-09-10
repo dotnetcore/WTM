@@ -530,8 +530,12 @@ namespace WalkingTec.Mvvm.Core
             var baseQuery = GetExportQuery();
             if (ReplaceWhere == null)
             {
-
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => Ids.Cast<object>().Contains(x.ID));
+                ParameterExpression pe = Expression.Parameter(typeof(TModel));
+                ParameterExpression pe2 = Expression.Parameter(typeof(TopBasePoco));
+                Expression peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+                Expression dpleft = Expression.Constant(ids, typeof(List<string>));
+                Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
+                WhereReplaceModifier mod = new WhereReplaceModifier(Expression.Lambda<Func<TopBasePoco, bool>>(dpcondition, pe2));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
@@ -552,7 +556,12 @@ namespace WalkingTec.Mvvm.Core
             var ids = Ids ?? new List<string>();
             if (ReplaceWhere == null)
             {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => ids.Cast<object>().Contains(x.ID));
+                ParameterExpression pe = Expression.Parameter(typeof(TModel));
+                ParameterExpression pe2 = Expression.Parameter(typeof(TopBasePoco));
+                Expression peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+                Expression dpleft = Expression.Constant(ids, typeof(List<string>));
+                Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
+                WhereReplaceModifier mod = new WhereReplaceModifier(Expression.Lambda<Func<TopBasePoco, bool>>(dpcondition, pe2));
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;

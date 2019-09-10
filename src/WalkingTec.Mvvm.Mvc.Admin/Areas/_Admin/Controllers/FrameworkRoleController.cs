@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(object[] ids)
+        public ActionResult BatchDelete(Guid[] ids)
         {
             var vm = CreateVM<FrameworkRoleBatchVM>(Ids: ids);
             return PartialView(vm);

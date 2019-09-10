@@ -268,16 +268,19 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                         }
                     }
-                    var f = HttpContext.Request.Form;
-                    foreach (var key in f.Keys)
+                    if (HttpContext.Request.HasFormContentType)
                     {
-                        if (rv.FC.Keys.Contains(key) == false)
+                        var f = HttpContext.Request.Form;
+                        foreach (var key in f.Keys)
                         {
-                            rv.FC.Add(key, f[key]);
+                            if (rv.FC.Keys.Contains(key) == false)
+                            {
+                                rv.FC.Add(key, f[key]);
+                            }
                         }
                     }
                 }
-                catch { }
+                catch {}
             }
             //如果传递了默认值，则给vm赋值
             if (values != null)
@@ -606,7 +609,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 rv.Controller.Response.Headers.Add("IsScript", "true");
             }
-            catch { }
+            catch{}
             return rv;
         }
 
