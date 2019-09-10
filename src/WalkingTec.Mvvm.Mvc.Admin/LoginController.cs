@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
@@ -171,6 +173,84 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok();
         }
 
+
+        [HttpPost("get_token")]
+        [ActionDescription("获取Token")]
+        public IActionResult GetToken(SigninRequest request)
+        {
+            if (request.UserId == null)
+                return BadRequest(nameof(request.UserId));
+            if (request.Password == null)
+                return BadRequest(nameof(request.Password));
+
+            var user = DC.Set<Core.FrameworkUserBase>()
+                .Include(x => x.UserRoles).Include(x => x.UserGroups)
+                .Where(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
+                            x.IsValid).SingleOrDefault();
+            if (user == null)
+                return NotFound();
+
+            var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
+            var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
+
+            //查找登录用户的角色
+            var roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList();
+
+            //查找登录用户的组
+            var groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList();
+
+            //查找登录用户的数据权限
+            var dataPrivileges = DC.Set<DataPrivilege>().Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value))).ToList();
+
+            //查找登录用户的页面权限
+            var functionPrivileges = DC.Set<FunctionPrivilege>().Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value))).ToList();
+
+            //生成并返回登录用户信息
+            var userInfo = new LoginUserInfo
+            {
+                Id = user.ID,
+                ITCode = user.ITCode,
+                Name = user.Name,
+                Roles = roles,
+                Groups = groups,
+                DataPrivileges = dataPrivileges,
+                PhotoId = user.PhotoId,
+                FunctionPrivileges = functionPrivileges
+            };
+
+            JwtHelper.CacheUer(userInfo);
+
+            var token = JwtHelper.BuildJwtToken(userInfo.Id.ToString(), userInfo.Name);
+            return new JsonResult(token);
+        }
+
+        [HttpPost("heartbeat")]
+        [ActionDescription("心跳")]
+        [Authorize]
+        public IActionResult Heartbeat()
+        {
+            if (LoginUserInfo == null)
+                return NoContent();
+
+            JwtHelper.Signin(LoginUserInfo.Id.ToString(), HttpContext);
+
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
+            return new JsonResult(token);
+        }
+
+        [HttpPost("refresh_token")]
+        [ActionDescription("刷新Token")]
+        [Authorize]
+        public IActionResult RefreshToken()
+        {
+            if (LoginUserInfo == null)
+                return NoContent();
+
+            JwtHelper.CacheUer(LoginUserInfo);
+
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
+            return new JsonResult(token);
+        }
     }
 
     public class SimpleMenu
@@ -184,5 +264,12 @@ namespace WalkingTec.Mvvm.Admin.Api
         public string Url { get; set; }
 
         public string Icon { get; set; }
+    }
+
+    public class SigninRequest
+    {
+        public string UserId { get; set; }
+
+        public string Password { get; set; }
     }
 }

@@ -353,6 +353,26 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region Jwt配置
+
+        private JwtConfig _jwtConfig;
+
+        /// <summary>
+        /// Jwt配置
+        /// </summary>
+        public JwtConfig JwtConfig {
+            get
+            {
+                if (_jwtConfig == null)
+                {
+                    _jwtConfig = new JwtConfig();
+                }
+                return _jwtConfig;
+            }
+            set { _jwtConfig = value; } }
+
+        #endregion
+
         #region 文件相关设置
 
         private FileUploadOptions _fileUploadOptions;

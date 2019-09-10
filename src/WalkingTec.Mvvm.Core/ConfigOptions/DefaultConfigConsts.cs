@@ -34,5 +34,10 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
         /// 默认展开SearchPanel内容
         /// </summary>
         public const bool DEFAULT_SEARCHPANEL_DEFAULT_EXPAND = true;
+
+        /// <summary>
+        /// SigninKey
+        /// </summary>
+        public const string DEFAULT_USER_SIGN_IN_KEY = "UserSignin_{0}";
     }
 }

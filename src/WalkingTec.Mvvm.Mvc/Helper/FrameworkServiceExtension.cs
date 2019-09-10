@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
-
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -99,6 +98,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 // Filters
                 options.Filters.Add(new DataContextFilter(CsSector));
+                options.Filters.Add(new JwtAuthFilterAttribute());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
             })
@@ -170,6 +170,55 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton<IUIService, DefaultUIService>();
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
+        }
+
+        public static IServiceCollection AddJwtAuth(this IServiceCollection services)
+        {
+            #region 授权
+            services.AddAuthorization();
+            #endregion
+
+            #region 认证
+            var jwtConfig = GlobalServices.GetRequiredService<Configs>().JwtConfig;
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.SecurityKey));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtConfig.Issuer,
+
+                    ValidateAudience = true,
+                    ValidAudience = jwtConfig.Audience,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = signingKey,
+
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    ClockSkew = TimeSpan.Zero,
+                };
+
+            });
+            #endregion
+
+            return services;
+        }
+
+        /// <summary>
+        /// 调用前请先调用services.AddJwtAuth方法，并且确保在application.UseFrameworkService方法前调用（在这之后调用不会起作用）
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseJwtAuth(this IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            return app;
         }
 
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
