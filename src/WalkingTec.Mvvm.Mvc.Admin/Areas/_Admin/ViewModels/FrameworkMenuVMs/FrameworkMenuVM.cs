@@ -82,28 +82,29 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-            var m = modules.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
-            List<FrameworkModule> toremove = new List<FrameworkModule>();
-            foreach (var item in m)
+            var toRemove = new List<FrameworkModule>();
+            foreach (var item in modules)
             {
-                var f = modules.Where(x => x.ClassName == item.ClassName && x.Area?.AreaName == item.Area?.AreaName).FirstOrDefault();
-                if (f?.IgnorePrivillege == true)
+                if (item.IgnorePrivillege)
                 {
-                    toremove.Add(item);
+                    toRemove.Add(item);
+                }
+                else
+                {
+                    if (!item.IsApi) continue;
+                    if (item.NameSpace == "WalkingTec.Mvvm.Admin.Api")
+                    {
+                        if (!item.ModuleName.EndsWith("(内置api)"))
+                            item.ModuleName += "(内置api)";
+                    }
+                    else if (!item.ModuleName.EndsWith("(api)"))
+                        item.ModuleName += "(api)";
                 }
             }
-            toremove.ForEach(x => m.Remove(x));
-            var m2 = modules.Where(x => x.NameSpace == "WalkingTec.Mvvm.Admin.Api").ToList();
-            foreach (var item in m2)
-            {
-                if (item.ModuleName.EndsWith("(内置api)") == false)
-                {
-                    item.ModuleName += "(内置api)";
-                }
-            }
-            m.AddRange(m2);
+            var m = modules.ToList();
+            toRemove.ForEach(x => m.Remove(x));
             AllModules = m.ToListItems(y => y.ModuleName, y => y.ClassName);
-            if (string.IsNullOrEmpty(SelectedModule) == false || ( string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
+            if (string.IsNullOrEmpty(SelectedModule) == false || (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
             {
                 if (string.IsNullOrEmpty(SelectedModule))
                 {
@@ -123,7 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
                 var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName== null || x.MethodName=="Index") && x.ID != Entity.ID).FirstOrDefault();
+                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName == null || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
                     MSD.AddModelError(" error", "该模块已经配置过了");
@@ -202,7 +203,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         {
                             Guid aid = action.ID;
                             var adb = actionsInDB.Where(x => x.Url.ToLower() == action.Url.ToLower()).FirstOrDefault();
-                            if(adb != null)
+                            if (adb != null)
                             {
                                 aid = adb.ID;
                             }
