@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 try
                 {
                     string userId;
-                    if (user != null)
+                    if (user?.Claims != null && user.Claims.Any())
                     {
                         userId = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
                     }
