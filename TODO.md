@@ -1,8 +1,12 @@
 # Todo List
 
-## LayUI
+## 框架整体
 
 - [ ] Jwt (2019年9月)
+- [ ] 重构文件上传 (2019年10月)
+
+## LayUI
+
 - [x] layuiAdmin (2019年8月)
 - [ ] Others...
 
@@ -18,7 +22,3 @@
 
 - [ ] Element UI (2019年9月)
 - [ ] Others...
-
-## Others
-
-- [ ] ...
