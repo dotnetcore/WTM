@@ -285,12 +285,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         if (!ids.Contains(null))
                         {
-                            List<string> finalIds = new List<string>();
-                            ids.ForEach(x => finalIds.Add(x));
-
-                            Expression dpleft = Expression.Constant(finalIds, typeof(List<string>));
-                            Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(dpcondition, pe));
+                            query = query.Where(ids.GetContainIdExpression<T>());
                         }
                     }
                 }
@@ -421,19 +416,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果关联 Id 包括null，则代表可以访问所有数据，就不需要再拼接where条件了
                         if (!ids.Contains(null))
                         {
-                            Expression dpleft = null;
-                            if (peid.Type == typeof(Guid))
-                            {
-                                List<string> templist = new List<string>();
-                                ids.ForEach(x => templist.Add(x));
-                                dpleft = Expression.Constant(templist, typeof(List<Guid>));
-                            }
-                            else
-                            {
-                                dpleft = Expression.Constant(ids, typeof(List<string>));
-                            }
-                            Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                            exp = dpcondition;
+
+                            exp = ids.GetContainIdExpression<T>(peid).Body;
                         }
                     }
                 }
@@ -551,7 +535,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             ParameterExpression pe = Expression.Parameter(typeof(T));
             var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
             Expression peid = Expression.Property(pe, idproperty);
-            var convertid = Convert.ChangeType(val, idproperty.PropertyType);
+            var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
                        
         }
@@ -806,6 +790,31 @@ where S : struct
             {
                 return "";
             }
+        }
+
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null) 
+        {
+            if (Ids == null)
+            {
+                Ids = new List<string>();
+            }
+
+            ParameterExpression pe = Expression.Parameter(typeof(TModel));
+            if (peid == null)
+            {
+                peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+            }
+            List<object> newids = new List<object>();
+            foreach (var item in Ids)
+            {
+                newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
+            }
+             
+            Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
+            Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
+            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft2, peid);
+            var rv = Expression.Lambda<Func<TModel, bool>>(dpcondition, pe);
+            return rv;
         }
 
         /// <summary>

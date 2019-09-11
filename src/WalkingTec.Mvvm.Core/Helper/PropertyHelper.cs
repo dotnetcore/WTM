@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -543,7 +543,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="value">要转换的值</param>
         /// <param name="propertyType">转换后的类型</param>
         /// <returns>转换后的值</returns>
-        private static object ConvertValue(this object value, Type propertyType)
+        public static object ConvertValue(this object value, Type propertyType)
         {
             object val = null;
             if (propertyType.IsGeneric(typeof(Nullable<>)) == true)

@@ -129,7 +129,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(object[] IDs)
+        public ActionResult BatchEdit(Guid[] IDs)
         {
             var vm = CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(object[] IDs)
+        public ActionResult BatchDelete(Guid[] IDs)
         {
             var vm = CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);

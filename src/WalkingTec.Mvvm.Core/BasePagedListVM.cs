@@ -527,24 +527,8 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>搜索语句</returns>
         public virtual IOrderedQueryable<TModel> GetCheckedExportQuery()
         {
-            var baseQuery = GetExportQuery();
-            var ids = Ids ?? new List<string>();
-            if (ReplaceWhere == null)
-            {
-                ParameterExpression pe = Expression.Parameter(typeof(TModel));
-                ParameterExpression pe2 = Expression.Parameter(typeof(TopBasePoco));
-                Expression peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
-                Expression dpleft = Expression.Constant(ids, typeof(List<string>));
-                Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                WhereReplaceModifier mod = new WhereReplaceModifier(Expression.Lambda<Func<TopBasePoco, bool>>(dpcondition, pe2));
-                var newExp = mod.Modify(baseQuery.Expression);
-                var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                return newQuery;
-            }
-            else
-            {
-                return baseQuery;
-            }
+            var baseQuery = GetBatchQuery();
+            return baseQuery;           
         }
 
         /// <summary>
@@ -554,15 +538,9 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetBatchQuery()
         {
             var baseQuery = GetSearchQuery();
-            var ids = Ids ?? new List<string>();
             if (ReplaceWhere == null)
             {
-                ParameterExpression pe = Expression.Parameter(typeof(TModel));
-                ParameterExpression pe2 = Expression.Parameter(typeof(TopBasePoco));
-                Expression peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
-                Expression dpleft = Expression.Constant(ids, typeof(List<string>));
-                Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                WhereReplaceModifier mod = new WhereReplaceModifier(Expression.Lambda<Func<TopBasePoco, bool>>(dpcondition, pe2));
+                var mod = new WhereReplaceModifier<TModel>(Ids.GetContainIdExpression<TModel>());
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
@@ -620,7 +598,7 @@ namespace WalkingTec.Mvvm.Core
                 //如果设定了替换条件，则使用替换条件替换Query中的Where语句
                 if (ReplaceWhere != null)
                 {
-                    var mod = new WhereReplaceModifier(ReplaceWhere);
+                    var mod = new WhereReplaceModifier<TopBasePoco>(ReplaceWhere);
                     var newExp = mod.Modify(query.Expression);
                     query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 }

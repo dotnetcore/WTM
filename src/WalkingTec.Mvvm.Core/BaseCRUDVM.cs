@@ -386,7 +386,7 @@ namespace WalkingTec.Mvvm.Core
                             //打开新的数据库联接,获取数据库中的主表和子表数据
                             using (var ndc = DC.CreateNew())
                             {
-                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().Where(x => x.ID == Entity.ID).FirstOrDefault();
+                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             }
                             //比较子表原数据和新数据的区别
                             IEnumerable<TopBasePoco> toadd = null;
@@ -465,7 +465,7 @@ namespace WalkingTec.Mvvm.Core
                         else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             PropertyInfo[] itemPros = ftype.GetProperties();                            
-                            var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().Where(x => x.ID == Entity.ID).FirstOrDefault();
+                            var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             if (_entity != null)
                             {
                                 IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
@@ -667,7 +667,7 @@ namespace WalkingTec.Mvvm.Core
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
                     MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(Entity.ID);
+                    ConstantExpression idRight = Expression.Constant(Entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();

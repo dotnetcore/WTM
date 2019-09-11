@@ -330,7 +330,7 @@ namespace WalkingTec.Mvvm.Core
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
                     MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(entity.ID);
+                    ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
@@ -391,7 +391,7 @@ namespace WalkingTec.Mvvm.Core
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
                     MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(entity.ID);
+                    ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
