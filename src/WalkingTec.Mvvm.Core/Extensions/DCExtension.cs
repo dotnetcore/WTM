@@ -287,6 +287,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         {
                             List<string> finalIds = new List<string>();
                             ids.ForEach(x => finalIds.Add(x));
+
                             Expression dpleft = Expression.Constant(finalIds, typeof(List<string>));
                             Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
                             query = query.Where(Expression.Lambda<Func<T, bool>>(dpcondition, pe));

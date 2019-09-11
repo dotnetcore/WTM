@@ -528,6 +528,7 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetCheckedExportQuery()
         {
             var baseQuery = GetExportQuery();
+            var ids = Ids ?? new List<string>();
             if (ReplaceWhere == null)
             {
                 ParameterExpression pe = Expression.Parameter(typeof(TModel));
