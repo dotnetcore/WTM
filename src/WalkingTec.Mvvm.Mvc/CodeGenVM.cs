@@ -1391,7 +1391,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 if (string.IsNullOrEmpty(pro.RelatedField))
                 {
-                    proType = modelType.GetProperty(pro.FieldName).PropertyType;
+                    proType = modelType.GetProperties().Where(x => x.Name == pro.FieldName).Select(x => x.PropertyType).FirstOrDefault();
                 }
                 else
                 {
