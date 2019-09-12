@@ -382,10 +382,8 @@ namespace WalkingTec.Mvvm.Core
                         var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
                         var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
                         var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
-                        var login2 = GetMenu2(AllModules, "Login", new List<FrameworkRole> { adminRole }, null, 7);
-                        var file2 = GetMenu2(AllModules, "FileApi", new List<FrameworkRole> { adminRole }, null, 8);
-                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2, file2, login2 };
-                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += "Api"; });
+                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2};
+                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += "(内置api)"; });
                         apifolder.Children.AddRange(apis);
                         Set<FrameworkMenu>().Add(apifolder);
                     }
