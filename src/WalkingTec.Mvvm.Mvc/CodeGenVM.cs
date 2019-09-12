@@ -398,7 +398,7 @@ namespace WalkingTec.Mvvm.Mvc
             var test = GenerateTest();
             if (test != "")
             {
-                if (UI == UIEnum.LayUI)
+                if (UI == UIEnum.LayUI && IsApi == false)
                 {
                     File.WriteAllText($"{TestDir}{Path.DirectorySeparatorChar}{ModelName}ControllerTest.cs", test, Encoding.UTF8);
                 }
