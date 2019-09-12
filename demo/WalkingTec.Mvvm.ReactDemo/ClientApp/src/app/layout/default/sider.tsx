@@ -1,13 +1,12 @@
 
 import { Icon, Menu } from 'antd';
+import { MenuProps } from 'antd/lib/menu';
 import GlobalConfig from 'global.config';
+import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Store from 'store/index';
-import lodash from 'lodash';
-import RequestFiles from 'utils/RequestFiles';
-import { MenuProps } from 'antd/lib/menu';
 
 const { SubMenu } = Menu;
 @observer
@@ -58,12 +57,12 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
       </Menu.Item>
     })
   }
-  runderSubMenu() {
-    return Store.Meun.subMenu.map((menu, index) => {
+  runderSubMenu(Meun) {
+    return Meun.map((menu, index) => {
       if (menu.Children && menu.Children.length > 0) {
         return <SubMenu key={menu.Id} title={<span>{renderIconTitle(menu)}</span>}>
           {
-            this.renderMenu(menu, index)
+            this.runderSubMenu(menu.Children)
           }
         </SubMenu>
       }
@@ -71,6 +70,17 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
         {this.renderLink(menu)}
       </Menu.Item>
     })
+  }
+  getDefaultOpenKeys(Menus, Menu, OpenKeys = []) {
+    const ParentId = lodash.get(Menu, 'ParentId');
+    if (ParentId) {
+      OpenKeys.push(ParentId);
+      const Parent = lodash.find(Menus, ["Id", ParentId]);
+      if (Parent.ParentId) {
+        this.getDefaultOpenKeys(Menus, Parent, OpenKeys);
+      }
+    }
+    return OpenKeys
   }
   render() {
     const props: MenuProps = {
@@ -84,9 +94,9 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
     const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
     props.selectedKeys.push(lodash.get(find, 'Id', '/'));
     if (props.mode === "inline") {
-      props.defaultOpenKeys.push(lodash.get(find, 'ParentId', ''));
       props.style.width = Store.Meun.collapsedWidth;
-      props.inlineCollapsed = Store.Meun.collapsed
+      props.inlineCollapsed = Store.Meun.collapsed;
+      props.defaultOpenKeys = this.getDefaultOpenKeys(Store.Meun.ParallelMenu, find);
     }
     let width = Store.Meun.collapsedWidth;
     return (
@@ -98,7 +108,7 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
             <Icon type="home" /><span>首页</span>
           </Link>
         </Menu.Item>
-        {this.runderSubMenu()}
+        {this.runderSubMenu([...Store.Meun.subMenu])}
       </Menu>
     );
   }
