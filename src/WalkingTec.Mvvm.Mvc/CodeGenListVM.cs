@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc
         public override IOrderedQueryable<CodeGenListView> GetSearchQuery()
         {
             Type modeltype =  Type.GetType(ModelFullName);
-            var pros = modeltype.GetProperties();
+            var pros = modeltype.GetProperties().Where(x=>x.Name.ToLower() != "id");
             List<CodeGenListView> lv = new List<CodeGenListView>();
             int count = 0;
             Type[] basetype = new Type[] { typeof(BasePoco), typeof(TopBasePoco), typeof(PersistPoco) };
@@ -181,6 +181,20 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
             }
+
+            for (int i = 0; i < lv.Count(); i++)
+            {
+                if (ignoreField.Contains(lv[i].FieldName))
+                {
+                    for(int j = i; j < lv.Count(); j++)
+                    {
+                        lv[j].Index--;
+                    }
+                    lv.RemoveAt(i);
+                    i--;
+                }
+            }
+
             return lv.AsQueryable().OrderBy(x => x.FieldName);
         }
     }

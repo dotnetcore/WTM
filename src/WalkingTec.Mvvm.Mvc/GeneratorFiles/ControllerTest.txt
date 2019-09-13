@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -143,7 +143,7 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof($model$BatchVM));
 
             $model$BatchVM vm = rv.Model as $model$BatchVM;
