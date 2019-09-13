@@ -204,7 +204,7 @@ namespace WalkingTec.Mvvm.Core
             PropertyInfo rv = null;
             if (me != null)
             {
-                rv = me.Member.DeclaringType.GetProperty(me.Member.Name);
+                rv = me.Member.DeclaringType.GetProperties().Where(x => x.Name == me.Member.Name).FirstOrDefault();
             }
             return rv;
         }

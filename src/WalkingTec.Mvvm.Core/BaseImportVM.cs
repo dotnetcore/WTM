@@ -329,7 +329,8 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
+                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
@@ -390,7 +391,8 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
+                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
@@ -578,7 +580,7 @@ namespace WalkingTec.Mvvm.Core
                     foreach (var pro in tempPros)
                     {
                         var excelProp = Template.GetType().GetField(pro.Name).GetValue(Template) as ExcelPropety;
-                        var proToSet = typeof(P).GetProperty(excelProp.FieldName);
+                        var proToSet = typeof(P).GetProperties().Where(x => x.Name == excelProp.FieldName).FirstOrDefault();
                         if (proToSet != null)
                         {
                             var val = proToSet.GetValue(item);
@@ -949,6 +951,7 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
+
                     if (conditions.Count > 0)
                     {
                         //循环添加条件并生成Where语句

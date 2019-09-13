@@ -454,7 +454,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (defaultSorts == null || defaultSorts.Length == 0)
                 {
                     ParameterExpression pe = Expression.Parameter(typeof(T));
-                    Expression pro = Expression.PropertyOrField(pe, "Id");
+                    var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    Expression pro = Expression.Property(pe, idproperty);
                     Type proType = typeof(Guid);
                     Expression final = Expression.Call(
                                                    typeof(Queryable),
@@ -478,7 +479,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             foreach (var item in info)
             {
                 ParameterExpression pe = Expression.Parameter(typeof(T));
-                Expression pro = Expression.PropertyOrField(pe, item.Property);
+                var idproperty = typeof(T).GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                Expression pro = Expression.Property(pe, idproperty);
                 Type proType = typeof(T).GetProperty(item.Property).PropertyType;
                 if (item.Direction == SortDir.Asc)
                 {

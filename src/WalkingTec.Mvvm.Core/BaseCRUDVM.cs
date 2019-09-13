@@ -666,7 +666,8 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
+                    var idproperty = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(Entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
@@ -681,7 +682,14 @@ namespace WalkingTec.Mvvm.Core
                         }
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
-                    }                   
+                    }
+                    //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
+                    if(props.Any(x=>x.Name.ToLower() == "id"))
+                    {
+                        conditions.RemoveAt(0);
+                        BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
+                        conditions.Insert(0,idEqual);
+                    }
                     int count = 0;
                     if (conditions.Count > 1)
                     {

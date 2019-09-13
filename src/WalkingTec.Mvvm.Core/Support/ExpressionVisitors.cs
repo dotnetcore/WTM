@@ -170,8 +170,9 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var item in info)
                 {
                     ParameterExpression pe = Expression.Parameter(modelType,"x");
-                    Expression pro = Expression.PropertyOrField(pe, item.Property);
-                    Type proType = modelType.GetProperty(item.Property).PropertyType;
+                    var idproperty = modelType.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                    Expression pro = Expression.Property(pe, idproperty);
+                    Type proType = idproperty.PropertyType;
                     if (item.Direction == SortDir.Asc)
                     {
                         if (rv == null)

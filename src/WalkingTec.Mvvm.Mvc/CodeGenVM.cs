@@ -556,8 +556,11 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         headerstring += $@"
                 this.MakeGridHeader(x => x.{pro.FieldName}),";
-                        selectstring += $@"
+                        if (pro.FieldName.ToLower() != "id")
+                        {
+                            selectstring += $@"
                     {pro.FieldName} = x.{pro.FieldName},";
+                        }
                     }
                     else
                     {
@@ -721,6 +724,11 @@ namespace WalkingTec.Mvvm.Mvc
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsImportField == true).ToList();
                 foreach (var pro in pros)
                 {
+                    if(pro.InfoType == FieldInfoType.Many2Many)
+                    {
+                        continue;
+                    }
+
                     if (string.IsNullOrEmpty(pro.RelatedField) == false)
                     {
                         var subtype = Type.GetType(pro.RelatedField);

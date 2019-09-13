@@ -885,7 +885,16 @@ namespace WalkingTec.Mvvm.Core
             if (root != null)
             {
                 var aroot = root as List<GridColumn<TModel>>;
-                var remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                List<GridColumn<TModel>> remove = null;
+                var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x=>x.PropertyType).FirstOrDefault();
+                if (idpro == typeof(string))
+                {
+                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true).ToList();
+                }
+                else
+                {
+                   remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                }
                 foreach (var item in remove)
                 {
                     aroot.Remove(item);
