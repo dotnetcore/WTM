@@ -188,6 +188,7 @@ namespace WalkingTec.Mvvm.Mvc
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
  </ItemGroup>
 </Project>
 ");
@@ -366,6 +367,8 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Areas{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
+                File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}alpine.Dockerfile", GetResource("alpine.Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}Dockerfile", GetResource("Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
             }
             if (UI == UIEnum.React)

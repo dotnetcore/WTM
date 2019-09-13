@@ -41,7 +41,7 @@
           <dd>
             <wt:linkbutton url="/Login/ChangePassword" window-width="400" text="修改密码" is-link="true" />
           </dd>
-          <dd><a href="javascript:;" lay-href="/">返回首页@{if(ViewData["debug"] is bool debug1 && debug1){<span>(调式)</span>}}</a></dd>
+          <dd><a href="javascript:;" lay-href="/">返回首页</a></dd>
           @{
             if(ViewData["debug"] is bool debug && debug)
             {
@@ -49,8 +49,12 @@
                 <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="代码生成器"
                   window-title="代码生成器" />
               </dd>
-            }
-          }
+               <dd>
+                <wt:linkbutton url="~/swagger" target="ButtonTargetEnum.newwindow" is-link="true" text="Api文档"
+                  window-title="API文档" />
+              </dd>
+             }
+        }
         </dl>
       </li>
       <li class="layui-nav-item"><a href="/Login/Logout">退出</a></li>

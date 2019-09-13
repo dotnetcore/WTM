@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("日志管理")]
     [ApiController]
     [Route("api/_ActionLog")]
-	public class ActionLogController : BaseApiController
+	public class _ActionLogController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
