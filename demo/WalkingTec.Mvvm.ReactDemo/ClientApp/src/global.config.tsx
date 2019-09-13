@@ -20,7 +20,7 @@ const hydrate = create({
     debounce: 1000,
 });
 // 环境变量 开发 模型
-const development = false;//process.env.NODE_ENV === "development"
+const development = process.env.NODE_ENV === "development"
 class ConfigStore {
     constructor() {
         hydrate('WTM_GlobalConfig', this)
