@@ -453,6 +453,7 @@ namespace WalkingTec.Mvvm.Core
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == "_"+controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
@@ -462,11 +463,11 @@ namespace WalkingTec.Mvvm.Core
                 menu.ActionName = "主页面";
                 menu.ClassName = acts[0].Module.ClassName;
                 menu.MethodName = null;
-                for (int i = 0; i < acts.Count; i++)
+                for (int i = 0; i < rest.Count; i++)
                 {
-                    if (acts[i] != null)
+                    if (rest[i] != null)
                     {
-                        menu.Children.Add(GetMenuFromAction(acts[i], false, allowedRoles, allowedUsers, (i + 1)));
+                        menu.Children.Add(GetMenuFromAction(rest[i], false, allowedRoles, allowedUsers, (i + 1)));
                     }
                 }
             }
