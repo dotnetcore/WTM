@@ -7,10 +7,23 @@
         WTM
       </div>
       <div class="user-panel">
-        <span class="user-btn"><i class="fa fa-mobile-phone nav-btn" />{{ userName }}</span>
+        <span class="user-btn" @click="onOpenGlobal"><i class="fa fa-mobile-phone nav-btn" />{{ userName }}</span>
         <span class="user-btn able"><i class="fa fa-power-off nav-btn" />退出</span>
       </div>
     </div>
+    <el-drawer title="全局设置" :visible.sync="isGlobalBox" direction="rtl" @close="onGlobalClose">
+      <el-form :model="global" class="global-el-form">
+        <el-form-item label="弹框类型">
+          <el-radio-group v-model="global.dialog">
+            <el-radio label="弹框" />
+            <el-radio label="抽屉" />
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="Tabs页签">
+          <el-switch v-model="global.tabs" />
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
@@ -26,16 +39,30 @@ import config from "@/config/index";
     components: { NprogressContainer }
 })
 export default class NavBar extends Vue {
-    show: Boolean = false;
-    userName: String = "";
     @Mutation("toggleIsFold")
     toggleFold;
     @Getter("isCollapse")
     collapse;
+    userName: String = "";
+    isGlobalBox: boolean = false;
+    global = {
+        dialog: "弹框",
+        tabs: false
+    };
 
     mounted() {
-        this.show = true;
+        const userGlobal = cache.getCookieJson(config.globalKey) || {};
+        this.global = {
+            ...this.global,
+            ...userGlobal
+        };
         this.userName = cache.getStorage(config.tokenKey, true).Name || "";
+    }
+    onOpenGlobal() {
+        this.isGlobalBox = true;
+    }
+    onGlobalClose() {
+        cache.setCookieJson(config.globalKey, this.global);
     }
 }
 </script>
@@ -84,5 +111,8 @@ export default class NavBar extends Vue {
             }
         }
     }
+}
+.global-el-form {
+    padding: 0 20px;
 }
 </style>

@@ -13,7 +13,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { setCookie } from "@/util/cookie";
 import config from "@/config/index";
-import baseMixin from "@/mixin/base";
+import baseMixin from "@/util/mixin/base";
 
 @Component({
     mixins: [baseMixin]

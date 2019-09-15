@@ -3,12 +3,22 @@
  */
 const config = {
     serverHost: "/wtm", // /api
-    headApi: "/api",
     headerApi: "/api",
-    // token 名称
+    /**
+     * token 名称
+     */
     tokenKey: "token",
-    userInfo: "userinfo",
-    // debugger调试
+    /**
+     * global cookies
+     */
+    globalKey: "global",
+    /**
+     * 组件大小 medium / small / mini
+     */
+    elSize: "small",
+    /**
+     * debugger调试
+     */
     development: true
 };
 export default config;

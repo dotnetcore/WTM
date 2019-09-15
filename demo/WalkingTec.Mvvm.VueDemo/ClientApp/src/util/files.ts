@@ -4,8 +4,8 @@
  */
 const createBlob = (
     response,
-    fileType = ".xls",
-    fileName = new Date().getTime()
+    fileName: string | number = new Date().getTime(),
+    fileType = ".xls"
 ) => {
     const blob = response;
     const a = document.createElement("a");
@@ -22,7 +22,6 @@ const createBlob = (
     a.addEventListener(
         "click",
         () => {
-            console.log("addEventListener");
             setTimeout(() => {
                 window.URL.revokeObjectURL(downUrl);
             }, 1000);

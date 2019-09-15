@@ -1,19 +1,19 @@
 <template>
   <div class="but-box">
-    <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList.add" icon="el-icon-plus" @click="onAdd">
+    <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList.add" type="primary" icon="el-icon-plus" @click="onAdd">
       添加
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.edit" v-visible="actionList.edit" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
+    <el-button v-assembly:[assembly]="butTypes.edit" v-visible="actionList.edit" type="primary" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
       修改
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList.batchDelete" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
+    <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList.batchDelete" type="primary" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
       删除
     </el-button>
-    <el-button v-assembly:[assembly]="butTypes.imported" icon="el-icon-upload" @click="onImported">
+    <el-button v-assembly:[assembly]="butTypes.imported" type="primary" icon="el-icon-upload" @click="onImported">
       导入
     </el-button>
     <el-dropdown v-visible="[actionList.exportExcel,actionList.exportExcelByIds]" class="dropdown-box" @command="onCommand">
-      <el-button v-assembly:[assembly]="butTypes.export">
+      <el-button v-assembly:[assembly]="butTypes.export" type="primary">
         <i class="el-icon-download" /> <span>导出</span> <i class="el-icon-arrow-down el-icon--right" />
       </el-button>
       <el-dropdown-menu slot="dropdown">
@@ -32,7 +32,6 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import ExportExcel from "@/components/common/export/export-excel.vue";
 import { butType } from "@/config/enum";
-
 @Component({
     components: {
         ExportExcel
@@ -74,7 +73,6 @@ export default class ButBox extends Vue {
         }
     })
     actionList;
-
     butTypes = butType;
     get isDisabledEdit() {
         if (this.selectedData.length === 1) {
@@ -120,9 +118,7 @@ export default class ButBox extends Vue {
 @import "../../assets/css/mixin.less";
 .but-box {
     .flexbox(row, flex-end);
-    background-color: #f5f5f5;
-    // margin-top: 30px;
-    padding: 15px;
+    margin: 15px 0;
     .dropdown-box {
         margin-left: 10px;
     }

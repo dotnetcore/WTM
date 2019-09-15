@@ -3,8 +3,8 @@
  */
 <template>
   <article class="common-card">
-    <div v-if="$slots.header" class="title">
-      <slot name="header" />
+    <div v-if="$route.name" class="title">
+      {{ $route.name }}
     </div>
     <div class="content">
       <slot />
@@ -20,7 +20,7 @@
     border-top: 3px solid #409eff;
     background-color: #ffffff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-    padding: 20px 10px 10px;
+    padding: 10px;
     margin-bottom: 10px;
     border-radius: 3px;
     min-width: 300px;
