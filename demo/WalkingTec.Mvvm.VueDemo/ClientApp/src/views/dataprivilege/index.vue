@@ -34,7 +34,7 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="dialogInfo.isShow">
+    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
     </dialog-box>
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
@@ -44,9 +44,9 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import baseMixin from "@/mixin/base";
-import mixinFunc from "@/mixin/search";
-import actionMixin from "@/mixin/action-mixin";
+import baseMixin from "@/util/mixin/base";
+import mixinFunc from "@/util/mixin/search";
+import actionMixin from "@/util/mixin/action-mixin";
 import store from "@/store/system/dataprivilege";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
@@ -88,7 +88,7 @@ export default class Index extends Vue {
     };
     tableCols = [
         { key: "Name", sortable: true, label: "授权对象" },
-        { key: "TableName", sortable: true, label: "授权对象" },
+        { key: "TableName", sortable: true, label: "权限名称" },
         { key: "RelateIDs", sortable: true, label: "权限" },
         { key: "operate", label: "操作", isSlot: true }
     ];

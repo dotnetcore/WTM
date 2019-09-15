@@ -42,8 +42,8 @@ import {
 } from "@/components/layout/index";
 import { Component, Vue } from "vue-property-decorator";
 import { Action, Mutation, Getter } from "vuex-class";
-// import cache from "@/util/cache";
-// import config from "@/config/index";
+import cache from "@/util/cache";
+import config from "@/config/index";
 
 @Component({
     components: {
@@ -77,6 +77,9 @@ export default class App extends Vue {
         return this["$route"].path;
     }
 
-    created() {}
+    created() {
+        const global = cache.getCookieJson(config.globalKey) || {};
+        this.isTab = global["tabs"];
+    }
 }
 </script>

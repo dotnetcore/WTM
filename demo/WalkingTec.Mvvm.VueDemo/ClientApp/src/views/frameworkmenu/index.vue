@@ -1,18 +1,8 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
-        <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
-          <el-form-item label="用户组编码">
-            <el-input v-model="searchForm.GroupCode" />
-          </el-form-item>
-          <el-form-item label="用户组名称">
-            <el-input v-model="searchForm.GroupName" />
-          </el-form-item>
-        </el-form>
-      </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableCols" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -26,8 +16,8 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="formDialog.isShow">
-      <dialog-form :ref="formRefName" :is-show.sync="formDialog.isShow" :dialog-data="formDialog.dialogData" :status="formDialog.dialogStatus" @onSearch="onSearch" />
+    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
+      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
@@ -35,19 +25,19 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
-import baseMixin from "@/mixin/base";
-import mixinFunc from "@/mixin/search";
-import actionMixin from "@/mixin/action-mixin";
+import { Action, State } from "vuex-class";
+import baseMixin from "@/util/mixin/base";
+import mixinFunc from "@/util/mixin/search";
+import actionMixin from "@/util/mixin/action-mixin";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
 import DialogForm from "./dialog-form.vue";
-import store from "@/store/system/frameworkgroup";
+import store from "@/store/system/frameworkmenu";
 // 查询参数 ★★★★★
 const defaultSearchData = {
-    GroupCode: "",
-    GroupName: ""
+    menuCode: "",
+    menuName: ""
 };
 @Component({
     mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
@@ -65,25 +55,49 @@ export default class Index extends Vue {
     @Action deleted;
     @Action exportExcel;
     @Action exportExcelByIds;
-    @Action detail;
     @Action imported;
     @Action getExcelTemplate;
-    // 表单弹框ref名称
-    formRefName: string = "dialogform";
-    // 表单数据的key，下方相同，主要用在dialog-form组件中 传入数据，在action-mixin的方法openDialog有用到
-    formDialogKey: string = "formDialog";
-    // 表单弹出框内容 ★★★★☆
-    formDialog = {
+
+    @State
+    searchData;
+
+    // 弹出框内容 ★★★★☆
+    dialogInfo = {
         isShow: false,
         dialogData: {},
         dialogStatus: ""
     };
-    // 列表 col ★★★★★
+    // ★★★★★
     tableCols = [
-        { key: "GroupCode", sortable: true, label: "用户组编码" },
-        { key: "GroupName", sortable: true, label: "用户组名称" },
-        { key: "GroupRemark", sortable: true, label: "备注" },
+        { key: "PageName", sortable: true, label: "页面名称", align: "left" },
+        { key: "DisplayOrder", sortable: true, label: "顺序" },
+        { key: "ICon", sortable: true, label: "图标" },
         { key: "operate", label: "操作", isSlot: true }
     ];
+    // 打开详情弹框 ★★★★☆
+    openDialog(status, data = {}) {
+        this.dialogInfo.isShow = true;
+        this.dialogInfo.dialogStatus = status;
+        this.dialogInfo.dialogData = data;
+        this.$nextTick(() => {
+            this.$refs["dialogform"].onGetFormData();
+        });
+    }
+    // tabledata返回tree
+    get treeData() {
+        const list = this["tableData"];
+        const tree = list.filter(parent => {
+            if (!parent.ParentID) {
+                const branchArr = list.filter(child => {
+                    return parent.ID === child.ParentID;
+                });
+                if (branchArr.length > 0) {
+                    parent.children = branchArr;
+                }
+            }
+            return !parent.ParentID;
+        });
+        return tree;
+    }
 }
 </script>

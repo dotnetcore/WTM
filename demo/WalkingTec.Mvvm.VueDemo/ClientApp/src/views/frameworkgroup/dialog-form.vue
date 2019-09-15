@@ -28,7 +28,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import mixinForm from "@/mixin/form-mixin";
+import mixinForm from "@/util/mixin/form-mixin";
 // 表单结构
 const defaultFormData = {
     // 表单名称

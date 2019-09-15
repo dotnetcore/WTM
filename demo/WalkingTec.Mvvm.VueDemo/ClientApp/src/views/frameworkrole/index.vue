@@ -29,7 +29,7 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="dialogInfo.isShow">
+    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
       <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
@@ -39,8 +39,9 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import baseMixin from "@/mixin/base";
-import mixinFunc from "@/mixin/search";
+import baseMixin from "@/util/mixin/base";
+import mixinFunc from "@/util/mixin/search";
+import actionMixin from "@/util/mixin/action-mixin";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
@@ -57,7 +58,7 @@ const defaultSearchData = {
     RoleName: ""
 };
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData)],
+    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -177,6 +178,7 @@ export default class Index extends Vue {
     }
     // ★★★★☆
     onImport(fileData) {
+        console.log("fileData", fileData);
         const parameters = {
             UploadFileId: fileData.Id
         };

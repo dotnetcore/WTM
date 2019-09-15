@@ -55,7 +55,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         }
         // 表单数据 赋值
         setFormData(params) {
-            console.log("defaultFormData.formData", defaultFormData.formData);
             Object.keys(defaultFormData.formData).forEach(key => {
                 if (_.isPlainObject(this.formData[key])) {
                     // Entity
@@ -69,7 +68,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                     this.formData[key] = params[key];
                 }
             });
-            console.log("setFormData", this.formData);
         }
         // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
         /**
@@ -82,7 +80,12 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
             if (this["status"] !== this["dialogType"].add) {
                 const parameters = { ID: this["dialogData"].ID };
                 this["detail"](parameters).then(res => {
-                    this.setFormData(res);
+                    // 判断是否 有Entity 属性，赋值全部
+                    if (this.formData.hasOwnProperty("Entity")) {
+                        this.setFormData(res);
+                    } else {
+                        this.setFormData(res.Entity);
+                    }
                     this["endFormData"] && this["endFormData"]();
                 });
             } else {

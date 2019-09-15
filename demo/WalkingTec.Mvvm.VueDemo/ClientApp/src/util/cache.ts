@@ -1,5 +1,5 @@
-module.exports = {
-    setCookie(name, value, days) {
+const defaultCache = {
+    setCookie(name, value, days?) {
         var expires = "";
         if (days) {
             var date = new Date();
@@ -7,6 +7,11 @@ module.exports = {
             expires = "; expires=" + date["toGMTString"]();
         }
         document.cookie = name + "=" + value + expires + "; path=/";
+    },
+    setCookieJson(name, value, days?) {
+        const val = JSON.stringify(value);
+        console.log("this", this);
+        this.setCookie(name, val, days);
     },
     getCookie(name) {
         var nameEQ = name + "=";
@@ -20,13 +25,17 @@ module.exports = {
         }
         return null;
     },
+    getCookieJson(name) {
+        const val = this.getCookie(name) || "{}";
+        return JSON.parse(val);
+    },
     setStorage(key, value) {
         if (typeof value === "object") {
             value = JSON.stringify(value);
         }
         localStorage.setItem(key, value);
     },
-    getStorage(key, isJson: false) {
+    getStorage(key, isJson: boolean = false) {
         const value = localStorage.getItem(key);
         if (isJson) {
             return JSON.parse(value || "");
@@ -38,3 +47,4 @@ module.exports = {
         localStorage.clear();
     }
 };
+export default defaultCache;

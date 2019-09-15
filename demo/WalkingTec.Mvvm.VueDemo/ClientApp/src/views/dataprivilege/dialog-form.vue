@@ -55,7 +55,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import mixinDialogForm from "@/mixin/form-mixin";
+import mixinDialogForm from "@/util/mixin/form-mixin";
 import cache from "@/util/cache";
 import config from "@/config/index";
 import { whether } from "@/config/entity";

@@ -5,6 +5,7 @@ import App from "@/views/index.vue";
 import { dirEdit, visible } from "@/util/directive/index";
 import { formatTime } from "@/util/filters/index";
 import { Card, DialogBox } from "@/util/component/index";
+import config from "@/config/index";
 
 import "font-awesome/css/font-awesome.min.css";
 import "element-ui/lib/theme-chalk/index.css";
@@ -13,7 +14,7 @@ import "@/assets/css/index.less";
 import ElementUI from "element-ui";
 import NProgress from "vue-nprogress";
 Vue.use(NProgress, {});
-Vue.use(ElementUI);
+Vue.use(ElementUI, { size: config.elSize });
 
 const nprogress = new NProgress({ parent: ".app-nprogress" });
 

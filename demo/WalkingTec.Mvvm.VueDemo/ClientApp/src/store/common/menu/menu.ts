@@ -27,7 +27,7 @@ class Menu {
         };
         if (menuItem.Url) {
             routerItem.component = () =>
-                import("@/views/system" + menuItem.Url + "/index.vue");
+                import("@/views" + menuItem.Url + "/index.vue");
         }
         return routerItem;
     }

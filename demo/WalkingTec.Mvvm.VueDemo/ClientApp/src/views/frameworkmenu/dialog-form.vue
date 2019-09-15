@@ -104,7 +104,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import mixinDialogForm from "@/mixin/form-mixin";
+import mixinDialogForm from "@/util/mixin/form-mixin";
 import user from "@/store/common/user";
 
 // 表单结构

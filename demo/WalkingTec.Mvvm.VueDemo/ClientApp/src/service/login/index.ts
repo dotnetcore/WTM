@@ -5,7 +5,7 @@ import { contentType } from "@/config/enum";
  */
 // 登陆
 const login = {
-    url: config.headApi + "/_login/login",
+    url: config.headerApi + "/_login/login",
     method: "post",
     contentType: contentType.form
 };
