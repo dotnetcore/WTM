@@ -812,22 +812,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        /// <summary>
-        /// get
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [AllRights]
-        [HttpGet]
-        [ResponseCache(Duration = 3600)]
-        public IActionResult GetIconFonts(string id)
-        {
-            if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
-                return Json(IconFontsHelper.IconFontDicItems[id]);
-            else
-                return Json(null);
-        }
-
     }
 
 }
