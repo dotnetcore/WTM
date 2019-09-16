@@ -253,6 +253,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     isRequired = true;
                 }
+                else if(pi.GetCustomAttributes(typeof(KeyAttribute),false).FirstOrDefault() != null){
+                    isRequired = true;
+                }
             }
             return isRequired;
         }

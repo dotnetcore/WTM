@@ -1045,8 +1045,9 @@ namespace WalkingTec.Mvvm.Mvc
                 cpros += $@"
                 v.{pro.Key} = {pro.Value};";
             }
+            var idpro = t.GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
             string rv = $@"
-        private object Add{mname}()
+        private {idpro.Name} Add{mname}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
