@@ -312,9 +312,10 @@ namespace WalkingTec.Mvvm.Core
                 {
                     return;
                 }
-                if (value == null)
+                if (value == null || ((value is StringValues s) && StringValues.IsNullOrEmpty(s)))
                 {
-                    fproperty.SetMemberValue(temp, value, null);
+                    fproperty.SetMemberValue(temp, null, null);
+                    return;
                 }
 
                 bool isArray = false;
