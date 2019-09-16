@@ -19,14 +19,6 @@ namespace WalkingTec.Mvvm.Demo
 
         public DbSet<MyUser> MyUsers { get; set; }
 
-#if DEBUG
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder.UseLoggerFactory(WTMLoggerFactory));
-
-        }
-        public new static readonly LoggerFactory WTMLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
-#endif
 
     }
 }

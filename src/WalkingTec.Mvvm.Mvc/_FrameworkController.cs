@@ -802,7 +802,7 @@ namespace WalkingTec.Mvvm.Mvc
                 bmp.Save(ms, ImageFormat.Png);
                 return File(ms.ToArray(), "image/jpeg");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

@@ -177,7 +177,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     foreach (var item in ListVM?.GetEntityList())
                     {
-                        item.BatchError = ErrorMessage.Where(x => x.Key == (item.ID as object)).Select(x => x.Value).FirstOrDefault();
+                        item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
                     }
                 }
                 MSD.AddModelError("", "数据已被使用，无法删除");

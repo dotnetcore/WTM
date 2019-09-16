@@ -572,7 +572,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    val = null;
+                    val = Guid.Empty;
                 }
             }
             else
