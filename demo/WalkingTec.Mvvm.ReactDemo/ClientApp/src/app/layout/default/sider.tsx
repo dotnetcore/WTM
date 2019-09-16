@@ -71,6 +71,7 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
       </Menu.Item>
     })
   }
+  defaultOpenKeys = [];
   getDefaultOpenKeys(Menus, Menu, OpenKeys = []) {
     const ParentId = lodash.get(Menu, 'ParentId');
     if (ParentId) {
@@ -82,6 +83,12 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
     }
     return OpenKeys
   }
+  componentWillMount() {
+    this.defaultOpenKeys = this.getDefaultOpenKeys(Store.Meun.ParallelMenu, this.getMenu());
+  }
+  getMenu() {
+    return lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
+  }
   render() {
     const props: MenuProps = {
       theme: "dark",
@@ -91,14 +98,13 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
       style: { borderRight: 0 },
       // inlineCollapsed: Store.Meun.collapsed,
     }
-    const find = lodash.find(Store.Meun.ParallelMenu, ["Url", this.props.location.pathname]);
-    props.selectedKeys.push(lodash.get(find, 'Id', '/'));
+    props.selectedKeys.push(lodash.get(this.getMenu(), 'Id', '/'));
     if (props.mode === "inline") {
       props.style.width = Store.Meun.collapsedWidth;
       props.inlineCollapsed = Store.Meun.collapsed;
-      props.defaultOpenKeys = this.getDefaultOpenKeys(Store.Meun.ParallelMenu, find);
+      props.defaultOpenKeys = this.defaultOpenKeys; //this.getDefaultOpenKeys(Store.Meun.ParallelMenu, find);
     }
-    let width = Store.Meun.collapsedWidth;
+    // let width = Store.Meun.collapsedWidth;
     return (
       <Menu
         {...props}

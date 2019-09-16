@@ -1,4 +1,4 @@
-import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col } from 'antd';
+import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col, Checkbox } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
@@ -115,7 +115,7 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
-            "Entity.Icon": {
+            "Entity.ICon": {
                 label: "图标",
                 rules: [],
                 formItem: <IConId />
@@ -166,6 +166,9 @@ class IConId extends React.Component<any, any> {
     onChange(event) {
         this.props.onChange(event);
     }
+    onChangeCustom(event) {
+        this.setState({ custom: event.target.checked });
+    }
     onSearch() {
 
     }
@@ -175,9 +178,11 @@ class IConId extends React.Component<any, any> {
     render() {
         return (
             <Row type="flex">
-                <Col span={24}>
-                    <Select
-                        disabled={this.state.custom}
+                <Col span={8}>
+                    <Checkbox onChange={this.onChangeCustom}>自定义</Checkbox>
+                </Col>
+                <Col span={16}>
+                    {this.state.custom ? <Input {...this.props} placeholder="custom Icon"/> : <Select
                         showSearch
                         style={{ width: '100%' }}
                         placeholder="Ant Icon"
@@ -185,21 +190,13 @@ class IConId extends React.Component<any, any> {
                         value={this.props.value || undefined}
                         allowClear
                         // onSearch={this.onSearch}
-                        filterOption={(input, option: any) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+                        filterOption={(input, option: any) => option.props.value && option.props.value.toLowerCase().indexOf(input && input.toLowerCase()) >= 0}
                     >
                         {AntIcons.fill.map(data => {
-                            return <Select.Option key={data} value={data}>{data}</Select.Option>
+                            return <Select.Option key={data} value={data}><Icon type={data} />：<span>{data}</span></Select.Option>
                         })}
-                    </Select>
-                </Col>
-                <Col span={24}>
-                    {/* {this.state.custom ?
-                        // <WtmUploadImg {...this.props} /> :
-                        
-                    } */}
-                    {this.props.value && <Icon type={this.props.value} style={{ fontSize: 100 }} />}
+                    </Select>}
+
                 </Col>
             </Row>
         );

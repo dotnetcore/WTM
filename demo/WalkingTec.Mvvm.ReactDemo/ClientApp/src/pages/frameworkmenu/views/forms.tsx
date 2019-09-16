@@ -31,7 +31,7 @@ export class InsertForm extends React.Component<any, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" value={true} />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.Icon" />
+            <FormItem {...props} fieId="Entity.ICon" />
         </InfoShellLayout>
     }
 }
@@ -70,7 +70,7 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.Icon" />
+            <FormItem {...props} fieId="Entity.ICon" />
         </InfoShellLayout>
     }
 }
@@ -103,7 +103,7 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.Icon"  />
+            <FormItem {...props} fieId="Entity.ICon"  />
         </InfoShellLayout>
     }
 }
