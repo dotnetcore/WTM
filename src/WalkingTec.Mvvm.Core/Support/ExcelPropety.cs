@@ -1,4 +1,4 @@
-﻿using NPOI.HSSF.UserModel;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System;
@@ -284,6 +284,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
+                ErrorMessage err = null;
                 switch (this.DataType)
                 {
                     case ColumnDataType.Date:
@@ -291,7 +292,7 @@ namespace WalkingTec.Mvvm.Core
                         DateTime tryDateTimeResult;
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
-                            errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},日期格式错误", this.ColumnName) });
+                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},日期格式错误", this.ColumnName) };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDateTimeResult;
@@ -300,7 +301,7 @@ namespace WalkingTec.Mvvm.Core
                         int tryIntResult;
                         if (!int.TryParse(value, out tryIntResult))
                         {
-                            errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},数字格式错误", this.ColumnName) });
+                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},数字格式错误", this.ColumnName) };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryIntResult;
@@ -309,7 +310,7 @@ namespace WalkingTec.Mvvm.Core
                         decimal tryDecimalResult;
                         if (!decimal.TryParse(value, out tryDecimalResult))
                         {
-                            errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},小数格式错误", this.ColumnName) });
+                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},小数格式错误", this.ColumnName) };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDecimalResult;
@@ -325,7 +326,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},应该输入【是】或者【否】", this.ColumnName) });
+                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},应该输入【是】或者【否】", this.ColumnName) };
                         }
                         break;
                     case ColumnDataType.Text:
@@ -335,7 +336,7 @@ namespace WalkingTec.Mvvm.Core
                     case ColumnDataType.Enum:
                         if (!this.ListItems.Any(x => x.Text == value))
                         {
-                            errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值在数据库中不存在", this.ColumnName) });
+                            err =  new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值在数据库中不存在", this.ColumnName) };
                         }
                         else
                         {
@@ -343,8 +344,13 @@ namespace WalkingTec.Mvvm.Core
                         }
                         break;
                     default:
-                        errorMessage.Add(new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值不在允许的数据类型范围内", this.ColumnName) });
+                        err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值不在允许的数据类型范围内", this.ColumnName) };
                         break;
+                }
+
+                if(err != null && this.SubTableType == null)
+                {
+                    errorMessage.Add(err);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
-        List<Guid> Ids { get; set; }
+        List<string> Ids { get; set; }
 
         /// <summary>
         /// 获取Model集合

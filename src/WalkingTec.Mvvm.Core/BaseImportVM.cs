@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -180,6 +181,7 @@ namespace WalkingTec.Mvvm.Core
                     subValString.Add(sub.Key, subVal);
                 }
 
+
                 P entity = null;
                 //说明主表信息为空
                 if (string.IsNullOrEmpty(mainValString))
@@ -211,7 +213,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 //子表
                                 var subList = entity.GetType().GetProperty(pro.Name).GetValue(entity);
-
+                                string fk = DC.GetFKName<P>(pro.Name);
                                 //如果子表不为空
                                 if (!string.IsNullOrEmpty(subValString.Where(x => x.Key == sub.Key).FirstOrDefault().Value))
                                 {
@@ -235,6 +237,10 @@ namespace WalkingTec.Mvvm.Core
                                         ExcelPropety ep = typeof(T).GetField(field.Name).GetValue(item) as ExcelPropety;
                                         //PropertyHelper.SetPropertyValue(obj, field.Name, ep.Value, stringBasedValue: true);
                                         SetEntityFieldValue(obj, ep, rowIndex, ep.FieldName, item);
+                                    }
+                                    if(string.IsNullOrEmpty(fk) == false)
+                                    {                                        
+                                        PropertyHelper.SetPropertyValue(obj, fk, entity.GetID());
                                     }
                                     //将付好值得SubTableType实例添加到List中
                                     list.Add(obj);
@@ -323,8 +329,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(entity.ID);
+                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
+                    ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
@@ -384,8 +391,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(entity.ID);
+                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
+                    ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
@@ -520,15 +528,16 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
             }
-            //todo: RedoValidation
-            //BaseController bc = new BaseController();
+            //调用controller方法验证model
+            var vmethod = Controller?.GetType().GetMethod("RedoValidation");
             foreach (var entity in EntityList)
             {
-                //bool check = bc.RedoValidation(entity);
-                //if (check == false)
-                //{
-                //    ErrorListVM.ErrorList.Add(new ErrorMessage { Message = bc.ModelState.Where(x => x.Value.Errors != null && x.Value.Errors.Count > 0).SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).FirstOrDefault(), Index = entity.ExcelIndex });
-                //}
+                try
+                {
+                    vmethod.Invoke(Controller, new object[] { entity });
+                }
+                catch { }
+
                 if (vm != null)
                 {
                     vm.SetEntity(entity);
@@ -571,7 +580,7 @@ namespace WalkingTec.Mvvm.Core
                     foreach (var pro in tempPros)
                     {
                         var excelProp = Template.GetType().GetField(pro.Name).GetValue(Template) as ExcelPropety;
-                        var proToSet = typeof(P).GetProperty(excelProp.FieldName);
+                        var proToSet = typeof(P).GetProperties().Where(x => x.Name == excelProp.FieldName).FirstOrDefault();
                         if (proToSet != null)
                         {
                             var val = proToSet.GetValue(item);
@@ -942,6 +951,7 @@ namespace WalkingTec.Mvvm.Core
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
                     }
+
                     if (conditions.Count > 0)
                     {
                         //循环添加条件并生成Where语句
