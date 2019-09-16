@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -86,6 +86,10 @@ namespace WalkingTec.Mvvm.Mvc
                 if (basetype.Contains(pro.DeclaringType) == false)
                 {
                     if(pro.CanWrite == false)
+                    {
+                        continue;
+                    }
+                    if(pro.Name.ToLower() == "id" && pro.PropertyType != typeof(string))
                     {
                         continue;
                     }
@@ -181,6 +185,20 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }
             }
+
+            for (int i = 0; i < lv.Count(); i++)
+            {
+                if (ignoreField.Contains(lv[i].FieldName))
+                {
+                    for(int j = i; j < lv.Count(); j++)
+                    {
+                        lv[j].Index--;
+                    }
+                    lv.RemoveAt(i);
+                    i--;
+                }
+            }
+
             return lv.AsQueryable().OrderBy(x => x.FieldName);
         }
     }

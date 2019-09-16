@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.Set<ActionLog>().Add(l);
                 context.SaveChanges();
             }
-            PartialViewResult rv = (PartialViewResult)_controller.Details(l.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Details(l.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof(IBaseCRUDVM<TopBasePoco>));
             Assert.AreEqual(l.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.ID);
         }
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void DetailsFailTest()
         {
-            Assert.ThrowsException<Exception>(() => _controller.Details(Guid.Empty), " ˝æ›≤ª¥Ê‘⁄");
+            Assert.ThrowsException<Exception>(() => _controller.Details("-1"), "Êï∞ÊçÆ‰∏çÂ≠òÂú®");
         }
 
     }

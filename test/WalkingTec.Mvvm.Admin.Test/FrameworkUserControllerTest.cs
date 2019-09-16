@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserVM));
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
@@ -161,11 +161,11 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserBatchVM));
 
             FrameworkUserBatchVM vm = rv.Model as FrameworkUserBatchVM;
-            vm.Ids = new Guid[] { v1.ID, v2.ID };
+            vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
             _controller.DoBatchDelete(vm, null);
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
