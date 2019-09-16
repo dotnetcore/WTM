@@ -1009,6 +1009,11 @@ namespace WalkingTec.Mvvm.Mvc
                 var modelpros2 = modelType.GetRandomValues();
                 foreach (var pro in modelpros2)
                 {
+                    if(pro.Key.ToLower() == "id")
+                    {
+                        continue;
+                    }
+
                     if (pro.Value == "$fk$")
                     {
                         mpros += $@"
