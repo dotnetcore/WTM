@@ -417,7 +417,7 @@ window.ff = {
           //替换gridId
           template = template.replace(/table[.]reload\('(.*)',\s{0,}{/img, 'table.reload(\'' + gridId + '\',{');
           //替换grid参数变量
-          template = template.replace(/\$.extend\((.*)[.]config[.]where,/img, '$.extend(' + gridVar + '.config.where,');
+          template = template.replace(/\$.extend\(JSON.parse\(JSON.stringify\((.*)[.]config[.]where\)\),/img, '$.extend(JSON.parse(JSON.stringify(' + gridVar + '.config.where)),');
           str = str.replace('$$SearchPanel$$', template);
         }
         layer.close(index);
