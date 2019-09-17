@@ -262,6 +262,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public void DoReInit()
         {
+            this.InitRigger();
             ReInitVM();
             OnAfterReInit?.Invoke(this);
         }
@@ -280,7 +281,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         protected virtual void ReInitVM()
         {
-            InitVM();
+            //InitVM();
         }
 
         /// <summary>
