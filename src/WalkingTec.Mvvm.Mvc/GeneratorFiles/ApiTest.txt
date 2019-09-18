@@ -114,7 +114,7 @@ namespace $tns$
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+                $mdel$
             }
 
             rv = _controller.BatchDelete(new string[] {});
