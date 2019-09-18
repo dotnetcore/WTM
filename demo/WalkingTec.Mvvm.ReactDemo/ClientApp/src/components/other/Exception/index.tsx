@@ -13,6 +13,7 @@ interface IExceptionProps {
   className?: string;
   backText?: React.ReactNode;
   redirect?: string;
+  [key: string]: any;
 }
 class Exception extends React.PureComponent<IExceptionProps, any>{
   static defaultProps = {
@@ -36,6 +37,7 @@ class Exception extends React.PureComponent<IExceptionProps, any>{
       img,
       actions,
       redirect,
+      staticContext,
       ...rest
     } = this.props;
     const pageType = type in config ? type : '404';

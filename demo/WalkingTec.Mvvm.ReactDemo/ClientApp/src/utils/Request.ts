@@ -22,10 +22,10 @@ const CacheHttp = new Map<string, Promise<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
 // 每30秒清理一次缓存
-// interval(30000).subscribe(obs => {
-//     CacheHttp.clear();
-//     Cache.clear();
-// })
+interval(5000).subscribe(obs => {
+    CacheHttp.clear();
+    Cache.clear();
+})
 export class Request {
     /**
      * 

@@ -18,7 +18,9 @@ export class WtmSelect extends React.Component<ILoadingDataProps & SelectProps<a
     }
     render() {
         const { dataSource, ...props } = this.props;
-        // console.log("TCL: WtmSelect -> render -> props", props)
+        if (props.value === null) {
+            delete props.value
+        }
         return (
             <Select
                 placeholder="Please choose"
