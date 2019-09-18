@@ -1,0 +1,149 @@
+{
+  "id": "498952",
+  "name": "播放器",
+  "font_family": "musicicon",
+  "css_prefix_text": "musicicon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1603687",
+      "name": "客服",
+      "font_class": "15",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "1603753",
+      "name": "点个赞",
+      "font_class": "14",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "1621431",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "1732016",
+      "name": "9",
+      "font_class": "13",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "1732019",
+      "name": "13",
+      "font_class": "12",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "1732020",
+      "name": "14",
+      "font_class": "11",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "1732021",
+      "name": "16",
+      "font_class": "10",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "1732023",
+      "name": "15",
+      "font_class": "9",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "1732027",
+      "name": "22",
+      "font_class": "8",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "1732031",
+      "name": "25",
+      "font_class": "7",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "1732032",
+      "name": "26",
+      "font_class": "6",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "2767689",
+      "name": "推荐歌单",
+      "font_class": "5",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "2767690",
+      "name": "此时此刻",
+      "font_class": "4",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "2767695",
+      "name": "音乐推荐",
+      "font_class": "3",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "2767698",
+      "name": "流派",
+      "font_class": "2",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "2767703",
+      "name": "播放",
+      "font_class": "icon-",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "2767705",
+      "name": "下一首",
+      "font_class": "icon-1",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "2767707",
+      "name": "上一首",
+      "font_class": "icon-2",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "2767708",
+      "name": "暂停",
+      "font_class": "icon-3",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "2767712",
+      "name": "随机播放",
+      "font_class": "1",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import * as React from 'react';
 import Store from '../store'; //页面状态
 import Models from './models'; //模型
 import { Help } from 'utils/Help';
+import { Icon } from 'antd';
 
 @DialogFormDes({
     onFormSubmit(values) {
@@ -103,7 +104,9 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.ShowOnMenu" />
             <FormItem {...props} fieId="Entity.IsPublic" />
             <FormItem {...props} fieId="Entity.DisplayOrder" />
-            <FormItem {...props} fieId="Entity.ICon"  />
+            <FormItem {...props} fieId="Entity.ICon" render={event => {
+                return <Icon type={lodash.get(event, 'defaultValues.Entity.ICon')} />
+            }} />
         </InfoShellLayout>
     }
 }
