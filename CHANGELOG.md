@@ -6,7 +6,7 @@
 
 本次更新增加了自定主键功能，除了默认的guid主键外，框架现在还支持自增整形和string类型的主键。
 同时代码生成器也可以准确识别主键类型，生成对应的代码。
-具体使用方式参见文档
+具体使用方式参见文档 https://wtmdoc.walkingtec.cn/#/Model/CustomKey
 
 由于主键不一定是guid了，老项目更新的时候需要手动修改之前的文件，主要是两部分：
 1. Controller里 BatchEdit，BatchDelete中的ids参数由guid[] 变为 string[]
