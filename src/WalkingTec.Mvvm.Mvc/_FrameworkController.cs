@@ -61,12 +61,7 @@ namespace WalkingTec.Mvvm.Mvc
             listVM.SearcherMode = ListVMSearchModeEnum.Selector;
             listVM.RemoveActionColumn();
             listVM.RemoveAction();
-            if (listVM.Searcher != null)
-            {
-                var searcher = listVM.Searcher;
-                searcher.CopyContext(listVM);
-                searcher.DoInit();
-            }
+
             ViewBag.TextName = _DONOT_USE_KFIELD;
             ViewBag.ValName = _DONOT_USE_VFIELD;
             ViewBag.FieldName = _DONOT_USE_FIELD;
