@@ -973,7 +973,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (pro.Value == "$fk$")
                     {
                         var fktype = modelType.GetProperties().Where(x => x.Name == pro.Key.Substring(0, pro.Key.Length - 2)).Select(x => x.PropertyType).FirstOrDefault();
-                        add += GenerateAddFKModel(fktype);
+                        add += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
                     }
                 }
 
@@ -1044,7 +1044,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        private string GenerateAddFKModel(Type t)
+        private string GenerateAddFKModel(string keyname, Type t)
         {
             var modelprops = t.GetRandomValues();
             var mname = t.Name?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
@@ -1056,7 +1056,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var idpro = t.GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
             string rv = $@"
-        private {idpro.Name} Add{mname}()
+        private {idpro.Name} Add{keyname}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
