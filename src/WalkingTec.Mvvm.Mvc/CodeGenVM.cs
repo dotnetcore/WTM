@@ -1030,7 +1030,16 @@ namespace WalkingTec.Mvvm.Mvc
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
                     }
                 }
-                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add);
+
+                string del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
+                string mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
+                if (modelType.IsSubclassOf(typeof(PersistPoco)))
+                {
+                    del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 1);";
+                    mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 2);";
+                }
+
+                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add).Replace("$del$", del).Replace("$mdel$", mdel);
             }
             return rv;
         }
