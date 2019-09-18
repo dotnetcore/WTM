@@ -33,7 +33,8 @@
                     "list": [
                         { "name": "/Poco", "title": "创建模型", "jump": "/Model/Poco" },
                         { "name": "/Att", "title": "模型属性", "jump": "/Model/Att" },
-                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" }
+                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" },
+                        { "name": "/CustomKey", "title": "自定义主键", "jump": "/Model/CustomKey" }
                     ]
                 },
                 {
