@@ -10,6 +10,7 @@ import Store from 'store';
 import Layout from "./layout/default/index";
 import Demo from "./pages/demo";
 import External from "./pages/external";
+import Exception from "components/other/Exception";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
@@ -50,7 +51,7 @@ const router: RouteConfig[] = [
             ...initRouters(),
             // 404  首页
             {
-                component: createCSSTransition(External)
+                component: createCSSTransition(Exception)
             }
         ]
     }
