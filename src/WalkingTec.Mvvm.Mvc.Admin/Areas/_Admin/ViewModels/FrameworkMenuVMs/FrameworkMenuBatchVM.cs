@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 foreach (var item in Ids)
                 {
-                    FrameworkMenu f = new FrameworkMenu { ID = item };
+                    FrameworkMenu f = new FrameworkMenu { ID = Guid.Parse(item) };
                     DC.CascadeDelete(f);
                 }
             }

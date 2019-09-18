@@ -179,6 +179,21 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return Json(AllActions);
         }
 
+        /// <summary>
+        /// GetIconFontItems
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseCache(Duration = 3600)]
+        public IActionResult GetIconFontItems(string id)
+        {
+            if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
+                return Json(IconFontsHelper.IconFontDicItems[id]);
+            else
+                return Json(null);
+        }
+
         [ActionDescription("同步模块")]
         protected void SycModelAndAction()
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +18,9 @@ namespace WalkingTec.Mvvm.ReactDemo.Models
 
     public class School : BasePoco
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         [Display(Name = "学校编码")]
         [Required(ErrorMessage = "{0}是必填项")]
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]

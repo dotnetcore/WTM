@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -108,10 +108,13 @@ namespace WalkingTec.Mvvm.Core
             }
             //生成一个表达式，类似于 x=>x.field == val
             var splits = propName.Split('.');
-            Expression left = Expression.PropertyOrField(para, splits[0]);
+            var idproperty = typeof(T).GetProperties().Where(x => x.Name == splits[0]).FirstOrDefault();
+
+            Expression left = Expression.Property(para, idproperty);
             for (int i = 1; i < splits.Length; i++)
             {
-                left = Expression.PropertyOrField(left, splits[i]);
+                var tempproperty = typeof(T).GetProperties().Where(x => x.Name == splits[i]).FirstOrDefault();
+                left = Expression.Property(left, tempproperty);
             }
 
             if (val != null && left.Type.IsGeneric(typeof(Nullable<>)))

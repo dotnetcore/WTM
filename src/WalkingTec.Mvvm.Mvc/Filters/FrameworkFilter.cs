@@ -82,6 +82,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.CurrentUrl = ctrl.BaseUrl;
                     model.ConfigInfo = (Configs)context.HttpContext.RequestServices.GetService(typeof(Configs));
                     model.DataContextCI = ((GlobalData)context.HttpContext.RequestServices.GetService(typeof(GlobalData))).DataContextCI;
+                    model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
                     if (ctrl is BaseController c)
                     {
@@ -160,7 +161,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         if (temp.ListVM != null)
                         {
                             temp.ListVM.CopyContext(model);
-                            temp.ListVM.Ids = temp.Ids == null ? new List<Guid>() : temp.Ids.ToList();
+                            temp.ListVM.Ids = temp.Ids == null ? new List<string>() : temp.Ids.ToList();
                             temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
                             temp.ListVM.NeedPage = false;
                         }

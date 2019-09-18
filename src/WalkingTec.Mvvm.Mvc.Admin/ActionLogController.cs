@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<ActionLogBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -69,12 +69,12 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<ActionLogListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

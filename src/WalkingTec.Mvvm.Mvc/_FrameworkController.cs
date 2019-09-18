@@ -801,7 +801,7 @@ namespace WalkingTec.Mvvm.Mvc
                 bmp.Save(ms, ImageFormat.Png);
                 return File(ms.ToArray(), "image/jpeg");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -810,22 +810,6 @@ namespace WalkingTec.Mvvm.Mvc
                 g.Dispose();
                 bmp.Dispose();
             }
-        }
-
-        /// <summary>
-        /// get
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [AllRights]
-        [HttpGet]
-        [ResponseCache(Duration = 3600)]
-        public IActionResult GetIconFonts(string id)
-        {
-            if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
-                return Json(IconFontsHelper.IconFontDicItems[id]);
-            else
-                return Json(null);
         }
 
     }

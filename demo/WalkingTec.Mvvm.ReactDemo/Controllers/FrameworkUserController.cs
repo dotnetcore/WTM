@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [HttpPost("BatchDelete")]
         [ActionDescription("批量删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -138,12 +138,12 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [HttpPost("ExportExcelByIds")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

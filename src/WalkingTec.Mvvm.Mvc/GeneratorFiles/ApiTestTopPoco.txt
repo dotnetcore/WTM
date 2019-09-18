@@ -88,7 +88,7 @@ namespace $tns$
                 context.Set<$model$>().Add(v);
                 context.SaveChanges();
             }
-            var rv = _controller.Get(v.ID);
+            var rv = _controller.Get(v.ID.ToString());
             Assert.IsNotNull(rv);
         }
 
@@ -105,7 +105,7 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            var rv = _controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
@@ -113,7 +113,7 @@ namespace $tns$
                 Assert.AreEqual(context.Set<$model$>().Count(), 0);
             }
 
-            rv = _controller.BatchDelete(new Guid[] {});
+            rv = _controller.BatchDelete(new string[] {});
             Assert.IsInstanceOfType(rv, typeof(OkResult));
 
         }
