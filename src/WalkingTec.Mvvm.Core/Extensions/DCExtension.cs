@@ -830,6 +830,8 @@ where S : struct
                 throw new ArgumentNullException(nameof(self));
             if (self.Database == null)
                 throw new ArgumentNullException(nameof(self.Database));
+            if (@"Microsoft.EntityFrameworkCore.InMemory".Equals(self.Database.ProviderName, StringComparison.OrdinalIgnoreCase))
+                return FakeNestedTransaction.DefaultTransaction;
             return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
         }
     }

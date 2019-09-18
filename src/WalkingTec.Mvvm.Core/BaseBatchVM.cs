@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Core
                     var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
                     if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
                     {
-                        var pp = DC.Set<TModel>().Find(idsData[i]);
+                        var pp = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
                         (pp as PersistPoco).IsValid = false;
                         (pp as PersistPoco).UpdateTime = DateTime.Now;
                         (pp as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
