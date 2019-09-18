@@ -16,6 +16,7 @@
   <script type="text/javascript">
     $(document).ready(function () {
       $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+      $("input[name='VerifyCode']").attr('autocomplete', 'off');
     });
     function verify() {
       $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
