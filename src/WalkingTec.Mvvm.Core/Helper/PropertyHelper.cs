@@ -241,7 +241,7 @@ namespace WalkingTec.Mvvm.Core
             //如果需要显示星号，则判断是否是必填项，如果是必填则在内容后面加上星号
             //所有int，float。。。这种Primitive类型的，肯定都是必填
             Type t = pi.GetMemberType();
-            if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal)))
+            if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal) || t == typeof(Guid)))
             {
                 isRequired = true;
             }
