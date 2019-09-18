@@ -273,13 +273,13 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(TModel).IsSubclassOf(typeof(BasePoco)))
                     {
                         BasePoco ent = entity as BasePoco;
-                        if (ent.CreateTime == null)
+                        if (ent.UpdateTime == null)
                         {
-                            ent.CreateTime = DateTime.Now;
+                            ent.UpdateTime = DateTime.Now;
                         }
-                        if (string.IsNullOrEmpty(ent.CreateBy))
+                        if (string.IsNullOrEmpty(ent.UpdateBy))
                         {
-                            ent.CreateBy = LoginUserInfo?.ITCode;
+                            ent.UpdateBy = LoginUserInfo?.ITCode;
                         }
                     }
                     DC.UpdateEntity(entity);
