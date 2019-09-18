@@ -411,7 +411,7 @@ namespace WalkingTec.Mvvm.Core
                                 foreach (var item in data)
                                 {
                                     //需要更新的数据
-                                    if (newitem.ID == item.ID)
+                                    if (newitem.GetID().ToString() == item.GetID().ToString())
                                     {
                                         dynamic i = newitem;
                                         var newitemType = item.GetType();
