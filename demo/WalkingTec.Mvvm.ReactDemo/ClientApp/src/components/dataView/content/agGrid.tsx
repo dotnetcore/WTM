@@ -288,6 +288,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         suppressLoadingOverlay
                         // 设置为true以启用范围选择。
                         enableRangeSelection
+                        animateRows
                         // suppressMakeColumnVisibleAfterUnGroup
                         // suppressDragLeaveHidesColumns
                         rowSelection="multiple"
