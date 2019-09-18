@@ -14,7 +14,7 @@ import App from "app/index";
 import 'nprogress/nprogress.css';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import "assets/font/font";
 import './global.config';
 ReactDOM.render(<App />,
   document.getElementById('root'));
- 
