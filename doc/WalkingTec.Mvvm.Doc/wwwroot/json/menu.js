@@ -33,7 +33,8 @@
                     "list": [
                         { "name": "/Poco", "title": "创建模型", "jump": "/Model/Poco" },
                         { "name": "/Att", "title": "模型属性", "jump": "/Model/Att" },
-                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" }
+                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" },
+                        { "name": "/CustomKey", "title": "自定义主键", "jump": "/Model/CustomKey" }
                     ]
                 },
                 {
@@ -109,7 +110,8 @@
                         { "name": "/Grid", "title": "数据表格", "jump": "/UI/Grid" },
                         { "name": "/TreeContainer", "title": "TreeContainer", "jump": "/UI/TreeContainer" },
                         { "name": "/Others", "title": "其他", "jump": "/UI/Others" },
-                        { "name": "/layuiadmin", "title": "LayuiAdmin", "jump": "/views/iframe/layuiadmin.html" }
+                        { "name": "/layuiadmin", "title": "LayuiAdminDemo", "jump": "/views/iframe/layuiadmin.html" },
+                        { "name": "/layuiadmin", "title": "LayuiAdminDoc", "jump": "/views/iframe/layuiadmindoc.html" }
                     ]
                 },
                 {

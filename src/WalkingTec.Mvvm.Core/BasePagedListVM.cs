@@ -375,7 +375,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
-        public List<Guid> Ids { get; set; }
+        public List<string> Ids { get; set; }
 
         /// <summary>
         /// 每页行数
@@ -527,18 +527,8 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>搜索语句</returns>
         public virtual IOrderedQueryable<TModel> GetCheckedExportQuery()
         {
-            var baseQuery = GetExportQuery();
-            if (ReplaceWhere == null)
-            {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => Ids.Contains(x.ID));
-                var newExp = mod.Modify(baseQuery.Expression);
-                var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
-                return newQuery;
-            }
-            else
-            {
-                return baseQuery;
-            }
+            var baseQuery = GetBatchQuery();
+            return baseQuery;           
         }
 
         /// <summary>
@@ -548,10 +538,9 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetBatchQuery()
         {
             var baseQuery = GetSearchQuery();
-            var ids = Ids ?? new List<Guid>();
             if (ReplaceWhere == null)
             {
-                WhereReplaceModifier mod = new WhereReplaceModifier(x => ids.Contains(x.ID));
+                var mod = new WhereReplaceModifier<TModel>(Ids.GetContainIdExpression<TModel>());
                 var newExp = mod.Modify(baseQuery.Expression);
                 var newQuery = baseQuery.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 return newQuery;
@@ -609,7 +598,7 @@ namespace WalkingTec.Mvvm.Core
                 //如果设定了替换条件，则使用替换条件替换Query中的Where语句
                 if (ReplaceWhere != null)
                 {
-                    var mod = new WhereReplaceModifier(ReplaceWhere);
+                    var mod = new WhereReplaceModifier<TopBasePoco>(ReplaceWhere);
                     var newExp = mod.Modify(query.Expression);
                     query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
                 }
@@ -840,7 +829,8 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var item in EntityList)
                 {
-                    if (Ids.Contains(item.ID))
+                    var id = item.GetID();
+                    if (Ids.Contains(id.ToString()))
                     {
                         item.Checked = true;
                     }
@@ -895,7 +885,16 @@ namespace WalkingTec.Mvvm.Core
             if (root != null)
             {
                 var aroot = root as List<GridColumn<TModel>>;
-                var remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                List<GridColumn<TModel>> remove = null;
+                var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x=>x.PropertyType).FirstOrDefault();
+                if (idpro == typeof(string))
+                {
+                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true).ToList();
+                }
+                else
+                {
+                   remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                }
                 foreach (var item in remove)
                 {
                     aroot.Remove(item);

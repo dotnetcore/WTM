@@ -47,8 +47,8 @@ class Store {
      */
     recursionTree(datalist, ParentId, children = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
+            data.Children = this.recursionTree(datalist, data.Id, data.Children || []);
             children.push(data);
-            data.Children = this.recursionTree(datalist, data.Id, data.Children || [])
         });
         return children;
     }

@@ -19,5 +19,6 @@ namespace WalkingTec.Mvvm.Demo
 
         public DbSet<MyUser> MyUsers { get; set; }
 
+
     }
 }

@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
-                valueField = x => x.ID.ToString().ToLower();
+                valueField = x => x.GetID().ToString().ToLower();
             }
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件
@@ -264,7 +264,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            Expression peid = Expression.PropertyOrField(pe, "Id");
+            Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x=>x.Name.ToLower() == "id").FirstOrDefault());
             //循环数据权限，加入到where条件中，达到自动过滤的效果
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
@@ -285,11 +285,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         if (!ids.Contains(null))
                         {
-                            List<Guid> finalIds = new List<Guid>();
-                            ids.ForEach(x => finalIds.Add(x.Value));
-                            Expression dpleft = Expression.Constant(finalIds, typeof(List<Guid>));
-                            Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                            query = query.Where(Expression.Lambda<Func<T, bool>>(dpcondition, pe));
+                            query = query.Where(ids.GetContainIdExpression<T>());
                         }
                     }
                 }
@@ -305,7 +301,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="dps">数据权限</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, params Expression<Func<T, Guid?>>[] IdFields)
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, params Expression<Func<T, object>>[] IdFields)
         {
             //循环所有关联外键
             List<string> tableNameList = new List<string>();
@@ -344,7 +340,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, List<string> tableName, params Expression<Func<T, Guid?>>[] IdFields)
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, List<string> tableName, params Expression<Func<T, object>>[] IdFields)
         {
             // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -420,19 +416,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         //如果关联 Id 包括null，则代表可以访问所有数据，就不需要再拼接where条件了
                         if (!ids.Contains(null))
                         {
-                            Expression dpleft = null;
-                            if (peid.Type == typeof(Guid))
-                            {
-                                List<Guid> templist = new List<Guid>();
-                                ids.ForEach(x => templist.Add(x.Value));
-                                dpleft = Expression.Constant(templist, typeof(List<Guid>));
-                            }
-                            else
-                            {
-                                dpleft = Expression.Constant(ids, typeof(List<Guid?>));
-                            }
-                            Expression dpcondition = Expression.Call(dpleft, "Contains", new Type[] { }, peid);
-                            exp = dpcondition;
+
+                            exp = ids.GetContainIdExpression<T>(peid).Body;
                         }
                     }
                 }
@@ -469,7 +454,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (defaultSorts == null || defaultSorts.Length == 0)
                 {
                     ParameterExpression pe = Expression.Parameter(typeof(T));
-                    Expression pro = Expression.PropertyOrField(pe, "Id");
+                    var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    Expression pro = Expression.Property(pe, idproperty);
                     Type proType = typeof(Guid);
                     Expression final = Expression.Call(
                                                    typeof(Queryable),
@@ -493,7 +479,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             foreach (var item in info)
             {
                 ParameterExpression pe = Expression.Parameter(typeof(T));
-                Expression pro = Expression.PropertyOrField(pe, item.Property);
+                var idproperty = typeof(T).GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                Expression pro = Expression.Property(pe, idproperty);
                 Type proType = typeof(T).GetProperty(item.Property).PropertyType;
                 if (item.Direction == SortDir.Asc)
                 {
@@ -543,6 +530,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
             }
             return rv;
+        }
+
+        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            Expression peid = Expression.Property(pe, idproperty);
+            var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
+            return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
+                       
         }
 
         public static IQueryable<T> CheckWhere<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, bool>> where)
@@ -797,6 +794,31 @@ where S : struct
             }
         }
 
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null) 
+        {
+            if (Ids == null)
+            {
+                Ids = new List<string>();
+            }
+
+            ParameterExpression pe = Expression.Parameter(typeof(TModel));
+            if (peid == null)
+            {
+                peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+            }
+            List<object> newids = new List<object>();
+            foreach (var item in Ids)
+            {
+                newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
+            }
+             
+            Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
+            Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
+            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft2, peid);
+            var rv = Expression.Lambda<Func<TModel, bool>>(dpcondition, pe);
+            return rv;
+        }
+
         /// <summary>
         /// 开始一个事务，当使用同一IDataContext时，嵌套的两个事务不会引起冲突，当嵌套的事务执行时引起的异常会通过回滚方法向上层抛出异常
         /// </summary>
@@ -808,6 +830,8 @@ where S : struct
                 throw new ArgumentNullException(nameof(self));
             if (self.Database == null)
                 throw new ArgumentNullException(nameof(self.Database));
+            if (@"Microsoft.EntityFrameworkCore.InMemory".Equals(self.Database.ProviderName, StringComparison.OrdinalIgnoreCase))
+                return FakeNestedTransaction.DefaultTransaction;
             return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -121,7 +121,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(Guid[] IDs)
+        public ActionResult BatchEdit(object[] IDs)
         {
             var vm = CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        public ActionResult BatchDelete(object[] IDs)
         {
             var vm = CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);

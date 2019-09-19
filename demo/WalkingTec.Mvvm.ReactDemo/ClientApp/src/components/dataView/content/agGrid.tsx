@@ -29,6 +29,7 @@ import "./style.less";
 import { columnsRenderImg } from './table';
 import RequestFiles from 'utils/RequestFiles';
 import Regular from 'utils/Regular';
+import { debounceTime } from 'rxjs/operators';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
@@ -201,7 +202,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
     }
     async componentDidMount() {
         this.onUpdateHeight();
-        this.resizeEvent = fromEvent(window, "resize").subscribe(e => {
+        this.resizeEvent = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
             // 获取当前高度 ，高度 为 0 说明页面属于隐藏状态
             if (lodash.get(this.refTableBody.current, 'clientHeight', 0) > 0) {
                 if (!globalConfig.tabsPage) {
@@ -217,7 +218,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
         this.resizeEvent && this.resizeEvent.unsubscribe()
     }
     sizeColumnsToFit() {
-        lodash.get(this.refTableBody.current, 'clientHeight', 0) && this.gridApi && this.gridApi.sizeColumnsToFit();
+        if (lodash.get(this.refTableBody.current, 'clientHeight', 0) && this.gridApi) {
+            this.gridApi.sizeColumnsToFit();
+        }
     }
     onGridReady(event: GridReadyEvent) {
         this.gridApi = event.api;
@@ -285,6 +288,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         suppressLoadingOverlay
                         // 设置为true以启用范围选择。
                         enableRangeSelection
+                        animateRows
                         // suppressMakeColumnVisibleAfterUnGroup
                         // suppressDragLeaveHidesColumns
                         rowSelection="multiple"

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
 {
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             string windowid = Guid.NewGuid().ToString();
             if (showDialog == true)
             {
-                innerClick = $"ff.OpenDialog('{url}', '{windowid}', '{title ?? ""}',{width?.ToString() ?? "null"}, {height?.ToString() ?? "null"});";
+                innerClick = $"ff.OpenDialog('{url}','{Guid.NewGuid().ToNoSplitString()}','{title ?? ""}',{width?.ToString() ?? "null"},{height?.ToString() ?? "null"});";
             }
             else
             {

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id获取Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        void SetEntityById(Guid id);
+        void SetEntityById(object id);
 
         /// <summary>
         /// 设置Entity
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.Core
         /// 根据主键Id设定Entity
         /// </summary>
         /// <param name="id">主键Id</param>
-        public void SetEntityById(Guid id)
+        public void SetEntityById(object id)
         {
             this.Entity = GetById(id);
         }
@@ -139,7 +139,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="Id">主键Id</param>
         /// <returns>Entity</returns>
-        protected virtual TModel GetById(Guid Id)
+        protected virtual TModel GetById(object Id)
         {
             TModel rv = null;
             //建立基础查询
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
             //获取数据
-            rv = query.Where(x => x.ID == Id).SingleOrDefault();
+            rv = query.CheckID(Id).SingleOrDefault();
             if (rv == null)
             {
                 throw new Exception("数据不存在");
@@ -252,7 +252,7 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.ID);
+                                            itempro.SetValue(newitem, Entity.GetID());
                                             found = true;
                                         }
                                     }
@@ -369,7 +369,7 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         if (itempro.Name.ToLower() == fkname.ToLower())
                                         {
-                                            itempro.SetValue(newitem, Entity.ID);
+                                            itempro.SetValue(newitem, Entity.GetID());
                                             found = true;
                                         }
                                     }
@@ -386,7 +386,7 @@ namespace WalkingTec.Mvvm.Core
                             //打开新的数据库联接,获取数据库中的主表和子表数据
                             using (var ndc = DC.CreateNew())
                             {
-                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().Where(x => x.ID == Entity.ID).FirstOrDefault();
+                                _entity = ndc.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             }
                             //比较子表原数据和新数据的区别
                             IEnumerable<TopBasePoco> toadd = null;
@@ -411,7 +411,7 @@ namespace WalkingTec.Mvvm.Core
                                 foreach (var item in data)
                                 {
                                     //需要更新的数据
-                                    if (newitem.ID == item.ID)
+                                    if (newitem.GetID().ToString() == item.GetID().ToString())
                                     {
                                         dynamic i = newitem;
                                         var newitemType = item.GetType();
@@ -465,7 +465,7 @@ namespace WalkingTec.Mvvm.Core
                         else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             PropertyInfo[] itemPros = ftype.GetProperties();                            
-                            var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().Where(x => x.ID == Entity.ID).FirstOrDefault();
+                            var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             if (_entity != null)
                             {
                                 IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
@@ -594,7 +594,7 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }
@@ -666,8 +666,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    MemberExpression idLeft = Expression.Property(para, "Id");
-                    ConstantExpression idRight = Expression.Constant(Entity.ID);
+                    var idproperty = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    MemberExpression idLeft = Expression.Property(para, idproperty);
+                    ConstantExpression idRight = Expression.Constant(Entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
@@ -681,7 +682,14 @@ namespace WalkingTec.Mvvm.Core
                         }
                         //将字段名保存，为后面生成错误信息作准备
                         props.AddRange(field.GetProperties());
-                    }                   
+                    }
+                    //如果要求判断id不重复，则去掉id不相等的判断，加入id相等的判断
+                    if(props.Any(x=>x.Name.ToLower() == "id"))
+                    {
+                        conditions.RemoveAt(0);
+                        BinaryExpression idEqual = Expression.Equal(idLeft, idRight);
+                        conditions.Insert(0,idEqual);
+                    }
                     int count = 0;
                     if (conditions.Count > 1)
                     {

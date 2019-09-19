@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="passInit"></param>
         /// <returns>创建的ViewModel</returns>
         [NonAction]
-        private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
         {
             //通过反射创建ViewModel并赋值
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
@@ -178,16 +178,25 @@ namespace WalkingTec.Mvvm.Mvc
             //如果ViewModel T继承自BaseCRUDVM<>且Id有值，那么自动调用ViewModel的GetById方法
             if (Id != null && rv is IBaseCRUDVM<TopBasePoco> cvm)
             {
-                cvm.SetEntityById(Id.Value);
+                cvm.SetEntityById(Id);
             }
             //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
-                temp.Ids = Ids;
+                temp.Ids = new string[] { };
+                if (Ids != null)
+                {
+                    var tempids = new List<string>();
+                    foreach (var iid in Ids)
+                    {
+                        tempids.Add(iid.ToString());
+                    }
+                    temp.Ids = tempids.ToArray();
+                }
                 if (temp.ListVM != null)
                 {
                     temp.ListVM.CopyContext(rv);
-                    temp.ListVM.Ids = Ids == null ? new List<Guid>() : Ids.ToList();
+                    temp.ListVM.Ids = Ids == null ? new List<string>() : temp.Ids.ToList();
                     temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
                     temp.ListVM.NeedPage = false;
                 }
@@ -284,7 +293,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
         /// <returns></returns>
         [NonAction]
-        public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        public T CreateVM<T>(object Id = null, object[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
             var dir = p.Parse(values);
@@ -292,7 +301,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [NonAction]
-        public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = false)
+        public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
         {
             return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
         }

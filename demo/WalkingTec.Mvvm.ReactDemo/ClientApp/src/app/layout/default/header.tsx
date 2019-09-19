@@ -22,6 +22,7 @@ export default class App extends React.Component<any, any> {
 class PageHeader extends React.Component<any, any> {
   render() {
     const isMenu = GlobalConfig.menuMode === "horizontal";
+    const iconType = Store.Meun.collapsed ? 'menu-unfold' : 'menu-fold';
     return (
       <Header className="app-layout-header" style={isMenu ? {} : { marginLeft: Store.Meun.collapsedWidth }}>
         <Row type="flex">
@@ -31,7 +32,7 @@ class PageHeader extends React.Component<any, any> {
           <Col >
             {isMenu ?
               <AppMenu mode="horizontal" {...this.props} />
-              : <Icon onClick={() => { Store.Meun.onCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" />}
+              : <Icon onClick={() => { Store.Meun.onCollapsed() }} className="app-collapsed-trigger" type={iconType} theme="outlined" />}
           </Col>
           <Col style={{ textAlign: "right", flex: 1, overflow: "hidden" }}>
             <Row type="flex" justify="end" style={{ height: "100%" }}>

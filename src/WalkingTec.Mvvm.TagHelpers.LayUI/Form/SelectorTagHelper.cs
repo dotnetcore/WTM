@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             #region Display Value
 
             var modelType = Field.Metadata.ModelType;
-            var list = new List<Guid>();
+            var list = new List<string>();
             if (Field.Model != null)
             {
                 // 数组 or 泛型集合
@@ -126,24 +126,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
-                        list.Add(item);
+                        list.Add(item.ToString());
                     }
                 }
                 else
                 {
-                    list.Add(Guid.Parse(Field.Model.ToString()));
+                    list.Add(Field.Model.ToString());
                 }
             }
             if (ListVM == null || ListVM.Model == null)
                 throw new Exception("Selector 组件指定的 ListVM 必须要实例化");
             var listVM = ListVM.Model as IBasePagedListVM<TopBasePoco, ISearcher>;
             var value = new List<string>();
+            if (context.Items.ContainsKey("model") == true)
+            {
+                listVM.CopyContext(context.Items["model"] as BaseVM);
+            }
             if (list.Count > 0)
             {
-                if (context.Items.ContainsKey("model") == true)
-                {
-                    listVM.CopyContext(context.Items["model"] as BaseVM);
-                }
                 listVM.Ids = list;
                 listVM.NeedPage = false;
                 listVM.IsSearched = false;
@@ -219,6 +219,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.Attributes.Add("id", Id + "_Display");
                 output.Attributes.Add("name", Field.Name + "_Display");
 
+                if (listVM.Searcher != null)
+                {
+                    var searcher = listVM.Searcher;
+                    searcher.CopyContext(listVM);
+                    searcher.DoInit();
+                }
                 var content = output.GetChildContentAsync().Result.GetContent().Trim();
 
                 #region 移除因 RowTagHelper 生成的外层 div 即 <div class="layui-col-xs6"></div>

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -170,8 +170,9 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var item in info)
                 {
                     ParameterExpression pe = Expression.Parameter(modelType,"x");
-                    Expression pro = Expression.PropertyOrField(pe, item.Property);
-                    Type proType = modelType.GetProperty(item.Property).PropertyType;
+                    var idproperty = modelType.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                    Expression pro = Expression.Property(pe, idproperty);
+                    Type proType = idproperty.PropertyType;
                     if (item.Direction == SortDir.Asc)
                     {
                         if (rv == null)
@@ -225,17 +226,17 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 替换表达式中的Where语句
     /// </summary>
-    public class WhereReplaceModifier : ExpressionVisitor
+    public class WhereReplaceModifier<T> : ExpressionVisitor where T:TopBasePoco
     {
         private Type _modelType;
         private bool _addMode = false;
-        private Expression<Func<TopBasePoco, bool>> _where;
+        private Expression<Func<T, bool>> _where;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="where">需要替换的新where语句</param>
-        public WhereReplaceModifier(Expression<Func<TopBasePoco, bool>> where)
+        public WhereReplaceModifier(Expression<Func<T, bool>> where)
         {
             _where = where;
         }

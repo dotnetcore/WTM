@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public List<ComboSelectListItem> AllItems { get; set; }
         public List<ComboSelectListItem> AllGroups { get; set; }
         [Display(Name = "允许访问")]
-        public List<Guid?> SelectedItemsID { get; set; }
+        public List<string> SelectedItemsID { get; set; }
         [Display(Name ="用户")]
         public string UserItCode { get; set; }
 
@@ -38,8 +38,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
                 TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             }
-            SelectedItemsID = new List<Guid?>();
-            List<Guid?> rids = null;
+            SelectedItemsID = new List<string>();
+            List<string> rids = null;
             if (DpType == DpTypeEnum.User)
             {
                 rids = DC.Set<DataPrivilege>().Where(x => x.TableName == Entity.TableName && x.UserId == Entity.UserId).Select(x => x.RelateId).ToList();

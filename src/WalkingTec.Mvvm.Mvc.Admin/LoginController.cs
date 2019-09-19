@@ -20,10 +20,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("登录")]
         public IActionResult Login([FromForm] string userid, [FromForm]string password)
         {
-            var user = DC.Set<FrameworkUserBase>()
-    .Include(x => x.UserRoles).Include(x => x.UserGroups)
-    .Where(x => x.ITCode.ToLower() == userid.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid)
-    .SingleOrDefault();
+            var user = DC
+    .Set<FrameworkUserBase>().Include(x => x.UserRoles)
+    .Include(x => x.UserGroups)
+    .SingleOrDefault(x => x.ITCode.ToLower() == userid.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid);
 
             //如果没有找到则输出错误
             if (user == null)
@@ -75,7 +75,23 @@ namespace WalkingTec.Mvvm.Admin.Api
                     Url = x.Url,
                     Icon = x.ICon
                 });
-            ms.AddRange(menus);
+
+            var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
+            {
+                Id = x.ID.ToString().ToLower(),
+                ParentId = x.ParentId.ToString().ToLower(),
+                Text = x.PageName,
+                Url = x.Url,
+                Icon = x.ICon
+            });            
+            ms.AddRange(folders);
+            foreach (var item in menus)
+            {
+                if(folders.Any(x=>x.Id == item.Id) == false)
+                {
+                    ms.Add(item);
+                }
+            }
 
             List<string> urls = new List<string>();
             urls.AddRange(DC.Set<FunctionPrivilege>()
@@ -86,7 +102,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 );
             urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", menus);
+            forapi.Attributes.Add("Menus", ms);
             forapi.Attributes.Add("Actions", urls);
             return Ok(forapi);
         }
@@ -123,8 +139,22 @@ namespace WalkingTec.Mvvm.Admin.Api
                       Url = x.Url,
                       Icon = x.ICon
                   });
-                ms.AddRange(menus);
-
+                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
+                {
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url,
+                    Icon = x.ICon
+                });
+                ms.AddRange(folders);
+                foreach (var item in menus)
+                {
+                    if (folders.Any(x => x.Id == item.Id) == false)
+                    {
+                        ms.Add(item);
+                    }
+                }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
@@ -134,7 +164,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();
-                forapi.Attributes.Add("Menus", menus);
+                forapi.Attributes.Add("Menus", ms);
                 forapi.Attributes.Add("Actions", urls);
                 return Ok(forapi);
             }
@@ -183,10 +213,10 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (request.Password == null)
                 return BadRequest(nameof(request.Password));
 
-            var user = DC.Set<Core.FrameworkUserBase>()
-                .Include(x => x.UserRoles).Include(x => x.UserGroups)
-                .Where(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
-                            x.IsValid).SingleOrDefault();
+            var user = DC
+                .Set<FrameworkUserBase>().Include(x => x.UserRoles)
+                .Include(x => x.UserGroups).SingleOrDefault(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
+                                                                 x.IsValid);
             if (user == null)
                 return NotFound();
 
