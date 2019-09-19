@@ -1,4 +1,22 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentSearchVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentSearchVM
 
-<wt:grid vm="ValidList" />
-<wt:grid vm="InValidList" />
+<wt:tab >
+  <wt:tabheaders>
+    <wt:tabheader title="有效用户" />
+    <wt:tabheader title="无效用户" />
+  </wt:tabheaders>
+  <wt:tabcontents>
+    <wt:tabcontent>
+        <wt:grid vm="ValidList" height="-300"/>
+    </wt:tabcontent>
+    <wt:tabcontent>
+      <wt:searchpanel vm="InValidList" reset-btn="true">
+        <wt:row items-per-row="ItemsPerRowEnum.Three">
+          <wt:textbox field="InValidList.Searcher.Name" />
+        </wt:row>
+      </wt:searchpanel>
+      <wt:grid vm="InValidList" height="-400"/>
+    </wt:tabcontent>
+  </wt:tabcontents>
+</wt:tab>
+

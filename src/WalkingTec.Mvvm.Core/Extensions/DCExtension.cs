@@ -200,6 +200,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, dps);
             }
 
+            if (typeof(T).IsSubclassOf(typeof(PersistPoco)))
+            {
+                var mod = new IsValidModifier();
+                var newExp = mod.Modify(query.Expression);
+                query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
+            }
+
+
             //定义PE
             ParameterExpression pe = Expression.Parameter(typeof(T));
             ChangePara cp = new ChangePara();
