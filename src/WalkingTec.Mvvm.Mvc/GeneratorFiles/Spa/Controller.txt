@@ -27,7 +27,7 @@ namespace $namespace$
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public $controllername$VM Get(Guid id)
+        public $controllername$VM Get(string id)
         {
             var vm = CreateVM<$controllername$VM>(id);
             return vm;
@@ -80,7 +80,7 @@ namespace $namespace$
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<$controllername$BatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -115,12 +115,12 @@ namespace $namespace$
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<$controllername$ListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

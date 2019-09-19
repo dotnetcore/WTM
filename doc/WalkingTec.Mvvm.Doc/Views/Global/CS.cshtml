@@ -4,6 +4,7 @@
     }
 </style>
 <p>WTM框架支持自动选择读写分离的数据库，以及根据条件动态使用不同的数据库连接</p>
+<p>同时，如果框架需要操作多个库，也可以使用本章介绍的方法，对某个操作使用不同的库</p>
 
 <wt:fieldset field-set-style="Simple" title="读写分离">
     框架会自动识别ConnectionString中以下划线+数字结尾的key值，作为只读库，比如下面的定义：

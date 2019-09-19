@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc
     public class JwtHelper
     {
 
-        public static object BuildJwtToken(string userId, string name)
+        public static string BuildJwtToken(string userId)
         {
             if (string.IsNullOrEmpty(userId))
                 return null;
@@ -49,20 +50,33 @@ namespace WalkingTec.Mvvm.Mvc
 
             var token = handler.WriteToken(securityToken);
 
+            return token;
+        }
+
+        public static JsonResult ToJwtTokenResult(string token, string name)
+        {
+            var configuration = GlobalServices.GetRequiredService<Configs>();
+
+            var jwtConfig = configuration.JwtConfig;
+            var expiration = TimeSpan.FromSeconds(jwtConfig.Expiration);
+
             var responseJson = new
             {
                 success = true,
                 name,
-                token = "Bearer " + token,
+                token = HttpContextExtention.BEARER_PREFIX + token,
                 expires_in = expiration.TotalSeconds
             };
 
-            return responseJson;
+            return new JsonResult(responseJson);
         }
 
 
-        public static void CacheUer(LoginUserInfo userInfo)
+        public static void CacheUer(LoginUserInfo userInfo, string token)
         {
+            if (token == null)
+                return;
+
             var jwtConfig = GlobalServices.GetRequiredService<Configs>().JwtConfig;
             var expiration = TimeSpan.FromSeconds(jwtConfig.Expiration + 60);
 
@@ -72,27 +86,50 @@ namespace WalkingTec.Mvvm.Mvc
 
             if (memoryCache.TryGetValue(key, out var value))
                 memoryCache.Remove(key);
-            memoryCache.Set(key, userInfo, expiration);
+            memoryCache.Set(key, new LoginUserInfoCache { UserInfo = userInfo, Token = token }, expiration);
         }
 
-        public static void Signin(string userId, HttpContext httpContext)
+        public static bool Signin(string userId, string token, HttpContext httpContext)
         {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                httpContext.Session?.Clear();
+                return false;
+            }
+
             var key = string.Format(DefaultConfigConsts.DEFAULT_USER_SIGN_IN_KEY, userId);
 
             var memoryCache = GlobalServices.GetRequiredService<IMemoryCache>();
             if (memoryCache.TryGetValue(key, out var cacheObj))
             {
-                if (cacheObj is LoginUserInfo loginUser)
+                if (cacheObj is LoginUserInfoCache loginUserCache)
                 {
-                    httpContext.Session?.Set("UserInfo", loginUser);
-                    return;
+                    if (token.Equals(loginUserCache.Token))
+                    {
+                        httpContext.Session?.Set("UserInfo", loginUserCache.UserInfo);
+                        return true;
+                    }
+                    else
+                    {
+                        httpContext.Session?.Clear();
+                        return false;
+                    }
                 }
             }
             var userInfo = GetUserById(userId);
             if (userInfo == null)
-                return;
-            CacheUer(userInfo);
-            Signin(userId, httpContext);
+            {
+                httpContext.Session?.Clear();
+                return false;
+            }
+            CacheUer(userInfo, token);
+            return Signin(userId, token, httpContext);
+        }
+
+        private class LoginUserInfoCache
+        {
+            public LoginUserInfo UserInfo { get; set; }
+            public string Token { get; set; }
         }
 
         private static LoginUserInfo GetUserById(string userId)

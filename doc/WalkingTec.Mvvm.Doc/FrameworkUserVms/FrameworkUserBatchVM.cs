@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 
@@ -12,11 +12,6 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
             LinkedVM = new FrameworkUser_BatchEdit();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
-        {
-            errorMessage = null;
-			return true;
-        }
     }
 
 	/// <summary>

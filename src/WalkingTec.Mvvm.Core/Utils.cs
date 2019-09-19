@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.Core
                 bool exist = false;
                 foreach (var newItem in newList)
                 {
-                    if (oldItem.ID == newItem.ID)
+                    if (oldItem.GetID().ToString() == newItem.GetID().ToString())
                     {
                         exist = true;
                         break;
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Core
                 bool exist = false;
                 foreach (var oldItem in oldList)
                 {
-                    if (newItem.ID == oldItem.ID)
+                    if (newItem.GetID().ToString() == oldItem.GetID().ToString())
                     {
                         exist = true;
                         break;

@@ -20,10 +20,10 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("登录")]
         public IActionResult Login([FromForm] string userid, [FromForm]string password)
         {
-            var user = DC.Set<FrameworkUserBase>()
-    .Include(x => x.UserRoles).Include(x => x.UserGroups)
-    .Where(x => x.ITCode.ToLower() == userid.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid)
-    .SingleOrDefault();
+            var user = DC
+    .Set<FrameworkUserBase>().Include(x => x.UserRoles)
+    .Include(x => x.UserGroups)
+    .SingleOrDefault(x => x.ITCode.ToLower() == userid.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid);
 
             //如果没有找到则输出错误
             if (user == null)
@@ -75,7 +75,23 @@ namespace WalkingTec.Mvvm.Admin.Api
                     Url = x.Url,
                     Icon = x.ICon
                 });
-            ms.AddRange(menus);
+
+            var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
+            {
+                Id = x.ID.ToString().ToLower(),
+                ParentId = x.ParentId.ToString().ToLower(),
+                Text = x.PageName,
+                Url = x.Url,
+                Icon = x.ICon
+            });
+            ms.AddRange(folders);
+            foreach (var item in menus)
+            {
+                if (folders.Any(x => x.Id == item.Id) == false)
+                {
+                    ms.Add(item);
+                }
+            }
 
             List<string> urls = new List<string>();
             urls.AddRange(DC.Set<FunctionPrivilege>()
@@ -86,7 +102,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 );
             urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
             forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", menus);
+            forapi.Attributes.Add("Menus", ms);
             forapi.Attributes.Add("Actions", urls);
             return Ok(forapi);
         }
@@ -123,8 +139,22 @@ namespace WalkingTec.Mvvm.Admin.Api
                       Url = x.Url,
                       Icon = x.ICon
                   });
-                ms.AddRange(menus);
-
+                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
+                {
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url,
+                    Icon = x.ICon
+                });
+                ms.AddRange(folders);
+                foreach (var item in menus)
+                {
+                    if (folders.Any(x => x.Id == item.Id) == false)
+                    {
+                        ms.Add(item);
+                    }
+                }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
@@ -134,7 +164,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();
-                forapi.Attributes.Add("Menus", menus);
+                forapi.Attributes.Add("Menus", ms);
                 forapi.Attributes.Add("Actions", urls);
                 return Ok(forapi);
             }
@@ -183,12 +213,12 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (request.Password == null)
                 return BadRequest(nameof(request.Password));
 
-            var user = DC.Set<Core.FrameworkUserBase>()
-                .Include(x => x.UserRoles).Include(x => x.UserGroups)
-                .Where(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
-                            x.IsValid).SingleOrDefault();
+            var user = DC
+                .Set<FrameworkUserBase>().Include(x => x.UserRoles)
+                .Include(x => x.UserGroups).SingleOrDefault(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
+                                                                 x.IsValid);
             if (user == null)
-                return NotFound();
+                return Unauthorized();
 
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
@@ -205,6 +235,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             //查找登录用户的页面权限
             var functionPrivileges = DC.Set<FunctionPrivilege>().Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value))).ToList();
 
+            var token = JwtHelper.BuildJwtToken(user.ID.ToString());
+
+            if(string.IsNullOrEmpty(token))
+                return Unauthorized();
+
             //生成并返回登录用户信息
             var userInfo = new LoginUserInfo
             {
@@ -218,10 +253,9 @@ namespace WalkingTec.Mvvm.Admin.Api
                 FunctionPrivileges = functionPrivileges
             };
 
-            JwtHelper.CacheUer(userInfo);
+            JwtHelper.CacheUer(userInfo, token);
 
-            var token = JwtHelper.BuildJwtToken(userInfo.Id.ToString(), userInfo.Name);
-            return new JsonResult(token);
+            return JwtHelper.ToJwtTokenResult(token, userInfo.Name);
         }
 
         [HttpPost("heartbeat")]
@@ -232,10 +266,16 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (LoginUserInfo == null)
                 return NoContent();
 
-            JwtHelper.Signin(LoginUserInfo.Id.ToString(), HttpContext);
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString());
 
-            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
-            return new JsonResult(token);
+            JwtHelper.CacheUer(LoginUserInfo, token);
+
+            if (JwtHelper.Signin(LoginUserInfo.Id.ToString(), token, HttpContext))
+            {
+                return JwtHelper.ToJwtTokenResult(token, LoginUserInfo.Name);
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost("refresh_token")]
@@ -246,10 +286,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (LoginUserInfo == null)
                 return NoContent();
 
-            JwtHelper.CacheUer(LoginUserInfo);
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString());
 
-            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
-            return new JsonResult(token);
+            JwtHelper.CacheUer(LoginUserInfo, token);
+
+            return JwtHelper.ToJwtTokenResult(token, LoginUserInfo.Name);
         }
     }
 

@@ -62,7 +62,7 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
 
             $model$VM vm = rv.Model as $model$VM;
@@ -94,18 +94,18 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.Delete(v.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Delete(v.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof($model$VM));
 
             $model$VM vm = rv.Model as $model$VM;
             v = new $model$();
             v.ID = vm.Entity.ID;
             vm.Entity = v;
-            _controller.Delete(v.ID,null);
+            _controller.Delete(v.ID.ToString(),null);
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+                $del$
             }
 
         }
@@ -121,9 +121,9 @@ namespace $tns$
                 context.Set<$model$>().Add(v);
                 context.SaveChanges();
             }
-            PartialViewResult rv = (PartialViewResult)_controller.Details(v.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Details(v.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof(IBaseCRUDVM<TopBasePoco>));
-            Assert.AreEqual(v.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.ID);
+            Assert.AreEqual(v.ID, (rv.Model as IBaseCRUDVM<TopBasePoco>).Entity.GetID());
         }
 
         [TestMethod]
@@ -139,16 +139,16 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof($model$BatchVM));
 
             $model$BatchVM vm = rv.Model as $model$BatchVM;
-            vm.Ids = new Guid[] { v1.ID, v2.ID };
+            vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
             _controller.DoBatchDelete(vm, null);
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(context.Set<$model$>().Count(), 0);
+                $mdel$
             }
         }
 $add$

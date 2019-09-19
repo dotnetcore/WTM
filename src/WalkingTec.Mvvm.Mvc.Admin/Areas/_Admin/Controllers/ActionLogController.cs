@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpGet]
         [ActionDescription("详细")]
-        public IActionResult Details(Guid id)
+        public IActionResult Details(string id)
         {
             var vm = CreateVM<ActionLogVM>(id);
             return PartialView(vm);

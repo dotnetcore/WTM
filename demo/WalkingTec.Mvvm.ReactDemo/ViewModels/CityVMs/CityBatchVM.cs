@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,11 +18,6 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs
             LinkedVM = new City_BatchEdit();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
-        {
-            errorMessage = null;
-			return true;
-        }
     }
 
 	/// <summary>

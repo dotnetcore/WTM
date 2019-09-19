@@ -128,7 +128,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
 
 
-            var rv = _controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 Assert.AreEqual(context.Set<FrameworkUserBase>().Count(), 0);
             }
 
-            rv = _controller.BatchDelete(new Guid[] {});
+            rv = _controller.BatchDelete(new string[] {});
             Assert.IsInstanceOfType(rv, typeof(OkResult));
         }
 
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             var rv = _controller.ExportExcel(new FrameworkUserSearcher());
             Assert.IsInstanceOfType(rv, typeof(FileResult));
 
-            rv = _controller.ExportExcelByIds(new Guid[] { });
+            rv = _controller.ExportExcelByIds(new string[] { });
             Assert.IsInstanceOfType(rv, typeof(FileResult));
 
             rv = _controller.GetExcelTemplate();

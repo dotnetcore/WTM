@@ -61,12 +61,7 @@ namespace WalkingTec.Mvvm.Mvc
             listVM.SearcherMode = ListVMSearchModeEnum.Selector;
             listVM.RemoveActionColumn();
             listVM.RemoveAction();
-            if (listVM.Searcher != null)
-            {
-                var searcher = listVM.Searcher;
-                searcher.CopyContext(listVM);
-                searcher.DoInit();
-            }
+
             ViewBag.TextName = _DONOT_USE_KFIELD;
             ViewBag.ValName = _DONOT_USE_VFIELD;
             ViewBag.FieldName = _DONOT_USE_FIELD;
@@ -801,7 +796,7 @@ namespace WalkingTec.Mvvm.Mvc
                 bmp.Save(ms, ImageFormat.Png);
                 return File(ms.ToArray(), "image/jpeg");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -810,22 +805,6 @@ namespace WalkingTec.Mvvm.Mvc
                 g.Dispose();
                 bmp.Dispose();
             }
-        }
-
-        /// <summary>
-        /// get
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [AllRights]
-        [HttpGet]
-        [ResponseCache(Duration = 3600)]
-        public IActionResult GetIconFonts(string id)
-        {
-            if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
-                return Json(IconFontsHelper.IconFontDicItems[id]);
-            else
-                return Json(null);
         }
 
     }

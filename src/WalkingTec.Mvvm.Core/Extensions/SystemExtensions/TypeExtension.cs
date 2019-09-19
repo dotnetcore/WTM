@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -195,13 +195,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         val = "\"" + val + "\"";
                     }
-                    else if(pro.PropertyType == typeof(Guid) || pro.PropertyType == typeof(Guid?))
-                    {
                         if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
                         {
                             val = "$fk$";
                         }
-                    }
                     if (val != "")
                     {
                         rv.Add(key, val);

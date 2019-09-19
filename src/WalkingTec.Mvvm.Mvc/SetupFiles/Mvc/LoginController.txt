@@ -27,8 +27,8 @@ namespace $ns$.Controllers
         {
             if (ConfigInfo.IsQuickDebug == false)
             {
-                var verifycode = HttpContext.Session.Get<string>("verify_code");
-                if (verifycode.ToLower() != vm.VerifyCode.ToLower())
+                var verifyCode = HttpContext.Session.Get<string>("verify_code");
+                if (string.IsNullOrEmpty(verifyCode) || verifyCode.ToLower() != vm.VerifyCode.ToLower())
                 {
                     vm.MSD.AddModelError("", "验证码不正确");
                     return View(vm);

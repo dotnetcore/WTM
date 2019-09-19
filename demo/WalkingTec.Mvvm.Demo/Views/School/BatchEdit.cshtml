@@ -1,9 +1,10 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolBatchVM
+@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolBatchVM
 
 <wt:form vm="@Model">
     <div style="margin-bottom:10px">批量修改以下数据: </div>
 <wt:row items-per-row="ItemsPerRowEnum.Two">
 <wt:combobox field="LinkedVM.SchoolType" />
+  <wt:textbox field="LinkedVM.SchoolCode" />
 </wt:row>
     <wt:hidden field="Ids" />
     <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>

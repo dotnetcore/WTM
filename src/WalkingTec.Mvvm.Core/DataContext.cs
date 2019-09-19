@@ -382,10 +382,8 @@ namespace WalkingTec.Mvvm.Core
                         var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
                         var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
                         var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
-                        var login2 = GetMenu2(AllModules, "Login", new List<FrameworkRole> { adminRole }, null, 7);
-                        var file2 = GetMenu2(AllModules, "FileApi", new List<FrameworkRole> { adminRole }, null, 8);
-                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2, file2, login2 };
-                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += "Api"; });
+                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2};
+                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += "(内置api)"; });
                         apifolder.Children.AddRange(apis);
                         Set<FrameworkMenu>().Add(apifolder);
                     }
@@ -455,6 +453,7 @@ namespace WalkingTec.Mvvm.Core
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == "_"+controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
@@ -464,11 +463,11 @@ namespace WalkingTec.Mvvm.Core
                 menu.ActionName = "主页面";
                 menu.ClassName = acts[0].Module.ClassName;
                 menu.MethodName = null;
-                for (int i = 0; i < acts.Count; i++)
+                for (int i = 0; i < rest.Count; i++)
                 {
-                    if (acts[i] != null)
+                    if (rest[i] != null)
                     {
-                        menu.Children.Add(GetMenuFromAction(acts[i], false, allowedRoles, allowedUsers, (i + 1)));
+                        menu.Children.Add(GetMenuFromAction(rest[i], false, allowedRoles, allowedUsers, (i + 1)));
                     }
                 }
             }
