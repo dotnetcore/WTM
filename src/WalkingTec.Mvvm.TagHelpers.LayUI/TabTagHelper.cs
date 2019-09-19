@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -17,13 +17,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             this.Id = Guid.NewGuid().ToString().ToLower().Replace("-","");
             output.TagName = "div";
+            string heightclass = "";
+            if(Height == null)
+            {
+                heightclass = "donotuse_pdiv";
+            }
             if (TabStyle == TabStyleEnum.Default)
             {
-                output.Attributes.SetAttribute("class", "layui-tab layui-tab-card");
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-card {heightclass}");
             }
             else
             {
-                output.Attributes.SetAttribute("class", "layui-tab layui-tab-brief");                
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief {heightclass}");                
             }
             if(AllowClose == true)
             {
@@ -71,8 +76,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            string heightclass = "";
+            if (Height == null)
+            {
+                heightclass = "donotuse_pdiv";
+            }
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", "layui-tab-content");
+            output.Attributes.SetAttribute("class", $"layui-tab-content {heightclass}");
             base.Process(context, output);
         }
     }
@@ -84,7 +94,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", "layui-tab-item");
+            output.Attributes.SetAttribute("class", $"layui-tab-item");
             base.Process(context, output);
         }
     }
