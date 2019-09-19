@@ -83,11 +83,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 Text = x.PageName,
                 Url = x.Url,
                 Icon = x.ICon
-            });            
+            });
             ms.AddRange(folders);
             foreach (var item in menus)
             {
-                if(folders.Any(x=>x.Id == item.Id) == false)
+                if (folders.Any(x => x.Id == item.Id) == false)
                 {
                     ms.Add(item);
                 }
@@ -218,7 +218,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .Include(x => x.UserGroups).SingleOrDefault(x => x.ITCode.ToLower() == request.UserId.ToLower() && x.Password == Utils.GetMD5String(request.Password) &&
                                                                  x.IsValid);
             if (user == null)
-                return NotFound();
+                return Unauthorized();
 
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
@@ -235,6 +235,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             //查找登录用户的页面权限
             var functionPrivileges = DC.Set<FunctionPrivilege>().Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value))).ToList();
 
+            var token = JwtHelper.BuildJwtToken(user.ID.ToString());
+
+            if(string.IsNullOrEmpty(token))
+                return Unauthorized();
+
             //生成并返回登录用户信息
             var userInfo = new LoginUserInfo
             {
@@ -248,10 +253,9 @@ namespace WalkingTec.Mvvm.Admin.Api
                 FunctionPrivileges = functionPrivileges
             };
 
-            JwtHelper.CacheUer(userInfo);
+            JwtHelper.CacheUer(userInfo, token);
 
-            var token = JwtHelper.BuildJwtToken(userInfo.Id.ToString(), userInfo.Name);
-            return new JsonResult(token);
+            return JwtHelper.ToJwtTokenResult(token, userInfo.Name);
         }
 
         [HttpPost("heartbeat")]
@@ -262,10 +266,16 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (LoginUserInfo == null)
                 return NoContent();
 
-            JwtHelper.Signin(LoginUserInfo.Id.ToString(), HttpContext);
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString());
 
-            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
-            return new JsonResult(token);
+            JwtHelper.CacheUer(LoginUserInfo, token);
+
+            if (JwtHelper.Signin(LoginUserInfo.Id.ToString(), token, HttpContext))
+            {
+                return JwtHelper.ToJwtTokenResult(token, LoginUserInfo.Name);
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost("refresh_token")]
@@ -276,10 +286,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             if (LoginUserInfo == null)
                 return NoContent();
 
-            JwtHelper.CacheUer(LoginUserInfo);
+            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString());
 
-            var token = JwtHelper.BuildJwtToken(LoginUserInfo.Id.ToString(), LoginUserInfo.Name);
-            return new JsonResult(token);
+            JwtHelper.CacheUer(LoginUserInfo, token);
+
+            return JwtHelper.ToJwtTokenResult(token, LoginUserInfo.Name);
         }
     }
 

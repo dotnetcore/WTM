@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WalkingTec.Mvvm.Core;
@@ -20,6 +21,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
+            if(!(context.Controller is ControllerBase controller))
+            {
+                base.OnActionExecuting(context);
+                return;
+            }
+
+            //var controller = context.Controller as ControllerBase;
 
             if (!(context.ActionDescriptor is ControllerActionDescriptor actionDescriptor))
             {
@@ -40,28 +48,23 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             if (!string.IsNullOrEmpty(tokenHeader))
             {
-                var user = context.HttpContext.User;
-
                 try
                 {
-                    string userId;
-                    if (user?.Claims != null && user.Claims.Any())
-                    {
-                        userId = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
-                    }
-                    else
-                    {
-                        var jwtHandler = new JwtSecurityTokenHandler();
-                        var token = jwtHandler.ReadJwtToken(tokenHeader);
-                        userId = token.Id;
-                    }
+                    var jwtHandler = new JwtSecurityTokenHandler();
+                    var token = jwtHandler.ReadJwtToken(tokenHeader);
+                    var userId = token.Id;
                     if (string.IsNullOrEmpty(userId))
                     {
                         base.OnActionExecuting(context);
                         return;
                     }
 
-                    JwtHelper.Signin(userId, context.HttpContext);
+                    if (!JwtHelper.Signin(userId, tokenHeader, context.HttpContext))
+                    {
+                        base.OnActionExecuting(context);
+                        context.Result = controller.Unauthorized();
+                        return;
+                    }
                 }
                 catch
                 {
