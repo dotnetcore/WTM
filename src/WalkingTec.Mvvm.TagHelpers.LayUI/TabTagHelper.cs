@@ -17,18 +17,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             this.Id = Guid.NewGuid().ToString().ToLower().Replace("-","");
             output.TagName = "div";
-            string heightclass = "";
-            if(Height == null)
-            {
-                heightclass = "donotuse_pdiv";
-            }
             if (TabStyle == TabStyleEnum.Default)
             {
-                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-card {heightclass}");
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-card");
             }
             else
             {
-                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief {heightclass}");                
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief");                
             }
             if(AllowClose == true)
             {
@@ -76,13 +71,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            string heightclass = "";
-            if (Height == null)
-            {
-                heightclass = "donotuse_pdiv";
-            }
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", $"layui-tab-content {heightclass}");
+            output.Attributes.SetAttribute("class", $"layui-tab-content");
             base.Process(context, output);
         }
     }
