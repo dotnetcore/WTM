@@ -23,6 +23,7 @@ namespace WalkingTec.Mvvm.Core
             //循环Datable中的每一行
             foreach (DataRow row in table.Rows)
             {
+                var isIdAssigned = false;
                 //新建Entity
                 T entity = (T)Activator.CreateInstance(typeof(T));
                 //循环Entity的每一个属性
@@ -31,6 +32,11 @@ namespace WalkingTec.Mvvm.Core
                     //如果DataTable中有列名和属性名一致，则把单元格内容赋值给Entity的该属性
                     if (row.Table.Columns.Contains(item.Name))
                     {
+                        if (isIdAssigned)
+                            continue;
+                        if (item.Name.ToLower().Equals("id"))
+                            isIdAssigned = true;
+
                         //判断null值
                         if (string.IsNullOrEmpty(row[item.Name].ToString()))
                         {
