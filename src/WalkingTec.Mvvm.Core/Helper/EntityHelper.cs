@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
@@ -25,6 +25,14 @@ namespace WalkingTec.Mvvm.Core
             {
                 //新建Entity
                 T entity = (T)Activator.CreateInstance(typeof(T));
+
+                var skipBaseId = false;
+                if (entity is TopBasePoco basePoco)
+                {
+                    var idType = basePoco.GetIDType();
+                    skipBaseId = idType != typeof(Guid);
+                }
+
                 //循环Entity的每一个属性
                 foreach (var item in entity.GetType().GetProperties())
                 {
@@ -46,6 +54,8 @@ namespace WalkingTec.Mvvm.Core
                             //如果是Guid或Guid?类型
                             if (ptype == typeof(Guid))
                             {
+                                if (item.Name.ToLower() == "id" && skipBaseId)
+                                    continue;
                                 item.SetValue(entity, Guid.Parse(row[item.Name].ToString()));
                             }
                             //如果是enum或enum?类型
