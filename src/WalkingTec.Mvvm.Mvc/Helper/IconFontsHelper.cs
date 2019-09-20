@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static void GenerateIconFont()
         {
-            var baseDirs = new string[] { "wwwroot/font", "wwwroot/layui" };
+            var baseDirs = new string[] { "/wwwroot/font", "/wwwroot/layui" };
 
             var iconFontHashSet = new HashSet<string>();
             var IconFontDic = new Dictionary<string, string[]>();
