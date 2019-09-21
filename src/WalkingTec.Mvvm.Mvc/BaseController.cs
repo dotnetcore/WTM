@@ -561,7 +561,6 @@ namespace WalkingTec.Mvvm.Mvc
             try
             {
                 BaseVM bvm = vm as BaseVM;
-                //循环FormCollection
                 foreach (var item in bvm.FC.Keys)
                 {
                     PropertyHelper.SetPropertyValue(vm, item, bvm.FC[item], prefix, true);
