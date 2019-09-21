@@ -2,6 +2,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
@@ -319,6 +320,11 @@ namespace WalkingTec.Mvvm.Core
                     break;
             }
             base.OnConfiguring(optionsBuilder);
+            var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
+            if (Configs.IsQuickDebug)
+            {
+                optionsBuilder.UseLoggerFactory(LoggerFactory);
+            }
         }
 
         /// <summary>
@@ -696,5 +702,16 @@ namespace WalkingTec.Mvvm.Core
             }
             return rv;
         }
+        /// <summary>
+        /// 将EF生成的sql语句输出到debug输出,using Microsoft.Extensions.Logging.Debug;
+        /// </summary>
+        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] {
+            new DebugLoggerProvider()
+        });
+        /// <summary>
+        /// 将EF生成的sql语句输出到Console,using Microsoft.Extensions.Logging.Console;
+        /// </summary>
+        //public static readonly LoggerFactory LoggerFactory =
+        //       new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
     }
 }
