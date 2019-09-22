@@ -11,14 +11,16 @@
 
 <script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
-import cache from "@/util/cache";
-import config from "@/config/index";
+import { globalConfig } from "@/config/global";
+
 @Component
 export default class DialogBox extends Vue {
     @Prop({ type: Boolean, default: false })
     isShow;
 
-    dialog: string = "弹框";
+    get dialog() {
+        return globalConfig.dialog;
+    }
     /**
      * 用法调用 携带sync
      * :is-show.sync="XXX"
@@ -26,18 +28,17 @@ export default class DialogBox extends Vue {
     onClose() {
         this.$emit("update:isShow", false);
     }
-    created() {
-        const userGlobal = cache.getCookieJson(config.globalKey) || {};
-        this.dialog = userGlobal.dialog;
-    }
 }
 </script>
 <style lang="less">
 .dialog-box {
 }
 .el-drawer-box {
+    .el-drawer {
+        overflow: auto;
+    }
     .el-drawer__body {
-        padding: 0 15px;
+        padding: 0 15px 15px;
     }
 }
 </style>

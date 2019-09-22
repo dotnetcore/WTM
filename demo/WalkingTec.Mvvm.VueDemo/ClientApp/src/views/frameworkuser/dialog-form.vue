@@ -63,10 +63,11 @@
         <el-col :span="12">
           <el-form-item label="头像">
             <edit-box :is-edit="status !== dialogType.detail">
-              <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <upload-img :photo-id.sync="formData.PhotoId" />
+              <!-- <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                 <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
-              </el-upload>
+              </el-upload> -->
               <template #editValue>
                 <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
               </template>
@@ -110,6 +111,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinDialogForm from "@/util/mixin/form-mixin";
 import { sexList } from "@/config/entity";
+import uploadImg from "@/components/form/upload-img.vue";
 // 表单结构
 const defaultFormData = {
     // 表单名称
@@ -133,7 +135,10 @@ const defaultFormData = {
     }
 };
 
-@Component({ mixins: [mixinDialogForm(defaultFormData)] })
+@Component({
+    mixins: [mixinDialogForm(defaultFormData)],
+    components: { "upload-img": uploadImg }
+})
 export default class Index extends Vue {
     @Action add;
     @Action edit;
@@ -288,4 +293,29 @@ export default class Index extends Vue {
 }
 </script>
 <style lang='less'>
+.frameworkuser-form {
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409eff;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+}
 </style>
