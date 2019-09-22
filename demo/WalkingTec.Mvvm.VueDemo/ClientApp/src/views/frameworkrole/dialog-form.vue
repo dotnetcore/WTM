@@ -111,6 +111,8 @@ export default class Index extends Vue {
      * 提交 ★★★★★
      */
     onSubmitForm() {
+        console.log("e.test", this.$refs["e.test"]);
+        this.$refs["e.test"].error = "123";
         this.$refs[this["refName"]].validate(valid => {
             if (valid) {
                 if (this["status"] === this["dialogType"].add) {

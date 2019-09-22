@@ -8,8 +8,8 @@
         <LeftMenu :default-path="defaultPath" :menu-items="menuItems" :collapse="collapse" />
       </el-aside>
       <el-main>
-        <Tabs v-if="isTab" />
-        <BreadCrumb v-else />
+        <Tabs v-show="isTab" />
+        <BreadCrumb v-show="!isTab" />
         <AppMain />
       </el-main>
     </el-container>
@@ -42,8 +42,7 @@ import {
 } from "@/components/layout/index";
 import { Component, Vue } from "vue-property-decorator";
 import { Action, Mutation, Getter } from "vuex-class";
-import cache from "@/util/cache";
-import config from "@/config/index";
+import { globalConfig, setGlobal } from "@/config/global";
 
 @Component({
     components: {
@@ -72,14 +71,16 @@ export default class App extends Vue {
     @Getter("menuItems")
     menuItems;
 
-    isTab: Boolean = true;
+    isTab: Boolean = globalConfig.tabs;
     get defaultPath() {
         return this["$route"].path;
     }
 
     created() {
-        const global = cache.getCookieJson(config.globalKey) || {};
-        this.isTab = global["tabs"];
+        this.isTab = globalConfig.tabs;
+        setGlobal("tabs", val => {
+            this.isTab = val;
+        });
     }
 }
 </script>

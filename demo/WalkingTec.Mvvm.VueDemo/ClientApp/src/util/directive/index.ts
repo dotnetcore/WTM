@@ -36,7 +36,7 @@ const domStyleFn = (el, binding, vnode) => {
         elPre.style.display = "inline-block";
     }
 };
-
+// 编辑
 export const dirEdit = {
     inserted: (el, binding, vnode) => {
         // el前添加dom
@@ -67,5 +67,12 @@ export const visible = {
                 el.parentNode.removeChild(el);
             }
         }
+    }
+};
+// error提示
+export const error = {
+    update: (el, binding, vnode) => {
+        console.log("---------------------------");
+        console.log(el, binding, vnode);
     }
 };

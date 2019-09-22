@@ -5,7 +5,7 @@
         <el-table-column v-if="isSelection" type="selection" align="center" width="55" />
         <!-- 判断是否需要插槽,自定义列内容 -->
         <template v-for="(item, index) of Cols">
-          <el-table-column v-if="item.isSlot" :key="index" :label="item.label" :width="item.width" :align="item.align || 'center'">
+          <el-table-column v-if="item.isSlot" :key="index" :label="item.label" :width="item.width" :align="item.align || 'center'" :fixed="item.fixed">
             <template slot-scope="scope">
               <slot :name="item.key" :row="{...scope.row}" />
             </template>

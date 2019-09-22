@@ -10,7 +10,6 @@ const defaultCache = {
     },
     setCookieJson(name, value, days?) {
         const val = JSON.stringify(value);
-        console.log("this", this);
         this.setCookie(name, val, days);
     },
     getCookie(name) {

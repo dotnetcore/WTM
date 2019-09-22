@@ -94,7 +94,13 @@ export default class Index extends Vue {
         { key: "IsValid", label: "是否生效", isSlot: true },
         { key: "RoleName_view", label: "角色" },
         { key: "GroupName_view", label: "用户组" },
-        { key: "operate", label: "操作", isSlot: true }
+        {
+            key: "operate",
+            label: "操作",
+            isSlot: true,
+            width: 130,
+            fixed: "right"
+        }
     ];
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {

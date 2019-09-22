@@ -34,6 +34,7 @@ import { Mutation, Getter } from "vuex-class";
 import NprogressContainer from "./nprogress.vue";
 import cache from "@/util/cache";
 import config from "@/config/index";
+import { globalConfig, setGlobal } from "@/config/global";
 
 @Component({
     components: { NprogressContainer }
@@ -46,8 +47,8 @@ export default class NavBar extends Vue {
     userName: String = "";
     isGlobalBox: boolean = false;
     global = {
-        dialog: "弹框",
-        tabs: false
+        dialog: globalConfig.dialog,
+        tabs: globalConfig.tabs
     };
 
     mounted() {
@@ -62,7 +63,8 @@ export default class NavBar extends Vue {
         this.isGlobalBox = true;
     }
     onGlobalClose() {
-        cache.setCookieJson(config.globalKey, this.global);
+        setGlobal("tabs", this.global.tabs);
+        setGlobal("dialog", this.global.dialog);
     }
 }
 </script>
