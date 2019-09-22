@@ -11,6 +11,7 @@
 由于主键不一定是guid了，老项目更新的时候需要手动修改之前的文件，主要是两部分：
 1. Controller里 BatchEdit，BatchDelete中的ids参数由guid[] 变为 string[]
 2. batchvm中的CheckIfCanDelete方法，第一个参数由guid变为object
+3. 老数据库中DataPrivileges表RelatedId字段类型由Guid变为Nvarchar
 改起来还是比较简单的
 
 #### 前后端不分离模式
