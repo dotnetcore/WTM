@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
@@ -17,6 +18,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             var vm = CreateVM<FrameworkGroupListVM>();
             return PartialView(vm);
+        }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(FrameworkGroupListVM vm)
+        {
+            return vm.GetJson(false);
         }
         #endregion
 
@@ -156,6 +164,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return FFResult().CloseDialog().Alert("操作成功");
         }
         #endregion
+
+        [ActionDescription("导出")]
+        [HttpPost]
+        public IActionResult ExportExcel(FrameworkGroupListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
 
     }
 

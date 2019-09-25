@@ -271,7 +271,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
                     {
-                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.ID}'/>";
+                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.GetID()}'/>";
                         addHiddenID = true;
                     }
                     if (inner == false)
@@ -315,9 +315,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return sb.ToString();
         }
 
-        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
+        /// <summary>
+        /// Get json format string of ListVM's search result
+        /// </summary>
+        /// <typeparam name="T">Model type</typeparam>
+        /// <param name="self">a listvm</param>
+        /// <param name="PlainText">true to return plain text, false to return formated html, such as checkbox,buttons ...</param>
+        /// <returns>json string</returns>
+        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
         {
-            return $@"{{""Data"":{self.GetDataJson(true)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount}}}";
+            return $@"{{""Data"":{self.GetDataJson(PlainText)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
     }
 }

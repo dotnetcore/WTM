@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
                 this.MakeAction("FrameworkGroup","DataFunction","数据权限","数据权限", GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin"),
             };
         }
 

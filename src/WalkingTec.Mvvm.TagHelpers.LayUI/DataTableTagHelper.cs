@@ -323,10 +323,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 ListVM.NeedPage = false;
             }
-            else if (string.IsNullOrEmpty(Url))
+            else 
             {
-                Url = "/_Framework/GetPagingData";
-
+                if (string.IsNullOrEmpty(Url))
+                {
+                    Url = "/_Framework/GetPagingData";
+                }
                 if (Filter == null) Filter = new Dictionary<string, object>();
                 Filter.Add("_DONOT_USE_VMNAME", vmQualifiedName);
                 Filter.Add("_DONOT_USE_CS", ListVM.CurrentCS);
@@ -444,7 +446,7 @@ layui.use(['table'], function(){{
     elem: '#{Id}'
     ,id: '{Id}'
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
-    {(string.IsNullOrEmpty(Url) ? string.Empty : $",url: '{Url}'")}
+    {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
@@ -470,7 +472,7 @@ layui.use(['table'], function(){{
     }}
     }}
   {TableJSVar} = table.render({Id}option);
-  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")}); " : string.Empty)}
+  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : string.Empty)}
 
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
       var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
@@ -790,7 +792,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         }
                         else
                         {
-                            if (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel")
+                            if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.ActionName == "ExportExcel")
                             {
                                 actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)},ids);";
                             }
