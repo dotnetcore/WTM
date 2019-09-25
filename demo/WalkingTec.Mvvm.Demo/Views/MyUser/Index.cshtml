@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs.MyUserListVM
+@model WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs.MyUserListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
 <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -9,4 +9,4 @@
 <wt:selector  field="Searcher.SelectedUserRolesIDs" list-vm="RoleList" text-bind="RoleList.EntityList[0].RoleName" />
 </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/MyUser/Search"/>

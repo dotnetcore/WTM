@@ -49,6 +49,7 @@ namespace WalkingTec.Mvvm.Core
             var paraType = GridActionParameterTypesEnum.NoId;
             var showInRow = false;
             var hideOnToolBar = false;
+            var showDialog = true;
 
             switch (standardType)
             {
@@ -105,6 +106,16 @@ namespace WalkingTec.Mvvm.Core
                     gridname = "导入";
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
+                case GridActionStandardTypesEnum.ExportExcel:
+                    iconcls = "layui-icon layui-icon-download-circle";
+                    gridname = "导出";
+                    paraType = GridActionParameterTypesEnum.MultiIdWithNull;
+                    name = "导出Excel";
+                    dialogTitle = "导出Excel";
+                    showInRow = false;
+                    showDialog = false;
+                    hideOnToolBar = false;
+                   break;
                 default:
                     break;
             }
@@ -129,7 +140,7 @@ namespace WalkingTec.Mvvm.Core
                 DialogWidth = dialogWidth ?? 800,
                 DialogHeight = dialogHeight,
                 ShowInRow = showInRow,
-                ShowDialog = true,
+                ShowDialog = showDialog,
                 HideOnToolBar = hideOnToolBar,
                 whereStr = list.ToArray()
             };
@@ -245,6 +256,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="exportType">导出类型  默认null，支持所有导出</param>
         /// <param name="param">参数</param>
         /// <returns></returns>
+        [Obsolete("Will be removed in future, use MakeStandardAction with GridActionStandardTypesEnum.ExportExcel instead")]
         public static GridAction MakeStandardExportAction<T, V>(this IBasePagedListVM<T, V> self
             , string gridid = null
             , bool MustSelect = false

@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs.FrameworkRoleListVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs.FrameworkRoleListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -6,4 +6,4 @@
         <wt:textbox field="Searcher.RoleName" />
     </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/_Admin/FrameworkRole/Search"/>
