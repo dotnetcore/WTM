@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeListVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -6,4 +6,4 @@
         <wt:combobox field="Searcher.DpType" />
     </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/_Admin/DataPrivilege/Search"/>

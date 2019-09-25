@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                 this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, "导出",""),
             };
         }
 
