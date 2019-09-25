@@ -85,6 +85,9 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         public string CurrentCS { get; set; }
+
+        public DBTypeEnum? CurrentDbType { get; set; }
+
         public string ParentWindowId
         {
             get
@@ -504,7 +507,7 @@ namespace WalkingTec.Mvvm.Mvc
                     cs = "default";
                 }
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
         #endregion

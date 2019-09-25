@@ -67,6 +67,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public string CurrentCS { get; set; }
 
+        public DBTypeEnum? CurrentDbType { get; set; }
 
         private IDataContext _dc;
         public IDataContext DC
@@ -320,7 +321,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 cs = "defaultlog";
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
         #endregion
