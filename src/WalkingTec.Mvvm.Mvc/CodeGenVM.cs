@@ -925,7 +925,16 @@ namespace WalkingTec.Mvvm.Mvc
                     fieldstr.Append(Environment.NewLine);
                 }
                 fieldstr.Append($@"</wt:row>");
-                rv = rv.Replace("$fields$", fieldstr.ToString());
+                string url = "";
+                if (string.IsNullOrEmpty(Area))
+                {
+                    url = $"/{ModelName}/Search";
+                }
+                else
+                {
+                    url = $"/{Area}/{ModelName}/Search";
+                }
+                rv = rv.Replace("$fields$", fieldstr.ToString()).Replace("$searchurl$", "");
             }
             return rv;
         }

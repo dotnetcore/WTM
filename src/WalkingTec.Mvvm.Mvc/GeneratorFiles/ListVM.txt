@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace $vmnamespace$
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchEdit, "批量修改","$area$", dialogWidth: 800),
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchDelete, "批量删除","$area$", dialogWidth: 800),
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Import, "导入","$area$", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.ExportExcel, "导出","$area$"),
             };
         }
 

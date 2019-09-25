@@ -11,10 +11,10 @@ window.ff = {
     var cookiePrefix = '', windowGuid = '';
 
     if ("undefined" !== typeof DONOTUSE_COOKIEPRE) {
-      cookiePrefix = DONOTUSE_COOKIEPRE
+        cookiePrefix = DONOTUSE_COOKIEPRE;
     }
     if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
-      windowGuid = DONOTUSE_WINDOWGUID
+        windowGuid = DONOTUSE_WINDOWGUID;
     }
 
     if (allwindow) {
@@ -567,10 +567,10 @@ window.ff = {
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (item.value !== null && item.value !== "") {
         if (filter.hasOwnProperty(item.name)) {
-          var temp = filter[item.name]
-          if (!(temp instanceof Array))
-            temp = [temp]
-          temp.push(item.value)
+            var temp = filter[item.name];
+            if (!(temp instanceof Array))
+                temp = [temp];
+            temp.push(item.value);
           filter[item.name] = temp;
         }
         else {
@@ -587,10 +587,10 @@ window.ff = {
       if (!item.name) return;
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (filter.hasOwnProperty(item.name)) {
-        var temp = filter[item.name]
-        if (!(temp instanceof Array))
-          temp = [temp]
-        temp.push(item.value)
+          var temp = filter[item.name];
+          if (!(temp instanceof Array));
+          temp = [temp];
+          temp.push(item.value);
         filter[item.name] = temp;
       }
       else {
@@ -612,9 +612,11 @@ window.ff = {
   },
 
   DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
-    var formData = ff.GetSearchFormData(formId);
+      var formData = ff.GetSearchFormData(formId);
+      if (defaultcondition == null) {
+          defaultcondition = {};
+      }
     $.extend(defaultcondition, formData);
-    $.cookie("DONOTUSEDOWNLOADING", "1", { path: '/' });
     var form = $('<form method="POST" action="' + url + '">');
     for (var attr in defaultcondition) {
       if (defaultcondition[attr] != null) {
@@ -663,13 +665,13 @@ window.ff = {
         data[val] = ff.guid();
       }
     }
-    for (val in data) {
+      var re = /(<input .*?)\s*\/>/ig;
+      var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
+      var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
+   for (val in data) {
       if (typeof (data[val]) == 'string') {
         data[val] = data[val].replace(/\[\d?\]/ig, "[" + loaddata.length + "]");
         data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
-        var re = /(<input .*?)\s*\/>/ig;
-        var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
-        var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
         data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',0)\" />");
         data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + loaddata.length + ",'" + val + "',1)\" >$2");
         data[val] = data[val].replace(re3, "$1 <input hidden name=\"$2.id\" value='" + data["ID"] + "'/> $3");
@@ -683,11 +685,15 @@ window.ff = {
   },
 
   LoadLocalData: function (gridid, option, datas) {
-    for (var i = 0; i < datas.length; i++) {
+      var re = /(<input .*?)\s*\/>/ig;
+      var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
+  for (var i = 0; i < datas.length; i++) {
       var data = datas[i];
       for (val in data) {
         if (typeof (data[val]) == 'string') {
-          data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
+            data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
+            data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\" />");
+            data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\" >$2");
         }
       }
     }
