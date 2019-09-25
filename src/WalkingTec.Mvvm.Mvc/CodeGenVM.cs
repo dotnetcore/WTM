@@ -934,7 +934,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     url = $"/{Area}/{ModelName}/Search";
                 }
-                rv = rv.Replace("$fields$", fieldstr.ToString()).Replace("$searchurl$", "");
+                rv = rv.Replace("$fields$", fieldstr.ToString()).Replace("$searchurl$", url);
             }
             return rv;
         }

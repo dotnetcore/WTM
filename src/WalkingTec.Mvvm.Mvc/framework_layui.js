@@ -684,7 +684,7 @@ window.ff = {
     layui.table.render(option);
   },
 
-  LoadLocalData: function (gridid, option, datas) {
+  LoadLocalData: function (gridid, option, datas,isnormaltable) {
       var re = /(<input .*?)\s*\/>/ig;
       var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
   for (var i = 0; i < datas.length; i++) {
@@ -692,8 +692,10 @@ window.ff = {
       for (val in data) {
         if (typeof (data[val]) == 'string') {
             data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
-            data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\" />");
-            data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\" >$2");
+            if (isnormaltable === false) {
+                data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\" />");
+                data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\" >$2");
+            }
         }
       }
     }
