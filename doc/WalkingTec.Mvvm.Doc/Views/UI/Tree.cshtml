@@ -14,7 +14,7 @@
       [Required(ErrorMessage = "{0}是必填项")]
       public string DepName { get; set; }
 
-      public List<Department>
+      public List&lt;Department&gt;
         Children { get; set; }
 
         [Display(Name = "上级部门")]
@@ -113,14 +113,14 @@
     </wt:tabcontent>
     <wt:tabcontent>
       <wt:code>
-        &lt;wt:form vm="@Model" style="max-width:600px;">
-          &lt;wt:textbox field="Entity.DepName" />
-          &lt;wt:tree field="Entity.ParentId" items="AllDeps" height="300" />
-          &lt;wt:row align="AlignEnum.Right">
-            &lt;wt:submitbutton disabled="true" />
-            &lt;wt:closebutton disabled="true" />
-          &lt;/wt:row>
-        &lt;/wt:form>
+        &lt;wt:form vm="@Model" style="max-width:600px;"&gt;
+          &lt;wt:textbox field="Entity.DepName" /&gt;
+          &lt;wt:tree field="Entity.ParentId" items="AllDeps" height="300" /&gt;
+          &lt;wt:row align="AlignEnum.Right"&gt;
+            &lt;wt:submitbutton disabled="true" /&gt;
+            &lt;wt:closebutton disabled="true" /&gt;
+          &lt;/wt:row&gt;
+        &lt;/wt:form&gt;
       </wt:code>
     </wt:tabcontent>
   </wt:tabcontents>
