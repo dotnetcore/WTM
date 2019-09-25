@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM
+@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true" old-post="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -8,4 +8,4 @@
     </wt:row>
 </wt:searchpanel>
 
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/School/Search"/>
