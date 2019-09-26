@@ -655,7 +655,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Public]
         [HttpPost]
-        [CrossDomain]
         public IActionResult Login(string userid, string password)
         {
             var user = DC.Set<FrameworkUserBase>()
@@ -692,7 +691,6 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
-        [CrossDomain]
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
