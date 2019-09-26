@@ -48,25 +48,37 @@ namespace WalkingTec.Mvvm.Mvc
         )
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
-            IConfigurationRoot config = null;
 
-            var configBuilder =
-                    new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
+            var configBuilder = new ConfigurationBuilder();
+
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")))
+            {
+                var binLocation = Assembly.GetEntryAssembly()?.Location;
+                if (!string.IsNullOrEmpty(binLocation))
+                {
+                    var binPath = new FileInfo(binLocation).Directory?.FullName;
+                    if (File.Exists(Path.Combine(binPath, "appsettings.json")))
+                    {
+                        configBuilder.SetBasePath(binPath)
+                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            .AddEnvironmentVariables();
+                    }
+                }
+            }
+            else
+            {
+                configBuilder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables();
+            }
 
             if (webHostBuilderContext != null)
             {
-                IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
+                var env = webHostBuilderContext.HostingEnvironment;
                 configBuilder
-                    .AddJsonFile(
-                        $"appsettings.{env.EnvironmentName}.json",
-                        optional: true,
-                        reloadOnChange: true
-                    );
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             }
-            config = configBuilder.Build();
+            var config = configBuilder.Build();
 
             var gd = GetGlobalData();
             services.AddSingleton(gd);
