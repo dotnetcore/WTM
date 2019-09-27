@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 时间范围分隔符 默认 ~
         /// </summary>
-        public string RangeSplit { get; set; }
+        private string RangeSplit { get; set; }
 
         /// <summary>
         /// Max
@@ -161,7 +161,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             { DateTimeTypeEnum.Date,"yyyy-MM-dd"},
             { DateTimeTypeEnum.Datetime,"yyyy-MM-dd HH:mm:ss"},
             { DateTimeTypeEnum.Year,"yyyy"},
-            { DateTimeTypeEnum.Month,"MM"},
+            { DateTimeTypeEnum.Month,"yyyy-MM"},
             { DateTimeTypeEnum.Time,"HH:mm:ss"},
         };
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -173,6 +173,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (Field.ModelExplorer.ModelType == typeof(string))
             {
                 Value = Field.Model?.ToString() ?? Value;
+            }
+            else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
+            {
+                var dateRange = Field.Model as DateRange;
+                Value = dateRange?.ToString(DateTimeFormatDic[Type]) ?? Value;
             }
             else
             {
