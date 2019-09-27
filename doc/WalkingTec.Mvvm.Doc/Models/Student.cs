@@ -64,13 +64,13 @@ namespace WalkingTec.Mvvm.Doc.Models
         public DateTime? EnRollDate { get; set; }
 
         [Display(Name = "日期区间")]
-        public DateTime? EnRollDateRange { get; set; }
+        public DateRange EnRollDateRange { get; set; }
 
         [Display(Name = "年份区间")]
-        public int? EnYearRange { get; set; }
+        public DateRange EnYearRange { get; set; }
 
         [Display(Name = "月份区间")]
-        public int? EnMonthRange { get; set; }
+        public DateRange EnMonthRange { get; set; }
 
         [Display(Name = "时间区间")]
         public string EnTimeRange { get; set; }
