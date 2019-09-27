@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 日期时间选择器
         /// 可选择：年、月、日、时、分、秒
         /// </summary>
-        Datetime,
+        DateTime,
         /// <summary>
         /// 年选择器
         /// 只提供年列表选择
@@ -159,7 +159,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public static Dictionary<DateTimeTypeEnum, string> DateTimeFormatDic = new Dictionary<DateTimeTypeEnum, string>()
         {
             { DateTimeTypeEnum.Date,"yyyy-MM-dd"},
-            { DateTimeTypeEnum.Datetime,"yyyy-MM-dd HH:mm:ss"},
+            { DateTimeTypeEnum.DateTime,"yyyy-MM-dd HH:mm:ss"},
             { DateTimeTypeEnum.Year,"yyyy"},
             { DateTimeTypeEnum.Month,"yyyy-MM"},
             { DateTimeTypeEnum.Time,"HH:mm:ss"},

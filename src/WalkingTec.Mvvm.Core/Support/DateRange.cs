@@ -175,7 +175,7 @@ namespace WalkingTec.Mvvm.Core
         public static readonly Dictionary<DateTimeTypeEnum, string> DateTimeFormatDic = new Dictionary<DateTimeTypeEnum, string>()
         {
             { DateTimeTypeEnum.Date,"yyyy-MM-dd"},
-            { DateTimeTypeEnum.Datetime,"yyyy-MM-dd HH:mm:ss"},
+            { DateTimeTypeEnum.DateTime,"yyyy-MM-dd HH:mm:ss"},
             { DateTimeTypeEnum.Year,"yyyy"},
             { DateTimeTypeEnum.Month,"yyyy-MM"},
             { DateTimeTypeEnum.Time,"HH:mm:ss"},
@@ -218,24 +218,38 @@ namespace WalkingTec.Mvvm.Core
             return time;
         }
 
-        public static DateRange Default
+        public static DateRange Default => Today;
+
+        public static DateRange Week
+        {
+            get
+            {
+                var result = new DateRange();
+                result.SetStartTime(DateTime.Today.AddDays(-7));
+                result.SetEndTime(DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                return result;
+            }
+        }
+
+        public static DateRange Today
+        {
+            get
+            {
+                var result = new DateRange();
+                result.SetStartTime(DateTime.Today);
+                result.SetEndTime(DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                return result;
+            }
+        }
+
+
+        public static DateRange Yesterday
         {
             get
             {
                 var result = new DateRange();
                 result.SetStartTime(DateTime.Today.AddDays(-1));
-                result.SetEndTime(DateTime.Today);
-                return result;
-            }
-        }
-
-        public static DateRange UtCDefault
-        {
-            get
-            {
-                var result = new DateRange();
-                result.SetStartTime(DateTime.UtcNow.Date.AddDays(-1));
-                result.SetEndTime(DateTime.UtcNow.Date);
+                result.SetEndTime(DateTime.Today.AddMilliseconds(-1));
                 return result;
             }
         }

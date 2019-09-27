@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Core
         /// 日期时间选择器
         /// 可选择：年、月、日、时、分、秒
         /// </summary>
-        Datetime,
+        DateTime,
         /// <summary>
         /// 年选择器
         /// 只提供年列表选择
