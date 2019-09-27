@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
     <wt:row items-per-row=" ItemsPerRowEnum.Three">
@@ -13,4 +13,4 @@
     </wt:row>
 </wt:searchpanel>
 
-<wt:grid vm="@Model"/>
+<wt:grid vm="@Model" url="/_Admin/ActionLog/Search" />

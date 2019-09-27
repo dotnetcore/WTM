@@ -40,6 +40,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("查询模式")]
+        public IActionResult SearchMode()
+        {
+            return PartialView();
+        }
+
         [ActionDescription("ImportVM")]
         public IActionResult Import()
         {

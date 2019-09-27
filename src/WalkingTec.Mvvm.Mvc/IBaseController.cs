@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +11,9 @@ namespace WalkingTec.Mvvm.Mvc
         Configs ConfigInfo { get; }
         GlobalData GlobaInfo { get; }
         string CurrentCS { get; set; }
+
+        DBTypeEnum? CurrentDbType { get; set; }
+
         IDataContext DC { get; set; }
         LoginUserInfo LoginUserInfo { get; set; }
 

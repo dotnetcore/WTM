@@ -30,6 +30,9 @@ namespace WalkingTec.Mvvm.Admin.Test
         {
             PartialViewResult rv = (PartialViewResult)_controller.Index();
             Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco,BaseSearcher>));
+
+            string rv2 = _controller.Search(rv.Model as ActionLogListVM);
+            Assert.IsTrue(rv2.Contains("\"Code\":200"));
         }
 
         [TestMethod]

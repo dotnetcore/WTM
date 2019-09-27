@@ -33,7 +33,8 @@
                     "list": [
                         { "name": "/Poco", "title": "创建模型", "jump": "/Model/Poco" },
                         { "name": "/Att", "title": "模型属性", "jump": "/Model/Att" },
-                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" }
+                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" },
+                        { "name": "/CustomKey", "title": "自定义主键", "jump": "/Model/CustomKey" }
                     ]
                 },
                 {
@@ -47,7 +48,8 @@
                             "name": "/List", "title": "列表&导出VM", "jump": "", "list": [
                                 { "name": "/ListAction", "title": "列表简介", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "列表动作按钮", "jump": "/VM/ListAction" },
-                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" }
+                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" },
+                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" }
                             ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
