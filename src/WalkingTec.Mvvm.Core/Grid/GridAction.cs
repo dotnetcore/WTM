@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WalkingTec.Mvvm.Core
@@ -49,6 +49,7 @@ namespace WalkingTec.Mvvm.Core
         BatchEdit,
         BatchDelete,
         Import,
+        ExportExcel,
         AddRow,
         RemoveRow,
         ActionsGroup

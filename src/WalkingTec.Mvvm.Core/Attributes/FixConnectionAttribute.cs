@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public string CsName { get; set; }
 
+        public DBTypeEnum? DbType { get; set; }
         /// <summary>
         /// 操作类型，读或写
         /// </summary>
@@ -22,11 +23,20 @@ namespace WalkingTec.Mvvm.Core
         /// 新建固定连接字符串标记
         /// </summary>
         /// <param name="Operation">Operation</param>
-        /// <param name="CsName">连接字符串名称</param>
+        /// <param name="CsName">the key of the ConnectionString in appsettings</param>
+        /// <param name="DbType">the database type, if it is Default, the value in appsettings will be used</param>
         public FixConnectionAttribute(DBOperationEnum Operation =  DBOperationEnum.Default, string CsName = "")
         {
             this.CsName = CsName;
             this.Operation = Operation;
+            this.DbType = null;
+        }
+
+        public FixConnectionAttribute(DBTypeEnum DbType, DBOperationEnum Operation = DBOperationEnum.Default, string CsName = "")
+        {
+            this.CsName = CsName;
+            this.Operation = Operation;
+            this.DbType = DbType;
         }
 
     }
