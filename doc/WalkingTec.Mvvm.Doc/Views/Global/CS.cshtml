@@ -4,6 +4,7 @@
     }
 </style>
 <p>WTM框架支持自动选择读写分离的数据库，以及根据条件动态使用不同的数据库连接</p>
+<p>同时，如果框架需要操作多个库，也可以使用本章介绍的方法，对某个操作使用不同的库</p>
 
 <wt:fieldset field-set-style="Simple" title="读写分离">
     框架会自动识别ConnectionString中以下划线+数字结尾的key值，作为只读库，比如下面的定义：
@@ -42,12 +43,13 @@ public IActionResult Create()
 }
     </wt:code>
     <p>通过在方法上加FixConnection，我们指定这个方法里的DC应该使用连接字符串是test开头的只读库，框架会去寻找比如test_1,test_2,test_3...这种key值的连接字符串，如果找不到就会使用叫test的连接字符串，如果仍然找不到，则会使用默认的default</p>
+    <p>FixConnection的另一种重载方法允许你使用特定的DbType，如果你要操作的数据库类型都不一样，这个参数会很有用</p>
     <p>另一种指定连接字符串的方法是不使用Controller和VM中已经生成的DC，而是直接使用指定连接字符串新实例化一个DataContext，比如</p>
     <wt:code>
 [HttpPost]
 public IActionResult Create()
 {
-    var testDc = new DataContext("test_2");
+    var testDc = new DataContext("实际连接字符串");
     return PartialView();
 }
     </wt:code>

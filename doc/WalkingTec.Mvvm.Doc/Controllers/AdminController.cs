@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         }
         [ActionDescription("数据权限管理")]
         public IActionResult Dp()
-        {
+        {  
             return PartialView();
         }
     }

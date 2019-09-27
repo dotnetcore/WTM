@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Core.Extensions;
 using $vmnamespace$;
 
 namespace $namespace$
@@ -18,6 +19,14 @@ namespace $namespace$
             var vm = CreateVM<$modelname$ListVM>();
             return PartialView(vm);
         }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search($modelname$ListVM vm)
+        {
+            return vm.GetJson(false);
+        }
+
         #endregion
 
         #region 新建
@@ -189,5 +198,15 @@ namespace $namespace$
             }
         }
         #endregion
+
+        [ActionDescription("导出")]
+        [HttpPost]
+        public IActionResult ExportExcel($modelname$ListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
     }
 }

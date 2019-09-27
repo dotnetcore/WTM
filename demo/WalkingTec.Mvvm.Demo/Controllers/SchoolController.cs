@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -26,6 +27,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Index(SchoolListVM vm)
         {
             return PartialView(vm);
+        }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(SchoolListVM vm)
+        {
+            return vm.GetJson(false);
         }
         #endregion
 

@@ -1,0 +1,42 @@
+<wt:fieldset field-set-style="Simple" title="自定义主键">
+  <p>从2.3.5开始，框架支持自定义主键类别，除了Guid之外，还支持自增int，long，以及string类型</p>
+  <p>框架自带的代码生成器可以准确识别model中的主键类型，生成对应的代码</p>
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Key]
+    [Column("testid")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public new int ID { get; set; }
+
+    // 。。。。 其他属性
+}
+    </wt:code>
+</wt:fieldset>
+<wt:quote>
+  <p>上面的代码演示了使用 new 来覆盖基类中定义的ID属性，形成一个int类型的自增主键，同时通过指定[Column("xxx")]来更改主键在数据库中的名字</p>
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="string类型主键">
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Key]
+    public new string ID { get; set; }
+
+    // 。。。。 其他属性
+}
+    </wt:code>
+</wt:fieldset>
+<wt:quote>
+
+  <p>上面的代码演示了指定string类型的主键，string类型无法自增，所以添加的时候需要手动指定</p>
+</wt:quote>
+
+<p>
+  自定义主键主要用于对已有数据库进行开发，我们只要将model里面的属性和已有数据库对应上，一样可以使用框架的其他功能。
+</p>
+
+  <script>
+    layui.use('code', function () { layui.code({ about: false }) })
+  </script>
