@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user, x.dp.Domain, x.dp.TableName }, x => x.dp.RelateId)
+                    .GroupBy(x => new { x.user, x.dp.TableName }, x => x.dp.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
                         TargetId = x.Key.user.ID,
@@ -95,15 +95,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, group = group })
                     .CheckContain(Searcher.Name, x => x.group.GroupName)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.group, x.dp.Domain, x.dp.TableName }, x => x.dp.RelateId)
-                    .Select(x => new DataPrivilege_ListView
+                    .GroupBy(x => new { x.group, x.dp.TableName }, x => x.dp.RelateId)
+                            
+           .Select(x => new DataPrivilege_ListView
                     {
                         TargetId = x.Key.group.ID,
                         Name = x.Key.group.GroupName,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
                         DpType = (int)Searcher.DpType
-                    })
+           })
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
 
             }

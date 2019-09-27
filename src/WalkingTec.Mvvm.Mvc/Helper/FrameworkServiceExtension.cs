@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -18,7 +17,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -146,17 +144,7 @@ namespace WalkingTec.Mvvm.Mvc
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
-            })
-            .AddJsonOptions(options =>
-            {
-                //忽略循环引用
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-                // custom ContractResolver
-                options.SerializerSettings.ContractResolver = new WTMContractResolver()
-                {
-                    //NamingStrategy = new CamelCaseNamingStrategy()
-                };
+                options.EnableEndpointRouting = false;
             })
             .ConfigureApplicationPartManager(m =>
             {
@@ -173,7 +161,7 @@ namespace WalkingTec.Mvvm.Mvc
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
             })
             .AddControllersAsServices()
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -184,27 +172,27 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
-            services.Configure<RazorViewEngineOptions>(options =>
-            {
-                if (mvc != null)
-                {
-                    options.FileProviders.Add(
-                    new EmbeddedFileProvider(
-                        mvc,
-                        "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
-                    )
-                );
-                }
-                if (admin != null)
-                {
-                    options.FileProviders.Add(
-                        new EmbeddedFileProvider(
-                            admin,
-                            "WalkingTec.Mvvm.Mvc.Admin" // your external assembly's base namespace
-                        )
-                    );
-                }
-            });
+            //services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    if (mvc != null)
+            //    {
+            //        options.FileProviders.Add(
+            //        new EmbeddedFileProvider(
+            //            mvc,
+            //            "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
+            //        )
+            //    );
+            //    }
+            //    if (admin != null)
+            //    {
+            //        options.FileProviders.Add(
+            //            new EmbeddedFileProvider(
+            //                admin,
+            //                "WalkingTec.Mvvm.Mvc.Admin" // your external assembly's base namespace
+            //            )
+            //        );
+            //    }
+            //});
 
             services.Configure<FormOptions>(y =>
             {

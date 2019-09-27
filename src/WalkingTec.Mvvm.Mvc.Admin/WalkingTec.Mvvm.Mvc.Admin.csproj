@@ -1,9 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
@@ -29,7 +32,6 @@
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Edit.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Import.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Index.cshtml" />
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\BatchCreate.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Create.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Delete.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Details.cshtml" />
@@ -47,12 +49,6 @@
     <EmbeddedResource Include="Areas\_Admin\Views\_ViewImports.cshtml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />

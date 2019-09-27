@@ -1,10 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
     <Title>$(AssemblyName)</Title>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
@@ -86,12 +89,9 @@
     <EmbeddedResource Include="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App">
-      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
@@ -20,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -38,8 +39,10 @@ namespace WalkingTec.Mvvm.Demo
                 globalConfig.ApplicationUrl = ASPNETCORE_URLS;
 
             return
-                WebHost.CreateDefaultBuilder(args)
-                    .ConfigureServices((hostingCtx, x) =>
+                Host.CreateDefaultBuilder(args)
+                 .ConfigureWebHostDefaults(webBuilder =>
+                 {
+                     webBuilder.ConfigureServices((hostingCtx, x) =>
                     {
                         var pris = new List<IDataPrivilege>
                         {
@@ -50,23 +53,24 @@ namespace WalkingTec.Mvvm.Demo
                         x.AddLayui();
                         x.AddSwaggerGen(c =>
                         {
-                            c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
                         });
-                    })
-                    .Configure(x =>
-                    {
-                        var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                        if (configs.IsQuickDebug == true)
-                        {
-                            x.UseSwagger();
-                            x.UseSwaggerUI(c =>
-                            {
-                                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                            });
-                        }
-                        x.UseFrameworkService();
-                    })
-                    .UseUrls(globalConfig.ApplicationUrl);
+                    });
+                     webBuilder.Configure(x =>
+                     {
+                         var configs = x.ApplicationServices.GetRequiredService<Configs>();
+                         if (configs.IsQuickDebug == true)
+                         {
+                             x.UseSwagger();
+                             x.UseSwaggerUI(c =>
+                             {
+                                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                             });
+                         }
+                         x.UseFrameworkService();
+                     });
+                 }
+                 );
         }
     }
 }
