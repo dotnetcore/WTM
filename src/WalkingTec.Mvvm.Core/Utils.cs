@@ -36,12 +36,23 @@ namespace WalkingTec.Mvvm.Core
             var dir = new DirectoryInfo(Path.GetDirectoryName(path));
 
             var dlls = dir.GetFiles("*.dll", SearchOption.AllDirectories);
-            
+            string[] systemdll = new string[]
+            {
+                "Microsoft.",
+                "System.",
+                "Swashbuckle.",
+                "ICSharpCode",
+                "Newtonsoft.",
+                "Oracle.",
+                "Pomelo.",
+                "SQLitePCLRaw."
+            };
+
             foreach (var dll in dlls)
             {
                 try
                 {
-                    if (dll.Name.StartsWith("Microsoft.") == false)
+                    if (systemdll.Any(x=> dll.Name.StartsWith(x)) == false)
                     {
                         rv.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
                     }
