@@ -346,6 +346,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         if (!_excludeParams.Contains(prop.Name))
                         {
+                            if(prop.PropertyType.IsGenericType == false || (prop.PropertyType.GenericTypeArguments[0] != typeof(ComboSelectListItem) && prop.PropertyType.GenericTypeArguments[0] != typeof(TreeSelectListItem)))
                             Filter.Add($"Searcher.{prop.Name}", prop.GetValue(ListVM.Searcher));
                         }
                     }
