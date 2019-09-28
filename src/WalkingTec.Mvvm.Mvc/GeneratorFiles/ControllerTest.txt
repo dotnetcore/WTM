@@ -157,6 +157,15 @@ namespace $tns$
                 $mdel$
             }
         }
+
+        [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as $model$ListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
+        }
 $add$
 
     }
