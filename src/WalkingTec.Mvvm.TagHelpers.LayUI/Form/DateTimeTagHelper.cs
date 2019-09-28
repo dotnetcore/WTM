@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// <summary>
         /// 时间范围分隔符 默认 ~
         /// </summary>
-        private string RangeSplit { get; set; }
+        public string RangeSplit { get; set; }
 
         /// <summary>
         /// Max
@@ -170,6 +170,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagOnly;
             output.Attributes.Add("type", "text");
             output.Attributes.Add("name", Field.Name);
+
+            if (Range.HasValue && Range.Value && string.IsNullOrEmpty(RangeSplit))
+            {
+                RangeSplit = "~";
+            }
+
             if (Field.ModelExplorer.ModelType == typeof(string))
             {
                 Value = Field.Model?.ToString() ?? Value;
@@ -177,7 +183,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
             {
                 var dateRange = Field.Model as DateRange;
-                Value = dateRange?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
             }
             else
             {
@@ -187,11 +193,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("class", "layui-input");
             if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTime.DefaultReadonly)
                 output.Attributes.Add("readonly", "readonly");
-
-            if (Range.HasValue && Range.Value && string.IsNullOrEmpty(RangeSplit))
-            {
-                RangeSplit = "~";
-            }
 
             if (!string.IsNullOrEmpty(Min))
             {

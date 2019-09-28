@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -8,66 +9,49 @@ namespace WalkingTec.Mvvm.Core
         private static readonly DateTime UtCDefaultEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private static readonly DateTime DefaultEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
-        private readonly DateTime _epoch = DefaultEpoch;
-
-        private readonly DateTimeKind _kind = DateTimeKind.Local;
-
-        private readonly DateTimeTypeEnum _type = DateTimeTypeEnum.Date;
+        private static readonly DateTimeTypeEnum DefaultType = DateTimeTypeEnum.DateTime;
 
 
         private DateRange() { }
 
 
-        public DateRange(DateTime startTime, DateTime endTime)
+        public DateRange(DateTime startTime, DateTime endTime) : this(startTime, endTime, DefaultType, DefaultEpoch) { }
+
+        public DateRange(DateTime startTime, DateTime endTime, DateTimeTypeEnum type, DateTime epoch)
         {
+            Type = type;
+            Epoch = epoch;
             SetStartTime(startTime);
             SetEndTime(endTime);
         }
 
 
-        public DateRange(TimeSpan startSpan, TimeSpan endSpan) : this(startSpan, endSpan, DefaultEpoch) { }
+        public DateRange(TimeSpan startSpan, TimeSpan endSpan) : this(startSpan, endSpan, DefaultType, DefaultEpoch) { }
 
-        public DateRange(TimeSpan startSpan, TimeSpan endSpan, DateTime epoch)
+        public DateRange(TimeSpan startSpan, TimeSpan endSpan, DateTimeTypeEnum type, DateTime epoch)
         {
-            _epoch = epoch;
-            _kind = epoch.Kind;
+            Type = type;
+            Epoch = epoch;
             SetStartTime(epoch.Add(startSpan));
             SetEndTime(epoch.Add(endSpan));
         }
 
-        public DateRange(DateTimeOffset startOffset, DateTimeOffset endOffset)
+        public DateRange(DateTimeOffset startOffset, DateTimeOffset endOffset) : this(startOffset, endOffset, DefaultType, DefaultEpoch) { }
+
+        public DateRange(DateTimeOffset startOffset, DateTimeOffset endOffset, DateTimeTypeEnum type, DateTime epoch)
         {
+            Type = type;
+            Epoch = epoch;
             SetStartTime(startOffset.DateTime);
             SetEndTime(endOffset.DateTime);
         }
 
+        public readonly DateTime Epoch = DefaultEpoch;
 
-        public DateRange(string dateRange)
-        {
-            Value = dateRange;
-        }
+        public readonly DateTimeTypeEnum Type = DefaultType;
 
-        public string Value
-        {
-            get => ToString();
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-                var values = value.Split(new[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
-                if (values.Length != 2) return;
 
-                if (DateTime.TryParse(values[0], out var v1))
-                {
-                    SetStartTime(v1);
-                }
-
-                if (!DateTime.TryParse(values[1], out var v2)) return;
-                SetEndTime(v2);
-            }
-        }
+        public string Value => ToString();
 
 
         private DateTime? _startTime;
@@ -91,6 +75,11 @@ namespace WalkingTec.Mvvm.Core
 
         public DateTime? GetEndTime()
         {
+            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue &&
+                _startTime.Value.Date == _endTime.Value.Date)
+            {
+                return _endTime.Value.AddDays(1).AddMilliseconds(-1);
+            }
             return _endTime;
         }
 
@@ -136,39 +125,42 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_endTime == null)
                 return null;
-            return _endTime - _epoch.ToLocalTime();
+            return _endTime - Epoch.ToLocalTime();
         }
 
         public void SetStartSpan(TimeSpan? value)
         {
             if (value == null) return;
-            SetStartTime(_epoch.Add(value.Value));
+            SetStartTime(Epoch.Add(value.Value));
         }
 
         public TimeSpan? GetEndSpan()
         {
             if (_endTime == null)
                 return null;
-            return _startTime - _epoch.ToLocalTime();
+            return _startTime - Epoch.ToLocalTime();
         }
 
         public void SetEndSpan(TimeSpan? value)
         {
             if (value == null) return;
-            SetEndTime(_epoch.Add(value.Value));
-        }
-
-        public string ToString(string format)
-        {
-            if (_startTime.HasValue && _endTime.HasValue)
-                return $"{_startTime?.ToString(format)} ~ {_endTime?.ToString(format)}";
-            return string.Empty;
+            SetEndTime(Epoch.Add(value.Value));
         }
 
         public override string ToString()
         {
+            return ToString(DateTimeFormatDic[Type], "~");
+        }
+
+        public string ToString(string format)
+        {
+            return ToString(format, "~");
+        }
+
+        public string ToString(string format, string rangeSplit)
+        {
             if (_startTime.HasValue && _endTime.HasValue)
-                return $"{_startTime?.ToString(DateTimeFormatDic[_type])} ~ {_endTime?.ToString(DateTimeFormatDic[_type])}";
+                return $"{_startTime?.ToString(format)} {rangeSplit} {_endTime?.ToString(format)}";
             return string.Empty;
         }
 
@@ -183,9 +175,9 @@ namespace WalkingTec.Mvvm.Core
 
         private DateTime SwitchTime(DateTime time)
         {
-            if (_kind == time.Kind)
+            if (Epoch.Kind == time.Kind)
                 return time;
-            switch (_kind)
+            switch (Epoch.Kind)
             {
                 case DateTimeKind.Local:
                     switch (time.Kind)
@@ -224,9 +216,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange();
-                result.SetStartTime(DateTime.Today.AddDays(-7));
-                result.SetEndTime(DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
                 return result;
             }
         }
@@ -235,9 +225,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange();
-                result.SetStartTime(DateTime.Today);
-                result.SetEndTime(DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                var result = new DateRange(DateTime.Today, DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
                 return result;
             }
         }
@@ -247,57 +235,151 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange();
-                result.SetStartTime(DateTime.Today.AddDays(-1));
-                result.SetEndTime(DateTime.Today.AddMilliseconds(-1));
+                var result = new DateRange(DateTime.Today.AddDays(-1), DateTime.Today.AddMilliseconds(-1));
                 return result;
             }
         }
 
+
+        public static DateRange UtcDefault => UtcToday;
+
+        public static DateRange UtcWeek
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                return result;
+            }
+
+        }
+
+        public static DateRange UtcToday
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999), DefaultType, UtCDefaultEpoch);
+                return result;
+            }
+        }
+
+        public static DateRange UtcYesterday
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddMilliseconds(-1));
+                return result;
+            }
+        }
+
+
+        private static readonly Dictionary<DateTimeTypeEnum, string> DateTimeRegexDic = new Dictionary<DateTimeTypeEnum, string>()
+        {
+            { DateTimeTypeEnum.DateTime,@"((\d{4}|\d{3}|\d{2}|\d{1})[-](1[0-2]|0?[1-9])[-](3[01]|[12][0-9]|0?[1-9])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d)"},
+            { DateTimeTypeEnum.Date,@"(\d{4}|\d{3}|\d{2}|\d{1})[-](1[0-2]|0?[1-9])[-](3[01]|[12][0-9]|0?[1-9])"},
+            { DateTimeTypeEnum.Month,@"(\d{4}|\d{3}|\d{2}|\d{1})[-](1[0-2]|0?[1-9])"},
+            { DateTimeTypeEnum.Time,@"(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d"},
+            { DateTimeTypeEnum.Year,@"(\d{4}|\d{3}|\d{2}|\d{1})"},
+        };
+
         public static bool TryParse(string input, out DateRange result)
+        {
+            if (TryParse(input, new[] { '~' }, out result)) return true;
+            result = null;
+            foreach (var pair in DateTimeRegexDic)
+            {
+                if (Regex.IsMatch(input,pair.Value))
+                {
+                    var values = Regex.Matches(input, pair.Value,RegexOptions.IgnorePatternWhitespace);
+                    return values.Count == 2 && TryParse(values[0].Value, values[1].Value, DefaultEpoch, out result);
+                }
+            }
+            return false;
+        }
+
+        public static bool TryParse(string input, char[] separator, out DateRange result)
         {
             result = null;
             if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
-            var values = input.Split(new[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
-            if (values.Length != 2) return false;
+            var values = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            return values.Length == 2 && TryParse(values[0], values[1], DefaultEpoch, out result);
+        }
 
-            switch (values[0].Trim().Length)
+        public static bool TryParse(string input, string[] separator, out DateRange result)
+        {
+            result = null;
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+            var values = input.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            return values.Length == 2 && TryParse(values[0], values[1], DefaultEpoch, out result);
+        }
+
+        public static bool TryParse(string startTime, string endTime, DateTime epoch, out DateRange result)
+        {
+            result = null;
+            switch (startTime.Trim().Length)
             {
                 //Year
                 case 4:
                     {
-                        if (!int.TryParse(values[0], out var y1)) return false;
+                        if (!int.TryParse(startTime, out var y1)) return false;
                         if (y1 < 1 || y1 > 9999) return false;
 
-                        if (!int.TryParse(values[1], out var y2)) return false;
+                        if (!int.TryParse(endTime, out var y2)) return false;
                         if (y2 < 1 || y2 > 9999) return false;
 
-                        result = new DateRange();
-                        result.SetStartTime(new DateTime(y1, 1, 1));
-                        result.SetEndTime(new DateTime(y2, 1, 1));
+                        result = new DateRange(new DateTime(y1, 1, 1, 0, 0, 0, epoch.Kind), new DateTime(y2, 1, 1, 0, 0, 0, epoch.Kind));
                         return true;
 
                     }
                 //Month
                 case 7:
+                    {
+                        if (!DateTime.TryParse(startTime, out var v1)) return false;
+
+                        if (!DateTime.TryParse(endTime, out var v2)) return false;
+
+                        result = new DateRange(v1, v2, DateTimeTypeEnum.Month, epoch);
+
+                        return true;
+                    }
                 //Time
                 case 8:
+                    {
+                        if (!DateTime.TryParse(startTime, out var v1)) return false;
+
+                        if (!DateTime.TryParse(endTime, out var v2)) return false;
+
+                        result = new DateRange(v1, v2, DateTimeTypeEnum.Time, epoch);
+
+                        return true;
+                    }
                 //Date
                 case 10:
-                //Datetime
+                    {
+                        if (!DateTime.TryParse(startTime, out var v1)) return false;
+
+                        if (!DateTime.TryParse(endTime, out var v2)) return false;
+
+                        result = new DateRange(v1, v2, DateTimeTypeEnum.Date, epoch);
+
+                        return true;
+                    }
+                //DateTime
                 default:
-                    if (!DateTime.TryParse(values[0], out var v1)) return false;
+                    {
+                        if (!DateTime.TryParse(startTime, out var v1)) return false;
 
-                    if (!DateTime.TryParse(values[1], out var v2)) return false;
+                        if (!DateTime.TryParse(endTime, out var v2)) return false;
 
-                    result = new DateRange();
-                    result.SetStartTime(v1);
-                    result.SetEndTime(v2);
+                        result = new DateRange(v1, v2, DateTimeTypeEnum.DateTime, epoch);
 
-                    return true;
+                        return true;
+                    }
             }
         }
     }

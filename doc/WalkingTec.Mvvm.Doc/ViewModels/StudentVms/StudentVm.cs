@@ -52,6 +52,8 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
             Entity.EnYearRange = DateRange.Today;
             Entity.EnYearRange.SetStartTime(new DateTime(2016, 1, 1));
             Entity.EnMonthRange = new DateRange(new DateTime(2018, 4, 1), new DateTime(2018, 8, 8));
+            Entity.EnTimeRange4 = DateRange.UtcDefault;
+            Entity.EnTimeRange0 = new DateRange(new DateTime(2018, 4, 29), new DateTime(2018, 8, 8));
 
             StuCount0 = 40;
             StuCount1 = 60;
