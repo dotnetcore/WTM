@@ -75,8 +75,7 @@ namespace WalkingTec.Mvvm.Core
 
         public DateTime? GetEndTime()
         {
-            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue &&
-                _startTime.Value.Date == _endTime.Value.Date)
+            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue )
             {
                 return _endTime.Value.AddDays(1).AddMilliseconds(-1);
             }
@@ -98,7 +97,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_startTime == null)
                 return null;
-            return _startTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(_startTime.Value);
+            return _startTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(GetStartTime().Value);
         }
 
         public void SetStartOffset(DateTimeOffset? value)
@@ -111,7 +110,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_endTime == null)
                 return null;
-            return _endTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(_endTime.Value);
+            return _endTime <= DateTimeOffset.MinValue.LocalDateTime ? DateTimeOffset.MinValue : new DateTimeOffset(GetEndTime().Value);
         }
 
         public void SetEndOffset(DateTimeOffset? value)
@@ -125,7 +124,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_endTime == null)
                 return null;
-            return _endTime - Epoch.ToLocalTime();
+            return GetStartTime() - Epoch.ToLocalTime();
         }
 
         public void SetStartSpan(TimeSpan? value)
@@ -138,7 +137,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (_endTime == null)
                 return null;
-            return _startTime - Epoch.ToLocalTime();
+            return GetEndTime() - Epoch.ToLocalTime();
         }
 
         public void SetEndSpan(TimeSpan? value)
@@ -160,7 +159,7 @@ namespace WalkingTec.Mvvm.Core
         public string ToString(string format, string rangeSplit)
         {
             if (_startTime.HasValue && _endTime.HasValue)
-                return $"{_startTime?.ToString(format)} {rangeSplit} {_endTime?.ToString(format)}";
+                return $"{GetStartTime()?.ToString(format)} {rangeSplit} {GetEndTime()?.ToString(format)}";
             return string.Empty;
         }
 
@@ -216,7 +215,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1).AddMilliseconds(-1));
                 return result;
             }
         }
@@ -225,7 +224,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today, DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                var result = new DateRange(DateTime.Today, DateTime.Today.AddDays(1).AddMilliseconds(-1));
                 return result;
             }
         }
@@ -247,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999));
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddDays(1).AddMilliseconds(-1));
                 return result;
             }
 
@@ -257,7 +256,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999), DefaultType, UtCDefaultEpoch);
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1).AddMilliseconds(-1), DefaultType, UtCDefaultEpoch);
                 return result;
             }
         }
