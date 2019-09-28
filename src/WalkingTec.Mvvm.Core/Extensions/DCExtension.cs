@@ -665,7 +665,7 @@ where S : struct
 
         public static IQueryable<T> CheckContain<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field, bool ignoreCase = true)
         {
-            if (val == null || val == "")
+            if (string.IsNullOrEmpty(val))
             {
                 return baseQuery;
             }
@@ -679,7 +679,7 @@ where S : struct
                 }
                 else
                 {
-                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val.ToLower()));
+                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val));
 
                 }
                 var where = Expression.Lambda<Func<T, bool>>(exp, field.Parameters[0]);
