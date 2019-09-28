@@ -75,9 +75,9 @@ namespace WalkingTec.Mvvm.Core
 
         public DateTime? GetEndTime()
         {
-            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue )
+            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue && _startTime.Value.Date == _endTime.Value.Date)
             {
-                return _endTime.Value.AddDays(1).AddMilliseconds(-1);
+                return _endTime.Value.AddDays(1);
             }
             return _endTime;
         }
@@ -215,7 +215,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1).AddMilliseconds(-1));
+                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1));
                 return result;
             }
         }
@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today, DateTime.Today.AddDays(1).AddMilliseconds(-1));
+                var result = new DateRange(DateTime.Today, DateTime.Today.AddDays(1));
                 return result;
             }
         }
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today.AddDays(-1), DateTime.Today.AddMilliseconds(-1));
+                var result = new DateRange(DateTime.Today.AddDays(-1), DateTime.Today);
                 return result;
             }
         }
@@ -246,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddDays(1).AddMilliseconds(-1));
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddDays(1));
                 return result;
             }
 
@@ -256,7 +256,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1).AddMilliseconds(-1), DefaultType, UtCDefaultEpoch);
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1), DefaultType, UtCDefaultEpoch);
                 return result;
             }
         }
@@ -265,7 +265,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddMilliseconds(-1));
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date);
                 return result;
             }
         }
@@ -286,9 +286,9 @@ namespace WalkingTec.Mvvm.Core
             result = null;
             foreach (var pair in DateTimeRegexDic)
             {
-                if (Regex.IsMatch(input,pair.Value))
+                if (Regex.IsMatch(input, pair.Value))
                 {
-                    var values = Regex.Matches(input, pair.Value,RegexOptions.IgnorePatternWhitespace);
+                    var values = Regex.Matches(input, pair.Value, RegexOptions.IgnorePatternWhitespace);
                     return values.Count == 2 && TryParse(values[0].Value, values[1].Value, DefaultEpoch, out result);
                 }
             }
