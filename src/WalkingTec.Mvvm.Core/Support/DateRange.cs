@@ -75,11 +75,15 @@ namespace WalkingTec.Mvvm.Core
 
         public DateTime? GetEndTime()
         {
-            if (Type == DateTimeTypeEnum.Date && _startTime.HasValue && _endTime.HasValue && _startTime.Value.Date == _endTime.Value.Date)
+            switch (Type)
             {
-                return _endTime.Value.AddDays(1);
+                case DateTimeTypeEnum.Date:
+                    return _endTime?.AddDays(1);
+                case DateTimeTypeEnum.DateTime when _startTime.HasValue && _endTime.HasValue && _startTime.Value == _endTime.Value:
+                    return _endTime?.AddDays(1);
+                default:
+                    return _endTime;
             }
-            return _endTime;
         }
 
         public void SetEndTime(DateTime? value)
@@ -159,7 +163,7 @@ namespace WalkingTec.Mvvm.Core
         public string ToString(string format, string rangeSplit)
         {
             if (_startTime.HasValue && _endTime.HasValue)
-                return $"{GetStartTime()?.ToString(format)} {rangeSplit} {GetEndTime()?.ToString(format)}";
+                return $"{_startTime?.ToString(format)} {rangeSplit} {_endTime?.ToString(format)}";
             return string.Empty;
         }
 
@@ -211,11 +215,38 @@ namespace WalkingTec.Mvvm.Core
 
         public static DateRange Default => Today;
 
+        public static DateRange NinetyDays
+        {
+            get
+            {
+                var result = new DateRange(DateTime.Today.AddDays(-90), DateTime.Today);
+                return result;
+            }
+        }
+
+        public static DateRange ThirtyDays
+        {
+            get
+            {
+                var result = new DateRange(DateTime.Today.AddDays(-30), DateTime.Today);
+                return result;
+            }
+        }
+
+        public static DateRange TwoWeek
+        {
+            get
+            {
+                var result = new DateRange(DateTime.Today.AddDays(-14), DateTime.Today);
+                return result;
+            }
+        }
+
         public static DateRange Week
         {
             get
             {
-                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1));
+                var result = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today);
                 return result;
             }
         }
@@ -224,7 +255,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today, DateTime.Today.AddDays(1));
+                var result = new DateRange(DateTime.Today, DateTime.Today);
                 return result;
             }
         }
@@ -234,7 +265,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.Today.AddDays(-1), DateTime.Today);
+                var result = new DateRange(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(-1));
                 return result;
             }
         }
@@ -242,11 +273,38 @@ namespace WalkingTec.Mvvm.Core
 
         public static DateRange UtcDefault => UtcToday;
 
+        public static DateRange UtcNinetyDays
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-90), DateTime.UtcNow.Date);
+                return result;
+            }
+        }
+
+        public static DateRange UtcThirtyDays
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-30), DateTime.UtcNow.Date, DefaultType, UtCDefaultEpoch);
+                return result;
+            }
+        }
+
+        public static DateRange UtcTwoWeek
+        {
+            get
+            {
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-14), DateTime.UtcNow.Date, DefaultType, UtCDefaultEpoch);
+                return result;
+            }
+        }
+
         public static DateRange UtcWeek
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date.AddDays(1));
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-7), DateTime.UtcNow.Date, DefaultType, UtCDefaultEpoch);
                 return result;
             }
 
@@ -256,7 +314,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1), DefaultType, UtCDefaultEpoch);
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date, DefaultType, UtCDefaultEpoch);
                 return result;
             }
         }
@@ -265,7 +323,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date);
+                var result = new DateRange(DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date, DefaultType, UtCDefaultEpoch);
                 return result;
             }
         }
