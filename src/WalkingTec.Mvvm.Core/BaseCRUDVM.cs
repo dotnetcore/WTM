@@ -152,6 +152,13 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Include(item);
                 }
             }
+            if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
+            {
+                var mod = new IsValidModifier();
+                var newExp = mod.Modify(query.Expression);
+                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+            }
+
             //获取数据
             rv = query.CheckID(Id).SingleOrDefault();
             if (rv == null)

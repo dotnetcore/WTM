@@ -615,6 +615,11 @@ namespace WalkingTec.Mvvm.Core
                         (item as BasePoco).CreateTime = DateTime.Now;
                         (item as BasePoco).CreateBy = LoginUserInfo?.ITCode;
                     }
+                    if (typeof(PersistPoco).IsAssignableFrom(item.GetType()))
+                    {
+                        (item as PersistPoco).IsValid = true;
+                    }
+
                     DC.Set<P>().Add(item);
                 }
             }

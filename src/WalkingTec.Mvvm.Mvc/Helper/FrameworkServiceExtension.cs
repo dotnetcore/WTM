@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -46,25 +47,37 @@ namespace WalkingTec.Mvvm.Mvc
         )
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
-            IConfigurationRoot config = null;
 
-            var configBuilder =
-                    new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
+            var configBuilder = new ConfigurationBuilder();
+
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")))
+            {
+                var binLocation = Assembly.GetEntryAssembly()?.Location;
+                if (!string.IsNullOrEmpty(binLocation))
+                {
+                    var binPath = new FileInfo(binLocation).Directory?.FullName;
+                    if (File.Exists(Path.Combine(binPath, "appsettings.json")))
+                    {
+                        configBuilder.SetBasePath(binPath)
+                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            .AddEnvironmentVariables();
+                    }
+                }
+            }
+            else
+            {
+                configBuilder.SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables();
+            }
 
             if (webHostBuilderContext != null)
             {
-                IHostingEnvironment env = webHostBuilderContext.HostingEnvironment;
+                var env = webHostBuilderContext.HostingEnvironment;
                 configBuilder
-                    .AddJsonFile(
-                        $"appsettings.{env.EnvironmentName}.json",
-                        optional: true,
-                        reloadOnChange: true
-                    );
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             }
-            config = configBuilder.Build();
+            var config = configBuilder.Build();
 
             var gd = GetGlobalData();
             services.AddSingleton(gd);
@@ -87,6 +100,38 @@ namespace WalkingTec.Mvvm.Mvc
                 options.IdleTimeout = TimeSpan.FromSeconds(3600);
             });
             SetupDFS(con);
+
+            services.AddCors(options =>
+            {
+                if (con.CorsOptions?.Policy?.Count > 0)
+                {
+                    foreach (var item in con.CorsOptions.Policy)
+                    {
+                        string[] domains = item.Domain?.Split(',');
+                        options.AddPolicy(item.Name,
+                           builder =>
+                           {
+                               builder.WithOrigins(domains)
+                                                   .AllowAnyHeader()
+                                                   .AllowAnyMethod()
+                                                   .AllowCredentials();
+                           });
+                    }
+                }
+                else
+                {
+                    options.AddPolicy("_donotusedefault",
+                        builder =>
+                        {
+                            builder.WithOrigins("http://localhost",
+                                                "https://localhost")
+                                                .AllowAnyHeader()
+                                                .AllowAnyMethod()
+                                                .AllowCredentials();
+                        });
+                }
+            });
+
 
 
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
@@ -261,6 +306,16 @@ namespace WalkingTec.Mvvm.Mvc
                     "WalkingTec.Mvvm.Mvc")
             });
             app.UseSession();
+            if(configs.CorsOptions.EnableAll == true){
+                if (configs.CorsOptions?.Policy?.Count > 0)
+                {
+                    app.UseCors(configs.CorsOptions.Policy[0].Name);
+                }
+                else
+                {
+                    app.UseCors("_donotusedefault");
+                }
+            }
             if (customRoutes != null)
             {
                 app.UseMvc(customRoutes);

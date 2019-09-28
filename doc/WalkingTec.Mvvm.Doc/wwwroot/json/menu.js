@@ -48,7 +48,8 @@
                             "name": "/List", "title": "列表&导出VM", "jump": "", "list": [
                                 { "name": "/ListAction", "title": "列表简介", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "列表动作按钮", "jump": "/VM/ListAction" },
-                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" }
+                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" },
+                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" }
                             ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
