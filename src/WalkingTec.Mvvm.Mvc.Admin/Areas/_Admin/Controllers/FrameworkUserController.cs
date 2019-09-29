@@ -23,6 +23,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             vm.Searcher.IsValid = true;
             return PartialView(vm);
         }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(FrameworkUserListVM vm)
+        {
+            return vm.GetJson(false);
+        }
+
         #endregion
 
         #region 新建
@@ -224,6 +232,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(LoginUserInfo.DataPrivileges,null, x=>x.CodeAndName, x => x.ITCode);
             return Json(users);
 
+        }
+
+        [ActionDescription("导出")]
+        [HttpPost]
+        public IActionResult ExportExcel(FrameworkUserListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
     }
 }

@@ -255,7 +255,6 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-
         #region 加密密钥
 
         private string _encryptKey;
@@ -464,6 +463,31 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region 跨域配置
+
+        private Cors _cors;
+
+        /// <summary>
+        /// 跨域配置
+        /// </summary>
+        public Cors CorsOptions
+        {
+            get
+            {
+                if (_cors == null)
+                {
+                    _cors = new Cors();
+                    _cors.Policy = new List<CorsPolicy>();
+                }
+                return _cors;
+            }
+            set
+            {
+                _cors = value;
+            }
+        }
+
+        #endregion
 
     }
 }

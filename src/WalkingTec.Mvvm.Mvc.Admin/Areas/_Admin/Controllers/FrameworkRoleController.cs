@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
@@ -16,6 +17,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             var vm = CreateVM<FrameworkRoleListVM>();
             return PartialView(vm);
+        }
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(FrameworkRoleListVM vm)
+        {
+            return vm.GetJson(false);
         }
         #endregion
 
@@ -167,5 +174,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         #endregion
 
+        [ActionDescription("导出")]
+        [HttpPost]
+        public IActionResult ExportExcel(FrameworkRoleListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
     }
 }

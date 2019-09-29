@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         public BasePaedListVMTest()
         {
+            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
+            mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
+            mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            GlobalServices.SetServiceProvider(mockService.Object);
+
             _seed = Guid.NewGuid().ToString();
             _studentListVM = new BasePagedListVM<Student, BaseSearcher>();
             _studentListVM.DC = new DataContext(_seed, DBTypeEnum.Memory);

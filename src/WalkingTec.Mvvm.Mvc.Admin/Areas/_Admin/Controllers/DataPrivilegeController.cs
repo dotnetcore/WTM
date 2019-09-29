@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var vm = CreateVM<DataPrivilegeListVM>();
             vm.Searcher.TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
+        }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(DataPrivilegeListVM vm)
+        {
+            return vm.GetJson(false);
         }
 
         [ActionDescription("新建")]
@@ -99,6 +106,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 AllItems = dps.GetItemList(DC, LoginUserInfo);
             }
             return Json(AllItems);
+        }
+
+        [ActionDescription("导出")]
+        [HttpPost]
+        public IActionResult ExportExcel(DataPrivilegeListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_DataPrivilege_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
     {
         public List<ComboSelectListItem> AllSchools { get; set; }
         [Display(Name = "所属学校")]
-        public Guid? SchoolId { get; set; }
+        public int? SchoolId { get; set; }
 
         protected override void InitVM()
         {

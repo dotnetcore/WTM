@@ -28,7 +28,19 @@ namespace WalkingTec.Mvvm.Admin.Test
         {
             PartialViewResult rv = (PartialViewResult)_controller.Index();
             Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            string rv2 = _controller.Search(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue(rv2.Contains("\"Code\":200"));
         }
+
+        [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
+        }
+
 
         [TestMethod]
         public void CreateTest()

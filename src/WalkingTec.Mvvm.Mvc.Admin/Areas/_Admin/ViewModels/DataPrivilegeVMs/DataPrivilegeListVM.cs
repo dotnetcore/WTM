@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "新建","_Admin", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin"),
             };
         }
 

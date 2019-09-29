@@ -23,6 +23,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var vm = CreateVM<FrameworkMenuListVM>();
             return PartialView(vm);
         }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(FrameworkMenuListVM vm)
+        {
+            return vm.GetJson(false);
+        }
         #endregion
 
         #region 新建
@@ -186,6 +193,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseCache(Duration = 3600)]
+        [AllRights()]
         public IActionResult GetIconFontItems(string id)
         {
             if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
