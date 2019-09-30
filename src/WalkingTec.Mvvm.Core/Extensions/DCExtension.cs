@@ -672,7 +672,7 @@ where S : struct
             else
             {
                 Expression exp = null;
-                if (ignoreCase == false)
+                if (ignoreCase == true)
                 {
                     var tolower = Expression.Call(field.Body, "ToLower", null);
                     exp = Expression.Call(tolower, "Contains", null, Expression.Constant(val.ToLower()));

@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
     }
