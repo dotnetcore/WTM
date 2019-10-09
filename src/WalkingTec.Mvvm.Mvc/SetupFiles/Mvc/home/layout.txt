@@ -35,6 +35,10 @@
       </li>
       <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;">
+          @if(Model.LoginUserInfo?.PhotoId != null)
+          {
+          <img class="layui-nav-img" src="api/_file/getfile/@Model.LoginUserInfo.PhotoId" />
+          }
           <cite>@Model.LoginUserInfo.Name</cite>
         </a>
         <dl class="layui-nav-child">
