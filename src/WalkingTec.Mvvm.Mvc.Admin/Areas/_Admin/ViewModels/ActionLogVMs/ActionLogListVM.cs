@@ -5,7 +5,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
 {
-    public class ActionLogListVM : BasePagedListVM<ActionLogDisplayModel, ActionLogSearcher>
+    public class ActionLogListVM : BasePagedListVM<ActionLog, ActionLogSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
@@ -17,9 +17,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             return actions;
         }
 
-        protected override IEnumerable<IGridColumn<ActionLogDisplayModel>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
         {
-            var header = new List<GridColumn<ActionLogDisplayModel>>();
+            var header = new List<GridColumn<ActionLog>>();
 
             header.Add(this.MakeGridHeader(x => x.LogType, 80).SetForeGroundFunc((entity)=> {
                 if(entity.LogType == ActionLogTypesEnum.Exception)
@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             return header;
         }
         
-        public override IOrderedQueryable<ActionLogDisplayModel> GetSearchQuery()
+        public override IOrderedQueryable<ActionLog> GetSearchQuery()
         {
             var query = DC.Set<ActionLog>()
                 .CheckContain(Searcher.ITCode, x=>x.ITCode)
@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 .CheckContain(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.IP, x=>x.IP)
                 .CheckBetween(Searcher.StartActionTime, Searcher.EndActionTime?.Date.AddDays(1), x=>x.ActionTime, includeMax:false)
-                .Select(x=>new ActionLogDisplayModel()
+                .Select(x=>new ActionLog()
                 {
                     ID          = x.ID,
                     ModuleName  = x.ModuleName,

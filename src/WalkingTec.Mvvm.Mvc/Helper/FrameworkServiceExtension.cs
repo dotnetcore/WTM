@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -135,6 +137,7 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
@@ -182,7 +185,28 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     return new BadRequestObjectResult(a.ModelState.GetErrorJson());
                 };
-            });
+            })
+            .AddDataAnnotationsLocalization(options =>
+            {
+                var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                var coreType = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                var adminType = admin?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                options.DataAnnotationLocalizerProvider = (type, factory) => {
+                    if (type.FullName.StartsWith("WalkingTec.Mvvm.Mvc.Admin"))
+                    {
+                        return factory.Create(coreType);
+                    }
+                    else if (type.FullName.StartsWith("WalkingTec.Mvvm.Core"))
+                    {
+                        return factory.Create(coreType);
+                    }
+                    else
+                    {
+                        return factory.Create(programType);
+                    }
+                };
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -267,6 +291,23 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     app.UseCors("_donotusedefault");
                 }
+            }
+
+            if (string.IsNullOrEmpty(configs.Languages) == false)
+            {
+                List<CultureInfo> supportedCultures = new List<CultureInfo>();
+                var lans = configs.Languages.Split(",");
+                foreach (var lan in lans)
+                {
+                    supportedCultures.Add(new CultureInfo(lan));
+                }
+
+                app.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
             }
             if (customRoutes != null)
             {
