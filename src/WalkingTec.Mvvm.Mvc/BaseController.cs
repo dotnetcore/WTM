@@ -535,6 +535,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region Validate model
+        [NonAction]
         public Dictionary<string,string> RedoValidation(object item)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
@@ -559,6 +560,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="vm">ViewModel</param>
         /// <param name="prefix">prefix</param>
         /// <returns>true if success</returns>
+        [NonAction]
         public bool RedoUpdateModel(object vm, string prefix = null)
         {
             try

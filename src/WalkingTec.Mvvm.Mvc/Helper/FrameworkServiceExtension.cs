@@ -59,6 +59,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var binPath = new FileInfo(binLocation).Directory?.FullName;
                     if (File.Exists(Path.Combine(binPath, "appsettings.json")))
                     {
+                        Directory.SetCurrentDirectory(binPath);
                         configBuilder.SetBasePath(binPath)
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
