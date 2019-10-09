@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
             var cd = Field?.Model as List<ChartData>;
             if (cd == null)
             {
-                output.Content.SetContent("Field属性必须指定，且必须是List<ChartData>类型");
+                output.Content.SetContent("Field must be set, and has to be of type List<ChartData>");
                 return;
             }
 

@@ -129,17 +129,32 @@
   <data name="ActionTime" xml:space="preserve">
     <value>操作时间</value>
   </data>
+  <data name="AdditionInfo" xml:space="preserve">
+    <value>附加信息</value>
+  </data>
   <data name="Address" xml:space="preserve">
     <value>地址</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>全部</value>
+  </data>
   <data name="Allowed" xml:space="preserve">
     <value>允许</value>
+  </data>
+  <data name="AllPris" xml:space="preserve">
+    <value>全部权限</value>
   </data>
   <data name="Area" xml:space="preserve">
     <value>区域</value>
   </data>
   <data name="AreaName" xml:space="preserve">
     <value>区域名称</value>
+  </data>
+  <data name="BasicInfo" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="BatchDeleteConfirm" xml:space="preserve">
+    <value>确定要删除以下数据么：</value>
   </data>
   <data name="CellPhone" xml:space="preserve">
     <value>手机</value>
@@ -149,6 +164,9 @@
   </data>
   <data name="ClassName" xml:space="preserve">
     <value>类名</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
   </data>
   <data name="Condition" xml:space="preserve">
     <value>条件</value>
@@ -162,8 +180,14 @@
   <data name="CreateTime" xml:space="preserve">
     <value>创建时间</value>
   </data>
-  <data name="DebugDebug" xml:space="preserve">
+  <data name="Debug" xml:space="preserve">
     <value>调试</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="DeleteConfirm" xml:space="preserve">
+    <value>确定要删除这条数据么：</value>
   </data>
   <data name="DisplayOrder" xml:space="preserve">
     <value>顺序</value>
@@ -174,6 +198,12 @@
   <data name="DomainName" xml:space="preserve">
     <value>域名称</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="DownloadTemplate" xml:space="preserve">
+    <value>下载模板</value>
+  </data>
   <data name="Duration" xml:space="preserve">
     <value>时长</value>
   </data>
@@ -182,6 +212,9 @@
   </data>
   <data name="EntryUrl" xml:space="preserve">
     <value>入口</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误</value>
   </data>
   <data name="Exception" xml:space="preserve">
     <value>异常</value>
@@ -198,6 +231,9 @@
   <data name="FolderOnly" xml:space="preserve">
     <value>目录</value>
   </data>
+  <data name="ForSelect" xml:space="preserve">
+    <value>待选择</value>
+  </data>
   <data name="Group" xml:space="preserve">
     <value>用户组</value>
   </data>
@@ -212,6 +248,9 @@
   </data>
   <data name="ICon" xml:space="preserve">
     <value>图标</value>
+  </data>
+  <data name="Inside" xml:space="preserve">
+    <value>内部</value>
   </data>
   <data name="IsInherit" xml:space="preserve">
     <value>继承</value>
@@ -249,8 +288,26 @@
   <data name="Name" xml:space="preserve">
     <value>姓名</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>无数据</value>
+  </data>
+  <data name="NoMatchingData" xml:space="preserve">
+    <value>无匹配数据</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="NoPris" xml:space="preserve">
+    <value>无权限</value>
+  </data>
   <data name="Normal" xml:space="preserve">
     <value>普通</value>
+  </data>
+  <data name="Outside" xml:space="preserve">
+    <value>外部</value>
   </data>
   <data name="PageName" xml:space="preserve">
     <value>页面名称</value>
@@ -270,6 +327,9 @@
   <data name="Photo" xml:space="preserve">
     <value>照片</value>
   </data>
+  <data name="PleaseSelect" xml:space="preserve">
+    <value>请选择</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>端口</value>
   </data>
@@ -281,6 +341,9 @@
   </data>
   <data name="Remark" xml:space="preserve">
     <value>备注</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>重置</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>角色</value>
@@ -294,8 +357,29 @@
   <data name="SaveFileMode" xml:space="preserve">
     <value>保存方式</value>
   </data>
+  <data name="SearchCondition" xml:space="preserve">
+    <value>搜索条件</value>
+  </data>
   <data name="SearchConditions" xml:space="preserve">
     <value>搜索条件</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>已选择</value>
+  </data>
+  <data name="SelectOneRow" xml:space="preserve">
+    <value>请选择一行</value>
+  </data>
+  <data name="SelectOneRowMax" xml:space="preserve">
+    <value>最多只能选择一行</value>
+  </data>
+  <data name="SelectOneRowMin" xml:space="preserve">
+    <value>请至少选择一行</value>
+  </data>
+  <data name="SelectPris" xml:space="preserve">
+    <value>选择权限</value>
   </data>
   <data name="Sex" xml:space="preserve">
     <value>性别</value>
@@ -303,14 +387,26 @@
   <data name="ShowOnMenu" xml:space="preserve">
     <value>菜单显示</value>
   </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
   <data name="TableName" xml:space="preserve">
     <value>权限名称</value>
   </data>
   <data name="UpdateBy" xml:space="preserve">
     <value>修改人</value>
   </data>
+  <data name="UpdateDone" xml:space="preserve">
+    <value>更新成功</value>
+  </data>
   <data name="UpdateTime" xml:space="preserve">
     <value>修改时间</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>上传失败</value>
+  </data>
+  <data name="UploadTemplate" xml:space="preserve">
+    <value>上传模板</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>用户</value>
@@ -320,6 +416,9 @@
   </data>
   <data name="VMName" xml:space="preserve">
     <value>模块</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
   </data>
   <data name="ZipCode" xml:space="preserve">
     <value>邮编</value>

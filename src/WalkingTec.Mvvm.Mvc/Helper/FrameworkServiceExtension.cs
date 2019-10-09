@@ -189,16 +189,22 @@ namespace WalkingTec.Mvvm.Mvc
             .AddDataAnnotationsLocalization(options =>
             {
                 var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                var coreType = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+                var layuidll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.TagHelpers.LayUI.dll").FirstOrDefault();
+                var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                 var adminType = admin?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                bool setcore = false;
                 options.DataAnnotationLocalizerProvider = (type, factory) => {
-                    if (type.FullName.StartsWith("WalkingTec.Mvvm.Mvc.Admin"))
+                    if (type.FullName.StartsWith("WalkingTec.Mvvm"))
                     {
-                        return factory.Create(coreType);
-                    }
-                    else if (type.FullName.StartsWith("WalkingTec.Mvvm.Core"))
-                    {
-                        return factory.Create(coreType);
+                        var rv = factory.Create(coreType);
+                        if(setcore == false)
+                        {
+                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_localizer").SetValue(null, rv);
+                            layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
+                            setcore = true;
+                        }
+                        return rv;
                     }
                     else
                     {
@@ -247,6 +253,7 @@ namespace WalkingTec.Mvvm.Mvc
             IconFontsHelper.GenerateIconFont();
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            var localizer = app.ApplicationServices.GetRequiredService<GlobalData>();
 
             if (configs == null)
             {

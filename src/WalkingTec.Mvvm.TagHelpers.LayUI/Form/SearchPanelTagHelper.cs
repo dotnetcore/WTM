@@ -114,10 +114,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
   <div class=""layui-colla-item"">
-    <h2 class=""layui-colla-title"">搜索条件
+    <h2 class=""layui-colla-title"">{Program._localizer["SearchCondition"]}
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">
         <a href=""javascript:void(0)"" class=""layui-btn layui-btn-sm"" id=""{SearchBtnId}""><i class=""layui-icon"">&#xe615;</i>搜索</a>
-        {(!ResetBtn ? string.Empty : $@"<button type=""reset"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">重置</button>")}
+        {(!ResetBtn ? string.Empty : $@"<button type=""reset"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">{Program._localizer["Reset"]}</button>")}
       </div>
     </h2>
     <div class=""layui-colla-content{layuiShow}"" >

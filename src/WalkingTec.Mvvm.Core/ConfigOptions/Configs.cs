@@ -503,6 +503,10 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
+                if (string.IsNullOrEmpty((_languages)))
+                {
+                    _languages = "zh";
+                }
                 return _languages;
             }
             set
