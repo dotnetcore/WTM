@@ -21,6 +21,7 @@ export default class DialogBox extends Vue {
     get dialog() {
         return globalConfig.dialog;
     }
+
     /**
      * 用法调用 携带sync
      * :is-show.sync="XXX"

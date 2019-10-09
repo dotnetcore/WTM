@@ -3,21 +3,21 @@
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="角色编号" prop="RoleCode">
-            <el-input v-model="formData.RoleCode" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode">
+            <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="角色名称" prop="RoleName">
-            <el-input v-model="formData.RoleName" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName">
+            <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input v-model="formData.RoleRemark" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.RoleRemark" label="备注">
+            <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -36,10 +36,12 @@ const defaultFormData = {
     refName: "refName",
     // 表单数据
     formData: {
-        ID: "",
-        RoleCode: "",
-        RoleName: "",
-        RoleRemark: ""
+        Entity: {
+            ID: "",
+            RoleCode: "",
+            RoleName: "",
+            RoleRemark: ""
+        }
     }
 };
 
@@ -57,6 +59,8 @@ export default class Index extends Vue {
     // 用户组
     groups = [];
     sexList = sexList;
+
+    testerror = "error";
     // ★★
     filterMethod = (query, item) => {
         return item.label.indexOf(query) > -1;
@@ -69,14 +73,14 @@ export default class Index extends Vue {
                 this.$refs[defaultFormData.refName].resetFields();
             });
             return {
-                RoleCode: [
+                "Entity.RoleCode": [
                     {
                         required: true,
                         message: "请输入角色编号",
                         trigger: "blur"
                     }
                 ],
-                RoleName: [
+                "Entity.RoleName": [
                     {
                         required: true,
                         message: "请输入角色名称",
@@ -88,8 +92,6 @@ export default class Index extends Vue {
             return {};
         }
     }
-    // ★★★★★
-    created() {}
     /**
      * 打开详情 ★★★★★
      */
@@ -111,8 +113,6 @@ export default class Index extends Vue {
      * 提交 ★★★★★
      */
     onSubmitForm() {
-        console.log("e.test", this.$refs["e.test"]);
-        this.$refs["e.test"].error = "123";
         this.$refs[this["refName"]].validate(valid => {
             if (valid) {
                 if (this["status"] === this["dialogType"].add) {
@@ -127,30 +127,40 @@ export default class Index extends Vue {
      * 添加 ★★★★★
      */
     onAdd(delID: string = "ID") {
-        const parameters = { ...this["formData"] };
-        delete parameters[delID];
-        this["add"]({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "添加成功",
-                type: "success"
+        const parameters = _.cloneDeep(this["formData"]);
+        if (parameters.Entity) {
+            delete parameters.Entity[delID];
+        }
+        this["add"](parameters)
+            .then(res => {
+                this["$notify"]({
+                    title: "添加成功",
+                    type: "success"
+                });
+                this["onClear"]();
+                this.$emit("onSearch");
+            })
+            .catch(error => {
+                this["showResponseValidate"](error.response.data.Form);
             });
-            this["onClear"]();
-            this.$emit("onSearch");
-        });
     }
     /**
      * 编辑 ★★★★★
      */
     onEdit() {
-        const parameters = { ...this["formData"] };
-        this["edit"]({ Entity: parameters }).then(res => {
-            this["$notify"]({
-                title: "修改成功",
-                type: "success"
+        const parameters = _.cloneDeep(this["formData"]);
+        this["edit"](parameters)
+            .then(res => {
+                this["$notify"]({
+                    title: "修改成功",
+                    type: "success"
+                });
+                this["onClear"]();
+                this.$emit("onSearch");
+            })
+            .catch(error => {
+                this["showResponseValidate"](error.response.data.Form);
             });
-            this["onClear"]();
-            this.$emit("onSearch");
-        });
     }
 }
 </script>

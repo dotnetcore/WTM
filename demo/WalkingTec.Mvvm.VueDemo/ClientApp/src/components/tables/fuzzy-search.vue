@@ -116,7 +116,6 @@ export default class FuzzySearch extends Vue {
         vertical-align: text-top;
     }
     .toggle-class {
-        height: 40px;
         width: 34px;
     }
     .uds-collapse {

@@ -2,6 +2,7 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { dialogType } from "@/config/enum";
 import DialogFooter from "@/components/common/dialog/dialog-footer.vue";
 import EditBox from "@/components/common/edit-box.vue";
+import WtmFormItem from "@/components/form/wtm-form-item.vue";
 
 /**
  * 弹出框（详情/编辑/创建）
@@ -23,7 +24,7 @@ interface formdata {
 }
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     @Component({
-        components: { DialogFooter, EditBox }
+        components: { DialogFooter, EditBox, WtmFormItem }
     })
     class formMixins extends Vue {
         @Prop({ type: Object, default: {} })
@@ -69,6 +70,18 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                 }
             });
         }
+
+        /**
+         * 展示验证
+         */
+        showResponseValidate(resForms: {}) {
+            Object.keys(resForms).forEach(key => {
+                if (this.$refs[key]) {
+                    this.$refs[key].showError(resForms[key]);
+                }
+            });
+        }
+
         // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
         /**
          * 打开详情 ★★★★★
@@ -117,14 +130,18 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                 delete parameters[delID];
                 parameters = { Entity: parameters };
             }
-            this["add"](parameters).then(res => {
-                this["$notify"]({
-                    title: "添加成功",
-                    type: "success"
+            this["add"](parameters)
+                .then(res => {
+                    this["$notify"]({
+                        title: "添加成功",
+                        type: "success"
+                    });
+                    this["onClear"]();
+                    this.$emit("onSearch");
+                })
+                .catch(error => {
+                    this["showResponseValidate"](error.response.data.Form);
                 });
-                this["onClear"]();
-                this.$emit("onSearch");
-            });
         }
         /**
          * 编辑 ★★★★★
@@ -134,14 +151,18 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
             if (!parameters.Entity) {
                 parameters = { Entity: parameters };
             }
-            this["edit"](parameters).then(res => {
-                this["$notify"]({
-                    title: "修改成功",
-                    type: "success"
+            this["edit"](parameters)
+                .then(res => {
+                    this["$notify"]({
+                        title: "修改成功",
+                        type: "success"
+                    });
+                    this["onClear"]();
+                    this.$emit("onSearch");
+                })
+                .catch(error => {
+                    this["showResponseValidate"](error.response.data.Form);
                 });
-                this["onClear"]();
-                this.$emit("onSearch");
-            });
         }
         // ---------------------------vue组件重新定义 end---------------------------------
     }
