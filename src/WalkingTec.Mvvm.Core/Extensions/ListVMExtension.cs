@@ -245,6 +245,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 if (int.TryParse(html, out int enumvalue))
                                 {
                                     html = PropertyHelper.GetEnumDisplayName(ptype, enumvalue);
+                                    if(Program._localizer != null)
+                                    {
+                                        html = Program._localizer[html];
+                                    }
                                 }
                             }
                         }

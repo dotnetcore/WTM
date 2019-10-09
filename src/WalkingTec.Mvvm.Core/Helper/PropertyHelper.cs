@@ -500,6 +500,10 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
                 }
                 else
                 {
@@ -532,6 +536,10 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
                 }
                 else
                 {

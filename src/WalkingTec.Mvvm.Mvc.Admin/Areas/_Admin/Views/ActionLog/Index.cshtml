@@ -1,16 +1,18 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs.ActionLogListVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:searchpanel vm="@Model" reset-btn="true">
-    <wt:row items-per-row=" ItemsPerRowEnum.Three">
-        <wt:combobox field="Searcher.LogType" empty-text="全部" />
-        <wt:textbox field="Searcher.ITCode" />
-        <wt:textbox field="Searcher.ActionUrl" />
-    </wt:row>
-    <wt:row items-per-row=" ItemsPerRowEnum.Three">
-        <wt:datetime field="Searcher.StartActionTime" />
-        <wt:datetime field="Searcher.EndActionTime" />
-        <wt:textbox field="Searcher.IP" />
-    </wt:row>
+  <wt:row items-per-row=" ItemsPerRowEnum.Three">
+    <wt:combobox field="Searcher.LogType" empty-text="@Localizer["All"]" />
+    <wt:textbox field="Searcher.ITCode" />
+    <wt:textbox field="Searcher.ActionUrl" />
+  </wt:row>
+  <wt:row items-per-row=" ItemsPerRowEnum.Three">
+    <wt:datetime field="Searcher.StartActionTime" />
+    <wt:datetime field="Searcher.EndActionTime" />
+    <wt:textbox field="Searcher.IP" />
+  </wt:row>
 </wt:searchpanel>
 
 <wt:grid vm="@Model" url="/_Admin/ActionLog/Search" />
