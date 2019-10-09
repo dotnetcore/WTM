@@ -160,7 +160,7 @@ namespace WalkingTec.Mvvm.Core
             }
 
             //获取数据
-            rv = query.CheckID(Id).SingleOrDefault();
+            rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
             if (rv == null)
             {
                 throw new Exception("数据不存在");
