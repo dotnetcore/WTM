@@ -93,7 +93,7 @@ protected override List<GridAction> InitGridAction()
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.MultiIds</td>
-        <td>按钮会获取勾选的多行数据的id调用新方法，比如批量修改，批量删除</td>
+        <td>按钮会获取勾选的多行数据的id调用新方法，比如批量修改，批量删除(注意MultiIds的时候框架会使用标记为[Post]的方法)</td>
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.SingleIdWithNull</td>
@@ -101,7 +101,7 @@ protected override List<GridAction> InitGridAction()
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.MultiIdWithNull</td>
-        <td>可以勾选多行，也可以不选</td>
+        <td>可以勾选多行，也可以不选(注意MultiIds的时候框架会使用标记为[Post]的方法)</td>
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.AddRow</td>
