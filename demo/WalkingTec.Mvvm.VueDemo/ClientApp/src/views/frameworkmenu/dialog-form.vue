@@ -3,7 +3,7 @@
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="地址类型" prop="IsInside">
+          <wtm-form-item ref="Entity.IsInside" label="地址类型" prop="Entity.IsInside">
             <edit-box :is-edit="status !== dialogType.detail">
               <el-radio-group v-model="formData.Entity.IsInside">
                 <el-radio :label="true">
@@ -17,83 +17,83 @@
                 {{ formData.Entity.IsInside==='true' ? "内部地址" : "外部地址" }}
               </template>
             </edit-box>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row v-show="formData.Entity.IsInside">
         <el-col :span="12">
-          <el-form-item label="模块名称">
+          <wtm-form-item label="模块名称">
             <el-select v-model="SelectedModule" v-edit:[status]="{list: pageNameList, key:'modelName', label: 'name'}" filterable placeholder="请选择" @change="onSelectedAction">
               <el-option v-for="item in pageNameList" :key="item.modelName" :label="item.name" :value="item.modelName" />
             </el-select>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="动作名称">
+          <wtm-form-item label="动作名称">
             <edit-box :is-edit="status !== dialogType.detail">
-              <el-select v-model="formData.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
+              <el-select v-model="formData.Entity.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
                 <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
               </el-select>
               <template #editValue>
                 动作名称 value
               </template>
             </edit-box>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row v-show="!formData.Entity.IsInside">
         <el-col :span="24">
-          <el-form-item label="Url">
+          <wtm-form-item ref="Entity.Url" label="Url">
             <el-input v-model="formData.Entity.Url" v-edit:[status] />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="页面名称">
+          <wtm-form-item ref="Entity.PageName" label="页面名称">
             <el-input v-model="formData.Entity.PageName" v-edit:[status] placeholder="请输入内容" />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="父目录">
+          <wtm-form-item ref="Entity.ParentId" label="父目录">
             <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: getFoldersData, key:'Value', label: 'Text'}" filterable placeholder="请选择">
               <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
             </el-select>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="目录">
+          <wtm-form-item ref="Entity.FolderOnly" label="目录">
             <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="菜单显示">
+          <wtm-form-item ref="Entity.ShowOnMenu" label="菜单显示">
             <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="公开">
+          <wtm-form-item ref="Entity.IsPublic" label="公开">
             <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="顺序">
+          <wtm-form-item ref="Entity.DisplayOrder" label="顺序">
             <el-input v-model="formData.Entity.DisplayOrder" v-edit:[status] placeholder="请输入顺序" />
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="图标">
+          <wtm-form-item ref="Entity.ICon" label="图标">
             <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: [], key:'value', label: 'label'}" filterable placeholder="请选择">
               <el-option v-for="item in []" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -187,11 +187,11 @@ export default class Index extends Vue {
      * formData.SelectedModule
      */
     get SelectedModule() {
-        const val = this["formData"].SelectedModule;
+        const val = _.get(this, `formData.Entity.SelectedModule`);
         return val ? val.toLowerCase() : "";
     }
     set SelectedModule(newValue) {
-        this["formData"].SelectedModule = newValue;
+        _.set(this, `formData.Entity.SelectedModule`, newValue);
     }
     created() {
         this.getFolders();
@@ -200,17 +200,20 @@ export default class Index extends Vue {
      * 查询详情-end-调用
      */
     endFormData() {
-        this["formData"].SelectedModule &&
+        const val = _.get(this, `formData.Entity.SelectedModule`);
+        val &&
             this.getActionsByModel({
-                ModelName: this["formData"].SelectedModule
+                ModelName: val
             });
     }
     /**
      * 动作名称
      */
     onSelectedAction() {
-        this["formData"].SelectedActionIDs = [];
-        this.getActionsByModel({ ModelName: this["formData"].SelectedModule });
+        _.set(this, `formData.Entity.SelectedActionIDs`, []);
+        this.getActionsByModel({
+            ModelName: _.get(this, `formData.Entity.SelectedModule`)
+        });
     }
 }
 </script>

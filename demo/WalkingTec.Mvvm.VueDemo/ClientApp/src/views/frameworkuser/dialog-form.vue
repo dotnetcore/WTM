@@ -3,102 +3,102 @@
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="账号" prop="ITCode">
-            <el-input v-model="formData.ITCode" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.RoleCode" label="账号" prop="ITCode">
+            <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="密码" prop="Password">
-            <el-input v-model="formData.Password" v-edit:[status] />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="邮箱">
-            <el-input v-model="formData.Email" v-edit:[status] />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="姓名" prop="Name">
-            <el-input v-model="formData.Name" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.RoleCode" label="密码" prop="Entity.Password">
+            <el-input v-model="formData.Entity.Password" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="性别">
-            <el-select v-model="formData.Sex" v-edit:[status]="{list: sexList, key:'value', label: 'label'}">
+          <wtm-form-item ref="Entity.RoleCode" label="邮箱">
+            <el-input v-model="formData.Entity.Email" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.RoleCode" label="姓名" prop="Entity.Name">
+            <el-input v-model="formData.Entity.Name" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <wtm-form-item label="性别">
+            <el-select v-model="formData.Entity.Sex" v-edit:[status]="{list: sexList, key:'value', label: 'label'}">
               <el-option v-for="(item, index) of sexList" :key="index" :label="item.label" :value="item.value" />
             </el-select>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="手机号">
-            <el-input v-model="formData.CellPhone" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item label="手机号">
+            <el-input v-model="formData.Entity.CellPhone" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="座机">
-            <el-input v-model="formData.HomePhone" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item label="座机">
+            <el-input v-model="formData.Entity.HomePhone" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="住址">
-            <el-input v-model="formData.Address" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item label="住址">
+            <el-input v-model="formData.Entity.Address" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="邮编">
-            <el-input v-model="formData.ZipCode" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item label="邮编">
+            <el-input v-model="formData.Entity.ZipCode" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="头像">
+          <wtm-form-item label="头像">
             <edit-box :is-edit="status !== dialogType.detail">
-              <upload-img :photo-id.sync="formData.PhotoId" />
+              <upload-img :photo-id.sync="formData.Entity.PhotoId" />
               <!-- <el-upload class="avatar-uploader" action="/api/_file/upload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                 <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
               </el-upload> -->
               <template #editValue>
-                <img v-if="formData.PhotoId" :src="'/api/_file/downloadFile/'+formData.PhotoId" class="avatar">
+                <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/'+formData.Entity.PhotoId" class="avatar">
               </template>
             </edit-box>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="是否有效" prop="IsValid">
+          <wtm-form-item label="是否有效" prop="IsValid">
             <edit-box :is-edit="status !== dialogType.detail">
-              <el-switch v-model="formData.IsValid" />
+              <el-switch v-model="formData.Entity.IsValid" />
               <template #editValue>
-                {{ formData.IsValid===true ? "是" : "否" }}
+                {{ formData.Entity.IsValid===true ? "是" : "否" }}
               </template>
             </edit-box>
-          </el-form-item>
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="角色">
-            <el-transfer v-model="formData.UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
-          </el-form-item>
+          <wtm-form-item label="角色">
+            <el-transfer v-model="formData.Entity.UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="用户组">
-            <el-transfer v-model="formData.UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
-          </el-form-item>
+          <wtm-form-item label="用户组">
+            <el-transfer v-model="formData.Entity.UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
+          </wtm-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -118,20 +118,22 @@ const defaultFormData = {
     refName: "refName",
     // 表单数据
     formData: {
-        ID: "",
-        ITCode: "",
-        Password: "",
-        Email: "",
-        Name: "",
-        Sex: 0,
-        CellPhone: "",
-        HomePhone: "",
-        Address: "",
-        ZipCode: "",
-        PhotoId: "",
-        IsValid: "true",
-        UserRoles: [],
-        UserGroups: []
+        Entity: {
+            ID: "",
+            ITCode: "",
+            Password: "",
+            Email: "",
+            Name: "",
+            Sex: 0,
+            CellPhone: "",
+            HomePhone: "",
+            Address: "",
+            ZipCode: "",
+            PhotoId: "",
+            IsValid: "true",
+            UserRoles: [],
+            UserGroups: []
+        }
     }
 };
 
@@ -162,21 +164,21 @@ export default class Index extends Vue {
                 this.$refs[defaultFormData.refName].resetFields();
             });
             return {
-                ITCode: [
+                "Entity.ITCode": [
                     {
                         required: true,
                         message: "请输入账号",
                         trigger: "blur"
                     }
                 ],
-                Password: [
+                "Entity.Password": [
                     {
                         required: true,
                         message: "请输入密码",
                         trigger: "blur"
                     }
                 ],
-                Name: [
+                "Entity.Name": [
                     {
                         required: true,
                         message: "请输入姓名",
@@ -268,17 +270,18 @@ export default class Index extends Vue {
     }
     // Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式 ★★
     updDataToTransfer(field) {
-        this["formData"][field] = this["formData"][field].map(item => {
+        const data = _.get(this, `formData.Entity.${field}`).map(item => {
             if (field === "UserGroups") {
                 return item.GroupId;
             } else {
                 return item.RoleId;
             }
         });
+        _.set(this, `formData.Entity.${field}`, data);
     }
     // Roles&Groups数据格式与穿梭框格式不符，穿梭框格式 >>> 数据格式 ★★
     updTransferToData(field) {
-        this["formData"][field] = this["formData"][field].map(item => {
+        const data = _.get(this, `formData.Entity.${field}`).map(item => {
             if (field === "UserGroups") {
                 return {
                     GroupId: item
@@ -289,6 +292,7 @@ export default class Index extends Vue {
                 };
             }
         });
+        _.set(this, `formData.Entity.${field}`, data);
     }
 }
 </script>

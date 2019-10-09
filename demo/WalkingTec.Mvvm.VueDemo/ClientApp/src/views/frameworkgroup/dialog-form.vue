@@ -3,21 +3,21 @@
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="用户组编码" prop="GroupCode">
-            <el-input v-model="formData.GroupCode" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
+            <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用户组名称" prop="GroupName">
-            <el-input v-model="formData.GroupName" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName">
+            <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input v-model="formData.GroupRemark" v-edit:[status] />
-          </el-form-item>
+          <wtm-form-item ref="Entity.GroupRemark" label="备注">
+            <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
+          </wtm-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -35,10 +35,12 @@ const defaultFormData = {
     refName: "refName",
     // 表单数据
     formData: {
-        ID: "",
-        GroupCode: "",
-        GroupName: "",
-        GroupRemark: ""
+        Entity: {
+            ID: "",
+            GroupCode: "",
+            GroupName: "",
+            GroupRemark: ""
+        }
     }
 };
 
