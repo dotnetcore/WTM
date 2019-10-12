@@ -168,8 +168,8 @@ namespace WalkingTec.Mvvm.Core
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? DateTime.MaxValue.ToString("yyyy/MM/dd") : this.MaxValuseOrLength;
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                     DVConstraint.CreateDateConstraint(OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength, "yyyy/MM/dd"));
-                    dataValidation.CreateErrorBox("错误", "请输入日期");
-                    dataValidation.CreatePromptBox("请输入日期格式 yyyy/mm/dd", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputDate"]);
+                    dataValidation.CreatePromptBox(Program._localizer?["PleaseInputFormat"], Program._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
                     //dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("yyyy/MM/dd");
                     dataStyle.DataFormat = dataFormat.GetFormat("yyyy/mm/dd");
                     break;
@@ -178,8 +178,8 @@ namespace WalkingTec.Mvvm.Core
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? DateTime.MaxValue.ToString("yyyy/MM/dd HH:mm:ss") : this.MaxValuseOrLength;
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                         DVConstraint.CreateDateConstraint(OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength, "yyyy/MM/dd HH:mm:ss"));
-                    dataValidation.CreateErrorBox("错误", "请输入日期");
-                    dataValidation.CreatePromptBox("请输入日期格式 yyyy/mm/dd HH:mm:ss", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputDate"]);
+                    dataValidation.CreatePromptBox(Program._localizer?["PleaseInputFormat"], Program._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
                     //dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("yyyy/MM/dd");
                     dataStyle.DataFormat = dataFormat.GetFormat("yyyy/mm/dd HH:mm:ss");
                     break;
@@ -188,34 +188,34 @@ namespace WalkingTec.Mvvm.Core
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? long.MaxValue.ToString() : this.MaxValuseOrLength;
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                          DVConstraint.CreateNumericConstraint(ValidationType.INTEGER, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength));
-                    dataValidation.CreateErrorBox("错误", "请输入数字");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputNumber"]);
                     dataStyle.DataFormat = dataFormat.GetFormat("0");
-                    dataValidation.CreatePromptBox("请输入数字格式", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    dataValidation.CreatePromptBox(Program._localizer?["PleaseInputNumberFormat"], Program._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.Float:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? decimal.MinValue.ToString() : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? decimal.MaxValue.ToString() : this.MaxValuseOrLength;
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                          DVConstraint.CreateNumericConstraint(ValidationType.DECIMAL, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength));
-                    dataValidation.CreateErrorBox("错误", "请输入小数");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputDecimal"]);
                     dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("0.00");
-                    dataValidation.CreatePromptBox("请输入小数", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    dataValidation.CreatePromptBox(Program._localizer?["PleaseInputDecimalFormat"], Program._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.Bool:
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                     DVConstraint.CreateFormulaListConstraint("Sheet1!$A$1:$B$1"));
-                    dataValidation.CreateErrorBox("错误", "请输入下拉菜单中存在的数据");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputExistData"]);
                     sheet.AddValidationData(dataValidation);
-                    dataValidation.CreatePromptBox("下拉菜单", "请输入下拉菜单中存在的数据");
+                    dataValidation.CreatePromptBox(Program._localizer?["ComboBox"], Program._localizer?["PleaseInputExistData"]);
                     break;
                 case ColumnDataType.Text:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? "0" : this.MinValueOrLength;
                     this.MaxValuseOrLength = string.IsNullOrEmpty(this.MaxValuseOrLength) ? "2000" : this.MaxValuseOrLength;
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                       DVConstraint.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, MinValueOrLength, MaxValuseOrLength));
-                    dataValidation.CreateErrorBox("错误", "文本长度不符合要求");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["WrongTextLength"]);
                     dataStyle.DataFormat = dataFormat.GetFormat("@");
-                    dataValidation.CreatePromptBox("请输入文本", "在" + MinValueOrLength + " 到 " + MaxValuseOrLength + "之间");
+                    dataValidation.CreatePromptBox(Program._localizer?["PleaseInputText"], Program._localizer?["DataRange", MinValueOrLength, MaxValuseOrLength]);
                     break;
                 case ColumnDataType.ComboBox:
                 case ColumnDataType.Enum:
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Core
                     //    DVConstraint.CreateFormulaListConstraint("Sheet2!$" + cloIndex + "$1:$" + cloIndex + "$" + count));
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                         DVConstraint.CreateFormulaListConstraint("dicRange" + porpetyIndex));
-                    dataValidation.CreateErrorBox("错误", "请输入下拉菜单中存在的数据");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["PleaseInputExistData"]);
 
                     var listItemsTemp = this.ListItems.ToList();
                     for (int rowIndex = 0; rowIndex < this.ListItems.Count(); rowIndex++)
@@ -251,12 +251,12 @@ namespace WalkingTec.Mvvm.Core
                         dataSheetRow.Cells.Where(x => x.ColumnIndex == porpetyIndex).FirstOrDefault().CellStyle = dataStyle;
                     }
                     sheet.AddValidationData(dataValidation);
-                    dataValidation.CreatePromptBox("下拉菜单", "请输入下拉菜单中存在的数据");
+                    dataValidation.CreatePromptBox(Program._localizer?["ComboBox"], Program._localizer?["PleaseInputExistData"]);
                     break;
                 default:
                     dataValidation = new HSSFDataValidation(new CellRangeAddressList(1, 65535, porpetyIndex, porpetyIndex),
                       DVConstraint.CreateNumericConstraint(ValidationType.TEXT_LENGTH, OperatorType.BETWEEN, this.MinValueOrLength, this.MaxValuseOrLength));
-                    dataValidation.CreateErrorBox("错误", "文本长度不符合要求");
+                    dataValidation.CreateErrorBox(Program._localizer?["Error"], Program._localizer?["WrongTextLength"]);
                     dataStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("@");
                     break;
             }
@@ -292,7 +292,7 @@ namespace WalkingTec.Mvvm.Core
                         DateTime tryDateTimeResult;
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},日期格式错误", this.ColumnName) };
+                            err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDateTimeResult;
@@ -301,7 +301,7 @@ namespace WalkingTec.Mvvm.Core
                         int tryIntResult;
                         if (!int.TryParse(value, out tryIntResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},数字格式错误", this.ColumnName) };
+                            err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryIntResult;
@@ -310,7 +310,7 @@ namespace WalkingTec.Mvvm.Core
                         decimal tryDecimalResult;
                         if (!decimal.TryParse(value, out tryDecimalResult))
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},小数格式错误", this.ColumnName) };
+                            err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
                             //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDecimalResult;
@@ -326,7 +326,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else
                         {
-                            err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},应该输入【是】或者【否】", this.ColumnName) };
+                            err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
                         }
                         break;
                     case ColumnDataType.Text:
@@ -336,7 +336,7 @@ namespace WalkingTec.Mvvm.Core
                     case ColumnDataType.Enum:
                         if (!this.ListItems.Any(x => x.Text == value))
                         {
-                            err =  new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值在数据库中不存在", this.ColumnName) };
+                            err =  new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}ValueNotExist", this.ColumnName] };
                         }
                         else
                         {
@@ -344,7 +344,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         break;
                     default:
-                        err = new ErrorMessage { Index = rowIndex, Message = string.Format("列:{0},输入的值不在允许的数据类型范围内", this.ColumnName) };
+                        err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}ValueTypeNotAllowed", this.ColumnName] };
                         break;
                 }
 

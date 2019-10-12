@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
@@ -210,6 +210,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Max = $"'{Max}'";
                 }
             }
+
+            if(Lang == null)
+            {
+                if(Enum.TryParse<DateTimeLangEnum>(Program._localizer["LayuiDateLan"],true, out var testlang))
+                {
+                    Lang = testlang;
+                }
+            }
+
             var content = $@"
 <script>
 layui.use(['laydate'],function(){{

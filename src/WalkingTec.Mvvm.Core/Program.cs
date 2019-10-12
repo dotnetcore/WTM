@@ -8,5 +8,7 @@ namespace WalkingTec.Mvvm.Core
     public class Program
     {
         public static IStringLocalizer _localizer { get; set; }
+
+        public static IStringLocalizer _Callerlocalizer { get; set; }
     }
 }

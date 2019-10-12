@@ -58,23 +58,11 @@ namespace WalkingTec.Mvvm.Core
                 if (_title == null && PI != null)
                 {
                     _title = PropertyHelper.GetPropertyDisplayName(PI) ?? string.Empty;
-                    if (Program._localizer != null && _title != string.Empty)
-                    {
-                        _title = Program._localizer[_title];
-                    }
-
                 }
                 return _title;
             }
             set {
-                if (Program._localizer != null &&string.IsNullOrEmpty(value) == false)
-                {
-                    _title = Program._localizer[value];
-                }
-                else
-                {
                     _title = value;
-                }
             }
         }
 

@@ -446,6 +446,9 @@ layui.use(['table'], function(){{
   {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
+    ,text:{{
+        none:'{Program._localizer["NoData"]}'
+    }}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}

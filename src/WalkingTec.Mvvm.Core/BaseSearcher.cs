@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -97,7 +97,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 是否有效，针对继承PersistPoco的Model
         /// </summary>
-        [Display(Name = "有效")]
+        [Display(Name = "IsValid")]
         public bool? IsValid { get; set; }
         /// <summary>
         /// 用于框架判断列表页是否全局刷新

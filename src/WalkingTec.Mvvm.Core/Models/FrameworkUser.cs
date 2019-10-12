@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "Group")]
         public List<FrameworkUserGroup> UserGroups { get; set; }
 
-        [Display(Name = "SearchConditions")]
+        [Display(Name = "SearchCondition")]
         [JsonIgnore]
         public List<SearchCondition> SearchConditions { get; set; } 
 

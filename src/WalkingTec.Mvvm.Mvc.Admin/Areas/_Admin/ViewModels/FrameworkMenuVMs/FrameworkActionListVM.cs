@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -95,13 +95,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         public Guid? ModuleID { get; set; }
 
-        [Display(Name = "模块名称")]
+        [Display(Name = "ModuleName")]
         public string ModuleName { get; set; }
-        [Display(Name = "动作名称")]
+        [Display(Name = "ActionName")]
         public string ActionName { get; set; }
-        [Display(Name = "类名")]
+        [Display(Name = "ClassName")]
         public string ClassName { get; set; }
-        [Display(Name = "方法名")]
+        [Display(Name = "MethodName")]
         public string MethodName { get; set; }
 
         public string AreaName { get; set; }

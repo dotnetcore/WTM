@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Core
         where TSearcher : BaseSearcher
     {
 
-        public string TotalText { get; set; } = "合计：";
+        public string TotalText { get; set; } = Program._localizer?["Total"];
 
         public virtual DbCommand GetSearchCommand()
         {

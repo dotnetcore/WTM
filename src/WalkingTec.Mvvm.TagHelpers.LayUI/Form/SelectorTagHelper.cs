@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
-<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? Program._localizer["Select"]}</button>
+<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
 <hidden id='{Id}' name='{Field.Name}' />
 <script>
 var {Id}filter = {{}};
