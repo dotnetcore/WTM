@@ -8,22 +8,22 @@ namespace WalkingTec.Mvvm.Admin
 {
     public class ChangePasswordVM : BaseVM
     {
-        [Display(Name = "用户")]
+        [Display(Name = "Account")]
         public Guid UserId { get; set; }
 
-        [Display(Name = "当前密码")]
+        [Display(Name = "OldPassword")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string OldPassword { get; set; }
 
-        [Display(Name = "新密码")]
+        [Display(Name = "NewPassword")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string NewPassword { get; set; }
 
-        [Display(Name = "新密码")]
+        [Display(Name = "NewPasswordComfirm")]
         [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string NewPasswordComfirm { get; set; }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace WalkingTec.Mvvm.Admin
             //检查原密码是否正确，如不正确则输出错误
             if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
             {
-                MSD.AddModelError("OldPassword", "当前密码错误");
+                MSD.AddModelError("OldPassword",Program._localizer["OldPasswrodWrong"]);
             }
             //检查两次新密码是否输入一致，如不一致则输出错误
             if (NewPassword != NewPasswordComfirm)
             {
-                MSD.AddModelError("NewPasswordComfirm", "两次新密码输入不一致");
+                MSD.AddModelError("NewPasswordComfirm", Program._localizer["PasswordNotSame"]);
             }
         }
 

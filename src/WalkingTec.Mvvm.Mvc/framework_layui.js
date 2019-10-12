@@ -7,6 +7,11 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 window.ff = {
+    DONOTUSE_Text_LoadFailed : "",
+    DONOTUSE_Text_SubmitFailed: "",
+    DONOTUSE_Text_PleaseSelect: "",
+    DONOTUSE_Text_FailedLoadData: "",
+
   SetCookie: function (name, value, allwindow) {
     var cookiePrefix = '', windowGuid = '';
 
@@ -114,7 +119,6 @@ window.ff = {
     url = url.replace(re, function (match, p1, p2) {
       return p1 + encodeURIComponent(p2);
     });
-
     if (newwindow === true || para !== undefined) {
       var getpost = "GET";
       if (para !== undefined) {
@@ -147,7 +151,7 @@ window.ff = {
             layer.alert(a.responseText);
           }
           else {
-            layer.alert('加载失败');
+              layer.alert(ff.DONOTUSE_Text_LoadFailed);
           }
         }
       });
@@ -175,7 +179,7 @@ window.ff = {
         },
         error: function (xhr, status, error) {
           layer.close(index);
-          layer.alert('加载失败');
+            layer.alert(ff.DONOTUSE_Text_LoadFailed);
         },
         complete: function () {
           ff.SetCookie("windowids", null);
@@ -247,8 +251,8 @@ window.ff = {
       data: ff.GetPostData(formId),
       async: true,
       error: function (request) {
-        layer.close(index);
-        alert("提交失败");
+          layer.close(index);
+          alert(ff.DONOTUSE_Text_SubmitFailed);
       },
       success: function (data, textStatus, request) {
         layer.close(index);
@@ -282,7 +286,7 @@ window.ff = {
               layer.alert(request.responseText);
           }
           else {
-              layer.alert('加载失败');
+              layer.alert(ff.DONOTUSE_Text_LoadFailed);
           }
       },
       success: function (str, textStatus, request) {
@@ -330,7 +334,7 @@ window.ff = {
               layer.alert(request.responseText);
           }
           else {
-              layer.alert('加载失败');
+              layer.alert(ff.DONOTUSE_Text_LoadFailed);
           }
       },
       success: function (str, textStatus, request) {
@@ -402,7 +406,7 @@ window.ff = {
               layer.alert(request.responseText);
           }
           else {
-              layer.alert('加载失败');
+              layer.alert(ff.DONOTUSE_Text_LoadFailed);
           }
       },
       success: function (str) {
@@ -498,8 +502,8 @@ window.ff = {
           });
         }
 
-        if (controltype === "combo") {
-          $('#' + target).html('<option value = "">请选择</option>');
+          if (controltype === "combo") {
+              $('#' + target).html('<option value = "">' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
           if (data.Data !== undefined && data.Data !== null) {
             for (i = 0; i < data.Data.length; i++) {
               item = data.Data[i];
@@ -543,7 +547,7 @@ window.ff = {
 
       }
       else {
-        layer.alert('获取数据失败');
+          layer.alert(ff.DONOTUSE_Text_FailedLoadData);
       }
     });
 
@@ -861,3 +865,13 @@ window.ff = {
     }
   }
 };
+
+$.ajax({
+    url: '/_framework/GetScriptLanguage',
+    type: 'GET',
+    success: function (data) {
+        for (val in data){
+            ff[val] = data[val];
+        }
+    }
+});

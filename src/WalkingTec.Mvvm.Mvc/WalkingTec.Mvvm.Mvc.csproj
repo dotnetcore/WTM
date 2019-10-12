@@ -10,6 +10,11 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Resourceen.txt" />
+    <None Remove="SetupFiles\Resourcezh.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ControllerTestTopPoco.txt" />
@@ -39,6 +44,8 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="SetupFiles\Resourceen.txt" />
+    <EmbeddedResource Include="SetupFiles\Resourcezh.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
     <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
     <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />

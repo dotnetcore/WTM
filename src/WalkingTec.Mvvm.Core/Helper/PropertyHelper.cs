@@ -124,6 +124,20 @@ namespace WalkingTec.Mvvm.Core
             if (pi.GetCustomAttributes(typeof(RegularExpressionAttribute), false).FirstOrDefault() is RegularExpressionAttribute dis && !string.IsNullOrEmpty(dis.ErrorMessage))
             {
                 rv = dis.ErrorMessage;
+                if (pi.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                {
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
+                }
             }
             else
             {
@@ -143,9 +157,20 @@ namespace WalkingTec.Mvvm.Core
             string rv = "";
             if (pi.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() is DisplayAttribute dis && !string.IsNullOrEmpty(dis.Name))
             {
-                if (dis.ResourceType == null)
+                rv = dis.Name;
+                if (pi.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
                 {
-                    rv = dis.Name;
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
                 }
             }
             else
@@ -500,9 +525,19 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
-                    if (Program._localizer != null)
+                    if (field.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
                     {
-                        rv = Program._localizer[rv];
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
                     }
                 }
                 else
@@ -536,9 +571,19 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
-                    if (Program._localizer != null)
+                    if (field.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
                     {
-                        rv = Program._localizer[rv];
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
                     }
                 }
                 else

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Localization;
 
-namespace WalkingTec.Mvvm.Mvc.Admin
+namespace WalkingTec.Mvvm.Mvc
 {
     public class Program
     {

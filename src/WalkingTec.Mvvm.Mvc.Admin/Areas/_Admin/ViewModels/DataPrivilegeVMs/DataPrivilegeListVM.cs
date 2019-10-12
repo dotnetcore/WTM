@@ -14,8 +14,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "新建","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin"),
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }
 
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
-                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader("操作"),
+                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Program._localizer["Operation"]),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
            };
@@ -61,8 +61,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             return new List<ColumnFormatInfo>
             {
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,"修改",800,null,"修改"),
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,"删除",null,null,showDialog:false)
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,Program._localizer["Edit"],800,null,Program._localizer["Edit"]),
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,Program._localizer["Delete"],null,null,showDialog:false)
             };
         }
 
@@ -116,15 +116,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     /// </summary>
     public class DataPrivilege_ListView : BasePoco
     {
-        [Display(Name = "授权对象")]
+        [Display(Name = "DpTargetName")]
         public string Name { get; set; }
         public Guid TargetId { get; set; }
-        [Display(Name = "权限名称")]
+        [Display(Name = "DataPrivilegeName")]
         public string TableName { get; set; }
-        [Display(Name = "权限数量")]
+        [Display(Name = "DataPrivilegeCount")]
         public int RelateIDs { get; set; }
         public int DpType { get; set; }
-        [Display(Name = "域名")]
         public string DomainName { get; set; }
 
         public Guid? DomainID { get; set; }

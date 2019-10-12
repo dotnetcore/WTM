@@ -13,11 +13,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ApiController]
     [Route("api/_file")]
     [AllRights]
-    [ActionDescription("文件操作")]
+    [ActionDescription("File")]
     public class _FileApiController : BaseApiController
     {
         [HttpPost("upload")]
-        [ActionDescription("上传文件")]
+        [ActionDescription("UploadFile")]
         public IActionResult Upload()
         {
             var FileData = Request.Form.Files[0];
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("uploadimage")]
-        [ActionDescription("上传图片")]
+        [ActionDescription("UploadPic")]
         public IActionResult UploadImage(int? width = null, int? height = null)
         {
             if (width == null && height == null)
@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpGet("getFileName/{id}")]
-        [ActionDescription("获取文件名")]
+        [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id)
         {
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpGet("getFile/{id}")]
-        [ActionDescription("获取文件")]
+        [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id)
         {
             if (id == Guid.Empty)
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpGet("downloadFile/{id}")]
-        [ActionDescription("下载文件")]
+        [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile(Guid id)
         {
             if (id == Guid.Empty)
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpGet("deleteFile/{id}")]
-        [ActionDescription("删除文件")]
+        [ActionDescription("DeleteFile")]
         public IActionResult DeletedFile(Guid id)
         {
             if (id == Guid.Empty)

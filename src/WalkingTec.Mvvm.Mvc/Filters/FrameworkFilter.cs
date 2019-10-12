@@ -41,8 +41,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
-            log.ModuleName = ctrlDes?.Description ?? ctrlActDesc.ControllerName;
-            log.ActionName = actDes?.Description ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+            log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
+            log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
             log.ActionUrl = context.HttpContext.GetRemoteIpAddress();
             log.IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -250,9 +250,9 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             if (ctrlDes != null)
                             {
-                                pagetitle = ctrlDes.Description + " - ";
+                                pagetitle = ctrlDes.GetDescription() + " - ";
                             }
-                            pagetitle += actDes.Description;
+                            pagetitle += actDes.GetDescription();
                         }
                     }
                     else
@@ -308,8 +308,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionTime = DateTime.Now;
                     log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
-                    log.ModuleName = ctrlDes?.Description ?? ctrlActDesc.ControllerName;
-                    log.ActionName = actDes?.Description ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+                    log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
+                    log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;
@@ -342,7 +342,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
                 else
                 {
-                    context.HttpContext.Response.WriteAsync("页面发生错误");
+                    context.HttpContext.Response.WriteAsync(Program._localizer["PageError"]);
                 }
             }
             base.OnResultExecuted(context);

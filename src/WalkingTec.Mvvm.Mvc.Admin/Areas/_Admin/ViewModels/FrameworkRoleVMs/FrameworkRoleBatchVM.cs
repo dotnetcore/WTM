@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == id as Guid?);
             if (check == true)
             {
-                errorMessage = "角色已被使用，无法删除";
+                errorMessage = Program._localizer["CannotDelete", Program._localizer["Role"]];
                 return false;
             }
             else

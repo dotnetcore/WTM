@@ -130,6 +130,7 @@ namespace WalkingTec.Mvvm.Mvc
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
+            string resourcedir = MainDir;
             string testdir = MainDir + ".Test";
             string vmns = MainNs + ".ViewModels";
             string datans = MainNs;
@@ -141,11 +142,13 @@ namespace WalkingTec.Mvvm.Mvc
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels");
+                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
                 }
                 vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
+                resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             }
             else
             {
@@ -349,6 +352,9 @@ EndProject
     .Replace("$uploaddir$", UploadDir ?? ""), Encoding.UTF8
     );
             File.WriteAllText($"{datadir}{Path.DirectorySeparatorChar}DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans), Encoding.UTF8);
+
+            File.WriteAllText($"{resourcedir}{Path.DirectorySeparatorChar}Program.zh.resx", GetResource("Resourcezh.txt"), Encoding.UTF8);
+            File.WriteAllText($"{resourcedir}{Path.DirectorySeparatorChar}Program.en.resx", GetResource("Resourceen.txt"), Encoding.UTF8);
             if (UI == UIEnum.LayUI)
             {
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}HomeController.cs", GetResource("HomeController.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);

@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
   <div class=""layui-colla-item"">
     <h2 class=""layui-colla-title"">{Program._localizer["SearchCondition"]}
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">
-        <a href=""javascript:void(0)"" class=""layui-btn layui-btn-sm"" id=""{SearchBtnId}""><i class=""layui-icon"">&#xe615;</i>搜索</a>
+        <a href=""javascript:void(0)"" class=""layui-btn layui-btn-sm"" id=""{SearchBtnId}""><i class=""layui-icon"">&#xe615;</i>{Program._localizer["Search"]}</a>
         {(!ResetBtn ? string.Empty : $@"<button type=""reset"" class=""layui-btn layui-btn-sm"" id=""{ResetBtnId}"">{Program._localizer["Reset"]}</button>")}
       </div>
     </h2>
