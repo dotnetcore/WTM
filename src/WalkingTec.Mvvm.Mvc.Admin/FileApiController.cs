@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 data = new byte[0];
             }
-            Response.Body.Write(data, 0, data.Count());
+            Response.Body.WriteAsync(data, 0, data.Count());
             return new EmptyResult();
         }
 
