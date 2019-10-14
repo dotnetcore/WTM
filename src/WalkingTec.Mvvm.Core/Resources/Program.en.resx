@@ -733,7 +733,7 @@
     <value>Upload failed</value>
   </data>
   <data name="UploadTemplate" xml:space="preserve">
-    <value>Upload template</value>
+    <value>Template</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
