@@ -350,6 +350,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region Validate model
+        [NonAction]
         public Dictionary<string, string> RedoValidation(object item)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();

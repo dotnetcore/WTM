@@ -14,13 +14,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     public class FrameworkMenuVM2 : BaseCRUDVM<FrameworkMenu>
     {
 
-        [Display(Name = "动作")]
+        [Display(Name = "Action")]
         public List<string> SelectedActionIDs { get; set; }
 
-        [Display(Name = "模块")]
+        [Display(Name = "Module")]
         public string SelectedModule { get; set; }
 
-        [Display(Name = "允许角色")]
+        [Display(Name = "AllowedRole")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
 
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
-                    MSD.AddModelError(" error", "该模块已经配置过了");
+                    MSD.AddModelError(" error", Program._localizer["ModuleHasSet"]);
                 }
             }
             base.Validate();
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
 
@@ -183,7 +183,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)

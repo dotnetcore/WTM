@@ -33,6 +33,16 @@ namespace WalkingTec.Mvvm.Admin.Test
         }
 
         [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
+        }
+
+
+        [TestMethod]
         public void CreateTest()
         {
             PartialViewResult rv = (PartialViewResult)_controller.Create();

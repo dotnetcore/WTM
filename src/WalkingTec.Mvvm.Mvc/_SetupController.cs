@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Mvc
             string rv = $@"
 <html>
 <body>
-    初始化已完成，请停止调试，重新编译代码
+    {Program._localizer["SetupSuccess"]}
 </body>
 </html>";
             return Content(rv, "text/html", Encoding.UTF8);

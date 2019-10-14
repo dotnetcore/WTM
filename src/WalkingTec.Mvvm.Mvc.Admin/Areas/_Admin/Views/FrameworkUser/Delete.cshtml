@@ -1,21 +1,23 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms.FrameworkUserVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
-<wt:form vm="@Model">
-    <wt:quote>确定要删除这条数据么：</wt:quote>
+  <wt:form vm="@Model">
+    <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
     <wt:row items-per-row=" ItemsPerRowEnum.Two">
-        <wt:image field="Entity.PhotoId" width="300" />
-        <wt:display field="Entity.ITCode" />
-        <wt:display field="Entity.Name" />
-        <wt:display field="Entity.Sex" />
-        <wt:display field="Entity.Email" />
-        <wt:display field="Entity.CellPhone" />
-        <wt:display field="Entity.HomePhone" />
-        <wt:display field="Entity.Address" />
-        <wt:display field="Entity.ZipCode" />
+      <wt:image field="Entity.PhotoId" width="300" />
+      <wt:display field="Entity.ITCode" />
+      <wt:display field="Entity.Name" />
+      <wt:display field="Entity.Sex" />
+      <wt:display field="Entity.Email" />
+      <wt:display field="Entity.CellPhone" />
+      <wt:display field="Entity.HomePhone" />
+      <wt:display field="Entity.Address" />
+      <wt:display field="Entity.ZipCode" />
     </wt:row>
     <wt:hidden field="Entity.ID" />
     <wt:row align=" AlignEnum.Right">
-        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
-        <wt:closebutton />
+      <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
+      <wt:closebutton />
     </wt:row>
-</wt:form>
+  </wt:form>

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +9,9 @@ namespace WalkingTec.Mvvm.Core
 {
     public enum SexEnum
     {
-        [Display(Name = "男")]
+        [Display(Name = "Male")]
         Male = 0,
-        [Display(Name = "女")]
+        [Display(Name = "Female")]
         Female = 1
     }
     /// <summary>
@@ -20,66 +20,66 @@ namespace WalkingTec.Mvvm.Core
     [Table("FrameworkUsers")]
     public class FrameworkUserBase : BasePoco
     {
-        [Display(Name = "账号")]
-        [Required(ErrorMessage ="{0}是必填项")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "Account")]
+        [Required(ErrorMessage = "{0}required")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
         public string ITCode { get; set; }
 
-        [Display(Name = "密码")]
-        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Password")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "{0}required")]
         [StringLength(32)]
         public string Password { get; set; }
 
-        [Display(Name = "邮箱" )]
-        [DataType(DataType.EmailAddress)]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "Email" )]
+        [DataType(DataType.EmailAddress,ErrorMessage= "{0}formaterror")]
+        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
         public string Email { get; set; }
 
-        [Display(Name = "姓名" )]
-        [Required(ErrorMessage ="{0}是必填项")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "Name" )]
+        [Required(ErrorMessage = "{0}required")]
+        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
         public string Name { get; set; }
 
-        [Display(Name = "性别")]
+        [Display(Name = "Sex")]
         public SexEnum? Sex { get; set; }
 
-        [Display(Name = "手机")]
-        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]
+        [Display(Name = "CellPhone")]
+        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}formaterror")]
         public string CellPhone { get; set; }
 
-        [Display(Name = "座机")]
-        [StringLength(30, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "HomePhone")]
+        [StringLength(30, ErrorMessage = "{0}stringmax{1}")]
         public string HomePhone { get; set; }
 
-        [Display(Name = "住址")]
-        [StringLength(200, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Address")]
+        [StringLength(200, ErrorMessage = "{0}stringmax{1}")]
         public string Address { get; set; }
 
-        [Display(Name = "邮编")]
-        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}必须是6位数字")]
+        [Display(Name = "ZipCode")]
+        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}formaterror")]
         public string ZipCode { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "Photo")]
         public Guid? PhotoId { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "Photo")]
         public FileAttachment Photo { get; set; }
 
-        [Display(Name = "是否有效")]
+        [Display(Name = "IsValid")]
         public bool IsValid { get; set; }
 
-        [Display(Name = "角色" )]
+        [Display(Name = "Role")]
         public List<FrameworkUserRole> UserRoles { get; set; }
 
-        [Display(Name = "用户组")]
+        [Display(Name = "Group")]
         public List<FrameworkUserGroup> UserGroups { get; set; }
 
-        [Display(Name = "搜索条件" )]
+        [Display(Name = "SearchCondition")]
         [JsonIgnore]
         public List<SearchCondition> SearchConditions { get; set; } 
 
         [NotMapped]
-        [Display(Name = "用户")]
+        [Display(Name = "User")]
         public string CodeAndName
         {
             get

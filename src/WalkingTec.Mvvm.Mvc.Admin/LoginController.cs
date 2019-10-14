@@ -10,12 +10,12 @@ namespace WalkingTec.Mvvm.Admin.Api
 {
     [ApiController]
     [Route("api/_login")]
-    [ActionDescription("登陆")]
+    [ActionDescription("Login")]
     [Public]
     public class _LoginController : BaseApiController
     {
         [HttpPost("login")]
-        [ActionDescription("登录")]
+        [ActionDescription("Login")]
         public IActionResult Login([FromForm] string userid, [FromForm]string password)
         {
             var user = DC.Set<FrameworkUserBase>()

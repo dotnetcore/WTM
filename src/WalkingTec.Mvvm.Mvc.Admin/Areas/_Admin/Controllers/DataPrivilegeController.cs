@@ -9,10 +9,10 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("数据权限")]
+    [ActionDescription("DataPrivilege")]
     public class DataPrivilegeController : BaseController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         public ActionResult Index()
         {
             var vm = CreateVM<DataPrivilegeListVM>();
@@ -20,14 +20,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost]
         public string Search(DataPrivilegeListVM vm)
         {
             return vm.GetJson(false);
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create()
         {
             var vm = CreateVM<DataPrivilegeVM>();
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         public ActionResult Edit(string ModelName, Guid Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPost]
         public ActionResult Edit(DataPrivilegeVM vm)
         {
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
         }
 
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public ActionResult Delete(string ModelName, Guid Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
@@ -108,13 +108,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return Json(AllItems);
         }
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost]
         public IActionResult ExportExcel(DataPrivilegeListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_DataPrivilege_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
     }
 }

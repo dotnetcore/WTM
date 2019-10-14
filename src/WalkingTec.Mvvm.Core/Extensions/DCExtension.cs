@@ -622,26 +622,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 BinaryExpression exp = null;
                 if (valMin != null)
                 {
-                    if (includeMin)
-                    {
-                        exp1 = Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
-                    }
-                    else
-                    {
-                        exp1 = Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
-                    }
+                    exp1 = !includeMin ? Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin)) : Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
                 }
                 if(valMax != null)
                 {
-                    if (includeMax)
-                    {
-                        exp2 = Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
-                    }
-                    else
-                    {
-                        exp2 = Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
-                    }
-
+                    exp2 = !includeMax ? Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax)) : Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
                 }
                 if(exp1 != null && exp2 != null)
                 {
@@ -682,21 +667,21 @@ where S : struct
 
         public static IQueryable<T> CheckContain<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field, bool ignoreCase = true)
         {
-            if (val == null || val == "")
+            if (string.IsNullOrEmpty(val))
             {
                 return baseQuery;
             }
             else
             {
                 Expression exp = null;
-                if (ignoreCase == false)
+                if (ignoreCase == true)
                 {
                     var tolower = Expression.Call(field.Body, "ToLower", null);
                     exp = Expression.Call(tolower, "Contains", null, Expression.Constant(val.ToLower()));
                 }
                 else
                 {
-                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val.ToLower()));
+                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val));
 
                 }
                 var where = Expression.Lambda<Func<T, bool>>(exp, field.Parameters[0]);

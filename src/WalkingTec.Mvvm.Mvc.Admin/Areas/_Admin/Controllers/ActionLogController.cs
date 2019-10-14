@@ -7,18 +7,18 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("日志")]
+    [ActionDescription("Log")]
     [FixConnection(CsName = "defaultlog")]
     public class ActionLogController : BaseController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         public IActionResult Index()
         {
             var vm = CreateVM<ActionLogListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost]
         public string Search(ActionLogListVM vm)
         {
@@ -27,14 +27,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
 
         [HttpGet]
-        [ActionDescription("详细")]
+        [ActionDescription("Details")]
         public IActionResult Details(string id)
         {
             var vm = CreateVM<ActionLogVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost]
         public IActionResult ExportExcel(ActionLogListVM vm)
         {
