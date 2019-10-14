@@ -206,24 +206,24 @@ namespace WalkingTec.Mvvm.Core
             switch (boolType)
             {
                 case BoolComboTypes.YesNo:
-                    yesText = "是";
-                    noText = "否";
+                    yesText = Program._localizer["Yes"];
+                    noText = Program._localizer["No"];
                     break;
                 case BoolComboTypes.ValidInvalid:
-                    yesText = "有效";
-                    noText = "无效";
+                    yesText = Program._localizer["Valid"];
+                    noText = Program._localizer["Invalid"];
                     break;
                 case BoolComboTypes.MaleFemale:
-                    yesText = "男";
-                    noText = "女";
+                    yesText = Program._localizer["Male"];
+                    noText = Program._localizer["Female"];
                     break;
                 case BoolComboTypes.HaveNotHave:
-                    yesText = "有";
-                    noText = "无";
+                    yesText = Program._localizer["Have"];
+                    noText = Program._localizer["NotHave"];
                     break;
                 case BoolComboTypes.Custom:
-                    yesText = trueText ?? "是";
-                    noText = falseText ?? "否";
+                    yesText = trueText ?? Program._localizer["Yes"];
+                    noText = falseText ?? Program._localizer["No"];
                     break;
                 default:
                     break;

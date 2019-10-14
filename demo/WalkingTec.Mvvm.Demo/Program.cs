@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WalkingTec.Mvvm.Core;
@@ -16,8 +18,10 @@ namespace WalkingTec.Mvvm.Demo
 {
     public class Program
     {
+        public static IStringLocalizer Localizer { get; set; }
+
         public static void Main(string[] args)
-        {
+        {           
             CreateWebHostBuilder(args).Build().Run();
         }
 

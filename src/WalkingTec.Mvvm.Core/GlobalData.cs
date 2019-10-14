@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -24,10 +24,12 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public List<string> AllAccessUrls { get; set; }
 
+
+        private Func<List<FrameworkModule>> ModuleGetFunc;
         /// <summary>
         /// 模块
         /// </summary>
-        public List<FrameworkModule> AllModule { get; set; }
+        public List<FrameworkModule> AllModule => ModuleGetFunc == null ? null : ModuleGetFunc();
 
         /// <summary>
         /// 数据库模型
@@ -43,5 +45,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="func"></param>
         public void SetMenuGetFunc(Func<List<FrameworkMenu>> func) => MenuGetFunc = func;
+        public void SetModuleGetFunc(Func<List<FrameworkModule>> func) => ModuleGetFunc = func;
+
     }
 }

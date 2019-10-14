@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -25,6 +28,7 @@ using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -57,6 +61,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var binPath = new FileInfo(binLocation).Directory?.FullName;
                     if (File.Exists(Path.Combine(binPath, "appsettings.json")))
                     {
+                        Directory.SetCurrentDirectory(binPath);
                         configBuilder.SetBasePath(binPath)
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
@@ -78,6 +83,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var config = configBuilder.Build();
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
             services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
@@ -132,7 +138,6 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
-
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
             services.AddMvc(options =>
@@ -169,7 +174,43 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     return new BadRequestObjectResult(a.ModelState.GetErrorJson());
                 };
-            });
+            })
+            .AddDataAnnotationsLocalization(options =>
+            {
+                var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+                var layuidll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.TagHelpers.LayUI.dll").FirstOrDefault();
+                var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                bool setcore = false;
+                string[] buildindll = new string[]
+                {
+                    "WalkingTec.Mvvm.Core",
+                    "WalkingTec.Mvvm.Mvc",
+                    "WalkingTec.Mvvm.Admin",
+                    "WalkingTec.Mvvm.Taghelpers"
+                };
+                options.DataAnnotationLocalizerProvider = (type, factory) => {
+                    if (buildindll.Any(x=>type.FullName.StartsWith(x)))
+                    {
+                        var rv = factory.Create(coreType);
+                        if(setcore == false)
+                        {
+                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_localizer").SetValue(null, rv);
+                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType));
+                            layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
+                            mvc.GetType("WalkingTec.Mvvm.Mvc.Program").GetProperty("_localizer").SetValue(null, rv);
+                            admin.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
+                            setcore = true;
+                        }
+                        return rv;
+                    }
+                    else
+                    {
+                        return factory.Create(programType);
+                    }
+                };
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 
             //services.Configure<RazorViewEngineOptions>(options =>
@@ -210,6 +251,7 @@ namespace WalkingTec.Mvvm.Mvc
             IconFontsHelper.GenerateIconFont();
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            var localizer = app.ApplicationServices.GetRequiredService<GlobalData>();
 
             if (configs == null)
             {
@@ -254,6 +296,23 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     app.UseCors("_donotusedefault");
                 }
+            }
+
+            if (string.IsNullOrEmpty(configs.Languages) == false)
+            {
+                List<CultureInfo> supportedCultures = new List<CultureInfo>();
+                var lans = configs.Languages.Split(",");
+                foreach (var lan in lans)
+                {
+                    supportedCultures.Add(new CultureInfo(lan));
+                }
+
+                app.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
             }
             if (customRoutes != null)
             {
@@ -323,11 +382,12 @@ namespace WalkingTec.Mvvm.Mvc
             }
             gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
             gd.AllModels = GetAllModels(gd.DataContextCI);
-
             var controllers = GetAllControllers(gd.AllAssembly);
-
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
-            gd.AllModule = GetAllModules(controllers);
+
+            gd.SetModuleGetFunc(() => {
+                return GetAllModules(controllers);
+            });
 
             gd.SetMenuGetFunc(() =>
             {
@@ -353,6 +413,7 @@ namespace WalkingTec.Mvvm.Mvc
         private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule, ConstructorInfo constructorInfo)
         {
             var ConfigInfo = GlobalServices.GetService<Configs>();
+            var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
             var menus = new List<FrameworkMenu>();
 
             if (ConfigInfo.IsQuickDebug)
@@ -364,7 +425,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var modelmenu = new FrameworkMenu
                     {
                         //ID = Guid.NewGuid(),
-                        PageName = area ?? "默认区域"
+                        PageName = area ?? localizer["DefaultArea"]
                     };
                     menus.Add(modelmenu);
                     var pages = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).SelectMany(x => x.Actions).Where(x => x.MethodName.ToLower() == "index").ToList();
@@ -512,7 +573,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (attrs.Length > 0)
                 {
                     var ada = attrs[0] as ActionDescriptionAttribute;
-                    var nameKey = ada.Description;
+                    var nameKey = ada.GetDescription();
                     model.ModuleName = nameKey;
                 }
                 else
@@ -555,7 +616,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            var nameKey = ada.Description;
+                            var nameKey = ada.GetDescription();
                             action.ActionName = nameKey;
                         }
                         else
@@ -605,7 +666,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            string nameKey = ada.Description;
+                            string nameKey = ada.GetDescription();
                             action.ActionName = nameKey;
                         }
                         else

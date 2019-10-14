@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
 
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("class", "layui-btn layui-btn-sm");
             output.Attributes.Add("type", "button");
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Content.SetHtmlContent("选择文件");
+            output.Content.SetHtmlContent(Program._localizer["Select"]);
             string ext = "";
             if (string.IsNullOrEmpty(CustomType))
             {
@@ -140,7 +140,7 @@ layui.use(['upload'],function(){{
       layui.layer.close(index);
       if(res.Data.Id == ''){{
           $('#{Id}label').html('');
-          layui.layer.msg('上传失败');
+          layui.layer.msg('{Program._localizer["UploadFailed"]}');
       }}
       else{{
             $('#{Id}label').html('');
@@ -154,7 +154,7 @@ layui.use(['upload'],function(){{
             }});
           }});
       " : $@"
-          $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  删除</button>"");
+          $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  {Program._localizer["Delete"]}</button>"");
           $('#{Id}del').on('click',function(){{
             {Id}DoDelete(res.Data.Id);
           }});
@@ -196,7 +196,7 @@ $.ajax({{
         {Id}DoDelete('{Field.Model}');
       }});
     " : $@"
-        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  删除</button>"");
+        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  {Program._localizer["Delete"]}</button>"");
         $('#{Id}del').on('click',function(){{
           {Id}DoDelete('{Field.Model}');
         }});

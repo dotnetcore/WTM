@@ -246,8 +246,8 @@ namespace WalkingTec.Mvvm.Mvc
                 var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                 var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
                 //给日志的多语言属性赋值
-                log.ModuleName = controllerDes?.Description ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-                log.ActionName = actionDes?.Description ?? ex.Error.TargetSite.Name;
+                log.ModuleName = controllerDes?.GetDescription() ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+                log.ActionName = actionDes?.GetDescription() ?? ex.Error.TargetSite.Name;
                 if (postDes != null)
                 {
                     log.ActionName += "[P]";
@@ -370,7 +370,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
                 return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
             }
-            return Content($"{{\"code\": 1 , \"msg\": \"上传失败\", \"data\": {{\"src\": \"\"}}}}");
+            return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
         }
 
         [ActionDescription("获取文件名")]
@@ -485,9 +485,9 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (ctrlDes != null)
                     {
-                        pagetitle = ctrlDes.Description + " - ";
+                        pagetitle = ctrlDes.GetDescription() + " - ";
                     }
-                    pagetitle += actDes.Description;
+                    pagetitle += actDes.GetDescription();
                 }
             }
             else
@@ -509,7 +509,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                throw new Exception("您没有访问该页面的权限");
+                throw new Exception(Program._localizer["NoPrivilege"]);
             }
         }
 
@@ -665,7 +665,7 @@ namespace WalkingTec.Mvvm.Mvc
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("登录失败");
+                return BadRequest(Program._localizer["LoginFailed"]);
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
@@ -805,6 +805,16 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        [Public]
+        public Dictionary<string, string> GetScriptLanguage()
+        {
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            rv.Add("DONOTUSE_Text_LoadFailed", Program._localizer["LoadFailed"]);
+            rv.Add("DONOTUSE_Text_SubmitFailed", Program._localizer["SubmitFailed"]);
+            rv.Add("DONOTUSE_Text_PleaseSelect", Program._localizer["PleaseSelect"]);
+            rv.Add("DONOTUSE_Text_FailedLoadData", Program._localizer["FailedLoadData"]);
+            return rv;
+        }
     }
 
 }

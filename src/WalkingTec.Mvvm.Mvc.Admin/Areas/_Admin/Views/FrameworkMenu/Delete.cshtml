@@ -1,19 +1,21 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
-    <wt:form vm="@Model" >
-        <wt:quote>确定要删除这条数据么：</wt:quote>
-        <wt:row items-per-row=" ItemsPerRowEnum.Two">
-            <wt:display field="Entity.PageName" />
-            <wt:display field="Entity.ModuleName" />
-        </wt:row>
-        <wt:row items-per-row=" ItemsPerRowEnum.Two">
-            <wt:display field="Entity.ShowOnMenu" />
-            <wt:display field="Entity.FolderOnly" />
-        </wt:row>
-        <wt:row items-per-row=" ItemsPerRowEnum.One">
-            <wt:checkbox field="SelectedActionIDs" items="AllActions" disabled=true />
-        </wt:row>
-        <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
-            <wt:closebutton />
-        </wt:row>
-    </wt:form>
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
+  <wt:form vm="@Model">
+    <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
+    <wt:row items-per-row=" ItemsPerRowEnum.Two">
+      <wt:display field="Entity.PageName" />
+      <wt:display field="Entity.ModuleName" />
+    </wt:row>
+    <wt:row items-per-row=" ItemsPerRowEnum.Two">
+      <wt:display field="Entity.ShowOnMenu" />
+      <wt:display field="Entity.FolderOnly" />
+    </wt:row>
+    <wt:row items-per-row=" ItemsPerRowEnum.One">
+      <wt:checkbox field="SelectedActionIDs" items="AllActions" disabled=true />
+    </wt:row>
+    <wt:row align="AlignEnum.Right">
+      <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
+      <wt:closebutton />
+    </wt:row>
+  </wt:form>

@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == (id as Guid?));
             if (check == true)
             {
-                errorMessage = "用户组已被使用，无法删除";
+                errorMessage = Program._localizer["CannotDelete", Program._localizer["Group"]];
                 return false;
             }
             else

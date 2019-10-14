@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.SetAttribute("type", "reset");
             if (string.IsNullOrEmpty(Text))
             {
-                Text = "重置";
+                Text = Program._localizer["Reset"];
             }
             base.Process(context, output);
         }
