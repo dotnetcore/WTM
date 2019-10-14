@@ -163,8 +163,14 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 m.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
+            })            
+            .AddControllersAsServices().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ContractResolver = new WTMContractResolver()
+                {
+                };
             })
-            .AddControllersAsServices()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
             {
@@ -210,29 +216,6 @@ namespace WalkingTec.Mvvm.Mvc
                 };
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
-
-
-            //services.Configure<RazorViewEngineOptions>(options =>
-            //{
-            //    if (mvc != null)
-            //    {
-            //        options.FileProviders.Add(
-            //        new EmbeddedFileProvider(
-            //            mvc,
-            //            "WalkingTec.Mvvm.Mvc" // your external assembly's base namespace
-            //        )
-            //    );
-            //    }
-            //    if (admin != null)
-            //    {
-            //        options.FileProviders.Add(
-            //            new EmbeddedFileProvider(
-            //                admin,
-            //                "WalkingTec.Mvvm.Mvc.Admin" // your external assembly's base namespace
-            //            )
-            //        );
-            //    }
-            //});
 
             services.Configure<FormOptions>(y =>
             {
