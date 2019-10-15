@@ -15,7 +15,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         protected override bool CheckIfCanDelete(object id, out string errorMessage)
         {
-            var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == (id as Guid?));
+            Guid? checkid = Guid.Parse(id.ToString());
+            var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == checkid);
             if (check == true)
             {
                 errorMessage = Program._localizer["CannotDelete", Program._localizer["Group"]];
