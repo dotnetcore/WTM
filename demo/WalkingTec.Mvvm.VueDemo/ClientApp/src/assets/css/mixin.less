@@ -83,3 +83,10 @@
     justify-items: center;
     line-height: @height;
 }
+.clearfix() {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}

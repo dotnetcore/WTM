@@ -1,22 +1,40 @@
-export const setCookie = (name, value, days?) => {
-    var expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-        expires = "; expires=" + date["toGMTString"]();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
+import Cookies from "js-cookie";
+import config from "@/config/index";
+
+// App
+const sidebarStatusKey = "sidebar_status";
+export const getSidebarStatus = () => Cookies.get(sidebarStatusKey);
+export const setSidebarStatus = (sidebarStatus: string) =>
+    Cookies.set(sidebarStatusKey, sidebarStatus);
+
+const languageKey = "language";
+export const getLanguage = () => Cookies.get(languageKey);
+export const setLanguage = (language: string) =>
+    Cookies.set(languageKey, language);
+
+const sizeKey = "size";
+export const getSize = () => Cookies.get(sizeKey);
+export const setSize = (size: string) => Cookies.set(sizeKey, size);
+
+// User
+const tokenKey = config.tokenKey;
+export const getToken = () => Cookies.get(tokenKey);
+export const setToken = (token: string) => Cookies.set(tokenKey, token);
+export const removeToken = () => Cookies.remove(tokenKey);
+
+/**
+ * set cookie
+ * @param key
+ * @param value
+ */
+export const setCookie = (key, value) => {
+    Cookies.set(key, value);
 };
 
+/**
+ * get cookie
+ * @param name
+ */
 export const getCookie = name => {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === " ") c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) {
-            return decodeURIComponent(c.substring(nameEQ.length, c.length));
-        }
-    }
-    return null;
+    return Cookies.get(name);
 };
