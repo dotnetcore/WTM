@@ -60,6 +60,10 @@ module.exports = merge(baseConfig, {
             {
                 test: /\.less$/,
                 use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"] // 编译顺序从右往左
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader", "scss-loader"]
             }
         ]
     },

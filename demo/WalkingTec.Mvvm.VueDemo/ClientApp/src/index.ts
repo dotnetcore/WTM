@@ -7,7 +7,6 @@ import { formatTime } from "@/util/filters/index";
 import { Card, DialogBox } from "@/util/component/index";
 import config from "@/config/index";
 
-import "font-awesome/css/font-awesome.min.css";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/index.less";
 // 饿了吗ui

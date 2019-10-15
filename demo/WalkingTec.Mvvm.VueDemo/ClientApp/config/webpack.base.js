@@ -2,7 +2,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const webpack = require("webpack");
-const path = require("path");
 const { utils } = require("./webpack-util");
 
 // 个性参数
@@ -18,6 +17,7 @@ if (process.env.NODE_ENV === "development") {
 }
 module.exports = {
     entry: {
+        index2: utils.resolve("src/index2.ts"),
         index: utils.resolve("src/index.ts"),
         login: utils.resolve("src/login.ts")
     },
@@ -133,6 +133,11 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            filename: "index2.html",
+            template: "view/index2.html",
+            chunks: ["index2", "vendor", "common", "runtime"]
+        }),
+        new HtmlWebpackPlugin({
             filename: "index.html",
             template: "view/index.html",
             chunks: ["index", "vendor", "common", "runtime"]
@@ -165,7 +170,6 @@ module.exports = {
                 toType: "dir"
             }
         ]),
-
         new webpack.ProvidePlugin({
             _: "lodash"
         })
