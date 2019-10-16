@@ -7,6 +7,7 @@
 <p>我们通过重写ListVM中的InitGridAction()方法来定义列表上的功能按钮</p>
 <p></p>
 <wt:fieldset field-set-style="Simple" title="功能按钮的行为">
+</wt:fieldset>
   <wt:quote>
     <p>通过ShowDialog和IsDirect两个属性的组合可以控制点击按钮后如何展示页面</p>
     <p>通过ShowInRow和HideOnToolBar来控制按钮显示在列表上方还是每行都显示</p>
@@ -52,9 +53,9 @@
   <wt:quote>列表按钮的默认行为显示在列表上方，点击后弹出模式对话框显示页面</wt:quote>
   <p>以下代码片段展示了按钮的多种设置方法</p>
   <wt:code title="InitGridAction">
-protected override List&lt;GridAction&gt; InitGridAction()
+protected override List<GridAction> InitGridAction()
 {
-    var actions = new List&lt;GridAction&gt;
+    var actions = new List<GridAction>
   {
     //调用页面上的名为test()的js方法
     this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
@@ -69,8 +70,8 @@ protected override List&lt;GridAction&gt; InitGridAction()
 }
 </wt:code>
 
-</wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="功能按钮获取列表数据">
+  </wt:fieldset>
   <wt:quote>
     <p>在调用MakeAction方法时，通过GridActionParameterTypesEnum来设定按钮是否需要列表数据</p>
   </wt:quote>
@@ -92,7 +93,7 @@ protected override List&lt;GridAction&gt; InitGridAction()
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.MultiIds</td>
-        <td>按钮会获取勾选的多行数据的id调用新方法，比如批量修改，批量删除</td>
+        <td>按钮会获取勾选的多行数据的id调用新方法，比如批量修改，批量删除(注意MultiIds的时候框架会使用标记为[Post]的方法)</td>
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.SingleIdWithNull</td>
@@ -100,7 +101,7 @@ protected override List&lt;GridAction&gt; InitGridAction()
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.MultiIdWithNull</td>
-        <td>可以勾选多行，也可以不选</td>
+        <td>可以勾选多行，也可以不选(注意MultiIds的时候框架会使用标记为[Post]的方法)</td>
       </tr>
       <tr>
         <td>GridActionParameterTypesEnum.AddRow</td>
@@ -112,7 +113,6 @@ protected override List&lt;GridAction&gt; InitGridAction()
       </tr>
     </tbody>
   </table>
-  </wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>

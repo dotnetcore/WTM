@@ -89,6 +89,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     if (output.Attributes["isrich"] == null)
                     {
                         output.Attributes.Add("lay-verify", "required");
+                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required",Field.Metadata.Name]}");
                     }
                 }
             }
@@ -139,8 +140,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 postHtml += $@"
     </div>
-<label class=""layui-form-label"" >{PaddingText}</label>
-</div>
+<div class=""layui-form-mid layui-word-aux"">{PaddingText}</div>
 ";
 
             }

@@ -19,11 +19,11 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="self">self</param>
         /// <param name="controllerName">动作的Controller</param>
         /// <param name="standardType">标准动作类型</param>
-        /// <param name="dialogTitle">弹出窗口的标题</param>
+        /// <param name="dialogTitle">弹出窗口的标题，可为空，代表使用默认文字</param>
         /// <param name="areaName">域名</param>
         /// <param name="dialogWidth">弹出窗口的宽度</param>
         /// <param name="dialogHeight">弹出窗口的高度</param>
-        /// <param name="name">动作名，默认为‘新建’</param>
+        /// <param name="name">按钮显示的文字</param>
         /// <param name="buttonId">Button的id  默认自动生成</param>
         /// <param name="whereStr">whereStr</param>
         /// <returns>列表动作</returns>
@@ -49,64 +49,79 @@ namespace WalkingTec.Mvvm.Core
             var paraType = GridActionParameterTypesEnum.NoId;
             var showInRow = false;
             var hideOnToolBar = false;
+            var showDialog = true;
 
             switch (standardType)
             {
                 case GridActionStandardTypesEnum.Create:
                     iconcls = "layui-icon layui-icon-add-1";
-                    gridname = "新建";
+                    gridname = Program._localizer["Create"];
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
                 case GridActionStandardTypesEnum.AddRow:
                     iconcls = "layui-icon layui-icon-add-1";
-                    gridname = "新建";
+                    gridname = Program._localizer["Create"];
                     paraType = GridActionParameterTypesEnum.AddRow;
                     break;
                 case GridActionStandardTypesEnum.Edit:
                     iconcls = "layui-icon layui-icon-edit";
-                    gridname = "修改";
+                    gridname = Program._localizer["Edit"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Delete:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = "删除";
+                    gridname = Program._localizer["Delete"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.RemoveRow:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = "删除";
+                    gridname = Program._localizer["Delete"];
                     paraType = GridActionParameterTypesEnum.RemoveRow;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Details:
                     iconcls = "layui-icon layui-icon-form";
-                    gridname = "详细";
+                    gridname = Program._localizer["Details"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.BatchEdit:
                     iconcls = "layui-icon layui-icon-edit";
-                    gridname = "批量修改";
+                    gridname = Program._localizer["BatchEdit"];
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.BatchDelete:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = "批量删除";
+                    gridname = Program._localizer["BatchDelete"];
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.Import:
                     iconcls = "layui-icon layui-icon-templeate-1";
-                    gridname = "导入";
+                    gridname = Program._localizer["Import"];
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
+                case GridActionStandardTypesEnum.ExportExcel:
+                    iconcls = "layui-icon layui-icon-download-circle";
+                    gridname = Program._localizer["Export"];
+                    paraType = GridActionParameterTypesEnum.MultiIdWithNull;
+                    name = Program._localizer["ExportExcel"];
+                    showInRow = false;
+                    showDialog = false;
+                    hideOnToolBar = false;
+                   break;
                 default:
                     break;
+            }
+
+            if (string.IsNullOrEmpty(dialogTitle))
+            {
+                dialogTitle = gridname;
             }
 
             var list = new List<string>();
@@ -129,7 +144,7 @@ namespace WalkingTec.Mvvm.Core
                 DialogWidth = dialogWidth ?? 800,
                 DialogHeight = dialogHeight,
                 ShowInRow = showInRow,
-                ShowDialog = true,
+                ShowDialog = showDialog,
                 HideOnToolBar = hideOnToolBar,
                 whereStr = list.ToArray()
             };
@@ -245,6 +260,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="exportType">导出类型  默认null，支持所有导出</param>
         /// <param name="param">参数</param>
         /// <returns></returns>
+        [Obsolete("Will be removed in future, use MakeStandardAction with GridActionStandardTypesEnum.ExportExcel instead")]
         public static GridAction MakeStandardExportAction<T, V>(this IBasePagedListVM<T, V> self
             , string gridid = null
             , bool MustSelect = false
@@ -257,8 +273,8 @@ namespace WalkingTec.Mvvm.Core
 
             var action = new GridAction
             {
-                Name = "导出Excel",
-                DialogTitle = "导出Excel",
+                Name = Program._localizer["ExportExcel"],
+                DialogTitle = Program._localizer["ExportExcel"],
                 Area = string.Empty,
                 ControllerName = "_Framework",
                 ActionName = "GetExportExcel",

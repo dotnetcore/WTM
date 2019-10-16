@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 {
                     item.AllActions = new List<ComboSelectListItem>();
                 }
-                item.AllActions.Insert(0, new ComboSelectListItem { Text = "主页面", Value = item.ID.ToString() });
+                item.AllActions.Insert(0, new ComboSelectListItem { Text = Program._localizer["MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value));
                 item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
             }

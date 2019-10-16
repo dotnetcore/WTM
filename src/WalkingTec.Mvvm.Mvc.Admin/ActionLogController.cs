@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +10,10 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
 
-    [ActionDescription("日志管理")]
+    [ActionDescription("Log")]
     [ApiController]
     [Route("api/_ActionLog")]
-	public class ActionLogController : BaseApiController
+	public class _ActionLogController : BaseApiController
     {
         [ActionDescription("搜索")]
         [HttpPost("Search")]
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<ActionLogBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -69,12 +69,12 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<ActionLogListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

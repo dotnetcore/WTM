@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -26,6 +27,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult Index(SchoolListVM vm)
         {
             return PartialView(vm);
+        }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(SchoolListVM vm)
+        {
+            return vm.GetJson(false);
         }
         #endregion
 
@@ -88,7 +96,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 修改
         [ActionDescription("修改")]
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(string id)
         {
             var vm = CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -121,7 +129,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 删除
         [ActionDescription("删除")]
-        public ActionResult Delete(Guid id)
+        public ActionResult Delete(int id)
         {
             var vm = CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -129,7 +137,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("删除")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection nouse)
+        public ActionResult Delete(int id, IFormCollection nouse)
         {
             var vm = CreateVM<SchoolVM>(id);
             vm.DoDelete();
@@ -146,7 +154,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 详细
         [ActionDescription("详细")]
-        public ActionResult Details(Guid id)
+        public ActionResult Details(int id)
         {
             var vm = CreateVM<SchoolVM>(id);
             return PartialView(vm);
@@ -156,7 +164,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(Guid[] IDs)
+        public ActionResult BatchEdit(string[] IDs)
         {
             var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -180,7 +188,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        public ActionResult BatchDelete(string[] IDs)
         {
             var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -245,6 +253,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
+                if(vm.Entity.Majors == null)
+                {
+                    vm.Entity.Majors = new System.Collections.Generic.List<Major>();
+                }
                 vm.DoAdd();
                 if (!ModelState.IsValid)
                 {
@@ -263,7 +275,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 主子表修改
         [ActionDescription("主子表修改")]
-        public ActionResult Edit2(Guid id)
+        public ActionResult Edit2(long id)
         {
             var vm = CreateVM<SchoolVM>(id);
             vm.MajorList.DetailGridPrix = "Entity.Majors";

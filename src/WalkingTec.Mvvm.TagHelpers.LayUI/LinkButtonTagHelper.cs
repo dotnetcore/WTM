@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 string windowid = Guid.NewGuid().ToString();
                 if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
                 {
-                    Click = $"ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"}, ff.GetFormData('{context.Items["formid"]}'))";
+                    Click = $"ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"}, ff.GetPostData('{context.Items["formid"]}'))";
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
                 {
-                    Click = $"ff.BgRequest('{Url}',ff.GetFormData('{context.Items["formid"]}'))";
+                    Click = $"ff.BgRequest('{Url}',ff.GetPostData('{context.Items["formid"]}'))";
                 }
                 else
                 {

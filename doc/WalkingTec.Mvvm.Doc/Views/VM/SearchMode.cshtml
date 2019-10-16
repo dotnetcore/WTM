@@ -1,0 +1,102 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>对于同一个模型，我们可以编写多个ListVM来适应不同场景下的列表，比如普通查询，导出，批量操作的列表，Selector的列表等等</p>
+<p>但是如果这些模式只是存在细微的差异，比如只是显示的列不同，我们可以通过判断SearchMode变量来进行不同的设置</p>
+<p>SearchMode是一个枚举变量，属性有：</p>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">属性</th>
+        <th lay-data="{field:'joinTime', width:400}">行为</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Search</td>
+        <td>普通搜索</td>
+      </tr>
+      <tr>
+        <td>Export</td>
+        <td>导出</td>
+      </tr>
+      <tr>
+        <td>CheckExport</td>
+        <td>勾选导出</td>
+      </tr>
+      <tr>
+        <td>Batch</td>
+        <td>批量操作</td>
+      </tr>
+      <tr>
+        <td>Selector</td>
+        <td>选择器</td>
+      </tr>
+      <tr>
+        <td>Custom1...Custom5</td>
+        <td>预留</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>以下代码片段展示了通过判断SearchMode来设置不同的列</p>
+  <wt:code title="InitGridAction">
+  protected override IEnumerable&lt;IGridColumn&lt;FrameworkMenu_ListView&gt;&gt; InitGridHeader()
+  {
+      List&lt;GridColumn&lt;FrameworkMenu_ListView&gt;&gt; rv = new List&lt;GridColumn&lt;FrameworkMenu_ListView&gt;&gt;();
+      switch (SearcherMode)
+      {
+          case ListVMSearchModeEnum.Batch:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName),
+                  this.MakeGridHeader(x =&gt; x.ModuleName, 200),
+                  this.MakeGridHeader(x =&gt; x.ActionName, 150),
+              });
+              break;
+          case ListVMSearchModeEnum.Custom1:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName,300),
+              });
+              break;
+          case ListVMSearchModeEnum.Custom2:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName,200),
+                    this.MakeGridHeader(x =&gt; x.ParentID).SetHeader("操作").SetFormat((item, cell) =&gt; GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+              });
+              break;
+          default:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName, 300),
+                  this.MakeGridHeader(x =&gt; x.ModuleName, 150),
+                  this.MakeGridHeader(x =&gt; x.ShowOnMenu, 60),
+                  this.MakeGridHeader(x =&gt; x.FolderOnly, 60),
+                  this.MakeGridHeader(x =&gt; x.IsPublic, 60),
+                  this.MakeGridHeader(x =&gt; x.DisplayOrder, 60),
+                  this.MakeGridHeader(x =&gt; x.ICon, 100).SetFormat(PhotoIdFormat),
+                  this.MakeGridHeaderAction(width: 290)
+              });
+              break;
+      }
+      return rv;
+  }
+
+</wt:code>
+
+<p>上面的代码演示了菜单列表在批量操作的时候只显示三列，而普通搜索时显示更多的列</p>
+<p>SearchMode的值，框架默认在普通列表中使用Search，在批量操作时使用Batch，在Selector弹出窗口使用Selector，在导出时使用Export</p>
+<p>Custom1，Custom2这些状态是需要手动指定的，比如你在别的方法中也想使用菜单列表，但是样式有所不同。你可以在CreateVM之后手动将ListVM的SearchMode设置成Custom1，然后再ListVM中进行判断</p>
+
+<wt:quote>
+  <p>SearchMode可以在ListVM中任何地方进行判断，不只是设置列，比如设置动作按钮，包括返回查询语句都可以根据不同的模式来返回不同的结果</p>
+  <p>当然，如果不同模式之间差距非常大，还是建议新建一个ListVM</p>
+</wt:quote>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>

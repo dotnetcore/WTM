@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,17 +10,17 @@ namespace WalkingTec.Mvvm.Core
     [Table("FrameworkAreas")]
     public class FrameworkArea : BasePoco
     {
-        [Display(Name = "区域名称")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [Display(Name = "AreaName")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Required(ErrorMessage ="{0}required")]
         public string AreaName { get; set; }
 
-        [Required(ErrorMessage ="{0}是必填项")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
-        [Display(Name = "前缀" )]
+        [Required(ErrorMessage ="{0}required")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Display(Name = "Prefix")]
         public string Prefix { get; set; }
 
-        [Display(Name = "模块" )]
+        [Display(Name = "Module")]
         public List<FrameworkModule> Modules { get; set; }
 
     }

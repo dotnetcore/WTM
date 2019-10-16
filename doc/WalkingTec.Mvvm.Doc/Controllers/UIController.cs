@@ -152,6 +152,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("按钮")]
+        public IActionResult Button()
+        {
+            return PartialView();
+        }
+
+
         public IActionResult GetSchool(string keywords)
         {
             List<School> schools = new List<School>()

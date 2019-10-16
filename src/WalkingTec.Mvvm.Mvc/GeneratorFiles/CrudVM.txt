@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +10,10 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public partial class $modelname$VM : BaseCRUDVM<$modelname$>
+    public partial class $classname$VM : BaseCRUDVM<$modelname$>
     {$pros$
 
-        public $modelname$VM()
+        public $classname$VM()
         {$include$
         }
 

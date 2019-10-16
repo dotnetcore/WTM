@@ -130,6 +130,7 @@ namespace WalkingTec.Mvvm.Mvc
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
+            string resourcedir = MainDir;
             string testdir = MainDir + ".Test";
             string vmns = MainNs + ".ViewModels";
             string datans = MainNs;
@@ -141,11 +142,13 @@ namespace WalkingTec.Mvvm.Mvc
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels");
+                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
                 }
                 vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
+                resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             }
             else
             {
@@ -188,6 +191,7 @@ namespace WalkingTec.Mvvm.Mvc
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
  </ItemGroup>
 </Project>
 ");
@@ -348,6 +352,9 @@ EndProject
     .Replace("$uploaddir$", UploadDir ?? ""), Encoding.UTF8
     );
             File.WriteAllText($"{datadir}{Path.DirectorySeparatorChar}DataContext.cs", GetResource("DataContext.txt").Replace("$ns$", datans), Encoding.UTF8);
+
+            File.WriteAllText($"{resourcedir}{Path.DirectorySeparatorChar}Program.zh.resx", GetResource("Resourcezh.txt"), Encoding.UTF8);
+            File.WriteAllText($"{resourcedir}{Path.DirectorySeparatorChar}Program.en.resx", GetResource("Resourceen.txt"), Encoding.UTF8);
             if (UI == UIEnum.LayUI)
             {
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Controllers{Path.DirectorySeparatorChar}HomeController.cs", GetResource("HomeController.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
@@ -366,6 +373,8 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Areas{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
+                File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}alpine.Dockerfile", GetResource("alpine.Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
+                File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}Dockerfile", GetResource("Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
             }
             if (UI == UIEnum.React)

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -180,6 +180,8 @@ namespace WalkingTec.Mvvm.Core
                 return rv ?? string.Empty;
             }
         }
+
+        public object Controller { get; set; }
 
         /// <summary>
         /// 当前登录人信息

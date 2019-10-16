@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="Textbox">
-    <p>Textbox的常用属性有：</p>
+ </wt:fieldset>
+   <p>Textbox的常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -64,7 +65,7 @@
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:textbox field="Entity.MajorCode" />
                         <wt:textbox field="Entity.MajorName" />
                         <wt:row align="AlignEnum.Right">
@@ -87,10 +88,10 @@
                 </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="AutoComplete">
-    <wt:quote>
+ </wt:fieldset>
+   <wt:quote>
         <p>Textbox可以开启自动补全功能，方法是设置SearchUrl</p>
         <p>该Url接受一个名为keywords的参数，返回Text,Value数组形式的json</p>
     </wt:quote>
@@ -102,7 +103,7 @@
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:display display-text="在所属学校中试试搜索北京，清华，复旦，浙江"/>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:textbox field="Entity.MajorCode" />
                     <wt:textbox field="Entity.MajorName" />
                     <wt:textbox field="SchoolName" label-text="所属学校" search-url="/UI/GetSchool" />
@@ -144,7 +145,6 @@ public IActionResult GetSchool(string keywords)
         </wt:tabcontents>
     </wt:tab>
 
-</wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
         layui.table.init('parse-table-demo', {

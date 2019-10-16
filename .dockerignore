@@ -22,6 +22,7 @@
 
 # Docker
 **/*Dockerfile*
+!**/*Dockerfile*.txt
 **/.dockerignore
 **/docker-compose.yml
 **/docker-compose.*.yml

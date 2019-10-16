@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>2.3.0</VersionPrefix>
+    <VersionPrefix>2.3.8</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,13 +11,13 @@
     -->
     <VersionSuffix Condition="'$(VersionSuffix)' == ''">alpha</VersionSuffix>
 
-    <FileVersion Condition="'$(BuildNumber)' != ''">$(VersionPrefix).$(BuildNumber)</FileVersion>
+    <FileVersion Condition="'$(Build_BuildNumber)' != ''">$(VersionPrefix).$(Build_BuildNumber)</FileVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
 
-    <Version Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
-    <Version Condition="'$(VersionSuffix)' == '' AND '$(BuildNumber)' == ''">$(VersionPrefix)</Version>
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(Build_BuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' == '' AND '$(Build_BuildNumber)' == ''">$(VersionPrefix)</Version>
 
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(Build_BuildNumber)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
   </PropertyGroup>
 

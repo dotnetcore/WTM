@@ -1,0 +1,156 @@
+
+<wt:fieldset field-set-style="Simple" title="SubmitButton">
+</wt:fieldset>
+<p>SubmitButton是默认提交表单的按钮，常用属性有：</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'joinTime', width:600}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>按钮大小，可选Big, Normal, Small, Mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>按钮风格，可选Primary, Normal, Warm, Danger, Disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>按钮图标，</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>按钮文字</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>点击触发的js方法</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>是否禁用</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<wt:fieldset field-set-style="Simple" title="CloseButton">
+</wt:fieldset>
+<p>CloseButton是默认关闭弹出窗口的按钮，常用属性有：</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'joinTime', width:600}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>按钮大小，可选Big, Normal, Small, Mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>按钮风格，可选Primary, Normal, Warm, Danger, Disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>按钮图标，</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>按钮文字</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>点击触发的js方法</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>是否禁用</td>
+    </tr>
+  </tbody>
+</table>
+
+<wt:fieldset field-set-style="Simple" title="LinkButton">
+</wt:fieldset>
+<p>LinkButton功能更丰富，常用属性有：</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'joinTime', width:600}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>按钮大小，可选Big, Normal, Small, Mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>按钮风格，可选Primary, Normal, Warm, Danger, Disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>按钮图标，</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>按钮文字</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>点击触发的js方法</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>是否禁用</td>
+    </tr>
+    <tr>
+      <td>IsLink</td>
+      <td>是否用a标签显示按钮，默认false</td>
+    </tr>
+    <tr>
+      <td>Target</td>
+      <td>点击按钮后的目标窗体，可选Layer, self, newwindow </td>
+    </tr>
+    <tr>
+      <td>Url</td>
+      <td>跳转地址</td>
+    </tr>
+    <tr>
+      <td>WindowTitle</td>
+      <td>如果跳转模式是Layer，或者newwindow，设置弹出窗体的标题</td>
+    </tr>
+    <tr>
+      <td>WindowWidth</td>
+      <td>如果跳转模式是Layer，设置弹出窗口宽度</td>
+    </tr>
+    <tr>
+      <td>WindowHeight</td>
+      <td>如果跳转模式是Layer，设置弹出窗口高度</td>
+    </tr>
+    <tr>
+      <td>PostCurrentForm</td>
+      <td>如果按钮在表单内，则使用表单数据Post到Url中</td>
+    </tr>
+  </tbody>
+</table>
+
+<wt:quote>
+  <p>LinkButton使用起来更加灵活，弹出窗口，提交表单，运行js等都可以通过LinkButton来实现</p>
+  <p>比如&lt;wt:linkbutton target=" ButtonTargetEnum.self" text="提交" url="/xxx/xxx" post-current-form="true" /&gt;</p>
+  <p>这句定义可以替代默认的submitbutton，你可以组合各种属性来达到不同的效果。</p>
+</wt:quote>
+
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false
+  });
+</script>

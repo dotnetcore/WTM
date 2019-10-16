@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
+@model WalkingTec.Mvvm.Doc.FrameworkUserVms.FrameworkAllVM
 <wt:quote>
     <p>WTM框架使用TagHelper提供了丰富的前端控件，目前框架只支持LayUI，后期会增加更多</p>
     <p>框架整体的运转并不依赖于LayUI，开发人员可以使用最普通的Html来编写页面，框架提供的控件只是简化编写难度，提高速度</p>
@@ -14,7 +14,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model.Vm" width="600">
+                <wt:form vm="@Model.Vm" style="max-width:600px">
                     <wt:textbox field="Vm.Entity.LoginName" />
                     <wt:textbox field="Vm.Entity.Password" is-password="true" />
                     <wt:textbox field="Vm.Entity.Name" />
@@ -58,7 +58,8 @@
 
 
 <wt:fieldset field-set-style="Simple" title="列表">
-    <p>使用框架提供的grid控件可以快速输出列表</p>
+ </wt:fieldset>
+   <p>使用框架提供的grid控件可以快速输出列表</p>
     <wt:tab>
         <wt:tabheaders>
             <wt:tabheader title="效果" />
@@ -89,7 +90,6 @@
             </wt:tabcontent>
         </wt:tabcontents>
     </wt:tab>
-</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="布局">
     <p>使用框架提供的Panel，Tab，Row等控件实现页面的布局</p>
@@ -100,7 +100,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model.Vm">
+                <wt:form vm="@Model.Vm" >
                     <wt:tab>
                         <wt:tabheaders>
                             <wt:tabheader title="基本信息" />

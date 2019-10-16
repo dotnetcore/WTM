@@ -1,17 +1,17 @@
 
-import { Layout, Tabs, Skeleton } from 'antd';
+import { Layout, Skeleton, Tabs, Icon } from 'antd';
 import globalConfig from 'global.config';
+import lodash from 'lodash';
+import { action, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { renderRoutes, matchRoutes } from 'react-router-config';
-import { fromEvent, Subscription } from 'rxjs';
+import { matchRoutes, renderRoutes } from 'react-router-config';
+import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { observable, runInAction, action, toJS } from 'mobx';
-import lodash from 'lodash';
 import Store from 'store/index';
-import { renderIconTitle } from './sider'
-import { Help } from 'utils/Help';
-
+import { renderIconTitle } from './sider';
+import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.min.css';
 const { Content } = Layout;
 @observer
 class Pages extends React.Component<any, any> {
@@ -71,12 +71,26 @@ class TabsPages extends React.Component<any, any> {
     // console.log("TCL: TabsPages -> componentDidUpdate -> this.props", this.props)
   }
   onChange(event) {
-    this.props.history.replace(event)
+    if (!lodash.eq(this.props.location.pathname, event)) {
+      this.props.history.replace(event)
+    }
   }
   onEdit(event) {
     const path = this.TabsPagesStore.onClosable(event);
-    if (lodash.eq(this.props.location.pathname, event))
+    if (lodash.eq(this.props.location.pathname, event)) {
       this.onChange(path)
+    }
+  }
+  /**
+   * 关闭
+   * @param type 其他，当前，全部 
+   * @param event 
+   */
+  onClose(type: "Other" | "Current" | "All", event) {
+    this.onChange(this.TabsPagesStore.onClose(type, event))
+  }
+  getDisabled(event) {
+    return event.props.pathname === '/'
   }
   render() {
     const tabPane = this.TabsPagesStore.tabPane;
@@ -97,7 +111,7 @@ class TabsPages extends React.Component<any, any> {
             const router = item.router;
             const props = { ...this.props, match: router.match };
             return <Tabs.TabPane
-              tab={renderIconTitle({ Icon: item.icon, Text: item.title })}
+              tab={<MenuProvider id="TabPane" component="span" data={item}>{renderIconTitle({ Icon: item.icon, Text: item.title })}</MenuProvider>}
               key={item.pathname}
               closable={item.closable}
               style={{ height: height }}>
@@ -107,6 +121,11 @@ class TabsPages extends React.Component<any, any> {
             </Tabs.TabPane>
           })}
         </Tabs>
+        <Menu id='TabPane' animation="pop" style={{ minWidth: 100 }}>
+          <Item disabled={this.getDisabled} onClick={this.onClose.bind(this, 'Current')}><span><Icon type="close" /></span> 关闭当前</Item>
+          <Item onClick={this.onClose.bind(this, 'Other')}><span><Icon type="close" /></span> 关闭其他</Item>
+          <Item onClick={this.onClose.bind(this, 'All')}><span><Icon type="close" /></span> 关闭全部</Item>
+        </Menu>
       </Content>
     );
   }
@@ -146,6 +165,41 @@ class TabsPagesStore {
     const path = lodash.get(this.tabPane, `[${index - 1}].pathname`, "/");
     lodash.remove(this.tabPane, ['pathname', pathname]);
     return path
+  }
+  /**
+  * 关闭
+  * @param type 其他，当前，全部 
+  * @param event 
+  */
+  @action
+  onClose(type: "Other" | "Current" | "All", event) {
+    let path = "/";
+    switch (type) {
+      case 'Other':
+        this.tabPane = [{
+          title: '首页',
+          pathname: "/",
+          closable: false,
+          icon: "home",
+          router: this.getRoutes("/")
+        }];
+        this.pushTabPane(event.props.pathname);
+        path = event.props.pathname;
+        break;
+      case 'Current':
+        path = this.onClosable(event.props.pathname);
+        break;
+      case 'All':
+        this.tabPane = [{
+          title: '首页',
+          pathname: "/",
+          closable: false,
+          icon: "home",
+          router: this.getRoutes("/")
+        }];
+        break;
+    }
+    return path;
   }
   getHeight() {
     return window.innerHeight - (lodash.some(["top", "bottom"], data => lodash.eq(data, globalConfig.tabPosition)) ? 90 : 50);

@@ -1,4 +1,4 @@
-import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col } from 'antd';
+import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber, Row, Col, Checkbox } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
@@ -6,8 +6,14 @@ import lodash from 'lodash';
 import { Observable } from 'rxjs';
 import Regular from 'utils/Regular';
 import AntIcons from "@ant-design/icons/lib/manifest";
+import Fonts from "assets/font/font";
 import Request from 'utils/Request';
 import { BindAll } from 'lodash-decorators';
+Fonts.unshift({
+    name: "Antd",
+    class: "Antd",
+    icons: AntIcons.fill,
+})
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -115,7 +121,7 @@ export default {
                 rules: [],
                 formItem: <Input placeholder="请输入 Url" />
             },
-            "Entity.Icon": {
+            "Entity.ICon": {
                 label: "图标",
                 rules: [],
                 formItem: <IConId />
@@ -161,45 +167,73 @@ export default {
 class IConId extends React.Component<any, any> {
     state = {
         // 自定义
-        custom: false
+        // custom: false,
+        iconType: 'Antd',
+        iconItems: this.onGetItems('Antd')
+    }
+    onGetItems(iconType): string[] {
+        return lodash.get(lodash.find(Fonts, ['class', iconType]), 'icons', [])
     }
     onChange(event) {
         this.props.onChange(event);
     }
+    onChangeType(event) {
+        this.setState({ iconType: event, iconItems: this.onGetItems(event) });
+    }
     onSearch() {
-
     }
     componentDidMount() {
-        // console.log('componentDidMount')
+    }
+    componentWillMount() {
+        if (this.props.value) {
+            // 某人 懒得加字段。就自己用一个字段截取吧
+            const fontClass = lodash.trim(this.props.value).split(' ');
+            // 自定义
+            if (fontClass.length > 1) {
+                const iconType = fontClass[0];
+                this.setState({ iconType: iconType, iconItems: this.onGetItems(iconType) })
+            }
+        }
+    }
+    onGetIcon(icon) {
+        // 自定义 图标 需要 使用 name 和 class名称拼接，并且前面需要一个空格
+        return this.state.iconType === "Antd" ? icon : ` ${this.state.iconType} ${icon}`;
     }
     render() {
         return (
             <Row type="flex">
                 <Col span={24}>
                     <Select
-                        disabled={this.state.custom}
                         showSearch
                         style={{ width: '100%' }}
-                        placeholder="Ant Icon"
-                        onChange={this.onChange}
-                        value={this.props.value || undefined}
+                        placeholder="Icon Type"
+                        onChange={this.onChangeType}
+                        value={this.state.iconType}
                         allowClear
                         // onSearch={this.onSearch}
-                        filterOption={(input, option: any) =>
-                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
+                        filterOption={(input, option: any) => option.props.value && option.props.value.toLowerCase().indexOf(input && input.toLowerCase()) >= 0}
                     >
-                        {AntIcons.fill.map(data => {
-                            return <Select.Option key={data} value={data}>{data}</Select.Option>
+                        {Fonts.map(data => {
+                            return <Select.Option key={data.name} value={data.class}><span>{data.name}</span></Select.Option>
                         })}
                     </Select>
                 </Col>
                 <Col span={24}>
-                    {/* {this.state.custom ?
-                        // <WtmUploadImg {...this.props} /> :
-                        
-                    } */}
-                    {this.props.value && <Icon type={this.props.value} style={{ fontSize: 100 }} />}
+                    <Select
+                        showSearch
+                        style={{ width: '100%' }}
+                        placeholder="Icon"
+                        onChange={this.onChange}
+                        value={this.props.value || undefined}
+                        allowClear
+                        // onSearch={this.onSearch}
+                        filterOption={(input, option: any) => option.props.value && option.props.value.toLowerCase().indexOf(input && input.toLowerCase()) >= 0}
+                    >
+                        {this.state.iconItems.map(data => {
+                            const key = this.onGetIcon(data);
+                            return <Select.Option key={key} value={key}><Icon type={key} />：<span>{data}</span></Select.Option>
+                        })}
+                    </Select>
                 </Col>
             </Row>
         );

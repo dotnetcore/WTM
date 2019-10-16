@@ -12,13 +12,13 @@
   </wt:quote>
   <p>以下代码片段展示了多级表头的设置方法</p>
   <wt:code title="InitGridHeaderInitGridHeader">
-protected override IEnumerable&lt;IGridColumn&lt;CustomView&gt;&gt; InitGridHeader()
+protected override IEnumerable<IGridColumn<CustomView>> InitGridHeader()
 {
-    var header = new List&lt;GridColumn&lt;CustomView&gt;&gt;();
+    var header = new List<GridColumn<CustomView>>();
     var topheader = this.MakeGridHeaderParent("父表头");
     topheader.SetChildren(
-        this.MakeGridHeader(x =&gt; x.test1, 120),
-        this.MakeGridHeader(x =&gt; x.test2, 120)
+        this.MakeGridHeader(x => x.test1, 120),
+        this.MakeGridHeader(x => x.test2, 120)
     );
     header.Add(topheader);
     header.Add(this.MakeGridHeaderAction(width: 320));
@@ -39,18 +39,19 @@ public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
 {
     protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
     {
-        return new List&ltGridColumn&ltSchool_View&gt&gt{
-            this.MakeGridHeader(x =&gt x.SchoolCode),
-            this.MakeGridHeader(x =&gt x.SchoolName),
-            this.MakeGridHeader(x =&gt x.SchoolType),
-            //内联函数直接返回格式化后的数字
-            this.MakeGridHeader(x =&gt x.Total).SetFormat((entity,v)=&gt { return ((double)v).ToString("f2"); }),
-            //调用方法
-            this.MakeGridHeader(x =&gt x.FullName).SetFormat(TotalFormat),
-            //可以不绑定任何列，直接通过SetFormat输出内容
-            this.MakeGridHeader(null).SetTitle("测试").SetFormat(PhotoIdFormat),
-            this.MakeGridHeaderAction(width: 200)
-        };
+      return new List&ltGridColumn&ltSchool_View&gt&gt{
+        this.MakeGridHeader(x =&gt x.SchoolCode),
+        this.MakeGridHeader(x =&gt x.SchoolName),
+        this.MakeGridHeader(x =&gt x.SchoolType),
+        //内联函数直接返回格式化后的数字
+        this.MakeGridHeader(x =&gt x.Total)
+        .SetFormat((entity,v)=&gt { return ((double)v).ToString("f2"); }),
+        //调用方法
+        this.MakeGridHeader(x =&gt x.FullName).SetFormat(TotalFormat),
+        //可以不绑定任何列，直接通过SetFormat输出内容
+        this.MakeGridHeader(null).SetTitle("测试").SetFormat(PhotoIdFormat),
+        this.MakeGridHeaderAction(width: 200)
+      };
     }
 
     private string TotalFormat(School_View entity, object val)
@@ -62,17 +63,17 @@ public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
     {
         return new List&ltColumnFormatInfo&gt
         {
-            ColumnFormatInfo.MakeDownloadButton(ButtonTypesEnum.Button,entity.PhotoId),
-            ColumnFormatInfo.MakeViewButton(ButtonTypesEnum.Button,entity.PhotoId,640,480),
+            ColumnFormatInfo.MakeDownloadButton( ButtonTypesEnum.Button,entity.PhotoId),
+            ColumnFormatInfo.MakeViewButton( ButtonTypesEnum.Button,entity.PhotoId,640,480),
         };
     }
 
     public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
     {
         var query = DC.Set&ltSchool&gt()
-            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
-            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
-            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .CheckContain( Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain( Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual( Searcher.SchoolType, x=&gtx.SchoolType)
             .Select(x =&gt new School_View
             {
                 ID = x.ID,

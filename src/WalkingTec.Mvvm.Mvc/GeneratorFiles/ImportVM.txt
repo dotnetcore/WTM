@@ -10,7 +10,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public partial class $modelname$TemplateVM : BaseTemplateVM
+    public partial class $classname$TemplateVM : BaseTemplateVM
     {$pros$
 
 	    protected override void InitVM()
@@ -19,7 +19,7 @@ namespace $vmnamespace$
 
     }
 
-    public class $modelname$ImportVM : BaseImportVM<$modelname$TemplateVM, $modelname$>
+    public class $classname$ImportVM : BaseImportVM<$classname$TemplateVM, $modelname$>
     {
 
     }

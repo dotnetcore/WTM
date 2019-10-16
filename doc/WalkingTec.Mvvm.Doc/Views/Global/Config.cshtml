@@ -22,6 +22,15 @@
     "LogExceptionOnly": false,
     "IsQuickDebug": true,
     "PageMode": "Tab",
+    "CorsOptions": {
+      "EnableAll": true, //所有方法是否默认跨域
+      "Policy": [
+        {
+          "Name": "Default",
+          "Domain": "http://localhost, https://localhost"
+        }
+      ]
+    },
     "UIOptions": {
       "DataTable": {
         "RPP": 20, 
@@ -78,7 +87,7 @@
           </tr>
           <tr>
             <td>DBType</td>
-            <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite</td>
+            <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite,oracle</td>
           </tr>
           <tr>
             <td>CookiePre</td>
@@ -99,6 +108,14 @@
           <tr>
             <td>RPP</td>
             <td>默认列表行数</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.EnableAll</td>
+            <td>是否默认对所有方法启用跨域，如果Policy没有配置，则默认对localhost跨域，如果有Policy，则使用第一条Policy对所有方法启动跨域</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.Policy</td>
+            <td>Name是方案名称，在Controller或Controller方法上使用[EnableCors('')]时填写的名称。 Domains是允许跨域的域名，多域名用逗号分隔</td>
           </tr>
           <tr>
             <td>FileUploadOptions.SaveFileMode</td>

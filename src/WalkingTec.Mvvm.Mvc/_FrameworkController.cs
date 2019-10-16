@@ -16,6 +16,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.UEditor;
+using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -62,12 +63,7 @@ namespace WalkingTec.Mvvm.Mvc
             listVM.SearcherMode = ListVMSearchModeEnum.Selector;
             listVM.RemoveActionColumn();
             listVM.RemoveAction();
-            if (listVM.Searcher != null)
-            {
-                var searcher = listVM.Searcher;
-                searcher.CopyContext(listVM);
-                searcher.DoInit();
-            }
+
             ViewBag.TextName = _DONOT_USE_KFIELD;
             ViewBag.ValName = _DONOT_USE_VFIELD;
             ViewBag.FieldName = _DONOT_USE_FIELD;
@@ -252,8 +248,8 @@ namespace WalkingTec.Mvvm.Mvc
                 var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                 var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
                 //给日志的多语言属性赋值
-                log.ModuleName = controllerDes?.Description ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-                log.ActionName = actionDes?.Description ?? ex.Error.TargetSite.Name;
+                log.ModuleName = controllerDes?.GetDescription() ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+                log.ActionName = actionDes?.GetDescription() ?? ex.Error.TargetSite.Name;
                 if (postDes != null)
                 {
                     log.ActionName += "[P]";
@@ -375,7 +371,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
                 return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
             }
-            return Content($"{{\"code\": 1 , \"msg\": \"上传失败\", \"data\": {{\"src\": \"\"}}}}");
+            return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
         }
 
         [ActionDescription("获取文件名")]
@@ -480,7 +476,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             url = HttpUtility.UrlDecode(url);
             var ctrlActDesc = this.ControllerContext.ActionDescriptor as ControllerActionDescriptor;
-            string pagetitle = "";
+            string pagetitle = string.Empty;
             var menu = Utils.FindMenu(url);
             if (menu == null)
             {
@@ -490,9 +486,9 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (ctrlDes != null)
                     {
-                        pagetitle = ctrlDes.Description + " - ";
+                        pagetitle = ctrlDes.GetDescription() + " - ";
                     }
-                    pagetitle += actDes.Description;
+                    pagetitle += actDes.GetDescription();
                 }
             }
             else
@@ -507,15 +503,14 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 pagetitle += menu.PageName;
             }
-            HttpContext.Response.Cookies.Append("pagetitle", pagetitle);
-
-            if (LoginUserInfo.IsAccessable(url) == true)
+            if (LoginUserInfo.IsAccessable(url))
             {
-                return Content($"<iframe width='100%' height='100%' frameborder=0 border=0 src='{url}'></iframe>");
+                return Content($@"<title>{pagetitle}</title>
+<iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
             }
             else
             {
-                throw new Exception("您没有访问该页面的权限");
+                throw new Exception(Program._localizer["NoPrivilege"]);
             }
         }
 
@@ -524,14 +519,14 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         /// <param name="menus">菜单列表</param>
         /// <param name="info">用户信息</param>
-        private void RemoveUnAccessableMenu(List<menuObj> menus, LoginUserInfo info)
+        private void RemoveUnAccessableMenu(List<Menu> menus, LoginUserInfo info)
         {
             if (menus == null)
             {
                 return;
             }
 
-            List<menuObj> toRemove = new List<menuObj>();
+            List<Menu> toRemove = new List<Menu>();
             //如果没有指定用户信息，则用当前用户的登录信息
             if (info == null)
             {
@@ -563,7 +558,11 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        private void RemoveEmptyMenu(List<menuObj> menus)
+        /// <summary>
+        /// RemoveEmptyMenu
+        /// </summary>
+        /// <param name="menus"></param>
+        private void RemoveEmptyMenu(List<Menu> menus)
         {
             for (int i = 0; i < menus.Count; i++)
             {
@@ -575,32 +574,34 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-
         /// <summary>
         /// genreate menu
         /// </summary>
-        private void GenerateMenuTree(List<FrameworkMenu> menus, List<menuObj> resultMenus)
+        /// <param name="menus"></param>
+        /// <param name="resultMenus"></param>
+        /// <param name="quickDebug"></param>
+        private void GenerateMenuTree(List<FrameworkMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
         {
-            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new menuObj()
+            resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new Menu()
             {
                 Id = x.ID,
                 Title = x.PageName,
                 Url = x.Url,
                 Order = x.DisplayOrder,
-                ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
             })
             .OrderBy(x => x.Order)
             .ToList());
 
             foreach (var menu in resultMenus)
             {
-                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new menuObj()
+                var temp = menus.Where(x => x.ParentId == menu.Id).Select(x => new Menu()
                 {
                     Id = x.ID,
                     Title = x.PageName,
                     Url = x.Url,
                     Order = x.DisplayOrder,
-                    ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                    ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
                 })
                 .OrderBy(x => x.Order)
                 .ToList();
@@ -609,12 +610,12 @@ namespace WalkingTec.Mvvm.Mvc
                     menu.Children = temp;
                     foreach (var item in menu.Children)
                     {
-                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new menuObj()
+                        item.Children = menus.Where(x => x.ParentId == item.Id).Select(x => new Menu()
                         {
                             Title = x.PageName,
                             Url = x.Url,
                             Order = x.DisplayOrder,
-                            ICon = x.ICon ?? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}"
+                            ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
                         })
                         .OrderBy(x => x.Order)
                         .ToList();
@@ -626,67 +627,14 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public class menuObj
-        {
-            [JsonIgnore]
-            public Guid Id { get; set; }
-
-            /// <summary>
-            /// Name
-            /// 默认用不上name，但是 v1.2.1 有问题：“默认展开了所有节点，并将所有子节点标蓝”
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("name")]
-            public string Name => Title;
-
-            /// <summary>
-            /// Title
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("title")]
-            public string Title { get; set; }
-
-            /// <summary>
-            /// 图标
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("icon")]
-            public string ICon { get; set; }
-
-            /// <summary>
-            /// 是否展开节点
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("spread")]
-            public bool? Expand { get; set; }
-
-            /// <summary>
-            /// Url
-            /// </summary>
-            /// <value></value>
-            [JsonProperty("jump")]
-            public string Url { get; set; }
-
-            [JsonProperty("list")]
-            public List<menuObj> Children { get; set; }
-
-            /// <summary>
-            /// order
-            /// </summary>
-            /// <value></value>
-            [JsonIgnore]
-            public int? Order { get; set; }
-
-        }
-
         [AllRights]
         [HttpGet]
         public IActionResult Menu()
         {
             if (ConfigInfo.IsQuickDebug == true)
             {
-                var resultMenus = new List<menuObj>();
-                GenerateMenuTree(FFMenus, resultMenus);
+                var resultMenus = new List<Menu>();
+                GenerateMenuTree(FFMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
@@ -695,9 +643,10 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                var resultMenus = new List<menuObj>();
+                var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
+                RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -707,7 +656,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Public]
         [HttpPost]
-        [CrossDomain]
         public IActionResult Login(string userid, string password)
         {
             var user = DC.Set<FrameworkUserBase>()
@@ -718,7 +666,7 @@ namespace WalkingTec.Mvvm.Mvc
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("登录失败");
+                return BadRequest(Program._localizer["LoginFailed"]);
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
@@ -744,7 +692,6 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
-        [CrossDomain]
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -848,7 +795,7 @@ namespace WalkingTec.Mvvm.Mvc
                 bmp.Save(ms, ImageFormat.Png);
                 return File(ms.ToArray(), "image/jpeg");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -859,19 +806,17 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        /// <summary>
-        /// get
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [AllRights]
-        [HttpGet]
-        [ResponseCache(Duration = 3600)]
-        public IActionResult GetIconFonts(string id)
+        [Public]
+        public Dictionary<string, string> GetScriptLanguage()
         {
-            return Json(IconFontsHelper.IconFontDicItems[id]);
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            rv.Add("DONOTUSE_Text_LoadFailed", Program._localizer["LoadFailed"]);
+            rv.Add("DONOTUSE_Text_SubmitFailed", Program._localizer["SubmitFailed"]);
+            rv.Add("DONOTUSE_Text_PleaseSelect", Program._localizer["PleaseSelect"]);
+            rv.Add("DONOTUSE_Text_FailedLoadData", Program._localizer["FailedLoadData"]);
+            return rv;
         }
-
+        
         [AllRights]
         [HttpPost]
         [ActionDescription("UploadForLayUIUEditor")]
@@ -921,4 +866,5 @@ namespace WalkingTec.Mvvm.Mvc
             return Json(ConfigInfo.UEditorOptions);
         }
     }
+
 }

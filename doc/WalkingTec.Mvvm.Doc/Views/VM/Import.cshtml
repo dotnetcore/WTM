@@ -1,8 +1,4 @@
 <style>
-    fieldset img {
-        width:800px;
-        border:1px solid black
-    }
     a {
         color: #01aaed
     }
@@ -58,7 +54,10 @@ public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
     }
     else
     {
-        return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
     }
 }
 #endregion
@@ -157,20 +156,20 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 public class SchoolTemplateVM : BaseTemplateVM
 {
     [Display(Name = "学校编码")]
-    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolCode);
     [Display(Name = "学校名称")]
-    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolName);
     [Display(Name = "学校类型")]
-    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolType);
     [Display(Name = "备注")]
-    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.Remark);
 
     [Display(Name = "专业编码")]
-    public ExcelPropety MajorCode_Excel = ExcelPropety.CreateProperty<School>(x =&gt x.Majors[0].MajorCode);
+    public ExcelPropety MajorCode_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorCode);
     [Display(Name = "专业名称")]
-    public ExcelPropety MajorName_Excel = ExcelPropety.CreateProperty<School>(x =&gt x.Majors[0].MajorName);
+    public ExcelPropety MajorName_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorName);
     [Display(Name = "专业类型")]
-    public ExcelPropety MajorType_Excel = ExcelPropety.CreateProperty<School>(x =&gt x.Majors[0].MajorType);
+    public ExcelPropety MajorType_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorType);
 
 }
 
@@ -186,7 +185,8 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 
 
 <wt:fieldset field-set-style="Simple" title="主要函数">
-    <table lay-filter="parse-table-demo">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">函数</th>
@@ -208,7 +208,6 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
             </tr>
         </tbody>
     </table>
-</wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>

@@ -5,20 +5,33 @@
       "Value": "$cs$"
     }
   ],
-  "DBType": "$dbtype$", //使用的数据库，可选mysql,sqlserver,pgsql,sqlite
+  "DBType": "$dbtype$", //使用的数据库，可选mysql,sqlserver,pgsql,sqlite,oracle
   "CookiePre": "$cookiepre$", //cookie前缀
   "EnableLog": $enablelog$, //是否启用日志
   "LogExceptionOnly": $logexception$, //当启用日志的时候，是否只记录错误信息
   "IsQuickDebug": true, //是否启用debug模式
+  "CorsOptions": {
+    "EnableAll": true, //所有方法是否默认跨域
+    "Policy": [
+      {
+        "Name": "Default",
+        "Domain": "http://localhost,https://localhost"
+      }
+    ]
+  },
+  "Languages":"zh,en",
   "UIOptions": {
     "DataTable": {
-      "RPP": $rpp$, //默认列表每页行数
+      "RPP": $rpp$ //默认列表每页行数
     },
     "ComboBox": {
-      "DefaultEnableSearch": true, //默认允许ComboBox搜索
+      "DefaultEnableSearch": true //默认允许ComboBox搜索
     },
     "DateTime": {
       "DefaultReadonly": true //默认开启DateTime只读
+    },
+    "SearchPanel": {
+      "DefaultExpand": true //默认展开SearchPanel内容
     }
   },
   "SyncDb": true, //是否自动同步数据库

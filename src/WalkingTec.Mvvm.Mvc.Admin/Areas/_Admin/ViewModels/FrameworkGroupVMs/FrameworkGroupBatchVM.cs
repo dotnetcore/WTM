@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,12 +13,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             ListVM = new FrameworkGroupListVM();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
+        protected override bool CheckIfCanDelete(object id, out string errorMessage)
         {
-            var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == id);
+            Guid? checkid = Guid.Parse(id.ToString());
+            var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == checkid);
             if (check == true)
             {
-                errorMessage = "用户组已被使用，无法删除";
+                errorMessage = Program._localizer["CannotDelete", Program._localizer["Group"]];
                 return false;
             }
             else
