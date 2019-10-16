@@ -489,6 +489,8 @@ namespace WalkingTec.Mvvm.Core
                 _ueditorOptions = value;
             }
         }
+        #endregion
+
         #region Cors configs
 
         private Cors _cors;
