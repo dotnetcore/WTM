@@ -1,11 +1,10 @@
-import { BasicLayout, SettingDrawer } from '@ant-design/pro-layout';
-import { Skeleton } from 'antd';
+import { BasicLayout } from '@ant-design/pro-layout';
+import LayoutSpin from "components/other/LayoutSpin";
 import GlobalConfig from 'global.config';
 import * as React from 'react';
 import { renderRoutes } from 'react-router-config';
 import RightContent from './GlobalHeader/RightContent';
-import LayoutSpin from "components/other/LayoutSpin";
-
+import SettingDrawer from './SettingDrawer';
 export default class App extends React.Component<any> {
     renderRoutes = renderRoutes(this.props.route.routes);
     public render() {
@@ -21,7 +20,7 @@ export default class App extends React.Component<any> {
                     )}
                     footerRender={() => null}
                 >
-                    <React.Suspense fallback={<LayoutSpin/>}>
+                    <React.Suspense fallback={<LayoutSpin />}>
                         {this.renderRoutes}
                     </React.Suspense>
                 </BasicLayout>
