@@ -93,7 +93,7 @@ export default class IApp extends React.Component<any, any> {
     componentDidMount() {
 
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
     }
     onLoad(e) {
         // 发送消息

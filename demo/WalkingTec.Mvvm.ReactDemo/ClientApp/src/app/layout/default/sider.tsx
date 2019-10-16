@@ -83,7 +83,7 @@ export class AppMenu extends React.Component<{ mode?: "horizontal" | "inline", [
     }
     return OpenKeys
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.defaultOpenKeys = this.getDefaultOpenKeys(Store.Meun.ParallelMenu, this.getMenu());
   }
   getMenu() {
