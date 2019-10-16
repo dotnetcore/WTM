@@ -13,10 +13,12 @@ namespace WalkingTec.Mvvm.Mvc
     public enum UIEnum { LayUI, React }
     public enum ProjectTypeEnum { Single, Multi }
 
+    public enum DotnetVersionEnum { dotnet2_2, dotnet3_0}
+
     public class SetupVM : BaseVM
     {
         private string version = "";
-
+        private string SwashbuckleVersion = "";
         public bool EnableLog { get; set; }
 
         public bool LogExceptionOnly { get; set; }
@@ -34,6 +36,8 @@ namespace WalkingTec.Mvvm.Mvc
         public int? Rpp { get; set; }
 
         public UIEnum? UI { get; set; }
+
+        public DotnetVersionEnum? DotnetVersion { get; set; }
 
         public PageModeEnum? PageMode { get; set; }
 
@@ -122,11 +126,24 @@ namespace WalkingTec.Mvvm.Mvc
 
         public SetupVM()
         {
-            version = Utils.GetNugetVersion();
         }
 
         public void DoSetup()
         {
+            switch (DotnetVersion)
+            {
+                case DotnetVersionEnum.dotnet2_2:
+                    SwashbuckleVersion = "4.0.1";
+                    version = "2.3.9";
+                    break;
+                case DotnetVersionEnum.dotnet3_0:
+                    SwashbuckleVersion = "5.0.0-rc4";
+                    version = "3.0.0";
+                    break;
+                default:
+                    break;
+            }
+
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
@@ -429,6 +446,14 @@ module.exports = (app) => {{
 
         private string GetResource(string fileName, string subdir = "")
         {
+            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs")
+            {
+                if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
+                {
+                    var index = fileName.IndexOf('.');
+                    fileName = fileName.Substring(0,index) + "3.txt";
+                }
+            }
             //获取编译在程序中的Controller原始代码文本
             Assembly assembly = Assembly.GetExecutingAssembly();
             string loc = "";
@@ -477,14 +502,14 @@ module.exports = (app) => {{
         }
 
 
-        public void WriteDefaultFiles()
-        {
-            File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
-            File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
-            if (UI == UIEnum.React)
-            {
-                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
-            }
-        }
+        //public void WriteDefaultFiles()
+        //{
+        //    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
+        //    File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
+        //    if (UI == UIEnum.React)
+        //    {
+        //        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
+        //    }
+        //}
     }
 }
