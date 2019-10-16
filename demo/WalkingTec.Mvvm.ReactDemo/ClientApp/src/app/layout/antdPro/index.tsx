@@ -24,7 +24,6 @@ export default class App extends React.Component<any> {
                     <React.Suspense fallback={<LayoutSpin/>}>
                         {this.renderRoutes}
                     </React.Suspense>
-
                 </BasicLayout>
                 <SettingDrawer settings={{
                     navTheme: 'dark',
