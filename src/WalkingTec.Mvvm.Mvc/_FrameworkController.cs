@@ -13,7 +13,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.ConfigOptions;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc.UEditor;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -352,7 +354,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
         }
-
 
         [HttpPost]
         [ActionDescription("UploadForLayUIRichTextBox")]
@@ -871,5 +872,53 @@ namespace WalkingTec.Mvvm.Mvc
             return Json(IconFontsHelper.IconFontDicItems[id]);
         }
 
+        [AllRights]
+        [HttpPost]
+        [ActionDescription("UploadForLayUIUEditor")]
+        public IActionResult UploadForLayUIUEditor(string _DONOT_USE_CS = "default")
+        {
+            CurrentCS = _DONOT_USE_CS ?? "default";
+            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
+            var vm = CreateVM<FileAttachmentVM>();
+
+            if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
+            {
+                //通过文件流方式上传附件
+                var FileData = Request.Form.Files[0];
+                vm.Entity.FileName = FileData.FileName;
+                vm.Entity.Length = FileData.Length;
+                vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
+            }
+            else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
+            {
+                //通过Base64方式上传附件
+                var FileData = Convert.FromBase64String(Request.Form["FileID"]);
+                vm.Entity.FileName = "SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg";
+                vm.Entity.Length = FileData.Length;
+                MemoryStream MS = new MemoryStream(FileData);
+                vm = FileHelper.GetFileByteForUpload(vm, MS, ConfigInfo, vm.Entity.FileName, sm);
+            }
+            vm.Entity.UploadTime = DateTime.Now;
+            vm.Entity.SaveFileMode = sm;
+            vm.Entity.IsTemprory = false;
+            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            {
+                vm.DoAdd();
+                string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
+                return Content($"{{\"Code\": 200 , \"Msg\": \"success\", \"Data\": {{\"src\": \"{url}\",\"FileName\":\"{vm.Entity.FileName}\"}}}}");
+            }
+            return Content($"{{\"Code\": 1 , \"Msg\": \"上传失败\", \"Data\": {{\"src\": \"\"}}}}");
+        }
+
+        [Public]
+        [ActionDescription("加载UEditor配置文件")]
+        [ResponseCache(Duration = 3600)]
+        [HttpGet]
+        public IActionResult UEditorOptions()
+        {
+            if (ConfigInfo.UEditorOptions == null)
+                throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
+            return Json(ConfigInfo.UEditorOptions);
+        }
     }
 }

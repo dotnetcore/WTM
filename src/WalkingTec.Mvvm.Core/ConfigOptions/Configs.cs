@@ -458,6 +458,30 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region UEditorOptions
+
+        private UEditorOptions _ueditorOptions;
+
+        /// <summary>
+        /// UEditor配置
+        /// </summary>
+        /// <value></value>
+        public UEditorOptions UEditorOptions
+        {
+            get
+            {
+                if (_ueditorOptions == null)
+                {
+                    _ueditorOptions = new UEditorOptions();
+                }
+                return _ueditorOptions;
+            }
+            set
+            {
+                _ueditorOptions = value;
+            }
+        }
+        #endregion
 
     }
 }
