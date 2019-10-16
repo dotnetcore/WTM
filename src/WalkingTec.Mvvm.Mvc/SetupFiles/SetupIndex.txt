@@ -88,6 +88,15 @@
     <form method="post" class="content">
         <table>
             <tr>
+                <td>.netcore版本：</td>
+                <td>
+                    <select name="DotnetVersion">
+                        <option value="dotnet2_2">.netcore2.2</option>
+                        <option value="dotnet3_0">.netcore3.0</option>
+                   </select>
+                </td>
+            </tr>
+            <tr>
                 <td>链接字符串：</td>
                 <td><input name="CS" value="Server=(localdb)\\mssqllocaldb;Database=$dbname$;Trusted_Connection=True;MultipleActiveResultSets=true"/></td>
             </tr>
