@@ -98,7 +98,7 @@ export default class IApp extends React.Component<any, any> {
     onLoad(e) {
         // 发送消息
         // e.target.contentWindow.postMessage(this.sendPostMessage(), decodeURIComponent(this.props.match.params.url));
-        console.log(decodeURIComponent(this.props.match.params.url), this.ref.current.contentWindow)
+        // console.log(decodeURIComponent(this.props.match.params.url), this.ref.current.contentWindow)
         this.setState({ loding: false })
     }
     render() {

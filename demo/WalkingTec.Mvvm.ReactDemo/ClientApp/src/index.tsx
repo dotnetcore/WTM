@@ -15,6 +15,10 @@ import 'nprogress/nprogress.css';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import "assets/font/font";
+import logo from "assets/img/logo.png";
 import './global.config';
-ReactDOM.render(<App />,
+import { BasicLayout, SettingDrawer } from '@ant-design/pro-layout';
+
+
+ReactDOM.render(<App/>,
   document.getElementById('root'));
