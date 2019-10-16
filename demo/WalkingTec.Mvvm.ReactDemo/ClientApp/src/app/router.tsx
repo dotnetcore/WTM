@@ -8,12 +8,15 @@ import React from 'react';
 import { renderRoutes, RouteConfig } from 'react-router-config';
 import Store from 'store';
 import Layout from "./layout/default/index";
+import LayoutPro from "./layout/antdPro";
 import Demo from "./pages/demo";
 import External from "./pages/external";
 import Exception from "components/other/Exception";
+import LayoutSpin from "components/other/LayoutSpin";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
+
 /**
  *  react-router-config 配置文档  https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
  *  react-router 配置文档 https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md
@@ -24,7 +27,7 @@ const router: RouteConfig[] = [
         * 主页布局 
         */
         path: "/",
-        component: AuthentRouter(Layout),
+        component: AuthentRouter(LayoutPro),
         //  业务路由
         routes: [
             {
@@ -73,9 +76,7 @@ class AuthentComponent extends React.Component<any> {
     }
     render() {
         if (Store.User.loding) {
-            return <div style={{ height: '100vh', overflow: "hidden", padding: '60px 30px' }}>
-                <Skeleton active paragraph={{ rows: 20 }} />
-            </div>
+            return <LayoutSpin/>
         }
         // 用户登陆菜单加载完成进入主界面
         if (Store.User.isLogin) {
