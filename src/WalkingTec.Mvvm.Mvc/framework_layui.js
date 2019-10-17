@@ -303,7 +303,7 @@ window.ff = {
 
   },
 
-  OpenDialog: function (url, windowid, title, width, height, para) {
+  OpenDialog: function (url, windowid, title, width, height, para,maxed) {
     var layer = layui.layer;
     var index = layer.load(2);
     var wid = this.GetCookie("windowids");
@@ -357,7 +357,7 @@ window.ff = {
             title = false;
             max = false;
           }
-          layer.open({
+          var oid = layer.open({
             type: 1
             , title: title
             , area: area
@@ -370,6 +370,9 @@ window.ff = {
               ff.SetCookie("windowids", owid);
             }
           });
+            if (maxed === true) {
+                layer.full(oid);
+            }
         }
       }
     });

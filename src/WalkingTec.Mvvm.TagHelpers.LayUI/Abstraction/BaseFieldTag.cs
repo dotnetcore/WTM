@@ -96,7 +96,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (LabelText == null)
             {
-                LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
+                if (pro != null)
+                {
+                    LabelText = pro.GetPropertyDisplayName();
+                }
+                else
+                {
+                    LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                }
                 if (LabelText == null)
                 {
                     HideLabel = true;

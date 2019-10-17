@@ -292,6 +292,18 @@ namespace WalkingTec.Mvvm.Core
 
         #region Set Property
 
+        /// <summary>
+        /// Set the dialog to be maximized
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="Max"></param>
+        /// <returns></returns>
+        public static GridAction SetMax(this GridAction self, bool Max = true)
+        {
+            self.Max = Max;
+            return self;
+        }
+
 
         /// <summary>
         /// 是否在每行都显示
