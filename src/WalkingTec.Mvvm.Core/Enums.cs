@@ -169,10 +169,7 @@ namespace WalkingTec.Mvvm.Core
     }
 
     public enum UIEnum
-    {
-        extjs,
-        bootstrap
-    }
+    { LayUI, React }
 
     public enum NoRightEnum
     {

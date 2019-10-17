@@ -209,7 +209,7 @@ namespace WalkingTec.Mvvm.Mvc
                             coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType));
                             layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
                             mvc.GetType("WalkingTec.Mvvm.Mvc.Program").GetProperty("_localizer").SetValue(null, rv);
-                            admin.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
+                            admin?.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
                             setcore = true;
                         }
                         return rv;
