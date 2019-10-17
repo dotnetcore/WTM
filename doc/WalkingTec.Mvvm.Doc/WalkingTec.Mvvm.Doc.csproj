@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -9,6 +9,92 @@
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
+
+  <ItemGroup>
+    <None Remove="SetupFiles\Appsettings.txt" />
+    <None Remove="SetupFiles\DataContext.txt" />
+    <None Remove="SetupFiles\DefaultProj.txt" />
+    <None Remove="SetupFiles\DefaultProj3.txt" />
+    <None Remove="SetupFiles\DefaultSolution.txt" />
+    <None Remove="SetupFiles\Mvc\alpine.Dockerfile.txt" />
+    <None Remove="SetupFiles\Mvc\Dockerfile.txt" />
+    <None Remove="SetupFiles\Mvc\HomeController.txt" />
+    <None Remove="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <None Remove="SetupFiles\Mvc\home\FrontPage.txt" />
+    <None Remove="SetupFiles\Mvc\home\Index.txt" />
+    <None Remove="SetupFiles\Mvc\home\layout.txt" />
+    <None Remove="SetupFiles\Mvc\home\Login.txt" />
+    <None Remove="SetupFiles\Mvc\home\PIndex.txt" />
+    <None Remove="SetupFiles\Mvc\layui\Layout.txt" />
+    <None Remove="SetupFiles\Mvc\layui\layui.zip" />
+    <None Remove="SetupFiles\Mvc\layui\Program.txt" />
+    <None Remove="SetupFiles\Mvc\layui\Program3.txt" />
+    <None Remove="SetupFiles\Mvc\layui\ViewImports.txt" />
+    <None Remove="SetupFiles\Mvc\LoginController.txt" />
+    <None Remove="SetupFiles\Mvc\ViewStart.txt" />
+    <None Remove="SetupFiles\Proj.txt" />
+    <None Remove="SetupFiles\Proj3.txt" />
+    <None Remove="SetupFiles\Resourceen.txt" />
+    <None Remove="SetupFiles\Resourcezh.txt" />
+    <None Remove="SetupFiles\SetupIndex.txt" />
+    <None Remove="SetupFiles\SetupIndex1.txt" />
+    <None Remove="SetupFiles\Spa\Launch.txt" />
+    <None Remove="SetupFiles\Spa\Program.txt" />
+    <None Remove="SetupFiles\Spa\React\ClientApp.zip" />
+    <None Remove="SetupFiles\Spa\React\Proj.txt" />
+    <None Remove="SetupFiles\TestProj.txt" />
+    <None Remove="SetupFiles\TestProj3.txt" />
+    <None Remove="SetupFiles\test\HomeControllerTest.txt" />
+    <None Remove="SetupFiles\test\LoginControllerTest.txt" />
+    <None Remove="SetupFiles\test\MockController.txt" />
+    <None Remove="SetupFiles\test\MockHttpSession.txt" />
+    <None Remove="SetupFiles\vms\ChangePasswordVM.txt" />
+    <None Remove="SetupFiles\vms\IndexVM.txt" />
+    <None Remove="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
+    <EmbeddedResource Include="SetupFiles\DataContext.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj3.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultSolution.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\alpine.Dockerfile.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\Dockerfile.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\PIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\Layout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\layui.zip" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\Program3.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\ViewStart.txt" />
+    <EmbeddedResource Include="SetupFiles\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\Proj3.txt" />
+    <EmbeddedResource Include="SetupFiles\Resourceen.txt" />
+    <EmbeddedResource Include="SetupFiles\Resourcezh.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\TestProj.txt" />
+    <EmbeddedResource Include="SetupFiles\TestProj3.txt" />
+    <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App">

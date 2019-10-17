@@ -8,7 +8,7 @@ using WalkingTec.Mvvm.Core;
 using System.Linq;
 using System.Threading;
 
-namespace WalkingTec.Mvvm.Mvc
+namespace WalkingTec.Mvvm.Doc
 {
     public enum UIEnum { LayUI, React }
     public enum ProjectTypeEnum { Single, Multi }
