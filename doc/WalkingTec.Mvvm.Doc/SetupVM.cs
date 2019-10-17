@@ -134,11 +134,11 @@ namespace WalkingTec.Mvvm.Doc
             {
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
-                    version = "2.3.9";
+                    version = Utils.GetNugetVersion(false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
-                    version = "3.0.0";
+                    version = version = Utils.GetNugetVersion(true);
                     break;
                 default:
                     break;
@@ -208,7 +208,7 @@ namespace WalkingTec.Mvvm.Doc
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
-    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
  </ItemGroup>
 </Project>
 ");
@@ -224,7 +224,7 @@ namespace WalkingTec.Mvvm.Doc
   <ItemGroup>
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
-    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""4.0.1"" />
+    <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
  </ItemGroup>
   <ItemGroup>
     <Content Remove=""$(SpaRoot)**"" />
@@ -392,13 +392,13 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Areas{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
                 File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}alpine.Dockerfile", GetResource("alpine.Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}Dockerfile", GetResource("Dockerfile.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
-                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
+                UnZip("WalkingTec.Mvvm.Doc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
             }
             if (UI == UIEnum.React)
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ClientApp");
-                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
-                UnZip("WalkingTec.Mvvm.Mvc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}{Path.DirectorySeparatorChar}ClientApp");
+                UnZip("WalkingTec.Mvvm.Doc.SetupFiles.Mvc.layui.layui.zip", $"{MainDir}{Path.DirectorySeparatorChar}wwwroot");
+                UnZip("WalkingTec.Mvvm.Doc.SetupFiles.Spa.React.ClientApp.zip", $"{MainDir}{Path.DirectorySeparatorChar}ClientApp");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Program.cs", GetResource("Program.txt", "Spa").Replace("$ns$", MainNs), Encoding.UTF8);
                 var config = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}global.config.tsx");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}global.config.tsx", config.Replace("title: \"WalkingTec MVVM\",", $"title: \"{MainNs}\","), Encoding.UTF8);
@@ -446,11 +446,11 @@ module.exports = (app) => {{
 
         private string GetResource(string fileName, string subdir = "")
         {
-            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs" || fileName == "DefaultProj.txt")
+            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs" || fileName == "layui.Program.txt" || fileName == "DefaultProj.txt")
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
-                    var index = fileName.IndexOf('.');
+                    var index = fileName.LastIndexOf('.');
                     fileName = fileName.Substring(0,index) + "3" + fileName.Substring(index);
                 }
             }
@@ -459,15 +459,23 @@ module.exports = (app) => {{
             string loc = "";
             if (string.IsNullOrEmpty(subdir))
             {
-                loc = $"WalkingTec.Mvvm.Mvc.SetupFiles.{fileName}";
+                loc = $"WalkingTec.Mvvm.Doc.SetupFiles.{fileName}";
             }
             else
             {
-                loc = $"WalkingTec.Mvvm.Mvc.SetupFiles.{subdir}.{fileName}";
+                loc = $"WalkingTec.Mvvm.Doc.SetupFiles.{subdir}.{fileName}";
             }
             var textStreamReader = new StreamReader(assembly.GetManifestResourceStream(loc));
             string content = textStreamReader.ReadToEnd();
             textStreamReader.Close();
+
+            if (fileName.EndsWith("Dockerfile.txt"))
+            {
+                if (DotnetVersion == DotnetVersionEnum.dotnet3_0)
+                {
+                    content = content.Replace("2.2", "3.0");
+                }
+            }
             return content;
         }
 

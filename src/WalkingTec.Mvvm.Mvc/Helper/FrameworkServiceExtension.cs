@@ -233,7 +233,6 @@ namespace WalkingTec.Mvvm.Mvc
             IconFontsHelper.GenerateIconFont();
             var configs = app.ApplicationServices.GetRequiredService<Configs>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
-            var localizer = app.ApplicationServices.GetRequiredService<GlobalData>();
 
             if (configs == null)
             {
@@ -361,6 +360,16 @@ namespace WalkingTec.Mvvm.Mvc
             if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
             {
                 gd.AllAssembly.Add(mvc);
+            }
+            var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
+            if (core != null && gd.AllAssembly.Contains(core) == false)
+            {
+                gd.AllAssembly.Add(core);
+            }
+            var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
+            if (layui != null && gd.AllAssembly.Contains(layui) == false)
+            {
+                gd.AllAssembly.Add(layui);
             }
             gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
             gd.AllModels = GetAllModels(gd.DataContextCI);
