@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -219,6 +220,27 @@ namespace WalkingTec.Mvvm.Mvc
         public string BaseUrl { get; set; }
         #endregion
 
+        private IStringLocalizer _localizer;
+        public IStringLocalizer Localizer
+        {
+            get
+            {
+                if(_localizer == null)
+                {
+                    var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    if (programtype != null)
+                    {
+                        _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                    }
+                    if(_localizer == null)
+                    {
+                        _localizer = GlobalServices.GetRequiredService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();                             
+                    }
+                }
+                return _localizer;
+            }
+        }
+
         public ActionLog Log { get; set; }
 
         //-------------------------------------------方法------------------------------------//
@@ -256,6 +278,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.Log = this.Log;
             rv.Controller = this;
             rv.ControllerName = this.GetType().FullName;
+            rv.Localizer = this.Localizer;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try
