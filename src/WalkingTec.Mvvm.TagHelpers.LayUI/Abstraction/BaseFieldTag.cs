@@ -89,13 +89,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     if (output.Attributes["isrich"] == null)
                     {
                         output.Attributes.Add("lay-verify", "required");
+                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required",Field.Metadata.Name]}");
                     }
                 }
             }
 
             if (LabelText == null)
             {
-                LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
+                if (pro != null)
+                {
+                    LabelText = pro.GetPropertyDisplayName();
+                }
+                else
+                {
+                    LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                }
                 if (LabelText == null)
                 {
                     HideLabel = true;

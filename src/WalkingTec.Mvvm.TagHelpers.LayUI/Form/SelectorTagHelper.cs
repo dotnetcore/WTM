@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 }
             }
             if (ListVM == null || ListVM.Model == null)
-                throw new Exception("Selector 组件指定的 ListVM 必须要实例化");
+                throw new Exception("The ListVM of the Selector is null");
             var listVM = ListVM.Model as IBasePagedListVM<TopBasePoco, ISearcher>;
             var value = new List<string>();
             if (context.Items.ContainsKey("model") == true)
@@ -242,7 +242,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 var searchPanelTemplate = $@"<script type=""text/template"" id=""Temp{Id}"">{content}</script>";
 
                 output.Attributes.Add("value", string.Join(",", value));
-                output.Attributes.Add("placeholder", EmptyText ?? "请选择");
+                output.Attributes.Add("placeholder", EmptyText ?? Program._localizer["PleaseSelect"]);
                 output.Attributes.Add("class", "layui-input");
                 this.Disabled = true;
                 var vmQualifiedName = ListVM.Metadata.ModelType.AssemblyQualifiedName;
@@ -306,7 +306,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.PostElement.AppendHtml($@"
 {hiddenStr}
 </div>
-<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? "选择"}</button>
+<button class='layui-btn layui-btn-sm layui-btn-warm' type='button' id='{Id}_Select' style='color:white;position:absolute;right:0px'>{SelectButtonText ?? " . . . "}</button>
 <hidden id='{Id}' name='{Field.Name}' />
 <script>
 var {Id}filter = {{}};
@@ -319,7 +319,7 @@ $('#{Id}_Select').on('click',function(){{
     filter.Ids.push(vals[i].value);
   }};
   var ffilter = $.extend(filter, {Id}filter)
-  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? "请选择"}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "500"},'#Temp{Id}', ffilter);
+  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? Program._localizer["PleaseSelect"]}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "500"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}

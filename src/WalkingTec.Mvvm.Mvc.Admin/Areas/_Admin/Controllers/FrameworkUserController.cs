@@ -12,21 +12,29 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("用户管理")]
+    [ActionDescription("UserManagement")]
     public class FrameworkUserController : BaseController
     {
         #region 搜索
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         public ActionResult Index()
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher.IsValid = true;
             return PartialView(vm);
         }
+
+        [ActionDescription("Search")]
+        [HttpPost]
+        public string Search(FrameworkUserListVM vm)
+        {
+            return vm.GetJson(false);
+        }
+
         #endregion
 
         #region 新建
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create()
         {
             var vm = CreateVM<FrameworkUserVM>();
@@ -34,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
@@ -58,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         public ActionResult Edit(string id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
@@ -66,7 +74,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkUserVM vm)
@@ -93,7 +101,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改密码
-        [ActionDescription("修改密码")]
+        [ActionDescription("ChangePassword")]
         public ActionResult Password(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id,passInit:true);
@@ -101,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("ChangePassword")]
         [HttpPost]
         public ActionResult Password(FrameworkUserVM vm)
         {
@@ -128,14 +136,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
 
         #region 删除
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         [HttpPost]
         public ActionResult Delete(Guid id, IFormCollection nouse)
         {
@@ -153,7 +161,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 详细
-        [ActionDescription("详细")]
+        [ActionDescription("Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = CreateVM<FrameworkUserVM>(id);
@@ -163,7 +171,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 批量删除
         [HttpPost]
-        [ActionDescription("批量删除")]
+        [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
             var vm = CreateVM<FrameworkUserBatchVM>(Ids: IDs);
@@ -171,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("批量删除")]
+        [ActionDescription("BatchDelete")]
         public ActionResult DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -180,13 +188,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer?["OprationSuccess"]);
             }
         }
         #endregion
 
         #region 导入
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         public ActionResult Import()
         {
             var vm = CreateVM<FrameworkUserImportVM>();
@@ -194,7 +202,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         public ActionResult Import(FrameworkUserImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -203,12 +211,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
 
-        [ActionDescription("启用禁用")]
+        [ActionDescription("Enable")]
         public ActionResult Enable(Guid id, bool enable)
         {
             FrameworkUserBase user = new FrameworkUserBase { ID = id };
@@ -224,6 +232,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(LoginUserInfo.DataPrivileges,null, x=>x.CodeAndName, x => x.ITCode);
             return Json(users);
 
+        }
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(FrameworkUserListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
     }
 }

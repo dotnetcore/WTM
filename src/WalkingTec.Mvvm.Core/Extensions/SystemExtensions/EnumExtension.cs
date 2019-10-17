@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Core.Extensions
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (pleaseSelect == true)
             {
-                rv.Insert(0, new ComboSelectListItem { Text = "请选择", Value = "" });
+                rv.Insert(0, new ComboSelectListItem { Text = Program._localizer["PleaseSelect"], Value = "" });
             }
             return rv;
         }

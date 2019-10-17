@@ -38,30 +38,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
             var validpostonly = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ValidateFormItemOnlyAttribute), false).Cast<ValidateFormItemOnlyAttribute>().FirstOrDefault();
-            var crossDomain = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
-            if (crossDomain == null)
-            {
-                crossDomain = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(CrossDomainAttribute), false).FirstOrDefault() as CrossDomainAttribute;
-            }
-            if (crossDomain != null)
-            {
-                if (crossDomain.AllowOrigin == "*")
-                {
-                    context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", context.HttpContext.Request.Headers["Origin"]);
-                }
-                else
-                {
-                    context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", crossDomain.AllowOrigin);
-                }
-                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
-                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-                context.HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-            }
 
             log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
-            log.ModuleName = ctrlDes?.Description ?? ctrlActDesc.ControllerName;
-            log.ActionName = actDes?.Description ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+            log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
+            log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
             log.ActionUrl = context.HttpContext.GetRemoteIpAddress();
             log.IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -251,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Result is PartialViewResult)
             {
                 var model = (context.Result as PartialViewResult).ViewData.Model as BaseVM;
-                if (model == null)
+                if ((context.Result as PartialViewResult).ViewData.Model == null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as PartialViewResult).ViewData.Model = model;
@@ -269,9 +250,9 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             if (ctrlDes != null)
                             {
-                                pagetitle = ctrlDes.Description + " - ";
+                                pagetitle = ctrlDes.GetDescription() + " - ";
                             }
-                            pagetitle += actDes.Description;
+                            pagetitle += actDes.GetDescription();
                         }
                     }
                     else
@@ -296,7 +277,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Result is ViewResult)
             {
                 var model = (context.Result as ViewResult).ViewData.Model as BaseVM;
-                if (model == null)
+                if ((context.Result as ViewResult).ViewData.Model == null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;
@@ -327,8 +308,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionTime = DateTime.Now;
                     log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
-                    log.ModuleName = ctrlDes?.Description ?? ctrlActDesc.ControllerName;
-                    log.ActionName = actDes?.Description ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+                    log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
+                    log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;
@@ -361,7 +342,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
                 else
                 {
-                    context.HttpContext.Response.WriteAsync("页面发生错误");
+                    context.HttpContext.Response.WriteAsync(Program._localizer["PageError"]);
                 }
             }
             base.OnResultExecuted(context);

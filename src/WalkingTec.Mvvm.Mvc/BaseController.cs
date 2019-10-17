@@ -85,6 +85,9 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         public string CurrentCS { get; set; }
+
+        public DBTypeEnum? CurrentDbType { get; set; }
+
         public string ParentWindowId
         {
             get
@@ -504,7 +507,7 @@ namespace WalkingTec.Mvvm.Mvc
                     cs = "default";
                 }
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
         #endregion
@@ -532,6 +535,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region Validate model
+        [NonAction]
         public Dictionary<string,string> RedoValidation(object item)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
@@ -556,12 +560,12 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="vm">ViewModel</param>
         /// <param name="prefix">prefix</param>
         /// <returns>true if success</returns>
+        [NonAction]
         public bool RedoUpdateModel(object vm, string prefix = null)
         {
             try
             {
                 BaseVM bvm = vm as BaseVM;
-                //循环FormCollection
                 foreach (var item in bvm.FC.Keys)
                 {
                     PropertyHelper.SetPropertyValue(vm, item, bvm.FC[item], prefix, true);

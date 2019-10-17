@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorListVM
+@model WalkingTec.Mvvm.Demo.ViewModels.MajorVMs.MajorListVM
 
 <br />
 <wt:quote>本页查询使用了数据权限，请给登陆用户配置学校的数据权限才能看到数据</wt:quote>
@@ -9,4 +9,4 @@
         <wt:combobox field="Searcher.SchoolId" items="Searcher.AllSchools" empty-text="全部" />
     </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/Major/Search"/>

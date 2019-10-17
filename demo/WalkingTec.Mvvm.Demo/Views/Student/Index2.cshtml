@@ -7,7 +7,7 @@
   </wt:tabheaders>
   <wt:tabcontents>
     <wt:tabcontent>
-        <wt:grid vm="ValidList" height="-300"/>
+        <wt:grid vm="ValidList" height="-300" url="/Student/Search"/>
     </wt:tabcontent>
     <wt:tabcontent>
       <wt:searchpanel vm="InValidList" reset-btn="true">
@@ -15,7 +15,7 @@
           <wt:textbox field="InValidList.Searcher.Name" />
         </wt:row>
       </wt:searchpanel>
-      <wt:grid vm="InValidList" height="-400"/>
+      <wt:grid vm="InValidList" height="-400"  url="/Student/Search"/>
     </wt:tabcontent>
   </wt:tabcontents>
 </wt:tab>

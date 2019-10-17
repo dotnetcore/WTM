@@ -447,12 +447,12 @@ namespace WalkingTec.Mvvm.Core
                         //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
                         if (props.Count == 1)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = AllName + "数据重复", Index = entity.ExcelIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["DuplicateError", AllName], Index = entity.ExcelIndex });
                         }
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = AllName + "组合字段重复", Index = entity.ExcelIndex });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["DuplicateGroupError", AllName], Index = entity.ExcelIndex });
                         }
                     }
                 }
@@ -615,6 +615,11 @@ namespace WalkingTec.Mvvm.Core
                         (item as BasePoco).CreateTime = DateTime.Now;
                         (item as BasePoco).CreateBy = LoginUserInfo?.ITCode;
                     }
+                    if (typeof(PersistPoco).IsAssignableFrom(item.GetType()))
+                    {
+                        (item as PersistPoco).IsValid = true;
+                    }
+
                     DC.Set<P>().Add(item);
                 }
             }
@@ -658,7 +663,7 @@ namespace WalkingTec.Mvvm.Core
                 hssfworkbook = new HSSFWorkbook();
                 if (UploadFileId == null)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请上传模板文件" });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["PleaseUploadTemplate"] });
                     return;
                 }
                 var fa = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).SingleOrDefault();
@@ -666,7 +671,7 @@ namespace WalkingTec.Mvvm.Core
 
                 if (ValidityTemplateType && hssfworkbook.GetSheetAt(1).GetRow(0).Cells[2].ToString() != typeof(T).Name)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = "错误的模板" });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                     return;
                 }
                 ISheet sheet = hssfworkbook.GetSheetAt(0);
@@ -698,7 +703,7 @@ namespace WalkingTec.Mvvm.Core
                 var cells = sheet.GetRow(0).Cells;
                 if (columnCount != cells.Count)
                 {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请下载新模板或上传符合当前功能的模板" });
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                     return;
                 }
                 else
@@ -714,7 +719,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             if (cells[i].ToString().Trim('*') != excelPropetys[pIndex].ColumnName)
                             {
-                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请下载新模板或上传符合当前功能的模板" });
+                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                                 return;
                             }
                             pIndex++;
@@ -727,7 +732,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
                                 {
-                                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请下载新模板或上传符合当前功能的模板" });
+                                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                                     break;
                                 }
                                 i = i + 1;
@@ -799,7 +804,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch
             {
-                ErrorListVM.EntityList.Add(new ErrorMessage { Message = "请下载新模板或上传符合当前功能的模板" });
+                ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                 //ErrorListVM.ErrorList.Add(new ErrorMessage { Message = ex.Message });
             }
             return;
@@ -892,11 +897,11 @@ namespace WalkingTec.Mvvm.Core
                         //根据State判断修改或删除操作，输出不同的错误信息
                         if (ent.State == EntityState.Deleted)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = "数据被使用，无法删除" });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = Program._localizer["DataCannotDelete"] });
                         }
                         else if (ent.State == EntityState.Modified)
                         {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = "修改失败" });
+                            ErrorListVM.EntityList.Add(new ErrorMessage { Index = errorId, Message = Program._localizer["EditFailed"] });
                         }
                         else
                         {
@@ -1092,12 +1097,12 @@ namespace WalkingTec.Mvvm.Core
     #region 辅助类
     public class ErrorMessage : TopBasePoco
     {
-        [Display(Name = "行号")]
+        [Display(Name = "RowIndex")]
         public long Index { get; set; }
 
-        [Display(Name = "列号")]
+        [Display(Name = "CellIndex")]
         public long Cell { get; set; }
-        [Display(Name = "错误信息")]
+        [Display(Name = "ErrorMsg")]
         public string Message { get; set; }
     }
 

@@ -10,12 +10,12 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
 
-    [ActionDescription("用户组管理")]
+    [ActionDescription("GroupManagement")]
     [ApiController]
     [Route("api/_FrameworkGroup")]
 	public class _FrameworkGroupController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("Search")]
 		public string Search(FrameworkGroupSearcher searcher)
         {
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public FrameworkGroupVM Get(Guid id)
         {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         [HttpPost("Add")]
         public IActionResult Add(FrameworkGroupVM vm)
         {
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(FrameworkGroupVM vm)
         {
@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 		[HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkGroupBatchVM>();
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("ExportByIds")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkGroup_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("下载模板")]
+        [ActionDescription("DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         [HttpPost("Import")]
         public ActionResult Import(FrameworkGroupImportVM vm)
         {

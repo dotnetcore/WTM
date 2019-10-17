@@ -13,7 +13,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.ConfigOptions;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc.UEditor;
 using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -246,8 +248,8 @@ namespace WalkingTec.Mvvm.Mvc
                 var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                 var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
                 //给日志的多语言属性赋值
-                log.ModuleName = controllerDes?.Description ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-                log.ActionName = actionDes?.Description ?? ex.Error.TargetSite.Name;
+                log.ModuleName = controllerDes?.GetDescription() ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+                log.ActionName = actionDes?.GetDescription() ?? ex.Error.TargetSite.Name;
                 if (postDes != null)
                 {
                     log.ActionName += "[P]";
@@ -349,7 +351,6 @@ namespace WalkingTec.Mvvm.Mvc
             return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
         }
 
-
         [HttpPost]
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
@@ -370,7 +371,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
                 return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
             }
-            return Content($"{{\"code\": 1 , \"msg\": \"上传失败\", \"data\": {{\"src\": \"\"}}}}");
+            return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
         }
 
         [ActionDescription("获取文件名")]
@@ -485,9 +486,9 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (ctrlDes != null)
                     {
-                        pagetitle = ctrlDes.Description + " - ";
+                        pagetitle = ctrlDes.GetDescription() + " - ";
                     }
-                    pagetitle += actDes.Description;
+                    pagetitle += actDes.GetDescription();
                 }
             }
             else
@@ -509,7 +510,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                throw new Exception("您没有访问该页面的权限");
+                throw new Exception(Program._localizer["NoPrivilege"]);
             }
         }
 
@@ -655,7 +656,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Public]
         [HttpPost]
-        [CrossDomain]
         public IActionResult Login(string userid, string password)
         {
             var user = DC.Set<FrameworkUserBase>()
@@ -666,7 +666,7 @@ namespace WalkingTec.Mvvm.Mvc
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("登录失败");
+                return BadRequest(Program._localizer["LoginFailed"]);
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
@@ -692,7 +692,6 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [Public]
-        [CrossDomain]
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -807,6 +806,65 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        [Public]
+        public Dictionary<string, string> GetScriptLanguage()
+        {
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            rv.Add("DONOTUSE_Text_LoadFailed", Program._localizer["LoadFailed"]);
+            rv.Add("DONOTUSE_Text_SubmitFailed", Program._localizer["SubmitFailed"]);
+            rv.Add("DONOTUSE_Text_PleaseSelect", Program._localizer["PleaseSelect"]);
+            rv.Add("DONOTUSE_Text_FailedLoadData", Program._localizer["FailedLoadData"]);
+            return rv;
+        }
+        
+        [AllRights]
+        [HttpPost]
+        [ActionDescription("UploadForLayUIUEditor")]
+        public IActionResult UploadForLayUIUEditor(string _DONOT_USE_CS = "default")
+        {
+            CurrentCS = _DONOT_USE_CS ?? "default";
+            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
+            var vm = CreateVM<FileAttachmentVM>();
+
+            if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
+            {
+                //通过文件流方式上传附件
+                var FileData = Request.Form.Files[0];
+                vm.Entity.FileName = FileData.FileName;
+                vm.Entity.Length = FileData.Length;
+                vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
+            }
+            else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
+            {
+                //通过Base64方式上传附件
+                var FileData = Convert.FromBase64String(Request.Form["FileID"]);
+                vm.Entity.FileName = "SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg";
+                vm.Entity.Length = FileData.Length;
+                MemoryStream MS = new MemoryStream(FileData);
+                vm = FileHelper.GetFileByteForUpload(vm, MS, ConfigInfo, vm.Entity.FileName, sm);
+            }
+            vm.Entity.UploadTime = DateTime.Now;
+            vm.Entity.SaveFileMode = sm;
+            vm.Entity.IsTemprory = false;
+            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            {
+                vm.DoAdd();
+                string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
+                return Content($"{{\"Code\": 200 , \"Msg\": \"success\", \"Data\": {{\"src\": \"{url}\",\"FileName\":\"{vm.Entity.FileName}\"}}}}");
+            }
+            return Content($"{{\"Code\": 1 , \"Msg\": \"上传失败\", \"Data\": {{\"src\": \"\"}}}}");
+        }
+
+        [Public]
+        [ActionDescription("加载UEditor配置文件")]
+        [ResponseCache(Duration = 3600)]
+        [HttpGet]
+        public IActionResult UEditorOptions()
+        {
+            if (ConfigInfo.UEditorOptions == null)
+                throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
+            return Json(ConfigInfo.UEditorOptions);
+        }
     }
 
 }
