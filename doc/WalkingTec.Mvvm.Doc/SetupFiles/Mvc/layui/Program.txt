@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 

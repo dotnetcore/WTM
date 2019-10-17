@@ -37,19 +37,29 @@ namespace $ns$
                         {
                             c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
                         });
+                        x.AddSpaStaticFiles(configuration =>
+                        {
+                            configuration.RootPath = "ClientApp/build";
+                        });
                     });
                      webBuilder.Configure(x =>
                      {
-                         var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                         if (configs.IsQuickDebug == true)
-                         {
-                             x.UseSwagger();
-                             x.UseSwaggerUI(c =>
-                             {
-                                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                             });
-                         }
-                         x.UseFrameworkService();
+                        var env = x.ApplicationServices.GetService<IHostingEnvironment>();
+                        x.UseSwagger();
+                        x.UseSwaggerUI(c =>
+                        {
+                            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                        });
+                        x.UseSpaStaticFiles();
+                        x.UseFrameworkService();
+                        x.UseSpa(spa =>
+                        {
+                            spa.Options.SourcePath = "ClientApp";                        
+                            if (env.IsDevelopment())
+                            {
+                                spa.UseReactDevelopmentServer(npmScript: "start");
+                            }
+                        });
                      });
                  }
                  );
