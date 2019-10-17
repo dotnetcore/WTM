@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using System;
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             _controller.GlobaInfo.AllAccessUrls = new List<string>();
             _controller.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             _controller.GlobaInfo.AllModels = new List<Type>();
-            _controller.GlobaInfo.AllModule = new List<FrameworkModule>();
+            _controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
             _controller.UIService = new LayuiUIService();
             return _controller;
         }
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             _controller.GlobaInfo.AllAccessUrls = new List<string>();
             _controller.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             _controller.GlobaInfo.AllModels = new List<Type>();
-            _controller.GlobaInfo.AllModule = new List<FrameworkModule>();
+            _controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
             return _controller;
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -103,8 +103,8 @@ namespace WalkingTec.Mvvm.Core
 
             HSSFSheet enumSheet = (HSSFSheet)workbook.CreateSheet();
             HSSFRow enumSheetRow1 = (HSSFRow)enumSheet.CreateRow(0);
-            enumSheetRow1.CreateCell(0).SetCellValue("是");
-            enumSheetRow1.CreateCell(1).SetCellValue("否");
+            enumSheetRow1.CreateCell(0).SetCellValue(Program._localizer?["Yes"]);
+            enumSheetRow1.CreateCell(1).SetCellValue(Program._localizer?["No"]);
             enumSheetRow1.CreateCell(2).SetCellValue(this.GetType().Name); //为模板添加标记,必要时可添加版本号
 
             HSSFSheet dataSheet = (HSSFSheet)workbook.CreateSheet();

@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     {
         public new string ID { get; set; }
 
-        [Display(Name = "名称")]
+        [Display(Name = "DataPrivilegeName")]
         public string Name { get; set; }
     }
 

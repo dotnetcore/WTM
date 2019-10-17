@@ -1,13 +1,15 @@
 @using WalkingTec.Mvvm.Mvc;
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
   <wt:row items-per-row=" ItemsPerRowEnum.Two">
-    <wt:radio field="Entity.IsInside" yes-text="内部" no-text="外部" change-func="MenuTypeChange(data)" />
+    <wt:radio field="Entity.IsInside"yes-text="@Localizer["Inside"]" no-text="@Localizer["Outside"]" change-func="MenuTypeChange(data)" />
   </wt:row>
   <wt:row id="modelrow">
     <wt:combobox field="SelectedModule" items="AllModules" link-field="SelectedActionIDs"
-      trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)" />
+                 trigger-url="/_Admin/FrameworkMenu/GetActionsByModelId" enable-search="true" change-func="ModelChange(data)" />
     <wt:checkbox field="SelectedActionIDs" items="AllActions" />
   </wt:row>
   <wt:row id="urlrow">
@@ -21,13 +23,13 @@
     <wt:textbox field="Entity.DisplayOrder" />
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Two">
-    <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="/_Admin/FrameworkMenu/GetIconFontItems"/>
+    <wt:combobox field="IconFont" items="@IconFontsHelper.IconFontItems" enable-search="true" link-field="IconFontItem" trigger-url="/_Admin/FrameworkMenu/GetIconFontItems" />
     <wt:combobox field="IconFontItem" items="IConSelectItems" enable-search="true" />
   </wt:row>
   <wt:row items-per-row="ItemsPerRowEnum.Four">
-    <wt:switch field="Entity.ShowOnMenu" lay-text="是|否" />
-    <wt:switch field="Entity.FolderOnly" lay-text="是|否" />
-    <wt:switch field="Entity.IsPublic" lay-text="是|否" />
+    <wt:switch field="Entity.ShowOnMenu" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
+    <wt:switch field="Entity.FolderOnly" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
+    <wt:switch field="Entity.IsPublic" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
   </wt:row>
   <wt:selector list-vm="RoleListVM" field="SelectedRolesIDs" text-bind="RoleListVM.EntityList[0].RoleName">
     <wt:searchpanel vm="RoleListVM">

@@ -15,10 +15,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 
         protected override bool CheckIfCanDelete(object id, out string errorMessage)
         {
-            var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == id as Guid?);
+            Guid? checkid = Guid.Parse(id.ToString());
+            var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == checkid);
             if (check == true)
             {
-                errorMessage = "角色已被使用，无法删除";
+                errorMessage = Program._localizer["CannotDelete", Program._localizer["Role"]];
                 return false;
             }
             else

@@ -10,12 +10,12 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
 
-    [ActionDescription("角色管理")]
+    [ActionDescription("RoleManagement")]
     [ApiController]
     [Route("api/_FrameworkRole")]
 	public class _FrameworkRoleController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("Search")]
 		public string Search(FrameworkRoleSearcher searcher)
         {
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public FrameworkRoleVM Get(Guid id)
         {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("获取所有动作")]
+        [ActionDescription("GetPageActions")]
         [HttpGet("GetPageActions/{id}")]
         public FrameworkRoleMDVM2 GetPageActions(Guid id)
         {
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("修改角色权限")]
+        [ActionDescription("PageFunction")]
         [HttpPut("EditPrivilege")]
         public IActionResult EditPrivilege(FrameworkRoleMDVM2 vm)
         {
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         [HttpPost("Add")]
         public IActionResult Add(FrameworkRoleVM vm)
         {
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(FrameworkRoleVM vm)
         {
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 		[HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkRoleBatchVM>();
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
@@ -143,7 +143,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("ExportByIds")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -157,7 +157,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("下载模板")]
+        [ActionDescription("DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -172,7 +172,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         [HttpPost("Import")]
         public ActionResult Import(FrameworkRoleImportVM vm)
         {

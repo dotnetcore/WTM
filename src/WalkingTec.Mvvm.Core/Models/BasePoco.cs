@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace WalkingTec.Mvvm.Core
@@ -11,24 +11,24 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// CreateTime
         /// </summary>
-        [Display(Name = "创建时间")]
+        [Display(Name = "CreateTime")]
         public DateTime? CreateTime { get; set; }
         /// <summary>
         /// CreateBy
         /// </summary>
-        [Display(Name = "创建人")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "CreateBy")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
         public string CreateBy { get; set; }
         /// <summary>
         /// UpdateTime
         /// </summary>
-        [Display(Name = "修改时间")]
+        [Display(Name = "UpdateTime")]
         public DateTime? UpdateTime { get; set; }
         /// <summary>
         /// UpdateBy
         /// </summary>
-        [Display(Name = "修改人")]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "UpdateBy")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
         public string UpdateBy { get; set; }
     }
 }
