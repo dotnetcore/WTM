@@ -230,11 +230,15 @@ namespace WalkingTec.Mvvm.Mvc
                     var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
                     {
-                        _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                        try
+                        {
+                            _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                        }
+                        catch { }
                     }
                     if(_localizer == null)
                     {
-                        _localizer = GlobalServices.GetRequiredService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();                             
+                        _localizer = WalkingTec.Mvvm.Core.Program._localizer;
                     }
                 }
                 return _localizer;
