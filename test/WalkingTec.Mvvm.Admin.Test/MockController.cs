@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpRequest(new DefaultHttpContext()));
+            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
