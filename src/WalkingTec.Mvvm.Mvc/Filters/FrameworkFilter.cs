@@ -232,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Result is PartialViewResult)
             {
                 var model = (context.Result as PartialViewResult).ViewData.Model as BaseVM;
-                if (model == null)
+                if ((context.Result as PartialViewResult).ViewData.Model == null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as PartialViewResult).ViewData.Model = model;
@@ -277,7 +277,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Result is ViewResult)
             {
                 var model = (context.Result as ViewResult).ViewData.Model as BaseVM;
-                if (model == null)
+                if ((context.Result as ViewResult).ViewData.Model == null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;

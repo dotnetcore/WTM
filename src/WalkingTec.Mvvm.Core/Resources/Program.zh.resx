@@ -381,6 +381,12 @@
   <data name="GetRoles" xml:space="preserve">
     <value>获取角色</value>
   </data>
+  <data name="Goto" xml:space="preserve">
+    <value>到第</value>
+  </data>
+  <data name="GotoButtonText" xml:space="preserve">
+    <value>确定</value>
+  </data>
   <data name="Group" xml:space="preserve">
     <value>用户组</value>
   </data>
@@ -555,6 +561,9 @@
   <data name="Outside" xml:space="preserve">
     <value>外部</value>
   </data>
+  <data name="Page" xml:space="preserve">
+    <value>页</value>
+  </data>
   <data name="PageError" xml:space="preserve">
     <value>页面发生错误</value>
   </data>
@@ -618,8 +627,17 @@
   <data name="Prefix" xml:space="preserve">
     <value>前缀</value>
   </data>
+  <data name="Preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>权限</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>条</value>
+  </data>
+  <data name="RecordsPerPage" xml:space="preserve">
+    <value>条/页</value>
   </data>
   <data name="RefreshMenu" xml:space="preserve">
     <value>刷新菜单</value>

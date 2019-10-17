@@ -64,16 +64,19 @@ namespace WalkingTec.Mvvm.Doc.Models
         public DateTime? EnRollDate { get; set; }
 
         [Display(Name = "日期区间")]
-        public DateTime? EnRollDateRange { get; set; }
+        public DateRange EnRollDateRange { get; set; }
 
         [Display(Name = "年份区间")]
-        public int? EnYearRange { get; set; }
+        public DateRange EnYearRange { get; set; }
 
         [Display(Name = "月份区间")]
-        public int? EnMonthRange { get; set; }
+        public DateRange EnMonthRange { get; set; }
 
         [Display(Name = "时间区间")]
         public string EnTimeRange { get; set; }
+
+        [Display(Name = "修改时间")]
+        public DateRange EnTimeRange0 { get; set; }
 
         [Display(Name = "英文日历")]
         public string EnTimeRange1 { get; set; }
@@ -85,7 +88,7 @@ namespace WalkingTec.Mvvm.Doc.Models
         public string EnTimeRange3 { get; set; }
 
         [Display(Name = "事件")]
-        public string EnTimeRange4 { get; set; }
+        public DateRange EnTimeRange4 { get; set; }
 
         [Display(Name = "专业")]
         public List<StudentMajor> Majors { get; set; }

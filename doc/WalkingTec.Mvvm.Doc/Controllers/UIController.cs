@@ -96,6 +96,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("UEditor")]
+        public IActionResult UEditor()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
         [ActionDescription("Others")]
         public IActionResult Others()
         {

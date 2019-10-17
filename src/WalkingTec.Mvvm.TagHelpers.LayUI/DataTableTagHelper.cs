@@ -454,7 +454,15 @@ layui.use(['table'], function(){{
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
-    {(page ? string.Empty : ",page:{layout:['count']}")}
+    ,page:{{
+        {(page?string.Empty: "layout:['count'],")}
+        rpptext:'{Program._localizer["RecordsPerPage"]}',
+        totaltext:'{Program._localizer["Total"]}',
+        recordtext:'{Program._localizer["Record"]}',
+        gototext:'{Program._localizer["Goto"]}',
+        pagetext:'{Program._localizer["Page"]}',
+        oktext:'{Program._localizer["GotoButtonText"]}',
+    }}
     {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(page
         ? (Limits == null || Limits.Length == 0
@@ -791,7 +799,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                             }
                             else
                             {
-                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined,{item.Max.ToString().ToLower()});";
                             }
                         }
                         else

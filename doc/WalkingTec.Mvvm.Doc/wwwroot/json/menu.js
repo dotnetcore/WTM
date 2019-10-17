@@ -23,8 +23,9 @@
                         { "name": "/Global", "title": "全局变量", "jump": "/Global/Global" },
                         { "name": "/CS", "title": "数据库分库", "jump": "/Global/CS" },
                         { "name": "/DP", "title": "数据权限", "jump": "/Global/DP" },
-                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" }
-                    ]
+                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" },
+                        { "name": "/Route", "title": "多语言", "jump": "/Global/MultiLanguages" }
+                   ]
                 },
                 {
                     "name": "Model",
@@ -105,7 +106,8 @@
                                 { "name": "/DateTime", "title": "DateTime", "jump": "/UI/DateTime" },
                                 { "name": "/Upload", "title": "Upload", "jump": "/UI/Upload" },
                                 { "name": "/Selector", "title": "Selector", "jump": "/UI/Selector" },
-                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" }
+                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" },
+                                { "name": "/UEditor", "title": "UEditor", "jump": "/UI/UEditor" }
                             ]
                         },
                         { "name": "/Grid", "title": "数据表格", "jump": "/UI/Grid" },

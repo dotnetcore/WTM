@@ -70,6 +70,129 @@ protected override List<GridAction> InitGridAction()
 }
 </wt:code>
 
+<wt:fieldset field-set-style="Simple" title="功能按钮的其他设置">
+</wt:fieldset>
+  <p>通过MakeAction和MakeStandardAction方法来创建功能按钮时，可以使用流函数来对按钮进行更多设置</p>
+  <p>功能按钮可以设置的属性有：</p>
+      <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">属性</th>
+                <th lay-data="{field:'joinTime', width:400}">描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>areaName</td>
+                <td>按钮调用的Area名称，如果没有Area就为空</td>
+            </tr>
+            <tr>
+                <td>controllerName</td>
+                <td>按钮调用的Controller名称</td>
+            </tr>
+            <tr>
+                <td>actionName</td>
+                <td>按钮调用的方法名称</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>按钮上的文字</td>
+            </tr>
+            <tr>
+                <td>dialogTitle</td>
+                <td>弹出窗口的标题</td>
+            </tr>
+            <tr>
+                <td>paraType</td>
+                <td>
+                    参数类型。
+                </td>
+            </tr>
+            <tr>
+                <td>dialogWidth</td>
+                <td>弹出窗口的宽度，可为空</td>
+            </tr>
+            <tr>
+                <td>dialogHeight</td>
+                <td>弹出窗口的高度，可为空</td>
+            </tr>
+            <tr>
+                <td>IconCls</td>
+                <td>按钮的图标，指定css文件中的某个 class</td>
+            </tr>
+            <tr>
+                <td>ShowDialog</td>
+                <td>是否需要弹出窗口。有的按钮不需要弹出窗口，如果不弹窗口，则框架只会在后台调用指定方法</td>
+            </tr>
+            <tr>
+                <td>ShowInRow</td>
+                <td>按钮是否要出现在每一行的操作列上</td>
+            </tr>
+            <tr>
+                <td>BindVisiableColName</td>
+                <td><p>用于根据行内数据判断是否显示行内按钮</p>
+                    <p>对于ShowInRow的动作，绑定一个字符串格式的隐藏列的列名，当该隐藏列返回字符串'true'的时候，行内按钮才显示</p>
+                </td>
+            </tr>
+            <tr>
+                <td>HideOnToolBar</td>
+                <td>列表上方的按钮条是否应该隐藏这个按钮</td>
+            </tr>
+            <tr>
+                <td>Max</td>
+                <td>当ShowDialog=true时，指定弹出窗口是否默认最大化</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+<wt:fieldset field-set-style="Simple" title="根据行内数据显示或隐藏按钮">
+</wt:fieldset>
+  <p>所有行内显示的动作按钮，都可以根据本行的其他字段来控制是否显示</p>
+  <p>具体方法是对某个按钮调用BindVisiableColName方法，设置某个隐藏列的名字，如果该隐藏列返回字符串'true'，那么这个动作按钮才会显示</p>
+  <p>请看下面的例子</p>
+    <wt:code title="InitGridAction">
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            return new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+                //使用SetBindVisiableColName方法将修改按钮是否显示关联到CanEdit这个列上
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetBindVisiableColName("CanEdit"),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.ExportExcel, "导出","")
+            };
+        }
+
+        protected override IEnumerable&lt;IGridColumn&lt;MyUser_View&gt;&gt; InitGridHeader()
+        {
+            return new List&lt;GridColumn&lt;MyUser_View&gt;&gt;{
+                this.MakeGridHeader(x =&gt; x.ITCode),
+                this.MakeGridHeader(x =&gt; x.Name),
+                //添加一个叫做CanEdit的列，使用SetHide方法使其隐藏，使用SetFormat函数根据本行数据来决定返回true或者false
+                this.MakeGridHeader(x=&gt;"CanEdit").SetHide().SetFormat((e,v)=&gt;{
+                    if (e.Sex == SexEnum.Male){
+                        return "true";
+                    }
+                    else {
+                        return "false";
+                    }
+                }),
+                this.MakeGridHeaderAction(width: 200)
+            };
+        }
+</wt:code>
+  <wt:quote>
+    <p>以上代码演示了将修改按钮绑定到模型中并不存在的叫CanEdit这个隐藏列上，然后CanEdit列判断行内数据返回true或者false来控制这行的修改按钮是否显示</p>
+    <p>上面代码的效果就是用户是男性就显示修改按钮，女性就不显示</p>
+    <p>请注意MakeGridHeader方法除了可以绑定某个字段之外，也可以使用上面代码所展示的，直接输出某个模型中不存在的字段</p>
+  </wt:quote>
+
 <wt:fieldset field-set-style="Simple" title="功能按钮获取列表数据">
   </wt:fieldset>
   <wt:quote>
