@@ -104,6 +104,8 @@ namespace WalkingTec.Mvvm.Core
 
         public string BindVisiableColName { get; set; }
 
+        public bool Max { get; set; }
+
         #region 请求链接相关
 
         /// <summary>

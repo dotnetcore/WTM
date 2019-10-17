@@ -789,7 +789,7 @@ where S : struct
             }
         }
 
-        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null) where TModel:TopBasePoco
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             if (Ids == null)
             {

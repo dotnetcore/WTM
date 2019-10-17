@@ -384,6 +384,12 @@
   <data name="GetRoles" xml:space="preserve">
     <value>GetRoles</value>
   </data>
+  <data name="Goto" xml:space="preserve">
+    <value>Goto</value>
+  </data>
+  <data name="GotoButtonText" xml:space="preserve">
+    <value>GO</value>
+  </data>
   <data name="Group" xml:space="preserve">
     <value>Group</value>
   </data>
@@ -558,6 +564,9 @@
   <data name="Outside" xml:space="preserve">
     <value>Outside</value>
   </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
   <data name="PageError" xml:space="preserve">
     <value>Error occurred</value>
   </data>
@@ -621,8 +630,17 @@
   <data name="Prefix" xml:space="preserve">
     <value>Prefix</value>
   </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record(s)</value>
+  </data>
+  <data name="RecordsPerPage" xml:space="preserve">
+    <value />
   </data>
   <data name="RefreshMenu" xml:space="preserve">
     <value>Refresh menu</value>
@@ -733,7 +751,7 @@
     <value>Upload failed</value>
   </data>
   <data name="UploadTemplate" xml:space="preserve">
-    <value>Upload template</value>
+    <value>Template</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>

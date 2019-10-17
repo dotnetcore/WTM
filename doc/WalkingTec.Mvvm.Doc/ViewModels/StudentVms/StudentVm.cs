@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -47,6 +47,13 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 new ComboSelectListItem{ Text = "复旦大学", Value = "复旦大学"},
                 new ComboSelectListItem{ Text = "浙江大学", Value = "浙江大学"},
            };
+
+            Entity.EnRollDateRange = DateRange.Week;
+            Entity.EnYearRange = DateRange.Today;
+            Entity.EnYearRange.SetStartTime(new DateTime(2016, 1, 1));
+            Entity.EnMonthRange = new DateRange(new DateTime(2018, 4, 1), new DateTime(2018, 8, 8));
+            Entity.EnTimeRange4 = DateRange.UtcDefault;
+            Entity.EnTimeRange0 = new DateRange(new DateTime(2018, 4, 29), new DateTime(2018, 8, 8));
 
             StuCount0 = 40;
             StuCount1 = 60;

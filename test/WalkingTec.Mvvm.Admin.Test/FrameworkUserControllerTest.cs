@@ -176,6 +176,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserBatchVM));
             (rv.Model as FrameworkUserBatchVM).ListVM.DoSearch();
+
             FrameworkUserBatchVM vm = rv.Model as FrameworkUserBatchVM;
             vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
             _controller.DoBatchDelete(vm, null);
