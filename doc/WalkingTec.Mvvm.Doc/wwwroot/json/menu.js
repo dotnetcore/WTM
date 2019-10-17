@@ -106,7 +106,8 @@
                                 { "name": "/DateTime", "title": "DateTime", "jump": "/UI/DateTime" },
                                 { "name": "/Upload", "title": "Upload", "jump": "/UI/Upload" },
                                 { "name": "/Selector", "title": "Selector", "jump": "/UI/Selector" },
-                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" }
+                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" },
+                                { "name": "/UEditor", "title": "UEditor", "jump": "/UI/UEditor" }
                             ]
                         },
                         { "name": "/Grid", "title": "数据表格", "jump": "/UI/Grid" },
