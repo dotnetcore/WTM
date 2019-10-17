@@ -219,7 +219,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             services.Configure<FormOptions>(y =>
             {
-                y.ValueLengthLimit = int.MaxValue;
+                y.ValueLengthLimit = int.MaxValue-20480;
                 y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
             });
 
