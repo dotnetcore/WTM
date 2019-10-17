@@ -1,12 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
-    <ApplicationIcon />
     <OutputType>Library</OutputType>
-    <StartupObject />
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
