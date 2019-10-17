@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                 this.MakeGridHeader(x => x.IsValid),
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
-                this.MakeGridHeader(x=>x.CanEdit).SetHide().SetFormat((e,v)=>{
+                this.MakeGridHeader(x=>"CanEdit").SetHide().SetFormat((e,v)=>{
                     if (e.Sex == SexEnum.Male){
                         return "true";
                     }
@@ -96,7 +96,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         [Display(Name = "用户组名称")]
         public String GroupName_view { get; set; }
 
-        public string CanEdit { get; set; }
+        //public string CanEdit { get; set; }
 
     }
 }

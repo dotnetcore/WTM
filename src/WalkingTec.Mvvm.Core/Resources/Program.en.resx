@@ -630,6 +630,9 @@
   <data name="Prefix" xml:space="preserve">
     <value>Prefix</value>
   </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>
   </data>

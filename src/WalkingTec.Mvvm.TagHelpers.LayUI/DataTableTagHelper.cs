@@ -799,7 +799,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                             }
                             else
                             {
-                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined,{item.Max.ToString().ToLower()});";
                             }
                         }
                         else

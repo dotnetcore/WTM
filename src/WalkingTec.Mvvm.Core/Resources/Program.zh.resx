@@ -627,6 +627,9 @@
   <data name="Prefix" xml:space="preserve">
     <value>前缀</value>
   </data>
+  <data name="Preview" xml:space="preserve">
+    <value>预览</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>权限</value>
   </data>
