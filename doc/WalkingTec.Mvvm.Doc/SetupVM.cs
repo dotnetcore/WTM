@@ -134,11 +134,11 @@ namespace WalkingTec.Mvvm.Doc
             {
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
-                    version = "2.3.9";
+                    version = Utils.GetNugetVersion(false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
-                    version = "3.0.0-rc1";
+                    version = version = Utils.GetNugetVersion(true);
                     break;
                 default:
                     break;
@@ -468,6 +468,14 @@ module.exports = (app) => {{
             var textStreamReader = new StreamReader(assembly.GetManifestResourceStream(loc));
             string content = textStreamReader.ReadToEnd();
             textStreamReader.Close();
+
+            if (fileName.EndsWith("Dockerfile.txt"))
+            {
+                if (DotnetVersion == DotnetVersionEnum.dotnet3_0)
+                {
+                    content = content.Replace("2.2", "3.0");
+                }
+            }
             return content;
         }
 
