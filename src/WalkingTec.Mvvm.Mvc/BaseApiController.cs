@@ -12,6 +12,7 @@ using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Core.Extensions;
+using Microsoft.Extensions.Localization;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -100,6 +101,26 @@ namespace WalkingTec.Mvvm.Mvc
 
 
         public string BaseUrl { get; set; }
+        private IStringLocalizer _localizer;
+        public IStringLocalizer Localizer
+        {
+            get
+            {
+                if (_localizer == null)
+                {
+                    var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    if (programtype != null)
+                    {
+                        _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                    }
+                    if (_localizer == null)
+                    {
+                        _localizer = GlobalServices.GetRequiredService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
+                    }
+                }
+                return _localizer;
+            }
+        }
 
         public ActionLog Log { get; set; }
 
@@ -138,6 +159,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.UIService = new DefaultUIService();
             rv.Log = this.Log;
             rv.ControllerName = this.GetType().FullName;
+            rv.Localizer = this.Localizer;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using Microsoft.Extensions.Localization;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -65,6 +66,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.DataContextCI = ((GlobalData)context.HttpContext.RequestServices.GetService(typeof(GlobalData))).DataContextCI;
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
+                    model.Localizer = ctrl.Localizer;
+                    var programtype = ctrl.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    if (programtype != null)
+                    {
+                        model.Localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                    }
                     if (ctrl is BaseController c)
                     {
                         model.WindowIds = c.WindowIds;

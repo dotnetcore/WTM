@@ -35,12 +35,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             //检查原密码是否正确，如不正确则输出错误
             if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null)
             {
-                MSD.AddModelError("OldPassword", Program.Localizer["OldPasswrodWrong"]);
+                MSD.AddModelError("OldPassword", Localizer["OldPasswrodWrong"]);
             }
             //检查两次新密码是否输入一致，如不一致则输出错误
             if (NewPassword != NewPasswordComfirm)
             {
-                MSD.AddModelError("NewPasswordComfirm", Program.Localizer["PasswordNotSame"]);
+                MSD.AddModelError("NewPasswordComfirm", Localizer["PasswordNotSame"]);
             }
         }
 
