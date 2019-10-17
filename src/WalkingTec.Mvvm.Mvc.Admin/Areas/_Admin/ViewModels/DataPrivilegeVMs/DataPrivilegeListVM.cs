@@ -78,11 +78,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user, x.dp.TableName }, x => x.dp.RelateId)
+                    .GroupBy(x => new { x.user.Name,x.user.ID, x.dp.TableName }, x => x.dp.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
-                        TargetId = x.Key.user.ID,
-                        Name = x.Key.user.Name,
+                        TargetId = x.Key.ID,
+                        Name = x.Key.Name,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
                         DpType = (int)Searcher.DpType
@@ -95,16 +95,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, group = group })
                     .CheckContain(Searcher.Name, x => x.group.GroupName)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.group, x.dp.TableName }, x => x.dp.RelateId)
-                            
-           .Select(x => new DataPrivilege_ListView
-                    {
-                        TargetId = x.Key.group.ID,
-                        Name = x.Key.group.GroupName,
-                        TableName = x.Key.TableName,
-                        RelateIDs = x.Count(),
-                        DpType = (int)Searcher.DpType
-           })
+                       .GroupBy(x => new { x.group.GroupName,x.group.ID, x.dp.TableName }, x => x.dp.RelateId)
+                       .Select(x => new DataPrivilege_ListView
+                        {
+                           TargetId = x.Key.ID,
+                           Name = x.Key.GroupName,
+                           TableName = x.Key.TableName,
+                           RelateIDs = x.Count(),
+                           DpType = (int)Searcher.DpType
+                       })
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
 
             }
@@ -115,7 +114,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     /// <summary>
     /// 如果需要显示树类型的列表需要继承ITreeData`T`接口，并实现Children,Parent,ParentID属性
     /// </summary>
-    public class DataPrivilege_ListView : BasePoco
+    public class DataPrivilege_ListView : TopBasePoco
     {
         [Display(Name = "DpTargetName")]
         public string Name { get; set; }
