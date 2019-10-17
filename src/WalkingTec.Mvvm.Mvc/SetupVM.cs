@@ -446,12 +446,12 @@ module.exports = (app) => {{
 
         private string GetResource(string fileName, string subdir = "")
         {
-            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs")
+            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs" || fileName == "DefaultProj.txt")
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
                     var index = fileName.IndexOf('.');
-                    fileName = fileName.Substring(0,index) + "3.txt";
+                    fileName = fileName.Substring(0,index) + "3" + fileName.Substring(index);
                 }
             }
             //获取编译在程序中的Controller原始代码文本
@@ -502,14 +502,14 @@ module.exports = (app) => {{
         }
 
 
-        //public void WriteDefaultFiles()
-        //{
-        //    File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
-        //    File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
-        //    if (UI == UIEnum.React)
-        //    {
-        //        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
-        //    }
-        //}
+        public void WriteDefaultFiles()
+        {
+            File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}{MainNs}.csproj", GetResource("DefaultProj.txt"), Encoding.UTF8);
+            File.WriteAllText($"{ExtraDir}{Path.DirectorySeparatorChar}{MainNs}.sln", GetResource("DefaultSolution.txt").Replace("$ns$", MainNs).Replace("$guid$", Guid.NewGuid().ToString()), Encoding.UTF8);
+            if (UI == UIEnum.React)
+            {
+                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
+            }
+        }
     }
 }

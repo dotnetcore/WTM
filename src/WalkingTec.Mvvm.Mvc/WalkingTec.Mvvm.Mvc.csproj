@@ -10,6 +10,7 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\DefaultProj3.txt" />
     <None Remove="SetupFiles\Mvc\layui\Program3.txt" />
     <None Remove="SetupFiles\Proj3.txt" />
     <None Remove="SetupFiles\Resourceen.txt" />
@@ -47,6 +48,7 @@
     <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
     <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
     <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
+    <EmbeddedResource Include="SetupFiles\DefaultProj3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\Proj3.txt" />
     <EmbeddedResource Include="SetupFiles\Resourceen.txt" />
