@@ -42,8 +42,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
-            log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
-            log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+            log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
+            log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
             log.ActionUrl = context.HttpContext.GetRemoteIpAddress();
             log.IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -257,9 +257,9 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         {
                             if (ctrlDes != null)
                             {
-                                pagetitle = ctrlDes.GetDescription() + " - ";
+                                pagetitle = ctrlDes.GetDescription(ctrl) + " - ";
                             }
-                            pagetitle += actDes.GetDescription();
+                            pagetitle += actDes.GetDescription(ctrl);
                         }
                     }
                     else
@@ -315,8 +315,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionTime = DateTime.Now;
                     log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
-                    log.ModuleName = ctrlDes?.GetDescription() ?? ctrlActDesc.ControllerName;
-                    log.ActionName = actDes?.GetDescription() ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
+                    log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
+                    log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;

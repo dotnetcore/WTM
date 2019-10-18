@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-    [ActionDescription("数据权限")]
+    [ActionDescription("DataPrivilege")]
     [ApiController]
     [Route("api/_DataPrivilege")]
     public class _DataPrivilegeController : BaseApiController
