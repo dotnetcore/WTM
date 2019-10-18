@@ -248,8 +248,8 @@ namespace WalkingTec.Mvvm.Mvc
                 var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
                 var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
                 //给日志的多语言属性赋值
-                log.ModuleName = controllerDes?.GetDescription() ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-                log.ActionName = actionDes?.GetDescription() ?? ex.Error.TargetSite.Name;
+                log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+                log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
                 if (postDes != null)
                 {
                     log.ActionName += "[P]";
@@ -475,21 +475,10 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult OutSide(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            var ctrlActDesc = this.ControllerContext.ActionDescriptor as ControllerActionDescriptor;
             string pagetitle = string.Empty;
             var menu = Utils.FindMenu(url);
             if (menu == null)
             {
-                var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                var actDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                if (actDes != null)
-                {
-                    if (ctrlDes != null)
-                    {
-                        pagetitle = ctrlDes.GetDescription() + " - ";
-                    }
-                    pagetitle += actDes.GetDescription();
-                }
             }
             else
             {

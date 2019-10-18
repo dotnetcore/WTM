@@ -726,6 +726,9 @@
   <data name="SubmitFailed" xml:space="preserve">
     <value>Failed to submit</value>
   </data>
+  <data name="SystemManagement" xml:space="preserve">
+    <value>System</value>
+  </data>
   <data name="TableName" xml:space="preserve">
     <value>Privilege name</value>
   </data>
