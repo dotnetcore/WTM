@@ -723,6 +723,9 @@
   <data name="SubmitFailed" xml:space="preserve">
     <value>提交失败</value>
   </data>
+  <data name="SystemManagement" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
   <data name="TableName" xml:space="preserve">
     <value>权限名称</value>
   </data>
