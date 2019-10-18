@@ -195,11 +195,11 @@ namespace WalkingTec.Mvvm.Mvc
                 options.DataAnnotationLocalizerProvider = (type, factory) => {
                     if (Core.Program.Buildindll.Any(x=>type.FullName.StartsWith(x)))
                     {
-                        var rv = factory.Create(coreType).WithCulture(new CultureInfo(con.Languages.Split(',')[0]));
+                        var rv = factory.Create(coreType);
                         if (setcore == false)
                         {
                             coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_localizer").SetValue(null, rv);
-                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType).WithCulture(new CultureInfo(con.Languages.Split(',')[0])));
+                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType));
                             layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
                             mvc.GetType("WalkingTec.Mvvm.Mvc.Program").GetProperty("_localizer").SetValue(null, rv);
                             admin?.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
@@ -263,9 +263,62 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
+            if (string.IsNullOrEmpty(configs.Languages) == false)
+            {
+                List<CultureInfo> supportedCultures = new List<CultureInfo>();
+                var lans = configs.Languages.Split(",");
+                foreach (var lan in lans)
+                {
+                    supportedCultures.Add(new CultureInfo(lan));
+                }
+
+                app.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
+            }
+
             app.UseResponseCaching();
+
+            bool InitDataBase = false;
             app.Use(async (context, next) =>
             {
+                if(InitDataBase == false)
+                {
+                    var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+                    foreach (var m in gd.AllModule)
+                    {
+                        if (m.IsApi == true)
+                        {
+                            foreach (var a in m.Actions)
+                            {
+                                var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
+                                if (u == null)
+                                {
+                                    u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+                                }
+                                if (u != null && u.EndsWith("/0"))
+                                {
+                                    u = u.Substring(0, u.Length - 2);
+                                    u = u + "/{id}";
+                                }
+                                a.Url = u;
+                            }
+                        }
+                    }
+
+                    var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+                    var cs = configs.ConnectionStrings.Select(x => x.Value);
+                    foreach (var item in cs)
+                    {
+                        var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
+                        dc.DataInit(gd.AllModule, test != null).Wait();
+                    }
+                    InitDataBase = true;
+                }
+
                 if (context.Request.Path == "/")
                 {
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
@@ -300,22 +353,6 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
-            if (string.IsNullOrEmpty(configs.Languages) == false)
-            {
-                List<CultureInfo> supportedCultures = new List<CultureInfo>();
-                var lans = configs.Languages.Split(",");
-                foreach (var lan in lans)
-                {
-                    supportedCultures.Add(new CultureInfo(lan));
-                }
-
-                app.UseRequestLocalization(new RequestLocalizationOptions
-                {
-                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
-                });
-            }
             if (customRoutes != null)
             {
                 app.UseMvc(customRoutes);
@@ -333,36 +370,6 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
 
-            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
-            foreach (var m in gd.AllModule)
-            {
-                if (m.IsApi == true)
-                {
-                    foreach (var a in m.Actions)
-                    {
-                        var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-                        if (u == null)
-                        {
-                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
-                        }
-                        if (u != null && u.EndsWith("/0"))
-                        {
-                            u = u.Substring(0, u.Length - 2);
-                            u = u + "/{id}";
-                        }
-                        a.Url = u;
-                    }
-                }
-            }
-
-
-            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            var cs = configs.ConnectionStrings.Select(x => x.Value);
-            foreach (var item in cs)
-            {
-                var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
-                dc.DataInit(gd.AllModule, test != null).Wait();
-            }
             return app;
         }
 
