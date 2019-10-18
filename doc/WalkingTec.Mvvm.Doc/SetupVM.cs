@@ -147,25 +147,24 @@ namespace WalkingTec.Mvvm.Doc
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
-            string resourcedir = MainDir;
+            string resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             string testdir = MainDir + ".Test";
             string vmns = MainNs + ".ViewModels";
             string datans = MainNs;
             string modelns = MainNs;
             string testns = MainNs + ".Test";
             Directory.CreateDirectory($"{MainDir}.Test");
+            Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
             if (ProjectType == ProjectTypeEnum.Single)
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels");
-                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
                 }
                 vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
-                resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             }
             else
             {

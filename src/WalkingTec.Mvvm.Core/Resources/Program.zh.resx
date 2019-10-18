@@ -135,6 +135,9 @@
   <data name="Address" xml:space="preserve">
     <value>地址</value>
   </data>
+  <data name="Admin" xml:space="preserve">
+    <value>超级管理员</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>全部</value>
   </data>
@@ -321,6 +324,9 @@
   <data name="Error" xml:space="preserve">
     <value>错误</value>
   </data>
+  <data name="ErrorHandle" xml:space="preserve">
+    <value>错误处理</value>
+  </data>
   <data name="ErrorMsg" xml:space="preserve">
     <value>错误信息</value>
   </data>
@@ -360,6 +366,9 @@
   <data name="ForSelect" xml:space="preserve">
     <value>待选择</value>
   </data>
+  <data name="Framework" xml:space="preserve">
+    <value>框架</value>
+  </data>
   <data name="GenApi" xml:space="preserve">
     <value>生成Api</value>
   </data>
@@ -369,6 +378,15 @@
   <data name="GetActionsByModelId" xml:space="preserve">
     <value>获取动作</value>
   </data>
+  <data name="GetEmptyData" xml:space="preserve">
+    <value>获取空行数据</value>
+  </data>
+  <data name="GetFile" xml:space="preserve">
+    <value>获取文件</value>
+  </data>
+  <data name="GetFileName" xml:space="preserve">
+    <value>获取文件名</value>
+  </data>
   <data name="GetFolders" xml:space="preserve">
     <value>获取目录</value>
   </data>
@@ -377,6 +395,9 @@
   </data>
   <data name="GetPageActions" xml:space="preserve">
     <value>获取所有动作</value>
+  </data>
+  <data name="GetPagingData" xml:space="preserve">
+    <value>获取分页数据</value>
   </data>
   <data name="GetRoles" xml:space="preserve">
     <value>获取角色</value>
@@ -723,6 +744,9 @@
   <data name="SubmitFailed" xml:space="preserve">
     <value>提交失败</value>
   </data>
+  <data name="SystemManagement" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
   <data name="TableName" xml:space="preserve">
     <value>权限名称</value>
   </data>
@@ -740,6 +764,9 @@
   </data>
   <data name="UpdateDone" xml:space="preserve">
     <value>更新成功</value>
+  </data>
+  <data name="UpdateModelProperty" xml:space="preserve">
+    <value>修改属性</value>
   </data>
   <data name="UpdateTime" xml:space="preserve">
     <value>修改时间</value>
@@ -764,6 +791,9 @@
   </data>
   <data name="Valid" xml:space="preserve">
     <value>有效</value>
+  </data>
+  <data name="ViewFile" xml:space="preserve">
+    <value>查看文件</value>
   </data>
   <data name="VMName" xml:space="preserve">
     <value>模块</value>

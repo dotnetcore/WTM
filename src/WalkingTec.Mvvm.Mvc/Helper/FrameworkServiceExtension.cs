@@ -187,21 +187,14 @@ namespace WalkingTec.Mvvm.Mvc
                 var layuidll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.TagHelpers.LayUI.dll").FirstOrDefault();
                 var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                 bool setcore = false;
-                string[] buildindll = new string[]
-                {
-                    "WalkingTec.Mvvm.Core",
-                    "WalkingTec.Mvvm.Mvc",
-                    "WalkingTec.Mvvm.Admin",
-                    "WalkingTec.Mvvm.Taghelpers"
-                };
                 options.DataAnnotationLocalizerProvider = (type, factory) => {
-                    if (buildindll.Any(x=>type.FullName.StartsWith(x)))
+                    if (Core.Program.Buildindll.Any(x=>type.FullName.StartsWith(x)))
                     {
-                        var rv = factory.Create(coreType);
-                        if(setcore == false)
+                        var rv = factory.Create(coreType).WithCulture(new CultureInfo(con.Languages.Split(',')[0]));
+                        if (setcore == false)
                         {
                             coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_localizer").SetValue(null, rv);
-                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType));
+                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType).WithCulture(new CultureInfo(con.Languages.Split(',')[0])));
                             layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
                             mvc.GetType("WalkingTec.Mvvm.Mvc.Program").GetProperty("_localizer").SetValue(null, rv);
                             admin?.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
@@ -564,7 +557,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (attrs.Length > 0)
                 {
                     var ada = attrs[0] as ActionDescriptionAttribute;
-                    var nameKey = ada.GetDescription();
+                    var nameKey = ada.GetDescription(ctrl);
                     model.ModuleName = nameKey;
                 }
                 else
@@ -607,7 +600,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            var nameKey = ada.GetDescription();
+                            var nameKey = ada.GetDescription(ctrl);
                             action.ActionName = nameKey;
                         }
                         else
@@ -657,7 +650,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            string nameKey = ada.GetDescription();
+                            string nameKey = ada.GetDescription(ctrl);
                             action.ActionName = nameKey;
                         }
                         else
