@@ -6,17 +6,17 @@
     <!-- 头部区域 -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item layadmin-flexible" lay-unselect>
-        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+        <a href="javascript:;" layadmin-event="flexible" title="@Model.Localizer["HideShow"]">
           <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
         </a>
       </li>
       <li class="layui-nav-item layui-hide-xs" lay-unselect>
-        <a href="https://wtmdoc.walkingtec.cn" target="_blank" title="WTM文档">
+        <a href="https://wtmdoc.walkingtec.cn" target="_blank" title="@Model.Localizer["WtmDoc"]">
           <i class="layui-icon layui-icon-website"></i>
         </a>
       </li>
       <li class="layui-nav-item" lay-unselect>
-        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+        <a href="javascript:;" layadmin-event="refresh" title="@Model.Localizer["Refresh"]">
           <i class="layui-icon layui-icon-refresh-3"></i>
         </a>
       </li>
@@ -43,25 +43,25 @@
         </a>
         <dl class="layui-nav-child">
           <dd>
-            <wt:linkbutton url="/Login/ChangePassword" window-width="400" text="修改密码" is-link="true" />
+            <wt:linkbutton url="/Login/ChangePassword" window-width="400" text="@Model.Localizer["ChangePassword"]" is-link="true" />
           </dd>
-          <dd><a href="javascript:;" lay-href="/">返回首页</a></dd>
+          <dd><a href="javascript:;" lay-href="/">@Model.Localizer["BackHome"]</a></dd>
           @{
             if(ViewData["debug"] is bool debug && debug)
             {
               <dd>
-                <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="代码生成器"
-                  window-title="代码生成器" />
+                <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="@Model.Localizer["CodeGen"]"
+                  window-title="@Model.Localizer["CodeGen"]" />
               </dd>
                <dd>
-                <wt:linkbutton url="~/swagger" target="ButtonTargetEnum.newwindow" is-link="true" text="Api文档"
-                  window-title="API文档" />
+                <wt:linkbutton url="~/swagger" target="ButtonTargetEnum.newwindow" is-link="true" text="@Model.Localizer["ApiDoc"]"
+                  window-title="@Model.Localizer["ApiDoc"]" />
               </dd>
              }
         }
         </dl>
       </li>
-      <li class="layui-nav-item"><a href="/Login/Logout">退出</a></li>
+      <li class="layui-nav-item"><a href="/Login/Logout">@Model.Localizer["LogOut"]</a></li>
     </ul>
   </div>
 
@@ -142,9 +142,9 @@
               <li class="layui-nav-item" lay-unselect>
                 <a href="javascript:;"></a>
                 <dl class="layui-nav-child layui-anim-fadein">
-                  <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
-                  <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
-                  <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                  <dd layadmin-event="closeThisTabs"><a href="javascript:;">@Model.Localizer["CloseThisTag"]</a></dd>
+                  <dd layadmin-event="closeOtherTabs"><a href="javascript:;">@Model.Localizer["CloseOtherTags"]</a></dd>
+                  <dd layadmin-event="closeAllTabs"><a href="javascript:;">@Model.Localizer["CloseAllTags"]</a></dd>
                 </dl>
               </li>
             </ul>
@@ -166,6 +166,3 @@
   <!-- 辅助元素，一般用于移动设备下遮罩 -->
   <div class="layadmin-body-shade" layadmin-event="shade"></div>
 </div>
-<script>
-  
-</script>
