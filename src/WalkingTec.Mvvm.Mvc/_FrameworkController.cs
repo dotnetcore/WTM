@@ -21,7 +21,7 @@ using WalkingTec.Mvvm.Mvc.Model;
 namespace WalkingTec.Mvvm.Mvc
 {
     [AllRights]
-    [ActionDescription("框架")]
+    [ActionDescription("Framework")]
     public class _FrameworkController : BaseController
     {
         private static JsonSerializerSettings _jsonSerializerSettings;
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Mvc
             return PartialView(listVM);
         }
 
-        [ActionDescription("获取单行空数据")]
+        [ActionDescription("GetEmptyData")]
         public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
         {
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="_DONOT_USE_CS"></param>
         /// <returns></returns>
         [HttpPost]
-        [ActionDescription("获取分页数据")]
+        [ActionDescription("GetPagingData")]
         public IActionResult GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
         {
             var qs = new Dictionary<string, object>();
@@ -149,7 +149,6 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="value">属性值</param>
         /// <returns></returns>
         [HttpPost]
-        [ActionDescription("修改属性")]
         public IActionResult UpdateModelProperty(string _DONOT_USE_VMNAME, Guid id, string field, string value)
         {
             if (value == null && Microsoft.Extensions.Primitives.StringValues.IsNullOrEmpty(Request.Form[nameof(value)]))
@@ -171,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="_DONOT_USE_CS"></param>
         /// <returns></returns>
         [HttpPost]
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         public IActionResult GetExportExcel(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
             var qs = new Dictionary<string, object>();
@@ -214,7 +213,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ActionDescription("获取模板")]
+        [ActionDescription("DownloadTemplate")]
         public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
@@ -233,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         [Public]
-        [ActionDescription("错误处理")]
+        [ActionDescription("ErrorHandle")]
         public IActionResult Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -374,7 +373,7 @@ namespace WalkingTec.Mvvm.Mvc
             return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
         }
 
-        [ActionDescription("获取文件名")]
+        [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
@@ -382,7 +381,7 @@ namespace WalkingTec.Mvvm.Mvc
             return Ok(vm.Entity.FileName);
         }
 
-        [ActionDescription("获取文件")]
+        [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
@@ -443,7 +442,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        [ActionDescription("查看文件")]
+        [ActionDescription("ViewFile")]
         public IActionResult ViewFile(Guid id, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";

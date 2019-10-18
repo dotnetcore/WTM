@@ -135,6 +135,9 @@
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
@@ -321,6 +324,9 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="ErrorHandle" xml:space="preserve">
+    <value>Error handling</value>
+  </data>
   <data name="ErrorMsg" xml:space="preserve">
     <value>Error message</value>
   </data>
@@ -363,6 +369,9 @@
   <data name="ForSelect" xml:space="preserve">
     <value>For selection</value>
   </data>
+  <data name="Framework" xml:space="preserve">
+    <value>Framework</value>
+  </data>
   <data name="GenApi" xml:space="preserve">
     <value>Generate Api</value>
   </data>
@@ -372,6 +381,15 @@
   <data name="GetActionsByModelId" xml:space="preserve">
     <value>GetActionsByModelId</value>
   </data>
+  <data name="GetEmptyData" xml:space="preserve">
+    <value>Get empry row</value>
+  </data>
+  <data name="GetFile" xml:space="preserve">
+    <value>Get file</value>
+  </data>
+  <data name="GetFileName" xml:space="preserve">
+    <value>Get file name</value>
+  </data>
   <data name="GetFolders" xml:space="preserve">
     <value>GetFolders</value>
   </data>
@@ -380,6 +398,9 @@
   </data>
   <data name="GetPageActions" xml:space="preserve">
     <value>GetPageActions</value>
+  </data>
+  <data name="GetPagingData" xml:space="preserve">
+    <value>Get paging data</value>
   </data>
   <data name="GetRoles" xml:space="preserve">
     <value>GetRoles</value>
@@ -747,6 +768,9 @@
   <data name="UpdateDone" xml:space="preserve">
     <value>Update successfully</value>
   </data>
+  <data name="UpdateModelProperty" xml:space="preserve">
+    <value>Update model</value>
+  </data>
   <data name="UpdateTime" xml:space="preserve">
     <value>Update time</value>
   </data>
@@ -770,6 +794,9 @@
   </data>
   <data name="Valid" xml:space="preserve">
     <value>Valid</value>
+  </data>
+  <data name="ViewFile" xml:space="preserve">
+    <value>View file</value>
   </data>
   <data name="VMName" xml:space="preserve">
     <value>VMName</value>

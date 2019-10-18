@@ -120,8 +120,32 @@
   <data name="Account" xml:space="preserve">
     <value>Account</value>
   </data>
+  <data name="ApiDoc" xml:space="preserve">
+    <value>Api Doc</value>
+  </data>
+  <data name="BackHome" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>Change my password</value>
+  </data>
+  <data name="CloseAllTags" xml:space="preserve">
+    <value>Close all tags</value>
+  </data>
+  <data name="CloseOtherTags" xml:space="preserve">
+    <value>Close other tags</value>
+  </data>
+  <data name="CloseThisTag" xml:space="preserve">
+    <value>Close this tag</value>
+  </data>
+  <data name="CodeGen" xml:space="preserve">
+    <value>CodeGen</value>
+  </data>
+  <data name="HideShow" xml:space="preserve">
+    <value>Hide/Show</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>LogOut</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>New</value>
@@ -137,6 +161,12 @@
   </data>
   <data name="PasswordNotSame" xml:space="preserve">
     <value>Inconsistent password</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="WtmDoc" xml:space="preserve">
+    <value>WTM Doc</value>
   </data>
   <data name="{0}formaterror" xml:space="preserve">
     <value>The {0} field has an error format</value>

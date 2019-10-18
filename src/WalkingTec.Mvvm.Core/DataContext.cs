@@ -354,11 +354,11 @@ namespace WalkingTec.Mvvm.Core
                 var AllModules = allModules as List<FrameworkModule>;
                 var roles = new FrameworkRole[]
                 {
-                    new FrameworkRole{ RoleCode = "001", RoleName = "超级管理员"}
+                    new FrameworkRole{ RoleCode = "001", RoleName = Program._localizer["Admin"]}
                 };
                 var users = new FrameworkUserBase[]
                 {
-                    new FrameworkUserBase{ITCode = "admin", Password = Utils.GetMD5String("000000"), IsValid = true, Name="超级管理员"}
+                    new FrameworkUserBase{ITCode = "admin", Password = Utils.GetMD5String("000000"), IsValid = true, Name=Program._localizer["Admin"]}
                 };
                 var userroles = new FrameworkUserRole[]
                 {
