@@ -28,6 +28,7 @@ using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -139,6 +140,14 @@ namespace WalkingTec.Mvvm.Mvc
 
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
+
+            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
+            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(programType);
+            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+
+
             services.AddMvc(options =>
             {
                 // ModelBinderProviders
@@ -182,24 +191,11 @@ namespace WalkingTec.Mvvm.Mvc
             })
             .AddDataAnnotationsLocalization(options =>
             {
-                var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
-                var layuidll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.TagHelpers.LayUI.dll").FirstOrDefault();
                 var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                bool setcore = false;
                 options.DataAnnotationLocalizerProvider = (type, factory) => {
                     if (Core.Program.Buildindll.Any(x=>type.FullName.StartsWith(x)))
                     {
                         var rv = factory.Create(coreType);
-                        if (setcore == false)
-                        {
-                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_localizer").SetValue(null, rv);
-                            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, factory.Create(programType));
-                            layuidll.GetType("WalkingTec.Mvvm.TagHelpers.LayUI.Program").GetProperty("_localizer").SetValue(null, rv);
-                            mvc.GetType("WalkingTec.Mvvm.Mvc.Program").GetProperty("_localizer").SetValue(null, rv);
-                            admin?.GetType("WalkingTec.Mvvm.Mvc.Admin.Program").GetProperty("_localizer").SetValue(null, rv);
-                            setcore = true;
-                        }
                         return rv;
                     }
                     else
