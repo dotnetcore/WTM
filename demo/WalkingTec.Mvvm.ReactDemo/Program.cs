@@ -9,6 +9,8 @@ using WalkingTec.Mvvm.ReactDemo.Models;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace WalkingTec.Mvvm.ReactDemo
 {
@@ -31,7 +33,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                     x.AddLayui();
                     x.AddSwaggerGen(c =>
                     {
-                        c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
                     });
                     x.AddSpaStaticFiles(configuration =>
                     {
@@ -40,7 +42,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                 })
                 .Configure(x =>
                 {
-                    var env = x.ApplicationServices.GetService<IHostingEnvironment>();
+                    var env = x.ApplicationServices.GetService<IWebHostEnvironment>();
                     x.UseSwagger();
                     x.UseSwaggerUI(c =>
                     {

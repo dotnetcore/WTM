@@ -233,6 +233,7 @@ namespace WalkingTec.Mvvm.Core
 
         public string ControllerName { get; set; }
 
+        [JsonIgnore]
         public IStringLocalizer Localizer { get; set; }
         #endregion
 

@@ -173,7 +173,7 @@ namespace WalkingTec.Mvvm.Mvc
                 m.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
             })            
-            .AddControllersAsServices().AddNewtonsoftJson(options =>
+            .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.ContractResolver = new WTMContractResolver()
@@ -250,6 +250,29 @@ namespace WalkingTec.Mvvm.Mvc
 
             app.UseResponseCaching();
 
+            app.UseExceptionHandler("/_Framework/Error");
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/_js"),
+                FileProvider = new EmbeddedFileProvider(
+                    typeof(_CodeGenController).GetTypeInfo().Assembly,
+                    "WalkingTec.Mvvm.Mvc")
+            });
+            app.UseSession();
+            if (configs.CorsOptions.EnableAll == true)
+            {
+                if (configs.CorsOptions?.Policy?.Count > 0)
+                {
+                    app.UseCors(configs.CorsOptions.Policy[0].Name);
+                }
+                else
+                {
+                    app.UseCors("_donotusedefault");
+                }
+            }
+
             bool InitDataBase = false;
             app.Use(async (context, next) =>
             {
@@ -292,6 +315,12 @@ namespace WalkingTec.Mvvm.Mvc
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
                     context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
                 }
+                context.Request.EnableBuffering();
+                context.Request.Body.Position = 0;
+                StreamReader tr = new StreamReader(context.Request.Body);
+                string body = tr.ReadToEndAsync().Result;
+                context.Request.Body.Position = 0;
+                context.Items.Add("DONOTUSE_REQUESTBODY", body);
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
                 {
@@ -299,27 +328,6 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             });
 
-            app.UseExceptionHandler("/_Framework/Error");
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
-            app.UseSession();
-            if(configs.CorsOptions.EnableAll == true){
-                if (configs.CorsOptions?.Policy?.Count > 0)
-                {
-                    app.UseCors(configs.CorsOptions.Policy[0].Name);
-                }
-                else
-                {
-                    app.UseCors("_donotusedefault");
-                }
-            }
 
             if (customRoutes != null)
             {

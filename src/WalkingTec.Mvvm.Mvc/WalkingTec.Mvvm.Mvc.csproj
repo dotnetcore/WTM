@@ -60,8 +60,9 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
   </ItemGroup>
 
+
   <ItemGroup>
-    <ProjectReference Include="..\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj" />
+    <ProjectReference Include="..\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
   </ItemGroup>
 
 </Project>

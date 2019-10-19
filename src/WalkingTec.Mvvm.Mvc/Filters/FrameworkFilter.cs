@@ -108,16 +108,16 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     if (ctrl is BaseApiController apictrl)
                     {
                         apictrl.TryValidateModel(model);
-                        apictrl.HttpContext.Request.Body.Position = 0;
-                        StreamReader tr = new StreamReader(apictrl.HttpContext.Request.Body);
-                        string body = tr.ReadToEnd();
-                        var obj = JsonConvert.DeserializeObject(body) as JObject;
-                        var fields = GetJsonFields(obj);
-                        foreach (var field in fields)
+                        if (context.HttpContext.Items.ContainsKey("DONOTUSE_REQUESTBODY"))
                         {
-                            model.FC.Add(field, null);
+                            string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
+                            var obj = JsonConvert.DeserializeObject(body) as JObject;
+                            var fields = GetJsonFields(obj);
+                            foreach (var field in fields)
+                            {
+                                model.FC.Add(field, null);
+                            }
                         }
-
                     }
                     if (model is IBaseCRUDVM<TopBasePoco> crud)
                     {
