@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq;
@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}");
                     }
-                    output.Content.AppendHtml("下载");
+                    output.Content.AppendHtml(Program._localizer["Download"]);
                 }
                 else
                 {
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.TagMode = TagMode.StartTagAndEndTag;
                     output.Attributes.Add("class", "layui-form-label");
                     output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset");
-                    output.Content.AppendHtml("无");
+                    output.Content.AppendHtml(Program._localizer["None"]);
                 }
             }
             else
@@ -80,11 +80,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         if((bool?)Field.Model == true)
                         {
-                            val = "是";
+                            val = Program._localizer["Yes"];
                         }
                         else
                         {
-                            val = "否";
+                            val = Program._localizer["No"];
                         }
                     }
                     else

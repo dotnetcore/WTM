@@ -55,76 +55,8 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
     </wt:quote>
     <wt:quote>
         <p>MakeStandardAction用来生成标准的新建，修改等按钮，如果是自定义的按钮请使用MakeAction，MakeAction返回一个GridAction，GridAction的主要属性有：</p>
+        <p>关于按钮设置的详细信息请参见<a href="/#/VM/ListAction">列表按钮</a>文档</p>
     </wt:quote>
-    <table lay-filter="parse-table-demo">
-        <thead>
-            <tr>
-                <th lay-data="{field:'username', width:200}">属性</th>
-                <th lay-data="{field:'joinTime', width:400}">描述</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>areaName</td>
-                <td>按钮调用的Area名称，如果没有Area就为空</td>
-            </tr>
-            <tr>
-                <td>controllerName</td>
-                <td>按钮调用的Controller名称</td>
-            </tr>
-            <tr>
-                <td>actionName</td>
-                <td>按钮调用的方法名称</td>
-            </tr>
-            <tr>
-                <td>name</td>
-                <td>按钮上的文字</td>
-            </tr>
-            <tr>
-                <td>dialogTitle</td>
-                <td>弹出窗口的标题</td>
-            </tr>
-            <tr>
-                <td>paraType</td>
-                <td>
-                    参数类型。<br />
-                    NoId:表示按钮不需要任何参数<br />
-                    SingleId：表示按钮需要列表勾选一条数据，并把数据的id作为参数传递给调用的方法<br />
-                    MultiIds：表示按钮需要列表勾选一条或多条数据，并把数据的id作为数组传递给调用的方法<br />
-                </td>
-            </tr>
-            <tr>
-                <td>dialogWidth</td>
-                <td>弹出窗口的宽度，可为空</td>
-            </tr>
-            <tr>
-                <td>dialogHeight</td>
-                <td>弹出窗口的高度，可为空</td>
-            </tr>
-            <tr>
-                <td>IconCls</td>
-                <td>按钮的图标，指定css文件中的某个 class</td>
-            </tr>
-            <tr>
-                <td>ShowDialog</td>
-                <td>是否需要弹出窗口。有的按钮不需要弹出窗口，如果不弹窗口，则框架只会在后台调用指定方法</td>
-            </tr>
-            <tr>
-                <td>ShowInRow</td>
-                <td>按钮是否要出现在每一行的操作列上</td>
-            </tr>
-            <tr>
-                <td>BindVisiableColName</td>
-                <td><p>用于根据行内数据判断是否显示行内按钮</p>
-                    <p>对于ShowInRow的动作，绑定一个字符串格式的隐藏列的列名，当该隐藏列返回字符串‘true'的时候，行内按钮才显示</p>
-                </td>
-            </tr>
-            <tr>
-                <td>HideOnToolBar</td>
-                <td>列表上方的按钮条是否应该隐藏这个按钮</td>
-            </tr>
-        </tbody>
-    </table>
     <wt:quote>
         <p>MakeGridHeader用来指定列表的某一列，我们可以通过一些流函数来设置一些属性来改变单元格的前景色，背景色，列头文字，列宽等等。主要流函数有：</p>
     </wt:quote>
@@ -176,6 +108,9 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
             </tr>
         </tbody>
     </table>
+    <wt:quote>
+      <p>关于列设置的详细信息请参见<a href="/#/VM/ListColumn">列表列文档</a> </p>
+    </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="使用BasePagedListVM">
     <p>在Controller中使用BasePagedListVM的步骤也是一目了然，请看下面的例子</p>

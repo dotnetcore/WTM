@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// IsValid
         /// </summary>
-        [Display(Name = "是否有效")]
+        [Display(Name = "IsValid")]
         public bool IsValid { get; set; }
     }
 }

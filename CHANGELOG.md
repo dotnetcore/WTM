@@ -2,6 +2,21 @@
 
 ## v2.3.x
 
+### v2.3.9 (2019-10-19)
+
+* **新增：**  多语言支持。https://wtmdoc.walkingtec.cn/#/Global/MultiLanguages
+老版本升级后会遇到单元测试项目中MockController.cs文件报错，将报错的行替换为
+_controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
+即可。
+
+* **新增：**  dotnet 3.0支持，线上新建项目时可选择dotnetcore3.0版本的项目
+
+#### 前后端不分离模式
+* **新增：**  集成了UEditor。https://wtmdoc.walkingtec.cn/#/UI/UEditor
+* **新增：**  列表按钮现在可以设置Max属性，来控制打开窗体时最大化
+* **修改：**  现在View页面不再强制要求Model必须继承BaseVM
+* **修改：**  修改菜单无法删除的历史遗留bug
+
 ### v2.3.6 (2019-9-27)
 
 * **新增：**  Debug模式下，debug窗口会输出ef执行的sql语句

@@ -36,6 +36,12 @@
         {"date":"2019-09-18","name":"裸奔侠","amount":9.99,"from":"微信","comment":"-"},
         {"date":"2019-09-20","name":"东雨肥牛","amount":66.00,"from":"微信","comment":"-"},
         {"date":"2019-09-21","name":"小新","amount":2.22,"from":"微信","comment":"小小心意，不成敬意。愿努力不停，愿捐助不断"},
-        {"date":"2019-09-26","name":"村西一颗草","amount":2.00,"from":"微信","comment":"-"}
+        {"date":"2019-09-26","name":"村西一颗草","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-09-27","name":"wbflike","amount":30.00,"from":"微信","comment":"辛苦大大开发框架"},
+        {"date":"2019-10-01","name":"汪建奎","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-10","name":"和生","amount":6.66,"from":"微信","comment":"支持一下加油"},
+        {"date":"2019-10-12","name":"g*W","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-13","name":"B*s","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-14","name":"*云","amount":20.00,"from":"微信","comment":"-"}
     ]
 }

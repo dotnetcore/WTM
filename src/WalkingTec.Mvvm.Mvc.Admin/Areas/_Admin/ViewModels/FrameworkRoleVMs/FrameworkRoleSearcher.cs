@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 {
     public class FrameworkRoleSearcher : BaseSearcher
     {
-        [Display(Name = "角色编码")]
+        [Display(Name = "RoleCode")]
         public string RoleCode { get; set; }
 
-        [Display(Name = "角色名称")]
+        [Display(Name = "RoleName")]
         public string RoleName { get; set; }
     }
 }

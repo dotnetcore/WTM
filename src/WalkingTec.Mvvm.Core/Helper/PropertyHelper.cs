@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -121,9 +122,24 @@ namespace WalkingTec.Mvvm.Core
         public static string GetRegexErrorMessage(this MemberInfo pi)
         {
             string rv = "";
+
             if (pi.GetCustomAttributes(typeof(RegularExpressionAttribute), false).FirstOrDefault() is RegularExpressionAttribute dis && !string.IsNullOrEmpty(dis.ErrorMessage))
             {
                 rv = dis.ErrorMessage;
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
+                {
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
+                }
             }
             else
             {
@@ -139,13 +155,23 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>属性名称</returns>
         public static string GetPropertyDisplayName(this MemberInfo pi)
         {
-
             string rv = "";
             if (pi.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() is DisplayAttribute dis && !string.IsNullOrEmpty(dis.Name))
             {
-                if (dis.ResourceType == null)
+                rv = dis.Name;
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
                 {
-                    rv = dis.Name;
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
                 }
             }
             else
@@ -253,7 +279,8 @@ namespace WalkingTec.Mvvm.Core
                 {
                     isRequired = true;
                 }
-                else if(pi.GetCustomAttributes(typeof(KeyAttribute),false).FirstOrDefault() != null){
+                else if (pi.GetCustomAttributes(typeof(KeyAttribute), false).FirstOrDefault() != null)
+                {
                     isRequired = true;
                 }
             }
@@ -272,7 +299,7 @@ namespace WalkingTec.Mvvm.Core
         {
             try
             {
-                property = property.Replace("[]", string.Empty);
+                property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
                 List<string> level = new List<string>();
                 if (property.Contains('.'))
                 {
@@ -310,11 +337,12 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
 
-                var fproperty = tempType.GetMember(level.Last())[0];
-                if (fproperty == null)
+                var memberInfos = tempType.GetMember(level.Last());
+                if (!memberInfos.Any())
                 {
                     return;
                 }
+                var fproperty = memberInfos[0];
                 if (value == null || ((value is StringValues s) && StringValues.IsNullOrEmpty(s)))
                 {
                     fproperty.SetMemberValue(temp, null, null);
@@ -404,7 +432,8 @@ namespace WalkingTec.Mvvm.Core
                     fproperty.SetMemberValue(temp, value, null);
                 }
             }
-            catch{
+            catch
+            {
             }
         }
 
@@ -500,6 +529,20 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (Core.Program.Buildindll.Any(x => field.DeclaringType.FullName.StartsWith(x)))
+                    {
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
+                    }
                 }
                 else
                 {
@@ -515,14 +558,15 @@ namespace WalkingTec.Mvvm.Core
             FieldInfo field = null;
             string ename = "";
             if (enumType.IsEnum())
-            {   ename = enumType.GetEnumName(value);
+            {
+                ename = enumType.GetEnumName(value);
                 field = enumType.GetField(ename);
             }
             //如果是nullable的枚举
             if (enumType.IsGeneric(typeof(Nullable<>)) && enumType.GetGenericArguments()[0].IsEnum())
             {
-                    ename = enumType.GenericTypeArguments[0].GetEnumName(value);
-                    field = enumType.GenericTypeArguments[0].GetField(ename);
+                ename = enumType.GenericTypeArguments[0].GetEnumName(value);
+                field = enumType.GenericTypeArguments[0].GetField(ename);
             }
 
             if (field != null)
@@ -532,6 +576,20 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (field.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                    {
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
+                    }
                 }
                 else
                 {
@@ -577,6 +635,17 @@ namespace WalkingTec.Mvvm.Core
                 else
                 {
                     val = Guid.Empty;
+                }
+            }
+            else if (propertyType == typeof(DateRange))
+            {
+                if (DateRange.TryParse(value.ToString(), out var result))
+                {
+                    val = result;
+                }
+                else
+                {
+                    val = DateRange.Default;
                 }
             }
             else

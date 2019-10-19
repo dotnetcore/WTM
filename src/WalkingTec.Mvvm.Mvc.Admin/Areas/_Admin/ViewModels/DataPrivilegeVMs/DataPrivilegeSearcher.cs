@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
@@ -7,23 +7,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
     public enum DpTypeEnum
     {
-        [Display(Name = "用户组权限")]
+        [Display(Name = "GroupDp")]
         UserGroup,
-        [Display(Name = "用户权限")]
+        [Display(Name = "UserDp")]
         User
     }
 
     public class DataPrivilegeSearcher : BaseSearcher
     {
-        [Display(Name = "ITCode")]
+        [Display(Name = "Account")]
         public string Name { get; set; }
-        [Display(Name = "权限")]
+        [Display(Name = "Privileges")]
         public string TableName { get; set; }
         public List<ComboSelectListItem> TableNames { get; set; }
 
-        [Display(Name = "权限类别")]
+        [Display(Name = "DpType")]
         public DpTypeEnum DpType { get; set; }
-        [Display(Name = "域名")]
         public Guid? DomainID { get; set; }
         public List<ComboSelectListItem> AllDomains { get; set; }
         protected override void InitVM()

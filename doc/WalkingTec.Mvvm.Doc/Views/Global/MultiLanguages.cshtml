@@ -1,0 +1,52 @@
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<wt:quote>
+  <p>从2.3.9开始，框架本身已经没有硬编码任何文本了，所有文本都通过资源文件来读取</p>
+  <p>目前框架内置了中文和英文文本，欢迎其他外语好的朋友可以贡献其他语言的文本</p>
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="在自己的项目中使用多语言">
+</wt:fieldset>
+<p>
+  从2.3.9开始，框架提供了便捷的方式让你可以快速配置多语言。<br />
+  AspnetCore默认是对每一个Controller和每一个View都使用单独的资源文件，这样做十分繁琐。<br />
+  在WTM框架中，我们简化了这一过程，只使用一个名为Program的资源文件，所有Controller，View，Model验证之类的多语言都会从这一个资源文件中寻找<br />
+  具体使用方法为：<br />
+  1. 在appsetting.json文件中修改Languages属性来设置支持的语言，比如 Languages="zh,en";<br />
+  2. 在Resources文件夹中，加入对应的资源文件，注意资源文件必须以Program开头。如果你在appsetting中设置了Languages="zh,en"，那么就应该在Resources文件夹中添加Program.zh.resx和Program.en.resx两个文件<br />
+  3. 你的Model层中的[Display]和验证的attribute，比如[StringLength],[Required]等等，都会自动根据当前语言去资源文件中查找<br />
+  4. Controller中的[ActionDescription]标记也会先去资源文件中查找<br />
+  5. 在Controller和VM中都有叫做Localizer的变量，可以直接用来获取多语言文本<br />
+  6. 在View中如果需要多语言，直接调用@Model.Localizer
+</p>
+
+<wt:quote>
+  2.3.9之后生成的项目已经自动帮你生成了多语言文件，并且修改密码的功能使用了多语言，上述不理解的可以参考生成的代码：<br />
+  /ViewModels/HomeVMs/ChangePasswordVM.cs <br />
+  /Views/Home/Login/ChangePassword.cshtml <br />
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="动态修改语言">
+</wt:fieldset>
+  AspnetCore的规则是先查看QueryString中有没有设置多语言，如果没有则查找名为".AspNetCore.Culture"的Cookie是存在，如果都没有则使用浏览器的当前语言
+<br />
+  如果我们想在页面上加一个下拉菜单，让用户动态改变语言，则只需要设置".AspNetCore.Culture"这个Cookie即可
+  下列代码演示了Controller中的一个方法，通过设置Cookie的方式修改当前语言
+<wt:code>
+  [Public]
+  public string ChangeLanguage(string lan)
+  {
+      Response.Cookies.Append(
+        CookieRequestCultureProvider.DefaultCookieName,
+        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(lan))
+      );
+      return "OK";
+  }
+</wt:code>
+
+<script>
+    layui.use('code',function(){layui.code({ about: false })})
+</script>

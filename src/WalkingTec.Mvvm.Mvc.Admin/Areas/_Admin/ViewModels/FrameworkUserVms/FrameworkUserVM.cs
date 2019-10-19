@@ -12,12 +12,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     {
         [JsonIgnore]
         public List<ComboSelectListItem> AllRoles { get; set; }
-        [Display(Name = "角色")]
+        [Display(Name = "Role")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
         [JsonIgnore]
         public List<ComboSelectListItem> AllGroups { get; set; }
-        [Display(Name = "用户组")]
+        [Display(Name = "Group")]
         public List<Guid> SelectedGroupIDs { get; set; }
 
 

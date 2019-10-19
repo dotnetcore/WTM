@@ -446,12 +446,23 @@ layui.use(['table'], function(){{
   {Id}option = {{
     elem: '#{Id}'
     ,id: '{Id}'
+    ,text:{{
+        none:'{Program._localizer["NoData"]}'
+    }}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
-    {(page ? string.Empty : ",page:{layout:['count']}")}
+    ,page:{{
+        {(page?string.Empty: "layout:['count'],")}
+        rpptext:'{Program._localizer["RecordsPerPage"]}',
+        totaltext:'{Program._localizer["Total"]}',
+        recordtext:'{Program._localizer["Record"]}',
+        gototext:'{Program._localizer["Goto"]}',
+        pagetext:'{Program._localizer["Page"]}',
+        oktext:'{Program._localizer["GotoButtonText"]}',
+    }}
     {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(page
         ? (Limits == null || Limits.Length == 0
@@ -478,7 +489,7 @@ layui.use(['table'], function(){{
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
       var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
       $.post(""/_Framework/UpdateModelProperty"",data,function(a,b,c){{
-          if(a.code == 200){{ff.Msg('更新成功');}}else{{ff.Msg(a.msg);}}
+          if(a.code == 200){{ff.Msg('{Program._localizer["UpdateDone"]}');}}else{{ff.Msg(a.msg);}}
       }});
   }}")}
   table.on('tool({Id})',wtToolBarFunc_{Id});
@@ -698,10 +709,10 @@ layui.use(['table'], function(){{
 if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
     var ids = ff.GetSelections('{Id}');
     if(ids.length == 0){{
-        layui.layer.msg('请选择一行');
+        layui.layer.msg('{Program._localizer["SelectOneRow"]}');
         return;
     }}else if(ids.length > 1){{
-        layui.layer.msg('最多只能选择一行');
+        layui.layer.msg('{Program._localizer["SelectOneRowMax"]}');
         return;
     }}else{{
         tempUrl = tempUrl + '&id=' + ids[0];
@@ -721,7 +732,7 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
 isPost = true;
 var ids = ff.GetSelections('{Id}');
 if(ids.length == 0){{
-    layui.layer.msg('请至少选择一行');
+    layui.layer.msg('{Program._localizer["SelectOneRowMin"]}');
     return;
 }}
 ");
@@ -740,7 +751,7 @@ if(data != null && data.ID != null){{
     }}
 }}
 if(ids.length > 1){{
-    layui.layer.msg('最多只能选择一行');
+    layui.layer.msg('{Program._localizer["SelectOneRowMax"]}');
     return;
 }}else if(ids.length == 1){{
     tempUrl = tempUrl + '&id=' + ids[0];
@@ -788,7 +799,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                             }
                             else
                             {
-                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined);";
+                                actionScript = $"ff.OpenDialog(tempUrl,'{Guid.NewGuid().ToNoSplitString()}','{item.DialogTitle}',{width},{height},isPost===true&&ids!==null&&ids!==undefined?{{'Ids':ids}}:undefined,{item.Max.ToString().ToLower()});";
                             }
                         }
                         else

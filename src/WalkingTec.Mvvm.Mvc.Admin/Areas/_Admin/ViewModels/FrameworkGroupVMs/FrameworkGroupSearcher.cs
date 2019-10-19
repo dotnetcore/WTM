@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 {
     public class FrameworkGroupSearcher : BaseSearcher
     {
-        [Display(Name = "用户组编码")]
+        [Display(Name = "GroupCode")]
         public string GroupCode { get; set; }
 
-        [Display(Name = "用户组名称")]
+        [Display(Name = "GroupName")]
         public string GroupName { get; set; }
     }
 }

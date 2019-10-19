@@ -1,42 +1,44 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms.FrameworkUserVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms.FrameworkUserVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <wt:tab>
-        <wt:tabheaders>
-            <wt:tabheader title="基本信息" />
-            <wt:tabheader title="附加信息" />
-        </wt:tabheaders>
-        <wt:tabcontents>
-            <wt:tabcontent>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:textbox field="Entity.ITCode" />
-                    <wt:textbox field="Entity.Password" is-password="true" />
-                </wt:row>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:textbox field="Entity.Name" />
-                    <wt:upload field="Entity.PhotoId" upload-type="ImageFile" thumb-width="128" />
-                </wt:row>
-                <wt:checkbox field="SelectedRolesIDs" items="AllRoles" />
-                <wt:checkbox field="SelectedGroupIDs" items="AllGroups" />
-            </wt:tabcontent>
-            <wt:tabcontent>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:combobox field="Entity.Sex" />
-                </wt:row>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:textbox field="Entity.CellPhone" />
-                    <wt:textbox field="Entity.HomePhone" />
-                </wt:row>
-                <wt:row items-per-row="ItemsPerRowEnum.Two">
-                    <wt:textbox field="Entity.Email" />
-                    <wt:textbox field="Entity.ZipCode" />
-                </wt:row>
-                <wt:textbox field="Entity.Address" />
-            </wt:tabcontent>
-        </wt:tabcontents>
-    </wt:tab>
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:tab>
+    <wt:tabheaders>
+      <wt:tabheader title="@Localizer["BasicInfo"]" />
+      <wt:tabheader title="@Localizer["AdditionInfo"]" />
+    </wt:tabheaders>
+    <wt:tabcontents>
+      <wt:tabcontent>
+        <wt:row items-per-row="ItemsPerRowEnum.Two">
+          <wt:textbox field="Entity.ITCode" />
+          <wt:textbox field="Entity.Password" is-password="true" />
+        </wt:row>
+        <wt:row items-per-row="ItemsPerRowEnum.Two">
+          <wt:textbox field="Entity.Name" />
+          <wt:upload field="Entity.PhotoId" upload-type="ImageFile" thumb-width="128" />
+        </wt:row>
+        <wt:checkbox field="SelectedRolesIDs" items="AllRoles" />
+        <wt:checkbox field="SelectedGroupIDs" items="AllGroups" />
+      </wt:tabcontent>
+      <wt:tabcontent>
+        <wt:row items-per-row="ItemsPerRowEnum.Two">
+          <wt:combobox field="Entity.Sex" />
+        </wt:row>
+        <wt:row items-per-row="ItemsPerRowEnum.Two">
+          <wt:textbox field="Entity.CellPhone" />
+          <wt:textbox field="Entity.HomePhone" />
+        </wt:row>
+        <wt:row items-per-row="ItemsPerRowEnum.Two">
+          <wt:textbox field="Entity.Email" />
+          <wt:textbox field="Entity.ZipCode" />
+        </wt:row>
+        <wt:textbox field="Entity.Address" />
+      </wt:tabcontent>
+    </wt:tabcontents>
+  </wt:tab>
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>
