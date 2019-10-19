@@ -453,7 +453,7 @@
   <data name="IsFormField" xml:space="preserve">
     <value>表单字段</value>
   </data>
-  <data name="IsImportFieldIsImportField" xml:space="preserve">
+  <data name="IsImportField" xml:space="preserve">
     <value>导入字段</value>
   </data>
   <data name="IsInherit" xml:space="preserve">
