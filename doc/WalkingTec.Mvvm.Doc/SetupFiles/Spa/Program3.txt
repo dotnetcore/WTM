@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 
 namespace $ns$
 {
@@ -45,7 +46,7 @@ namespace $ns$
                     });
                      webBuilder.Configure(x =>
                      {
-                        var env = x.ApplicationServices.GetService<IHostingEnvironment>();
+                        var env = x.ApplicationServices.GetService<IWebHostEnvironment>();
                         x.UseSwagger();
                         x.UseSwaggerUI(c =>
                         {
