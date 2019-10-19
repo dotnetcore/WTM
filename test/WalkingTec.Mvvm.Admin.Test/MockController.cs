@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using System;
@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpRequest(new DefaultHttpContext()));
+            mockHttpContext.Setup(x => x.Request).Returns(new DefaultHttpContext().Request);
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             _controller.GlobaInfo.AllAccessUrls = new List<string>();
             _controller.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             _controller.GlobaInfo.AllModels = new List<Type>();
-            _controller.GlobaInfo.AllModule = new List<FrameworkModule>();
+            _controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
             _controller.UIService = new LayuiUIService();
             return _controller;
         }
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             _controller.GlobaInfo.AllAccessUrls = new List<string>();
             _controller.GlobaInfo.AllAssembly = new List<System.Reflection.Assembly>();
             _controller.GlobaInfo.AllModels = new List<Type>();
-            _controller.GlobaInfo.AllModule = new List<FrameworkModule>();
+            _controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
             return _controller;
         }
 

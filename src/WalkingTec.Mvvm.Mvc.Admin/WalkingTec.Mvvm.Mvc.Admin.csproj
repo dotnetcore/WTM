@@ -29,7 +29,6 @@
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Edit.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Import.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkGroup\Index.cshtml" />
-    <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\BatchCreate.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Create.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Delete.cshtml" />
     <EmbeddedResource Include="Areas\_Admin\Views\FrameworkMenu\Details.cshtml" />

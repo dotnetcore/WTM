@@ -11,13 +11,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "新建","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "修改","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "删除", "_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
-                this.MakeAction("FrameworkGroup","DataFunction","数据权限","数据权限", GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
-                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin"),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Edit, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Delete, "", "_Admin",dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
+                this.MakeAction("FrameworkGroup","DataFunction",Program._localizer["DataPrivilege"],Program._localizer["DataPrivilege"], GridActionParameterTypesEnum.SingleId,"_Admin",800).SetShowInRow(),
+                this.MakeStandardAction("FrameworkGroup", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,7 @@ namespace WalkingTec.Mvvm.Mvc
         IDataContext CreateDC(bool isLog = false);
 
         ModelStateDictionary ModelState { get; }
+
+        IStringLocalizer Localizer { get; }
     }
 }

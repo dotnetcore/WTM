@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 namespace WalkingTec.Mvvm.Admin.Api
 {
 
-    [ActionDescription("日志管理")]
+    [ActionDescription("Log")]
     [ApiController]
     [Route("api/_ActionLog")]
 	public class _ActionLogController : BaseApiController

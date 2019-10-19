@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -231,6 +232,8 @@ namespace WalkingTec.Mvvm.Core
         public List<Guid> DeletedFileIds { get; set; }
 
         public string ControllerName { get; set; }
+
+        public IStringLocalizer Localizer { get; set; }
         #endregion
 
         #region Event

@@ -127,11 +127,11 @@ namespace WalkingTec.Mvvm.Mvc
                         if(checktype == typeof(FileAttachment))
                         {
                             view.IsImportField = false;
-                            view.FieldDes += "(附件)";
+                            view.FieldDes += $"({Program._localizer["Attachment"]})";
                         }
                         else
                         {
-                            view.FieldDes += "(一对多)";
+                            view.FieldDes += $"({Program._localizer["OneToMany"]})";
                         }
                         view.LinkedType = checktype.AssemblyQualifiedName;
                         show = true;
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var middletable = checktype.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
                         if (middletable != null)
                         {
-                            view.FieldDes += "(多对多)";
+                            view.FieldDes += $"({Program._localizer["ManyToMany"]})";
                             view.IsImportField = false;
                             var subpros = checktype.GetProperties();
                             foreach (var spro in subpros)
@@ -205,37 +205,37 @@ namespace WalkingTec.Mvvm.Mvc
 
     public class CodeGenListView : BasePoco
     {
-        [Display(Name ="字段名称")]
+        [Display(Name = "FieldName")]
         public string FieldName { get; set; }
 
-        [Display(Name = "字段描述")]
+        [Display(Name = "FieldDes")]
         public string FieldDes { get; set; }
 
 
-        [Display(Name = "搜索条件")]
+        [Display(Name = "IsSearcherField")]
         public bool IsSearcherField { get; set; }
 
-        [Display(Name = "列表展示")]
+        [Display(Name = "IsListField")]
         public bool IsListField { get; set; }
 
-        [Display(Name = "表单字段")]
+        [Display(Name = "IsFormField")]
         public bool IsFormField { get; set; }
 
 
-        [Display(Name = "关联表显示字段")]
+        [Display(Name = "SubField")]
         public string SubField { get; set; }
 
         public string SubIdField { get; set; }
 
-        [Display(Name = "导入字段")]
+        [Display(Name = "IsImportField")]
         public bool IsImportField { get; set; }
 
-        [Display(Name = "批量更新字段")]
+        [Display(Name = "IsBatchField")]
         public bool IsBatchField { get; set; }
 
         public int Index { get; set; }
 
-        [Display(Name = "关联类型")]
+        [Display(Name = "LinkedType")]
         public string LinkedType { get; set; }
 
     }

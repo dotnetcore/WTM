@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             switch (info.FormatType)
             {
                 case ColumnFormatTypeEnum.Dialog:
-                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable).ToString();
+                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed).ToString();
                     break;
                 case ColumnFormatTypeEnum.Redirect:
                     rv = vm.UIService.MakeRedirectButton(info.ButtonType, info.Url, info.Text).ToString();

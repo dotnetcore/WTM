@@ -1,11 +1,13 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupBatchVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupBatchVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <wt:quote>确定要删除以下数据么：</wt:quote>
-    <wt:hidden field="Ids" />
-    <wt:grid vm="ListVM" use-local-data="true" hidden-checkbox="true" hidden-panel="true"  height="300"/>
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:quote>@Localizer["BatchDeleteConfirm"]</wt:quote>
+  <wt:hidden field="Ids" />
+  <wt:grid vm="ListVM" use-local-data="true" hidden-checkbox="true" hidden-panel="true" height="300" />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>

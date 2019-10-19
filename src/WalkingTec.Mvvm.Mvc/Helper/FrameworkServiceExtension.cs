@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -26,7 +28,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -81,6 +84,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var config = configBuilder.Build();
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
             services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
@@ -135,9 +139,16 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
-
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
+
+            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
+            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(programType);
+            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+
+
             services.AddMvc(options =>
             {
                 // ModelBinderProviders
@@ -182,7 +193,23 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     return new BadRequestObjectResult(a.ModelState.GetErrorJson());
                 };
-            });
+            })
+            .AddDataAnnotationsLocalization(options =>
+            {
+                var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                options.DataAnnotationLocalizerProvider = (type, factory) => {
+                    if (Core.Program.Buildindll.Any(x=>type.FullName.StartsWith(x)))
+                    {
+                        var rv = factory.Create(coreType);
+                        return rv;
+                    }
+                    else
+                    {
+                        return factory.Create(programType);
+                    }
+                };
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -232,9 +259,62 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
+            if (string.IsNullOrEmpty(configs.Languages) == false)
+            {
+                List<CultureInfo> supportedCultures = new List<CultureInfo>();
+                var lans = configs.Languages.Split(",");
+                foreach (var lan in lans)
+                {
+                    supportedCultures.Add(new CultureInfo(lan));
+                }
+
+                app.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
+            }
+
             app.UseResponseCaching();
+
+            bool InitDataBase = false;
             app.Use(async (context, next) =>
             {
+                if(InitDataBase == false)
+                {
+                    var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+                    foreach (var m in gd.AllModule)
+                    {
+                        if (m.IsApi == true)
+                        {
+                            foreach (var a in m.Actions)
+                            {
+                                var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
+                                if (u == null)
+                                {
+                                    u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+                                }
+                                if (u != null && u.EndsWith("/0"))
+                                {
+                                    u = u.Substring(0, u.Length - 2);
+                                    u = u + "/{id}";
+                                }
+                                a.Url = u;
+                            }
+                        }
+                    }
+
+                    var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+                    var cs = configs.ConnectionStrings.Select(x => x.Value);
+                    foreach (var item in cs)
+                    {
+                        var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
+                        dc.DataInit(gd.AllModule, test != null).Wait();
+                    }
+                    InitDataBase = true;
+                }
+
                 if (context.Request.Path == "/")
                 {
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
@@ -268,6 +348,7 @@ namespace WalkingTec.Mvvm.Mvc
                     app.UseCors("_donotusedefault");
                 }
             }
+
             if (customRoutes != null)
             {
                 app.UseMvc(customRoutes);
@@ -285,36 +366,6 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
 
-            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
-            foreach (var m in gd.AllModule)
-            {
-                if (m.IsApi == true)
-                {
-                    foreach (var a in m.Actions)
-                    {
-                        var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-                        if (u == null)
-                        {
-                            u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
-                        }
-                        if (u != null && u.EndsWith("/0"))
-                        {
-                            u = u.Substring(0, u.Length - 2);
-                            u = u + "/{id}";
-                        }
-                        a.Url = u;
-                    }
-                }
-            }
-
-
-            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            var cs = configs.ConnectionStrings.Select(x => x.Value);
-            foreach (var item in cs)
-            {
-                var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
-                dc.DataInit(gd.AllModule, test != null).Wait();
-            }
             return app;
         }
 
@@ -334,13 +385,24 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 gd.AllAssembly.Add(mvc);
             }
+            var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
+            if (core != null && gd.AllAssembly.Contains(core) == false)
+            {
+                gd.AllAssembly.Add(core);
+            }
+            var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
+            if (layui != null && gd.AllAssembly.Contains(layui) == false)
+            {
+                gd.AllAssembly.Add(layui);
+            }
             gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
             gd.AllModels = GetAllModels(gd.DataContextCI);
-
             var controllers = GetAllControllers(gd.AllAssembly);
-
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
-            gd.AllModule = GetAllModules(controllers);
+
+            gd.SetModuleGetFunc(() => {
+                return GetAllModules(controllers);
+            });
 
             gd.SetMenuGetFunc(() =>
             {
@@ -366,6 +428,7 @@ namespace WalkingTec.Mvvm.Mvc
         private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule, ConstructorInfo constructorInfo)
         {
             var ConfigInfo = GlobalServices.GetService<Configs>();
+            var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
             var menus = new List<FrameworkMenu>();
 
             if (ConfigInfo.IsQuickDebug)
@@ -377,7 +440,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var modelmenu = new FrameworkMenu
                     {
                         //ID = Guid.NewGuid(),
-                        PageName = area ?? "默认区域"
+                        PageName = area ?? localizer["DefaultArea"]
                     };
                     menus.Add(modelmenu);
                     var pages = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api" && x.Area?.AreaName == area).SelectMany(x => x.Actions).Where(x => x.MethodName.ToLower() == "index").ToList();
@@ -525,7 +588,7 @@ namespace WalkingTec.Mvvm.Mvc
                 if (attrs.Length > 0)
                 {
                     var ada = attrs[0] as ActionDescriptionAttribute;
-                    var nameKey = ada.Description;
+                    var nameKey = ada.GetDescription(ctrl);
                     model.ModuleName = nameKey;
                 }
                 else
@@ -568,7 +631,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            var nameKey = ada.Description;
+                            var nameKey = ada.GetDescription(ctrl);
                             action.ActionName = nameKey;
                         }
                         else
@@ -618,7 +681,7 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            string nameKey = ada.Description;
+                            string nameKey = ada.GetDescription(ctrl);
                             action.ActionName = nameKey;
                         }
                         else

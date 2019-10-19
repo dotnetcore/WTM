@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
 
             output.Attributes.SetAttribute("href", $"/_Framework/GetExcelTemplate?_DONOT_USE_VMNAME={vmQualifiedName}");
-            Text = "下载模板";
+            Text = Program._localizer["DownloadTemplate"];
             base.Process(context, output);
         }
 

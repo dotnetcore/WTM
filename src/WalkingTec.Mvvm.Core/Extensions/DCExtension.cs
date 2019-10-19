@@ -787,7 +787,7 @@ where S : struct
             }
         }
 
-        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null) 
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             if (Ids == null)
             {
@@ -804,10 +804,10 @@ where S : struct
             {
                 newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
             }
-             
             Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
             Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
-            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft2, peid);
+            Expression dpleft3 = Expression.Call(typeof(Enumerable), "ToList", new Type[] { peid.Type }, dpleft2);
+            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft3, peid);
             var rv = Expression.Lambda<Func<TModel, bool>>(dpcondition, pe);
             return rv;
         }

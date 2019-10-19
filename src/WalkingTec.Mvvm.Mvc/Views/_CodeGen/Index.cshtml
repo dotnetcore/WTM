@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="/layui/css/layui.css">
   <link rel="stylesheet" href="/sitecss/wtm.css">
   <script src="/jquery.min.js"></script>
-  <script src="/jquery.haschange.js"></script>
   <script src="/jquery.cookie.js"></script>
   <script src="/layui/layui.js"></script>
   <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
@@ -32,7 +31,7 @@
           <wt:combobox field="SelectedModel" items="AllModels" />
           <wt:textbox field="Area" />
           <wt:textbox field="ModuleName" placeholder="请输入模块名称，比如xx管理" />
-          @if (Model.UI == WalkingTec.Mvvm.Mvc.UIEnum.LayUI)
+          @if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.LayUI)
           {
           <wt:checkbox field="IsApi" padding-text="(勾选此项将只生成api，而没有前端代码)" width="80"/>
           }
