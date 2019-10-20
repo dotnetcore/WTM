@@ -6,8 +6,8 @@ import {
     getModule
 } from "vuex-module-decorators";
 import { RouteConfig } from "vue-router";
-import { constantRoutes } from "@/router2";
-import Menu from "@/router2/menu";
+import { constantRoutes } from "@/router";
+import Menu from "@/router/menu";
 import store from "@/store/modules";
 
 export interface IRoutesModule {

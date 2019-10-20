@@ -1,6 +1,7 @@
 import { RouteConfig } from "vue-router";
 import config from "@/config/index";
-import Layout from "@/layout/index.vue";
+// import Layout from "@/layout/index.vue";
+import Layout from "@/components/layout/index.vue";
 
 const development = config.development;
 

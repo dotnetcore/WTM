@@ -6,7 +6,7 @@ import {
     getModule
 } from "vuex-module-decorators";
 import { getToken, setToken, removeToken } from "@/util/cookie";
-import { resetRouter } from "@/router2";
+import { resetRouter } from "@/router";
 import store from "@/store/modules";
 import _request from "@/service/service";
 import serviceUrl from "@/service/index";
