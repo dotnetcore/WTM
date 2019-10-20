@@ -1,45 +1,51 @@
-import Vue from "vue";
-import createRouter from "@/router/index";
-import store from "@/store/index";
-import App from "@/views/index.vue";
-import { edit, visible, error } from "@/util/directive/index";
-import { formatTime } from "@/util/filters/index";
-import { Card, DialogBox } from "@/util/component/index";
+import Vue, { DirectiveOptions, ComputedOptions } from "vue";
+import ElementUI from "element-ui";
 import config from "@/config/index";
+import i18n from "@/lang";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/index.less";
-// 饿了吗ui
-import ElementUI from "element-ui";
-import NProgress from "vue-nprogress";
-Vue.use(NProgress, {});
-Vue.use(ElementUI, { size: config.elSize });
+import SvgIcon from "vue-svgicon";
+import App from "@/views/index.vue";
+import router from "@/router";
+import store from "@/store/modules";
+import "@/assets/icon/components";
+import "@/router/permission";
 
-const nprogress = new NProgress({ parent: ".app-nprogress" });
-
-console.log("store");
-console.log(store);
-
-createRouter().then(router => {
-    // 指令
-    Vue.directive("edit", edit);
-    Vue.directive("visible", visible);
-    Vue.directive("error", error);
-    // 过滤器
-    Vue.filter("formatTime", formatTime);
-    // 组件
-    Vue.component("card", Card);
-    Vue.component("dialog-box", DialogBox);
-    const app = new Vue({
-        nprogress,
-        router,
-        store,
-        render(h) {
-            return h(App, {
-                props: {
-                    projectName: "wtm"
-                }
-            });
-        }
-    });
-    app.$mount("#App");
+import * as directives from "@/util/directive/index";
+import * as filters from "@/util/filters/index";
+import * as component from "@/util/component/index";
+Vue.use(ElementUI, {
+    size: config.elSize, // Set element-ui default size
+    i18n: (key: string, value: string) => i18n.t(key, value)
 });
+
+Vue.use(SvgIcon, {
+    tagName: "svg-icon",
+    defaultWidth: "1em",
+    defaultHeight: "1em"
+});
+
+// 指令
+Object.keys(directives).forEach(key => {
+    Vue.directive(
+        key,
+        (directives as { [key: string]: DirectiveOptions })[key]
+    );
+});
+// 过滤器
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, (filters as { [key: string]: Function })[key]);
+});
+// 组件
+Object.keys(component).forEach(key => {
+    Vue.component(_.kebabCase(key), component[key]);
+});
+
+Vue.config.productionTip = false;
+
+new Vue({
+    router,
+    store,
+    i18n,
+    render: h => h(App)
+}).$mount("#App");

@@ -17,7 +17,6 @@ if (process.env.NODE_ENV === "development") {
 }
 module.exports = {
     entry: {
-        index2: utils.resolve("src/index2.ts"),
         index: utils.resolve("src/index.ts"),
         login: utils.resolve("src/login.ts")
     },
@@ -132,11 +131,6 @@ module.exports = {
         }
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            filename: "index2.html",
-            template: "view/index2.html",
-            chunks: ["index2", "vendor", "common", "runtime"]
-        }),
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: "view/index.html",
