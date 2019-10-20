@@ -57,7 +57,10 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         // 表单数据 赋值
         setFormData(params) {
             Object.keys(defaultFormData.formData).forEach(key => {
-                if (_.isPlainObject(this.formData[key])) {
+                if (
+                    _.isPlainObject(this.formData[key]) ||
+                    _.isArray(this.formData[key])
+                ) {
                     // Entity
                     Object.keys(this.formData[key]).forEach(item => {
                         this.formData[key][item] = _.get(
@@ -69,6 +72,8 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                     this.formData[key] = params[key];
                 }
             });
+            console.log("---------------------------------------------");
+            console.log(this.formData, defaultFormData.formData, params);
         }
 
         /**

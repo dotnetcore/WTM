@@ -1,43 +1,42 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-      <router-link v-for="tag in visitedViews" ref="tag" :key="tag.path" :class="isActive(tag) ? 'active' : ''" :to="{path: tag.path, query: tag.query, fullPath: tag.fullPath}" tag="span" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)" @contextmenu.prevent.native="openMenu(tag, $event)">
-        {{ $t('route.' + tag.meta.title) }}
-        <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
-      </router-link>
-    </scroll-pane>
-    <ul v-show="visible" :style="{left: left+'px', top: top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">
-        {{ $t('tagsView.refresh') }}
-      </li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
-        {{
-        $t('tagsView.close') }}
-      </li>
-      <li @click="closeOthersTags">
-        {{ $t('tagsView.closeOthers') }}
-      </li>
-      <li @click="closeAllTags(selectedTag)">
-        {{ $t('tagsView.closeAll') }}
-      </li>
-    </ul>
-  </div>
+    <div id="tags-view-container" class="tags-view-container">
+        <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+            <router-link v-for="tag in visitedViews" ref="tag" :key="tag.path" :class="isActive(tag) ? 'active' : ''" :to="{path: tag.path, query: tag.query, fullPath: tag.fullPath}" tag="span" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)" @contextmenu.prevent.native="openMenu(tag, $event)">
+                {{ getText(tag.meta.title,'route.') }}
+                <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+            </router-link>
+        </scroll-pane>
+        <ul v-show="visible" :style="{left: left+'px', top: top+'px'}" class="contextmenu">
+            <li @click="refreshSelectedTag(selectedTag)">
+                {{ $t('tagsView.refresh') }}
+            </li>
+            <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
+                {{ $t('tagsView.close') }}
+            </li>
+            <li @click="closeOthersTags">
+                {{ $t('tagsView.closeOthers') }}
+            </li>
+            <li @click="closeAllTags(selectedTag)">
+                {{ $t('tagsView.closeAll') }}
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script lang="ts">
 import path from "path";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import VueRouter, { Route, RouteRecord, RouteConfig } from "vue-router";
-import { PermissionModule } from "@/store/modules/permission";
+import { RoutesModule } from "@/store/modules/routes";
 import { TagsViewModule, ITagView } from "@/store/modules/tags-view";
 import ScrollPane from "./ScrollPane.vue";
 
 @Component({
     name: "TagsView",
     components: {
-    ScrollPane
+        ScrollPane
     }
-    })
+})
 export default class extends Vue {
     private visible: boolean = false;
     private top: number = 0;
@@ -50,7 +49,7 @@ export default class extends Vue {
     }
 
     get routes() {
-        return PermissionModule.routes;
+        return RoutesModule.routes;
     }
 
     @Watch("$route")
@@ -204,6 +203,14 @@ export default class extends Vue {
 
     private closeMenu() {
         this.visible = false;
+    }
+
+    private getText(key: string, module: string = "tagsView") {
+        let title = this.$t(module + key);
+        if (title.indexOf(module) > -1) {
+            return key;
+        }
+        return title;
     }
 }
 </script>

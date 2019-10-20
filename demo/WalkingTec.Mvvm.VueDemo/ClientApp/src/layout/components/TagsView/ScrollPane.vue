@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native.prevent="handleScroll">
-    <slot />
-  </el-scrollbar>
+    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native.prevent="handleScroll">
+        <slot />
+    </el-scrollbar>
 </template>
 
 <script lang="ts">
@@ -11,7 +11,7 @@ const tagSpacing = 4;
 
 @Component({
     name: "ScrollPane"
-    })
+})
 export default class extends Vue {
     handleScroll(e: MouseWheelEvent) {
         const eventDelta = (e as any).wheelDelta || -e.deltaY * 40;

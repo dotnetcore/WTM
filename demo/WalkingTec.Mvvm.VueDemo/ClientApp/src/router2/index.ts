@@ -1,15 +1,8 @@
 import Vue from "vue";
 import Router, { RouteConfig } from "vue-router";
-/* Layout */
 import Layout from "@/layout/index.vue";
-
 Vue.use(Router);
 
-/**
-  ConstantRoutes
-  a base page that does not have permission requirements
-  all roles can be accessed
-*/
 export const constantRoutes: RouteConfig[] = [
     {
         path: "/",
@@ -35,8 +28,7 @@ export const constantRoutes: RouteConfig[] = [
         children: [
             {
                 path: "index",
-                component: () =>
-                    import(/* webpackChunkName: "i18n-demo" */ "@/views/i18n-demo/index.vue"),
+                component: () => import("@/views/i18n-demo/index.vue"),
                 name: "I18n",
                 meta: {
                     title: "i18n",
@@ -44,15 +36,7 @@ export const constantRoutes: RouteConfig[] = [
                 }
             }
         ]
-    }
-];
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes: RouteConfig[] = [
-    /** when your routing map is too long, you can split it into small modules **/
+    },
     {
         path: "external-link",
         component: Layout,
@@ -65,7 +49,10 @@ export const asyncRoutes: RouteConfig[] = [
                 }
             }
         ]
-    },
+    }
+];
+
+export const asyncRoutes: RouteConfig[] = [
     {
         path: "*",
         redirect: "/404",
@@ -75,7 +62,7 @@ export const asyncRoutes: RouteConfig[] = [
 
 const createRouter = () =>
     new Router({
-        // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
+        // mode: 'history',
         scrollBehavior: (to, from, savedPosition) => {
             if (savedPosition) {
                 return savedPosition;
@@ -89,7 +76,6 @@ const createRouter = () =>
 
 const router = createRouter();
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
     const newRouter = createRouter();
     (router as any).matcher = (newRouter as any).matcher; // reset router

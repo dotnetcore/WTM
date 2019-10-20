@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { AppModule } from "@/store/modules/app";
-import { PermissionModule } from "@/store/modules/permission";
+import { RoutesModule } from "@/store/modules/routes";
 import { SettingsModule } from "@/store/modules/settings";
 import SidebarItem from "./SidebarItem.vue";
 import SidebarLogo from "./SidebarLogo.vue";
@@ -31,8 +31,7 @@ export default class extends Vue {
     }
 
     get routes() {
-        console.log("PermissionModule.routes", PermissionModule.routes);
-        return PermissionModule.routes;
+        return RoutesModule.routes;
     }
 
     get showLogo() {

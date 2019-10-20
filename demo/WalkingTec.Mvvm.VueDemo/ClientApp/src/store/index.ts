@@ -21,14 +21,13 @@ const mutations = {
         states.menuItems = data;
     }
 };
-const actions = {};
 const getters = {
     menuItems: (state: any) => state.menuItems,
     isCollapse: (state: any) => state.isFold
 };
 export default new Vuex.Store({
     state: { ...state, ...newStore.state },
-    actions: { ...newStore.actions, ...actions },
+    actions: newStore.actions,
     getters,
     mutations: { ...mutations, ...newStore.mutations }
 });

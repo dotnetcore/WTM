@@ -2,11 +2,10 @@ import Vue from "vue";
 import createRouter from "@/router/index";
 import store from "@/store/index";
 import App from "@/views/index.vue";
-import { dirEdit, visible, error } from "@/util/directive/index";
+import { edit, visible, error } from "@/util/directive/index";
 import { formatTime } from "@/util/filters/index";
 import { Card, DialogBox } from "@/util/component/index";
 import config from "@/config/index";
-
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/index.less";
 // 饿了吗ui
@@ -17,12 +16,14 @@ Vue.use(ElementUI, { size: config.elSize });
 
 const nprogress = new NProgress({ parent: ".app-nprogress" });
 
+console.log("store");
+console.log(store);
+
 createRouter().then(router => {
     // 指令
-    Vue.directive("edit", dirEdit);
+    Vue.directive("edit", edit);
     Vue.directive("visible", visible);
     Vue.directive("error", error);
-
     // 过滤器
     Vue.filter("formatTime", formatTime);
     // 组件

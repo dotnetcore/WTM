@@ -3,7 +3,7 @@
  *
  * 目前创建 state，actions，mutations 部分
  */
-import service from "@/service/service";
+import _request from "@/service/service";
 import { firstUpperCase } from "@/util/string";
 import attributes from "@/store/common/attributes";
 
@@ -44,7 +44,7 @@ const stoBase = {
     actionsDef: (serviceItem, mutationsKey, cb?: Function) => {
         return ({ commit }, params) => {
             const option = Object.assign({ data: params }, serviceItem);
-            return service(option, null).then(result => {
+            return _request(option, null).then(result => {
                 if (serviceItem.method === "get") {
                     commit(mutationsKey, result || {});
                     // 判断是否回调方法

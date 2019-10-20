@@ -1,8 +1,9 @@
-import user from "@/store/common/user";
+// import user from "@/store/common/user";
+import { UserModule } from "@/store/modules/user";
 import config from "@/config/index";
 /**
  * 1. 文本字段
- * dirEdit 指令-是否编辑
+ * edit 指令-是否编辑
  * v-edit:[status]
  * status： 增/删/改 状态
  * 2. 集合字段
@@ -37,7 +38,7 @@ const domStyleFn = (el, binding, vnode) => {
     }
 };
 // 编辑
-export const dirEdit = {
+export const edit = {
     inserted: (el, binding, vnode) => {
         // el前添加dom
         const div = document.createElement("div");
@@ -57,13 +58,13 @@ export const visible = {
         }
         if (_.isArray(binding.value)) {
             const fslist = _.filter(binding.value, item =>
-                user.Actions.includes(item)
+                UserModule.actionList.includes(item)
             );
             if (fslist.length < 1) {
                 el.parentNode.removeChild(el);
             }
         } else {
-            if (!user.Actions.includes(_.toLower(binding.value))) {
+            if (!UserModule.actionList.includes(_.toLower(binding.value))) {
                 el.parentNode.removeChild(el);
             }
         }
@@ -76,3 +77,4 @@ export const error = {
         console.log(el, binding, vnode);
     }
 };
+export * from "./el-draggable-dialog";

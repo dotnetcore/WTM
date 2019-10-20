@@ -5,7 +5,7 @@
  *      method: 'post' // 请求方式，post\get\put\delete
  *      data: {}, // 参数
  * }
- * service(option)
+ * _request(option)
             .then(data => {
                 console.log('then', data);
             })
@@ -72,7 +72,7 @@ function parameterTemplate(url, param) {
     return url;
 }
 
-const service = (option, serverHost?) => {
+const _request = (option, serverHost?) => {
     // config.serverHost
     let url = serverHost ? serverHost : "" + option.url;
     url = parameterTemplate(url, option.data);
@@ -129,4 +129,4 @@ const service = (option, serverHost?) => {
             throw res;
         });
 };
-export default service;
+export default _request;
