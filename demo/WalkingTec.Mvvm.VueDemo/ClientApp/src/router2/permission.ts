@@ -3,7 +3,7 @@ import "nprogress/nprogress.css";
 import { Message } from "element-ui";
 import { Route } from "vue-router";
 import { UserModule } from "@/store/modules/user";
-import { PermissionModule } from "@/store/modules/permission";
+import { RoutesModule } from "@/store/modules/routes";
 import i18n from "@/lang"; // Internationalization
 import settings from "../settings";
 import router from "./index";
@@ -24,20 +24,14 @@ const getPageTitle = (key: string) => {
 router.beforeEach(async (to: Route, _: Route, next: any) => {
     NProgress.start();
     if (UserModule.token) {
-        // Check whether the user has obtained his permission roles
+        // Check roles
         if (UserModule.roles.length === 0) {
             try {
-                // await UserModule.GetUserInfo();
-                const roles = ["admin"]; // UserModule.roles;
-                PermissionModule.GenerateRoutes(roles);
-                //router.addRoutes(PermissionModule.dynamicRoutes);
-                console.log("to", to);
-                console.log(PermissionModule.dynamicRoutes);
-                // next({ ...to, replace: true });
-                next();
+                await UserModule.GetUserInfo();
+                RoutesModule.GenerateRoutes(UserModule.menus);
+                router.addRoutes(RoutesModule.dynamicRoutes);
+                next({ ...to, replace: true });
             } catch (err) {
-                // Remove token and redirect to login page
-                UserModule.ResetToken();
                 Message.error(err || "Has Error");
                 location.href = "/login.html";
                 // next(`/login?redirect=${to.path}`);

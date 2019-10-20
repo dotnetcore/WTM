@@ -42,9 +42,9 @@ class TagsView extends VuexModule implements ITagsViewState {
 
     @Mutation
     private DEL_VISITED_VIEW(view: ITagView) {
-        for (const [i, v] of this.visitedViews.entries()) {
+        for (const [i, v] of Object.entries(this.visitedViews)) {
             if (v.path === view.path) {
-                this.visitedViews.splice(i, 1);
+                this.visitedViews.splice(_.parseInt(i), 1);
                 break;
             }
         }
@@ -52,9 +52,9 @@ class TagsView extends VuexModule implements ITagsViewState {
 
     @Mutation
     private DEL_CACHED_VIEW(view: ITagView) {
-        for (const [i, v] of this.cachedViews.entries()) {
+        for (const [i, v] of Object.entries(this.cachedViews)) {
             if (v === view.name) {
-                this.cachedViews.splice(i, 1);
+                this.cachedViews.splice(_.parseInt(i), 1);
                 break;
             }
         }
@@ -69,9 +69,12 @@ class TagsView extends VuexModule implements ITagsViewState {
 
     @Mutation
     private DEL_OTHERS_CACHED_VIEWS(view: ITagView) {
-        for (const [i, v] of this.cachedViews.entries()) {
+        for (const [i, v] of Object.entries(this.cachedViews)) {
             if (v === view.name) {
-                this.cachedViews = this.cachedViews.slice(i, i + 1);
+                this.cachedViews = this.cachedViews.slice(
+                    _.parseInt(i),
+                    _.parseInt(i) + 1
+                );
                 break;
             }
         }

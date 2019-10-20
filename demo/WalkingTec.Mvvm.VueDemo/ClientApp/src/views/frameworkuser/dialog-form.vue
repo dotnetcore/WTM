@@ -192,11 +192,6 @@ export default class Index extends Vue {
     }
     // ★★
     get userRolesData() {
-        console.log(
-            "this.getFrameworkRolesData",
-            this.getFrameworkRolesData,
-            this
-        );
         return this.getFrameworkRolesData.map(item => {
             return {
                 key: item.Value,
@@ -230,7 +225,7 @@ export default class Index extends Vue {
         if (this["status"] !== this["dialogType"].add) {
             const parameters = { ID: this["dialogData"].ID };
             this.detail(parameters).then(res => {
-                this["setFormData"](res.Entity);
+                this["setFormData"](res);
                 this.updDataToTransfer("UserRoles");
                 this.updDataToTransfer("UserGroups");
             });

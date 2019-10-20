@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-box">
-    <el-dialog v-if="dialog==='弹框'" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" @close="onClose" v-on="$listeners">
+    <el-dialog v-el-draggable-dialog v-if="dialog==='弹框'" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" @close="onClose" v-on="$listeners">
       <slot />
     </el-dialog>
     <el-drawer v-else class="el-drawer-box" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" @close="onClose" v-on="$listeners">

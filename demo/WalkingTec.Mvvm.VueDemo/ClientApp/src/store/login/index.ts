@@ -7,11 +7,6 @@ const newStore = createStore(reqLogin);
 
 export default new Vuex.Store({
     strict: true,
-    state: {
-        ...newStore.state
-    },
-    actions: { ...newStore.actions },
     getters: {},
-    mutations: { ...newStore.mutations },
-    modules: {}
+    ...newStore
 });

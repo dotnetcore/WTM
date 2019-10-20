@@ -1,11 +1,15 @@
 import { RouteConfig } from "vue-router";
 import config from "@/config/index";
+import Layout from "@/layout/index.vue";
+
 const development = config.development;
+
 interface routerItem {
     children: [];
     path: string;
     meta: {};
 }
+
 class Menu {
     constructor() {}
     /**
@@ -13,13 +17,14 @@ class Menu {
      * @param menuItem
      * @param originalMenu
      */
-    private getRouterItem(menuItem, originalMenu: any[]) {
+    private getRouterItem(menuItem, originalMenu: any[] = []) {
         const routerItem: RouteConfig = {
             path: menuItem.Url || "",
             name: menuItem.Text,
-            component: () => {},
+            component: Layout,
             children: [] as RouteConfig[],
             meta: {
+                title: menuItem.Text,
                 icon: menuItem.Icon,
                 ParentId: menuItem.ParentId,
                 Id: menuItem.Id
@@ -79,6 +84,19 @@ class Menu {
                 menuItem.children || [],
                 originalMenu
             );
+            if (
+                ParentId === null &&
+                menuItem.Url &&
+                routerItem.children.length === 0
+            ) {
+                routerItem.children.push({
+                    meta: routerItem.meta,
+                    path: "index",
+                    component: routerItem.component
+                });
+                // delete routerItem.meta;
+                routerItem.component = Layout;
+            }
             children.push(routerItem);
         });
         return children;
