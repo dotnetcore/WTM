@@ -6,6 +6,7 @@ import { create, persist } from 'mobx-persist';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "./global.less";
+import { Settings } from '@ant-design/pro-layout';
 // 日期中文
 moment.locale('zh-cn');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
@@ -36,10 +37,39 @@ class ConfigStore {
      * 默认配置
      */
     default = {
-        title: "WalkingTec MVVM",
+        // title: "WalkingTec MVVM",
         logo: ImgLogo,
         avatar: ImgUser,
     };
+    /**
+     * ant Pro 布局 设置  https://github.com/ant-design/ant-design-pro-layout/blob/master/README.zh-CN.md#MenuDataItem
+     * @type {Settings}
+     * @memberof ConfigStore
+     */
+    @persist("object")
+    @observable
+    settings: Settings = {
+        // 导航的主题 'light' | 'dark'
+        navTheme: 'dark',
+        // layout 的菜单模式,sidemenu：右侧导航，topmenu：顶部导航 'sidemenu' | 'topmenu'
+        layout: 'sidemenu',
+        // layout 的内容模式,Fluid：定宽 1200px，Fixed：自适应
+        contentWidth: 'Fluid',
+        // 是否固定 header 到顶部
+        fixedHeader: true,
+        // 是否下滑时自动隐藏 header
+        autoHideHeader: false,
+        // 是否固定导航
+        fixSiderbar: true,
+        // 关于 menu 的配置，暂时只有 locale,locale 可以关闭 menu 的自带的全球化
+        menu: {
+            locale: true,
+        },
+        // layout 的 左上角 的 title
+        title: 'WalkingTec MVVM',
+        // 使用 IconFont 的图标配置
+        iconfontUrl: '',
+    }
     /**
      * 服务器地址 前缀
      * process.env.NODE_ENV === "development" 根据 环境替换
@@ -162,6 +192,8 @@ class ConfigStore {
     @persist
     @observable
     agGridTheme = "ag-theme-balham";
+
+
 }
 const GlobalConfig = new ConfigStore();
 
