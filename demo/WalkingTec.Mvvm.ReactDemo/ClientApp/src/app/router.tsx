@@ -76,7 +76,7 @@ class AuthentComponent extends React.Component<any> {
     }
     render() {
         if (Store.User.loding) {
-            return <LayoutSpin/>
+            return <LayoutSpin />
         }
         // 用户登陆菜单加载完成进入主界面
         if (Store.User.isLogin) {
@@ -109,9 +109,9 @@ function initRouters() {
  */
 function createCSSTransition(Component: any, classNames = "fade") {
     return class extends React.Component<any, any> {
-        shouldComponentUpdate() {
-            return !globalConfig.tabsPage
-        }
+        // shouldComponentUpdate() {
+        //     return !globalConfig.tabsPage
+        // }
         componentDidMount() {
             // console.log("TCL: extends -> componentDidMount -> this.props", this.props)
         }

@@ -14,7 +14,7 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { Icon, Pagination, Switch, Button } from 'antd';
+import { Icon, Pagination, Switch, Button, Spin } from 'antd';
 import { PaginationProps } from 'antd/lib/pagination';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -148,9 +148,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
             }
             const refTable = this.refTableBody.current;//ReactDOM.findDOMNode(this.ref.current) as HTMLDivElement;
             // 60 是头部 标题栏 高度
-            let height = window.innerHeight - refTable.offsetTop - 60 - 100;
+            let height = window.innerHeight - refTable.offsetTop - 60 - 104;
             if (!globalConfig.tabsPage) {
-                height += 90;
+                height += 84;
             }
             height = height < this.minHeight ? this.minHeight : height;
             if (this.state.height !== height) {
@@ -246,7 +246,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
             // rowData,
             ...props
         } = this.props;
-        const { DataSource } = Store;
+        const { DataSource, PageState } = Store;
         const dataSource = DataSource.tableList;
         const checkboxSelectionWidth = {
             "ag-theme-balham": 40,
@@ -277,7 +277,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid ${className} ${theme}`}>
-                    {/* <Spin spinning={loading} > */}
+                    <Spin spinning={PageState.tableLoading} size="large" indicator={<Icon type="loading" spin />} />
                     <AgGridReact
                         // 内置 翻译 替换
                         localeText={localeText}
@@ -320,12 +320,27 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         }}
                         columnDefs={[
                             checkboxSelection && {
+                                // pivotIndex: 0,
+                                rowDrag: false,
+                                dndSource: false,
+                                lockPosition:true,
+                                // dndSourceOnRowDrag: false,
+                                suppressMenu: true,
+                                suppressSizeToFit: true,
+                                suppressMovable: true,
+                                suppressNavigable: true,
+                                suppressCellFlash: true,
+                                // rowGroup: false,
+                                enableRowGroup: false,
+                                enablePivot: false,
+                                enableValue: false,
+                                suppressResize: false,
                                 editable: false,
+                                suppressToolPanel: true,
                                 filter: false,
                                 resizable: false,
                                 checkboxSelection: true,
                                 headerCheckboxSelection: true,
-                                menuTabs: [],
                                 width: checkboxSelectionWidth,
                                 maxWidth: checkboxSelectionWidth,
                                 minWidth: checkboxSelectionWidth,
@@ -356,23 +371,26 @@ export class AgGrid extends React.Component<ITableProps, any> {
                     />
                     {/* </Spin> */}
                 </div>
-                <Pagination
-                    className='ant-table-pagination'
-                    {...{
-                        position: "bottom",
-                        showSizeChanger: true,//是否可以改变 pageSize
-                        showQuickJumper: true,
-                        pageSize: dataSource.Limit,
-                        pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
-                        size: "small",
-                        current: dataSource.Page,
-                        // defaultPageSize: dataSource.Limit,
-                        // defaultCurrent: dataSource.Page,
-                        total: dataSource.Count,
-                        onChange: this.onChangePagination,
-                        onShowSizeChange: this.onChangePagination
-                    }}
-                />
+                <div className='app-table-pagination'>
+                    <Pagination
+
+                        {...{
+                            disabled: PageState.tableLoading,
+                            position: "bottom",
+                            showSizeChanger: true,//是否可以改变 pageSize
+                            showQuickJumper: true,
+                            pageSize: dataSource.Limit,
+                            pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
+                            size: "small",
+                            current: dataSource.Page,
+                            // defaultPageSize: dataSource.Limit,
+                            // defaultCurrent: dataSource.Page,
+                            total: dataSource.Count,
+                            onChange: this.onChangePagination,
+                            onShowSizeChange: this.onChangePagination
+                        }}
+                    />
+                </div>
             </>
         );
     }

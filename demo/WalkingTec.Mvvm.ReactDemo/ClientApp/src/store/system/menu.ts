@@ -54,7 +54,8 @@ class Store {
                 path: data.Url,
                 name: data.Text,
                 icon: "pic-right",
-                children: data.Children
+                children: data.Children,
+                ...data
             });
         });
         return children;
@@ -62,7 +63,16 @@ class Store {
     /**  设置菜单 */
     @action.bound
     setSubMenu(subMenu) {
-        this.ParallelMenu = subMenu;
+        this.ParallelMenu = subMenu.map(data => {
+            return {
+                ...data,
+                key: data.Id,
+                path: data.Url,
+                name: data.Text,
+                icon: "pic-right",
+                // children: data.Children
+            }
+        });
         const menu = this.recursionTree(subMenu, null, []);
         console.log(menu)
         this.subMenu = menu

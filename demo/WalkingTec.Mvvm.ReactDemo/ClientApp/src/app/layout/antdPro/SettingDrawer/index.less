@@ -7,6 +7,7 @@
     position: relative;
     min-height: 100%;
     background: @component-background;
+
     .ant-list-item {
       span {
         flex: 1;
@@ -17,16 +18,19 @@
   &-block-checbox {
     display: flex;
     background: @component-background;
+
     &-item {
       position: relative;
       margin-right: 16px;
       // box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
       border-radius: @border-radius-base;
       cursor: pointer;
+
       img {
         width: 48px;
       }
     }
+
     &-selectIcon {
       position: absolute;
       top: 0;
@@ -61,8 +65,8 @@
 
   &-handle {
     position: absolute;
-    top: 240px;
-    right: 300px;
+    top: 140px;
+    right: 265px;
     z-index: 0;
     display: flex;
     align-items: center;
@@ -75,10 +79,21 @@
     border-radius: 4px 0 0 4px;
     cursor: pointer;
     pointer-events: auto;
+    transition: all .2s;
+
+    &:hover {
+      right: 300px;
+    }
   }
 
   &-production-hint {
     margin-top: 16px;
     font-size: 12px;
+  }
+}
+
+.ant-drawer-open {
+  .@{ant-pro-setting-drawer}-handle {
+    right: 300px;
   }
 }

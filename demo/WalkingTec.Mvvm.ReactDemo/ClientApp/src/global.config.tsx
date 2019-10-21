@@ -131,7 +131,7 @@ class ConfigStore {
      */
     @persist
     @observable
-    tabsPage = true;
+    tabsPage = false;
     /**
      * tabs 切换动画
      */

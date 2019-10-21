@@ -118,7 +118,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         const { PageState } = this.Store;
         return (
             <>
-                <DataSpin Store={this.Store} />
+                {/* <DataSpin Store={this.Store} /> */}
                 {items.length > 0 && <Form className="data-view-search" onSubmit={this.onSubmit}>
                     {/* <Spin spinning={PageState.tableLoading}> */}
                     <Row type="flex" >

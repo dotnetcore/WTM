@@ -1,24 +1,13 @@
-import './index.less';
-
-import {
-  Button,
-  Divider,
-  Drawer,
-  Icon,
-  List,
-  Select,
-  Switch,
-  Tooltip,
-  message,
-} from 'antd';
-import React, { Component } from 'react';
 // import CopyToClipboard from 'react-copy-to-clipboard';
 // import omit from 'omit.js';
 import defaultSettings, { Settings } from '@ant-design/pro-layout/es/defaultSettings';
-
+import getLocales, { getLanguage } from '@ant-design/pro-layout/es/locales';
+import { Divider, Drawer, Icon, List, Select, Switch, Tooltip } from 'antd';
+import React, { Component } from 'react';
 import BlockCheckbox from './BlockCheckbox';
-import ThemeColor from './ThemeColor';
-import getLocales, { getLanguage } from '@ant-design/pro-layout/es//locales';
+import './index.less';
+
+
 // import { isBrowser } from '../utils/utils';
 const isBrowser = () => typeof window !== 'undefined';
 
@@ -318,12 +307,12 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
             />
           </Body>
 
-          <ThemeColor
+          {/* <ThemeColor
             title={formatMessage({ id: 'app.setting.themecolor' })}
             value={primaryColor}
             formatMessage={formatMessage}
             onChange={color => this.changeSetting('primaryColor', color)}
-          />
+          /> */}
 
           <Divider />
 
@@ -356,7 +345,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
 
           <Divider />
 
-          <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
+          {/* <Body title={formatMessage({ id: 'app.setting.othersettings' })}>
             <List
               split={false}
               renderItem={this.renderLayoutSettingItem}
@@ -376,7 +365,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
               ]}
             />
           </Body>
-          <Divider />
+          <Divider /> */}
           {/* <CopyToClipboard
             text={JSON.stringify(omit(settings, ['colorWeak']), null, 2)}
             onCopy={() =>

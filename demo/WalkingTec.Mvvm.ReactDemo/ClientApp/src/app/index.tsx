@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import routes from './router';
-@observer
+// @observer
 export default class RootRoutes extends React.Component<any, any> {
     render() {
         return (

@@ -93,12 +93,34 @@
     transition: all .1s;
     position: relative;
     padding-top: 10px;
-    .ant-spin-container,
-    .ant-spin-nested-loading {
-        height: 100%;
+
+    .ant-spin-spinning {
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.9);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: all .2s;
+        display: flex;
+        z-index: -1;
+
+        &.ant-spin-spinning {
+            z-index: 10;
+            // display: flex;
+        }
     }
-    
 }
+
+.app-table-pagination {
+    margin: 0;
+    padding: 14px 0;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .ag-pinned-left-cols-container,
 .ag-pinned-left-header,
 .ag-pinned-right-cols-container,
@@ -107,10 +129,10 @@
 .ag-header-row,
 .ag-header-cell,
 .ag-center-cols-container,
-.ag-cell
-{
+.ag-cell {
     transition: all .2s;
 }
+
 // .app-ag-grid.ag-theme-balham .ag-root {
 //     border: none;
 // }
