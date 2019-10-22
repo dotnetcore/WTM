@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            Id = "chart" + Guid.NewGuid().ToString().Replace("-", "");
+            Id = "chart" + Guid.NewGuid().ToString("N");
             output.TagName = "div";
             output.Attributes.Add("ischart", "1");
             output.TagMode = TagMode.StartTagAndEndTag;
