@@ -17,7 +17,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         headerName: "性别", field: "Sex",
     },
     {
-        headerName: "照片", field: "PhotoId", cellRenderer: "columnsRenderImg"
+        headerName: "照片", field: "PhotoId", cellRenderer: "columnsRenderImg", minWidth: 130
     },
     {
         headerName: "是否有效", field: "IsValid", cellRenderer: "columnsRenderBoolean"
