@@ -1,15 +1,15 @@
 <template>
-  <div ref="rightPanel" :class="{show: show}" class="rightPanel-container">
-    <div class="rightPanel-background" />
-    <div class="rightPanel">
-      <div class="handle-button" :style="{'top': buttonTop+'px','background-color': theme}" @click="show=!show">
-        <i :class="show?'el-icon-close':'el-icon-setting'" />
-      </div>
-      <div class="rightPanel-items">
-        <slot />
-      </div>
+    <div ref="rightPanel" :class="{show: show}" class="rightPanel-container">
+        <div class="rightPanel-background" />
+        <div class="rightPanel">
+            <div class="handle-button" :style="{'top': buttonTop+'px','background-color': theme}" @click="show=!show">
+                <i :class="show?'el-icon-close':'el-icon-setting'" />
+            </div>
+            <div class="rightPanel-items">
+                <slot />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -19,10 +19,10 @@ import { SettingsModule } from "@/store/modules/settings";
 
 @Component({
     name: "RightPanel"
-    })
+})
 export default class extends Vue {
     @Prop({ default: false }) private clickNotClose!: boolean;
-    @Prop({ default: 250 }) private buttonTop!: number;
+    @Prop({ default: 450 }) private buttonTop!: number;
 
     private show = false;
 

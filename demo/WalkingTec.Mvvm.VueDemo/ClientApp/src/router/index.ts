@@ -42,7 +42,7 @@ export const constantRoutes: RouteConfig[] = [
         component: Layout,
         children: [
             {
-                path: "https://github.com/Armour/vue-typescript-admin-template",
+                path: "https://www.baidu.com",
                 meta: {
                     title: "externalLink",
                     icon: "link"

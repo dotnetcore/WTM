@@ -13,8 +13,7 @@
                     模糊查询
                 </el-button>
                 <el-button v-if="needCollapse&&$slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
-                    <!-- <i class="fa fa-angle-double-down arrow-down" :class="{'is-active': isActive}"></i> -->
-                    <i class="fa fa-angle-down arrow-down" :class="{'is-active': isActive}" />
+                    <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
                 </el-button>
             </el-button-group>
             <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" @click="onReset">
@@ -25,9 +24,7 @@
             </div>
         </div>
         <div class="uds-collapse" :class="{'is-active':!isFuzzy || isActive}" v-show="$slots['collapse-content']">
-            <div class="collapse-content">
-                <slot name="collapse-content" />
-            </div>
+            <slot name="collapse-content" />
         </div>
     </div>
 </template>
@@ -116,12 +113,11 @@ export default class FuzzySearch extends Vue {
         vertical-align: text-top;
     }
     .toggle-class {
-        width: 34px;
+        padding-left: 7px;
+        padding-right: 7px;
     }
     .uds-collapse {
         will-change: max-height;
-
-        // background-color: #f5f5f5;
         .transition(all 0.4s ease 0s);
         max-height: 0;
         opacity: 0;

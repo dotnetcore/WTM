@@ -10,12 +10,13 @@ import router from "@/router";
 import store from "@/store/modules";
 import "@/assets/icon/components";
 import "@/router/permission";
+import { AppModule } from "@/store/modules/app";
 
 import * as directives from "@/util/directive/index";
 import * as filters from "@/util/filters/index";
 import * as component from "@/util/component/index";
 Vue.use(ElementUI, {
-    size: config.elSize, // Set element-ui default size
+    size: AppModule.size, // config.elSize, // Set element-ui default size
     i18n: (key: string, value: string) => i18n.t(key, value)
 });
 

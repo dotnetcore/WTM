@@ -11,13 +11,12 @@ interface ISettings {
     isDialog: boolean;
 }
 
-// You can customize below settings :)
 const settings: ISettings = {
-    title: "Vue Typescript Admin",
+    title: "WTM",
     showSettings: true,
     showTagsView: true,
     fixedHeader: false,
-    showSidebarLogo: false,
+    showSidebarLogo: true,
     errorLog: ["production"],
     sidebarTextTheme: true,
     isDialog: true,
