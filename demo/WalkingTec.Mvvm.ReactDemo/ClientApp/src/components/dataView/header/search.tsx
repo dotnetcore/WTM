@@ -121,9 +121,9 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
                 {/* <DataSpin Store={this.Store} /> */}
                 {items.length > 0 && <Form className="data-view-search" onSubmit={this.onSubmit}>
                     {/* <Spin spinning={PageState.tableLoading}> */}
-                    <Row type="flex" >
-                        {items.map(x => <Col key={`${this.key}_${x.key}`} span={colSpan}>{x}</Col>)}
-                        <Col span={colSpanSearch} className="data-view-search-right" >
+                    <Row type="flex" align="top">
+                        {items.map(x => <Col key={`${this.key}_${x.key}`} lg={colSpan} md={12} sm={24} xs={24} >{x}</Col>)}
+                        <Col lg={colSpanSearch} md={24} sm={24} xs={24} className="data-view-search-right" >
                             <Button icon="search" type="primary" htmlType="submit" >搜索</Button>
                             <Divider type="vertical" />
                             <Button icon="retweet" onClick={this.onReset} >重置</Button>

@@ -4,11 +4,13 @@ import ImgUser from 'assets/img/user.png';
 import { configure, observable } from 'mobx';
 import { create, persist } from 'mobx-persist';
 import moment from 'moment';
+import lodash from 'lodash';
 import 'moment/locale/zh-cn';
 import "./global.less";
 import { Settings } from '@ant-design/pro-layout';
+const language = lodash.get(window, 'navigator.language', 'zh-CN');
 // 日期中文
-moment.locale('zh-cn');
+// moment.locale('zh-cn');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 notification.config({
@@ -26,7 +28,12 @@ class ConfigStore {
     constructor() {
         hydrate('WTM_GlobalConfig', this)
             // post hydration
-            .then(() => console.log('some WTM_GlobalConfig', { ...this }))
+            .then(() => {
+                console.log('WTM_GlobalConfig', { ...this })
+                if (this.language === "zh-CN") {
+                    moment.locale('zh-cn');
+                }
+            })
     }
     buildTime = process.env.REACT_APP_TIME;
     /**
@@ -41,6 +48,12 @@ class ConfigStore {
         logo: ImgLogo,
         avatar: ImgUser,
     };
+    /**
+     * 语言
+     * @memberof ConfigStore
+     */
+    @observable
+    language = language
     /**
      * ant Pro 布局 设置  https://github.com/ant-design/ant-design-pro-layout/blob/master/README.zh-CN.md#MenuDataItem
      * @type {Settings}
@@ -111,7 +124,7 @@ class ConfigStore {
      */
     @persist
     @observable
-    infoType = "Drawer";//Drawer || Modal
+    infoType = "Modal";//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */

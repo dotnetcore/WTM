@@ -7,7 +7,7 @@ import Animate from 'rc-animate';
 import React from 'react';
 import { renderRoutes, RouteConfig } from 'react-router-config';
 import Store from 'store';
-import Layout from "./layout/default/index";
+import Layout from "./layout/default";
 import LayoutPro from "./layout/antdPro";
 import Demo from "./pages/demo";
 import External from "./pages/external";
