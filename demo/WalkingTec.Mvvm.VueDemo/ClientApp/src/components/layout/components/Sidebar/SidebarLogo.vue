@@ -2,10 +2,10 @@
   <div class="sidebar-logo-container" :class="{'collapse': collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img src="favicon.ico" class="sidebar-logo">
+        <img src="static/img/favicon.ico" class="sidebar-logo">
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img src="favicon.ico" class="sidebar-logo">
+        <img src="static/img/logo.png" class="sidebar-logo">
         <h1 class="sidebar-title">
           {{ title }}
         </h1>
@@ -23,7 +23,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class extends Vue {
     @Prop({ required: true }) private collapse!: boolean;
 
-    private title = "Vue Typescript Admin";
+    private title = "wtm";
 }
 </script>
 
@@ -63,7 +63,7 @@ export default class extends Vue {
             color: #fff;
             font-weight: 600;
             line-height: 50px;
-            font-size: 14px;
+            font-size: 20px;
             font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
             vertical-align: middle;
         }

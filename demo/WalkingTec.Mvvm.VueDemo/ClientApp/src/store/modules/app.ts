@@ -38,7 +38,7 @@ class App extends VuexModule implements IAppState {
     };
     public device = DeviceType.Desktop;
     public language = getLocale();
-    public size = getSize() || "medium";
+    public size = getSize() || "Small";
 
     @Mutation
     private TOGGLE_SIDEBAR(withoutAnimation: boolean) {

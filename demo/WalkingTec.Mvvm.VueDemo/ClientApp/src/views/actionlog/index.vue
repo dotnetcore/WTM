@@ -10,7 +10,7 @@
             <el-input v-model="searchForm.ActionUrl" />
           </el-form-item>
         </el-form>
-        <el-form slot="collapse-content" class="form-class">
+        <el-form slot="collapse-content" label-width="75px">
           <el-form-item label="操作时间">
             <el-input v-model="searchForm.ActionTime" />
           </el-form-item>

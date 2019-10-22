@@ -35,7 +35,9 @@ const messages = {
         ...elementJaLocale
     }
 };
-
+const missing = (locale, key, vm) => {
+    return key.substr(key.lastIndexOf(".") + 1);
+};
 export const getLocale = () => {
     const cookieLanguage = getLanguage();
     if (cookieLanguage) {
@@ -56,7 +58,8 @@ export const getLocale = () => {
 
 const i18n = new VueI18n({
     locale: getLocale(),
-    messages
+    messages,
+    missing
 });
 
 export default i18n;
