@@ -150,7 +150,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
             // 60 是头部 标题栏 高度
             let height = window.innerHeight - refTable.offsetTop - 168;
             if (!globalConfig.settings.tabsPage) {
-                height += 92;
+                height += 90;
             }
             height = height < this.minHeight ? this.minHeight : height;
             if (this.state.height !== height) {
