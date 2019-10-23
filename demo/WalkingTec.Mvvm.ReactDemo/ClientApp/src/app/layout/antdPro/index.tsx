@@ -86,7 +86,7 @@ export default class App extends React.Component<any> {
                     }}
                     footerRender={() => null}
                 >
-                    {GlobalConfig.settings.tabsPage ? <TabsPages {...this.props} /> : <MainContent {...this.props} contentWidth={settings.contentWidth} />}
+                    {settings.tabsPage && settings.contentWidth !== "Fixed" ? <TabsPages {...this.props} /> : <MainContent {...this.props} contentWidth={settings.contentWidth} />}
                 </BasicLayout>
                 <SettingDrawer settings={settings} onSettingChange={this.onSettingChange} />
             </>

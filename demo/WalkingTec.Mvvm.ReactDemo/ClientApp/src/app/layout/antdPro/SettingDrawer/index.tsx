@@ -233,6 +233,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
           id: 'app.setting.tabsPage',
           defaultMessage: 'tabsPage',
         }),
+        disabled: contentWidth === "Fixed",
         action: (
           <Switch
             size="small"
@@ -279,7 +280,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
           id: 'app.setting.fixedsidebar',
           defaultMessage: 'Fixed Sidebar',
         }),
-        disabled: layout === 'topmenu',
+        disabled: tabsPage || layout === 'topmenu',
         disabledReason: formatMessage({
           id: 'app.setting.fixedsidebar.hint',
           defaultMessage: 'Works on Side Menu Layout',
@@ -301,6 +302,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
     nextState[key] = value;
     if (key === 'layout') {
       nextState.contentWidth = value === 'topmenu' ? 'Fixed' : 'Fluid';
+      nextState.tabsPage = value === 'sidemenu';
     } else if (key === 'fixedHeader' && !value) {
       nextState.autoHideHeader = false;
     }
