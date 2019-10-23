@@ -39,7 +39,7 @@
     "test": "react-scripts test",
     "init": "yarn install",
     "clean": "rimraf node_modules package-lock.json yarn.lock",
-    "merge_dev": "git checkout develop && git pull && git checkout feature/React && git merge develop --no-edit ",
+    "merge_dev": "git checkout develop && git pull && git checkout feature/ReactNext && git merge develop --no-edit ",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
