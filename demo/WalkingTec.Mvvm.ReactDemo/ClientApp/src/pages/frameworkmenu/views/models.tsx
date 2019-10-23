@@ -179,6 +179,7 @@ class IConId extends React.Component<any, any> {
     }
     onChangeType(event) {
         this.setState({ iconType: event, iconItems: this.onGetItems(event) });
+        this.onChange(undefined)
     }
     onSearch() {
     }

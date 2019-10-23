@@ -2,6 +2,7 @@ import { Skeleton } from 'antd';
 import globalConfig from 'global.config';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import LayoutSpin from "components/other/LayoutSpin";
 import * as React from 'react';
 import './style.less';
 class MessageStore {
@@ -96,6 +97,7 @@ export default class IApp extends React.Component<any, any> {
     UNSAFE_componentWillMount() {
     }
     onLoad(e) {
+        // console.dir(e.target.contentWindow)
         // 发送消息
         // e.target.contentWindow.postMessage(this.sendPostMessage(), decodeURIComponent(this.props.match.params.url));
         // console.log(decodeURIComponent(this.props.match.params.url), this.ref.current.contentWindow)
@@ -105,19 +107,18 @@ export default class IApp extends React.Component<any, any> {
         const src = decodeURIComponent(this.props.match.params.url)
 
         return (
-            <>
+            <div className={"app-external-iframe " + (MsgeStore.visible && "app-external-visible")}>
                 <iframe
                     ref={this.ref}
                     key={src}
                     src={src}
-                    className={"app-external-iframe " + (MsgeStore.visible && "app-external-visible")}
                     onLoad={this.onLoad.bind(this)}
                 >
                 </iframe>
                 {this.state.loding ? <div className="app-external-iframe-Skeleton">
-                    <Skeleton paragraph={{ rows: 10 }} />
+                    <LayoutSpin />
                 </div> : null}
-            </>
+            </div>
         );
     }
 }

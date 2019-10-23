@@ -1,13 +1,13 @@
 import { notification } from 'antd';
+import { Settings } from 'app/layout/antdPro/SettingDrawer';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
+import lodash from 'lodash';
 import { configure, observable } from 'mobx';
 import { create, persist } from 'mobx-persist';
 import moment from 'moment';
-import lodash from 'lodash';
 import 'moment/locale/zh-cn';
 import "./global.less";
-import { Settings } from '@ant-design/pro-layout';
 const language = lodash.get(window, 'navigator.language', 'zh-CN');
 // 日期中文
 // moment.locale('zh-cn');
@@ -82,6 +82,18 @@ class ConfigStore {
         title: 'WalkingTec MVVM',
         // 使用 IconFont 的图标配置
         iconfontUrl: '',
+        // 弹框类型
+        infoType: "Modal",
+        /**
+        * AgGrid 主题
+        * ag-theme-balham
+        * ag-theme-material
+        */
+        agGridTheme: "ag-theme-material",
+        /**
+         * 页签 页面
+         */
+        tabsPage: true,
     }
     /**
      * 服务器地址 前缀
@@ -122,9 +134,9 @@ class ConfigStore {
     /** 
      * 详情信息 展示类型 
      */
-    @persist
-    @observable
-    infoType = "Modal";//Drawer || Modal
+    // @persist
+    // @observable
+    // infoType = "Modal";//Drawer || Modal
     /** 
     * 详情信息 展示 宽度
     */
@@ -164,49 +176,11 @@ class ConfigStore {
     @observable
     lockingTableRoll = true;
     /**
-     * 菜单默认展开 true=收起
-     */
-    @persist
-    @observable
-    collapsed = false;
-    /**
-     * tabs 页面
-     */
-    @persist
-    @observable
-    tabsPage = false;
-    /**
-     * tabs 切换动画
-     */
-    tabsAnimated = false;
-    /**
-     * tabs 页签位置，可选值有 top right bottom left
-     */
-    @persist
-    @observable
-    tabPosition: 'top' | 'right' | 'bottom' | 'left' = "top";
-    /**
-     * 菜单类型  horizontal 头部  inline 左侧
-     */
-    @persist
-    @observable
-    menuMode: "horizontal" | "inline" = "inline";
-    /**
      * 静态页面 标记
      */
     @persist
     @observable
     staticPage = "@StaticPage";
-    /**
-     * AgGrid 主题
-     * ag-theme-balham
-     * ag-theme-material
-     */
-    @persist
-    @observable
-    agGridTheme = "ag-theme-balham";
-
-
 }
 const GlobalConfig = new ConfigStore();
 

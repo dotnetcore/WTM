@@ -71,7 +71,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
         style: {}
     }
     render() {
-        if (GlobalConfig.infoType === "Modal") {
+        if (GlobalConfig.settings.infoType === "Modal") {
             const onClose = (this.props as DrawerProps).onClose
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal

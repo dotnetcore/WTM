@@ -1,13 +1,64 @@
 // import CopyToClipboard from 'react-copy-to-clipboard';
 // import omit from 'omit.js';
-import defaultSettings, { Settings } from '@ant-design/pro-layout/es/defaultSettings';
+// import defaultSettings, { Settings } from '@ant-design/pro-layout/es/defaultSettings';
 import getLocales, { getLanguage } from '@ant-design/pro-layout/es/locales';
 import { Divider, Drawer, Icon, List, Select, Switch, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import BlockCheckbox from './BlockCheckbox';
 import './index.less';
-
-
+import { MenuTheme } from 'antd/es/menu/MenuContext';
+export declare type ContentWidth = 'Fluid' | 'Fixed';
+export interface Settings {
+  /**
+   * theme for nav menu
+   */
+  navTheme: MenuTheme | undefined;
+  /**
+   * nav menu position: `sidemenu` or `topmenu`
+   */
+  layout: 'sidemenu' | 'topmenu';
+  /**
+   * layout of content: `Fluid` or `Fixed`, only works when layout is topmenu
+   */
+  contentWidth: ContentWidth;
+  /**
+   * sticky header
+   */
+  fixedHeader: boolean;
+  /**
+   * auto hide header
+   */
+  autoHideHeader: boolean;
+  /**
+   * sticky siderbar
+   */
+  fixSiderbar: boolean;
+  menu: {
+    locale: boolean;
+  };
+  title: string;
+  iconfontUrl: string;
+  /**
+   * 弹框类型
+   *
+   * @type {("Modal" | "Drawer")}
+   * @memberof Settings
+   */
+  infoType?: "Modal" | "Drawer";
+  /**
+   * AgGrid 主题
+   * ag-theme-balham
+   * ag-theme-material
+   */
+  agGridTheme?: "ag-theme-balham" | "ag-theme-material";
+  /**
+   *页签 页面
+   *
+   * @type {boolean}
+   * @memberof Settings
+   */
+  tabsPage?: boolean;
+}
 // import { isBrowser } from '../utils/utils';
 const isBrowser = () => typeof window !== 'undefined';
 
@@ -92,8 +143,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
   getLayoutSetting = (): SettingItemProps[] => {
     const { settings } = this.props;
     const formatMessage = this.getFormatMessage();
-    const { contentWidth, fixedHeader, layout, autoHideHeader, fixSiderbar } =
-      settings || defaultSettings;
+    const { contentWidth, fixedHeader, layout, autoHideHeader, fixSiderbar, infoType = "Modal", agGridTheme = 'ag-theme-material', tabsPage } = settings;
     return [
       {
         title: formatMessage({
@@ -126,9 +176,77 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
       },
       {
         title: formatMessage({
+          id: 'app.setting.infoType',
+          defaultMessage: '弹框类型',
+        }),
+        action: (
+          <Select<string>
+            value={infoType}
+            size="small"
+            onSelect={value => this.changeSetting('infoType', value)}
+            style={{ width: 80 }}
+          >
+            <Option value="Modal">
+              {formatMessage({
+                id: 'app.setting.infoType.Modal',
+                defaultMessage: 'Modal',
+              })}
+            </Option>
+            <Option value="Drawer">
+              {formatMessage({
+                id: 'app.setting.infoType.Drawer',
+                defaultMessage: 'Drawer',
+              })}
+            </Option>
+          </Select>
+        ),
+      },
+      {
+        title: formatMessage({
+          id: 'app.setting.agGridTheme',
+          defaultMessage: 'agGridTheme',
+        }),
+        action: (
+          <Select<string>
+            value={agGridTheme}
+            size="small"
+            onSelect={value => this.changeSetting('agGridTheme', value)}
+            style={{ width: 80 }}
+          >
+            <Option value="ag-theme-balham">
+              {formatMessage({
+                id: 'app.setting.agGridTheme.balham',
+                defaultMessage: 'balham',
+              })}
+            </Option>
+            <Option value="ag-theme-material">
+              {formatMessage({
+                id: 'app.setting.agGridTheme.material',
+                defaultMessage: 'material',
+              })}
+            </Option>
+          </Select>
+        ),
+      },
+      {
+        title: formatMessage({
+          id: 'app.setting.tabsPage',
+          defaultMessage: 'tabsPage',
+        }),
+        action: (
+          <Switch
+            size="small"
+            checked={!!tabsPage}
+            onChange={checked => this.changeSetting('tabsPage', checked)}
+          />
+        ),
+      },
+      {
+        title: formatMessage({
           id: 'app.setting.fixedheader',
           defaultMessage: 'Fixed Header',
         }),
+        disabled: tabsPage,
         action: (
           <Switch
             size="small"
@@ -137,12 +255,13 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
           />
         ),
       },
+
       {
         title: formatMessage({
           id: 'app.setting.hideheader',
           defaultMessage: 'Hidden Header when scrolling',
         }),
-        disabled: !fixedHeader,
+        disabled: tabsPage || !fixedHeader,
         disabledReason: formatMessage({
           id: 'app.setting.hideheader.hint',
           defaultMessage: 'Works when Hidden Header is enabled',
@@ -249,7 +368,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
       primaryColor = '1890FF',
       layout = 'sidemenu',
       colorWeak,
-    } = (settings || defaultSettings) as any;
+    } = (settings) as any;
     const { collapse } = this.state;
     const formatMessage = this.getFormatMessage();
     return (

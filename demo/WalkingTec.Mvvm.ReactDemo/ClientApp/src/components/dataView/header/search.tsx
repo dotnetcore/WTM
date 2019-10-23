@@ -89,7 +89,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         lodash.defer(() => {
             // 主动触发 浏览器 resize 事件
             dispatchEvent(new CustomEvent('resize'));
-            lodash.delay(() => document.body.style.overflowY = "", 500)
+            lodash.delay(() => document.body.style.overflowY = "", 300)
         })
     }
     render() {
