@@ -1,16 +1,18 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupMDVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupMDVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    @for (int i = 0; i < Model.DpLists.Count; i++)
-    {
-        <wt:hidden field="DpLists[i].List.Searcher.TableName" />
-        <wt:combobox field="DpLists[i].IsAll" yes-text="全部权限" no-text="选择权限" empty-text="无权限" label-text="@Model.DpLists[i].DpName" change-func="IsAllChange@(i)" />
-        <wt:row id="selector@(i)">
-            <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" label-text="">
-            </wt:selector>
-        </wt:row>
+  @for (int i = 0; i < Model.DpLists.Count; i++)
+  {
+    <wt:hidden field="DpLists[i].List.Searcher.TableName" />
+    <wt:combobox field="DpLists[i].IsAll" yes-text="@Localizer["AllPris"]" no-text="@Localizer["SelectPris"]" empty-text="@Localizer["NoPris"]" label-text="@Model.DpLists[i].DpName" change-func="IsAllChange@(i)" />
+    <wt:row id="selector@(i)">
+      <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" label-text="">
+      </wt:selector>
+    </wt:row>
 
-        <script>
+    <script>
             IsAllChange@(i)({ value: '@Model.DpLists[i].IsAll.ToString().ToLower()' });
             function IsAllChange@(i)(data) {
                 if (data.value == 'true' || data.value == '') {
@@ -21,12 +23,12 @@
                 }
             }
 
-        </script>
-    }
+    </script>
+  }
 
-    <wt:hidden field="GroupId" />
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:hidden field="GroupId" />
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>

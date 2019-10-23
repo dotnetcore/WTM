@@ -1,0 +1,61 @@
+{
+  "ConnectionStrings": [
+    {
+      "Key": "default",
+      "Value": "$cs$"
+    }
+  ],
+  "DBType": "$dbtype$", //使用的数据库，可选mysql,sqlserver,pgsql,sqlite,oracle
+  "CookiePre": "$cookiepre$", //cookie前缀
+  "EnableLog": $enablelog$, //是否启用日志
+  "LogExceptionOnly": $logexception$, //当启用日志的时候，是否只记录错误信息
+  "IsQuickDebug": true, //是否启用debug模式
+  "CorsOptions": {
+    "EnableAll": true, //所有方法是否默认跨域
+    "Policy": [
+      {
+        "Name": "Default",
+        "Domain": "http://localhost,https://localhost"
+      }
+    ]
+  },
+  "Languages":"zh,en",
+  "UIOptions": {
+    "DataTable": {
+      "RPP": $rpp$ //默认列表每页行数
+    },
+    "ComboBox": {
+      "DefaultEnableSearch": true //默认允许ComboBox搜索
+    },
+    "DateTime": {
+      "DefaultReadonly": true //默认开启DateTime只读
+    },
+    "SearchPanel": {
+      "DefaultExpand": true //默认展开SearchPanel内容
+    }
+  },
+  "SyncDb": true, //是否自动同步数据库
+  "EncryptKey": "", //加密密钥
+  "PageMode": "$pagemode$", //页面显示模式，Single或者Tab
+  "TabMode": "Simple", //Tab页显示方式，Default或者Simple
+  "IsFilePublic": false,//是否允许附件不用登陆就可以查看和下载
+  "FileUploadOptions": {
+    "UploadLimit": 20971520,
+    "SaveFileMode": "$filemode$", //上传文件的保存方式，可选Database,local,dfs
+    "UploadDir": "$uploaddir$"    //当上传文件选择Local时，指定硬盘目录
+  },
+  "DFSServer": {
+    "StorageMaxConnection": 100,
+    "TrackerMaxConnection": 100,
+    "ConnectionTimeout": 100,
+    "ConnectionLifeTime": 100,
+    "Trackers": [
+      {
+        "IP": "127.0.0.1",
+        "Port": 22122
+      }
+    ]
+  },
+  "AppSettings": [
+  ]
+}

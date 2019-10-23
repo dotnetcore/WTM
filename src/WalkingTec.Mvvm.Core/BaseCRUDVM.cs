@@ -152,8 +152,15 @@ namespace WalkingTec.Mvvm.Core
                     query = query.Include(item);
                 }
             }
+            if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
+            {
+                var mod = new IsValidModifier();
+                var newExp = mod.Modify(query.Expression);
+                query = query.Provider.CreateQuery<TModel>(newExp) as IOrderedQueryable<TModel>;
+            }
+
             //获取数据
-            rv = query.CheckID(Id).SingleOrDefault();
+            rv = query.CheckID(Id).AsNoTracking().SingleOrDefault();
             if (rv == null)
             {
                 throw new Exception("数据不存在");
@@ -411,7 +418,7 @@ namespace WalkingTec.Mvvm.Core
                                 foreach (var item in data)
                                 {
                                     //需要更新的数据
-                                    if (newitem.ID == item.ID)
+                                    if (newitem.GetID().ToString() == item.GetID().ToString())
                                     {
                                         dynamic i = newitem;
                                         var newitemType = item.GetType();

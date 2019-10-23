@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch (DbUpdateException)
             {
-                MSD.AddModelError("", "数据被使用，无法删除");
+                MSD.AddModelError("", Program._localizer["DataCannotDelete"]);
             }
         }
     }

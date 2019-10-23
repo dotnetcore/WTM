@@ -28,7 +28,19 @@ namespace WalkingTec.Mvvm.Admin.Test
         {
             PartialViewResult rv = (PartialViewResult)_controller.Index();
             Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            string rv2 = _controller.Search(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue(rv2.Contains("\"Code\":200"));
         }
+
+        [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
+        }
+
 
         [TestMethod]
         public void CreateTest()
@@ -163,6 +175,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserBatchVM));
+            (rv.Model as FrameworkUserBatchVM).ListVM.DoSearch();
 
             FrameworkUserBatchVM vm = rv.Model as FrameworkUserBatchVM;
             vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };

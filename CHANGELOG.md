@@ -2,6 +2,52 @@
 
 ## v2.3.x
 
+### v2.3.9 (2019-10-19)
+
+* **新增：**  多语言支持。https://wtmdoc.walkingtec.cn/#/Global/MultiLanguages
+老版本升级后会遇到单元测试项目中MockController.cs文件报错，将报错的行替换为
+_controller.GlobaInfo.SetModuleGetFunc(() => new List\<FrameworkModule\>());
+即可。
+
+* **新增：**  dotnet 3.0支持，线上新建项目时可选择dotnetcore3.0版本的项目
+
+#### 前后端不分离模式
+* **新增：**  集成了UEditor。https://wtmdoc.walkingtec.cn/#/UI/UEditor
+* **新增：**  列表按钮现在可以设置Max属性，来控制打开窗体时最大化
+* **修改：**  现在View页面不再强制要求Model必须继承BaseVM
+* **修改：**  修改菜单无法删除的历史遗留bug
+
+### v2.3.6 (2019-9-27)
+
+* **新增：**  Debug模式下，debug窗口会输出ef执行的sql语句
+* **修改：**  移除EnableCors属性，集成dotnetcore自带的Cors实现跨域，并可在appsettings文件中进行配置
+
+#### 前后端不分离模式
+* **修改：**  代码生成器会为Controller生成独立的搜索和导出方法，方便对搜索和导出进行权限控制，之前公共方法仍然保留
+* **修改：**  修复IE11下的显示问题
+* **修改：**  修复PersistPoco导入时没有给IsValid赋值的问题
+* **修改：**  修复SearchPanel中显示树形列表的问题
+
+### v2.3.5 (2019-9-19)
+
+本次更新增加了自定主键功能，除了默认的guid主键外，框架现在还支持自增整形和string类型的主键。
+同时代码生成器也可以准确识别主键类型，生成对应的代码。
+具体使用方式参见文档 https://wtmdoc.walkingtec.cn/#/Model/CustomKey
+
+由于主键不一定是guid了，老项目更新的时候需要手动修改之前的文件，主要是两部分：
+1. Controller里 BatchEdit，BatchDelete中的ids参数由guid[] 变为 string[]
+2. batchvm中的CheckIfCanDelete方法，第一个参数由guid变为object
+3. 老数据库中DataPrivileges表RelatedId字段类型由Guid变为Nvarchar
+改起来还是比较简单的
+
+#### 前后端不分离模式
+* **修改：**  修复layui模式下三级菜单无法显示的bug
+* **修改：**  修复selector控件不能搜索，不初始化的bug
+
+#### React前后端分离模式
+* **新增：**  增加菜单对字体图标的支持
+* **修改：**  修复react模式下三级菜单无法显示的bug
+
 ### v2.3.4 (2019-9-5)
 
 #### 前后端不分离模式
@@ -74,7 +120,7 @@
 #### 前后端不分离模式
 
 * **新增：** GridAction的按钮现在可以通过IsRedirect属性设置在当前页或者Tab页，或者新窗口中显示
-* **修改：** 修复layui普通checkbox样式问题 
+* **修改：** 修复layui普通checkbox样式问题
 * **修改：** 修复菜单添加报错的bug
 * **修改：** 修复多表头显示问题
 * **修改：** 修复GridAction中IconCls属性不起作用的问题

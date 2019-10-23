@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public UIEnum UI { get; set; }
 
-        [Display(Name = "生成Api")]
+        [Display(Name = "GenApi")]
         public bool IsApi { get; set; }
 
         public string ModelName
@@ -33,19 +33,19 @@ namespace WalkingTec.Mvvm.Mvc
                 return SelectedModel?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
             }
         }
-        [Display(Name = "Model命名空间")]
+        [Display(Name = "ModelNS")]
         [ValidateNever()]
         public string ModelNS => SelectedModel?.Split(',').FirstOrDefault()?.Split('.').SkipLast(1).ToSpratedString(seperator: ".");
-        [Display(Name = "模块名称")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "ModuleName")]
+        [Required(ErrorMessage = "{0}required")]
         public string ModuleName { get; set; }
-        [RegularExpression("^[A-Za-z_]+", ErrorMessage = "{0}只能以英文字母或下划线开头")]
+        [RegularExpression("^[A-Za-z_]+", ErrorMessage = "EnglishOnly")]
         public string Area { get; set; }
         [ValidateNever()]
         [BindNever()]
         public List<ComboSelectListItem> AllModels { get; set; }
-        [Required(ErrorMessage = "{0}是必填项")]
-        [Display(Name = "选择模型")]
+        [Required(ErrorMessage = "{0}required")]
+        [Display(Name = "SelectedModel")]
         public string SelectedModel { get; set; }
         [ValidateNever()]
         public string EntryDir { get; set; }
@@ -194,7 +194,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _controllerNs;
-        [Display(Name = "Controller命名空间")]
+        [Display(Name = "ControllerNs")]
         [ValidateNever()]
         public string ControllerNs
         {
@@ -213,7 +213,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _testNs;
-        [Display(Name = "Test命名空间")]
+        [Display(Name = "TestNs")]
         [ValidateNever()]
         public string TestNs
         {
@@ -232,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         private string _dataNs;
-        [Display(Name = "Data命名空间")]
+        [Display(Name = "DataNs")]
         [ValidateNever()]
         public string DataNs
         {
@@ -261,7 +261,7 @@ namespace WalkingTec.Mvvm.Mvc
 
 
         private string _vmNs;
-        [Display(Name = "VM命名空间")]
+        [Display(Name = "VMNs")]
         [ValidateNever()]
         public string VMNs
         {
@@ -925,7 +925,16 @@ namespace WalkingTec.Mvvm.Mvc
                     fieldstr.Append(Environment.NewLine);
                 }
                 fieldstr.Append($@"</wt:row>");
-                rv = rv.Replace("$fields$", fieldstr.ToString());
+                string url = "";
+                if (string.IsNullOrEmpty(Area))
+                {
+                    url = $"/{ModelName}/Search";
+                }
+                else
+                {
+                    url = $"/{Area}/{ModelName}/Search";
+                }
+                rv = rv.Replace("$fields$", fieldstr.ToString()).Replace("$searchurl$", url);
             }
             return rv;
         }
@@ -973,7 +982,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (pro.Value == "$fk$")
                     {
                         var fktype = modelType.GetProperties().Where(x => x.Name == pro.Key.Substring(0, pro.Key.Length - 2)).Select(x => x.PropertyType).FirstOrDefault();
-                        add += GenerateAddFKModel(fktype);
+                        add += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
                     }
                 }
 
@@ -1030,12 +1039,21 @@ namespace WalkingTec.Mvvm.Mvc
                 Assert.AreEqual(data.{pro.Key}, {pro.Value});";
                     }
                 }
-                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add);
+
+                string del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
+                string mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 0);";
+                if (modelType.IsSubclassOf(typeof(PersistPoco)))
+                {
+                    del = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 1);";
+                    mdel = $"Assert.AreEqual(context.Set<{ModelName}>().Count(), 2);";
+                }
+
+                rv = rv.Replace("$cpros$", cpros).Replace("$epros$", epros).Replace("$pros$", pros).Replace("$mpros$", mpros).Replace("$assert$", assert).Replace("$eassert$", eassert).Replace("$fc$", fc).Replace("$add$", add).Replace("$del$", del).Replace("$mdel$", mdel);
             }
             return rv;
         }
 
-        private string GenerateAddFKModel(Type t)
+        private string GenerateAddFKModel(string keyname, Type t)
         {
             var modelprops = t.GetRandomValues();
             var mname = t.Name?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
@@ -1047,7 +1065,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var idpro = t.GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
             string rv = $@"
-        private {idpro.Name} Add{mname}()
+        private {idpro.Name} Add{keyname}()
         {{
             {mname} v = new {mname}();
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))

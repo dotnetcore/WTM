@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,25 +11,25 @@ namespace WalkingTec.Mvvm.Core
     [Table("FileAttachments")]
     public class FileAttachment : BasePoco
     {
-        [Display(Name = "文件名" )]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [Display(Name = "FileName")]
+        [Required(ErrorMessage = "{0}required")]
         public string FileName { get; set; }
-        [Display(Name = "扩展名" )]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [Display(Name = "FileExt")]
+        [Required(ErrorMessage = "{0}required")]
         [StringLength(10)]
         public string FileExt { get; set; }
-        [Display(Name = "路径" )]
+        [Display(Name = "Path")]
         public string Path { get; set; }
-        [Display(Name = "长度" )]
+        [Display(Name = "Length")]
         public long Length { get; set; }
         public DateTime UploadTime { get; set; }
         public bool IsTemprory { get; set; }
 
         #region 组名，FastDFS服务器用
-        [Display(Name = "保存方式" )]
+        [Display(Name = "SaveFileMode")]
         public SaveFileModeEnum? SaveFileMode { get; set; }
-        [Display(Name = "组名" )]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
+        [Display(Name = "GroupName")]
+        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
         public string GroupName { get; set; }
         #endregion
         public byte[] FileData { get; set; }

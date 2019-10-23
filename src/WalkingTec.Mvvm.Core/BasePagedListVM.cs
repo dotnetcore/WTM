@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Core
         where TSearcher : BaseSearcher
     {
 
-        public string TotalText { get; set; } = "合计：";
+        public string TotalText { get; set; } = Program._localizer?["Total"];
 
         public virtual DbCommand GetSearchCommand()
         {
@@ -917,16 +917,16 @@ namespace WalkingTec.Mvvm.Core
         {
             GetHeaders();
             //寻找所有Header为错误信息的列，如果没有则添加
-            if (GridHeaders.Where(x => x.Title == "错误").FirstOrDefault() == null)
+            if (GridHeaders.Where(x => x.Field == "BatchError").FirstOrDefault() == null)
             {
                 var temp = GridHeaders as List<GridColumn<TModel>>;
                 if (temp.Where(x => x.ColumnType == GridColumnTypeEnum.Action).FirstOrDefault() == null)
                 {
-                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "错误").SetForeGroundFunc(x => "ff0000"));
+                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "Error").SetForeGroundFunc(x => "ff0000"));
                 }
                 else
                 {
-                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "错误").SetForeGroundFunc(x => "ff0000"));
+                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "Error").SetForeGroundFunc(x => "ff0000"));
                 }
             }
         }

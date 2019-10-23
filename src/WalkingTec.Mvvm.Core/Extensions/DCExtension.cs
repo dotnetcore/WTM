@@ -200,6 +200,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 query = AppendSelfDPWhere(query, dps);
             }
 
+            if (typeof(T).IsSubclassOf(typeof(PersistPoco)))
+            {
+                var mod = new IsValidModifier();
+                var newExp = mod.Modify(query.Expression);
+                query = query.Provider.CreateQuery<T>(newExp) as IOrderedQueryable<T>;
+            }
+
+
             //定义PE
             ParameterExpression pe = Expression.Parameter(typeof(T));
             ChangePara cp = new ChangePara();
@@ -612,26 +620,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 BinaryExpression exp = null;
                 if (valMin != null)
                 {
-                    if (includeMin)
-                    {
-                        exp1 = Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
-                    }
-                    else
-                    {
-                        exp1 = Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
-                    }
+                    exp1 = !includeMin ? Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin)) : Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
                 }
                 if(valMax != null)
                 {
-                    if (includeMax)
-                    {
-                        exp2 = Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
-                    }
-                    else
-                    {
-                        exp2 = Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
-                    }
-
+                    exp2 = !includeMax ? Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax)) : Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
                 }
                 if(exp1 != null && exp2 != null)
                 {
@@ -672,21 +665,21 @@ where S : struct
 
         public static IQueryable<T> CheckContain<T>(this IQueryable<T> baseQuery, string val, Expression<Func<T, string>> field, bool ignoreCase = true)
         {
-            if (val == null || val == "")
+            if (string.IsNullOrEmpty(val))
             {
                 return baseQuery;
             }
             else
             {
                 Expression exp = null;
-                if (ignoreCase == false)
+                if (ignoreCase == true)
                 {
                     var tolower = Expression.Call(field.Body, "ToLower", null);
                     exp = Expression.Call(tolower, "Contains", null, Expression.Constant(val.ToLower()));
                 }
                 else
                 {
-                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val.ToLower()));
+                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val));
 
                 }
                 var where = Expression.Lambda<Func<T, bool>>(exp, field.Parameters[0]);
@@ -794,7 +787,7 @@ where S : struct
             }
         }
 
-        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null) 
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             if (Ids == null)
             {
@@ -811,10 +804,10 @@ where S : struct
             {
                 newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
             }
-             
             Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
             Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
-            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft2, peid);
+            Expression dpleft3 = Expression.Call(typeof(Enumerable), "ToList", new Type[] { peid.Type }, dpleft2);
+            Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft3, peid);
             var rv = Expression.Lambda<Func<TModel, bool>>(dpcondition, pe);
             return rv;
         }
@@ -830,6 +823,8 @@ where S : struct
                 throw new ArgumentNullException(nameof(self));
             if (self.Database == null)
                 throw new ArgumentNullException(nameof(self.Database));
+            if (@"Microsoft.EntityFrameworkCore.InMemory".Equals(self.Database.ProviderName, StringComparison.OrdinalIgnoreCase))
+                return FakeNestedTransaction.DefaultTransaction;
             return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
         }
     }

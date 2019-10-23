@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Details, "详细", "_Admin",dialogWidth: 600),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin"),
             };
         }
 

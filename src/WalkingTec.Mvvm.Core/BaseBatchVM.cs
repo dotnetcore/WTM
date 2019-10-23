@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Core
                     var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
                     if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
                     {
-                        var pp = DC.Set<TModel>().Find(idsData[i]);
+                        var pp = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
                         (pp as PersistPoco).IsValid = false;
                         (pp as PersistPoco).UpdateTime = DateTime.Now;
                         (pp as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
@@ -168,7 +168,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (!ErrorMessage.ContainsKey(id))
                         {
-                            ErrorMessage.Add(id, "已回滚");
+                            ErrorMessage.Add(id, Program._localizer["Rollback"]);
                         }
                     }
                 }
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Core
                         item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
                     }
                 }
-                MSD.AddModelError("", "数据已被使用，无法删除");
+                MSD.AddModelError("", Program._localizer["DataCannotDelete"]);
             }
             return rv;
         }
@@ -217,7 +217,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     if (entity == null)
                     {
-                        ErrorMessage.Add(idsData[i], "数据不存在");
+                        ErrorMessage.Add(idsData[i], Program._localizer["DataNotExist"]);
                         rv = false;
                         break;
                     }
@@ -273,13 +273,13 @@ namespace WalkingTec.Mvvm.Core
                     if (typeof(TModel).IsSubclassOf(typeof(BasePoco)))
                     {
                         BasePoco ent = entity as BasePoco;
-                        if (ent.CreateTime == null)
+                        if (ent.UpdateTime == null)
                         {
-                            ent.CreateTime = DateTime.Now;
+                            ent.UpdateTime = DateTime.Now;
                         }
-                        if (string.IsNullOrEmpty(ent.CreateBy))
+                        if (string.IsNullOrEmpty(ent.UpdateBy))
                         {
-                            ent.CreateBy = LoginUserInfo?.ITCode;
+                            ent.UpdateBy = LoginUserInfo?.ITCode;
                         }
                     }
                     DC.UpdateEntity(entity);
@@ -313,7 +313,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (!ErrorMessage.ContainsKey(id))
                         {
-                            ErrorMessage.Add(id, "已回滚");
+                            ErrorMessage.Add(id, Program._localizer["Rollback"]);
                         }
                     }
                 }

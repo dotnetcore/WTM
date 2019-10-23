@@ -23,8 +23,9 @@
                         { "name": "/Global", "title": "全局变量", "jump": "/Global/Global" },
                         { "name": "/CS", "title": "数据库分库", "jump": "/Global/CS" },
                         { "name": "/DP", "title": "数据权限", "jump": "/Global/DP" },
-                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" }
-                    ]
+                        { "name": "/Route", "title": "路由", "jump": "/Global/Route" },
+                        { "name": "/Route", "title": "多语言", "jump": "/Global/MultiLanguages" }
+                   ]
                 },
                 {
                     "name": "Model",
@@ -33,7 +34,8 @@
                     "list": [
                         { "name": "/Poco", "title": "创建模型", "jump": "/Model/Poco" },
                         { "name": "/Att", "title": "模型属性", "jump": "/Model/Att" },
-                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" }
+                        { "name": "/BuildIn", "title": "内置模型", "jump": "/Model/BuildIn" },
+                        { "name": "/CustomKey", "title": "自定义主键", "jump": "/Model/CustomKey" }
                     ]
                 },
                 {
@@ -47,7 +49,8 @@
                             "name": "/List", "title": "列表&导出VM", "jump": "", "list": [
                                 { "name": "/ListAction", "title": "列表简介", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "列表动作按钮", "jump": "/VM/ListAction" },
-                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" }
+                                { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" },
+                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" }
                             ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
@@ -103,13 +106,15 @@
                                 { "name": "/DateTime", "title": "DateTime", "jump": "/UI/DateTime" },
                                 { "name": "/Upload", "title": "Upload", "jump": "/UI/Upload" },
                                 { "name": "/Selector", "title": "Selector", "jump": "/UI/Selector" },
-                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" }
+                                { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" },
+                                { "name": "/UEditor", "title": "UEditor", "jump": "/UI/UEditor" }
                             ]
                         },
                         { "name": "/Grid", "title": "数据表格", "jump": "/UI/Grid" },
                         { "name": "/TreeContainer", "title": "TreeContainer", "jump": "/UI/TreeContainer" },
                         { "name": "/Others", "title": "其他", "jump": "/UI/Others" },
-                        { "name": "/layuiadmin", "title": "LayuiAdmin", "jump": "/views/iframe/layuiadmin.html" }
+                        { "name": "/layuiadmin", "title": "LayuiAdminDemo", "jump": "/views/iframe/layuiadmin.html" },
+                        { "name": "/layuiadmin", "title": "LayuiAdminDoc", "jump": "/views/iframe/layuiadmindoc.html" }
                     ]
                 },
                 {
