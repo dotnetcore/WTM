@@ -10,7 +10,6 @@ import Store from 'store';
 import LayoutPro from "./layout/antdPro";
 import Demo from "./pages/demo";
 import External from "./pages/external";
-import Exception from "components/other/Exception";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
