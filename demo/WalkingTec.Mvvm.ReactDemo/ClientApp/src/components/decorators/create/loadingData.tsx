@@ -62,7 +62,7 @@ export function DesLoadingData(options: ILoadingDataOptions = {}) {
                 }
                 return (
                     <Spin spinning={this.state.spinning} indicator={<Icon type="loading" spin />}>
-                        {super.render()}
+                        <div>loading...</div>
                     </Spin>
                 );
             }

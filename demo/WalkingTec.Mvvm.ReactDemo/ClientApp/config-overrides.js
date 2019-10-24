@@ -2,20 +2,31 @@
  * config-overrides.js
  * 重写 react-scripts 默认配置
  */
-const configDev = require("./config/webpack.config.dev");
-const configProd = require("./config/webpack.config.prod");
 const moment = require('moment');
 const lodash = require('lodash');
 const path = require('path');
 const fs = require('fs');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+const { override, fixBabelImports, addLessLoader } = require('customize-cra');
 const appDirectory = fs.realpathSync(process.cwd());
 process.env.REACT_APP_TIME = moment().format('YYYY-MM-DD HH:mm:ss');
 // process.stdout.isTTY = false;
 // 魔改 react-scripts 默认配置
 magicChange();
 getFont();
-module.exports = (config, env) => {
+module.exports = (...params) => {
+  const config = override(
+    fixBabelImports('import', {
+      libraryName: 'antd',
+      libraryDirectory: 'es',
+      style: true,
+    }),
+    addLessLoader({
+      javascriptEnabled: true,
+      // modifyVars: { '@primary-color': '#1DA57A' },
+      localIdentName: "app-[local]-[hash:base64:5]"
+    }),
+  )(...params);
   // 删除 typescript-eslint
   lodash.remove(config.module.rules, data => String(data.test) === String(/\.(js|mjs|jsx|ts|tsx)$/) && data.enforce === "pre");
   // 删除 ForkTsCheckerWebpackPlugin
@@ -25,36 +36,31 @@ module.exports = (config, env) => {
   //   return { ...value, "css-animation/es/Event": "css-animation/dist-src/Event" }
   // })
   // 修改 ts 编译器
-  lodash.update(config, 'module.rules[1].oneOf[1]', value => {
-    return {
-      test: /\.(tsx|ts|js|jsx)$/,
-      include: value.include,
-      use: [
-        // 'cache-loader',
-        {
-          loader: 'awesome-typescript-loader',
-          options: {
-            useCache: true,
-            configFileName: "tsconfig.app.json",
-            cacheDirectory: "node_modules/.cache/awcache",
-            // transpileOnly: true,
-            errorsAsWarnings: true,
-            // reportFiles: [
-            //   `${value.include}/**/*.{ts,tsx}`,
-            //   ...packages.map(data => `${data}/**/*.{ts,tsx}`)
-            // ]
-            // usePrecompiledFiles: true,
-          }
-        }
-      ]
-
-    }
-  });
-  if (env == "development") {
-    return configDev(config, env)
-  } else {
-    return configProd(config, env)
-  }
+  // lodash.update(config, 'module.rules[1].oneOf[1]', value => {
+  //   return {
+  //     test: /\.(tsx|ts|js|jsx)$/,
+  //     include: value.include,
+  //     use: [
+  //       // 'cache-loader',
+  //       {
+  //         loader: 'awesome-typescript-loader',
+  //         options: {
+  //           useCache: true,
+  //           configFileName: "tsconfig.app.json",
+  //           cacheDirectory: "node_modules/.cache/awcache",
+  //           // transpileOnly: true,
+  //           errorsAsWarnings: true,
+  //           // reportFiles: [
+  //           //   `${value.include}/**/*.{ts,tsx}`,
+  //           //   ...packages.map(data => `${data}/**/*.{ts,tsx}`)
+  //           // ]
+  //           // usePrecompiledFiles: true,
+  //         }
+  //       }
+  //     ]
+  //   }
+  // });
+  return config;
 }
 /**
  * 魔改 react-scripts 默认配置

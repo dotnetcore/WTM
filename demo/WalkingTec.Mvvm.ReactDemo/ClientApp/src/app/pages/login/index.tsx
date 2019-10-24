@@ -53,7 +53,7 @@ export default class LoginDemo extends React.Component<any, any>{
     return (
       <LayoutLogin>
         <Form onSubmit={this.onSubmit.bind(this)} >
-          <h1>{GlobalConfig.default.title}</h1>
+          <h1>{GlobalConfig.settings.title}</h1>
           <Form.Item
             validateStatus={userNameError ? 'error' : ''}
             help={userNameError || ''}
