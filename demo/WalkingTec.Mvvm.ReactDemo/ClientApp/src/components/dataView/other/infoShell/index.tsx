@@ -71,7 +71,7 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
         style: {}
     }
     render() {
-        if (GlobalConfig.infoType === "Modal") {
+        if (GlobalConfig.settings.infoType === "Modal") {
             const onClose = (this.props as DrawerProps).onClose
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal
@@ -138,9 +138,7 @@ export class InfoShellLayout extends React.Component<{ loading?: boolean }, any>
         const spinning = lodash.get(this.props, 'loading', false);
         return <div className="data-view-form-item">
             <Spin tip="Loading..." spinning={lodash.get(this.props, 'loading', false)} key={lodash.toString(spinning)}>
-                <Row type="flex">
                     {childrens}
-                </Row>
             </Spin>
         </div>
     }
@@ -177,7 +175,7 @@ export class InfoShellCol extends React.Component<{ layout?: string }, any> {
         if (this.props.layout != "row") {
             colSpan = 24 / this.columnCount;//每列 值
         }
-        return <Col span={colSpan} {...this.props}>
+        return <Col lg={colSpan} md={12} sm={24} xs={24} {...this.props}>
             {this.props.children}
         </Col>
     }
