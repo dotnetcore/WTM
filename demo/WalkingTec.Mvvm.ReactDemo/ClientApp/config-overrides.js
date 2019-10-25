@@ -7,9 +7,11 @@ const lodash = require('lodash');
 const path = require('path');
 const fs = require('fs');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
-const { override, fixBabelImports, addLessLoader } = require('customize-cra');
+const { override, fixBabelImports, addLessLoader, addBundleVisualizer, removeModuleScopePlugin } = require('customize-cra');
 const appDirectory = fs.realpathSync(process.cwd());
 process.env.REACT_APP_TIME = moment().format('YYYY-MM-DD HH:mm:ss');
+// process.env.GENERATE_SOURCEMAP = 'false';
+// process.env.TSC_COMPILE_ON_ERROR = 'true';
 // process.stdout.isTTY = false;
 // 魔改 react-scripts 默认配置
 magicChange();
@@ -21,16 +23,31 @@ module.exports = (...params) => {
       libraryDirectory: 'es',
       style: true,
     }),
+    fixBabelImports("lodash", {
+      libraryDirectory: "",
+      camel2DashComponentName: false
+    }),
     addLessLoader({
       javascriptEnabled: true,
       // modifyVars: { '@primary-color': '#1DA57A' },
       localIdentName: "app-[local]-[hash:base64:5]"
     }),
+    // 查看 构建文件 大小 分布地图
+    // addBundleVisualizer({
+    //   "analyzerMode": "static",
+    //   "reportFilename": "report.html"
+    // }),
+    removeModuleScopePlugin()
   )(...params);
   // 删除 typescript-eslint
   lodash.remove(config.module.rules, data => String(data.test) === String(/\.(js|mjs|jsx|ts|tsx)$/) && data.enforce === "pre");
   // 删除 ForkTsCheckerWebpackPlugin
   lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
+  // 源代码映射 非dev环境需要测试 和输出日志 请 注释 下面两行
+  config.devtool = config.mode === "production" ? false : config.devtool;
+  // 清理  drop_console 日志
+  lodash.set(config, 'optimization.minimizer[0].options.terserOptions.compress.drop_console', config.mode === "production");
+
   // 暂时 修复 antd Antd Webpack build failing (Can't resolve 'css-animation/es/Event') https://github.com/ant-design/ant-design/issues/17928
   // lodash.update(config, 'resolve.alias', value => {
   //   return { ...value, "css-animation/es/Event": "css-animation/dist-src/Event" }
