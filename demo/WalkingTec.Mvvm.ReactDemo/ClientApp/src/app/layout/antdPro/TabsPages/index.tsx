@@ -116,7 +116,7 @@ class TabsPagesStore {
     componentWillUnmount() {
         this.resize.unsubscribe();
     }
-    @persist
+    // @persist
     @observable height = this.getHeight();
     @persist("list")
     @observable tabPane = [{
