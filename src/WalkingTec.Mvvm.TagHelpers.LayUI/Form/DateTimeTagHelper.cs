@@ -189,11 +189,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
             {
                 var dateRange = Field.Model as DateRange;
-                Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                if (string.IsNullOrEmpty(Format))
+                    Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                else
+                    Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
             }
             else
             {
-                Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                if (string.IsNullOrEmpty(Format))
+                    Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                else
+                    Value = (Field.Model as DateTime?)?.ToString(Format) ?? Value;
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
