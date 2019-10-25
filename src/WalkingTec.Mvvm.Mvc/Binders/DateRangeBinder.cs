@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Binders
             var valueProviderResult = bindingContext.ValueProvider.GetValue(modelName);
             if (valueProviderResult == ValueProviderResult.None)
             {
-                modelName += "[value]";
+                modelName += "[Value]";
                 valueProviderResult = bindingContext.ValueProvider.GetValue(modelName);
             }
 
