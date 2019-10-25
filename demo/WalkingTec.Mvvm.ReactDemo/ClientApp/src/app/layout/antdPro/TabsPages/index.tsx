@@ -1,9 +1,8 @@
 
 import { Icon, Tabs } from 'antd';
 import LayoutSpin from "components/other/LayoutSpin";
-import GlobalConfig from 'global.config';
 import lodash from 'lodash';
-import { action, observable, runInAction } from 'mobx';
+import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Item, Menu, MenuProvider } from 'react-contexify';
@@ -12,7 +11,12 @@ import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import Store from 'store/index';
 import './index.less';
-
+import { create, persist } from 'mobx-persist';
+const hydrate = create({
+    storage: window.localStorage,   // 存储的对象
+    jsonify: true, // 格式化 json
+    debounce: 1000,
+});
 /**
  * tabs 页面布局
  */
@@ -79,9 +83,9 @@ class TabsPages extends React.Component<any, any> {
                             key={item.pathname}
                             closable={item.closable}
                             style={{ height: height }}>
-                            <React.Suspense fallback={<LayoutSpin />}>
+                            {router.component && <React.Suspense fallback={<LayoutSpin />}>
                                 {React.createElement(router.component, props)}
-                            </React.Suspense>
+                            </React.Suspense>}
                         </Tabs.TabPane>
                     })}
                 </Tabs>
@@ -96,11 +100,25 @@ class TabsPages extends React.Component<any, any> {
 }
 class TabsPagesStore {
     constructor(private routes) {
+        hydrate('TabsPagesStore', this)
+            // post hydration
+            .then(() => {
+                runInAction(() => {
+                    this.tabPane = this.tabPane.map(item => {
+                        return {
+                            ...item,
+                            router: this.getRoutes(item.pathname)
+                        }
+                    })
+                })
+            })
     }
     componentWillUnmount() {
         this.resize.unsubscribe();
     }
+    @persist
     @observable height = this.getHeight();
+    @persist("list")
     @observable tabPane = [{
         title: '首页',
         pathname: "/",

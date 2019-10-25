@@ -138,7 +138,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
      * 修改 高度
      * @param refFullscreen
      */
-    @Debounce(200)
+    @Debounce(100)
     onUpdateHeight(refFullscreen = false) {
         try {
             // props 中传递了 height
@@ -290,7 +290,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         })
         return (
             <>
-                <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid ${className} ${theme}`}>
+                <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid  ${className} ${theme}`}>
                     <Spin spinning={PageState.tableLoading} size="large" indicator={<Icon type="loading" spin />} />
                     <AgGridReact
                         key={theme}
