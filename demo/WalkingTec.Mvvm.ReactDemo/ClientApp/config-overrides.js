@@ -33,10 +33,10 @@ module.exports = (...params) => {
       localIdentName: "app-[local]-[hash:base64:5]"
     }),
     // 查看 构建文件 大小 分布地图
-    // addBundleVisualizer({
-    //   "analyzerMode": "static",
-    //   "reportFilename": "report.html"
-    // }),
+    addBundleVisualizer({
+      "analyzerMode": "static",
+      "reportFilename": "report.html"
+    }),
     removeModuleScopePlugin()
   )(...params);
   // 删除 typescript-eslint
@@ -45,9 +45,40 @@ module.exports = (...params) => {
   lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
   // 源代码映射 非dev环境需要测试 和输出日志 请 注释 下面两行
   config.devtool = config.mode === "production" ? false : config.devtool;
+  [
+    // {
+    //   name: 'app',
+    //   // test: /\.(tsx|ts)$/,
+    //   // test: /[\\/]src[\\/](pages)[\\/]/,
+    //   test: /([\\/]src\/pages[\\/])/,
+    //   chunks: 'all',
+    //   // enforce: true // 强制忽略minChunks等设置
+    // },
+    {
+      name: 'grid',
+      test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-enterprise|ag-grid-react)[\\/]/,
+      chunks: 'all',
+    },
+    {
+      name: 'echarts',
+      test: /[\\/]node_modules[\\/](echarts|echarts-for-react|zrender)[\\/]/,
+      chunks: 'all',
+    },
+    {
+      name: 'antd',
+      test: /[\\/]node_modules[\\/](antd|@ant-design|rc-.*|rmc-.*|size-sensor|fast-deep-equal)[\\/]/,
+      chunks: 'all',
+    }
+  ].map(item => {
+    // 随机一个名字
+    const { name } = item;
+    if (config.mode === "production") {
+      item.name = lodash.uniqueId()
+    }
+    lodash.set(config, `optimization.splitChunks.cacheGroups.${name}`, item);
+  })
   // 清理  drop_console 日志
   lodash.set(config, 'optimization.minimizer[0].options.terserOptions.compress.drop_console', config.mode === "production");
-
   // 暂时 修复 antd Antd Webpack build failing (Can't resolve 'css-animation/es/Event') https://github.com/ant-design/ant-design/issues/17928
   // lodash.update(config, 'resolve.alias', value => {
   //   return { ...value, "css-animation/es/Event": "css-animation/dist-src/Event" }

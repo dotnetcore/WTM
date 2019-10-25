@@ -11,8 +11,9 @@ import { AgGridReactProps } from 'ag-grid-react';
 import { PaginationProps } from 'antd/lib/pagination';
 import * as React from 'react';
 import Store from 'store/dataSource';
+// import GridCommunity from './gridCommunity';
 import "./style.less";
-const Table = React.lazy(() => import('./gridCommunity'));
+const GridCommunity = React.lazy(() => import('./gridCommunity'));
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
     Store: Store;
@@ -51,7 +52,7 @@ interface ITableProps extends AgGridReactProps {
 }
 export const AgGrid: React.FC<ITableProps> = (props) => (
     <React.Suspense fallback={<div style={{ height: 300 }}></div>}>
-        <Table {...props} />
+        <GridCommunity {...props} />
     </React.Suspense>
 );
 export default AgGrid
