@@ -14,7 +14,7 @@ export class LayoutLogin extends React.Component<{
     const isIe = "ActiveXObject" in window;
     return (
       <Layout className="app-layout-login app-fade-enter">
-        <Layout style={isIe ? { minHeight: window.innerHeight - 197 } : {}}>
+        {/* <Layout style={isIe ? { minHeight: window.innerHeight - 197 } : {}}>
           <Header>
             <img className='app-login-logo' src={logo} alt="" height="48" />
           </Header>
@@ -23,7 +23,8 @@ export class LayoutLogin extends React.Component<{
               {this.props.children}
             </div>
           </Content>
-        </Layout>
+        </Layout> */}
+        <Main>{this.props.children}</Main>
         <Footer>
           <Row type="flex" align="top" className='app-login-links'>
             <Col lg={18} md={24}>
@@ -52,11 +53,48 @@ export class LayoutLogin extends React.Component<{
               <p></p>
             </Col>
           </Row>
-                <div className="app-login-record">
-                    <a href="https://wtmdoc.walkingtec.cn/" target="_blank"> Help</a> © 2019 WTM all rights reserved
+          <div className="app-login-record">
+            <a href="https://wtmdoc.walkingtec.cn/" target="_blank"> Help</a> © 2019 WTM all rights reserved
                 </div>
         </Footer>
       </Layout>
     );
+  }
+}
+class Main extends React.Component<any, any>{
+  state = {
+    loginBck: this.onSample(),
+    Unmount: false
+  }
+  onSample() {
+    return `app-login-back-${lodash.sample([1, 2, 3, 4, 5])}`;
+  }
+  onDelay() {
+    if (this.state.Unmount) {
+      return
+    }
+    lodash.delay(() => {
+      this.setState({ loginBck: this.onSample() }, () => this.onDelay())
+    }, 5000)
+  }
+  componentDidMount() {
+    // this.onDelay()
+  }
+  componentWillUnmount() {
+    this.setState({ Unmount: true })
+  }
+  render() {
+    return (
+      <Layout className={this.state.loginBck}>
+        <Header>
+          <img className='app-login-logo' src={logo} alt="" height="48" />
+        </Header>
+        <Content>
+          <div className='app-login-form'>
+            {this.props.children}
+          </div>
+        </Content>
+      </Layout>
+    )
   }
 }

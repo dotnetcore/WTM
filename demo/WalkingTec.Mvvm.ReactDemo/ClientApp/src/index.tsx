@@ -9,6 +9,7 @@
 import "core-js";
 import 'antd/dist/antd.css';
 import 'viewerjs/dist/viewer.css';
+import 'react-contexify/dist/ReactContexify.min.css';
 import 'braft-editor/dist/index.css';
 import App from "app/index";
 import 'nprogress/nprogress.css';
@@ -16,5 +17,5 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import "assets/font/font";
 import './global.config';
-ReactDOM.render(<App />,
+ReactDOM.render(<App/>,
   document.getElementById('root'));

@@ -5,6 +5,7 @@
  * @modify date 2018-09-12 18:52:54
  * @desc [description]
 */
+import { MenuDataItem } from '@ant-design/pro-layout';
 import Regular from 'utils/Regular';
 import { action, observable, runInAction, computed } from "mobx";
 import lodash from 'lodash';
@@ -45,17 +46,33 @@ class Store {
      * @param ParentId 
      * @param children 
      */
-    recursionTree(datalist, ParentId, children = []) {
+    recursionTree(datalist, ParentId, children: MenuDataItem[] = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
             data.Children = this.recursionTree(datalist, data.Id, data.Children || []);
-            children.push(data);
+            children.push({
+                key: data.Id,
+                path: data.Url,
+                name: data.Text,
+                icon: "pic-right",
+                children: data.Children,
+                ...data
+            });
         });
         return children;
     }
     /**  设置菜单 */
     @action.bound
     setSubMenu(subMenu) {
-        this.ParallelMenu = subMenu;
+        this.ParallelMenu = subMenu.map(data => {
+            return {
+                ...data,
+                key: data.Id,
+                path: data.Url,
+                name: data.Text,
+                icon: "pic-right",
+                // children: data.Children
+            }
+        });
         const menu = this.recursionTree(subMenu, null, []);
         console.log(menu)
         this.subMenu = menu

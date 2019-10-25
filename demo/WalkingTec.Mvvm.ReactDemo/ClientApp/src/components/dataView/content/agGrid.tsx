@@ -5,16 +5,16 @@
  * @modify date 2019-06-26 16:55:28
  * @desc [description]
  */
-import { ColDef, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent, ColumnRowGroupChangedEvent } from 'ag-grid-community';
+import { ColDef, ColumnRowGroupChangedEvent, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
-// import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
-import 'ag-grid-community/dist/styles/ag-theme-material.css';
 // import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
 // import 'ag-grid-community/dist/styles/ag-theme-blue.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+// import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
-import { Icon, Pagination, Switch, Button } from 'antd';
+import { Button, Icon, Pagination, Spin, Switch } from 'antd';
 import { PaginationProps } from 'antd/lib/pagination';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -23,13 +23,13 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import Store from 'store/dataSource';
+import Regular from 'utils/Regular';
+import RequestFiles from 'utils/RequestFiles';
+import { ToImg } from '..';
 import localeText from './localeText ';
 import "./style.less";
-import { columnsRenderImg } from './table';
-import RequestFiles from 'utils/RequestFiles';
-import Regular from 'utils/Regular';
-import { debounceTime } from 'rxjs/operators';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
@@ -148,8 +148,8 @@ export class AgGrid extends React.Component<ITableProps, any> {
             }
             const refTable = this.refTableBody.current;//ReactDOM.findDOMNode(this.ref.current) as HTMLDivElement;
             // 60 是头部 标题栏 高度
-            let height = window.innerHeight - refTable.offsetTop - 60 - 100;
-            if (!globalConfig.tabsPage) {
+            let height = window.innerHeight - refTable.offsetTop - 168;
+            if (!globalConfig.settings.tabsPage) {
                 height += 90;
             }
             height = height < this.minHeight ? this.minHeight : height;
@@ -205,14 +205,23 @@ export class AgGrid extends React.Component<ITableProps, any> {
         this.resizeEvent = fromEvent(window, "resize").pipe(debounceTime(300)).subscribe(e => {
             // 获取当前高度 ，高度 为 0 说明页面属于隐藏状态
             if (lodash.get(this.refTableBody.current, 'clientHeight', 0) > 0) {
-                if (!globalConfig.tabsPage) {
-                    this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
-                }
+                // if (!globalConfig.settings.tabsPage) {
+                this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
+                // }
                 this.sizeColumnsToFit();
             }
         });
         await this.props.Store.onSearch();
-        this.sizeColumnsToFit()
+        lodash.defer(() => {
+            this.sizeColumnsToFit();
+            this.setSelected();
+        });
+    }
+    setSelected() {
+        this.gridApi &&
+            this.gridApi.forEachNode((rowNode) => {
+                rowNode.setSelected(lodash.includes(this.props.Store.DataSource.selectedRowKeys, lodash.get(rowNode, 'data.key')));
+            });
     }
     componentWillUnmount() {
         this.resizeEvent && this.resizeEvent.unsubscribe()
@@ -224,8 +233,10 @@ export class AgGrid extends React.Component<ITableProps, any> {
     }
     onGridReady(event: GridReadyEvent) {
         this.gridApi = event.api;
-        // 更新 列 大小
-        event.api.sizeColumnsToFit();
+        lodash.defer(() => {
+            this.sizeColumnsToFit();
+            this.setSelected();
+        });
     }
     public render() {
         let {
@@ -234,7 +245,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
             rowActionCol,
             paginationProps,
             style,
-            theme = globalConfig.agGridTheme,//'ag-theme-balham',
+            theme = globalConfig.settings.agGridTheme,//'ag-theme-balham',
             className = '',
             children,
             onGridReady,
@@ -246,7 +257,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
             // rowData,
             ...props
         } = this.props;
-        const { DataSource } = Store;
+        const { DataSource, PageState } = Store;
         const dataSource = DataSource.tableList;
         const checkboxSelectionWidth = {
             "ag-theme-balham": 40,
@@ -277,8 +288,9 @@ export class AgGrid extends React.Component<ITableProps, any> {
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid ${className} ${theme}`}>
-                    {/* <Spin spinning={loading} > */}
+                    <Spin spinning={PageState.tableLoading} size="large" indicator={<Icon type="loading" spin />} />
                     <AgGridReact
+                        key={theme}
                         // 内置 翻译 替换
                         localeText={localeText}
                         // suppressMenuHide
@@ -292,8 +304,35 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         // suppressMakeColumnVisibleAfterUnGroup
                         // suppressDragLeaveHidesColumns
                         rowSelection="multiple"
+                        // 分组工具栏 
+                        rowGroupPanelShow="always"
                         sideBar={{
-                            toolPanels: ["columns"]
+                            toolPanels: [
+                                {
+                                    id: 'columns',
+                                    labelDefault: 'Columns',
+                                    labelKey: 'columns',
+                                    iconKey: 'columns',
+                                    toolPanel: 'agColumnsToolPanel',
+                                    toolPanelParams: {
+                                        // suppressRowGroups: true,
+                                        suppressValues: true,
+                                        suppressPivots: true,
+                                        suppressPivotMode: true
+                                        // suppressSideButtons: true,
+                                        // suppressColumnFilter: true,
+                                        // suppressColumnSelectAll: true,
+                                        // suppressColumnExpandAll: true
+                                    }
+                                },
+                                {
+                                    id: 'filters',
+                                    labelDefault: 'Filters',
+                                    labelKey: 'filters',
+                                    iconKey: 'filter',
+                                    toolPanel: 'agFiltersToolPanel',
+                                }
+                            ]
                         }}
                         {...props}
                         frameworkComponents={
@@ -313,6 +352,8 @@ export class AgGrid extends React.Component<ITableProps, any> {
                             resizable: true,
                             sortable: true,
                             minWidth: 100,
+                            filter: true,
+                            enableRowGroup: true,
                             ...defaultColDef
                         }}
                         autoGroupColumnDef={{
@@ -320,12 +361,27 @@ export class AgGrid extends React.Component<ITableProps, any> {
                         }}
                         columnDefs={[
                             checkboxSelection && {
+                                // pivotIndex: 0,
+                                rowDrag: false,
+                                dndSource: false,
+                                lockPosition: true,
+                                // dndSourceOnRowDrag: false,
+                                suppressMenu: true,
+                                suppressSizeToFit: true,
+                                suppressMovable: true,
+                                suppressNavigable: true,
+                                suppressCellFlash: true,
+                                // rowGroup: false,
+                                enableRowGroup: false,
+                                enablePivot: false,
+                                enableValue: false,
+                                suppressResize: false,
                                 editable: false,
+                                suppressToolPanel: true,
                                 filter: false,
                                 resizable: false,
                                 checkboxSelection: true,
                                 headerCheckboxSelection: true,
-                                menuTabs: [],
                                 width: checkboxSelectionWidth,
                                 maxWidth: checkboxSelectionWidth,
                                 minWidth: checkboxSelectionWidth,
@@ -340,6 +396,7 @@ export class AgGrid extends React.Component<ITableProps, any> {
                                 pinned: 'right',
                                 sortable: false,
                                 menuTabs: [],
+                                minWidth: 120,
                                 ...rowActionCol,
                             }
                         ].filter(Boolean)}
@@ -356,26 +413,78 @@ export class AgGrid extends React.Component<ITableProps, any> {
                     />
                     {/* </Spin> */}
                 </div>
-                <Pagination
-                    className='ant-table-pagination'
-                    {...{
-                        position: "bottom",
-                        showSizeChanger: true,//是否可以改变 pageSize
-                        showQuickJumper: true,
-                        pageSize: dataSource.Limit,
-                        pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
-                        size: "small",
-                        current: dataSource.Page,
-                        // defaultPageSize: dataSource.Limit,
-                        // defaultCurrent: dataSource.Page,
-                        total: dataSource.Count,
-                        onChange: this.onChangePagination,
-                        onShowSizeChange: this.onChangePagination
-                    }}
-                />
+                <div className='app-table-pagination'>
+                    <Pagination
+
+                        {...{
+                            disabled: PageState.tableLoading,
+                            position: "bottom",
+                            showSizeChanger: true,//是否可以改变 pageSize
+                            showQuickJumper: true,
+                            pageSize: dataSource.Limit,
+                            pageSizeOptions: lodash.get(globalConfig, 'pageSizeOptions', ['10', '20', '30', '40', '50', '100', '200']),
+                            size: "small",
+                            current: dataSource.Page,
+                            // defaultPageSize: dataSource.Limit,
+                            // defaultCurrent: dataSource.Page,
+                            total: dataSource.Count,
+                            onChange: this.onChangePagination,
+                            onShowSizeChange: this.onChangePagination
+                        }}
+                    />
+                </div>
             </>
         );
     }
 }
 
 export default AgGrid
+
+/**
+ * 重写 列渲染 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRender(text, record) {
+    if (lodash.isBoolean(text) || text === "true" || text === "false") {
+        text = (text === true || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
+    } else if (Regular.isHtml.test(text)) {
+        // text = <Popover content={
+        //     <div dangerouslySetInnerHTML={{ __html: text }}></div>
+        // } trigger="hover">
+        //     <a>查看详情</a>
+        // </Popover>
+        text = <div className="data-view-columns-render" style={record.__style} dangerouslySetInnerHTML={{ __html: text }}></div>
+    }
+    // if (lodash.isString(text) && text.length <= 12) {
+    //     return text
+    // }
+    return <div className="data-view-columns-render" title={text} style={record.__style}>
+        <span>{text}</span>
+    </div>
+}
+/**
+ * 重写 图片 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRenderImg(text, record) {
+    return <div>
+        <ToImg fileID={text} />
+    </div>
+}
+/**
+ * 重写 下载 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRenderDownload(text, record) {
+    if (text) {
+        return <div style={{ textAlign: "center" }} >
+            <Button shape="circle" icon="download" onClick={e => {
+                window.open(RequestFiles.onFileDownload(text))
+            }} />
+        </div>
+    }
+    return null
+}
