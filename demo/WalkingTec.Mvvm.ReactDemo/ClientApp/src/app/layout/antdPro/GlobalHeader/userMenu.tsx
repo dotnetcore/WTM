@@ -1,34 +1,37 @@
 
-import { Avatar, Dropdown, Icon, Menu, Input } from 'antd';
+import { Avatar, Dropdown, Icon, Input, Menu } from 'antd';
+import classNames from 'classnames';
+import { DialogForm, DialogFormDes, FormItem, InfoShellLayout } from 'components/dataView';
 import globalConfig from 'global.config';
+import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import lodash from 'lodash';
 import Store from 'store/index';
-import RequestFiles from 'utils/RequestFiles';
 import Request from 'utils/Request';
-import { DialogFormDes, InfoShellLayout, FormItem, DialogForm } from 'components/dataView';
-import GlobalConfig from 'global.config';
+import RequestFiles from 'utils/RequestFiles';
+import styles from './index.module.less';
 @observer
 export default class UserMenu extends React.Component<any, any> {
   render() {
+    const { theme, layout = 'sidemenu' } = this.props;
+    let className = styles.userName;
+    if (theme === 'dark' && layout === 'topmenu') {
+      className = `${styles.userName}  ${styles.dark}`;
+    }
     return (
-      <Dropdown overlay={
-        globalConfig.development ? <Menu>
+      <Dropdown overlayClassName={classNames(styles.userDropdown)} overlay={
+        // globalConfig.development ? 
+        <Menu>
           <Menu.Item>
-            <a href="/_codegen?ui=react" target="_blank">  <Icon type={'appstore'} /> 代码生成器</a>
+            <a href="/_codegen?ui=react" target="_blank">  <Icon type='code' /> 代码生成器</a>
           </Menu.Item>
           <Menu.Item>
-            <a href="/swagger" target="_blank">  <Icon type={'appstore'} /> API文档</a>
+            <a href="/swagger" target="_blank">  <Icon type='bars' /> API文档</a>
           </Menu.Item>
-          {/* <Menu.Item>
-            <a >  <Icon type={'appstore'} />设置</a>
-          </Menu.Item> */}
           <Menu.Item>
-            {/* <a >  <Icon type={'appstore'} />修改密码</a> */}
             <DialogForm
               title="修改密码"
-              icon="appstore"
+              icon="user"
               type="a"
               width="700"
             >
@@ -36,23 +39,13 @@ export default class UserMenu extends React.Component<any, any> {
             </DialogForm>
           </Menu.Item>
           <Menu.Item>
-            <a onClick={e => { Store.User.outLogin() }}>  <Icon type={'appstore'} /> 退出</a>
+            <a onClick={e => { Store.User.outLogin() }}>  <Icon type='user-delete' /> 退出</a>
           </Menu.Item>
-        </Menu> : <Menu>
-            <Menu.Item>
-              <a >  <Icon type={'appstore'} /> 设置</a>
-            </Menu.Item>
-            <Menu.Item>
-              <a onClick={e => { Store.User.outLogin() }}>  <Icon type={'appstore'} /> 退出</a>
-            </Menu.Item>
-          </Menu>
-
+        </Menu>
       } placement="bottomCenter">
-        <div className="app-user-menu" >
-          <div>
-            <Avatar size="large" icon="user" src={Store.User.UserInfo.PhotoId ? RequestFiles.onFileUrl(Store.User.UserInfo.PhotoId) : globalConfig.default.avatar} />
-            &nbsp;<span>{Store.User.UserInfo.Name}</span>
-          </div>
+        <div className={classNames(styles.userAvatar)} >
+          <Avatar size="large" icon="user" src={Store.User.UserInfo.PhotoId ? RequestFiles.onFileUrl(Store.User.UserInfo.PhotoId) : globalConfig.default.avatar} />
+          &nbsp;<span className={classNames(className)}>{Store.User.UserInfo.Name}</span>
         </div>
       </Dropdown>
     );
