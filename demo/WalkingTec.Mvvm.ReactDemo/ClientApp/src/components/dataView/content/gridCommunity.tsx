@@ -288,6 +288,8 @@ export class GridCommunity extends React.Component<ITableProps, any> {
             col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
             return col
         })
+        // console.log("TCL: GridCommunity -> render -> PageState.tableLoading", PageState.tableLoading)
+
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid  ${className} ${theme}`}>
