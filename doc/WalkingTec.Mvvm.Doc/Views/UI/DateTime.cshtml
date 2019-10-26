@@ -155,14 +155,14 @@
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:form vm="@Model" style="max-width:600px;">
-                    <wt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" />
-                    <wt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" />
-                    <wt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" />
-                    <wt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" />
+                    <wt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2038-08-01" type="Date" show-bottom="false" />
+                    <wt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2038-08-01" type="Date" range="true" confirm-only="true"/>
+                    <wt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2038-08-01" type="Year" range="true" confirm-only="true"/>
+                    <wt:datetime field="Entity.EnMonthRange" min="2018-01-01" max="2038-08-01" type="Month" range="true" confirm-only="true"/>
                     <wt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" />
                     <wt:datetime field="Entity.EnTimeRange0"
                                  min="2018-01-01 00:00:00"
-                                 max="2018-08-01 23:59:59"
+                                 max="2038-08-01 23:59:59"
                                  type="DateTime"
                                  range="true"
                                  range-split="~"
@@ -181,7 +181,7 @@
                                  range="true"
                                  ready-func="readyFunc"
                                  change-func="changeFunc"
-                                 done-func="doneFunc" />
+                                 done-func="doneFunc"  confirm-only="true"/>
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
                         <wt:closebutton disabled="true" />
@@ -200,14 +200,14 @@
 }
 
 &ltwt:form vm="@@Model" width="600"&gt
-    &ltwt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2018-08-01" type="Date" show-bottom="false" /&gt
-    &ltwt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2018-08-01" type="Date" range="true" /&gt
-    &ltwt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2019-12-31" type="Year" range="true" /&gt
-    &ltwt:datetime field="Entity.EnMonthRange" min="2018-4-0" max="2018-9-0" type="Month" range="true" /&gt
+    &ltwt:datetime field="Entity.EnRollDate" min="2018-01-01" max="2038-08-01" type="Date" show-bottom="false" /&gt
+    &ltwt:datetime field="Entity.EnRollDateRange" min="2018-01-01" max="2038-08-01" type="Date" range="true" confirm-only="true" /&gt
+    &ltwt:datetime field="Entity.EnYearRange" min="2016-1-1" max="2038-08-01" type="Year" range="true" confirm-only="true" /&gt
+    &ltwt:datetime field="Entity.EnMonthRange" min="2018-01-01" max="2038-08-01" type="Month" range="true" confirm-only="true" /&gt
     &ltwt:datetime field="Entity.EnTimeRange" min="12:09:09" max="20:00:00" type="Time" range="true" /&gt
-    &ltwt:datetime field="Entity.UpdateTime"
+    &ltwt:datetime field="Entity.EnTimeRange0"
                     min="2018-01-01 00:00:00"
-                    max="2018-08-01 23:59:59"
+                    max="2038-08-01 23:59:59"
                     type="DateTime"
                     range="true"
                     range-split="~"
@@ -226,7 +226,7 @@
                     range="true"
                     ready-func="readyFunc"
                     change-func="changeFunc"
-                    done-func="doneFunc"/&gt
+                    done-func="doneFunc" confirm-only="true" /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
