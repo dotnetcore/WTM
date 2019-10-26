@@ -10,7 +10,6 @@ import Store from 'store';
 import LayoutPro from "./layout/antdPro";
 import Demo from "./pages/demo";
 import External from "./pages/external";
-import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
 
@@ -30,7 +29,8 @@ const router: RouteConfig[] = [
             {
                 path: "/",
                 exact: true,
-                component: createCSSTransition(Home)
+                // page 里面有个 echarts 比较大。所以拆开加载比较好
+                component: createCSSTransition(React.lazy(() => import("./pages/home")))
             },
             {
                 path: "/demo/:path?",
