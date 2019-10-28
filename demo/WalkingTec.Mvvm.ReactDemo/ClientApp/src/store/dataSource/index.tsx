@@ -56,9 +56,9 @@ export default class PageStore {
   /** 搜索 */
   async onSearch(params?: ISearchParams) {
     try {
-      if (this.PageState.tableLoading) {
-        return
-      }
+      // if (this.PageState.tableLoading) {
+      //   return
+      // }
       this.PageState.tableLoading = true;
       const res = await this.Observable.onSearch(params);
       this.DataSource.tableList = res;
