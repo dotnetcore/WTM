@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
   <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -7,4 +7,4 @@
     <wt:combobox field="Searcher.IsValid" empty-text="全部" />
   </wt:row>
 </wt:searchpanel>
-<wt:grid vm="@Model" />
+<wt:grid vm="@Model" url="/Student/Search"/>

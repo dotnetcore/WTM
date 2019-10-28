@@ -1,13 +1,15 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs.FrameworkGroupVM
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <wt:quote>确定要删除这条数据么：</wt:quote>
-    <wt:textbox field="Entity.GroupCode" />
-    <wt:textbox field="Entity.GroupName" />
-    <wt:textarea field="Entity.GroupRemark" disabled="true" />
-    <wt:hidden field="Entity.ID" />
-    <wt:row align=" AlignEnum.Right">
-        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
-        <wt:closebutton />
-    </wt:row>
+  <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
+  <wt:textbox field="Entity.GroupCode" />
+  <wt:textbox field="Entity.GroupName" />
+  <wt:textarea field="Entity.GroupRemark" disabled="true" />
+  <wt:hidden field="Entity.ID" />
+  <wt:row align=" AlignEnum.Right">
+    <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除" />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>

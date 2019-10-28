@@ -1,5 +1,6 @@
 import React, { createElement } from 'react';
 import { Button } from 'antd';
+import { Link } from 'react-router-dom';
 import config from './typeConfig';
 import './index.less';
 interface IExceptionProps {
@@ -13,6 +14,7 @@ interface IExceptionProps {
   className?: string;
   backText?: React.ReactNode;
   redirect?: string;
+  [key: string]: any;
 }
 class Exception extends React.PureComponent<IExceptionProps, any>{
   static defaultProps = {
@@ -36,6 +38,7 @@ class Exception extends React.PureComponent<IExceptionProps, any>{
       img,
       actions,
       redirect,
+      staticContext,
       ...rest
     } = this.props;
     const pageType = type in config ? type : '404';
@@ -52,14 +55,16 @@ class Exception extends React.PureComponent<IExceptionProps, any>{
           <div className={'desc'}>{desc || config[pageType].desc}</div>
           <div className={'actions'}>
             {actions ||
-              createElement(
-                linkElement as any,
-                {
-                  to: redirect,
-                  href: redirect,
-                },
-                <Button type="primary">{backText}</Button>
-              )}
+              // createElement(
+              //   linkElement as any,
+              //   {
+              //     to: redirect,
+              //     href: redirect,
+              //   },
+              //   <Button type="primary">{backText}</Button>
+              // )
+              <Link to={redirect}><Button type="primary">{backText}</Button></Link>
+            }
           </div>
         </div>
       </div>

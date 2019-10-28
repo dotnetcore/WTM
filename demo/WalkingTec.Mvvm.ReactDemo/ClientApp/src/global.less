@@ -1,3 +1,5 @@
+// @import "./assets//font//wtm//iconfont.css";
+
 body {
     background-color: #f0f2f5;
     min-height: 100vh;
@@ -10,8 +12,14 @@ body {
     background-position: center 110px;
     background-size: 100%;
     min-height: 100vh;
-}
 
+   
+}
+.anticon-::before {
+    display: inline-block !important;
+    line-height: 1rem;
+    text-align: center;
+}
 #nprogress {
     .bar {
         // background: red;
@@ -63,50 +71,51 @@ body {
 //     cursor: pointer
 // }
 
-body ::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 15px;
     height: 15px;
 }
 
-body ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: #c2c2c2;
     border-radius: 10px;
     background-clip: content-box;
 }
 
-body ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background-color: #7d7d7d;
     border-radius: 10px;
     background-clip: content-box;
 }
 
-body ::-webkit-scrollbar-thumb:vertical,
-body ::-webkit-scrollbar-thumb:vertical:hover {
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:vertical:hover {
     border: 3px solid transparent;
     border-left: 4px solid transparent;
 }
 
-body ::-webkit-scrollbar-thumb:horizontal,
-body ::-webkit-scrollbar-thumb:horizontal:hover {
+::-webkit-scrollbar-thumb:horizontal,
+::-webkit-scrollbar-thumb:horizontal:hover {
     border: 3px solid transparent;
     border-top: 4px solid transparent;
 }
 
-body ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background-color: #fafafa;
 }
 
-body ::-webkit-scrollbar-track:vertical {
+::-webkit-scrollbar-track:vertical {
     border-left: 1px solid #e8e8e8;
 }
 
-body ::-webkit-scrollbar-track:horizontal {
+::-webkit-scrollbar-track:horizontal {
     border-top: 1px solid #e8e8e8;
 }
 
-body ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
     background-color: #fafafa;
 }
+
 .app-fade-enter {
     opacity: 0;
     animation-duration: .2s;

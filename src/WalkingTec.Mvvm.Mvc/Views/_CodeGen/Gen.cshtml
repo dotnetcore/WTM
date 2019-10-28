@@ -35,28 +35,28 @@ Layout = null;
           <wt:fieldset title="Controller">
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Controller" />
-            @Model.ControllerDir\@(Model.ModelName)Controller.cs <br />
+            @Model.ControllerDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")Controller.cs <br />
           </wt:fieldset>
           <wt:fieldset title="ViewModels">
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=CrudVM" />
-            @Model.VmDir\@(Model.ModelName)VM.cs <br />
+            @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")VM.cs <br />
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ListVM" />
-            @Model.VmDir\@(Model.ModelName)ListVM.cs <br />
+            @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")ListVM.cs <br />
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=BatchVM" />
-            @Model.VmDir\@(Model.ModelName)BatchVM.cs <br />
+            @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")BatchVM.cs <br />
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ImportVM" />
-            @Model.VmDir\@(Model.ModelName)ImportVM.cs <br />
+            @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")ImportVM.cs <br />
             <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Searcher" />
-            @Model.VmDir\@(Model.ModelName)Searcher.cs <br />
+            @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")Searcher.cs <br />
           </wt:fieldset>
           @if (Model.IsApi == false)
           {
-            if (Model.UI == WalkingTec.Mvvm.Mvc.UIEnum.LayUI)
+            if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.LayUI)
             {
               <wt:fieldset title="Views">
                 <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"

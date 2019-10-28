@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
@@ -16,14 +16,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            c9.DataType = ColumnDataType.ComboBox;
-            c9.ListItems = new List<ComboSelectListItem>
-            {
-                new ComboSelectListItem{ Text="aaa", Value="aaa"},
-                new ComboSelectListItem{ Text="bbb", Value="bbb"},
-                new ComboSelectListItem{ Text="ccc", Value="ccc"},
-                new ComboSelectListItem{ Text="ddd", Value="ddd"},
-            };
         }
 
     }

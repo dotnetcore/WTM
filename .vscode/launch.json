@@ -36,6 +36,37 @@
       }
     },
     {
+      "name": ".NET Core Launch (doc)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "doc build",
+      "program": "${workspaceFolder}/doc/WalkingTec.Mvvm.Doc/bin/Debug/netcoreapp2.2/WalkingTec.Mvvm.Doc.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/doc/WalkingTec.Mvvm.Doc",
+      "stopAtEntry": false,
+      "internalConsoleOptions": "openOnSessionStart",
+      "launchBrowser": {
+        "enabled": true,
+        "args": "${auto-detect-url}",
+        "windows": {
+          "command": "cmd.exe",
+          "args": "/C start ${auto-detect-url}"
+        },
+        "osx": {
+          "command": "open"
+        },
+        "linux": {
+          "command": "xdg-open"
+        }
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
       "name": ".NET Core Attach",
       "type": "coreclr",
       "request": "attach",

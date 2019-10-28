@@ -27,6 +27,21 @@
         {"date":"2019-09-04","name":"清风惹寂寥","amount":8.88,"from":"微信","comment":"支持一下加油"},
         {"date":"2019-09-04","name":"peterpc","amount":200.00,"from":"微信","comment":"小小支持，期待vue前后端分离，ids4集成"},
         {"date":"2019-09-05","name":"顽强的灰太狼","amount":9.99,"from":"微信","comment":"支持开源"},
-        {"date":"2019-09-05","name":"恩熙先生、（Mr.Nexe）","amount":9.99,"from":"微信","comment":"开源的框架，作者不容易。希望c#国内崛起！！！"}
+        {"date":"2019-09-05","name":"恩熙先生、（Mr.Nexe）","amount":9.99,"from":"微信","comment":"开源的框架，作者不容易。希望c#国内崛起！！！"},
+        {"date":"2019-09-05","name":"匿名（这位同学如果看到请联系群里的@Vito）","amount":20.19,"from":"微信","comment":"感谢提供这么方便的框架"},
+        {"date":"2019-09-08","name":"无心(孙利)","amount":99.99,"from":"微信","comment":"谢谢，刘大神的无私帮助！！"},
+        {"date":"2019-09-12","name":"小明","amount":166.66,"from":"微信","comment":"为 . net 中的清流亮哥加油！我也想加入共建。"},
+        {"date":"2019-09-16","name":"杜亮","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-09-17","name":"受气de灰太狼","amount":66.66,"from":"微信","comment":"越来越好，支持一下"},
+        {"date":"2019-09-18","name":"裸奔侠","amount":9.99,"from":"微信","comment":"-"},
+        {"date":"2019-09-20","name":"东雨肥牛","amount":66.00,"from":"微信","comment":"-"},
+        {"date":"2019-09-21","name":"小新","amount":2.22,"from":"微信","comment":"小小心意，不成敬意。愿努力不停，愿捐助不断"},
+        {"date":"2019-09-26","name":"村西一颗草","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-09-27","name":"wbflike","amount":30.00,"from":"微信","comment":"辛苦大大开发框架"},
+        {"date":"2019-10-01","name":"汪建奎","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-10","name":"和生","amount":6.66,"from":"微信","comment":"支持一下加油"},
+        {"date":"2019-10-12","name":"g*W","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-13","name":"B*s","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-14","name":"*云","amount":20.00,"from":"微信","comment":"-"}
     ]
 }

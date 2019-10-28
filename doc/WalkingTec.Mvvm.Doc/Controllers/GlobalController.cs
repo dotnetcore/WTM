@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
@@ -43,6 +43,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
 
         [ActionDescription("发布")]
         public IActionResult Publish()
+        {
+            return PartialView();
+        }
+
+        [ActionDescription("多语言")]
+        public IActionResult MultiLanguages()
         {
             return PartialView();
         }

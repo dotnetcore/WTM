@@ -96,6 +96,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("UEditor")]
+        public IActionResult UEditor()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
         [ActionDescription("Others")]
         public IActionResult Others()
         {
@@ -144,6 +151,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             var vm = CreateVM<StudentListVm3>();
             return PartialView(vm);
         }
+
+        [ActionDescription("按钮")]
+        public IActionResult Button()
+        {
+            return PartialView();
+        }
+
 
         public IActionResult GetSchool(string keywords)
         {

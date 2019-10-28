@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
                 this.MakeStandardAction("Major", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("Major", GridActionStandardTypesEnum.ExportExcel, "导出","")
             };
         }
 

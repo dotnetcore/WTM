@@ -77,11 +77,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     if (controller is BaseController c)
                     {
-                        context.Result = c.Content("该地址只能在调试模式下访问");
+                        context.Result = c.Content(Program._localizer["DebugOnly"]);
                     }
                     else if (controller is ControllerBase c2)
                     {
-                        context.Result = c2.BadRequest("该地址只能在调试模式下访问");
+                        context.Result = c2.BadRequest(Program._localizer["DebugOnly"]);
                     }
                 }
                 return;
@@ -122,7 +122,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         if (controller is BaseController c)
                         {
-                            throw new Exception("您没有访问该页面的权限");
+                            throw new Exception(Program._localizer["NoPrivilege"]);
                         }
                         else if (controller is ControllerBase c2)
                         {

@@ -30,7 +30,9 @@ namespace WalkingTec.Mvvm.Core
         public Guid? FileID { get; set; }
 
         public string Html { get; set; }
-        public static ColumnFormatInfo MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height,  string title = null, string buttonID = null, bool showDialog = true, bool resizable = true)
+
+        public bool Maxed { get; set; }
+        public static ColumnFormatInfo MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height,  string title = null, string buttonID = null, bool showDialog = true, bool resizable = true, bool maxed = false)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Dialog;
@@ -43,6 +45,7 @@ namespace WalkingTec.Mvvm.Core
             rv.ButtonID = buttonID;
             rv.ShowDialog = showDialog;
             rv.Resizable = resizable;
+            rv.Maxed = maxed;
             return rv;
         }
 
@@ -74,11 +77,11 @@ namespace WalkingTec.Mvvm.Core
             rv.FormatType = ColumnFormatTypeEnum.Download;
             rv.ButtonType = buttonType;
             rv.FileID = fileID;
-            rv.Text = buttonText??"下载";
+            rv.Text = buttonText?? Program._localizer["Download"];
             return rv;
         }
 
-        public static ColumnFormatInfo MakeViewButton(ButtonTypesEnum buttonType, Guid? fileID, int? width = null, int? height = null, string title = null, string windowID = null, string buttonText = null, bool resizable = true)
+        public static ColumnFormatInfo MakeViewButton(ButtonTypesEnum buttonType, Guid? fileID, int? width = null, int? height = null, string title = null, string windowID = null, string buttonText = null, bool resizable = true, bool maxed = false)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.ViewPic;
@@ -87,9 +90,10 @@ namespace WalkingTec.Mvvm.Core
             rv.Width = width;
             rv.Height = height;
             rv.WindowID = windowID;
-            rv.Text = buttonText??"预览";
-            rv.Title = title??"预览";
+            rv.Text = buttonText ?? Program._localizer["Preview"];
+            rv.Title = title ?? Program._localizer["Preview"];
             rv.Resizable = resizable;
+            rv.Maxed = maxed;
             return rv;
         }
 

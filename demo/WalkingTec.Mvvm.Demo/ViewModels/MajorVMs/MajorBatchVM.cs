@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,11 +18,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
             LinkedVM = new Major_BatchEdit();
         }
 
-        protected override bool CheckIfCanDelete(Guid id, out string errorMessage)
-        {
-            errorMessage = null;
-			return true;
-        }
     }
 
 	/// <summary>
@@ -32,7 +27,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
     {
         public List<ComboSelectListItem> AllSchools { get; set; }
         [Display(Name = "所属学校")]
-        public Guid? SchoolId { get; set; }
+        public int? SchoolId { get; set; }
 
         protected override void InitVM()
         {

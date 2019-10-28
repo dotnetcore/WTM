@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,26 +13,26 @@ namespace WalkingTec.Mvvm.Core
     public class FrameworkMenu : BasePoco, ITreeData<FrameworkMenu>
     {
 
-        [Display(Name = "页面名称")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "PageName")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [Required(ErrorMessage = "{0}required")]
         public string PageName { get; set; }
 
-        [Display(Name = "动作名称")]
+        [Display(Name = "ActionName")]
         public string ActionName { get; set; }
 
-        [Display(Name = "模块名称")]
+        [Display(Name = "ModuleName")]
         public string ModuleName { get; set; }
 
-        [Display(Name = "目录")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "FolderOnly")]
+        [Required(ErrorMessage = "{0}required")]
         public bool FolderOnly { get; set; }
 
-        [Display(Name = "继承")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "IsInherit")]
+        [Required(ErrorMessage = "{0}required")]
         public bool IsInherit { get; set; }
 
-        [Display(Name = "权限")]
+        [Display(Name = "Privileges")]
         public List<FunctionPrivilege> Privileges { get; set; }
 
         /// <summary>
@@ -47,26 +47,26 @@ namespace WalkingTec.Mvvm.Core
         /// <value></value>
         public string MethodName { get; set; }
 
-        [Display(Name = "域")]
+        [Display(Name = "Domain")]
         public Guid? DomainId { get; set; }
 
-        [Display(Name = "域")]
+        [Display(Name = "Domain")]
         public FrameworkDomain Domain { get; set; }
 
-        [Display(Name = "菜单显示")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "ShowOnMenu")]
+        [Required(ErrorMessage = "{0}required")]
         public bool ShowOnMenu { get; set; }
 
-        [Display(Name = "公开")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "IsPublic")]
+        [Required(ErrorMessage = "{0}required")]
         public bool IsPublic { get; set; }
 
-        [Display(Name = "顺序")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "DisplayOrder")]
+        [Required(ErrorMessage = "{0}required")]
         public int? DisplayOrder { get; set; }
 
-        [Display(Name = "内部地址")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "IsInside")]
+        [Required(ErrorMessage = "{0}required")]
         public bool? IsInside { get; set; }
 
         /// <summary>
@@ -75,18 +75,18 @@ namespace WalkingTec.Mvvm.Core
         /// <value></value>
         public string Url { get; set; }
 
-        [Display(Name = "图标")]
+        [Display(Name = "ICon")]
         [StringLength(50)]
         public string ICon { get; set; }
 
         #region ITreeData成员
 
-        [Display(Name = "父目录")]
+        [Display(Name = "ParentFolder")]
         public Guid? ParentId { get; set; }
-        [Display(Name = "父目录")]
+        [Display(Name = "ParentFolder")]
         [JsonIgnore]
         public FrameworkMenu Parent { get; set; }
-        [Display(Name = "子项")]
+        [Display(Name = "Children")]
         [JsonIgnore]
         public List<FrameworkMenu> Children { get; set; }
 

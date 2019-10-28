@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -84,6 +86,9 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         public string CurrentCS { get; set; }
+
+        public DBTypeEnum? CurrentDbType { get; set; }
+
         public string ParentWindowId
         {
             get
@@ -139,7 +144,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        #region 数据库环境（属性）
+        #region DataContext 
         private IDataContext _dc;
         public IDataContext DC
         {
@@ -158,7 +163,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region 域（属性）
+        #region Domain 
         public List<FrameworkDomain> Domains
         {
             get
@@ -177,7 +182,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-        #region 当前用户（属性）
+        #region Current User
         public LoginUserInfo LoginUserInfo
         {
             get
@@ -191,7 +196,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region GUID（属性）
+        #region GUID
         public List<EncHash> EncHashs
         {
             get
@@ -207,14 +212,38 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region 菜单 （属性）
+        #region Menus 
         public List<FrameworkMenu> FFMenus => GlobaInfo.AllMenus;
         #endregion
-
 
         #region URL
         public string BaseUrl { get; set; }
         #endregion
+
+        private IStringLocalizer _localizer;
+        public IStringLocalizer Localizer
+        {
+            get
+            {
+                if(_localizer == null)
+                {
+                    var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    if (programtype != null)
+                    {
+                        try
+                        {
+                            _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                        }
+                        catch { }
+                    }
+                    if(_localizer == null)
+                    {
+                        _localizer = WalkingTec.Mvvm.Core.Program._localizer;
+                    }
+                }
+                return _localizer;
+            }
+        }
 
         public ActionLog Log { get; set; }
 
@@ -222,17 +251,17 @@ namespace WalkingTec.Mvvm.Mvc
 
         #region CreateVM
         /// <summary>
-        /// 创建一个ViewModel，将Controller层的Session，cache，DC等信息传递给ViewModel
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
         /// </summary>
-        /// <param name="VMType">ViewModel的类</param>
-        /// <param name="Id">ViewModel的Id，如果有Id，则自动获取该Id的数据</param>
-        /// <param name="Ids">如果VM为BatchVM，则自动将Ids赋值</param>
-        /// <param name="values"></param>
-        /// <param name="passInit"></param>
-        /// <returns>创建的ViewModel</returns>
-        private BaseVM CreateVM(Type VMType, Guid? Id = null, Guid[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        /// <param name="VMType">The type of the viewmodel</param>
+        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">properties of the viewmodel that you want to assign values</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
         {
-            //通过反射创建ViewModel并赋值
+            //Use reflection to create viewmodel
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
             BaseVM rv = ctor.Invoke(null) as BaseVM;
             try
@@ -251,7 +280,9 @@ namespace WalkingTec.Mvvm.Mvc
             rv.WindowIds = this.WindowIds;
             rv.UIService = this.UIService;
             rv.Log = this.Log;
+            rv.Controller = this;
             rv.ControllerName = this.GetType().FullName;
+            rv.Localizer = this.Localizer;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try
@@ -266,18 +297,21 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                         }
                     }
-                    var f = HttpContext.Request.Form;
-                    foreach (var key in f.Keys)
+                    if (HttpContext.Request.HasFormContentType)
                     {
-                        if (rv.FC.Keys.Contains(key) == false)
+                        var f = HttpContext.Request.Form;
+                        foreach (var key in f.Keys)
                         {
-                            rv.FC.Add(key, f[key]);
+                            if (rv.FC.Keys.Contains(key) == false)
+                            {
+                                rv.FC.Add(key, f[key]);
+                            }
                         }
                     }
                 }
-                catch { }
+                catch {}
             }
-            //如果传递了默认值，则给vm赋值
+            //try to set values to the viewmodel's matching properties
             if (values != null)
             {
                 foreach (var v in values)
@@ -285,19 +319,28 @@ namespace WalkingTec.Mvvm.Mvc
                     PropertyHelper.SetPropertyValue(rv, v.Key, v.Value, null, false);
                 }
             }
-            //如果ViewModel T继承自BaseCRUDVM<>且Id有值，那么自动调用ViewModel的GetById方法
+            //if viewmodel is derrived from BaseCRUDVM<> and Id has value, call ViewModel's GetById method
             if (Id != null && rv is IBaseCRUDVM<TopBasePoco> cvm)
             {
-                cvm.SetEntityById(Id.Value);
+                cvm.SetEntityById(Id);
             }
-            //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
+            //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
-                temp.Ids = Ids;
+                temp.Ids = new string[] { };
+                if(Ids != null)
+                {
+                    var tempids = new List<string>();
+                    foreach (var iid in Ids)
+                    {
+                        tempids.Add(iid.ToString());
+                    }
+                    temp.Ids = tempids.ToArray();
+                }
                 if (temp.ListVM != null)
                 {
                     temp.ListVM.CopyContext(rv);
-                    temp.ListVM.Ids = Ids == null ? new List<Guid>() : Ids.ToList();
+                    temp.ListVM.Ids = Ids == null ? new List<string>() : temp.Ids.ToList();
                     temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
                     temp.ListVM.NeedPage = false;
                 }
@@ -307,7 +350,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 if (temp.ListVM != null)
                 {
-                    //绑定ListVM的OnAfterInitList事件，当ListVM的InitList完成时，自动将操作列移除
+                    //Remove the action columns from list
                     temp.ListVM.OnAfterInitList += (self) =>
                     {
                         self.RemoveActionColumn();
@@ -331,7 +374,7 @@ namespace WalkingTec.Mvvm.Mvc
                 temp.LinkedVM?.DoInit();
                 //temp.ListVM.DoSearch();
             }
-            //如果ViewModel是ListVM，则初始化Searcher并调用Searcher的InitVM方法
+            //if the viewmodel is a ListVM, Init it's searcher
             if (rv is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
             {
                 var searcher = lvm.Searcher;
@@ -350,7 +393,7 @@ namespace WalkingTec.Mvvm.Mvc
                 template.DoInit();
             }
 
-            //自动调用ViewMode的InitVM方法
+            //if passinit is not set, call the viewmodel's DoInit method
             if (passInit == false)
             {
                 rv.DoInit();
@@ -359,22 +402,118 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         /// <summary>
-        /// 初始化一个新的ViewModel
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
         /// </summary>
-        /// <typeparam name="T">VM的类</typeparam>
-        /// <param name="Id">VM的主键，如果不为空则自动根据主键读取数据</param>
-        /// <param name="Ids">VM的列表主键数组，针对ListVM和BatchVM等有列表的VM，如果不为空则根据数组读取数据</param>
-        /// <param name="values">Lambda的表达式，使用时用类似Where条件的写法来写，比如CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b');会在新建VM后将Field1赋为a，Field2赋为b</param>
-        /// <param name="passInit"></param>
-        /// <returns></returns>
-        public T CreateVM<T>(Guid? Id = null, Guid[] Ids = null, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
             var dir = p.Parse(values);
-            return CreateVM(typeof(T), Id, Ids, dir, passInit) as T;
+            return CreateVM(typeof(T), null, new object[] { }, dir, passInit) as T;
         }
 
-        public BaseVM CreateVM(string VmFullName, Guid? Id = null, Guid[] Ids = null, bool passInit = false)
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        /// <param name="values">properties of the viewmodel that you want to assign values</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(object Id, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), Id, new object[] { }, dir, passInit) as T;
+        }
+
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(object[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids, dir, passInit) as T;
+        }
+
+
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>( Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(int[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(long[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public T CreateVM<T>(string[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        {
+            SetValuesParser p = new SetValuesParser();
+            var dir = p.Parse(values);
+            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        }
+
+        /// <summary>
+        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        /// </summary>
+        /// <param name="VmFullName">the fullname of the viewmodel's type</param>
+        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        /// <returns>ViewModel</returns>
+        public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
         {
             return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
         }
@@ -395,12 +534,12 @@ namespace WalkingTec.Mvvm.Mvc
                     cs = "default";
                 }
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
         #endregion
 
-        #region 重新加载model
+        #region ReInit model
         private void SetReInit(ModelStateDictionary msd, BaseVM model)
         {
             var reinit = model.GetType().GetTypeInfo().GetCustomAttributes(typeof(ReInitAttribute), false).Cast<ReInitAttribute>().SingleOrDefault();
@@ -422,56 +561,38 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region 验证mode
-        public bool RedoValidation(object item)
+        #region Validate model
+        [NonAction]
+        public Dictionary<string,string> RedoValidation(object item)
         {
-            if (ControllerContext == null)
+            Dictionary<string, string> rv = new Dictionary<string, string>();
+            TryValidateModel(item);
+
+            foreach (var e in ControllerContext.ModelState)
             {
-                ControllerContext = new ControllerContext();
-            }
-            bool rv = TryValidateModel(item);
-            var pros = item.GetType().GetProperties();
-            foreach (var pro in pros)
-            {
-                if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                if(e.Value.ValidationState == ModelValidationState.Invalid)
                 {
-                    if (pro.GetValue(item) is TopBasePoco bp)
-                    {
-                        rv = TryValidateModel(bp);
-                    }
-                }
-                if (pro.PropertyType.GenericTypeArguments.Count() > 0)
-                {
-                    var ftype = pro.PropertyType.GenericTypeArguments.First();
-                    if (ftype.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
-                    {
-                        if (pro.GetValue(item) is IEnumerable<TopBasePoco> list)
-                        {
-                            foreach (var li in list)
-                            {
-                                rv = RedoValidation(li);
-                            }
-                        }
-                    }
+                    rv.Add(e.Key, e.Value.Errors.Select(x=>x.ErrorMessage).ToSpratedString());
                 }
             }
+
             return rv;
         }
         #endregion
 
-        #region 更新model
+        #region update viewmodel
         /// <summary>
-        /// 模拟MVC将FormCollection的值赋给ViewModel的相应字段的过程
+        /// Set viewmodel's properties to the matching items posted by user
         /// </summary>
         /// <param name="vm">ViewModel</param>
         /// <param name="prefix">prefix</param>
-        /// <returns>成功返回True，失败返回False</returns>
+        /// <returns>true if success</returns>
+        [NonAction]
         public bool RedoUpdateModel(object vm, string prefix = null)
         {
             try
             {
                 BaseVM bvm = vm as BaseVM;
-                //循环FormCollection
                 foreach (var item in bvm.FC.Keys)
                 {
                     PropertyHelper.SetPropertyValue(vm, item, bvm.FC[item], prefix, true);
@@ -544,7 +665,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 rv.Controller.Response.Headers.Add("IsScript", "true");
             }
-            catch { }
+            catch{}
             return rv;
         }
 
@@ -553,7 +674,6 @@ namespace WalkingTec.Mvvm.Mvc
         private const string SUCCESS = "success";
 
         /// <summary>
-        /// 替换默认的 Json 不添加任何外部属性
         /// Creates a Microsoft.AspNetCore.Mvc.JsonResult object that serializes the specified
         /// data object to JSON.
         /// </summary>
@@ -567,11 +687,13 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         /// <summary>
-        /// 替换默认的 Json 不添加任何外部属性
+        /// Creates a Microsoft.AspNetCore.Mvc.JsonResult object that serializes the specified
+        /// data object to JSON.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="serializerSettings"></param>
-        /// <returns></returns>
+        /// <param name="data">The object to serialize.</param>
+        /// <param name="serializerSettings">settings</param>
+        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
+        /// data to JSON format for the response.</returns>
         [NonAction]
         public virtual JsonResult JsonCustom(object data, JsonSerializerSettings serializerSettings)
         {
@@ -579,11 +701,12 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         /// <summary>
-        /// 重写 Json方法
-        /// 统一接口 Json 输出格式{data:{object},code:200,msg:""}
+        /// override Json method
+        /// output format is {data:{object},code:200,msg:""}
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">The object to serialize.</param>
+        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
+        /// data to JSON format for the response.</returns>
         [NonAction]
         public override JsonResult Json(object data)
         {
@@ -591,12 +714,13 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         /// <summary>
-        /// 重写 Json方法
-        /// 统一接口 Json 输出格式{data:{object},code:200,msg:""}
+        /// override Json method
+        /// output format is {data:{object},code:200,msg:""}
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="serializerSettings"></param>
-        /// <returns></returns>
+        /// <param name="data">The object to serialize.</param>
+        /// <param name="serializerSettings">settings</param>
+        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
+        /// data to JSON format for the response.</returns>
         [NonAction]
         public override JsonResult Json(object data, JsonSerializerSettings serializerSettings)
         {
@@ -604,14 +728,15 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         /// <summary>
-        /// 重写 Json方法
-        /// 统一接口 Json 输出格式{data:{object},code:200,msg:""}
+        /// override Json method
+        /// output format is {data:{object},code:200,msg:""}
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="statusCode"></param>
-        /// <param name="msg"></param>
-        /// <param name="serializerSettings"></param>
-        /// <returns></returns>
+        /// <param name="data">The object to serialize.</param>
+        /// <param name="statusCode">status code</param>
+        /// <param name="msg">message</param>
+        /// <param name="serializerSettings">settings</param>
+        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
+        /// data to JSON format for the response.</returns>
         [NonAction]
         public virtual JsonResult Json(object data, int statusCode = StatusCodes.Status200OK, string msg = SUCCESS, JsonSerializerSettings serializerSettings = null)
         {

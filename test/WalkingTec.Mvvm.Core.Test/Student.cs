@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -56,5 +56,6 @@ namespace WalkingTec.Mvvm.Core.Test
 
         [Display(Name = "专业")]
         public List<StudentMajor> StudentMajor { get; set; }
+        public List<StudentMajorWithOtherID> StudentMajorWithOtherID { get; set; }
     }
 }

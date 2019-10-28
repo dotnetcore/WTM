@@ -13,12 +13,12 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 namespace WalkingTec.Mvvm.Admin.Api
 {
 
-    [ActionDescription("用户管理")]
+    [ActionDescription("UserManagement")]
     [ApiController]
     [Route("api/_FrameworkUserBase")]
 	public class _FrameworkUserController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("Search")]
 		public string Search(FrameworkUserSearcher searcher)
         {
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         [HttpPost("Add")]
         public IActionResult Add(FrameworkUserVM vm)
         {
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit(FrameworkUserVM vm)
         {
@@ -85,8 +85,8 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        [ActionDescription("Delete")]
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
@@ -119,21 +119,21 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("ExportByIds")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("下载模板")]
+        [ActionDescription("DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         [HttpPost("Import")]
         public ActionResult Import(FrameworkUserImportVM vm)
         {
@@ -168,14 +168,14 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [HttpGet("GetFrameworkRoles")]
-        [ActionDescription("获取角色")]
+        [ActionDescription("GetRoles")]
         public ActionResult GetFrameworkRoles()
         {
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
-        [ActionDescription("获取用户组")]
+        [ActionDescription("GetGroups")]
         public ActionResult GetFrameworkGroups()
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));

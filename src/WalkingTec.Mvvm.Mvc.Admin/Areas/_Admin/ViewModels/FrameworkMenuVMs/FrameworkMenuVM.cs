@@ -13,10 +13,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
     public class FrameworkMenuVM : BaseCRUDVM<FrameworkMenu>
     {
-        [Display(Name = "图标库")]
+        [Display(Name = "IconFont")]
         public string IconFont { get; set; }
 
-        [Display(Name = "图标")]
+        [Display(Name = "ICon")]
         public string IconFontItem { get; set; }
 
         [JsonIgnore]
@@ -26,13 +26,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         [JsonIgnore]
         public List<ComboSelectListItem> AllActions { get; set; }
 
-        [Display(Name = "动作")]
+        [Display(Name = "Action")]
         public List<string> SelectedActionIDs { get; set; }
 
-        [Display(Name = "模块")]
+        [Display(Name = "Module")]
         public string SelectedModule { get; set; }
 
-        [Display(Name = "允许角色")]
+        [Display(Name = "AllowedRole")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
         [JsonIgnore]
@@ -75,35 +75,36 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             SelectedRolesIDs.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == true).Select(x => x.RoleId.Value).ToList());
 
-            var data = DC.Set<FrameworkMenu>().ToList();
+            var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
             AllParents = topMenu.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
 
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-            var m = modules.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").ToList();
-            List<FrameworkModule> toremove = new List<FrameworkModule>();
-            foreach (var item in m)
+            var toRemove = new List<FrameworkModule>();
+            foreach (var item in modules)
             {
-                var f = modules.Where(x => x.ClassName == item.ClassName && x.Area?.AreaName == item.Area?.AreaName).FirstOrDefault();
-                if (f?.IgnorePrivillege == true)
+                if (item.IgnorePrivillege)
                 {
-                    toremove.Add(item);
+                    toRemove.Add(item);
+                }
+                else
+                {
+                    if (!item.IsApi) continue;
+                    if (item.NameSpace == "WalkingTec.Mvvm.Admin.Api")
+                    {
+                        if (!item.ModuleName.EndsWith($"({Program._localizer["BuildinApi"]})"))
+                            item.ModuleName += $"({Program._localizer["BuildinApi"]})";
+                    }
+                    else if (!item.ModuleName.EndsWith("(api)"))
+                        item.ModuleName += "(api)";
                 }
             }
-            toremove.ForEach(x => m.Remove(x));
-            var m2 = modules.Where(x => x.NameSpace == "WalkingTec.Mvvm.Admin.Api").ToList();
-            foreach (var item in m2)
-            {
-                if (item.ModuleName.EndsWith("(内置api)") == false)
-                {
-                    item.ModuleName += "(内置api)";
-                }
-            }
-            m.AddRange(m2);
+            var m = modules.ToList();
+            toRemove.ForEach(x => m.Remove(x));
             AllModules = m.ToListItems(y => y.ModuleName, y => y.ClassName);
-            if (string.IsNullOrEmpty(SelectedModule) == false || ( string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
+            if (string.IsNullOrEmpty(SelectedModule) == false || (string.IsNullOrEmpty(Entity.Url) == false && Entity.IsInside == true))
             {
                 if (string.IsNullOrEmpty(SelectedModule))
                 {
@@ -123,10 +124,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
                 var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName== null || x.MethodName=="Index") && x.ID != Entity.ID).FirstOrDefault();
+                var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName == null || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
-                    MSD.AddModelError(" error", "该模块已经配置过了");
+                    MSD.AddModelError(" error", Program._localizer["ModuleHasSet"]);
                 }
 
             }
@@ -161,7 +162,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
@@ -171,7 +172,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var mainAction = modules.Where(x => x.ClassName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
-                        MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
+                        MSD.AddModelError("Entity.ModuleId", Program._localizer["NoIndexInModule"]);
                         return;
                     }
                     if (mainAction == null && Entity.ShowOnMenu == false)
@@ -202,7 +203,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                         {
                             Guid aid = action.ID;
                             var adb = actionsInDB.Where(x => x.Url.ToLower() == action.Url.ToLower()).FirstOrDefault();
-                            if(adb != null)
+                            if (adb != null)
                             {
                                 aid = adb.ID;
                             }
@@ -272,7 +273,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
@@ -282,7 +283,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     var mainAction = modules.Where(x => x.ClassName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
-                        MSD.AddModelError("Entity.ModuleId", "模块中没有找到Index页面");
+                        MSD.AddModelError("Entity.ModuleId", Program._localizer["NoIndexInModule"]);
                         return;
                     }
                     if (mainAction == null && Entity.ShowOnMenu == false)

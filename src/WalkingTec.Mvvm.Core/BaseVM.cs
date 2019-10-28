@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -181,6 +182,8 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public object Controller { get; set; }
+
         /// <summary>
         /// 当前登录人信息
         /// </summary>
@@ -229,6 +232,8 @@ namespace WalkingTec.Mvvm.Core
         public List<Guid> DeletedFileIds { get; set; }
 
         public string ControllerName { get; set; }
+
+        public IStringLocalizer Localizer { get; set; }
         #endregion
 
         #region Event

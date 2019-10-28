@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -44,28 +44,28 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
     public class FrameworkUserBase_ListView : BasePoco
     {
-        [Display(Name = "账号")]
+        [Display(Name = "Account")]
         public string ITCode { get; set; }
 
-        [Display(Name = "姓名")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Display(Name = "角色")]
+        [Display(Name = "Role")]
         public string RoleName_view { get; set; }
 
-        [Display(Name = "用户组")]
+        [Display(Name = "Group")]
         public string GroupName_view { get; set; }
     }
 
     public class FrameworkUserBaseSearcher : BaseSearcher
     {
-        [Display(Name = "账号")]
+        [Display(Name = "Account")]
         public string ITCode { get; set; }
 
-        [Display(Name = "名字")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Display(Name = "类型")]
+        [Display(Name = "Role")]
         public List<Guid> Roles { get; set; }
 
         public List<ComboSelectListItem> AllRoles { get; set; }
