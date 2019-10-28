@@ -122,7 +122,7 @@ class ConfigStore {
         },
         clear() {
             window.localStorage.clear();
-            window.location.reload()
+            window.location.pathname = "/"
         }
     };
     /** 列表 分页 可选 行数 以下是默认值 */

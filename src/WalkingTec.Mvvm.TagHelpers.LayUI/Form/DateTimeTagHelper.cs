@@ -116,6 +116,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public bool? ShowBottom { get; set; }
 
+
+        /// <summary>
+        /// 只出现确定按钮
+        /// </summary>
+        public bool? ConfirmOnly { get; set; }
+
         /// <summary>
         /// 语言 默认CN
         /// </summary>
@@ -183,11 +189,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
             {
                 var dateRange = Field.Model as DateRange;
-                Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                if (string.IsNullOrEmpty(Format))
+                    Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                else
+                    Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
             }
             else
             {
-                Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                if (string.IsNullOrEmpty(Format))
+                    Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                else
+                    Value = (Field.Model as DateTime?)?.ToString(Format) ?? Value;
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
@@ -217,9 +229,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
 
-            if(Lang == null)
+            if (Lang == null)
             {
-                if(Enum.TryParse<DateTimeLangEnum>(Program._localizer["LayuiDateLan"],true, out var testlang))
+                if (Enum.TryParse<DateTimeLangEnum>(Program._localizer["LayuiDateLan"], true, out var testlang))
                 {
                     Lang = testlang;
                 }
@@ -238,6 +250,7 @@ layui.use(['laydate'],function(){{
     {(string.IsNullOrEmpty(Max) ? string.Empty : $",max: {Max}")}
     {(!ZIndex.HasValue ? string.Empty : $",zIndex: {ZIndex.Value}")}
     {(!ShowBottom.HasValue ? string.Empty : $",showBottom: {ShowBottom.Value.ToString().ToLower()}")}
+    {(!ConfirmOnly.HasValue ? string.Empty : ShowBottom.HasValue && ShowBottom.Value && ConfirmOnly.Value || !ShowBottom.HasValue && ConfirmOnly.Value ? $",btns: ['confirm']" : string.Empty)}
     {(!Calendar.HasValue ? string.Empty : $",calendar: {Calendar.Value.ToString().ToLower()}")}
     {(!Lang.HasValue ? string.Empty : $",lang: '{Lang.Value.ToString().ToLower()}'")}
     {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonConvert.SerializeObject(Mark)}")}
