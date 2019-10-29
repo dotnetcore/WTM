@@ -9,7 +9,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 用户登录信息，需要保存在Session中，所以使用Serializable标记
     /// </summary>
-    public class LoginUserInfo 
+    public class LoginUserInfo
     {
         public Guid Id { get; set; }
         /// <summary>

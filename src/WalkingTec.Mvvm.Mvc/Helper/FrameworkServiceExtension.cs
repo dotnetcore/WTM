@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -23,16 +27,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
@@ -135,6 +141,12 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
+            // edit start by @vito
+            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
+            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Auth.PolicyEvaluator>());
+            services.TryAddEnumerable(
+                ServiceDescriptor.Transient<IApplicationModelProvider, Auth.AuthorizationApplicationModelProvider>());
+            // edit end
 
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
@@ -144,6 +156,7 @@ namespace WalkingTec.Mvvm.Mvc
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
+                options.Filters.Add(new AuthorizeFilter());
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
@@ -214,6 +227,61 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
             services.AddSingleton<IUIService, DefaultUIService>();
+
+            #region CookieWithJwtAuth
+
+            // services.AddSingleton<UserStore>();
+            services.AddSingleton<ITokenRefreshService, TokenRefreshService>();
+            services.AddSingleton<IAuthService, AuthService>();
+
+            var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
+            services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
+
+            var cookieOptions = config.GetSection("CookieOptions").Get<Auth.CookieOptions>();
+            services.Configure<Auth.CookieOptions>(config.GetSection("CookieOptions"));
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                    {
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.SameSite = SameSiteMode.Strict;
+
+                        options.ClaimsIssuer = cookieOptions.Issuer;
+                        options.SlidingExpiration = cookieOptions.SlidingExpiration;
+                        options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
+                        // options.SessionStore = new MemoryTicketStore();
+
+                        // options.LoginPath = CookieAuthenticationDefaults.LoginPath;
+                        options.LoginPath = "/Login/Login";
+                        options.LogoutPath = CookieAuthenticationDefaults.LogoutPath;
+                        // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                        options.ReturnUrlParameter = "Redirect";
+                        options.AccessDeniedPath = options.LoginPath;
+                    })
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            NameClaimType = AuthConstants.JwtClaimTypes.Name,
+                            RoleClaimType = AuthConstants.JwtClaimTypes.Role,
+
+                            ValidateIssuer = true,
+                            ValidIssuer = jwtOptions.Issuer,
+
+                            ValidateAudience = true,
+                            ValidAudience = jwtOptions.Audience,
+
+                            ValidateIssuerSigningKey = false,
+                            IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
+
+                            ValidateLifetime = true
+                        };
+                    });
+            #endregion
+
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -232,6 +300,19 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
             }
+
+            app.UseExceptionHandler("/_Framework/Error");
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/_js"),
+                FileProvider = new EmbeddedFileProvider(
+                    typeof(_CodeGenController).GetTypeInfo().Assembly,
+                    "WalkingTec.Mvvm.Mvc")
+            });
+            app.UseAuthentication();
+
             app.UseResponseCaching();
             app.Use(async (context, next) =>
             {
@@ -247,18 +328,9 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             });
 
-            app.UseExceptionHandler("/_Framework/Error");
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
             app.UseSession();
-            if(configs.CorsOptions.EnableAll == true){
+            if (configs.CorsOptions.EnableAll == true)
+            {
                 if (configs.CorsOptions?.Policy?.Count > 0)
                 {
                     app.UseCors(configs.CorsOptions.Policy[0].Name);

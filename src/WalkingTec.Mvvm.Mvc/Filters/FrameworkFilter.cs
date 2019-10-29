@@ -53,6 +53,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     var model = item.Value as BaseVM;
                     model.Session = new SessionServiceProvider(context.HttpContext.Session);
+                    model.Cache = ctrl.Cache;
+                    model.LoginUserInfo = ctrl.LoginUserInfo;
                     model.DC = ctrl.DC;
                     model.MSD = new ModelStateServiceProvider(ctrl.ModelState);
                     model.FC = new Dictionary<string, object>();
