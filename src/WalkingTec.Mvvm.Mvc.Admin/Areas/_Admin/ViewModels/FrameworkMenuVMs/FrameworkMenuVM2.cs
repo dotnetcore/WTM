@@ -94,18 +94,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     var ndc = DC.ReCreate();
-                    var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
-                    foreach (var oldid in oldIDs)
-                    {
-                        try
-                        {
-                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
-                            ndc.Set<FrameworkMenu>().Attach(fp);
-                            ndc.DeleteEntity(fp);
-                        }
-                        catch { }
-                    }
-                    ndc.SaveChanges();
+                    var actionsInDB = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.ParentId == Entity.ID).ToList();
                     var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.ModuleName = mo.ModuleName;
                     Entity.ClassName = mo.ClassName;
@@ -118,6 +107,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     {
                         if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))
                         {
+                            Guid aid = action.ID;
+                            var adb = actionsInDB.Where(x => x.Url.ToLower() == action.Url.ToLower()).FirstOrDefault();
+                            if (adb != null)
+                            {
+                                aid = adb.ID;
+                            }
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -135,6 +130,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.Url = action.Url;
                             menu.ClassName = action.Module.ClassName;
                             menu.MethodName = action.MethodName;
+                            menu.ID = aid;
                             Entity.Children.Add(menu);
                         }
                     }

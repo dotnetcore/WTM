@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             var menus = DC.Set<FunctionPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .Select(x => x.MenuItem)
+                .Select(x => x.MenuItem).Distinct()
                 .Where(x => x.MethodName == null)
                 .OrderBy(x => x.DisplayOrder)
                 .Select(x => new SimpleMenu
@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             List<string> urls = new List<string>();
             urls.AddRange(DC.Set<FunctionPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .Select(x => x.MenuItem)
+                .Select(x => x.MenuItem).Distinct()
                 .Where(x => x.MethodName != null)
                 .Select(x => x.Url)
                 );
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
                 var menus = DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                    .Select(x => x.MenuItem)
+                    .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName == null)
                   .OrderBy(x => x.DisplayOrder)
                   .Select(x => new SimpleMenu
@@ -156,7 +156,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                    .Select(x => x.MenuItem)
+                    .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName != null)
                     .Select(x => x.Url)
                     );

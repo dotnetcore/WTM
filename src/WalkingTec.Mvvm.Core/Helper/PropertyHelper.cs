@@ -468,6 +468,13 @@ namespace WalkingTec.Mvvm.Core
         public static void SetMemberValue(this MemberInfo mi, object obj, object val, object[] index = null)
         {
             object newval = val;
+            if(val is string s)
+            {
+                if (string.IsNullOrEmpty(s))
+                {
+                    val = null;
+                }
+            }
             if (val != null && val.GetType() != mi.GetMemberType())
             {
                 newval = val.ConvertValue(mi.GetMemberType());
