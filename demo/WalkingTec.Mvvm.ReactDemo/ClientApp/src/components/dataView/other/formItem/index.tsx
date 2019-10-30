@@ -94,31 +94,43 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         }
         // 布局
         // let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
-        let itemlayout = formItemLayout;
+        let itemlayout: any = formItemLayout;
         if (layout === "row") {
             itemlayout = {
                 labelCol: {
-                    span: labelSpan
+                    lg: labelSpan,
+                    md: labelSpan,
+                    sm: 24,
+                    xs: 24,
                 },
                 wrapperCol: {
-                    span: warppSpan
+                    lg: warppSpan,
+                    md: warppSpan,
+                    sm: 24,
+                    xs: 24,
                 },
             }
             // 富文本 分 2行
             if (lodash.get(model.formItem, "type.wtmType") === "Editor") {
                 itemlayout = {
                     labelCol: {
-                        span: labelSpan
+                        lg: labelSpan,
+                        md: labelSpan,
+                        sm: 24,
+                        xs: 24,
                     },
                     wrapperCol: {
-                        span: 24
+                        lg: 24,
+                        md: 24,
+                        sm: 24,
+                        xs: 24,
                     },
                 }
             }
         } else if (layout === "row-hidden-label") {
             itemlayout = {
                 labelCol: {
-                    span: 0
+                    span: 0,
                 },
                 wrapperCol: {
                     span: 24

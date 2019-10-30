@@ -381,6 +381,7 @@ namespace WalkingTec.Mvvm.Mvc
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
             gd.SetModuleGetFunc(() => {
+                
                 return GetAllModules(controllers);
             });
 

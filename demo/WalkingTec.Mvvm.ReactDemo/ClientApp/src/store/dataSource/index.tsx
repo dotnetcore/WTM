@@ -56,14 +56,16 @@ export default class PageStore {
   /** 搜索 */
   async onSearch(params?: ISearchParams) {
     try {
+      // if (this.PageState.tableLoading) {
+      //   return
+      // }
       this.PageState.tableLoading = true;
       const res = await this.Observable.onSearch(params);
       this.DataSource.tableList = res;
+      this.PageState.tableLoading = false;
       return res;
     } catch (error) {
       console.warn(error)
-    }
-    finally {
       this.PageState.tableLoading = false;
     }
   }

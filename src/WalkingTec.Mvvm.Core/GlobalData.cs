@@ -26,10 +26,21 @@ namespace WalkingTec.Mvvm.Core
 
 
         private Func<List<FrameworkModule>> ModuleGetFunc;
+        private List<FrameworkModule> _allModules;
         /// <summary>
         /// 模块
         /// </summary>
-        public List<FrameworkModule> AllModule => ModuleGetFunc == null ? null : ModuleGetFunc();
+        public List<FrameworkModule> AllModule
+        {
+            get
+            {
+                if(_allModules == null)
+                {
+                    _allModules = ModuleGetFunc?.Invoke();
+                }
+                return _allModules;
+            }
+        }
 
         /// <summary>
         /// 数据库模型
@@ -38,7 +49,7 @@ namespace WalkingTec.Mvvm.Core
 
         private Func<List<FrameworkMenu>> MenuGetFunc;
 
-        public List<FrameworkMenu> AllMenus => MenuGetFunc == null ? null : MenuGetFunc();
+        public List<FrameworkMenu> AllMenus => MenuGetFunc?.Invoke();
 
         /// <summary>
         /// 设置菜单委托
