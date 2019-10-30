@@ -1,15 +1,18 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwt]
     [ActionDescription("Log")]
     [ApiController]
     [Route("api/_ActionLog")]

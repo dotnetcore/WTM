@@ -1,23 +1,26 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwt]
     [ActionDescription("RoleManagement")]
     [ApiController]
     [Route("api/_FrameworkRole")]
-	public class _FrameworkRoleController : BaseApiController
+    public class _FrameworkRoleController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("Search")]
-		public string Search(FrameworkRoleSearcher searcher)
+        public string Search(FrameworkRoleSearcher searcher)
         {
             var vm = CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
@@ -108,7 +111,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-		[HttpPost("BatchDelete")]
+        [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {

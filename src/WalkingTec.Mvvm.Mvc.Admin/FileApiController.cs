@@ -1,15 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Mvc;
+
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
+    [AuthorizeJwt]
     [ApiController]
     [Route("api/_file")]
     [AllRights]

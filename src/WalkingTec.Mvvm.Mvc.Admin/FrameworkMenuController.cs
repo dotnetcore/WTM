@@ -1,27 +1,26 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwt]
     [ActionDescription("MenuMangement")]
     [ApiController]
     [Route("api/_FrameworkMenu")]
-	public class _FrameworkMenuController : BaseApiController
+    public class _FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("Search")]
-		public string Search(FrameworkMenuSearcher searcher)
+        public string Search(FrameworkMenuSearcher searcher)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
@@ -154,7 +153,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
+            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {
@@ -173,7 +172,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFolders")]
         public ActionResult GetFolders()
         {
-            var m = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x=>x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
+            var m = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
             return Ok(m);
         }
 
