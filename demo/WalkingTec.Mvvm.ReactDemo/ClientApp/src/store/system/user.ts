@@ -31,15 +31,14 @@ class Store {
     Actions = [];
     @action
     async onSetUserInfo(userInfo) {
-
-        this.Actions = lodash.map(lodash.get(userInfo, 'Attributes.Actions', []), lodash.toLower);
-        await Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []));
         // jwt
         if ('access_token' in userInfo) {
             globalConfig.headers.Authorization = `${userInfo.token_type} ${userInfo.access_token}`;
             const user = await Request.ajax("/api/_FrameworkUserBase/GetUserInfo").toPromise();
             userInfo = { ...user, Authorization: userInfo };
         }
+        this.Actions = lodash.map(lodash.get(userInfo, 'Attributes.Actions', []), lodash.toLower);
+        await Menu.onInitMenu(lodash.get(userInfo, 'Attributes.Menus', []));
         runInAction(() => {
             this.UserInfo = userInfo;
             this.isLogin = true;
