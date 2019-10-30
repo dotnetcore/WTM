@@ -15,11 +15,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("MenuMangement")]
     [ApiController]
-    [Route("api/_FrameworkMenu")]
+    [Route("api/_[controller]")]
     public class _FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
+        [HttpPost("[action]")]
         public string Search(FrameworkMenuSearcher searcher)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
@@ -103,9 +103,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkMenuSearcher searcher)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
@@ -116,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
@@ -131,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         #region 未设置页面
         [ActionDescription("UnsetPages")]
-        [HttpGet("UnsetPages")]
+        [HttpGet("[action]")]
         public string UnsetPages()
         {
             var vm = CreateVM<FrameworkActionListVM>();
@@ -141,7 +140,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         #region 刷新菜单
         [ActionDescription("RefreshMenu")]
-        [HttpGet("RefreshMenu")]
+        [HttpGet("[action]")]
         public ActionResult RefreshMenu()
         {
             Cache.Remove("FFMenus");

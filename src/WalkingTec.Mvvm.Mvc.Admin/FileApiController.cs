@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("File")]
     public class _FileApiController : BaseApiController
     {
-        [HttpPost("upload")]
+        [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
         public IActionResult Upload()
         {
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
             vm.Entity.IsTemprory = true;
 
-            if(string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
+            if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
             {
                 return BadRequest("服务端没有配置储存文件的地址");
             }
@@ -44,11 +44,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return BadRequest("上传失败");
             }
-             vm.DoAdd();
+            vm.DoAdd();
             return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
         }
 
-        [HttpPost("uploadimage")]
+        [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
         public IActionResult UploadImage(int? width = null, int? height = null)
         {
@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [HttpGet("getFileName/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id)
         {
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(vm.Entity.FileName);
         }
 
-        [HttpGet("getFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id)
         {
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return new EmptyResult();
         }
 
-        [HttpGet("downloadFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile(Guid id)
         {
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
-        [HttpGet("deleteFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("DeleteFile")]
         public IActionResult DeletedFile(Guid id)
         {

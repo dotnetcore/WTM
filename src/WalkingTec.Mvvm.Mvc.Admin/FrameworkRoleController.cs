@@ -15,11 +15,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("RoleManagement")]
     [ApiController]
-    [Route("api/_FrameworkRole")]
+    [Route("api/_[controller]")]
     public class _FrameworkRoleController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
+        [HttpPost("[action]")]
         public string Search(FrameworkRoleSearcher searcher)
         {
             var vm = CreateVM<FrameworkRoleListVM>();
@@ -36,16 +36,15 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("GetPageActions")]
-        [HttpGet("GetPageActions/{id}")]
+        [HttpGet("[action]/{id}")]
         public FrameworkRoleMDVM2 GetPageActions(Guid id)
         {
             var vm = CreateVM<FrameworkRoleMDVM2>(id);
             return vm;
         }
 
-
         [ActionDescription("PageFunction")]
-        [HttpPut("EditPrivilege")]
+        [HttpPut("[action]")]
         public IActionResult EditPrivilege(FrameworkRoleMDVM2 vm)
         {
             if (!ModelState.IsValid)
@@ -67,7 +66,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
@@ -90,7 +89,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
@@ -134,9 +133,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
             var vm = CreateVM<FrameworkRoleListVM>();
@@ -147,7 +145,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkRoleListVM>();
@@ -161,7 +159,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("DownloadTemplate")]
-        [HttpGet("GetExcelTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
             var vm = CreateVM<FrameworkRoleImportVM>();
@@ -176,7 +174,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Import")]
-        [HttpPost("Import")]
+        [HttpPost("[action]")]
         public ActionResult Import(FrameworkRoleImportVM vm)
         {
 

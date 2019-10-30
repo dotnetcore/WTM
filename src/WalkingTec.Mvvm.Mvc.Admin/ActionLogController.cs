@@ -15,11 +15,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("Log")]
     [ApiController]
-    [Route("api/_ActionLog")]
+    [Route("api/_[controller]")]
     public class _ActionLogController : BaseApiController
     {
         [ActionDescription("搜索")]
-        [HttpPost("Search")]
+        [HttpPost("[action]")]
         public string Search(ActionLogSearcher searcher)
         {
             var vm = CreateVM<ActionLogListVM>();
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [HttpPost("BatchDelete")]
+        [HttpPost("[action]")]
         [ActionDescription("删除")]
         public IActionResult BatchDelete(string[] ids)
         {
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
 
         [ActionDescription("导出")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(ActionLogSearcher searcher)
         {
             var vm = CreateVM<ActionLogListVM>();
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("勾选导出")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<ActionLogListVM>();

@@ -15,11 +15,11 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("DataPrivilege")]
     [ApiController]
-    [Route("api/_DataPrivilege")]
+    [Route("api/_[controller]")]
     public class _DataPrivilegeController : BaseApiController
     {
         [ActionDescription("搜索")]
-        [HttpPost("Search")]
+        [HttpPost("[action]")]
         public string Search(DataPrivilegeSearcher searcher)
         {
             var vm = CreateVM<DataPrivilegeListVM>();
@@ -27,9 +27,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-
         [ActionDescription("获取")]
-        [HttpGet("Get")]
+        [HttpGet("[action]")]
         public DataPrivilegeVM Get(string TableName, Guid TargetId, DpTypeEnum DpType)
         {
             DataPrivilegeVM vm = null;
@@ -46,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("新建")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
@@ -69,7 +68,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("修改")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
@@ -91,7 +90,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("删除")]
-        [HttpGet("Delete/{id}")]
+        [HttpGet("[action]/{id}")]
         public IActionResult Delete(Guid id)
         {
             var vm = CreateVM<DataPrivilegeVM>(id);
@@ -107,7 +106,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [HttpPost("BatchDelete")]
+        [HttpPost("[action]")]
         [ActionDescription("批量删除")]
         public IActionResult BatchDelete(string[] ids)
         {
@@ -131,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [AllRights]
-        [HttpGet("GetPrivilegeByTableName")]
+        [HttpGet("[action]")]
         public ActionResult GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
@@ -144,7 +143,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [AllRights]
-        [HttpGet("GetPrivileges")]
+        [HttpGet("[action]")]
         public ActionResult GetPrivileges()
         {
             var rv = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
@@ -152,7 +151,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [AllRights]
-        [HttpGet("GetUserGroups")]
+        [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
             var rv = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);

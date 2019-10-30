@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     public class _FrameworkUserController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
+        [HttpPost("[action]")]
         public string Search(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkUserVM vm)
         {
             ModelState.Remove("Entity.Password");
@@ -80,9 +80,6 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
             }
         }
-
-
-
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
@@ -107,9 +104,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
@@ -120,7 +116,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
@@ -134,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("DownloadTemplate")]
-        [HttpGet("GetExcelTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
             var vm = CreateVM<FrameworkUserImportVM>();
@@ -152,7 +148,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Import")]
-        [HttpPost("Import")]
+        [HttpPost("[action]")]
         public ActionResult Import(FrameworkUserImportVM vm)
         {
 

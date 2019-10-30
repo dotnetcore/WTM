@@ -15,12 +15,12 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("GroupManagement")]
     [ApiController]
-    [Route("api/_FrameworkGroup")]
-	public class _FrameworkGroupController : BaseApiController
+    [Route("api/_[controller]")]
+    public class _FrameworkGroupController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
-		public string Search(FrameworkGroupSearcher searcher)
+        [HttpPost("[action]")]
+        public string Search(FrameworkGroupSearcher searcher)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-		[HttpPost("BatchDelete")]
+        [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
@@ -103,9 +103,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
@@ -116,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
@@ -130,7 +129,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("DownloadTemplate")]
-        [HttpGet("GetExcelTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
             var vm = CreateVM<FrameworkGroupImportVM>();
@@ -145,7 +144,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Import")]
-        [HttpPost("Import")]
+        [HttpPost("[action]")]
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
 
@@ -158,7 +157,6 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Ok(vm.EntityList.Count);
             }
         }
-
 
     }
 }
