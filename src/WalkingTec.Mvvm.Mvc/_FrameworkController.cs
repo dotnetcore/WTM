@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +6,15 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+
+using Newtonsoft.Json;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Model;
@@ -100,6 +103,7 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
+        [Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除")]
         /// <summary>
         /// 获取分页数据
         /// </summary>
@@ -197,7 +201,7 @@ namespace WalkingTec.Mvvm.Mvc
                 listVM.SearcherMode = listVM.Ids != null && listVM.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
 
                 var data = listVM.GenerateExcel();
-                HttpContext.Response.Cookies.Append("DONOTUSEDOWNLOADING", "0", new CookieOptions() { Path = "/", Expires = DateTime.Now.AddDays(2) });
+                HttpContext.Response.Cookies.Append("DONOTUSEDOWNLOADING", "0", new Microsoft.AspNetCore.Http.CookieOptions() { Path = "/", Expires = DateTime.Now.AddDays(2) });
 
                 return File(data, "application/vnd.ms-excel", $"Export_{instanceType.Name}_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
             }
@@ -224,13 +228,13 @@ namespace WalkingTec.Mvvm.Mvc
             }
             importVM.SetParms(qs);
             var data = importVM.GenerateTemplate(out string fileName);
-            HttpContext.Response.Cookies.Append("DONOTUSEDOWNLOADING", "0", new CookieOptions() { Domain = "/", Expires = DateTime.Now.AddDays(2) });
+            HttpContext.Response.Cookies.Append("DONOTUSEDOWNLOADING", "0", new Microsoft.AspNetCore.Http.CookieOptions() { Domain = "/", Expires = DateTime.Now.AddDays(2) });
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
         #endregion
 
-        [Public]
+        [AllowAnonymous]
         [ActionDescription("错误处理")]
         public IActionResult Error()
         {
@@ -470,7 +474,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         }
 
-        [AllRights]
         public IActionResult OutSide(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -626,7 +629,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        [AllRights]
         [HttpGet]
         public IActionResult Menu()
         {
@@ -653,44 +655,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        [Public]
-        [HttpPost]
-        public IActionResult Login(string userid, string password)
-        {
-            var user = DC.Set<FrameworkUserBase>()
-    .Include(x => x.UserRoles).Include(x => x.UserGroups)
-    .Where(x => x.ITCode.ToLower() == userid.ToLower() && x.Password == Utils.GetMD5String(password) && x.IsValid)
-    .SingleOrDefault();
-
-            //如果没有找到则输出错误
-            if (user == null)
-            {
-                return BadRequest("登录失败");
-            }
-            var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
-            var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
-            //查找登录用户的数据权限
-            var dpris = DC.Set<DataPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
-                .ToList();
-            //生成并返回登录用户信息
-            LoginUserInfo rv = new LoginUserInfo();
-            rv.Id = user.ID;
-            rv.ITCode = user.ITCode;
-            rv.Name = user.Name;
-            rv.Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList();
-            rv.Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList();
-            rv.DataPrivileges = dpris;
-            //查找登录用户的页面权限
-            var pris = DC.Set<FunctionPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .ToList();
-            rv.FunctionPrivileges = pris;
-            LoginUserInfo = rv;
-            return Ok("Success");
-        }
-
-        [Public]
+        [AllowAnonymous]
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
@@ -705,7 +670,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        [Public]
+        [AllowAnonymous]
         [ResponseCache(Duration = 3600)]
         public string GetGithubStarts()
         {
@@ -716,7 +681,7 @@ namespace WalkingTec.Mvvm.Mvc
             }, 1800);
         }
 
-        [Public]
+        [AllowAnonymous]
         [ResponseCache(Duration = 3600)]
         public ActionResult GetGithubInfo()
         {
@@ -728,8 +693,7 @@ namespace WalkingTec.Mvvm.Mvc
             return Content(rv, "application/json");
         }
 
-
-        [Public]
+        [AllowAnonymous]
         [ResponseCache(Duration = 3600)]
         public string Redirect()
         {
@@ -744,7 +708,7 @@ namespace WalkingTec.Mvvm.Mvc
             public int open_issues_count { get; set; }
         }
 
-        [Public]
+        [AllowAnonymous]
         public ActionResult GetVerifyCode()
         {
             int codeW = 80;

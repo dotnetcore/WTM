@@ -7,7 +7,6 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
-
     [Area("_Admin")]
     [ActionDescription("用户组管理")]
     public class FrameworkGroupController : BaseController

@@ -1,4 +1,4 @@
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public class AuthConstants
     {

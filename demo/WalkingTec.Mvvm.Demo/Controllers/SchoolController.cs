@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    
+    [AuthorizeJwtWithCookie]
     [ActionDescription("学校管理（单表）")]
     public class SchoolController : BaseController
     {
@@ -49,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索并修改某字段")]
         public ActionResult EditIndex(SchoolListVM2 vm)
         {
-            //由于只更新名称字段，其他必填字段并没有值也不影响            
+            //由于只更新名称字段，其他必填字段并没有值也不影响
             ModelState.Clear();
             foreach (var item in vm.EntityList)
             {
@@ -176,11 +177,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
-                return PartialView("BatchEdit",vm);
+                return PartialView("BatchEdit", vm);
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有" + vm.Ids.Length + "条数据被修改");
             }
         }
         #endregion
@@ -200,17 +201,17 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                return PartialView("BatchDelete",vm);
+                return PartialView("BatchDelete", vm);
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有" + vm.Ids.Length + "条数据被删除");
             }
         }
         #endregion
 
         #region 导入
-		[ActionDescription("导入")]
+        [ActionDescription("导入")]
         public ActionResult Import()
         {
             var vm = CreateVM<SchoolImportVM>();

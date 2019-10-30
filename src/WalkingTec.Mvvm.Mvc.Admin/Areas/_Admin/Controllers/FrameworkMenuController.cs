@@ -170,8 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("刷新菜单")]
         public ActionResult RefreshMenu()
         {
-            var cache = GlobalServices.GetService<IMemoryCache>();
-            cache.Remove("FFMenus");
+            Cache.Remove("FFMenus");
             return FFResult().Alert("操作成功");
         }
         #endregion
@@ -193,7 +192,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseCache(Duration = 3600)]
-        [AllRights()]
+        [AllRights]
         public IActionResult GetIconFontItems(string id)
         {
             if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))

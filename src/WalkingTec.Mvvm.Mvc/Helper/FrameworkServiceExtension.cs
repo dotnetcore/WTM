@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
@@ -237,8 +239,8 @@ namespace WalkingTec.Mvvm.Mvc
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
             services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
 
-            var cookieOptions = config.GetSection("CookieOptions").Get<Auth.CookieOptions>();
-            services.Configure<Auth.CookieOptions>(config.GetSection("CookieOptions"));
+            var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -417,12 +419,12 @@ namespace WalkingTec.Mvvm.Mvc
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<FrameworkMenu>();
-                var cache = GlobalServices.GetService<IMemoryCache>();
+                var cache = GlobalServices.GetService<IDistributedCache>();
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
                 {
                     var data = GetAllMenus(gd.AllModule, gd.DataContextCI);
-                    cache.Set(menuCacheKey, data);
+                    cache.Add(menuCacheKey, data);
                     menus = data;
                 }
                 else
@@ -567,7 +569,8 @@ namespace WalkingTec.Mvvm.Mvc
 
             foreach (var ctrl in controllers)
             {
-                var pubattr = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var pubattr1 = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var pubattr12 = ctrl.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
@@ -583,7 +586,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     continue;
                 }
-                if (pubattr.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
+                if (pubattr1.Length > 0 || pubattr12.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
                 }
@@ -620,6 +623,7 @@ namespace WalkingTec.Mvvm.Mvc
                 foreach (var method in methods)
                 {
                     var pubattr2 = method.GetCustomAttributes(typeof(PublicAttribute), false);
+                    var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
@@ -631,7 +635,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Module = model,
                             MethodName = method.Name
                         };
-                        if (pubattr2.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
+                        if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
@@ -663,6 +667,7 @@ namespace WalkingTec.Mvvm.Mvc
                 foreach (var method in methods)
                 {
                     var pubattr2 = method.GetCustomAttributes(typeof(PublicAttribute), false);
+                    var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
 
@@ -682,7 +687,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Module = model,
                             MethodName = method.Name
                         };
-                        if (pubattr2.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
+                        if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
@@ -746,12 +751,13 @@ namespace WalkingTec.Mvvm.Mvc
                 //获取controller上标记的ActionDescription属性的值
                 var attrs = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var attrs2 = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var attrs22 = ctrl.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                 var areaAttr = ctrl.GetCustomAttribute(typeof(AreaAttribute), false);
                 if (areaAttr != null)
                 {
                     area = (areaAttr as AreaAttribute).RouteValue;
                 }
-                if (attrs.Length > 0 || attrs2.Length > 0)
+                if (attrs.Length > 0 || attrs2.Length > 0 || attrs22.Length > 0)
                 {
                     includeAll = true;
                 }
@@ -782,7 +788,8 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var attrs3 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                             var attrs4 = method.GetCustomAttributes(typeof(PublicAttribute), false);
-                            if (attrs3.Length > 0 || attrs4.Length > 0)
+                            var attrs42 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
+                            if (attrs3.Length > 0 || attrs4.Length > 0 || attrs42.Length > 0)
                             {
                                 rv.Add(url);
                             }
@@ -810,7 +817,8 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var attrs5 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                             var attrs6 = method.GetCustomAttributes(typeof(PublicAttribute), false);
-                            if (attrs5.Length > 0 || attrs6.Length > 0)
+                            var attrs62 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
+                            if (attrs5.Length > 0 || attrs6.Length > 0 || attrs62.Length > 0)
                             {
                                 rv.Add(url);
                             }

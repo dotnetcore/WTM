@@ -11,10 +11,10 @@ window.ff = {
     var cookiePrefix = '', windowGuid = '';
 
     if ("undefined" !== typeof DONOTUSE_COOKIEPRE) {
-        cookiePrefix = DONOTUSE_COOKIEPRE;
+      cookiePrefix = DONOTUSE_COOKIEPRE;
     }
     if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
-        windowGuid = DONOTUSE_WINDOWGUID;
+      windowGuid = DONOTUSE_WINDOWGUID;
     }
 
     if (allwindow) {
@@ -278,12 +278,12 @@ window.ff = {
       async: true,
       error: function (request) {
         layer.close(index);
-          if (request.responseText !== undefined && request.responseText !== "") {
-              layer.alert(request.responseText);
-          }
-          else {
-              layer.alert('加载失败');
-          }
+        if (request.responseText !== undefined && request.responseText !== "") {
+          layer.alert(request.responseText);
+        }
+        else {
+          layer.alert('加载失败');
+        }
       },
       success: function (str, textStatus, request) {
         layer.close(index);
@@ -323,15 +323,20 @@ window.ff = {
       url: url,
       data: para,
       async: true,
-      error: function (request) {
+      error: function (xhr) {
         layer.close(index);
+        let location = xhr.getResponseHeader("Location");
+        if (location) {
+          window.location = location;
+          return false;
+        }
         ff.SetCookie("windowids", owid);
-          if (request.responseText !== undefined && request.responseText !== "") {
-              layer.alert(request.responseText);
-          }
-          else {
-              layer.alert('加载失败');
-          }
+        if (xhr.responseText !== undefined && xhr.responseText !== "") {
+          layer.alert(xhr.responseText);
+        }
+        else {
+          layer.alert('加载失败');
+        }
       },
       success: function (str, textStatus, request) {
         layer.close(index);
@@ -398,12 +403,12 @@ window.ff = {
       error: function (request) {
         layer.close(index);
         ff.SetCookie("windowids", owid);
-          if (request.responseText !== undefined && request.responseText !== "") {
-              layer.alert(request.responseText);
-          }
-          else {
-              layer.alert('加载失败');
-          }
+        if (request.responseText !== undefined && request.responseText !== "") {
+          layer.alert(request.responseText);
+        }
+        else {
+          layer.alert('加载失败');
+        }
       },
       success: function (str) {
         var regGridId = /<\s{0,}table\s+.*\s+id\s{0,}=\s{0,}"(.*)"\s+lay-filter="\1"\s{0,}>\s{0,}<\s{0,}\/\s{0,}table\s{0,}>/im;
@@ -567,10 +572,10 @@ window.ff = {
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (item.value !== null && item.value !== "") {
         if (filter.hasOwnProperty(item.name)) {
-            var temp = filter[item.name];
-            if (!(temp instanceof Array))
-                temp = [temp];
-            temp.push(item.value);
+          var temp = filter[item.name];
+          if (!(temp instanceof Array))
+            temp = [temp];
+          temp.push(item.value);
           filter[item.name] = temp;
         }
         else {
@@ -587,10 +592,10 @@ window.ff = {
       if (!item.name) return;
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (filter.hasOwnProperty(item.name)) {
-          var temp = filter[item.name];
-          if (!(temp instanceof Array));
-          temp = [temp];
-          temp.push(item.value);
+        var temp = filter[item.name];
+        if (!(temp instanceof Array));
+        temp = [temp];
+        temp.push(item.value);
         filter[item.name] = temp;
       }
       else {
@@ -612,10 +617,10 @@ window.ff = {
   },
 
   DownloadExcelOrPdf: function (url, formId, defaultcondition, ids) {
-      var formData = ff.GetSearchFormData(formId);
-      if (defaultcondition == null) {
-          defaultcondition = {};
-      }
+    var formData = ff.GetSearchFormData(formId);
+    if (defaultcondition == null) {
+      defaultcondition = {};
+    }
     $.extend(defaultcondition, formData);
     var form = $('<form method="POST" action="' + url + '">');
     for (var attr in defaultcondition) {
@@ -665,10 +670,10 @@ window.ff = {
         data[val] = ff.guid();
       }
     }
-      var re = /(<input .*?)\s*\/>/ig;
-      var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
-      var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
-   for (val in data) {
+    var re = /(<input .*?)\s*\/>/ig;
+    var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
+    var re3 = /(.*?)<input hidden name='(.*?)\.id' .*?\/>(.*?)/ig;
+    for (val in data) {
       if (typeof (data[val]) == 'string') {
         data[val] = data[val].replace(/\[\d?\]/ig, "[" + loaddata.length + "]");
         data[val] = data[val].replace(/_\d?_/ig, "_" + loaddata.length + "_");
@@ -684,18 +689,18 @@ window.ff = {
     layui.table.render(option);
   },
 
-  LoadLocalData: function (gridid, option, datas,isnormaltable) {
-      var re = /(<input .*?)\s*\/>/ig;
-      var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
-  for (var i = 0; i < datas.length; i++) {
+  LoadLocalData: function (gridid, option, datas, isnormaltable) {
+    var re = /(<input .*?)\s*\/>/ig;
+    var re2 = /(<select .*?)\s*>(.*?<\/select>)/ig;
+    for (var i = 0; i < datas.length; i++) {
       var data = datas[i];
       for (val in data) {
         if (typeof (data[val]) == 'string') {
-            data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
-            if (isnormaltable === false) {
-                data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\" />");
-                data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\" >$2");
-            }
+          data[val] = data[val].replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
+          if (isnormaltable === false) {
+            data[val] = data[val].replace(re, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',0)\" />");
+            data[val] = data[val].replace(re2, "$1 onchange=\"ff.gridcellchange(this,'" + gridid + "'," + i + ",'" + val + "',1)\" >$2");
+          }
         }
       }
     }

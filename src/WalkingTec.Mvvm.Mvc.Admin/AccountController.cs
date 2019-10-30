@@ -1,23 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Auth;
-using WalkingTec.Mvvm.Mvc.Auth.Attribute;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwt]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/_[controller]")]
     [ActionDescription("登陆")]
     public class AccountController : BaseApiController
     {

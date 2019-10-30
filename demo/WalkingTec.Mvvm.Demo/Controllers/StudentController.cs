@@ -8,7 +8,6 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    
     [ActionDescription("学生管理（多对多）")]
     public class StudentController : BaseController
     {

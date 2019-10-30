@@ -18,6 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var vm = CreateVM<FrameworkRoleListVM>();
             return PartialView(vm);
         }
+
         [ActionDescription("搜索")]
         [HttpPost]
         public string Search(FrameworkRoleListVM vm)

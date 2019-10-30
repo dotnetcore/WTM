@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using WalkingTec.Mvvm.Core.Auth;
 
 namespace WalkingTec.Mvvm.Mvc.Auth
 {

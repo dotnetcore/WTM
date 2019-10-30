@@ -20,6 +20,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string Password { get; set; }
 
+        [Display(Name = "记录我的登录")]
+        public bool RememberLogin { get; set; }
+
         public string Redirect { get; set; }
 
         [Display(Name = "验证码")]
@@ -34,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         {
             //根据用户名和密码查询用户
             var user = DC.Set<FrameworkUserBase>()
-                .Include(x => x.UserRoles).Include(x=>x.UserGroups)
+                .Include(x => x.UserRoles).Include(x => x.UserGroups)
                 .Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password) && x.IsValid)
                 .SingleOrDefault();
 
@@ -48,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
             //查找登录用户的数据权限
             var dpris = DC.Set<DataPrivilege>()
-                .Where(x => x.UserId == user.ID ||  ( x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .ToList();
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo

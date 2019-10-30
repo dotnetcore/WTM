@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using WalkingTec.Mvvm.Core.Auth;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public interface ITokenRefreshService
     {

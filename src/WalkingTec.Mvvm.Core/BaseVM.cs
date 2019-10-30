@@ -1,9 +1,13 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+
+using Microsoft.Extensions.Caching.Distributed;
+
+using Newtonsoft.Json;
+
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -17,7 +21,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// BaseVM
         /// </summary>
-        public BaseVM() {
+        public BaseVM()
+        {
             FC = new Dictionary<string, object>();
         }
 
@@ -183,22 +188,13 @@ namespace WalkingTec.Mvvm.Core
 
         public object Controller { get; set; }
 
+        public IDistributedCache Cache { get; set; }
+
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo
-        {
-            get
-            {
-                return Session?.Get<LoginUserInfo>("UserInfo");
-            }
-            set
-            {
-                Session?.Set("UserInfo", value);
-            }
-
-        }
+        public LoginUserInfo LoginUserInfo { get; set; }
 
         /// <summary>
         /// 当前Url
@@ -307,6 +303,7 @@ namespace WalkingTec.Mvvm.Core
             ConfigInfo = vm.ConfigInfo;
             DataContextCI = vm.DataContextCI;
             UIService = vm.UIService;
+            LoginUserInfo = vm.LoginUserInfo;
         }
 
         /// <summary>
@@ -318,7 +315,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if (string.IsNullOrEmpty(csName))
             {
-                csName = CurrentCS??"default";
+                csName = CurrentCS ?? "default";
             }
             return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
         }

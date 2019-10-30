@@ -1,12 +1,10 @@
+using System;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
@@ -58,6 +56,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             //如果用户登录信息为空，也不需要判断权限，BaseController中会对没有登录的用户做其他处理
 
             var isPublic = ad.MethodInfo.IsDefined(typeof(PublicAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(PublicAttribute), false);
+            isPublic = ad.MethodInfo.IsDefined(typeof(AllowAnonymousAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllowAnonymousAttribute), false);
+
             var isAllRights = ad.MethodInfo.IsDefined(typeof(AllRightsAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllRightsAttribute), false);
             var isDebug = ad.MethodInfo.IsDefined(typeof(DebugOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(DebugOnlyAttribute), false);
             if (controller.ConfigInfo.IsFilePublic == true)
@@ -93,27 +93,27 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
 
-            if (controller.LoginUserInfo == null)
-            {
-                var publicMenu = controller.GlobaInfo.AllMenus
-                               .Where(x => x.Url != null
-                                   && x.Url.ToLower() == "/" + ad.ControllerName.ToLower() + "/" + ad.ActionName
-                                   && x.IsPublic == true)
-                               .FirstOrDefault();
-                if (publicMenu == null)
-                {
-                    if (controller is BaseController c)
-                    {
-                        context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType = "text/html" };
-                    }
-                    else if (controller is ControllerBase c2)
-                    {
-                        context.Result = c2.Unauthorized();
-                    }
-                    return;
-                }
-            }
-            else
+            // if (controller.LoginUserInfo == null)
+            // {
+            //     var publicMenu = controller.GlobaInfo.AllMenus
+            //                    .Where(x => x.Url != null
+            //                        && x.Url.ToLower() == "/" + ad.ControllerName.ToLower() + "/" + ad.ActionName
+            //                        && x.IsPublic == true)
+            //                    .FirstOrDefault();
+            //     if (publicMenu == null)
+            //     {
+            //         if (controller is BaseController c)
+            //         {
+            //             context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType = "text/html" };
+            //         }
+            //         else if (controller is ControllerBase c2)
+            //         {
+            //             context.Result = c2.Unauthorized();
+            //         }
+            //         return;
+            //     }
+            // }
+            // else
             {
                 if (isAllRights == false)
                 {
@@ -126,7 +126,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                         else if (controller is ControllerBase c2)
                         {
-                            context.Result = c2.Unauthorized();
+                            context.Result = c2.Forbid();
+                            // context.Result = c2.Unauthorized();
                         }
                     }
                 }

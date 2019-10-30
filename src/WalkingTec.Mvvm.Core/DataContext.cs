@@ -34,6 +34,7 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
+        public DbSet<PersistedGrant> PersistedGrants { get; set; }
 
 
 
@@ -245,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
             }
 
             // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
-            for (int i = 0; i < allTypes.Count; i++) // 
+            for (int i = 0; i < allTypes.Count; i++) //
             {
                 var item = allTypes[i];
                 var pros = item.GetProperties();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 
 namespace WalkingTec.Mvvm.Mvc.Auth
 {

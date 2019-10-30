@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public interface IAuthService
     {

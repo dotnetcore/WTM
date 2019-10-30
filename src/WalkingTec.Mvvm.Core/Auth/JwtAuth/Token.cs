@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public class Token
     {

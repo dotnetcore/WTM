@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-
 namespace WalkingTec.Mvvm.Core
 {
     /// <summary>
@@ -12,6 +11,7 @@ namespace WalkingTec.Mvvm.Core
     public class LoginUserInfo
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 登录用户
         /// </summary>
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Core
 
         public List<FrameworkGroup> Groups { get; set; }
 
-        public Dictionary<string,object> Attributes { get; set; }
+        public Dictionary<string, object> Attributes { get; set; }
         /// <summary>
         /// 用户的页面权限列表
         /// </summary>

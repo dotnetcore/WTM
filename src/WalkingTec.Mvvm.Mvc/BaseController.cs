@@ -1,22 +1,33 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+
+using Newtonsoft.Json;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Mvc.Auth;
 
 namespace WalkingTec.Mvvm.Mvc
 {
     public abstract class BaseController : Controller, IBaseController
     {
+        public BaseController()
+        {
+        }
+
         private Configs _configInfo;
         public Configs ConfigInfo
         {
@@ -33,6 +44,7 @@ namespace WalkingTec.Mvvm.Mvc
                 _configInfo = value;
             }
         }
+
         private GlobalData _globaInfo;
         public GlobalData GlobaInfo
         {
@@ -67,21 +79,17 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        private IMemoryCache _cache;
-        protected IMemoryCache Cache
+        private IDistributedCache _cache;
+        public IDistributedCache Cache
         {
             get
             {
                 if (_cache == null)
                 {
-                    _cache = (IMemoryCache)HttpContext.RequestServices.GetService(typeof(IMemoryCache));
+                    _cache = (IDistributedCache)HttpContext.RequestServices.GetService(typeof(IDistributedCache));
                 }
                 return _cache;
             }
-        }
-
-        public BaseController()
-        {
         }
 
         public string CurrentCS { get; set; }
@@ -105,6 +113,7 @@ namespace WalkingTec.Mvvm.Mvc
                 return rv ?? string.Empty;
             }
         }
+
         public string CurrentWindowId
         {
             get
@@ -122,6 +131,7 @@ namespace WalkingTec.Mvvm.Mvc
                 return rv ?? string.Empty;
             }
         }
+
         public string WindowIds
         {
             get
@@ -143,7 +153,8 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        #region DataContext 
+        #region DataContext
+
         private IDataContext _dc;
         public IDataContext DC
         {
@@ -160,9 +171,11 @@ namespace WalkingTec.Mvvm.Mvc
                 _dc = value;
             }
         }
+
         #endregion
 
-        #region Domain 
+        #region Domain
+
         public List<FrameworkDomain> Domains
         {
             get
@@ -176,23 +189,81 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
         }
-
         public static Guid? DomainId { get; set; }
 
         #endregion
 
         #region Current User
+
+        private LoginUserInfo _loginUserInfo;
         public LoginUserInfo LoginUserInfo
         {
             get
             {
-                return HttpContext.Session?.Get<LoginUserInfo>("UserInfo");
+                if (User.Identity.IsAuthenticated && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                {
+                    var userIdStr = User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
+                    Guid userId = Guid.Parse(userIdStr);
+                    var cacheKey = $"{GlobalConstants.Cache.UserInfo}:{userIdStr}";
+                    _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
+                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
+                    {
+                        var userInfo = DC.Set<FrameworkUserBase>()
+                                            .Include(x => x.UserRoles)
+                                            .Include(x => x.UserGroups)
+                                            .Where(x => x.ID == userId)
+                                            .SingleOrDefault();
+                        if (userInfo != null)
+                        {
+                            // 初始化用户信息
+                            var roleIDs = userInfo.UserRoles.Select(x => x.RoleId).ToList();
+                            var groupIDs = userInfo.UserGroups.Select(x => x.GroupId).ToList();
+                            var dataPris = DC.Set<DataPrivilege>()
+                                            .Where(x => x.UserId == userInfo.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                                            .ToList();
+
+                            //查找登录用户的页面权限
+                            var funcPrivileges = DC.Set<FunctionPrivilege>()
+                                .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .ToList();
+
+                            _loginUserInfo = new LoginUserInfo
+                            {
+                                Id = userInfo.ID,
+                                ITCode = userInfo.ITCode,
+                                Name = userInfo.Name,
+                                PhotoId = userInfo.PhotoId,
+                                Roles = DC.Set<FrameworkRole>().Where(x => userInfo.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
+                                Groups = DC.Set<FrameworkGroup>().Where(x => userInfo.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
+                                DataPrivileges = dataPris,
+                                FunctionPrivileges = funcPrivileges
+                            };
+                            Cache.Add(cacheKey, _loginUserInfo);
+                        }
+                        else
+                        {
+                            HttpContext.ChallengeAsync().Wait();
+                            return null;
+                        }
+                    }
+                }
+                return _loginUserInfo;
             }
             set
             {
-                HttpContext.Session?.Set<LoginUserInfo>("UserInfo", value);
+                if (value == null)
+                {
+                    Cache.Add($"{GlobalConstants.Cache.UserInfo}:{_loginUserInfo.Id}", value);
+                    _loginUserInfo = value;
+                }
+                else
+                {
+                    _loginUserInfo = value;
+                    Cache.Add($"{GlobalConstants.Cache.UserInfo}:{_loginUserInfo.Id}", value);
+                }
             }
         }
+
         #endregion
 
         #region GUID
@@ -211,7 +282,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region Menus 
+        #region Menus
         public List<FrameworkMenu> FFMenus => GlobaInfo.AllMenus;
         #endregion
 
@@ -244,6 +315,8 @@ namespace WalkingTec.Mvvm.Mvc
             }
             catch { }
             rv.ConfigInfo = ConfigInfo;
+            rv.Cache = Cache;
+            rv.LoginUserInfo = LoginUserInfo;
             rv.DataContextCI = GlobaInfo?.DataContextCI;
             rv.DC = this.DC;
             rv.MSD = new ModelStateServiceProvider(ModelState);
@@ -282,7 +355,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                     }
                 }
-                catch {}
+                catch { }
             }
             //try to set values to the viewmodel's matching properties
             if (values != null)
@@ -301,7 +374,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (rv is IBaseBatchVM<BaseVM> temp)
             {
                 temp.Ids = new string[] { };
-                if(Ids != null)
+                if (Ids != null)
                 {
                     var tempids = new List<string>();
                     foreach (var iid in Ids)
@@ -427,7 +500,7 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
         /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
         /// <returns>ViewModel</returns>
-        public T CreateVM<T>( Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        public T CreateVM<T>(Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
         {
             SetValuesParser p = new SetValuesParser();
             var dir = p.Parse(values);
@@ -536,16 +609,16 @@ namespace WalkingTec.Mvvm.Mvc
 
         #region Validate model
         [NonAction]
-        public Dictionary<string,string> RedoValidation(object item)
+        public Dictionary<string, string> RedoValidation(object item)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
             TryValidateModel(item);
 
             foreach (var e in ControllerContext.ModelState)
             {
-                if(e.Value.ValidationState == ModelValidationState.Invalid)
+                if (e.Value.ValidationState == ModelValidationState.Invalid)
                 {
-                    rv.Add(e.Key, e.Value.Errors.Select(x=>x.ErrorMessage).ToSpratedString());
+                    rv.Add(e.Key, e.Value.Errors.Select(x => x.ErrorMessage).ToSpratedString());
                 }
             }
 
@@ -579,18 +652,21 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        protected T ReadFromCache<T>(string key, Func<T> setFunc,int? timeout = null)
+        protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
             if (Cache.TryGetValue(key, out T rv) == false)
             {
                 T data = setFunc();
                 if (timeout == null)
                 {
-                    Cache.Set(key, data);
+                    Cache.Add(key, data);
                 }
                 else
                 {
-                    Cache.Set(key, data, DateTime.Now.AddSeconds(timeout.Value).Subtract(DateTime.Now));
+                    Cache.Add(key, data, new DistributedCacheEntryOptions()
+                    {
+                        SlidingExpiration = new TimeSpan(timeout.Value)
+                    });
                 }
                 return data;
             }
@@ -638,7 +714,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 rv.Controller.Response.Headers.Add("IsScript", "true");
             }
-            catch{}
+            catch { }
             return rv;
         }
 

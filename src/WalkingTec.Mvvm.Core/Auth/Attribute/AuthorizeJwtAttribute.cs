@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WalkingTec.Mvvm.Mvc.Auth.Attribute
+namespace WalkingTec.Mvvm.Core.Auth.Attribute
 {
     public class AuthorizeJwtAttribute : AuthorizeAttribute
     {
