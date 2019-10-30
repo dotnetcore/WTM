@@ -27,7 +27,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return View(vm);
         }
 
-        [Public]
         [AllowAnonymous]
         public IActionResult PIndex()
         {

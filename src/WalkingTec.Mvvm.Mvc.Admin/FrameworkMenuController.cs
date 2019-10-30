@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [ActionDescription("MenuMangement")]
     [ApiController]
     [Route("api/_[controller]")]
-    public class _FrameworkMenuController : BaseApiController
+    public class FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]

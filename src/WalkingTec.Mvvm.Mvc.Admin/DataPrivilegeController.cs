@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ActionDescription("DataPrivilege")]
     [ApiController]
-    [Route("api/_[controller]")]
+    [Route("api/[controller]")]
     public class _DataPrivilegeController : BaseApiController
     {
         [ActionDescription("搜索")]
