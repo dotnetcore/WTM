@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Utils.DeleteFile(Entity.Path);
                 }
-                DC.Database.ExecuteSqlCommand(new RawSqlString($"delete from {DC.GetTableName<FileAttachment>()} where ID='{Entity.ID}'"));
+                DC.Database.ExecuteSqlRaw($"delete from {DC.GetTableName<FileAttachment>()} where ID='{Entity.ID}'");
             }
             catch (DbUpdateException)
             {

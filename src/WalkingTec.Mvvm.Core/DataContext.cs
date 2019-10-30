@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using MySql.Data.MySqlClient;
 using Npgsql;
-using Oracle.ManagedDataAccess.Client;
+//using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -314,7 +314,7 @@ namespace WalkingTec.Mvvm.Core
                     optionsBuilder.UseSqlite(CSName);
                     break;
                 case DBTypeEnum.Oracle:
-                    optionsBuilder.UseOracle(CSName);
+                    //optionsBuilder.UseOracle(CSName);
                     break;
                 default:
                     break;
@@ -701,7 +701,7 @@ namespace WalkingTec.Mvvm.Core
                     rv = new SqliteParameter(name, value) { Direction = dir };
                     break;
                 case DBTypeEnum.Oracle:
-                    rv = new OracleParameter(name, value) { Direction = dir };
+                    //rv = new OracleParameter(name, value) { Direction = dir };
                     break;
             }
             return rv;
