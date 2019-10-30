@@ -6,7 +6,7 @@
 
 * **新增：**  多语言支持。https://wtmdoc.walkingtec.cn/#/Global/MultiLanguages
 老版本升级后会遇到单元测试项目中MockController.cs文件报错，将报错的行替换为
-_controller.GlobaInfo.SetModuleGetFunc(() => new List<FrameworkModule>());
+_controller.GlobaInfo.SetModuleGetFunc(() => new List\<FrameworkModule\>());
 即可。
 
 * **新增：**  dotnet 3.0支持，线上新建项目时可选择dotnetcore3.0版本的项目

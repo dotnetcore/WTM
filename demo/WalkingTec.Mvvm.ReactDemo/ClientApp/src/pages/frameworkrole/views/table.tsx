@@ -29,9 +29,9 @@ export default class extends React.Component<any, any> {
             // 行操作 
             rowAction={Action.rowAction}
             // 行操作 col props 同 columnDefs配置相同
-            // rowActionCol={{ headerName: "操作" }}
-            // frameworkComponents={{
-            // }}
+            rowActionCol={{ width: 300 }}
+        // frameworkComponents={{
+        // }}
         />
     }
 }

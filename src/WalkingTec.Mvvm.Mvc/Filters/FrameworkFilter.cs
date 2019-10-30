@@ -296,6 +296,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
         public override void OnResultExecuted(ResultExecutedContext context)
         {
             var ctrl = context.Controller as IBaseController;
+            if (ctrl == null)
+            {
+                base.OnResultExecuted(context);
+                return;
+            }
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
             //如果是来自Error，则已经记录过日志，跳过
             if (ctrlActDesc.ControllerName == "_Framework" && ctrlActDesc.ActionName == "Error")

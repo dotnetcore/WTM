@@ -9,18 +9,20 @@ import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
 import routes from './router';
 @observer
-export default class RootRoutes extends React.Component<any, any> {
-    render() {
+export default class App extends React.Component<any> {
+    public render() {
         return (
             <ConfigProvider locale={zhCN}>
-                <BrowserRouter >
-                    {routes}
-                </BrowserRouter>
+                <IntlProvider locale="en">
+                    <BrowserRouter >
+                        {routes}
+                    </BrowserRouter>
+                </IntlProvider>
             </ConfigProvider>
         );
     }
-
 }
