@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public StudentVM()
         {
             MajorList = new MajorListVM();
+            MajorList.CopyContext(this);
             SetInclude(x => x.StudentMajor);
         }
 

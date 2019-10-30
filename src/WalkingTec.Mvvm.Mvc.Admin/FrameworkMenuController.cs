@@ -145,8 +145,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("RefreshMenu")]
         public ActionResult RefreshMenu()
         {
-            var cache = GlobalServices.GetService<IMemoryCache>();
-            cache.Remove("FFMenus");
+            Cache.Remove("FFMenus");
             return Ok(Mvc.Admin.Program._localizer["OprationSuccess"]);
         }
         #endregion

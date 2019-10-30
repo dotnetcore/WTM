@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
+
+using Microsoft.AspNetCore.Http;
+using Moq;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
@@ -13,8 +12,8 @@ namespace WalkingTec.Mvvm.Admin.Test
 {
     public class MockController
     {
-        public static T CreateController<T>(string dataseed, string usercode) where T:BaseController,new()
-        {            
+        public static T CreateController<T>(string dataseed, string usercode) where T : BaseController, new()
+        {
             var _controller = new T();
             _controller.DC = new FrameworkContext(dataseed, DBTypeEnum.Memory);
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();

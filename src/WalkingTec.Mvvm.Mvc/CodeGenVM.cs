@@ -526,7 +526,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 typename += "?";
                             }
                             break;
-                        case FieldInfoType.Many2Many:                            
+                        case FieldInfoType.Many2Many:
                             proname = $@"Selected{pro.FieldName}IDs";
                             typename = $"List<{pro.GetFKType(DC, modelType)}>";
                             break;
@@ -1200,8 +1200,8 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
-                                fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}"" 
-                    dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}} 
+                                fieldstr.AppendLine($@"                formItem: <WtmSelect placeholder=""{label}""
+                    dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
                             }
                             else
@@ -1299,8 +1299,8 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" 
-                    dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}} 
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""
+                    dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
                         }
                         else

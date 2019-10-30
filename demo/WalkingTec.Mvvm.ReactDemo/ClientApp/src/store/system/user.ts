@@ -57,7 +57,7 @@ class Store {
         try {
             const res = await Request.ajax({
                 method: "post",
-                url: "/api/_login/login",
+                url: "/api/_Account/Login",
                 body: params,
                 headers: { 'Content-Type': null }
             }).toPromise();

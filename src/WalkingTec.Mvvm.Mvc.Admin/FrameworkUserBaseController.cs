@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
@@ -12,15 +11,14 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
     [ActionDescription("UserManagement")]
     [ApiController]
     [Route("api/_FrameworkUserBase")]
-	public class _FrameworkUserController : BaseApiController
+    public class _FrameworkUserController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("Search")]
-		public string Search(FrameworkUserSearcher searcher)
+        public string Search(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;

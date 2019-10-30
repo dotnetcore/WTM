@@ -1,16 +1,11 @@
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Http;
+using System;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
-using Microsoft.AspNetCore.Hosting;
-using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
@@ -22,14 +17,14 @@ namespace WalkingTec.Mvvm.Admin.Test
         public ActionLogControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<ActionLogController>(_seed,"user");
+            _controller = MockController.CreateController<ActionLogController>(_seed, "user");
         }
 
         [TestMethod]
         public void SearchTest()
         {
             PartialViewResult rv = (PartialViewResult)_controller.Index();
-            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco,BaseSearcher>));
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
 
             string rv2 = _controller.Search(rv.Model as ActionLogListVM);
             Assert.IsTrue(rv2.Contains("\"Code\":200"));

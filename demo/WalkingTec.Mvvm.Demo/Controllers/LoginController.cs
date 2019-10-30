@@ -3,17 +3,24 @@ using System.Web;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
+using Microsoft.AspNetCore.Authentication;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using WalkingTec.Mvvm.Mvc.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    [Public]
     public class LoginController : BaseController
     {
+        [Public]
+        [AllowAnonymous]
         [ActionDescription("登录")]
         public IActionResult Login()
         {
             LoginVM vm = CreateVM<LoginVM>();
-            vm.Redirect = HttpContext.Request.Query["rd"];
+            vm.Redirect = HttpContext.Request.Query["Redirect"];
             if (ConfigInfo.IsQuickDebug == true)
             {
                 vm.ITCode = "admin";
@@ -22,8 +29,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return View(vm);
         }
 
+        [Public]
+        [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login(LoginVM vm)
+        public async Task<ActionResult> Login(LoginVM vm)
         {
             if (ConfigInfo.IsQuickDebug == false)
             {
@@ -43,7 +52,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 LoginUserInfo = user;
-                string url = "";
+                string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
                     url = vm.Redirect;
@@ -52,16 +61,32 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 {
                     url = "/";
                 }
+
+                AuthenticationProperties properties = null;
+                if (vm.RememberLogin)
+                {
+                    properties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30))
+                    };
+                }
+
+                var principal = user.CreatePrincipal();
+                // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+
                 return Redirect(HttpUtility.UrlDecode(url));
             }
         }
 
+        [AllRights]
         [ActionDescription("登出")]
-        public ActionResult Logout()
+        public async Task Logout()
         {
-            LoginUserInfo = null;
             HttpContext.Session.Clear();
-            return Redirect("/Login/Login?rd=");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Response.Redirect("/");
         }
 
         [AllRights]
@@ -73,6 +98,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return PartialView(vm);
         }
 
+        [AllRights]
         [HttpPost]
         [ActionDescription("修改密码")]
         public ActionResult ChangePassword(ChangePasswordVM vm)

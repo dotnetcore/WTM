@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
-    [Public]
+    [AllowAnonymous]
     public class SetupController : BaseController
     {
         public IActionResult Index()
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
                 .Replace("$extradir$", g.ToString())
                 .Replace("$extrans$", ns)
                 .Replace(@"<form method=""post"" class=""content"">", @"<form method=""post"" class=""content"" action=""/setup/index2"">")
-                .Replace("该操作将重置框架相关的代码及配置，请提前做好备份，是否继续？","一个包含VS解决方案的zip文件将会生成，是否继续？");
+                .Replace("该操作将重置框架相关的代码及配置，请提前做好备份，是否继续？", "一个包含VS解决方案的zip文件将会生成，是否继续？");
             return Content(rv, "text/html", Encoding.UTF8);
         }
 
@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             vm.ExtraDir = vm.EntryDir + Path.DirectorySeparatorChar + vm.ExtraDir;
             vm.MainNs = vm.ExtraNS;
             vm.MainDir = vm.ExtraDir + Path.DirectorySeparatorChar + vm.MainNs;
-            string propertydir = vm.MainDir + Path.DirectorySeparatorChar +"Properties";
+            string propertydir = vm.MainDir + Path.DirectorySeparatorChar + "Properties";
             if (Directory.Exists(vm.ExtraDir) == false)
             {
                 Directory.CreateDirectory(vm.ExtraDir);
@@ -59,8 +59,8 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             vm.WriteDefaultFiles();
             vm.DoSetup();
 
-            var zipdir = vm.EntryDir + Path.DirectorySeparatorChar +"ZipFiles";
-            if(Directory.Exists(zipdir) == false)
+            var zipdir = vm.EntryDir + Path.DirectorySeparatorChar + "ZipFiles";
+            if (Directory.Exists(zipdir) == false)
             {
                 Directory.CreateDirectory(zipdir);
             }

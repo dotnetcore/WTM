@@ -1,19 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,20 +26,25 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
@@ -139,13 +148,28 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
 
+            // edit start by @vito
+            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
+            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Auth.PolicyEvaluator>());
+            services.TryAddEnumerable(
+                ServiceDescriptor.Transient<IApplicationModelProvider, Auth.AuthorizationApplicationModelProvider>());
+            // edit end
+
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
             var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
             var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
             var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
-            var programLocalizer = new ResourceManagerStringLocalizerFactory(Options.Create(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(programType);
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(
+                                        Options.Create(
+                                            new LocalizationOptions
+                                            {
+                                                ResourcesPath = "Resources"
+                                            })
+                                            , new Microsoft.Extensions.Logging.LoggerFactory()
+                                        )
+                                        .Create(programType);
             coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
 
 
@@ -155,6 +179,7 @@ namespace WalkingTec.Mvvm.Mvc
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
+                options.Filters.Add(new AuthorizeFilter());
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
@@ -197,8 +222,9 @@ namespace WalkingTec.Mvvm.Mvc
             .AddDataAnnotationsLocalization(options =>
             {
                 var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                options.DataAnnotationLocalizerProvider = (type, factory) => {
-                    if (Core.Program.Buildindll.Any(x=>type.FullName.StartsWith(x)))
+                options.DataAnnotationLocalizerProvider = (type, factory) =>
+                {
+                    if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
                     {
                         var rv = factory.Create(coreType);
                         return rv;
@@ -241,6 +267,61 @@ namespace WalkingTec.Mvvm.Mvc
             });
 
             services.AddSingleton<IUIService, DefaultUIService>();
+
+            #region CookieWithJwtAuth
+
+            // services.AddSingleton<UserStore>();
+            services.AddSingleton<ITokenRefreshService, TokenRefreshService>();
+            services.AddSingleton<IAuthService, AuthService>();
+
+            var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
+            services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
+
+            var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                    {
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.SameSite = SameSiteMode.Strict;
+
+                        options.ClaimsIssuer = cookieOptions.Issuer;
+                        options.SlidingExpiration = cookieOptions.SlidingExpiration;
+                        options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
+                        // options.SessionStore = new MemoryTicketStore();
+
+                        // options.LoginPath = CookieAuthenticationDefaults.LoginPath;
+                        options.LoginPath = "/Login/Login";
+                        options.LogoutPath = CookieAuthenticationDefaults.LogoutPath;
+                        // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                        options.ReturnUrlParameter = "Redirect";
+                        options.AccessDeniedPath = options.LoginPath;
+                    })
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            NameClaimType = AuthConstants.JwtClaimTypes.Name,
+                            RoleClaimType = AuthConstants.JwtClaimTypes.Role,
+
+                            ValidateIssuer = true,
+                            ValidIssuer = jwtOptions.Issuer,
+
+                            ValidateAudience = true,
+                            ValidAudience = jwtOptions.Audience,
+
+                            ValidateIssuerSigningKey = false,
+                            IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
+
+                            ValidateLifetime = true
+                        };
+                    });
+            #endregion
+
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -276,12 +357,24 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
 
+            app.UseExceptionHandler("/_Framework/Error");
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/_js"),
+                FileProvider = new EmbeddedFileProvider(
+                    typeof(_CodeGenController).GetTypeInfo().Assembly,
+                    "WalkingTec.Mvvm.Mvc")
+            });
+            app.UseAuthentication();
+
             app.UseResponseCaching();
 
             bool InitDataBase = false;
             app.Use(async (context, next) =>
             {
-                if(InitDataBase == false)
+                if (InitDataBase == false)
                 {
                     var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
                     foreach (var m in gd.AllModule)
@@ -327,18 +420,9 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             });
 
-            app.UseExceptionHandler("/_Framework/Error");
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
             app.UseSession();
-            if(configs.CorsOptions.EnableAll == true){
+            if (configs.CorsOptions.EnableAll == true)
+            {
                 if (configs.CorsOptions?.Policy?.Count > 0)
                 {
                     app.UseCors(configs.CorsOptions.Policy[0].Name);
@@ -400,20 +484,21 @@ namespace WalkingTec.Mvvm.Mvc
             var controllers = GetAllControllers(gd.AllAssembly);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
-            gd.SetModuleGetFunc(() => {
-                
+            gd.SetModuleGetFunc(() =>
+            {
+
                 return GetAllModules(controllers);
             });
 
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<FrameworkMenu>();
-                var cache = GlobalServices.GetService<IMemoryCache>();
+                var cache = GlobalServices.GetService<IDistributedCache>();
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
                 {
                     var data = GetAllMenus(gd.AllModule, gd.DataContextCI);
-                    cache.Set(menuCacheKey, data);
+                    cache.Add(menuCacheKey, data);
                     menus = data;
                 }
                 else
@@ -559,7 +644,8 @@ namespace WalkingTec.Mvvm.Mvc
 
             foreach (var ctrl in controllers)
             {
-                var pubattr = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var pubattr1 = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var pubattr12 = ctrl.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
@@ -575,7 +661,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     continue;
                 }
-                if (pubattr.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
+                if (pubattr1.Length > 0 || pubattr12.Length > 0 || rightattr.Length > 0 || debugattr.Length > 0)
                 {
                     model.IgnorePrivillege = true;
                 }
@@ -612,6 +698,7 @@ namespace WalkingTec.Mvvm.Mvc
                 foreach (var method in methods)
                 {
                     var pubattr2 = method.GetCustomAttributes(typeof(PublicAttribute), false);
+                    var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                     var postAttr = method.GetCustomAttributes(typeof(HttpPostAttribute), false);
@@ -623,7 +710,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Module = model,
                             MethodName = method.Name
                         };
-                        if (pubattr2.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
+                        if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
@@ -655,6 +742,7 @@ namespace WalkingTec.Mvvm.Mvc
                 foreach (var method in methods)
                 {
                     var pubattr2 = method.GetCustomAttributes(typeof(PublicAttribute), false);
+                    var pubattr22 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                     var arattr2 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                     var debugattr2 = method.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
 
@@ -674,7 +762,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Module = model,
                             MethodName = method.Name
                         };
-                        if (pubattr2.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
+                        if (pubattr2.Length > 0 || pubattr22.Length > 0 || arattr2.Length > 0 || debugattr2.Length > 0)
                         {
                             action.IgnorePrivillege = true;
                         }
@@ -738,12 +826,13 @@ namespace WalkingTec.Mvvm.Mvc
                 //获取controller上标记的ActionDescription属性的值
                 var attrs = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var attrs2 = ctrl.GetCustomAttributes(typeof(PublicAttribute), false);
+                var attrs22 = ctrl.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
                 var areaAttr = ctrl.GetCustomAttribute(typeof(AreaAttribute), false);
                 if (areaAttr != null)
                 {
                     area = (areaAttr as AreaAttribute).RouteValue;
                 }
-                if (attrs.Length > 0 || attrs2.Length > 0)
+                if (attrs.Length > 0 || attrs2.Length > 0 || attrs22.Length > 0)
                 {
                     includeAll = true;
                 }
@@ -774,7 +863,8 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var attrs3 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                             var attrs4 = method.GetCustomAttributes(typeof(PublicAttribute), false);
-                            if (attrs3.Length > 0 || attrs4.Length > 0)
+                            var attrs42 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
+                            if (attrs3.Length > 0 || attrs4.Length > 0 || attrs42.Length > 0)
                             {
                                 rv.Add(url);
                             }
@@ -802,7 +892,8 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var attrs5 = method.GetCustomAttributes(typeof(AllRightsAttribute), false);
                             var attrs6 = method.GetCustomAttributes(typeof(PublicAttribute), false);
-                            if (attrs5.Length > 0 || attrs6.Length > 0)
+                            var attrs62 = method.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
+                            if (attrs5.Length > 0 || attrs6.Length > 0 || attrs62.Length > 0)
                             {
                                 rv.Add(url);
                             }
