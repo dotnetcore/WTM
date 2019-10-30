@@ -9,6 +9,11 @@ const fs = require('fs');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const { override, fixBabelImports, addLessLoader, addBundleVisualizer, removeModuleScopePlugin } = require('customize-cra');
 const appDirectory = fs.realpathSync(process.cwd());
+process.argv.map(val => {
+  if (lodash.endsWith(val, 'scripts/build.js') && lodash.isNil(process.env.GENERATE_SOURCEMAP)) {
+    process.env.GENERATE_SOURCEMAP = 'false';
+  }
+})
 process.env.REACT_APP_TIME = moment().format('YYYY-MM-DD HH:mm:ss') + ' @冷（lengyingxin8966@gmail.com）';
 // process.env.GENERATE_SOURCEMAP = 'false';
 // process.env.TSC_COMPILE_ON_ERROR = 'true';
@@ -44,7 +49,7 @@ module.exports = (...params) => {
   // 删除 ForkTsCheckerWebpackPlugin
   lodash.remove(config.plugins, data => data instanceof ForkTsCheckerWebpackPlugin);
   // 源代码映射 非dev环境需要测试 和输出日志 请 注释 下面两行
-  config.devtool = config.mode === "production" ? false : config.devtool;
+  // config.devtool = config.mode === "production" ? false : config.devtool;
   [
     // {
     //   name: 'app',
