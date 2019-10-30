@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-    [AuthorizeJwt]
+    [AuthorizeJwtWithCookie]
     [ApiController]
     [Route("api/_file")]
     [AllRights]

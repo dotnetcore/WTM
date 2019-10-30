@@ -12,7 +12,7 @@ using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-    [AuthorizeJwt]
+    [AuthorizeJwtWithCookie]
     [ActionDescription("RoleManagement")]
     [ApiController]
     [Route("api/_[controller]")]
