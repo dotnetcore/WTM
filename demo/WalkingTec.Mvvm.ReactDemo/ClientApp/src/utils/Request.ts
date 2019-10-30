@@ -80,7 +80,7 @@ export class Request {
                     if (ajax instanceof AjaxResponse) {
                         // 无 响应 数据
                         if (lodash.isNil(ajax.response)) {
-                            console.warn("响应体为 NULL", ajax)
+                            console.warn(`未解析到 response ${ajax.request.url}`, ajax)
                             // GlobalConfig.development && notification.warn({
                             //     message: "响应体为 NULL ",
                             //     duration: 5,

@@ -5,7 +5,7 @@
  * @modify date 2019-03-08 02:36:43
  * @desc [description]
  */
-import { Button, Divider, message, notification, Skeleton, Spin, Icon } from 'antd';
+import { Button, Divider, message, notification, Skeleton, Spin, Icon, Row, Col } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -296,7 +296,7 @@ export function DialogFormDes(params: {
                 }
                 // 强制 执行加载最少 400 毫秒
                 await new Promise((res, rej) => {
-                    lodash.delay(res, 400 - (Date.now() - time))
+                    lodash.delay(res, 600 - (Date.now() - time))
                 });
                 this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 super.componentDidMount && super.componentDidMount()
@@ -304,9 +304,22 @@ export function DialogFormDes(params: {
             render() {
                 const { __spinning, __details, __key } = this.state;
                 // const notLoadData = this.isOnLoadData && !this.props.loadData;
-                return <Spin tip={params.tip || 'Loading...'} spinning={__spinning}>
-                    {__spinning ? <Skeleton paragraph={{ rows: 10 }} /> : <Component {...this.props} defaultValues={__details} />}
-                </Spin>
+                // return <Spin tip={params.tip || 'Loading...'} spinning={__spinning}>
+                return __spinning ? <Row type="flex" align="top" gutter={20}>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                </Row> : <Component {...this.props} defaultValues={__details} />
+                {/* </Spin> */ }
             }
         }
         lodash.set(Component, 'onFormSubmit', params.onFormSubmit)

@@ -35,8 +35,8 @@
   "scripts": {
     "start": "react-app-rewired start",
     "start:api": "cd .. && dotnet run --launch-profile ApiOnly",
-    "build": "react-app-rewired build",
-    "test": "react-scripts test",
+    "build": "react-app-rewired build --analyze",
+    "test": "react-app-rewired test",
     "init": "yarn install",
     "clean": "rimraf node_modules package-lock.json yarn.lock",
     "merge_dev": "git checkout develop && git pull && git checkout feature/React && git merge develop --no-edit ",

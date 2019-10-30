@@ -20,26 +20,24 @@ export default class UserMenu extends React.Component<any, any> {
     }
     return (
       <Dropdown overlayClassName={classNames(styles.userDropdown)} overlay={
-        // globalConfig.development ? 
         <Menu>
-          <Menu.Item>
+          {globalConfig.development && <Menu.Item>
             <a href="/_codegen?ui=react" target="_blank">  <Icon type='code' /> 代码生成器</a>
-          </Menu.Item>
-          <Menu.Item>
+          </Menu.Item>}
+          {globalConfig.development && <Menu.Item>
             <a href="/swagger" target="_blank">  <Icon type='bars' /> API文档</a>
-          </Menu.Item>
+          </Menu.Item>}
           <Menu.Item>
             <DialogForm
               title="修改密码"
               icon="user"
               type="a"
-              width="700"
             >
               <InsertForm />
             </DialogForm>
           </Menu.Item>
           <Menu.Item>
-            <a onClick={e => { Store.User.outLogin() }}>  <Icon type='user-delete' /> 退出</a>
+            <a onClick={e => { Store.User.outLogin() }}>  <Icon type='logout' /> 退出</a>
           </Menu.Item>
         </Menu>
       } placement="bottomCenter">

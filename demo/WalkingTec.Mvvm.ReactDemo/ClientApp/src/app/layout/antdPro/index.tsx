@@ -9,6 +9,7 @@ import { renderRoutes } from 'react-router-config';
 import { Link } from 'react-router-dom';
 import Store from 'store/index';
 import RightContent from './GlobalHeader/RightContent';
+import UserMenu from './GlobalHeader/userMenu';
 import TabsPages from './TabsPages';
 import SettingDrawer, { ContentWidth } from './SettingDrawer';
 import './style.less';
@@ -65,8 +66,9 @@ export default class App extends React.Component<any> {
                     rightContentRender={rightProps => (
                         <RightContent {...rightProps} changeLang={event => {
                             // window['g_locale'] = event.key
-                        }} />
-
+                        }} >
+                            <UserMenu {...this.props} />
+                        </RightContent>
                     )}
                     menuHeaderRender={(logo, title) => <Link to="/">{logo}{title}</Link>}
                     menuDataRender={() => toJS(Store.Meun.subMenu)}

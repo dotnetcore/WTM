@@ -1,6 +1,5 @@
 import React from 'react';
 import SelectLang from '../SelectLang';
-import UserMenu from './userMenu';
 import styles from './index.module.less';
 
 export type SiderTheme = 'light' | 'dark';
@@ -19,7 +18,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 
   return (
     <div className={className}>
-      <UserMenu {...props} />
+      {props.children}
       <SelectLang className={styles.action} changeLang={changeLang} />
     </div>
   );
