@@ -46,9 +46,10 @@ export class Request {
      * 获取 认证 token请求头
      */
     getHeaders() {
+        console.log("TCL: Request -> getHeaders -> GlobalConfig.headers", GlobalConfig.headers)
         return {
             ...GlobalConfig.headers,
-            token: GlobalConfig.token.get()
+            // token: GlobalConfig.token.get()
         }
     }
 
@@ -210,7 +211,7 @@ export class Request {
      */
     ajax(urlOrRequest: string | AjaxRequest) {
         if (lodash.isString(urlOrRequest)) {
-            return this.AjaxObservable(ajax(this.get({ url: urlOrRequest })))
+            return this.AjaxObservable(ajax(this.get({ url: urlOrRequest, headers: this.getHeaders() })))
         }
         urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
         switch (lodash.toLower(urlOrRequest.method)) {

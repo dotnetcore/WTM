@@ -9,6 +9,7 @@ import { message, notification } from "antd";
 import moment from 'moment';
 import { ajax, AjaxRequest } from "rxjs/ajax";
 import { Request } from './Request';
+import lodash from 'lodash';
 /** 文件服务器 */
 const files = {
     fileUpload: {
@@ -107,7 +108,17 @@ export class RequestFiles extends Request {
         }
         try {
             const result = await ajax(AjaxRequest).toPromise();
-            this.onCreateBlob(result.response, fileType, fileName).click();
+            const disposition = result.xhr.getResponseHeader('content-disposition');
+            if (disposition) {
+                fileType = '';
+                fileName = lodash.trim(disposition.replace('attachment;filename=', ''), '"');
+            }
+            // ie
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(result.response, fileName + fileType);
+            } else {
+                this.onCreateBlob(result.response, fileType, fileName).click();
+            }
             notification.success({
                 key: "download",
                 message: `文件下载成功`,
@@ -133,14 +144,7 @@ export class RequestFiles extends Request {
         const a = document.createElement('a');
         const downUrl = window.URL.createObjectURL(blob);
         a.href = downUrl;
-        switch (blob.type) {
-            case 'application/vnd.ms-excel':
-                a.download = fileName + '.xls';
-                break;
-            default:
-                a.download = fileName + fileType;
-                break;
-        }
+        a.download = fileName + fileType;
         a.addEventListener("click", () => {
             setTimeout(() => {
                 window.URL.revokeObjectURL(downUrl);
