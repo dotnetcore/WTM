@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Binders
 {
@@ -20,6 +21,9 @@ namespace WalkingTec.Mvvm.Mvc.Binders
             {
                 throw new ArgumentNullException(nameof(context));
             }
+
+            if (context.Metadata.ModelType == typeof(DateRange))
+                return new BinderTypeModelBinder(typeof(DateRangeBinder));
 
             if (context.Metadata.ModelType == typeof(string))
             {
