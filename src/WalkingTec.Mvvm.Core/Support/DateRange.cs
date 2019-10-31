@@ -80,6 +80,7 @@ namespace WalkingTec.Mvvm.Core
                 case DateTimeTypeEnum.Date:
                     return _endTime?.AddDays(1);
                 case DateTimeTypeEnum.DateTime when _startTime.HasValue && _endTime.HasValue && _startTime.Value == _endTime.Value:
+                case DateTimeTypeEnum.DateTime when _endTime.HasValue && _endTime.Value.Hour == 0 && _endTime.Value.Minute == 0 && _endTime.Value.Second == 0 && _endTime.Value.Millisecond == 0:
                     return _endTime?.AddDays(1);
                 default:
                     return _endTime;

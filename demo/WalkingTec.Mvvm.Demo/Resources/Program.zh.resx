@@ -120,8 +120,32 @@
   <data name="Account" xml:space="preserve">
     <value>账号</value>
   </data>
+  <data name="ApiDoc" xml:space="preserve">
+    <value>Api文档</value>
+  </data>
+  <data name="BackHome" xml:space="preserve">
+    <value>返回首页</value>
+  </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>修改密码</value>
+  </data>
+  <data name="CloseAllTags" xml:space="preserve">
+    <value>关闭全部标签页</value>
+  </data>
+  <data name="CloseOtherTags" xml:space="preserve">
+    <value>关闭其它标签页</value>
+  </data>
+  <data name="CloseThisTag" xml:space="preserve">
+    <value>关闭当前标签页</value>
+  </data>
+  <data name="CodeGen" xml:space="preserve">
+    <value>代码生成器</value>
+  </data>
+  <data name="HideShow" xml:space="preserve">
+    <value>侧边伸缩</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>退出</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>新密码</value>
@@ -137,6 +161,12 @@
   </data>
   <data name="PasswordNotSame" xml:space="preserve">
     <value>两次新密码输入不一致</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="WtmDoc" xml:space="preserve">
+    <value>WTM文档</value>
   </data>
   <data name="{0}formaterror" xml:space="preserve">
     <value>{0}格式错误</value>

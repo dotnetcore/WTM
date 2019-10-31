@@ -134,11 +134,11 @@ namespace WalkingTec.Mvvm.Doc
             {
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
-                    version = "2.3.9";
+                    version = Utils.GetNugetVersion(false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
-                    version = "3.0.0-rc1";
+                    version = version = Utils.GetNugetVersion(true);
                     break;
                 default:
                     break;
@@ -147,25 +147,24 @@ namespace WalkingTec.Mvvm.Doc
             string vmdir = MainDir;
             string datadir = MainDir;
             string modeldir = MainDir;
-            string resourcedir = MainDir;
+            string resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             string testdir = MainDir + ".Test";
             string vmns = MainNs + ".ViewModels";
             string datans = MainNs;
             string modelns = MainNs;
             string testns = MainNs + ".Test";
             Directory.CreateDirectory($"{MainDir}.Test");
+            Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
             if (ProjectType == ProjectTypeEnum.Single)
             {
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Models");
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Models{Path.DirectorySeparatorChar}ReadMe.txt", "Put your models here");
                 Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels");
-                Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}Resources");
                 if (UI == UIEnum.LayUI)
                 {
                     Directory.CreateDirectory($"{MainDir}{Path.DirectorySeparatorChar}ViewModels{Path.DirectorySeparatorChar}HomeVMs");
                 }
                 vmdir = MainDir + $"{Path.DirectorySeparatorChar}ViewModels";
-                resourcedir = MainDir + $"{Path.DirectorySeparatorChar}Resources";
             }
             else
             {
@@ -446,7 +445,7 @@ module.exports = (app) => {{
 
         private string GetResource(string fileName, string subdir = "")
         {
-            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.cs" || fileName == "layui.Program.txt" || fileName == "DefaultProj.txt")
+            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.txt" || fileName == "layui.Program.txt" || fileName == "DefaultProj.txt")
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
@@ -468,6 +467,14 @@ module.exports = (app) => {{
             var textStreamReader = new StreamReader(assembly.GetManifestResourceStream(loc));
             string content = textStreamReader.ReadToEnd();
             textStreamReader.Close();
+
+            if (fileName.EndsWith("Dockerfile.txt"))
+            {
+                if (DotnetVersion == DotnetVersionEnum.dotnet3_0)
+                {
+                    content = content.Replace("2.2", "3.0");
+                }
+            }
             return content;
         }
 

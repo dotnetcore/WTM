@@ -16,8 +16,6 @@ namespace WalkingTec.Mvvm.Demo
 {
     public class Program
     {
-        public static IStringLocalizer Localizer { get; set; }
-
         public static void Main(string[] args)
         {           
             CreateWebHostBuilder(args).Build().Run();

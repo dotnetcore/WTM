@@ -19,14 +19,14 @@
   2. 在Resources文件夹中，加入对应的资源文件，注意资源文件必须以Program开头。如果你在appsetting中设置了Languages="zh,en"，那么就应该在Resources文件夹中添加Program.zh.resx和Program.en.resx两个文件<br />
   3. 你的Model层中的[Display]和验证的attribute，比如[StringLength],[Required]等等，都会自动根据当前语言去资源文件中查找<br />
   4. Controller中的[ActionDescription]标记也会先去资源文件中查找<br />
-  5. 在Controller和VM中如果需要多语言，可以直接通过Program.Localizer获取<br />
-  6. 在View中如果需要多语言，需要在view上方使用@inject
+  5. 在Controller和VM中都有叫做Localizer的变量，可以直接用来获取多语言文本<br />
+  6. 在View中如果需要多语言，直接调用@Model.Localizer
 </p>
 
 <wt:quote>
   2.3.9之后生成的项目已经自动帮你生成了多语言文件，并且修改密码的功能使用了多语言，上述不理解的可以参考生成的代码：<br />
   /ViewModels/HomeVMs/ChangePasswordVM.cs <br />
-  /Views/Home/Login/Login.cshtml <br />
+  /Views/Home/Login/ChangePassword.cshtml <br />
 </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="动态修改语言">

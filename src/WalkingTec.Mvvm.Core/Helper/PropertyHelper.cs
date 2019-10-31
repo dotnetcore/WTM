@@ -122,10 +122,11 @@ namespace WalkingTec.Mvvm.Core
         public static string GetRegexErrorMessage(this MemberInfo pi)
         {
             string rv = "";
+
             if (pi.GetCustomAttributes(typeof(RegularExpressionAttribute), false).FirstOrDefault() is RegularExpressionAttribute dis && !string.IsNullOrEmpty(dis.ErrorMessage))
             {
                 rv = dis.ErrorMessage;
-                if (pi.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
                 {
                     if (Program._localizer != null)
                     {
@@ -154,12 +155,11 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>属性名称</returns>
         public static string GetPropertyDisplayName(this MemberInfo pi)
         {
-
             string rv = "";
             if (pi.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() is DisplayAttribute dis && !string.IsNullOrEmpty(dis.Name))
             {
                 rv = dis.Name;
-                if (pi.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
                 {
                     if (Program._localizer != null)
                     {
@@ -468,6 +468,13 @@ namespace WalkingTec.Mvvm.Core
         public static void SetMemberValue(this MemberInfo mi, object obj, object val, object[] index = null)
         {
             object newval = val;
+            if(val is string s)
+            {
+                if (string.IsNullOrEmpty(s))
+                {
+                    val = null;
+                }
+            }
             if (val != null && val.GetType() != mi.GetMemberType())
             {
                 newval = val.ConvertValue(mi.GetMemberType());
@@ -529,7 +536,7 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
-                    if (field.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                    if (Core.Program.Buildindll.Any(x => field.DeclaringType.FullName.StartsWith(x)))
                     {
                         if (Program._localizer != null)
                         {
