@@ -177,7 +177,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
       {
         title: formatMessage({
           id: 'app.setting.infoType',
-          defaultMessage: '弹框类型',
+          defaultMessage: 'Info Type',
         }),
         action: (
           <Select<string>
@@ -204,7 +204,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
       {
         title: formatMessage({
           id: 'app.setting.agGridTheme',
-          defaultMessage: 'agGridTheme',
+          defaultMessage: 'Ag Grid Theme',
         }),
         action: (
           <Select<string>
@@ -231,7 +231,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
       {
         title: formatMessage({
           id: 'app.setting.tabsPage',
-          defaultMessage: 'tabsPage',
+          defaultMessage: 'Tabs Page',
         }),
         disabled: contentWidth === "Fixed",
         action: (

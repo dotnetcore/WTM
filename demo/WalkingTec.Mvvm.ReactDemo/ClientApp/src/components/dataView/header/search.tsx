@@ -17,6 +17,7 @@ import Store from 'store/dataSource';
 import { Debounce, BindAll } from 'lodash-decorators';
 
 import "./style.less";
+import { FormattedMessage } from 'react-intl';
 interface IAppProps {
     /** 状态 */
     Store: Store;
@@ -124,9 +125,9 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
                     <Row type="flex" align="top">
                         {items.map(x => <Col key={`${this.key}_${x.key}`} lg={colSpan} md={12} sm={24} xs={24} >{x}</Col>)}
                         <Col lg={colSpanSearch} md={24} sm={24} xs={24} className="data-view-search-right" >
-                            <Button loading={PageState.tableLoading} icon="search" type="primary" htmlType="submit" >搜索</Button>
+                            <Button loading={PageState.tableLoading} icon="search" type="primary" htmlType="submit" ><FormattedMessage id="action.search" /></Button>
                             <Divider type="vertical" />
-                            <Button loading={PageState.tableLoading} icon="retweet" onClick={this.onReset} >重置</Button>
+                            <Button loading={PageState.tableLoading} icon="retweet" onClick={this.onReset} ><FormattedMessage id="action.reset" /></Button>
                             {
                                 toggleShow && <>
                                     <Divider type="vertical" />

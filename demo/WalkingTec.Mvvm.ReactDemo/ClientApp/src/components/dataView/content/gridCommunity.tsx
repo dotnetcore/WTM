@@ -29,6 +29,8 @@ import Regular from 'utils/Regular';
 import RequestFiles from 'utils/RequestFiles';
 import { ToImg } from '../help/toImg';
 import localeText from './localeText ';
+import { IntlProvider } from 'react-intl';
+import { getLocales } from 'locale';
 LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
@@ -124,7 +126,7 @@ const frameworkRender = {
 @observer
 @BindAll()
 export class GridCommunity extends React.Component<ITableProps, any> {
-    gridApi: GridApi;
+    gridApi: GridReadyEvent;
     // 表格容器
     refTableBody = React.createRef<HTMLDivElement>();
     // 事件对象
@@ -153,7 +155,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
             }
             height = height < this.minHeight ? this.minHeight : height;
             if (this.state.height !== height) {
-                this.gridApi.sizeColumnsToFit();
+                this.gridApi.api.sizeColumnsToFit();
                 this.setState({ height });
             }
         } catch (error) {
@@ -212,13 +214,21 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         });
         await this.props.Store.onSearch();
         lodash.defer(() => {
-            this.sizeColumnsToFit();
+            // this.sizeColumnsToFit();
+            this.autoSizeAll();
             this.setSelected();
         });
     }
+    autoSizeAll() {
+        // var allColumnIds = [];
+        // this.gridApi.columnApi.getAllColumns().forEach((column: any) => {
+        //     allColumnIds.push(column.colId);
+        // });
+        this.gridApi.columnApi.autoSizeColumns(['RowAction']);
+    }
     setSelected() {
         this.gridApi &&
-            this.gridApi.forEachNode((rowNode) => {
+            this.gridApi.api.forEachNode((rowNode) => {
                 rowNode.setSelected(lodash.includes(this.props.Store.DataSource.selectedRowKeys, lodash.get(rowNode, 'data.key')));
             });
     }
@@ -227,13 +237,14 @@ export class GridCommunity extends React.Component<ITableProps, any> {
     }
     sizeColumnsToFit() {
         if (lodash.get(this.refTableBody.current, 'clientHeight', 0) && this.gridApi) {
-            this.gridApi.sizeColumnsToFit();
+            this.gridApi.api.sizeColumnsToFit();
         }
     }
     onGridReady(event: GridReadyEvent) {
-        this.gridApi = event.api;
+        this.gridApi = event;
         lodash.defer(() => {
             this.sizeColumnsToFit();
+            this.autoSizeAll();
             this.setSelected();
         });
     }
@@ -289,15 +300,16 @@ export class GridCommunity extends React.Component<ITableProps, any> {
             return col
         })
         // console.log("TCL: GridCommunity -> render -> PageState.tableLoading", PageState.tableLoading)
-
+        const key = `${theme}_${globalConfig.language}`;
+        const PVmessages = getLocales(globalConfig.language)
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid  ${className} ${theme}`}>
                     <Spin spinning={PageState.tableLoading} size="large" indicator={<Icon type="loading" spin />} />
                     <AgGridReact
-                        key={theme}
+                        key={key}
                         // 内置 翻译 替换
-                        localeText={localeText}
+                        localeText={globalConfig.language === "zh-CN" && localeText}
                         // suppressMenuHide
                         // 禁用“加载” 叠加层。
                         suppressNoRowsOverlay
@@ -344,7 +356,9 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                             {
                                 RowAction: (rowProps) => {
                                     if (rowProps.data) {
-                                        return <RowAction {...rowProps} />;
+                                        return <IntlProvider locale={globalConfig.language} messages={PVmessages}>
+                                            <RowAction {...rowProps} />
+                                        </IntlProvider>;
                                     }
                                     return null;
                                 },
@@ -383,6 +397,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                                 suppressResize: false,
                                 editable: false,
                                 suppressToolPanel: true,
+                                suppressAutoSize: true,
                                 filter: false,
                                 resizable: false,
                                 checkboxSelection: true,
@@ -401,7 +416,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                                 pinned: 'right',
                                 sortable: false,
                                 menuTabs: [],
-                                minWidth: 120,
+                                // minWidth: 120,
                                 ...rowActionCol,
                             }
                         ].filter(Boolean)}

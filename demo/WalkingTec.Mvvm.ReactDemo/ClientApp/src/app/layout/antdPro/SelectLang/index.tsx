@@ -6,11 +6,12 @@ import styles from './index.module.less';
 
 interface SelectLangProps {
   className?: string;
+  selectedLang?: string;
   changeLang?: (key) => void;
 }
 const SelectLang: React.FC<SelectLangProps> = props => {
-  const { className, changeLang } = props;
-  const selectedLang = 'zh-CN';
+  const { className, changeLang, selectedLang } = props;
+  // const selectedLang = 'zh-CN';
   // const changeLang = ({ key }: ClickParam): void => setLocale(key, false);
   // const locales = ['zh-CN', 'zh-TW', 'en-US', 'pt-BR'];
   const locales = ['zh-CN', 'en-US'];
