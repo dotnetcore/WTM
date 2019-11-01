@@ -77,7 +77,7 @@ export default class App extends React.Component<any> {
                     {...settings}
                     rightContentRender={rightProps => (
                         <RightContent {...rightProps} selectedLang={language} changeLang={this.changeLang} >
-                            <UserMenu {...this.props} />
+                            <UserMenu {...rightProps} {...this.props} />
                         </RightContent>
                     )}
                     menuHeaderRender={(logo, title) => <Link to="/">{logo}{title}</Link>}
