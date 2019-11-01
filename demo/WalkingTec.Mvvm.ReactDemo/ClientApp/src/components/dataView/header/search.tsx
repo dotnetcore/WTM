@@ -132,7 +132,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
                                 toggleShow && <>
                                     <Divider type="vertical" />
                                     <a className="data-view-search-toggle" onClick={this.onToggle}>
-                                        {this.toggle ? <>收起 <Icon type='up' /></> : <>展开 <Icon type='down' /></>}
+                                        {this.toggle ? <><FormattedMessage id="action.open" /><Icon type='up' /></> : <><FormattedMessage id="action.retract" /> <Icon type='down' /></>}
                                     </a>
                                 </>
                             }

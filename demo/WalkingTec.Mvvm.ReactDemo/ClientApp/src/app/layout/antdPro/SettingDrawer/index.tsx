@@ -1,10 +1,12 @@
 // import CopyToClipboard from 'react-copy-to-clipboard';
 // import omit from 'omit.js';
 // import defaultSettings, { Settings } from '@ant-design/pro-layout/es/defaultSettings';
-import getLocales, { getLanguage } from '@ant-design/pro-layout/es/locales';
+// import getLocales, { getLanguage } from '@ant-design/pro-layout/es/locales';
 import { Divider, Drawer, Icon, List, Select, Switch, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import BlockCheckbox from './BlockCheckbox';
+import globalConfig from 'global.config';
+import { getLocales } from 'locale';
 import './index.less';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 export declare type ContentWidth = 'Fluid' | 'Fixed';
@@ -102,7 +104,7 @@ export interface SettingDrawerState extends MergerSettingsType<Settings> {
 class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
   state: SettingDrawerState = {
     collapse: false,
-    language: getLanguage(),
+    language: globalConfig.language,
   };
 
   static getDerivedStateFromProps(
@@ -131,7 +133,7 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
   }
 
   onLanguageChange = (): void => {
-    const language = getLanguage();
+    const language = globalConfig.language;//getLanguage();
 
     if (language !== this.state.language) {
       this.setState({

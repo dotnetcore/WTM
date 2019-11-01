@@ -127,7 +127,7 @@ class ConfigStore {
     /** 列表 分页 可选 行数 以下是默认值 */
     // pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200'],
     /** 列表 行  */
-    @persist
+    // @persist
     @observable
     Limit = 50;
     /** 
@@ -139,14 +139,14 @@ class ConfigStore {
     /** 
     * 详情信息 展示 宽度
     */
-    @persist
+    // @persist
     @observable
-    infoTypeWidth = '800px';
+    infoTypeWidth = '900px';
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
      */
-    @persist("object")
+    // @persist("object")
     @observable
     formItemLayout = {
         labelCol: {
@@ -159,25 +159,25 @@ class ConfigStore {
     /**
      * 详情信息 列 数 24 的除数
      */
-    @persist
+    // @persist
     @observable
     infoColumnCount = 2;
     /**
     * 搜索 列 数 24 的除数
     */
-    @persist
+    // @persist
     @observable
     searchColumnCount = 3;
     /**
      * 锁定表格滚动
      */
-    @persist
+    // @persist
     @observable
     lockingTableRoll = true;
     /**
      * 静态页面 标记
      */
-    @persist
+    // @persist
     @observable
     staticPage = "@StaticPage";
 }

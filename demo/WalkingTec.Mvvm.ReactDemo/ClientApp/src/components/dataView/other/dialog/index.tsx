@@ -15,6 +15,7 @@ import { Help } from 'utils/Help';
 import { DesError } from 'components/decorators';
 
 import { InfoShell } from '../infoShell';
+import { FormattedMessage } from 'react-intl';
 declare type Props = {
     form?: WrappedFormUtils;
     // InfoShell?: DrawerProps | ModalProps;
@@ -85,8 +86,8 @@ export class DialogForm extends React.Component<Props, any> {
             title: lodash.get(this.props, 'title', '未设置标题'),
             disabled: lodash.get(this.props, "disabled", false),
             showSubmit: lodash.get(this.props, 'showSubmit', true),
-            closeText: lodash.get(this.props, 'closeText', '关闭'),
-            submitText: lodash.get(this.props, 'submitText', '提交'),
+            closeText: lodash.get(this.props, 'closeText', <FormattedMessage id="action.close" />),
+            submitText: lodash.get(this.props, 'submitText', <FormattedMessage id="action.submit" />),
             icon: lodash.get(this.props, 'icon'),
             type: lodash.get(this.props, 'type', 'button'),
             button: lodash.get(this.props, 'button'),

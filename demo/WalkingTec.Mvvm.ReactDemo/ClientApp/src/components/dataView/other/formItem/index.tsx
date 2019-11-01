@@ -7,7 +7,6 @@
  */
 import { Icon, Input, Switch } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
-import { FormItemProps } from 'antd/lib/form/FormItem';
 import { ToImg } from 'components/dataView';
 import GlobalConfig from 'global.config'; //全局配置
 import lodash from 'lodash';
@@ -138,7 +137,7 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             }
         }
         // console.log(models, renderItem)
-        return <Form.Item label={model.label} {...itemlayout}>
+        return <Form.Item label={GlobalConfig.language === "zh-CN" ? model.label : lodash.replace(fieId,'Entity.', '')} {...itemlayout}>
             {renderItem}
         </Form.Item >
     }

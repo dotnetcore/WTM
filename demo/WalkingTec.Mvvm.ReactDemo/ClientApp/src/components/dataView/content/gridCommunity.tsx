@@ -5,7 +5,7 @@
  * @modify date 2019-06-26 16:55:28
  * @desc [description]
  */
-import { ColDef, ColumnRowGroupChangedEvent, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent } from 'ag-grid-community';
+import { ColDef, ColumnRowGroupChangedEvent, GridApi, GridReadyEvent, SelectionChangedEvent, SortChangedEvent, ColGroupDef } from 'ag-grid-community';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-fresh.css';
 // import 'ag-grid-community/dist/styles/ag-theme-blue.css';
@@ -224,7 +224,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         // this.gridApi.columnApi.getAllColumns().forEach((column: any) => {
         //     allColumnIds.push(column.colId);
         // });
-        this.gridApi.columnApi.autoSizeColumns(['RowAction']);
+        this.gridApi.columnApi.autoSizeColumns(['Action']);
     }
     setSelected() {
         this.gridApi &&
@@ -268,6 +268,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
             ...props
         } = this.props;
         const { DataSource, PageState } = Store;
+        const { language } = globalConfig;
         const dataSource = DataSource.tableList;
         const checkboxSelectionWidth = {
             "ag-theme-balham": 40,
@@ -282,8 +283,8 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         if (!!!props.treeData && !props.rowGroupPanelShow) {
             props.rowGroupPanelShow = "always"
         }
-        // 替换默认的渲染器
-        columnDefs = columnDefs.map((col: ColDef) => {
+        columnDefs = lodash.cloneDeep(columnDefs);
+        const colDefMap = (col: any) => {
             // 根据 数据 定制 样式
             col.cellStyle = col.cellStyle ||
                 ((props) => {
@@ -297,11 +298,63 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 });
             // 渲染器
             col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
+            if (language === "en-US") {
+                col.headerName = col.field;
+            }
+            if (col.children) {
+                col.children = col.children.map(colDefMap);
+            }
             return col
-        })
+        }
+        if (checkboxSelection) {
+            columnDefs.unshift({
+                // pivotIndex: 0,
+                rowDrag: false,
+                dndSource: false,
+                lockPosition: true,
+                // dndSourceOnRowDrag: false,
+                suppressMenu: true,
+                suppressSizeToFit: true,
+                suppressMovable: true,
+                suppressNavigable: true,
+                suppressCellFlash: true,
+                // rowGroup: false,
+                enableRowGroup: false,
+                enablePivot: false,
+                enableValue: false,
+                suppressResize: false,
+                editable: false,
+                suppressToolPanel: true,
+                suppressAutoSize: true,
+                filter: false,
+                resizable: false,
+                checkboxSelection: true,
+                headerCheckboxSelection: true,
+                width: checkboxSelectionWidth,
+                maxWidth: checkboxSelectionWidth,
+                minWidth: checkboxSelectionWidth,
+                pinned: 'left',
+            });
+        }
+        if (RowAction) {
+            columnDefs.push({
+                headerName: "操作",
+                field: "Action",
+                cellRenderer: 'RowAction',
+                pinned: 'right',
+                sortable: false,
+                menuTabs: [],
+                // minWidth: 120,
+                ...rowActionCol,
+            })
+        }
+        // 替换默认的渲染器
+        columnDefs = columnDefs.map(colDefMap);
+
         // console.log("TCL: GridCommunity -> render -> PageState.tableLoading", PageState.tableLoading)
-        const key = `${theme}_${globalConfig.language}`;
-        const PVmessages = getLocales(globalConfig.language)
+        const key = `${theme}_${language}`;
+        const PVmessages = getLocales(language);
+
         return (
             <>
                 <div ref={this.refTableBody} style={{ height: this.state.height, ...style }} className={`app-ag-grid  ${className} ${theme}`}>
@@ -309,7 +362,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                     <AgGridReact
                         key={key}
                         // 内置 翻译 替换
-                        localeText={globalConfig.language === "zh-CN" && localeText}
+                        localeText={language === "zh-CN" && localeText}
                         // suppressMenuHide
                         // 禁用“加载” 叠加层。
                         suppressNoRowsOverlay
@@ -356,7 +409,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                             {
                                 RowAction: (rowProps) => {
                                     if (rowProps.data) {
-                                        return <IntlProvider locale={globalConfig.language} messages={PVmessages}>
+                                        return <IntlProvider locale={language} messages={PVmessages}>
                                             <RowAction {...rowProps} />
                                         </IntlProvider>;
                                     }
@@ -378,48 +431,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                         autoGroupColumnDef={{
                             sortable: false
                         }}
-                        columnDefs={[
-                            checkboxSelection && {
-                                // pivotIndex: 0,
-                                rowDrag: false,
-                                dndSource: false,
-                                lockPosition: true,
-                                // dndSourceOnRowDrag: false,
-                                suppressMenu: true,
-                                suppressSizeToFit: true,
-                                suppressMovable: true,
-                                suppressNavigable: true,
-                                suppressCellFlash: true,
-                                // rowGroup: false,
-                                enableRowGroup: false,
-                                enablePivot: false,
-                                enableValue: false,
-                                suppressResize: false,
-                                editable: false,
-                                suppressToolPanel: true,
-                                suppressAutoSize: true,
-                                filter: false,
-                                resizable: false,
-                                checkboxSelection: true,
-                                headerCheckboxSelection: true,
-                                width: checkboxSelectionWidth,
-                                maxWidth: checkboxSelectionWidth,
-                                minWidth: checkboxSelectionWidth,
-                                pinned: 'left',
-                            },
-                            ...columnDefs,
-                            // 固定右侧 操作列
-                            RowAction && {
-                                headerName: "操作",
-                                field: "RowAction",
-                                cellRenderer: 'RowAction',
-                                pinned: 'right',
-                                sortable: false,
-                                menuTabs: [],
-                                // minWidth: 120,
-                                ...rowActionCol,
-                            }
-                        ].filter(Boolean)}
+                        columnDefs={columnDefs}
                         // 分组改变
                         onColumnRowGroupChanged={this.onColumnRowGroupChanged}
                         // 选择框

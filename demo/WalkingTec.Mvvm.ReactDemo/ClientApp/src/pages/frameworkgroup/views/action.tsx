@@ -8,6 +8,7 @@ import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
 import { InfoForm, InsertForm, UpdateForm } from './forms';
 import { FormattedMessage } from 'react-intl';
+import { getLocalesTemplate } from 'locale';
 /**
  * 动作事件
  */
@@ -43,7 +44,7 @@ export const ActionEvents = {
     onDeleteList() {
         const length = Store.DataSource.selectedRowKeys.length
         Modal.confirm({
-            title: `确定删除 ${length} 条数据?`,
+            title: getLocalesTemplate('action.deleteConfirm', { text: length }),
             onOk: async () => {
                 Store.onDelete(Store.DataSource.selectedRowKeys)
             },
@@ -141,7 +142,7 @@ class RowAction extends React.Component<{
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
-                    <Popconfirm title="确定删除?" onConfirm={() => { ActionEvents.onDelete(data) }} >
+                    <Popconfirm title={<FormattedMessage id="action.deleteConfirm" values={{ text: '' }} />} onConfirm={() => { ActionEvents.onDelete(data) }} >
                         <a ><FormattedMessage id="action.delete" /></a>
                     </Popconfirm>
                 </Visible>
