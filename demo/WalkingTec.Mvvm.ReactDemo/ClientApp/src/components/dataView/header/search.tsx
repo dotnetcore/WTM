@@ -40,6 +40,7 @@ interface IAppProps {
 @observer
 @BindAll()
 export class DataViewSearch extends React.Component<IAppProps, any> {
+    ref = React.createRef<HTMLDivElement>();
     Store: Store = this.props.Store;
     @observable toggle = false;
     columnCount = GlobalConfig.searchColumnCount || 3;
@@ -87,10 +88,21 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
     onToggle() {
         this.toggle = !this.toggle;
         document.body.style.overflowY = "hidden";
+        const parentNode: HTMLDivElement = this.ref.current && this.ref.current.parentNode as HTMLDivElement;
+        if (parentNode && parentNode.offsetHeight) {
+            parentNode.style.overflow = "hidden";
+            parentNode.style.maxHeight = `${parentNode.clientHeight}px`;
+        }
         lodash.defer(() => {
             // 主动触发 浏览器 resize 事件
             dispatchEvent(new CustomEvent('resize'));
-            lodash.delay(() => document.body.style.overflowY = "", 1000)
+            lodash.delay(() => {
+                document.body.style.overflowY = "";
+                if (parentNode && parentNode.offsetHeight) {
+                    parentNode.style.overflow = '';
+                    parentNode.style.maxHeight = ``;
+                }
+            }, 600)
         })
     }
     render() {
@@ -118,10 +130,8 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         }
         const { PageState } = this.Store;
         return (
-            <>
-                {/* <DataSpin Store={this.Store} /> */}
+            <div ref={this.ref}>
                 {items.length > 0 && <Form className="data-view-search" onSubmit={this.onSubmit}>
-                    {/* <Spin spinning={PageState.tableLoading}> */}
                     <Row type="flex" align="top">
                         {items.map(x => <Col key={`${this.key}_${x.key}`} lg={colSpan} md={12} sm={24} xs={24} >{x}</Col>)}
                         <Col lg={colSpanSearch} md={24} sm={24} xs={24} className="data-view-search-right" >
@@ -132,16 +142,15 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
                                 toggleShow && <>
                                     <Divider type="vertical" />
                                     <a className="data-view-search-toggle" onClick={this.onToggle}>
-                                        {this.toggle ? <><FormattedMessage id="action.open" /><Icon type='up' /></> : <><FormattedMessage id="action.retract" /> <Icon type='down' /></>}
+                                        {this.toggle ? <><FormattedMessage id="action.retract" /><Icon type='up' /></> : <><FormattedMessage id="action.open" /> <Icon type='down' /></>}
                                     </a>
                                 </>
                             }
                         </Col>
                     </Row>
-                    {/* </Spin> */}
                     <div className="data-view-search-divider"></div>
                 </Form>}
-            </>
+            </div>
         );
     }
 }

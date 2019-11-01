@@ -209,16 +209,18 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 // if (!globalConfig.settings.tabsPage) {
                 this.onUpdateHeight(lodash.get(e, 'detail') === 'refFullscreen');
                 // }
-                this.sizeColumnsToFit();
+                // this.sizeColumnsToFit();
+                this.autoSizeAll();
             }
         });
         await this.props.Store.onSearch();
         lodash.defer(() => {
-            // this.sizeColumnsToFit();
+            this.sizeColumnsToFit();
             this.autoSizeAll();
             this.setSelected();
         });
     }
+    @Debounce(100)
     autoSizeAll() {
         // var allColumnIds = [];
         // this.gridApi.columnApi.getAllColumns().forEach((column: any) => {
