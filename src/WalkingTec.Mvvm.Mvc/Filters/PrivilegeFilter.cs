@@ -26,31 +26,22 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
-            if (controller is BaseController)
+            var lg = GlobalServices.GetRequiredService<LinkGenerator>();
+            var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
+            if (u == null)
             {
-                controller.BaseUrl = $"/{ad.ControllerName}/{ad.ActionName}";
-                controller.BaseUrl += context.HttpContext.Request.QueryString.ToUriComponent();
-                if (context.RouteData.Values["area"] != null)
-                {
-                    controller.BaseUrl = $"/{context.RouteData.Values["area"]}{controller.BaseUrl}";
-                }
+                u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"], id = 0 });
             }
-            if (controller is BaseApiController)
+            if (u.EndsWith("/0"))
             {
-                var lg = GlobalServices.GetRequiredService<LinkGenerator>();
-                var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
-                if (u == null)
+                u = u.Substring(0, u.Length - 2);
+                if (controller is BaseApiController)
                 {
-                    u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"], id = 0 });
-                }
-                if (u.EndsWith("/0"))
-                {
-                    u = u.Substring(0, u.Length - 2);
                     u = u + "/{id}";
                 }
-                controller.BaseUrl = u;
-
             }
+            controller.BaseUrl = u;
+
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限
             //如果用户登录信息为空，也不需要判断权限，BaseController中会对没有登录的用户做其他处理

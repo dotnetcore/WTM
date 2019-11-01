@@ -15,10 +15,10 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("DataPrivilege")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class _DataPrivilegeController : BaseApiController
+    [Route("api/_[controller]")]
+    public class DataPrivilegeController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("[action]")]
         public string Search(DataPrivilegeSearcher searcher)
         {
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("[action]")]
         public DataPrivilegeVM Get(string TableName, Guid TargetId, DpTypeEnum DpType)
         {
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         [HttpPost("[action]")]
         public IActionResult Add(DataPrivilegeVM vm)
         {
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPut("[action]")]
         public IActionResult Edit(DataPrivilegeVM vm)
         {
@@ -89,25 +89,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [ActionDescription("删除")]
-        [HttpGet("[action]/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<DataPrivilegeVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
-        }
 
         [HttpPost("[action]")]
-        [ActionDescription("批量删除")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<DataPrivilegeBatchVM>();

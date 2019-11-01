@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     public class ActionLogController : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("[action]")]
         public string Search(ActionLogSearcher searcher)
         {
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public ActionLogVM Get(Guid id)
         {
@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("[action]")]
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<ActionLogBatchVM>();
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost("[action]")]
         public IActionResult ExportExcel(ActionLogSearcher searcher)
         {
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("ExportByIds")]
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {

@@ -34,15 +34,15 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
             {
-                return BadRequest("服务端没有配置储存文件的地址");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)
             {
-                return BadRequest("DFS上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (vm.Entity.FileData == null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database)
             {
-                return BadRequest("上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             vm.DoAdd();
             return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
@@ -63,7 +63,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return BadRequest("上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (width == null)
             {
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.DoAdd();
                 return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
             }
-            return BadRequest("上传失败");
+            return BadRequest(Core.Program._localizer["UploadFailed"]);
 
         }
 
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             vm.DoDelete();

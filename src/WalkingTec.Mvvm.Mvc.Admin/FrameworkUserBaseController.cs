@@ -178,7 +178,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]")]
-        [ActionDescription("登录")]
+        [ActionDescription("Login")]
         public async Task<IActionResult> GetUserInfo()
         {
             var user = await DC.Set<FrameworkUserBase>()

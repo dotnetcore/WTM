@@ -463,7 +463,7 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
-            var acts = allModules.Where(x => x.ClassName == "_"+controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
@@ -472,7 +472,7 @@ namespace WalkingTec.Mvvm.Core
                 menu.ModuleName = acts[0].Module.ModuleName;
                 menu.PageName = menu.ModuleName;
                 menu.ActionName = Program._localizer["MainPage"];
-                menu.ClassName = acts[0].Module.ClassName;
+                menu.ClassName = acts[0].Module.FullName;
                 menu.MethodName = null;
                 for (int i = 0; i < rest.Count; i++)
                 {
@@ -495,7 +495,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 //ActionId = act.ID,
                 //ModuleId = act.ModuleId,
-                ClassName = act.Module.ClassName,
+                ClassName = act.Module.FullName,
                 MethodName = act.MethodName,
                 Url = act.Url,
                 Privileges = new List<FunctionPrivilege>(),

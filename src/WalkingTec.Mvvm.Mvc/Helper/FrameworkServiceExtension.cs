@@ -379,8 +379,8 @@ namespace WalkingTec.Mvvm.Mvc
                     var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
                     foreach (var m in gd.AllModule)
                     {
-                        if (m.IsApi == true)
-                        {
+                        //if (m.IsApi == true)
+                        //{
                             foreach (var a in m.Actions)
                             {
                                 var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
@@ -395,7 +395,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 }
                                 a.Url = u;
                             }
-                        }
+                        //}
                     }
 
                     var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
@@ -405,6 +405,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
                         dc.DataInit(gd.AllModule, test != null).Wait();
                     }
+                    GlobalServices.SetServiceProvider(app.ApplicationServices);
                     InitDataBase = true;
                 }
 

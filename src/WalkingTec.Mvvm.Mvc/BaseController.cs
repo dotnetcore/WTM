@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -700,20 +701,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return rv;
             }
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            var ctrlActDes = context.ActionDescriptor as ControllerActionDescriptor;
-            BaseUrl = $"/{ctrlActDes.ControllerName}/{ctrlActDes.ActionName}";
-            BaseUrl += context.HttpContext.Request.QueryString.ToUriComponent();
-            if (context.RouteData.Values["area"] != null)
-            {
-                BaseUrl = $"/{context.RouteData.Values["area"]}{BaseUrl}";
-            }
-
-
-            base.OnActionExecuting(context);
         }
 
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)

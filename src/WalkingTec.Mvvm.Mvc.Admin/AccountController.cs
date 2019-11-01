@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ApiController]
     [Route("api/_[controller]")]
-    [ActionDescription("登陆")]
+    [ActionDescription("Login")]
     public class AccountController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("登录失败");
+                return BadRequest("LoadFailed");
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
