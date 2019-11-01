@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     u = u + "/{id}";
                 }
             }
-            controller.BaseUrl = u;
+            controller.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent(); ;
 
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限

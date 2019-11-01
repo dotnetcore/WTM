@@ -55,7 +55,7 @@ class Store {
                 // await this.onSetUserInfo(res);
                 await this.onSetUserInfo(Authorization);
             } else if (userid) {
-                const res = await Request.ajax("/api/_login/CheckLogin/" + userid).toPromise();
+                const res = await Request.ajax("/api/_account/CheckLogin/" + userid).toPromise();
                 await this.onSetUserInfo(res);
             }
         } catch (error) {
@@ -89,7 +89,7 @@ class Store {
         const userid = lodash.get(this.UserInfo, 'Id');
         if (Logout && userid) {
             try {
-                Request.ajax("/api/_login/Logout/" + userid).toPromise();
+                Request.ajax("/api/_account/Logout/" + userid).toPromise();
             } catch (error) {
             }
         }
