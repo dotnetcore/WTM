@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Internal;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public class PolicyEvaluator : IPolicyEvaluator
     {

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Auth;
-
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public class TokenRefreshService : ITokenRefreshService
     {

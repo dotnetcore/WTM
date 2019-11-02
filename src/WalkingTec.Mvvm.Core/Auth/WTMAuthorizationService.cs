@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
 
     /// <summary>

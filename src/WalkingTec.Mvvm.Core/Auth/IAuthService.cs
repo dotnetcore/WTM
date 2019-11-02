@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core.Auth
 {

@@ -1,14 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Web;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
-using Microsoft.AspNetCore.Authentication;
+
 using System;
+using System.Web;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using WalkingTec.Mvvm.Mvc.Auth;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {

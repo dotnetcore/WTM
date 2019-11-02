@@ -44,7 +44,6 @@ using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
-using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
@@ -150,9 +149,9 @@ namespace WalkingTec.Mvvm.Mvc
 
             // edit start by @vito
             services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
-            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Auth.PolicyEvaluator>());
+            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
             services.TryAddEnumerable(
-                ServiceDescriptor.Transient<IApplicationModelProvider, Auth.AuthorizationApplicationModelProvider>());
+                ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
             // edit end
 
             var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
@@ -381,20 +380,20 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         //if (m.IsApi == true)
                         //{
-                            foreach (var a in m.Actions)
+                        foreach (var a in m.Actions)
+                        {
+                            var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
+                            if (u == null)
                             {
-                                var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-                                if (u == null)
-                                {
-                                    u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
-                                }
-                                if (u != null && u.EndsWith("/0"))
-                                {
-                                    u = u.Substring(0, u.Length - 2);
-                                    u = u + "/{id}";
-                                }
-                                a.Url = u;
+                                u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
                             }
+                            if (u != null && u.EndsWith("/0"))
+                            {
+                                u = u.Substring(0, u.Length - 2);
+                                u = u + "/{id}";
+                            }
+                            a.Url = u;
+                        }
                         //}
                     }
 
