@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo
     public class Program
     {
         public static void Main(string[] args)
-        {           
+        {
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -52,6 +52,17 @@ namespace WalkingTec.Mvvm.Demo
                         x.AddSwaggerGen(c =>
                         {
                             c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                            c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                            {
+                                Description = "JWT Bearer",
+                                Name = "Bearer",
+                                In = "header",
+                                Type = "apiKey"
+                            });
+                            c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                            {
+                                { "Bearer", new string[] { } }
+                            });
                         });
                     })
                     .Configure(x =>
