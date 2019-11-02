@@ -52,7 +52,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             //查找登录用户的数据权限
             var dpris = DC.Set<DataPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                .Distinct()
                 .ToList();
+                
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo
             {
@@ -69,6 +71,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 //查找登录用户的页面权限
                 var pris = DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Distinct()
                     .ToList();
                 rv.FunctionPrivileges = pris;
             }
