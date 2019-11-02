@@ -14,11 +14,13 @@ using Microsoft.Extensions.Localization;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Implement;
 
 namespace WalkingTec.Mvvm.Mvc
 {
+    [AuthorizeJwt]
     public abstract class BaseApiController : ControllerBase, IBaseController
     {
         private Configs _configInfo;

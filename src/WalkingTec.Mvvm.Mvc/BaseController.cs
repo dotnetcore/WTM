@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -19,10 +17,12 @@ using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
+    [AuthorizeCookie]
     public abstract class BaseController : Controller, IBaseController
     {
         public BaseController()
@@ -296,7 +296,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             get
             {
-                if(_localizer == null)
+                if (_localizer == null)
                 {
                     var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
@@ -307,7 +307,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         catch { }
                     }
-                    if(_localizer == null)
+                    if (_localizer == null)
                     {
                         _localizer = WalkingTec.Mvvm.Core.Program._localizer;
                     }
