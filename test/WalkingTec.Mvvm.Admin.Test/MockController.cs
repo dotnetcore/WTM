@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Moq;
 
 using WalkingTec.Mvvm.Core;
@@ -24,6 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
             GlobalServices.SetServiceProvider(mockService.Object);
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();
@@ -47,6 +51,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
             GlobalServices.SetServiceProvider(mockService.Object);
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();

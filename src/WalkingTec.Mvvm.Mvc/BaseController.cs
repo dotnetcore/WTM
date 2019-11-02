@@ -91,6 +91,10 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 return _cache;
             }
+            set
+            {
+                _cache = value;
+            }
         }
 
         public string CurrentCS { get; set; }
@@ -201,7 +205,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             get
             {
-                if (User.Identity.IsAuthenticated && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                if (User?.Identity?.IsAuthenticated == true  && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     Guid userId = Guid.Parse(userIdStr);
