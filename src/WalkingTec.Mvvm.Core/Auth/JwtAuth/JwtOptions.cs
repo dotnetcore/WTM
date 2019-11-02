@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core.Auth
 {
     public class JwtOptions
     {
