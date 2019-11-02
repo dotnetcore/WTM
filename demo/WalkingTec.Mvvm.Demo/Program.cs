@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Demo
                             c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
                             {
                                 Description = "JWT Bearer",
-                                Name = "Bearer",
+                                Name = "Authorization",
                                 In = "header",
                                 Type = "apiKey"
                             });
