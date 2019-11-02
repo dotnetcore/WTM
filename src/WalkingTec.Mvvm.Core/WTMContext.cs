@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     var userIdStr = User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     Guid userId = Guid.Parse(userIdStr);
-                    var cacheKey = $"{GlobalConstants.Cache.UserInfo}:{userIdStr}";
+                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                     {
@@ -242,13 +242,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (value == null)
                 {
-                    Cache.Add($"{GlobalConstants.Cache.UserInfo}:{_loginUserInfo.Id}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
                     _loginUserInfo = value;
                 }
                 else
                 {
                     _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.Cache.UserInfo}:{_loginUserInfo.Id}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
                 }
             }
         }
