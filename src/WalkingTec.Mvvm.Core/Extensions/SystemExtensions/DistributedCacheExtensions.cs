@@ -120,7 +120,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             T value,
             DistributedCacheEntryOptions options = null)
         {
-            var ss = JsonConvert.SerializeObject(value, jsonSerializerSettings);
             if (options == null)
                 cache.Set(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)));
             else
@@ -138,6 +137,26 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 await cache.SetAsync(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), token);
             else
                 await cache.SetAsync(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), options, token);
+        }
+
+        #endregion
+
+
+        #region Delete
+
+        public static void Delete(
+            this IDistributedCache cache,
+            string key)
+        {
+            cache.Remove(InstanceName + key);
+        }
+
+        public static async Task DeleteAsync(
+            this IDistributedCache cache,
+            string key,
+            CancellationToken token = default)
+        {
+            await cache.RemoveAsync(InstanceName + key, token);
         }
 
         #endregion

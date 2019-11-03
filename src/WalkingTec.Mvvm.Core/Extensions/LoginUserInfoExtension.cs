@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             foreach (var userId in userIds)
             {
                 var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId}";
-                await Cache.RemoveAsync(key);
+                await Cache.DeleteAsync(key);
             }
         }
 
