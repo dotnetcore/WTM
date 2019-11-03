@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             v.Password = "password";
             vm.Entity = v;
             var rv = _controller.Add(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
             var rv = _controller.Edit(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
 
             var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
 
             rv = _controller.BatchDelete(new string[] {});
-            Assert.IsInstanceOfType(rv, typeof(OkResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkResult));
         }
 
         [TestMethod]

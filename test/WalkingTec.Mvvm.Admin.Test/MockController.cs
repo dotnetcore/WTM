@@ -10,6 +10,7 @@ using Moq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
@@ -26,6 +27,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
             _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
@@ -50,6 +52,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
             _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
