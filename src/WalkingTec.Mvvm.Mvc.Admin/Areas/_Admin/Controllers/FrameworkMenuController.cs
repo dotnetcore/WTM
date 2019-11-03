@@ -149,9 +149,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 刷新菜单
         [ActionDescription("RefreshMenu")]
-        public ActionResult RefreshMenu()
+        public async Task<ActionResult> RefreshMenu()
         {
             Cache.Remove("FFMenus");
+            var userids = DC.RunSQL<string>($"select id from {DC.GetTableName<FrameworkUserBase>()}").ToArray();
+            await LoginUserInfo.RemoveUserCache(userids);
             return FFResult().Alert(Program._localizer["OprationSuccess"]);
         }
         #endregion

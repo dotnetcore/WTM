@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("PageFunction")]
         [HttpPut("[action]")]
-        public IActionResult EditPrivilege(FrameworkRoleMDVM2 vm)
+        public async Task<IActionResult> EditPrivilege(FrameworkRoleMDVM2 vm)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoChange();
+                await vm.DoChangeAsync();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkRoleBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -129,6 +129,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                var roleids = vm.Ids.Cast<Guid?>().ToList();
+                var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }

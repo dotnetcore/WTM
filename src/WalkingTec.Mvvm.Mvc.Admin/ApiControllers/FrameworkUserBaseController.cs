@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(FrameworkUserVM vm)
+        public async Task<IActionResult> Add(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(FrameworkUserVM vm)
+        public async Task<IActionResult> Edit(FrameworkUserVM vm)
         {
             ModelState.Remove("Entity.Password");
             if (!ModelState.IsValid)
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEditAsync(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -100,6 +100,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                var tempids = vm.Ids.Cast<Guid?>().ToList();
+                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }

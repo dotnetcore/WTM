@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Create")]
         [HttpPost("[action]")]
-        public IActionResult Add(DataPrivilegeVM vm)
+        public async Task<IActionResult> Add(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Edit")]
         [HttpPut("[action]")]
-        public IActionResult Edit(DataPrivilegeVM vm)
+        public async Task<IActionResult> Edit(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                vm.DoEdit(false);
+                await vm.DoEditAsync(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());

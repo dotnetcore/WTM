@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -57,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
         }
 
-        public override void DoAdd()
+        public override async Task DoAddAsync()
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
@@ -80,10 +81,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
             Entity.IsValid = true;
             Entity.Password = Utils.GetMD5String(Entity.Password);
-            base.DoAdd();
+            await base.DoAddAsync();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEditAsync(bool updateAllFields = false)
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
@@ -98,12 +99,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
                 }
             }
-            base.DoEdit(updateAllFields);
+            await base.DoEditAsync(updateAllFields);
+            await base.DoAddAsync();
+            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
         }
 
-        public override void DoDelete()
+        public override async Task DoDeleteAsync()
         {
-            base.DoDelete();
+            await base.DoDeleteAsync();
         }
 
         public void ChangePassword()

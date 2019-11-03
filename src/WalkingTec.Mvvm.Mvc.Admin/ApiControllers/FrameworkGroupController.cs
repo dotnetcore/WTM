@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkGroupBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -100,6 +100,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                var groupids = vm.Ids.Cast<Guid?>().ToList();
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }

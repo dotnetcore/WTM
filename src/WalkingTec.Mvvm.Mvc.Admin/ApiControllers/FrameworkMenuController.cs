@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -141,9 +141,11 @@ namespace WalkingTec.Mvvm.Admin.Api
         #region 刷新菜单
         [ActionDescription("RefreshMenu")]
         [HttpGet("[action]")]
-        public ActionResult RefreshMenu()
+        public async Task<ActionResult> RefreshMenu()
         {
             Cache.Remove("FFMenus");
+            var userids = DC.RunSQL<string>($"select id from {DC.GetTableName<FrameworkUserBase>()}").ToArray();
+            await LoginUserInfo.RemoveUserCache(userids);
             return Ok(Mvc.Admin.Program._localizer["OprationSuccess"]);
         }
         #endregion

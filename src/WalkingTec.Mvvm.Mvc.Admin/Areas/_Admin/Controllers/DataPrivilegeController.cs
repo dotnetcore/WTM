@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -37,7 +38,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Create")]
-        public ActionResult Create(DataPrivilegeVM vm)
+        public async Task<ActionResult> Create(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
@@ -68,7 +69,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Edit")]
         [HttpPost]
-        public ActionResult Edit(DataPrivilegeVM vm)
+        public async Task<ActionResult> Edit(DataPrivilegeVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -76,13 +77,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoEdit();
+                await vm.DoEditAsync();
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }
 
         [ActionDescription("Delete")]
-        public ActionResult Delete(string ModelName, Guid Id, DpTypeEnum Type)
+        public async Task<ActionResult> Delete(string ModelName, Guid Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
@@ -93,7 +94,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             {
                 vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
             }
-            vm.DoDelete();
+            await vm.DoDeleteAsync();
             return FFResult().RefreshGrid();
         }
 

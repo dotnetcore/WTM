@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
@@ -84,12 +86,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Delete")]
-        public ActionResult Delete(Guid id, IFormCollection noUse)
+        public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = CreateVM<FrameworkRoleVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
+                var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == id).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -110,10 +114,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("BatchDelete")]
-        public ActionResult DoBatchDelete(FrameworkRoleBatchVM vm, IFormCollection noUse)
+        public async Task<ActionResult> DoBatchDelete(FrameworkRoleBatchVM vm, IFormCollection noUse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
+                var roleids = vm.Ids.Cast<Guid?>().ToList();
+                var userids = DC.Set<FrameworkUserRole>().Where(x=> roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return PartialView("BatchDelete", vm);
             }
             else
@@ -167,9 +174,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("PageFunction")]
         [HttpPost]
-        public ActionResult PageFunction(FrameworkRoleMDVM vm, IFormCollection noUse)
+        public async Task<ActionResult> PageFunction(FrameworkRoleMDVM vm, IFormCollection noUse)
         {
-            vm.DoChange();
+            await vm.DoChangeAsync();
             return FFResult().CloseDialog().Alert(Program._localizer["OprationSuccess"]);
         }
         #endregion
