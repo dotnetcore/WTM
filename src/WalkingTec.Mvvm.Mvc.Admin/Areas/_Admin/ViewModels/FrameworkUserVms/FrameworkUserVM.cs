@@ -100,7 +100,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 }
             }
             await base.DoEditAsync(updateAllFields);
-            await base.DoAddAsync();
             await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
         }
 

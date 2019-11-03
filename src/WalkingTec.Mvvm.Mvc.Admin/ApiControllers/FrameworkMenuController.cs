@@ -144,7 +144,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<ActionResult> RefreshMenu()
         {
             Cache.Remove("FFMenus");
-            var userids = DC.RunSQL<string>($"select id from {DC.GetTableName<FrameworkUserBase>()}").ToArray();
+            var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString()).ToArray();
             await LoginUserInfo.RemoveUserCache(userids);
             return Ok(Mvc.Admin.Program._localizer["OprationSuccess"]);
         }
@@ -154,7 +154,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
+            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.FullName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {

@@ -152,7 +152,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public async Task<ActionResult> RefreshMenu()
         {
             Cache.Remove("FFMenus");
-            var userids = DC.RunSQL<string>($"select id from {DC.GetTableName<FrameworkUserBase>()}").ToArray();
+            var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString()).ToArray();
             await LoginUserInfo.RemoveUserCache(userids);
             return FFResult().Alert(Program._localizer["OprationSuccess"]);
         }

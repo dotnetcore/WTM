@@ -129,7 +129,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                var roleids = vm.Ids.Cast<Guid?>().ToList();
+                List<Guid?> roleids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    roleids.Add(Guid.Parse(item));
+                }
                 var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
                 await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());

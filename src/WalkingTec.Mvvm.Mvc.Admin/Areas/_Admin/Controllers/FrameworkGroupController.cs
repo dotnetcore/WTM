@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -119,13 +121,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                var groupids = vm.Ids.Cast<Guid?>().ToList();
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+
                 return PartialView("BatchDelete", vm);
             }
             else
             {
+                List<Guid?> groupids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    groupids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer["OprationSuccess"]);
             }
         }

@@ -100,7 +100,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                var tempids = vm.Ids.Cast<Guid?>().ToList();
+                List<Guid?> tempids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    tempids.Add(Guid.Parse(item));
+                }
                 var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
                 await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());

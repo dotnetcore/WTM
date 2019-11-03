@@ -6,6 +6,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -182,13 +183,17 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
-                var tempids = vm.Ids.Cast<Guid?>().ToList();
-                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
                 return PartialView("BatchDelete", vm);
             }
             else
             {
+                List<Guid?> tempids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    tempids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer?["OprationSuccess"]);
             }
         }
