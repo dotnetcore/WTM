@@ -1,7 +1,6 @@
 import { Icon, message, Modal, Upload, Button } from "antd";
 import React from "react";
 import RequestFiles from 'utils/RequestFiles';
-import Globalconfig from 'global.config'
 import lodash from 'lodash'
 export class WtmUpload extends React.Component<any, any> {
     static wtmType = "Upload";
@@ -69,11 +68,6 @@ export class WtmUpload extends React.Component<any, any> {
                 action={RequestFiles.FileTarget}
                 onChange={this.handleChange}
                 onRemove={this.onRemove}
-                headers={
-                    {
-                        Authorization: Globalconfig.headers.Authorization
-                    }
-                }
             >
                 <Button>
                     <Icon type="upload" /> 选择文件

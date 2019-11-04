@@ -3,7 +3,6 @@ import React from "react";
 import RequestFiles from 'utils/RequestFiles';
 import Viewer from 'viewerjs';
 import lodash from 'lodash'
-import Globalconfig from 'global.config'
 function beforeUpload(file) {
     console.log(file.type)
     const isJPG = lodash.includes(file.type, 'image/');
@@ -101,11 +100,6 @@ export class WtmUploadImg extends React.Component<any, any> {
                     fileList={fileList as any}
                     action={RequestFiles.FileTarget}
                     beforeUpload={beforeUpload}
-                    headers={
-                        {
-                            Authorization: Globalconfig.headers.Authorization
-                        }
-                    }
                     onChange={this.handleChange}
                     onPreview={this.handlePreview}
                     onRemove={this.onRemove}
