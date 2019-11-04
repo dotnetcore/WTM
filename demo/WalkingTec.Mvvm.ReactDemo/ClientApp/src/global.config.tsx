@@ -107,19 +107,19 @@ class ConfigStore {
         credentials: 'include',
         accept: "*/*",
         "Content-Type": "application/json",
-        "Authorization": null
+        "token": null
     };
     /**
      * token
      */
     token = {
-        // set(token) {
-        //     window.localStorage.setItem('__token', token);
-        //     return token
-        // },
-        // get() {
-        //     return window.localStorage.getItem('__token') || null;
-        // },
+        set(token) {
+            window.localStorage.setItem('__token', token);
+            return token
+        },
+        get() {
+            return window.localStorage.getItem('__token') || null;
+        },
         clear() {
             window.localStorage.clear();
             window.location.pathname = "/"
