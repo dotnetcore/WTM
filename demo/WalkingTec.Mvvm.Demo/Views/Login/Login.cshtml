@@ -51,7 +51,7 @@
           <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()" /></i>
         </li>
         <li style="text-align:right;vertical-align:text-top">
-          <input type="checkbox" name="RememberLogin"  value="true" checked="@Model.RememberLogin.ToString().ToLower()">
+          <input type="checkbox" name="RememberLogin" value="true" @(Model.RememberLogin?"checked":"")>
           <span style="font-size:14px; margin-left:5px;">记住我</span>
         </li>
 

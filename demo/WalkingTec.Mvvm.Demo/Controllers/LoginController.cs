@@ -15,7 +15,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 {
     public class LoginController : BaseController
     {
-        [Public]
         [AllowAnonymous]
         [ActionDescription("登录")]
         public IActionResult Login()

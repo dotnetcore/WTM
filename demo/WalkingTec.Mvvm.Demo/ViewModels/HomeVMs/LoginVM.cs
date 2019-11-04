@@ -1,15 +1,14 @@
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Microsoft.EntityFrameworkCore;
+
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
-
         [Display(Name = "账号")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
@@ -54,7 +53,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .Distinct()
                 .ToList();
-                
+
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo
             {
