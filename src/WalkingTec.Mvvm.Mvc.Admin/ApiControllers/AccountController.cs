@@ -20,7 +20,7 @@ using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-    [AuthorizeJwt]
+    [AuthorizeJwtWithCookie]
     [ApiController]
     [Route("api/_[controller]")]
     [Route("api/_login")]

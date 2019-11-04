@@ -14,7 +14,12 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public enum ApiAuthMode
     {
-        Both,Jwt,Cookie
+        [Display(Name = "Both Jwt & Cookie")]
+        Both,
+        [Display(Name = "Jwt")]
+        Jwt,
+        [Display(Name = "Cookie")]
+        Cookie
     }
 
     [ReInit(ReInitModes.ALWAYS)]
@@ -423,6 +428,7 @@ namespace WalkingTec.Mvvm.Mvc
         public string GenerateController()
         {
             string dir = "";
+            string jwt = "";
             if (UI == UIEnum.LayUI && IsApi == false)
             {
                 dir = "Mvc";
@@ -430,8 +436,22 @@ namespace WalkingTec.Mvvm.Mvc
             if (UI == UIEnum.React || IsApi == true)
             {
                 dir = "Spa";
+                switch (AuthMode)
+                {
+                    case ApiAuthMode.Both:
+                        jwt = "[AuthorizeJwtWithCookie]";
+                        break;
+                    case ApiAuthMode.Jwt:
+                        jwt = "[AuthorizeJwt]";
+                        break;
+                    case ApiAuthMode.Cookie:
+                        jwt = "[AuthorizeCookie]";
+                        break;
+                    default:
+                        break;
+                }
             }
-            var rv = GetResource("Controller.txt", dir).Replace("$vmnamespace$", VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName).Replace("$modelnamespace$", ModelNS).Replace("$controllername$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
+            var rv = GetResource("Controller.txt", dir).Replace("$jwt$",jwt).Replace("$vmnamespace$", VMNs).Replace("$namespace$", ControllerNs).Replace("$des$", ModuleName).Replace("$modelname$", ModelName).Replace("$modelnamespace$", ModelNS).Replace("$controllername$", $"{ModelName}{(IsApi == true ? "Api" : "")}");
             if (string.IsNullOrEmpty(Area))
             {
                 rv = rv.Replace("$area$", "");
@@ -450,7 +470,7 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    if (item.InfoType == FieldInfoType.One2Many && item.SubField != "`file")
+                    if ((item.InfoType == FieldInfoType.One2Many || item.InfoType == FieldInfoType.Many2Many)  && item.SubField != "`file")
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();

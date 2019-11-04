@@ -4,7 +4,6 @@ using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -15,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 {
     public class LoginController : BaseController
     {
-        [AllowAnonymous]
+        [Public]
         [ActionDescription("登录")]
         public IActionResult Login()
         {
@@ -30,7 +29,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [Public]
-        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Login(LoginVM vm)
         {
