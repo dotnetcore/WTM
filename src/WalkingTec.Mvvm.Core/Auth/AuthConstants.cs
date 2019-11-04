@@ -1,6 +1,6 @@
 namespace WalkingTec.Mvvm.Core.Auth
 {
-    public class AuthConstants
+    public static class AuthConstants
     {
         public const string JwtTokenType = "Bearer";
         public const string AuthenticationType = "WTMAuthentication";
@@ -309,6 +309,5 @@ namespace WalkingTec.Mvvm.Core.Auth
             //     The confirmation
             public const string Confirmation = "cnf";
         }
-
     }
 }

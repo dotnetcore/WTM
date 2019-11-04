@@ -25,15 +25,12 @@ namespace WalkingTec.Mvvm.Admin.Api
     public class AccountController : BaseApiController
     {
         private readonly ILogger _logger;
-        private readonly ITokenRefreshService _tokenRefreshService;
-        private readonly IAuthService _authService;
+        private readonly ITokenService _authService;
         public AccountController(
             ILogger<AccountController> logger,
-            ITokenRefreshService tokenRefreshService,
-            IAuthService authService)
+            ITokenService authService)
         {
             _logger = logger;
-            _tokenRefreshService = tokenRefreshService;
             _authService = authService;
         }
 
@@ -41,7 +38,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromForm]string userid, [FromForm]string password)
         {
-            var authService = HttpContext.RequestServices.GetService(typeof(IAuthService)) as IAuthService;
+            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
             var user = DC.Set<FrameworkUserBase>()
                             .Include(x => x.UserRoles)
                             .Include(x => x.UserGroups)
@@ -83,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public async Task<Token> RefreshToken(string refreshToken)
         {
-            return await _tokenRefreshService.RefreshTokenAsync(refreshToken);
+            return await _authService.RefreshTokenAsync(refreshToken);
         }
 
         [AllRights]

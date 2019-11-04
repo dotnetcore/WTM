@@ -1,10 +1,18 @@
 ﻿using System.Threading.Tasks;
-using WalkingTec.Mvvm.Core.Auth;
 
 namespace WalkingTec.Mvvm.Core.Auth
 {
-    public interface ITokenRefreshService
+    public interface ITokenService
     {
+        IDataContext DC { get; }
+
+        /// <summary>
+        /// Issue token
+        /// </summary>
+        /// <param name="loginUserInfo"></param>
+        /// <returns></returns>
+        Task<Token> IssueToken(LoginUserInfo loginUserInfo);
+
         /// <summary>
         /// refresh token
         /// </summary>

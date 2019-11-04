@@ -1,8 +1,8 @@
 namespace WalkingTec.Mvvm.Core
 {
-    public class GlobalConstants
+    public static class GlobalConstants
     {
-        public class CacheKey
+        public static class CacheKey
         {
             public const string UserInfo = "UserInfo";
         }

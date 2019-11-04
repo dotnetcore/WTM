@@ -1,28 +1,85 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WalkingTec.Mvvm.Core.Auth
 {
-    public class TokenRefreshService : ITokenRefreshService
+    public class TokenService : ITokenService
     {
         private readonly ILogger _logger;
-        private readonly IAuthService _authService;
-        private readonly IDataContext _dc;
+        private readonly JwtOptions _jwtOptions;
 
-        public TokenRefreshService(
-            ILogger<TokenRefreshService> logger,
-            IAuthService authService
+        private const Token _emptyToken = null;
+
+        private readonly Configs _configs;
+        private readonly IDataContext _dc;
+        public IDataContext DC => _dc;
+
+        public TokenService(
+            ILogger<TokenService> logger,
+            IOptions<JwtOptions> jwtOptions
         )
         {
+            _configs = GlobalServices.GetRequiredService<Configs>();
+            _jwtOptions = jwtOptions.Value;
             _logger = logger;
-            _authService = authService;
-            _dc = _authService.DC;
+            _dc = CreateDC();
         }
+
+        public async Task<Token> IssueToken(LoginUserInfo loginUserInfo)
+        {
+            if (loginUserInfo == null)
+                throw new ArgumentNullException(nameof(loginUserInfo));
+
+            var signinCredentials = new SigningCredentials(_jwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var tokeOptions = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: new List<Claim>()
+                {
+                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.Id.ToString()),
+                    new Claim(AuthConstants.JwtClaimTypes.Name, loginUserInfo.Name)
+                },
+                expires: DateTime.Now.AddSeconds(_jwtOptions.Expires),
+                signingCredentials: signinCredentials
+            );
+
+
+            var refreshToken = new PersistedGrant()
+            {
+                UserId = loginUserInfo.Id,
+                Type = "refresh_token",
+                CreationTime = DateTime.Now,
+                RefreshToken = Guid.NewGuid().ToString("N"),
+                Expiration = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenExpires)
+            };
+            _dc.AddEntity(refreshToken);
+            await _dc.SaveChangesAsync();
+
+            return await Task.FromResult(new Token()
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(tokeOptions),
+                ExpiresIn = _jwtOptions.Expires,
+                TokenType = AuthConstants.JwtTokenType,
+                RefreshToken = refreshToken.RefreshToken
+            });
+        }
+
+        private IDataContext CreateDC()
+        {
+            string cs = "default";
+            var globalIngo = GlobalServices.GetRequiredService<GlobalData>();
+            return (IDataContext)globalIngo.DataContextCI?.Invoke(new object[] { _configs.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), _configs.DbType });
+        }
+
 
         /// <summary>
         /// refresh token
@@ -79,7 +136,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 _logger.LogDebug("清理过期的refreshToken：【sql:{0}】", sql);
 
                 // 颁发 token
-                return await _authService.IssueToken(loginUserInfo);
+                return await IssueToken(loginUserInfo);
             }
             else
                 throw new Exception("非法的 refresh Token");
@@ -100,5 +157,6 @@ namespace WalkingTec.Mvvm.Core.Auth
             });
             await Task.CompletedTask;
         }
+
     }
 }
