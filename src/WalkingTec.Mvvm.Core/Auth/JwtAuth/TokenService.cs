@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             _dc = CreateDC();
         }
 
-        public async Task<Token> IssueToken(LoginUserInfo loginUserInfo)
+        public async Task<Token> IssueTokenAsync(LoginUserInfo loginUserInfo)
         {
             if (loginUserInfo == null)
                 throw new ArgumentNullException(nameof(loginUserInfo));
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 _logger.LogDebug("清理过期的refreshToken：【sql:{0}】", sql);
 
                 // 颁发 token
-                return await IssueToken(loginUserInfo);
+                return await IssueTokenAsync(loginUserInfo);
             }
             else
                 throw new Exception("非法的 refresh Token");

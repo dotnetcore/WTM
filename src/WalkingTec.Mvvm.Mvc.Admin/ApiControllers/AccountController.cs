@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using Newtonsoft.Json;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Auth.Attribute;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
@@ -21,6 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwt]
     [ApiController]
     [Route("api/_[controller]")]
+    [Route("api/_login")]
     [ActionDescription("Login")]
     public class AccountController : BaseApiController
     {
@@ -36,9 +39,8 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromForm]string userid, [FromForm]string password)
+        public async Task<IActionResult> Login([FromForm]string userid, [FromForm]string password, [FromForm]bool rememberLogin = false, [FromForm]bool cookie = true)
         {
-            var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
             var user = DC.Set<FrameworkUserBase>()
                             .Include(x => x.UserRoles)
                             .Include(x => x.UserGroups)
@@ -57,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .ToList();
             //生成并返回登录用户信息
-            LoginUserInfo rv = new LoginUserInfo();
+            var rv = new LoginUserInfo();
             rv.Id = user.ID;
             rv.ITCode = user.ITCode;
             rv.Name = user.Name;
@@ -66,16 +68,39 @@ namespace WalkingTec.Mvvm.Admin.Api
             rv.DataPrivileges = dpris;
             //查找登录用户的页面权限
             var pris = DC.Set<FunctionPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .ToList();
+                            .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                            .ToList();
+
             rv.FunctionPrivileges = pris;
             LoginUserInfo = rv;
 
-            var token = await authService.IssueToken(LoginUserInfo);
-            return Content(JsonConvert.SerializeObject(token), "application/json");
+            if (cookie) // cookie auth
+            {
+                AuthenticationProperties properties = null;
+                if (rememberLogin)
+                {
+                    properties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(30))
+                    };
+                }
+
+                var principal = LoginUserInfo.CreatePrincipal();
+                // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+
+                return Ok();
+            }
+            else // jwt auth
+            {
+                var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
+
+                var token = await authService.IssueTokenAsync(LoginUserInfo);
+                return Content(JsonConvert.SerializeObject(token), "application/json");
+            }
         }
 
-        [AllowAnonymous]
         [HttpPost("[action]")]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public async Task<Token> RefreshToken(string refreshToken)
@@ -93,29 +118,30 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
-                LoginUserInfo forapi = new LoginUserInfo();
+                var forapi = new LoginUserInfo();
                 forapi.Id = LoginUserInfo.Id;
                 forapi.ITCode = LoginUserInfo.ITCode;
                 forapi.Name = LoginUserInfo.Name;
                 forapi.Roles = LoginUserInfo.Roles;
                 forapi.Groups = LoginUserInfo.Groups;
                 forapi.PhotoId = LoginUserInfo.PhotoId;
-                List<SimpleMenu> ms = new List<SimpleMenu>();
+
+                var ms = new List<SimpleMenu>();
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
 
                 var menus = DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                    .Select(x => x.MenuItem).Distinct()
-                    .Where(x => x.MethodName == null)
-                  .OrderBy(x => x.DisplayOrder)
-                  .Select(x => new SimpleMenu
-                  {
-                      Id = x.ID.ToString().ToLower(),
-                      ParentId = x.ParentId.ToString().ToLower(),
-                      Text = x.PageName,
-                      Url = x.Url,
-                      Icon = x.ICon
-                  });
+                                .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .Select(x => x.MenuItem).Distinct()
+                                .Where(x => x.MethodName == null)
+                                .OrderBy(x => x.DisplayOrder)
+                                .Select(x => new SimpleMenu
+                                {
+                                    Id = x.ID.ToString().ToLower(),
+                                    ParentId = x.ParentId.ToString().ToLower(),
+                                    Text = x.PageName,
+                                    Url = x.Url,
+                                    Icon = x.ICon
+                                });
                 var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),

@@ -17,12 +17,10 @@ using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
-using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
-    [AuthorizeCookie]
     public abstract class BaseController : Controller, IBaseController
     {
         public BaseController()

@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core.Auth
         /// </summary>
         /// <param name="loginUserInfo"></param>
         /// <returns></returns>
-        Task<Token> IssueToken(LoginUserInfo loginUserInfo);
+        Task<Token> IssueTokenAsync(LoginUserInfo loginUserInfo);
 
         /// <summary>
         /// refresh token
