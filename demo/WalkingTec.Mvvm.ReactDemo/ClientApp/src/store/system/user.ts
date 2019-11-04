@@ -73,8 +73,8 @@ class Store {
     @action.bound
     async outLogin(Logout = true) {
         this.isLogin = false;
-        this.UserInfo = null;
         const userid = lodash.get(this.UserInfo, 'Id');
+        this.UserInfo = null;
         if (Logout && userid) {
             try {
                 Request.ajax("/api/_account/Logout/" + userid).toPromise();
