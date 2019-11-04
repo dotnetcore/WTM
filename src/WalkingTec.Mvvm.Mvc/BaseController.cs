@@ -245,7 +245,6 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            HttpContext.ChallengeAsync().Wait();
                             return null;
                         }
                     }

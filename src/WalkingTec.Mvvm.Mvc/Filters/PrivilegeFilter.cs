@@ -1,5 +1,6 @@
 using System;
-
+using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -85,27 +86,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
 
-            // if (controller.LoginUserInfo == null)
-            // {
-            //     var publicMenu = controller.GlobaInfo.AllMenus
-            //                    .Where(x => x.Url != null
-            //                        && x.Url.ToLower() == "/" + ad.ControllerName.ToLower() + "/" + ad.ActionName
-            //                        && x.IsPublic == true)
-            //                    .FirstOrDefault();
-            //     if (publicMenu == null)
-            //     {
-            //         if (controller is BaseController c)
-            //         {
-            //             context.Result = new ContentResult { Content = $"<script>window.location.href = '/Login/Login?rd={HttpUtility.UrlEncode(controller.BaseUrl)}'</script>", ContentType = "text/html" };
-            //         }
-            //         else if (controller is ControllerBase c2)
-            //         {
-            //             context.Result = c2.Unauthorized();
-            //         }
-            //         return;
-            //     }
-            // }
-            // else
+            if (controller.LoginUserInfo == null)
+            {
+                context.HttpContext.ChallengeAsync().Wait();
+            }
+            else
             {
                 if (isAllRights == false)
                 {

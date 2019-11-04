@@ -72,6 +72,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                             .ToList();
 
             rv.FunctionPrivileges = pris;
+            rv.PhotoId = user.PhotoId;
             LoginUserInfo = rv;
 
             if (cookie) // cookie auth
@@ -89,8 +90,41 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var principal = LoginUserInfo.CreatePrincipal();
                 // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+                List<SimpleMenu> ms = new List<SimpleMenu>();
+                LoginUserInfo forapi = new LoginUserInfo();
+                forapi.Id = LoginUserInfo.Id;
+                forapi.ITCode = LoginUserInfo.ITCode;
+                forapi.Name = LoginUserInfo.Name;
+                forapi.Roles = LoginUserInfo.Roles;
+                forapi.Groups = LoginUserInfo.Groups;
+                forapi.PhotoId = LoginUserInfo.PhotoId;
+                var menus = DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Select(x => x.MenuItem)
+                    .Where(x => x.MethodName == null)
+                    .Select(x => new SimpleMenu
+                    {
+                        Id = x.ID.ToString().ToLower(),
+                        ParentId = x.ParentId.ToString().ToLower(),
+                        Text = x.PageName,
+                        Url = x.Url,
+                        Icon = x.ICon
+                    });
+                ms.AddRange(menus);
 
-                return Ok();
+                List<string> urls = new List<string>();
+                urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Select(x => x.MenuItem)
+                    .Where(x => x.MethodName != null)
+                    .Select(x => x.Url)
+                    );
+                urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+                forapi.Attributes = new Dictionary<string, object>();
+                forapi.Attributes.Add("Menus", menus);
+                forapi.Attributes.Add("Actions", urls);
+
+                return Ok(forapi);
             }
             else // jwt auth
             {

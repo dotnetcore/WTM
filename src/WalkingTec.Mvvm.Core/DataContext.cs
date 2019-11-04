@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
-        public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
+        //public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
 
 

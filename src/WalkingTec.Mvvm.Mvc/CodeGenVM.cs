@@ -12,6 +12,11 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc
 {
+    public enum ApiAuthMode
+    {
+        Both,Jwt,Cookie
+    }
+
     [ReInit(ReInitModes.ALWAYS)]
     public class CodeGenVM : BaseVM
     {
@@ -25,6 +30,8 @@ namespace WalkingTec.Mvvm.Mvc
 
         [Display(Name = "GenApi")]
         public bool IsApi { get; set; }
+
+        public ApiAuthMode AuthMode { get; set; }
 
         public string ModelName
         {
@@ -59,9 +66,13 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (_mainDir == null)
                 {
-                    int index = EntryDir?.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}") ?? 0;
+                    int? index = EntryDir?.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}");
+                    if(index == null || index < 0)
+                    {
+                        index = EntryDir?.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}Release{Path.DirectorySeparatorChar}")??0;
+                    }
 
-                    _mainDir = EntryDir?.Substring(0, index);
+                    _mainDir = EntryDir?.Substring(0, index.Value);
                 }
                 return _mainDir;
             }
