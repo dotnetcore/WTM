@@ -8,6 +8,7 @@
 import { message, notification, List, Col, Row, Button } from 'antd';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
+import { getLocalesValue } from 'locale';
 import { BindAll } from 'lodash-decorators';
 import { computed, observable, toJS, runInAction } from 'mobx';
 import { map } from 'rxjs/operators';
@@ -78,14 +79,14 @@ export default class PageStore {
   /** 添加 */
   async onInsert(params) {
     const res = await this.Observable.onInsert(params);
-    notification.success({ message: "操作成功" });
+    notification.success({ message: getLocalesValue('tips.success.operation') });
     this.onSearch();
     return res;
   }
   /** 修改 */
   async onUpdate(params) {
     const res = await this.Observable.onUpdate(this.DataSource.details, params);
-    notification.success({ message: "操作成功" });
+    notification.success({ message: getLocalesValue('tips.success.operation') });
     this.onSearch();
     return res;
   }
@@ -103,14 +104,14 @@ export default class PageStore {
         params = [params as any];
       }
       const res = await this.Observable.onDelete(params)
-      notification.success({ message: "操作成功" });
+      notification.success({ message: getLocalesValue('tips.success.operation') });
       this.DataSource.selectedRowKeys = [];
       // 刷新数据
       this.onSearch(this.DataSource.searchParams);
       return res
     } catch (error) {
       this.PageState.tableLoading = false;
-      notification.error({ message: "操作失败" });
+      notification.error({ message: getLocalesValue('tips.error.operation') });
     }
   }
   /**
@@ -120,10 +121,10 @@ export default class PageStore {
   async onImport(UploadFileId) {
     try {
       const res = await this.Observable.onImport(UploadFileId);
-      notification.success({ message: "操作成功" });
+      notification.success({ message: getLocalesValue('tips.success.operation') });
       return res
     } catch (error) {
-      this.onErrorMessage("导入失败", [{ value: lodash.get(error, 'Form["Entity.Import"]'), key: null, FileId: lodash.get(error, 'Form["Entity.ErrorFileId"]') }])
+      this.onErrorMessage(getLocalesValue('tips.error.import'), [{ value: lodash.get(error, 'Form["Entity.Import"]'), key: null, FileId: lodash.get(error, 'Form["Entity.ErrorFileId"]') }])
     }
   }
   /**
@@ -177,7 +178,7 @@ export default class PageStore {
               {item.FileId && <Col span={10}>
                 <Button type="primary" onClick={e => {
                   RequestFiles.download({ url: RequestFiles.onFileDownload(item.FileId, "/"), method: "get" })
-                }}>下载错误文件</Button>
+                }}>{getLocalesValue('tips.error.file')}</Button>
               </Col>}
             </Row>
           </List.Item>

@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import Store from 'store/dataSource';
 import RequestFiles from 'utils/RequestFiles';
+import { FormattedMessage } from 'react-intl';
 /**
  * 导入导出
  */
@@ -67,7 +68,7 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
         const { PageState } = this.Store;
         return (
             <Modal
-                title="导入"
+                title={<FormattedMessage id="action.import" />}
                 centered
                 visible={PageState.visiblePort}
                 destroyOnClose={true}
@@ -78,14 +79,14 @@ export class ImportModal extends React.Component<{ Store: Store }, any> {
             >
                 <div >
                     <div >
-                        导入说明：请下载模版，然后在把信息输入到模版中   <Divider type="vertical" /> <Button icon="download" onClick={this.onTemplate.bind(this)}>下载模板</Button>
+                    <FormattedMessage id="tips.text.importExplain" /><Divider type="vertical" /> <Button icon="download" onClick={this.onTemplate.bind(this)}><FormattedMessage id="action.downloadTemplate" /></Button>
                     </div>
                     <Divider style={{ margin: "5px 0" }} />
                     <Upload.Dragger {...DraggerProps}>
                         <p className="ant-upload-drag-icon">
                             <Icon type="inbox" />
                         </p>
-                        <p className="ant-upload-text">单击或拖动文件到该区域上载</p>
+                        <p className="ant-upload-text"><FormattedMessage id="tips.text.upload" /></p>
                     </Upload.Dragger>
                 </div>
             </Modal>
