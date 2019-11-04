@@ -9,7 +9,7 @@ namespace WalkingTec.Mvvm.Core.Auth
         public string Audience { get; set; }
         public int Expires { get; set; }
         public string SecurityKey { get; set; }
-        public string LoginUrl { get; set; }
+        public string LoginPath { get; set; }
         private SecurityKey _symmetricSecurityKey;
 
         public SecurityKey SymmetricSecurityKey

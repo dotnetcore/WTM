@@ -279,7 +279,10 @@ namespace WalkingTec.Mvvm.Mvc
             services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.Configure<Core.Auth.CookieOptions>("", options =>
+            {
 
+            });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
@@ -292,12 +295,10 @@ namespace WalkingTec.Mvvm.Mvc
                         options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
                         // options.SessionStore = new MemoryTicketStore();
 
-                        // options.LoginPath = CookieAuthenticationDefaults.LoginPath;
-                        options.LoginPath = "/Login/Login";
-                        options.LogoutPath = CookieAuthenticationDefaults.LogoutPath;
-                        // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-                        options.ReturnUrlParameter = "Redirect";
-                        options.AccessDeniedPath = options.LoginPath;
+                        options.LoginPath = cookieOptions.LoginPath;
+                        options.LogoutPath = cookieOptions.LogoutPath;
+                        options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
+                        options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
                     })
                     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {

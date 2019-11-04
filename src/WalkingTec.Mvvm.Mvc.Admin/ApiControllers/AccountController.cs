@@ -198,16 +198,12 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]/{id}")]
-        public ActionResult Logout(Guid id)
+        public async Task Logout(Guid? id)
         {
-            if (LoginUserInfo?.Id == id)
-            {
-                LoginUserInfo = null;
-                HttpContext.Session.Clear();
-            }
-            return Ok();
+            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Response.Redirect("/");
         }
-
     }
 
     public class SimpleMenu
