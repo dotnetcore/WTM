@@ -1,13 +1,6 @@
-/**
- * @author 冷 (https://github.com/LengYXin)
- * @email lengyingxin8966@gmail.com
- * @create date 2019-02-24 17:06:20
- * @modify date 2019-02-24 17:06:20
- * @desc [description]
- */
+
 import { Icon, Input, Switch } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
-import { FormItemProps } from 'antd/lib/form/FormItem';
 import { ToImg } from 'components/dataView';
 import GlobalConfig from 'global.config'; //全局配置
 import lodash from 'lodash';
@@ -136,9 +129,24 @@ export class FormItem extends React.Component<IFormItemProps, any> {
                     span: 24
                 },
             }
+        } else {
+            itemlayout = {
+                labelCol: {
+                    lg: formItemLayout.labelCol.span,
+                    md: formItemLayout.labelCol.span,
+                    sm: 24,
+                    xs: 24,
+                },
+                wrapperCol: {
+                    lg: formItemLayout.wrapperCol.span,
+                    md: formItemLayout.wrapperCol.span,
+                    sm: 24,
+                    xs: 24,
+                },
+            }
         }
         // console.log(models, renderItem)
-        return <Form.Item label={model.label} {...itemlayout}>
+        return <Form.Item label={GlobalConfig.language === "zh-CN" ? model.label : lodash.replace(fieId, 'Entity.', '')} {...itemlayout}>
             {renderItem}
         </Form.Item >
     }
