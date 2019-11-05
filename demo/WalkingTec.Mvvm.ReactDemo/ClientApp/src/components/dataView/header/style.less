@@ -1,4 +1,12 @@
 .data-view-search {
+
+
+    @media (max-width: 768px) {
+        .ant-form-item-label {
+            line-height: 32px;
+        }
+    }
+
     .data-view-search-left {}
 
     .data-view-search-right {
@@ -14,8 +22,8 @@
 
     .data-view-search-divider {
         height: 10px; // width: 120%;
-        background: #e5e9ee;
-        margin: 10px -20px;
+        background: #f0f2f5;
+        margin: 0px -20px 10px;
     }
 
     .ant-row-flex {
@@ -47,6 +55,7 @@
     transition: all .2s;
     display: flex;
     z-index: -1;
+
     &.ant-spin-spinning {
         z-index: 10;
         // display: flex;

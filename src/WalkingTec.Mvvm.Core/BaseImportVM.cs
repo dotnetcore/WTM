@@ -887,7 +887,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if(de.Entries.Count == 0)
                     {
-                        ErrorListVM.EntityList.Add(new ErrorMessage { Index = 0, Message = e.Message });
+                        ErrorListVM.EntityList.Add(new ErrorMessage { Index = 0, Message = e.Message+e.InnerException?.Message });
                     }
                     //循环此错误相关的数据
                     foreach (var ent in de.Entries)

@@ -282,18 +282,18 @@ namespace WalkingTec.Mvvm.Core
 
         #region Custom settings
 
-        private List<KV> _appSettings;
+        private Dictionary<string,string> _appSettings;
 
         /// <summary>
         /// Custom settings
         /// </summary>
-        public List<KV> AppSettings
+        public Dictionary<string, string> AppSettings
         {
             get
             {
                 if (_appSettings == null)
                 {
-                    _appSettings = new List<KV>();
+                    _appSettings = new Dictionary<string, string>();
                 }
                 return _appSettings;
             }

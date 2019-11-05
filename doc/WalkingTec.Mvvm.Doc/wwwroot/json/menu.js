@@ -24,7 +24,8 @@
                         { "name": "/CS", "title": "数据库分库", "jump": "/Global/CS" },
                         { "name": "/DP", "title": "数据权限", "jump": "/Global/DP" },
                         { "name": "/Route", "title": "路由", "jump": "/Global/Route" },
-                        { "name": "/Route", "title": "多语言", "jump": "/Global/MultiLanguages" }
+                        { "name": "/Route", "title": "多语言", "jump": "/Global/MultiLanguages" },
+                        { "name": "/Route", "title": "Jwt支持", "jump": "/Global/jwt" }
                    ]
                 },
                 {

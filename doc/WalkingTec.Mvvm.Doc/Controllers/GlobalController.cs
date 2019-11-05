@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
-    [Public]
+    [AllowAnonymous]
     [ActionDescription("框架配置")]
     public class GlobalController : BaseController
     {
@@ -49,6 +50,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
 
         [ActionDescription("多语言")]
         public IActionResult MultiLanguages()
+        {
+            return PartialView();
+        }
+
+        [ActionDescription("Jwt")]
+        public IActionResult Jwt()
         {
             return PartialView();
         }

@@ -32,6 +32,17 @@ namespace WalkingTec.Mvvm.ReactDemo
                     x.AddSwaggerGen(c =>
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                        {
+                            Description = "JWT Bearer",
+                            Name = "Authorization",
+                            In = "header",
+                            Type = "apiKey"
+                        });
+                        c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                            {
+                                { "Bearer", new string[] { } }
+                            });
                     });
                     x.AddSpaStaticFiles(configuration =>
                     {

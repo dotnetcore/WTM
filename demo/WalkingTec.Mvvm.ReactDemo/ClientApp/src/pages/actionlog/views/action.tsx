@@ -1,12 +1,13 @@
 ﻿import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
-import lodash from 'lodash';
+import { getLocalesTemplate } from 'locale';
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InfoForm, InsertForm, UpdateForm } from './forms';
+import { InfoForm } from './forms';
 /**
  * 动作事件
  */
@@ -42,7 +43,7 @@ export const ActionEvents = {
     onDeleteList() {
         const length = Store.DataSource.selectedRowKeys.length
         Modal.confirm({
-            title: `确定删除 ${length} 条数据?`,
+            title: getLocalesTemplate('action.deleteConfirm', { text: length }),
             onOk: async () => {
                 Store.onDelete(Store.DataSource.selectedRowKeys)
             },
@@ -63,19 +64,20 @@ class PageAction extends React.Component<any, any> {
         return (
             <Row className="data-view-page-action">
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
-                    <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}> 删除  </Button>
+                    <Divider type="vertical" />
+                    <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}><FormattedMessage id="action.delete" /></Button>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "export")}>
                     <Divider type="vertical" />
                     <Dropdown overlay={<Menu>
                         <Menu.Item>
-                            <a onClick={ActionEvents.onExport}>导出全部</a>
+                            <a onClick={ActionEvents.onExport}><FormattedMessage id="action.exportAll" /></a>
                         </Menu.Item>
                         <Menu.Item disabled={disabled}>
-                            <a onClick={ActionEvents.onExportIds}>导出勾选</a>
+                            <a onClick={ActionEvents.onExportIds}><FormattedMessage id="action.exportSelect" /></a>
                         </Menu.Item>
                     </Menu>}>
-                        <Button icon="download" >导出</Button>
+                        <Button icon="download" ><FormattedMessage id="action.export" /></Button>
                     </Dropdown>
                 </Visible>
 
@@ -99,7 +101,7 @@ class RowAction extends React.Component<{
             <Row className="data-view-row-action">
                 <Visible visible={onAuthorizeActions(Store, "details")}>
                     <DialogForm
-                        title="详情"
+                        title={<FormattedMessage id="action.info" />}
                         showSubmit={false}
                         type="a"
                     >
@@ -108,8 +110,8 @@ class RowAction extends React.Component<{
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
-                    <Popconfirm title="确定删除?" onConfirm={() => { ActionEvents.onDelete(data) }} >
-                        <a >删除</a>
+                    <Popconfirm title={<FormattedMessage id="action.deleteConfirm" values={{ text: '' }} />} onConfirm={() => { ActionEvents.onDelete(data) }} >
+                        <a ><FormattedMessage id="action.delete" /></a>
                     </Popconfirm>
                 </Visible>
             </Row>

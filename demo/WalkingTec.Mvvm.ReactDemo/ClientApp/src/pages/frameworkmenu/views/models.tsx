@@ -179,12 +179,13 @@ class IConId extends React.Component<any, any> {
     }
     onChangeType(event) {
         this.setState({ iconType: event, iconItems: this.onGetItems(event) });
+        this.onChange(undefined)
     }
     onSearch() {
     }
     componentDidMount() {
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (this.props.value) {
             // 某人 懒得加字段。就自己用一个字段截取吧
             const fontClass = lodash.trim(this.props.value).split(' ');

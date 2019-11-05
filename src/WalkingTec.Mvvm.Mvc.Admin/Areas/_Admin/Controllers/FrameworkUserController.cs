@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
-
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
@@ -43,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Create")]
-        public ActionResult Create(FrameworkUserVM vm)
+        public async Task<ActionResult> Create(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -77,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(FrameworkUserVM vm)
+        public async Task<ActionResult> Edit(FrameworkUserVM vm)
         {
             if (ModelState.Any(x => x.Key != "Entity.Password" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))
             {
@@ -86,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             else
             {
                 ModelState.Clear();
-                vm.DoEdit();
+                await vm.DoEditAsync();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -145,10 +144,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Delete")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection nouse)
+        public async Task<ActionResult> Delete(Guid id, IFormCollection nouse)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
-            vm.DoDelete();
+            await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -180,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("BatchDelete")]
-        public ActionResult DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
+        public async Task<ActionResult> DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -188,6 +187,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
+                List<Guid?> tempids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    tempids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer?["OprationSuccess"]);
             }
         }

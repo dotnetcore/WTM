@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
 {
@@ -22,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             ListVM.Searcher.RoleID = Entity.ID;
         }
 
-        public bool DoChange()
+        public async Task<bool> DoChangeAsync()
         {
             var all = FC.Where(x => x.Key.StartsWith("menu_")).ToList();
             List<Guid> AllowedMenuIds = all.Where(x => x.Value.ToString() == "1").Select(x=> Guid.Parse(x.Key.Replace("menu_",""))).ToList();
@@ -44,7 +45,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == Entity.ID).Select(x => x.UserId.ToString()).ToArray();
+            await LoginUserInfo.RemoveUserCache(userids);
             return true;
         }
 
