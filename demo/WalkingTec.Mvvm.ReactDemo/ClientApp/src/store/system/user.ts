@@ -57,7 +57,7 @@ class Store {
         try {
             const res = await Request.ajax({
                 method: "post",
-                url: "/api/_Account/Login",
+                url: "/api/_login/Login",
                 body: params,
                 headers: { 'Content-Type': null }
             }).toPromise();
@@ -77,7 +77,7 @@ class Store {
         this.UserInfo = null;
         if (Logout && userid) {
             try {
-                Request.ajax("/api/_account/Logout/" + userid).toPromise();
+                Request.ajax("/api/_login/Logout/" + userid).toPromise();
             } catch (error) {
             }
         }
