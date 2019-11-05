@@ -38,10 +38,10 @@ module.exports = (...params) => {
       localIdentName: "app-[local]-[hash:base64:5]"
     }),
     // 查看 构建文件 大小 分布地图
-    // addBundleVisualizer({
-    //   "analyzerMode": "static",
-    //   "reportFilename": "report.html"
-    // }),
+    addBundleVisualizer({
+      "analyzerMode": "static",
+      "reportFilename": "report.html"
+    },true),
     removeModuleScopePlugin()
   )(...params);
   // 删除 typescript-eslint
@@ -61,7 +61,7 @@ module.exports = (...params) => {
     // },
     {
       name: 'grid',
-      test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-enterprise|ag-grid-react)[\\/]/,
+      test: /[\\/]node_modules[\\/](ag-grid-.*)[\\/]/,
       chunks: 'all',
     },
     {

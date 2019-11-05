@@ -3,14 +3,14 @@ import { Settings } from 'app/layout/antdPro/SettingDrawer';
 import ImgLogo from 'assets/img/logo.png';
 import ImgUser from 'assets/img/user.png';
 import lodash from 'lodash';
-import { configure, observable } from 'mobx';
+import { configure, observable, toJS } from 'mobx';
 import { create, persist } from 'mobx-persist';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "./global.less";
 const language = lodash.get(window, 'navigator.language', 'zh-CN');
 // 日期中文
-// moment.locale('zh-cn');
+moment.locale('zh-cn');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 notification.config({
@@ -29,10 +29,8 @@ class ConfigStore {
         hydrate('WTM_GlobalConfig', this)
             // post hydration
             .then(() => {
-                console.log('WTM_GlobalConfig', { ...this })
-                if (this.language === "zh-CN") {
-                    moment.locale('zh-cn');
-                }
+                console.log('WTM_GlobalConfig', toJS(this));
+                window['g_locale'] = this.language;
             })
     }
     buildTime = process.env.REACT_APP_TIME;
@@ -52,8 +50,9 @@ class ConfigStore {
      * 语言
      * @memberof ConfigStore
      */
+    @persist
     @observable
-    language = language
+    language: "zh-CN" | "en-US" = language;
     /**
      * ant Pro 布局 设置  https://github.com/ant-design/ant-design-pro-layout/blob/master/README.zh-CN.md#MenuDataItem
      * @type {Settings}
@@ -128,7 +127,7 @@ class ConfigStore {
     /** 列表 分页 可选 行数 以下是默认值 */
     // pageSizeOptions: ['10', '20', '30', '40', '50', '100', '200'],
     /** 列表 行  */
-    @persist
+    // @persist
     @observable
     Limit = 50;
     /** 
@@ -140,14 +139,14 @@ class ConfigStore {
     /** 
     * 详情信息 展示 宽度
     */
-    @persist
+    // @persist
     @observable
-    infoTypeWidth = '800px';
+    infoTypeWidth = '900px';
     /**
      * 表单 item lable 占比
      * doc:https://ant.design/components/form-cn/
      */
-    @persist("object")
+    // @persist("object")
     @observable
     formItemLayout = {
         labelCol: {
@@ -160,25 +159,25 @@ class ConfigStore {
     /**
      * 详情信息 列 数 24 的除数
      */
-    @persist
+    // @persist
     @observable
     infoColumnCount = 2;
     /**
     * 搜索 列 数 24 的除数
     */
-    @persist
+    // @persist
     @observable
     searchColumnCount = 3;
     /**
      * 锁定表格滚动
      */
-    @persist
+    // @persist
     @observable
     lockingTableRoll = true;
     /**
      * 静态页面 标记
      */
-    @persist
+    // @persist
     @observable
     staticPage = "@StaticPage";
 }
