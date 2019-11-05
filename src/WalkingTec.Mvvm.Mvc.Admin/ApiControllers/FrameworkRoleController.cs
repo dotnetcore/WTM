@@ -1,43 +1,73 @@
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
-    [ActionDescription("UserManagement")]
+    [AuthorizeJwtWithCookie]
+    [ActionDescription("RoleManagement")]
     [ApiController]
-    [Route("api/_FrameworkUserBase")]
-	public class _FrameworkUserController : BaseApiController
+    [Route("api/_[controller]")]
+    public class FrameworkRoleController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
-		public string Search(FrameworkUserSearcher searcher)
+        [HttpPost("[action]")]
+        public string Search(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
         [ActionDescription("Get")]
         [HttpGet("{id}")]
-        public FrameworkUserVM Get(Guid id)
+        public FrameworkRoleVM Get(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = CreateVM<FrameworkRoleVM>(id);
             return vm;
         }
 
+        [ActionDescription("GetPageActions")]
+        [HttpGet("[action]/{id}")]
+        public FrameworkRoleMDVM2 GetPageActions(Guid id)
+        {
+            var vm = CreateVM<FrameworkRoleMDVM2>(id);
+            return vm;
+        }
+
+        [ActionDescription("PageFunction")]
+        [HttpPut("[action]")]
+        public async Task<IActionResult> EditPrivilege(FrameworkRoleMDVM2 vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else
+            {
+                await vm.DoChangeAsync();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState.GetErrorJson());
+                }
+                else
+                {
+                    return Ok(vm.Entity);
+                }
+            }
+        }
+
         [ActionDescription("Create")]
-        [HttpPost("Add")]
-        public IActionResult Add(FrameworkUserVM vm)
+        [HttpPost("[action]")]
+        public IActionResult Add(FrameworkRoleVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -59,10 +89,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkUserVM vm)
+        [HttpPut("[action]")]
+        public IActionResult Edit(FrameworkRoleVM vm)
         {
-            ModelState.Remove("Entity.Password");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
@@ -81,14 +110,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
-
-
         [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            var vm = CreateVM<FrameworkUserBatchVM>();
+            var vm = CreateVM<FrameworkRoleBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -103,48 +129,51 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                List<Guid?> roleids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    roleids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
-        public IActionResult ExportExcel(FrameworkUserSearcher searcher)
+        [HttpPost("[action]")]
+        public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = CreateVM<FrameworkRoleListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUse_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [ActionDescription("DownloadTemplate")]
-        [HttpGet("GetExcelTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkUserImportVM>();
+            var vm = CreateVM<FrameworkRoleImportVM>();
             var qs = new Dictionary<string, string>();
-            if (Request != null)
+            foreach (var item in Request.Query.Keys)
             {
-                foreach (var item in Request.Query.Keys)
-                {
-                    qs.Add(item, Request.Query[item]);
-                }
+                qs.Add(item, Request.Query[item]);
             }
             vm.SetParms(qs);
             var data = vm.GenerateTemplate(out string fileName);
@@ -152,8 +181,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Import")]
-        [HttpPost("Import")]
-        public ActionResult Import(FrameworkUserImportVM vm)
+        [HttpPost("[action]")]
+        public ActionResult Import(FrameworkRoleImportVM vm)
         {
 
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -166,20 +195,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
-        [HttpGet("GetFrameworkRoles")]
-        [ActionDescription("GetRoles")]
-        public ActionResult GetFrameworkRoles()
-        {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
-        }
-
-        [HttpGet("GetFrameworkGroups")]
-        [ActionDescription("GetGroups")]
-        public ActionResult GetFrameworkGroups()
-        {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
-        }
 
     }
 }

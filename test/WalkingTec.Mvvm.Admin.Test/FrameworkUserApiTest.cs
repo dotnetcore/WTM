@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using WalkingTec.Mvvm.Admin.Api;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
@@ -13,13 +14,13 @@ namespace WalkingTec.Mvvm.Admin.Test
     [TestClass]
     public class FrameworkUserApiTest
     {
-        private _FrameworkUserController _controller;
+        private FrameworkUserController _controller;
         private string _seed;
 
         public FrameworkUserApiTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateApi<_FrameworkUserController>(_seed, "user");
+            _controller = MockController.CreateApi<FrameworkUserController>(_seed, "user");
         }
 
         [TestMethod]
@@ -35,13 +36,13 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
             FrameworkUserBase v = new FrameworkUserBase();
-            
+
             v.ITCode = "itcode";
             v.Name = "name";
             v.Password = "password";
             vm.Entity = v;
             var rv = _controller.Add(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -79,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
             var rv = _controller.Edit(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -129,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
 
             var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -137,7 +138,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
 
             rv = _controller.BatchDelete(new string[] {});
-            Assert.IsInstanceOfType(rv, typeof(OkResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkResult));
         }
 
         [TestMethod]

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
-    [Public]
+    [AllowAnonymous]
     public class HomeController : BaseController
     {
         public IActionResult Index()
@@ -14,26 +15,22 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return View();
         }
 
-        [Public]
         public IActionResult PIndex()
         {
             return View();
         }
 
-        [AllRights]
         public IActionResult FrontPage()
         {
             return Redirect("/QuickStart/Intro");
         }
 
-        [Public]
         [ActionDescription("捐赠名单")]
         public IActionResult DonateList()
         {
             return PartialView();
         }
 
-        [Public]
         [ActionDescription("Layout")]
         public IActionResult Layout()
         {

@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
+    [AuthorizeJwt]
+    [AllRights]
     [ActionDescription("学校管理Api")]
     [ApiController]
     [Route("api/School")]
@@ -26,7 +30,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("获取")]
         [HttpGet("{id}")]
-        public SchoolVM Get(Guid id)
+        public SchoolVM Get(int id)
         {
             var vm = CreateVM<SchoolVM>(id);
             return vm;

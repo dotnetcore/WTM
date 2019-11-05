@@ -57,7 +57,7 @@ class Store {
         try {
             const res = await Request.ajax({
                 method: "post",
-                url: "/api/_login/login",
+                url: "/api/_Account/Login",
                 body: params,
                 headers: { 'Content-Type': null }
             }).toPromise();
@@ -73,11 +73,11 @@ class Store {
     @action.bound
     async outLogin(Logout = true) {
         this.isLogin = false;
-        this.UserInfo = null;
         const userid = lodash.get(this.UserInfo, 'Id');
+        this.UserInfo = null;
         if (Logout && userid) {
             try {
-                Request.ajax("/api/_login/Logout/" + userid).toPromise();
+                Request.ajax("/api/_account/Logout/" + userid).toPromise();
             } catch (error) {
             }
         }

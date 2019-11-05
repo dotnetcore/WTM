@@ -82,11 +82,12 @@ export class Request {
                         // 无 响应 数据
                         if (lodash.isNil(ajax.response)) {
                             console.warn(`未解析到 response ${ajax.request.url}`, ajax)
-                            // GlobalConfig.development && notification.warn({
-                            //     message: "响应体为 NULL ",
-                            //     duration: 5,
-                            //     description: `url:${lodash.get(ajax, "request.url")}`
-                            // })
+                            GlobalConfig.development && notification.warn({
+                                message: "未解析到 response ",
+                                duration: 5,
+                                description: `url:${lodash.get(ajax, "request.url")}`
+                            })
+                            sub.error({})
                             return false
                         }
                         return true

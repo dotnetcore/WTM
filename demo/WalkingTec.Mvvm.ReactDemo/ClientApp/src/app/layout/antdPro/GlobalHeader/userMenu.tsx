@@ -54,7 +54,7 @@ export default class UserMenu extends React.Component<any, any> {
 @DialogFormDes({
   onFormSubmit(values) {
     return Request.ajax({
-      url: "/api/_login/ChangePassword",
+      url: "/api/_account/ChangePassword",
       method: "post",
       body: values
     }).toPromise()

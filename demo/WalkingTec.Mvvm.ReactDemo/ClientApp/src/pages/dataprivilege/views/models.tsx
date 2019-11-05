@@ -57,8 +57,8 @@ export default {
                 rules: [{ "required": true, "message": "全部权限不能为空" }],
                 formItem: <WtmSelect
                     dataSource={[
-                        { Text: "是", Value: true },
-                        { Text: "否", Value: false },
+                        { Text: "是", Value: 'true' },
+                        { Text: "否", Value: 'false' },
                     ]} />
             },
             /** 用户Id */
