@@ -12,6 +12,7 @@ import { debounceTime } from 'rxjs/operators';
 import Store from 'store/index';
 import './index.less';
 import { create, persist } from 'mobx-persist';
+import { FormattedMessage } from 'react-intl';
 const hydrate = create({
     storage: window.localStorage,   // 存储的对象
     jsonify: true, // 格式化 json
@@ -90,9 +91,9 @@ class TabsPages extends React.Component<any, any> {
                     })}
                 </Tabs>
                 <Menu id='TabPane' animation="pop" style={{ minWidth: 100 }}>
-                    <Item disabled={this.getDisabled} onClick={this.onClose.bind(this, 'Current')}><span><Icon type="close" /></span> 关闭当前</Item>
-                    <Item onClick={this.onClose.bind(this, 'Other')}><span><Icon type="close" /></span> 关闭其他</Item>
-                    <Item onClick={this.onClose.bind(this, 'All')}><span><Icon type="close" /></span> 关闭全部</Item>
+                    <Item disabled={this.getDisabled} onClick={this.onClose.bind(this, 'Current')}><span><Icon type="close" /></span> <FormattedMessage id='action.pages.closeTheCurrent' /></Item>
+                    <Item onClick={this.onClose.bind(this, 'Other')}><span><Icon type="close" /></span> <FormattedMessage id='action.pages.closeOther' /></Item>
+                    <Item onClick={this.onClose.bind(this, 'All')}><span><Icon type="close" /></span> <FormattedMessage id='action.pages.closeAll' /></Item>
                 </Menu>
             </>
         );
@@ -116,16 +117,19 @@ class TabsPagesStore {
     componentWillUnmount() {
         this.resize.unsubscribe();
     }
+    onCreateHoem() {
+        return {
+            title: 'pages.home',
+            pathname: "/",
+            closable: false,
+            icon: "home",
+            router: this.getRoutes("/")
+        }
+    }
     // @persist
     @observable height = this.getHeight();
     @persist("list")
-    @observable tabPane = [{
-        title: '首页',
-        pathname: "/",
-        closable: false,
-        icon: "home",
-        router: this.getRoutes("/")
-    }];
+    @observable tabPane = [this.onCreateHoem()];
     @action
     pushTabPane(pathname) {
         const router = this.getRoutes(pathname);
@@ -158,13 +162,7 @@ class TabsPagesStore {
         let path = "/";
         switch (type) {
             case 'Other':
-                this.tabPane = [{
-                    title: '首页',
-                    pathname: "/",
-                    closable: false,
-                    icon: "home",
-                    router: this.getRoutes("/")
-                }];
+                this.tabPane = [this.onCreateHoem()];
                 this.pushTabPane(event.props.pathname);
                 path = event.props.pathname;
                 break;
@@ -172,13 +170,7 @@ class TabsPagesStore {
                 path = this.onClosable(event.props.pathname);
                 break;
             case 'All':
-                this.tabPane = [{
-                    title: '首页',
-                    pathname: "/",
-                    closable: false,
-                    icon: "home",
-                    router: this.getRoutes("/")
-                }];
+                this.tabPane = [this.onCreateHoem()];
                 break;
         }
         return path;
@@ -203,5 +195,5 @@ class TabsPagesStore {
 function renderIconTitle(menu) {
     let icon = null;
     icon = <Icon type={menu.Icon || 'appstore'} />
-    return <>{icon}<span>{menu.Text}</span> </>
+    return <>{icon}<span><FormattedMessage id={menu.Text} defaultMessage={menu.Text} /></span> </>
 }
