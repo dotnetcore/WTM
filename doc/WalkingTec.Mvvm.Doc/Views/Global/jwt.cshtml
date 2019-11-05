@@ -4,7 +4,7 @@
   }
 </style>
 <wt:quote>
-  <p>从2.4.0开始，框架支持Cookie和Jwt两种模式，继承BaseController和BaseApiController的控制器将默认同时支持Cookie和Jwt两种模式
+  <p>从2.4.0开始，框架支持Cookie和Jwt两种模式
 </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="指定认证方式">
@@ -22,7 +22,7 @@
   <tbody>
     <tr>
       <td>[AuthorizeJwtWithCookie]</td>
-      <td>同时支持cookie和jwt，如没有指定认证方式，默认使用这种</td>
+      <td>同时支持cookie和jwt</td>
     </tr>
     <tr>
       <td>[AuthorizeJwt]</td>
@@ -30,7 +30,7 @@
     </tr>
     <tr>
       <td>[AuthorizeCookie]</td>
-      <td>只支持Cookie</td>
+      <td>只支持Cookie，如没有指定认证方式，默认使用这种</td>
     </tr>
   </tbody>
 </table>
