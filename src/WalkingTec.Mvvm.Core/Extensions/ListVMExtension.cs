@@ -1,7 +1,5 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -136,7 +134,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         foreColor = RowColor;
                     }
-                    (string bgcolor, string forecolor) colors = (null,null);
+                    (string bgcolor, string forecolor) colors = (null, null);
                     if (backColor != string.Empty)
                     {
                         colors.bgcolor = backColor;
@@ -145,7 +143,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         colors.forecolor = foreColor;
                     }
-                    if( string.IsNullOrEmpty(colors.bgcolor) == false || string.IsNullOrEmpty(colors.forecolor) == false)
+                    if (string.IsNullOrEmpty(colors.bgcolor) == false || string.IsNullOrEmpty(colors.forecolor) == false)
                     {
                         colorcolumns.Add(col.Field, colors);
                     }
@@ -285,7 +283,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             sb.Append($"\"TempIsSelected\":\"{ (isSelected == true ? "1" : "0") }\"");
             foreach (var cc in colorcolumns)
             {
-                if(string.IsNullOrEmpty(cc.Value.Item1) == false)
+                if (string.IsNullOrEmpty(cc.Value.Item1) == false)
                 {
                     string bg = cc.Value.Item1;
                     if (bg.StartsWith("#") == false)

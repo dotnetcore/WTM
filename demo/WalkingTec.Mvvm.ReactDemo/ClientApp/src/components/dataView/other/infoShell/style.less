@@ -1,10 +1,38 @@
+@media (max-width: 768px) {
+    .data-view-form-item {
+        .ant-form-item-label {
+            line-height: 24px;
+        }
+
+        .ant-form-item {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.data-view-form-item {
+    .ant-form-item {
+        min-height: 40px;
+    }
+
+    .ant-form-item-label>label {
+        // padding-left: 10px;
+
+        &.ant-form-item-required {
+            padding-left: 0;
+        }
+    }
+}
+
 .data-view-modal {
     // display: flex;
     align-items: center;
     justify-items: center;
+
     .ant-modal-header {
         position: relative;
         padding: 0;
+
         .ant-modal-title {
             .modal-dnd-title {
                 padding: 16px 24px;
@@ -12,27 +40,33 @@
             }
         }
     }
+
     .ant-modal {
         // top: 0;
         top: 50px;
         max-height: 100vh;
         overflow: hidden;
     }
+
     .ant-modal-content {
         max-height: calc(100vh - 100px);
         display: flex;
         flex-direction: column;
+
         .ant-modal-body {
             overflow: auto; // padding-bottom: 65px;
         }
     }
+
     .ant-modal-footer {
         // display: none;
         opacity: 0;
     }
+
     .data-view-modal-footer {
         height: 40px;
     }
+
     .data-view-form-btns {
         position: absolute;
         bottom: 0;
@@ -47,6 +81,10 @@
 }
 
 .data-view-drawer {
+    .ant-drawer-content-wrapper {
+        max-width: 100%;
+    }
+
     .ant-drawer-body {
         position: absolute;
         left: 0;
@@ -54,6 +92,7 @@
         top: 55px;
         bottom: 0;
         padding: 0;
+
         >.app-shell-body {
             padding: 20px;
             padding-bottom: 65px;
@@ -61,6 +100,7 @@
             overflow: auto;
         }
     }
+
     .data-view-form-item {
         // position: absolute;
         // left: 0;
@@ -69,7 +109,10 @@
         // bottom: 65px;
         overflow: auto; // padding: 24px;
         margin-bottom: 65px;
+
+        .ant-form-item-label {}
     }
+
     .data-view-form-btns {
         position: absolute;
         bottom: 0;
@@ -83,14 +126,17 @@
     }
 }
 
+
 .app-shell-body {
-   
+
     .bf-container.disabled {
-        opacity: 1; 
-        filter:grayscale(0%);
+        opacity: 1;
+        filter: grayscale(0%);
     }
 }
+
 .ant-form-item-children {
+
     .ant-select,
     .ant-calendar-picker,
     .ant-input-number,

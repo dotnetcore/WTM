@@ -1,23 +1,46 @@
-.app-layout-content-tabs .app-external-iframe{
+@import '~antd/es/style/themes/default.less';
+
+.app-layout-content-tabs .app-external-iframe {
     padding: 0;
 }
+
 .app-external-iframe {
     position: absolute;
     left: 0;
     bottom: 0;
     top: 0;
-    height: 100%;
+    // height: 100%;
     right: 0;
-    width: 100%;
+    // width: 100%;
     border: none;
-    padding: 50px 0px 0px;
+    padding: 0px !important;
     overflow: hidden;
+    background: @layout-body-background;
+
+    &>iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
     &.app-external-visible {
         position: fixed;
         bottom: 0;
         top: 0;
-        height:100vh;
+        height: 100vh;
         z-index: 999;
+    }
+}
+
+.ant-pro-basicLayout-content>.ant-pro-grid-content {
+    .app-external-iframe {
+        padding: 0 !important;
+        top: 52px;
+        right: -12px;
+        left: -12px;
+        bottom: -12px;
     }
 }
 
@@ -30,7 +53,6 @@
     right: 0;
     width: 100%;
     border: none;
-    padding: 80px 30px 10px;
     overflow: hidden;
     border: none;
     background: #fff;

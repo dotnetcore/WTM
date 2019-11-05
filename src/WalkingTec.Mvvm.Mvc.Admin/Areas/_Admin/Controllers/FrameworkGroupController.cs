@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
-
     [Area("_Admin")]
     [ActionDescription("GroupManagement")]
     public class FrameworkGroupController : BaseController
@@ -86,12 +89,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Delete")]
-        public ActionResult Delete(Guid id, IFormCollection noUse)
+        public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
             var vm = CreateVM<FrameworkGroupVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == id).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -112,14 +117,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("BatchDelete")]
-        public ActionResult DoBatchDelete(FrameworkGroupBatchVM vm, IFormCollection noUse)
+        public async Task<ActionResult> DoBatchDelete(FrameworkGroupBatchVM vm, IFormCollection noUse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
+
                 return PartialView("BatchDelete", vm);
             }
             else
             {
+                List<Guid?> groupids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    groupids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer["OprationSuccess"]);
             }
         }

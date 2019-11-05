@@ -53,7 +53,7 @@ export default class LoginDemo extends React.Component<any, any>{
     return (
       <LayoutLogin>
         <Form onSubmit={this.onSubmit.bind(this)} >
-          <h1>{GlobalConfig.default.title}</h1>
+          <h1>{GlobalConfig.settings.title}</h1>
           <Form.Item
             validateStatus={userNameError ? 'error' : ''}
             help={userNameError || ''}
@@ -62,7 +62,7 @@ export default class LoginDemo extends React.Component<any, any>{
               rules: [{ required: true, message: '请输入 用户名!' }],
               initialValue: globalConfig.development ? "admin" : ''
             })(
-              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" size="large" />
             )}
           </Form.Item>
           <Form.Item
@@ -73,7 +73,7 @@ export default class LoginDemo extends React.Component<any, any>{
               rules: [{ required: true, message: '请输入 密码!' }],
               initialValue: globalConfig.development ? "000000" : ""
             })(
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" size="large"/>
             )}
           </Form.Item>
           <div
@@ -97,7 +97,7 @@ export default class LoginDemo extends React.Component<any, any>{
                 icon="" >
                 <Button
                   disabled={disabled || this.state.notCode}
-                  type="primary" htmlType="submit" block
+                  type="primary" htmlType="submit" block size="large"
                   loading={this.state.loading}>
                   <span > Log in</span>
                 </Button>

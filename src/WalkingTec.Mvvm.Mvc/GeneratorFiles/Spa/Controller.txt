@@ -5,12 +5,14 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using $vmnamespace$;
 using $modelnamespace$;
 
 namespace $namespace$
 {
     $area$
+    $jwt$
     [ActionDescription("$des$")]
     [ApiController]
     [Route("api/$modelname$")]

@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            this.Id = Guid.NewGuid().ToString().ToLower().Replace("-","");
+            this.Id = Guid.NewGuid().ToString("N").ToLower();
             output.TagName = "div";
             if (TabStyle == TabStyleEnum.Default)
             {
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief");                
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief");
             }
             if(AllowClose == true)
             {
