@@ -54,20 +54,6 @@ namespace $ns$.Test
 
             //测试当前登陆用户是否正确设定
             Assert.AreEqual(_controller.LoginUserInfo.ITCode, "itcode");
-            //测试是否正确返回
-            Assert.IsInstanceOfType(rv2, typeof(RedirectResult));
-        }
-
-        [TestMethod]
-        public void LogoutTest()
-        {
-            //调用Logout
-            var rv = _controller.Logout();
-            //测试当前用户是否被清除
-            Assert.IsNull(_controller.LoginUserInfo);
-            //测试是否正确返回
-            Assert.IsInstanceOfType(rv, typeof(RedirectResult));
-
         }
 
         [TestMethod]

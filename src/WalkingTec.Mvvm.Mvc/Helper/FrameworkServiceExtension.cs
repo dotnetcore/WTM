@@ -273,9 +273,18 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton<ITokenService, TokenService>();
 
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
+            if(jwtOptions == null)
+            {
+                jwtOptions = new JwtOptions();
+            }
             services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
 
             var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            if (cookieOptions == null)
+            {
+                cookieOptions = new Core.Auth.CookieOptions();
+            }
+
             services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public enum ApiAuthMode
     {
-        [Display(Name = "Both Jwt & Cookie")]
+        [Display(Name = "Both Jwt and Cookie")]
         Both,
         [Display(Name = "Jwt")]
         Jwt,

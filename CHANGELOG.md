@@ -1,5 +1,21 @@
 # 更新日志
 
+## v2.4.x
+
+### v2.4.0 (2019-11-5)
+本次更新为大版本更新，废弃了之前Session的模式，使用Jwt方式进行登陆认证。
+框架目前支持Cookie和Jwt两种模式，继承BaseController和BaseApiController的控制器将默认同时支持Cookie和Jwt两种模式。
+用户可以通过[AuthorizeCookie],[AuthorizeJwt],[AuthorizeJwtWithCookie]三种标签来指定Controller的验证方式。
+已有代码不需要修改将自动同时支持cookie和jwt，用户使用过程中并不会感觉到变化。
+详情请参考https://wtmdoc.walkingtec.cn/#/Global/jwt
+系统增加了persistedgrants表来存储jwt持久化信息，另外菜单的默认数据也发生了改变，建议已有系统重新生成数据库或手动同步数据库
+
+* **新增：**  Jwt支持
+* **新增：**  Swagger jwt支持
+* **修改：**  修复多语言验证信息bug
+* **修改：**  菜单管理支持不同Area下同名Controller的配置
+
+
 ## v2.3.x
 
 ### v2.3.9 (2019-10-19)

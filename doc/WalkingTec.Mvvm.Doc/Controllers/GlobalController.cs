@@ -53,5 +53,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [ActionDescription("Jwt")]
+        public IActionResult Jwt()
+        {
+            return PartialView();
+        }
     }
 }
