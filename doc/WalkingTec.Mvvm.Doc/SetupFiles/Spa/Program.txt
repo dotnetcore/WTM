@@ -8,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using System.Collections.Generic;
 
 namespace $ns$
 {
