@@ -11,6 +11,11 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Mvc\LoginController3.txt" />
+    <None Remove="SetupFiles\test\MockController3.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
@@ -30,6 +35,7 @@
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\LoginController3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\ViewStart.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
@@ -47,6 +53,7 @@
     <EmbeddedResource Include="SetupFiles\TestProj3.txt" />
     <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
     <EmbeddedResource Include="SetupFiles\test\LoginControllerTest.txt" />
+    <EmbeddedResource Include="SetupFiles\test\MockController3.txt" />
     <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
     <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
