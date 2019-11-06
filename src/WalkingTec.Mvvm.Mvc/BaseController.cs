@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -203,7 +202,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             get
             {
-                if (User?.Identity?.IsAuthenticated == true  && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                if (User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     Guid userId = Guid.Parse(userIdStr);
@@ -253,16 +252,8 @@ namespace WalkingTec.Mvvm.Mvc
             }
             set
             {
-                if (value == null)
-                {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                    _loginUserInfo = value;
-                }
-                else
-                {
-                    _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                }
+                Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                _loginUserInfo = value;
             }
         }
 
