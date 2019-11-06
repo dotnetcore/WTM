@@ -69,7 +69,7 @@ class Store {
                 key: data.Id,
                 path: data.Url,
                 name: data.Text,
-                icon: "pic-right",
+                icon: data.Icon || "pic-right",
                 // children: data.Children
             }
         });

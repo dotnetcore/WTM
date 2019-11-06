@@ -382,20 +382,20 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
         onClose={this.togglerContent}
         placement="right"
         getContainer={getContainer}
-        handler={
-          <div
-            className="ant-pro-setting-drawer-handle"
-            onClick={this.togglerContent}
-          >
-            <Icon
-              type={collapse ? 'close' : 'setting'}
-              style={{
-                color: '#fff',
-                fontSize: 20,
-              }}
-            />
-          </div>
-        }
+        // handler={
+        //   <div
+        //     className="ant-pro-setting-drawer-handle"
+        //     onClick={this.togglerContent}
+        //   >
+        //     <Icon
+        //       type={collapse ? 'close' : 'setting'}
+        //       style={{
+        //         color: '#fff',
+        //         fontSize: 20,
+        //       }}
+        //     />
+        //   </div>
+        // }
         style={{
           zIndex: 999,
         }}
