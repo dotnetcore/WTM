@@ -85,7 +85,7 @@ export default class App extends React.Component<any> {
                     rightContentRender={rightProps => (
                         <RightContent {...rightProps} selectedLang={language} changeLang={this.changeLang} >
                             <UserMenu {...rightProps} {...this.props} />
-                            <div className="ant-pro-setting" onClick={this.togglerContent}>
+                            <div className={`ant-pro-setting ${settings.navTheme}`} onClick={this.togglerContent}>
                                 <Icon type={ 'setting'} />
                             </div>
                         </RightContent>
