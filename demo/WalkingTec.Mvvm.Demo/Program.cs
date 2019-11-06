@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo
     public class Program
     {
         public static void Main(string[] args)
-        {           
+        {
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -55,24 +55,34 @@ namespace WalkingTec.Mvvm.Demo
                         x.AddLayui();
                         x.AddSwaggerGen(c =>
                         {
-                            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                            c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                            c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                            {
+                                Description = "JWT Bearer",
+                                Name = "Authorization",
+                                In = "header",
+                                Type = "apiKey"
+                            });
+                            c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                            {
+                                { "Bearer", new string[] { } }
+                            });
                         });
-                    });
-                     webBuilder.Configure(x =>
-                     {
-                         var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                         if (configs.IsQuickDebug == true)
-                         {
-                             x.UseSwagger();
-                             x.UseSwaggerUI(c =>
-                             {
-                                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                             });
-                         }
-                         x.UseFrameworkService();
-                     });
-                 }
-                 );
+                    })
+                    .Configure(x =>
+                    {
+                        var configs = x.ApplicationServices.GetRequiredService<Configs>();
+                        if (configs.IsQuickDebug == true)
+                        {
+                            x.UseSwagger();
+                            x.UseSwaggerUI(c =>
+                            {
+                                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                            });
+                        }
+                        x.UseFrameworkService();
+                    })
+                    .UseUrls(globalConfig.ApplicationUrl);
         }
     }
 }

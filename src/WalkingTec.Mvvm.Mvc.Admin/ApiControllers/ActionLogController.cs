@@ -1,30 +1,33 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwtWithCookie]
     [ActionDescription("Log")]
     [ApiController]
-    [Route("api/_ActionLog")]
-	public class _ActionLogController : BaseApiController
+    [Route("api/_[controller]")]
+    public class ActionLogController : BaseApiController
     {
-        [ActionDescription("搜索")]
-        [HttpPost("Search")]
-		public string Search(ActionLogSearcher searcher)
+        [ActionDescription("Search")]
+        [HttpPost("[action]")]
+        public string Search(ActionLogSearcher searcher)
         {
             var vm = CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public ActionLogVM Get(Guid id)
         {
@@ -32,8 +35,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             return vm;
         }
 
-        [HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
+        [HttpPost("[action]")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<ActionLogBatchVM>();
@@ -56,8 +59,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
 
-        [ActionDescription("导出")]
-        [HttpPost("ExportExcel")]
+        [ActionDescription("Export")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(ActionLogSearcher searcher)
         {
             var vm = CreateVM<ActionLogListVM>();
@@ -67,8 +70,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
-        [ActionDescription("勾选导出")]
-        [HttpPost("ExportExcelByIds")]
+        [ActionDescription("ExportByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<ActionLogListVM>();

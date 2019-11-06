@@ -6,6 +6,9 @@ using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 using $datans$;
 
 namespace $ns$
@@ -23,8 +26,10 @@ namespace $ns$
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();
             _controller.GlobaInfo = new GlobalData();
@@ -46,8 +51,10 @@ namespace $ns$
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();
             _controller.GlobaInfo = new GlobalData();

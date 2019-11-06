@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             Pages = data2;
         }
 
-        public bool DoChange()
+        public async Task<bool> DoChangeAsync()
         {
             List<Guid> AllowedMenuIds = new List<Guid>();
             var torem = AllowedMenuIds.Distinct();
@@ -85,7 +85,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 fp.Allowed = true;
                 DC.Set<FunctionPrivilege>().Add(fp);
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == Entity.ID).Select(x => x.UserId.ToString()).ToArray();
+            await LoginUserInfo.RemoveUserCache(userids);
             return true;
         }
 

@@ -363,6 +363,9 @@
   <data name="FileName" xml:space="preserve">
     <value>File name</value>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File is not found</value>
+  </data>
   <data name="FolderOnly" xml:space="preserve">
     <value>Folder</value>
   </data>

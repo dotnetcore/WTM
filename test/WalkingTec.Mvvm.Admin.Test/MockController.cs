@@ -1,19 +1,26 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using Moq;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
     public class MockController
     {
-        public static T CreateController<T>(string dataseed, string usercode) where T:BaseController,new()
-        {            
+        public static T CreateController<T>(string dataseed, string usercode) where T : BaseController, new()
+        {
             var _controller = new T();
             _controller.DC = new FrameworkContext(dataseed, DBTypeEnum.Memory);
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
@@ -23,7 +30,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();
@@ -46,7 +55,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
             mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
             GlobalServices.SetServiceProvider(mockService.Object);
+            _controller.Cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
             _controller.ControllerContext.HttpContext = mockHttpContext.Object;
             _controller.LoginUserInfo = new LoginUserInfo { ITCode = usercode ?? "user" };
             _controller.ConfigInfo = new Configs();

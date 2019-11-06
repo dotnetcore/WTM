@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tid = Guid.NewGuid().ToString().Replace("-", "");
+            string tid = Guid.NewGuid().ToString("N");
             output.Attributes.Add("lay-filter", tid);
             if (PanelType == PanelType.Collapse)
             {

@@ -1,23 +1,26 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwtWithCookie]
     [ActionDescription("GroupManagement")]
     [ApiController]
-    [Route("api/_FrameworkGroup")]
-	public class _FrameworkGroupController : BaseApiController
+    [Route("api/_[controller]")]
+    public class FrameworkGroupController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
-		public string Search(FrameworkGroupSearcher searcher)
+        [HttpPost("[action]")]
+        public string Search(FrameworkGroupSearcher searcher)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
@@ -33,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)
@@ -56,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)
@@ -77,9 +80,9 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-		[HttpPost("BatchDelete")]
+        [HttpPost("BatchDelete")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkGroupBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -96,13 +99,19 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
             else
             {
+                List<Guid?> groupids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    groupids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
@@ -113,7 +122,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkGroupListVM>();
@@ -127,7 +136,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("DownloadTemplate")]
-        [HttpGet("GetExcelTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
             var vm = CreateVM<FrameworkGroupImportVM>();
@@ -142,7 +151,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Import")]
-        [HttpPost("Import")]
+        [HttpPost("[action]")]
         public ActionResult Import(FrameworkGroupImportVM vm)
         {
 
@@ -155,7 +164,6 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Ok(vm.EntityList.Count);
             }
         }
-
 
     }
 }
