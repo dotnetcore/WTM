@@ -148,16 +148,8 @@ namespace WalkingTec.Mvvm.Mvc
             }
             set
             {
-                if (value == null)
-                {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                    _loginUserInfo = value;
-                }
-                else
-                {
-                    _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                }
+                Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                _loginUserInfo = value;
             }
         }
 
