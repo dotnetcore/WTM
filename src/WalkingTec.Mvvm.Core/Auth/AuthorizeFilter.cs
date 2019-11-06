@@ -142,8 +142,8 @@ namespace WalkingTec.Mvvm.Core.Auth
             {
                 _mvcOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value;
             }
-
-            if (_mvcOptions.AllowCombiningAuthorizeFilters)
+            //Todo:
+            if (true) //_mvcOptions.AllowCombiningAuthorizeFilters)
             {
                 if (!context.IsEffectivePolicy(this))
                 {

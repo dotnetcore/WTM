@@ -55,17 +55,14 @@ namespace WalkingTec.Mvvm.Demo
                         x.AddLayui();
                         x.AddSwaggerGen(c =>
                         {
-                            c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-                            c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                             {
                                 Description = "JWT Bearer",
                                 Name = "Authorization",
-                                In = "header",
-                                Type = "apiKey"
-                            });
-                            c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-                            {
-                                { "Bearer", new string[] { } }
+                                In =  ParameterLocation.Header,
+                                Type = SecuritySchemeType.ApiKey
+
                             });
                         });
                     })
@@ -83,6 +80,9 @@ namespace WalkingTec.Mvvm.Demo
                         x.UseFrameworkService();
                     })
                     .UseUrls(globalConfig.ApplicationUrl);
+
+                 });
+
         }
-    }
+        }
 }

@@ -438,7 +438,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                Response.Body.Write(data, 0, data.Count());
+                Response.Body.WriteAsync(data, 0, data.Count());
                 return new EmptyResult();
             }
         }

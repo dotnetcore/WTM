@@ -182,7 +182,7 @@ namespace WalkingTec.Mvvm.Mvc
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
-                options.EnableEndpointRouting = false;
+                options.EnableEndpointRouting = true;
             })
             .ConfigureApplicationPartManager(m =>
             {
@@ -348,6 +348,7 @@ namespace WalkingTec.Mvvm.Mvc
                     typeof(_CodeGenController).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
+            app.UseRouting();
             app.UseAuthentication();
 
             app.UseResponseCaching();
@@ -412,7 +413,6 @@ namespace WalkingTec.Mvvm.Mvc
                     GlobalServices.SetServiceProvider(app.ApplicationServices);
                     InitDataBase = true;
                 }
-
                 if (context.Request.Path == "/")
                 {
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
@@ -444,22 +444,15 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
 
-            if (customRoutes != null)
+            app.UseEndpoints(endpoints =>
             {
-                app.UseMvc(customRoutes);
-            }
-            else
-            {
-                app.UseMvc(routes =>
-                {
-                    routes.MapRoute(
-                        name: "areaRoute",
-                        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}/{id?}");
-                });
-            }
+                endpoints.MapControllerRoute(
+                   name: "areaRoute",
+                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
             return app;
         }
