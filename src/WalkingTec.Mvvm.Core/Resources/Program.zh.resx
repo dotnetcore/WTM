@@ -360,6 +360,9 @@
   <data name="FileName" xml:space="preserve">
     <value>文件名</value>
   </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>没有找到文件</value>
+  </data>
   <data name="FolderOnly" xml:space="preserve">
     <value>目录</value>
   </data>

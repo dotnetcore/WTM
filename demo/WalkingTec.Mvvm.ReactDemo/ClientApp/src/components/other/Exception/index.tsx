@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 import config from './typeConfig';
 import './index.less';
+import { FormattedMessage } from 'react-intl';
 interface IExceptionProps {
   type?: '403' | '404' | '500';
   title?: React.ReactNode;
@@ -52,7 +53,7 @@ class Exception extends React.PureComponent<IExceptionProps, any>{
         </div>
         <div className={'content'}>
           <h1>{title || config[pageType].title}</h1>
-          <div className={'desc'}>{desc || config[pageType].desc}</div>
+          <div className={'desc'}>{desc ||  <FormattedMessage id={`tips.status.${pageType}`} />}</div>
           <div className={'actions'}>
             {actions ||
               // createElement(

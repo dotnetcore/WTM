@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -33,20 +34,25 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         void DoAdd();
 
+        Task DoAddAsync();
+
         /// <summary>
         /// 修改
         /// </summary>
         void DoEdit(bool updateAllFields);
+        Task DoEditAsync(bool updateAllFields);
 
         /// <summary>
         /// 删除，对于TopBasePoco进行物理删除，对于PersistPoco把IsValid修改为false
         /// </summary>
         void DoDelete();
+        Task DoDeleteAsync();
 
         /// <summary>
         /// 彻底删除，对PersistPoco进行物理删除
         /// </summary>
         void DoRealDelete();
+        Task DoRealDeleteAsync();
 
         /// <summary>
         /// 将源VM的上数据库上下文，Session，登录用户信息，模型状态信息，缓存信息等内容复制到本VM中
@@ -197,6 +203,40 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public virtual void DoAdd()
         {
+            DoAddPrepare();
+            //删除不需要的附件
+            if (DeletedFileIds != null)
+            {
+                foreach (var item in DeletedFileIds)
+                {
+                    FileAttachmentVM ofa = new FileAttachmentVM();
+                    ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
+                    ofa.DoDelete();
+                }
+            }
+            DC.SaveChanges();
+        }
+
+        public virtual async Task DoAddAsync()
+        {
+            DoAddPrepare();
+            //删除不需要的附件
+            if (DeletedFileIds != null)
+            {
+                foreach (var item in DeletedFileIds)
+                {
+                    FileAttachmentVM ofa = new FileAttachmentVM();
+                    ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
+                    await ofa.DoDeleteAsync();
+                }
+            }
+            await DC.SaveChangesAsync();
+        }
+
+        private void DoAddPrepare()
+        {
             var pros = typeof(TModel).GetProperties();
             //将所有TopBasePoco的属性赋空值，防止添加关联的重复内容
             if (typeof(TModel) != typeof(FileAttachment))
@@ -228,8 +268,8 @@ namespace WalkingTec.Mvvm.Core
                 (Entity as PersistPoco).IsValid = true;
             }
 
-                #region 更新子表
-                foreach (var pro in pros)
+            #region 更新子表
+            foreach (var pro in pros)
             {
                 //找到类型为List<xxx>的字段
                 if (pro.PropertyType.GenericTypeArguments.Count() > 0)
@@ -294,8 +334,19 @@ namespace WalkingTec.Mvvm.Core
             //添加数据
             DC.Set<TModel>().Add(Entity);
 
+        }
+
+        /// <summary>
+        /// 修改，进行默认的修改操作。子类如有自定义操作应重载本函数
+        /// </summary>
+        /// <param name="updateAllFields">为true时，框架会更新当前Entity的全部值，为false时，框架会检查Request.Form里的key，只更新表单提交的字段</param>
+        public virtual void DoEdit(bool updateAllFields = false)
+        {
+            DoEditPrepare(updateAllFields);
+
+            DC.SaveChanges();
             //删除不需要的附件
-            if(DeletedFileIds != null)
+            if (DeletedFileIds != null)
             {
                 foreach (var item in DeletedFileIds)
                 {
@@ -305,18 +356,30 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            DC.SaveChanges();
+
         }
 
-        /// <summary>
-        /// 修改，进行默认的修改操作。子类如有自定义操作应重载本函数
-        /// </summary>
-        /// <param name="updateAllFields">为true时，框架会更新当前Entity的全部值，为false时，框架会检查Request.Form里的key，只更新表单提交的字段</param>
-        public virtual void DoEdit(bool updateAllFields = false)
+        public virtual async Task DoEditAsync(bool updateAllFields = false)
         {
+            DoEditPrepare(updateAllFields);
 
-            //自动设定修改日期和修改人
-           if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
+            await DC.SaveChangesAsync();
+            //删除不需要的附件
+            if (DeletedFileIds != null)
+            {
+                foreach (var item in DeletedFileIds)
+                {
+                    FileAttachmentVM ofa = new FileAttachmentVM();
+                    ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
+                    await ofa.DoDeleteAsync();
+                }
+            }
+        }
+
+        private void DoEditPrepare(bool updateAllFields)
+        {
+            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
             {
                 BasePoco ent = Entity as BasePoco;
                 if (ent.UpdateTime == null)
@@ -407,7 +470,7 @@ namespace WalkingTec.Mvvm.Core
                                 if (field.StartsWith("Entity." + pro.Name + "[0]."))
                                 {
                                     string name = field.Replace("Entity." + pro.Name + "[0].", "");
-                                        setnames.Add(name);
+                                    setnames.Add(name);
                                 }
                             }
 
@@ -424,7 +487,7 @@ namespace WalkingTec.Mvvm.Core
                                         var newitemType = item.GetType();
                                         foreach (var itempro in itemPros)
                                         {
-                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true ||  setnames.Contains(itempro.Name)))
+                                            if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name)))
                                             {
                                                 var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
                                                 if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
@@ -471,7 +534,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
-                            PropertyInfo[] itemPros = ftype.GetProperties();                            
+                            PropertyInfo[] itemPros = ftype.GetProperties();
                             var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             if (_entity != null)
                             {
@@ -503,13 +566,13 @@ namespace WalkingTec.Mvvm.Core
                     if (field.StartsWith("Entity.") && !field.Contains("["))
                     {
                         string name = field.Replace("Entity.", "");
-                            try
-                            {
-                                DC.UpdateProperty(Entity, name);
-                            }
-                            catch (Exception)
-                            {
-                            }
+                        try
+                        {
+                            DC.UpdateProperty(Entity, name);
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
                 if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(BasePoco)))
@@ -528,20 +591,6 @@ namespace WalkingTec.Mvvm.Core
             {
                 DC.UpdateEntity(Entity);
             }
-
-            DC.SaveChanges();
-            //删除不需要的附件
-            if (DeletedFileIds != null)
-            {
-                foreach (var item in DeletedFileIds)
-                {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    ofa.DoDelete();
-                }
-            }
-
         }
 
         /// <summary>
@@ -559,6 +608,31 @@ namespace WalkingTec.Mvvm.Core
                 try
                 {
                     DC.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    MSD.AddModelError("", "数据使用中，无法删除");
+                }
+            }
+            //如果是普通的TopBasePoco，则进行物理删除
+            else if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+            {
+                DoRealDelete();
+            }
+        }
+
+        public virtual async Task DoDeleteAsync()
+        {
+            //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
+            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
+            {
+                (Entity as PersistPoco).IsValid = false;
+                (Entity as PersistPoco).UpdateTime = DateTime.Now;
+                (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                DC.UpdateEntity(Entity);
+                try
+                {
+                    await DC.SaveChangesAsync();
                 }
                 catch (DbUpdateException)
                 {
@@ -599,6 +673,39 @@ namespace WalkingTec.Mvvm.Core
                     ofa.CopyContext(this);
                     ofa.SetEntityById(item);
                     ofa.DoDelete();
+                }
+            }
+            catch (Exception)
+            {
+                MSD.AddModelError("", "数据使用中，无法删除");
+            }
+        }
+
+
+        public virtual async Task DoRealDeleteAsync()
+        {
+            try
+            {
+                List<Guid> fileids = new List<Guid>();
+                var pros = typeof(TModel).GetProperties();
+                //如果包含附件，则先删除附件
+                var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fa)
+                {
+                    if (f.GetValue(Entity) is FileAttachment file)
+                    {
+                        fileids.Add(file.ID);
+                    }
+                    f.SetValue(Entity, null);
+                }
+                DC.DeleteEntity(Entity);
+                await DC.SaveChangesAsync();
+                foreach (var item in fileids)
+                {
+                    FileAttachmentVM ofa = new FileAttachmentVM();
+                    ofa.CopyContext(this);
+                    ofa.SetEntityById(item);
+                    await ofa.DoDeleteAsync();
                 }
             }
             catch (Exception)

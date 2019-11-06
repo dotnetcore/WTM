@@ -7,9 +7,11 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
+    [AuthorizeJwt]
     [Area("aaa")]
     [ActionDescription("地区管理")]
     [ApiController]
@@ -29,7 +31,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("{id}")]
         public CityVM Get(Guid id)
         {
-            var vm = CreateVM<CityVM>(id);            
+            var vm = CreateVM<CityVM>(id);
             return vm;
         }
 

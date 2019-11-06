@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -78,15 +79,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var textMI = typeof(TreeSelectListItem).GetMember("Text")[0];
             MemberBinding textBind = Expression.Bind(textMI, cp.Change(textField.Body, pe));
 
-            //绑定Value字段，形成类似 Value = valueField 的表达式 
+            //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(TreeSelectListItem).GetMember("Id")[0];
             MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
 
-            //绑定ParentId字段，形成类似 Value = valueField 的表达式 
+            //绑定ParentId字段，形成类似 Value = valueField 的表达式
             var parentMI = typeof(TreeSelectListItem).GetMember("ParentId")[0];
             MemberBinding parentBind = Expression.Bind(parentMI, cp.Change(parentField.Body, pe));
 
-            //绑定Url字段，形成类似 Value = valueField 的表达式 
+            //绑定Url字段，形成类似 Value = valueField 的表达式
             MemberBinding urlBind = null;
             var urlMI = typeof(TreeSelectListItem).GetMember("Url")[0];
             if (urlField != null)
@@ -98,7 +99,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 urlBind = Expression.Bind(urlMI, Expression.Constant(string.Empty));
             }
 
-            //绑定icon字段，形成类似 ICon = iconField 的表达式 
+            //绑定icon字段，形成类似 ICon = iconField 的表达式
             MemberBinding iconBind = null;
             var iconMI = typeof(TreeSelectListItem).GetMember("ICon")[0];
             if (iconField != null)
@@ -110,7 +111,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 iconBind = Expression.Bind(iconMI, Expression.Constant(string.Empty));
             }
 
-            //绑定Tag字段，形成类似 Value = valueField 的表达式 
+            //绑定Tag字段，形成类似 Value = valueField 的表达式
             MemberBinding tagBind = null;
             var tagMI = typeof(TreeSelectListItem).GetMember("Tag")[0];
             if (tagField != null)
@@ -122,7 +123,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 tagBind = Expression.Bind(tagMI, Expression.Constant(""));
             }
 
-            //绑定Tag字段，形成类似 Value = valueField 的表达式 
+            //绑定Tag字段，形成类似 Value = valueField 的表达式
             MemberBinding expandBind = null;
             var expandMI = typeof(TreeSelectListItem).GetMember("Expended")[0];
             if (expandField != null)
@@ -221,7 +222,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             MemberBinding textBind = Expression.Bind(textMI, cp.Change(textField.Body, pe));
 
 
-            //绑定Value字段，形成类似 Value = valueField 的表达式 
+            //绑定Value字段，形成类似 Value = valueField 的表达式
             var valueMI = typeof(ComboSelectListItem).GetMember("Value")[0];
             MemberBinding valueBind = Expression.Bind(valueMI, cp.Change(valueField.Body, pe));
 
@@ -274,7 +275,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x=>x.Name.ToLower() == "id").FirstOrDefault());
+            Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
             //循环数据权限，加入到where条件中，达到自动过滤的效果
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
@@ -385,7 +386,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         fieldName = fieldName.Remove(fieldName.Length - 2);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
-                        var IsTableName = tableName?. Where(x => x.ToLower().Contains(fieldName.ToLower())).FirstOrDefault();
+                        var IsTableName = tableName?.Where(x => x.ToLower().Contains(fieldName.ToLower())).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
                         {
                             continue;
@@ -549,7 +550,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
-                       
+
         }
 
         public static IQueryable<T> CheckWhere<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, bool>> where)
@@ -562,7 +563,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 if (typeof(IList).IsAssignableFrom(val.GetType()))
                 {
-                    if( ((IList)val).Count == 0)
+                    if (((IList)val).Count == 0)
                     {
                         return baseQuery;
                     }
@@ -603,7 +604,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static IQueryable<T> CheckEqual<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, S?>> field)
     where S : struct
         {
-             S? a = val;
+            S? a = val;
             return baseQuery.CheckEqual(a, field);
         }
 
@@ -624,11 +625,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     exp1 = !includeMin ? Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin)) : Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
                 }
-                if(valMax != null)
+                if (valMax != null)
                 {
                     exp2 = !includeMax ? Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax)) : Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
                 }
-                if(exp1 != null && exp2 != null)
+                if (exp1 != null && exp2 != null)
                 {
                     exp = Expression.And(exp1, exp2);
                 }
@@ -689,7 +690,7 @@ where S : struct
             }
         }
 
-        public static IQueryable<T> CheckContain<T,S>(this IQueryable<T> baseQuery, List<S> val, Expression<Func<T,S>> field)
+        public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<S> val, Expression<Func<T, S>> field)
         {
             if (val == null || val.Count == 0)
             {
@@ -835,7 +836,7 @@ where S : struct
     {
         public static void AddParameter(this DbCommand command)
         {
-            
+
         }
     }
 

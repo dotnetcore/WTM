@@ -185,6 +185,7 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
+
         /// <summary>
         /// 批量修改，默认对Ids中包含的数据进行修改，子类如果有特殊判断应重载本函数
         /// </summary>
