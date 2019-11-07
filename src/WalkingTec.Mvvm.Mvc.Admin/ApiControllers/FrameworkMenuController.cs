@@ -1,27 +1,26 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
-
+    [AuthorizeJwtWithCookie]
     [ActionDescription("MenuMangement")]
     [ApiController]
-    [Route("api/_FrameworkMenu")]
-	public class _FrameworkMenuController : BaseApiController
+    [Route("api/_[controller]")]
+    public class FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
-        [HttpPost("Search")]
-		public string Search(FrameworkMenuSearcher searcher)
+        [HttpPost("[action]")]
+        public string Search(FrameworkMenuSearcher searcher)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
@@ -37,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Create")]
-        [HttpPost("Add")]
+        [HttpPost("[action]")]
         public IActionResult Add(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
@@ -60,7 +59,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("Edit")]
-        [HttpPut("Edit")]
+        [HttpPut("[action]")]
         public IActionResult Edit(FrameworkMenuVM2 vm)
         {
             if (!ModelState.IsValid)
@@ -104,9 +103,8 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-
         [ActionDescription("Export")]
-        [HttpPost("ExportExcel")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkMenuSearcher searcher)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
@@ -117,7 +115,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [ActionDescription("ExportByIds")]
-        [HttpPost("ExportExcelByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkMenuListVM2>();
@@ -132,7 +130,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         #region 未设置页面
         [ActionDescription("UnsetPages")]
-        [HttpGet("UnsetPages")]
+        [HttpGet("[action]")]
         public string UnsetPages()
         {
             var vm = CreateVM<FrameworkActionListVM>();
@@ -142,11 +140,12 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         #region 刷新菜单
         [ActionDescription("RefreshMenu")]
-        [HttpGet("RefreshMenu")]
-        public ActionResult RefreshMenu()
+        [HttpGet("[action]")]
+        public async Task<ActionResult> RefreshMenu()
         {
-            var cache = GlobalServices.GetService<IMemoryCache>();
-            cache.Remove("FFMenus");
+            Cache.Remove("FFMenus");
+            var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString()).ToArray();
+            await LoginUserInfo.RemoveUserCache(userids);
             return Ok(Mvc.Admin.Program._localizer["OprationSuccess"]);
         }
         #endregion
@@ -155,7 +154,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetActionsByModel")]
         public ActionResult GetActionsByModel(string ModelName)
         {
-            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.ClassName.ToLower()==ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
+            var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.FullName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
             List<FrameworkAction> toremove = new List<FrameworkAction>();
             foreach (var item in m)
             {
@@ -174,7 +173,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFolders")]
         public ActionResult GetFolders()
         {
-            var m = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x=>x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
+            var m = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
             return Ok(m);
         }
 

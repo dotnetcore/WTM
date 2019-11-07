@@ -15,6 +15,7 @@ import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import './style.less';
+import { FormattedMessage } from 'react-intl';
 
 
 class DndTitle extends React.Component<{ styleState: { left: number, top: number }, onUpdate?: (style: React.CSSProperties) => void }, any> {
@@ -155,10 +156,10 @@ export class InfoShellFooter extends React.Component<{ btns?: React.ReactNode, l
                 {this.props.children}
             </InfoShellLayout>
             {this.props.btns ? this.props.btns : <div className="data-view-form-btns" >
-                <Button onClick={() => this.props.onCancel && this.props.onCancel()} > 关闭 </Button>
+                <Button onClick={() => this.props.onCancel && this.props.onCancel()} ><FormattedMessage id="action.close" /></Button>
                 {this.props.submit && <>
                     <Divider type="vertical" />
-                    <Button loading={this.props.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
+                    <Button loading={this.props.loadingEdit} type="primary" htmlType="submit"  ><FormattedMessage id="action.submit" /></Button>
                 </>}
             </div>}
 

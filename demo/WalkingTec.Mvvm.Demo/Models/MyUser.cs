@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models

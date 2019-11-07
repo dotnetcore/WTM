@@ -88,8 +88,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
                     {
+                        var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
                         output.Attributes.Add("lay-verify", "required");
-                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required",Field.Metadata.Name]}");
+                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required", pro.GetPropertyDisplayName()]}");
                     }
                 }
             }

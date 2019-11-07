@@ -445,7 +445,9 @@ module.exports = (app) => {{
 
         private string GetResource(string fileName, string subdir = "")
         {
-            if(fileName == "Proj.txt" || fileName == "TestProj.txt" || fileName == "Program.txt" || fileName == "layui.Program.txt" || fileName == "DefaultProj.txt")
+            if(fileName == "Proj.txt" || fileName == "TestProj.txt" ||
+                fileName == "Program.txt" || fileName == "layui.Program.txt"
+                || fileName == "DefaultProj.txt" || fileName == "MockController.txt" || fileName == "LoginController.txt")
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
