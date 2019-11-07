@@ -1,22 +1,24 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Mvc;
+
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {
+    [AuthorizeJwtWithCookie]
     [ApiController]
     [Route("api/_file")]
     [AllRights]
     [ActionDescription("File")]
-    public class _FileApiController : BaseApiController
+    public class FileApiController : BaseApiController
     {
-        [HttpPost("upload")]
+        [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
         public IActionResult Upload()
         {
@@ -30,23 +32,23 @@ namespace WalkingTec.Mvvm.Admin.Api
             vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
             vm.Entity.IsTemprory = true;
 
-            if(string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
+            if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
             {
-                return BadRequest("服务端没有配置储存文件的地址");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)
             {
-                return BadRequest("DFS上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (vm.Entity.FileData == null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database)
             {
-                return BadRequest("上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
-             vm.DoAdd();
+            vm.DoAdd();
             return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
         }
 
-        [HttpPost("uploadimage")]
+        [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
         public IActionResult UploadImage(int? width = null, int? height = null)
         {
@@ -61,7 +63,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return BadRequest("上传失败");
+                return BadRequest(Core.Program._localizer["UploadFailed"]);
             }
             if (width == null)
             {
@@ -87,11 +89,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.DoAdd();
                 return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
             }
-            return BadRequest("上传失败");
+            return BadRequest(Core.Program._localizer["UploadFailed"]);
 
         }
 
-        [HttpGet("getFileName/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id)
         {
@@ -99,13 +101,13 @@ namespace WalkingTec.Mvvm.Admin.Api
             return Ok(vm.Entity.FileName);
         }
 
-        [HttpGet("getFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id)
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
@@ -117,13 +119,13 @@ namespace WalkingTec.Mvvm.Admin.Api
             return new EmptyResult();
         }
 
-        [HttpGet("downloadFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
         public IActionResult DownloadFile(Guid id)
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
@@ -144,13 +146,13 @@ namespace WalkingTec.Mvvm.Admin.Api
             return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
-        [HttpGet("deleteFile/{id}")]
+        [HttpGet("[action]/{id}")]
         [ActionDescription("DeleteFile")]
         public IActionResult DeletedFile(Guid id)
         {
             if (id == Guid.Empty)
             {
-                return BadRequest("没有找到文件");
+                return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
             var vm = CreateVM<FileAttachmentVM>(id);
             vm.DoDelete();

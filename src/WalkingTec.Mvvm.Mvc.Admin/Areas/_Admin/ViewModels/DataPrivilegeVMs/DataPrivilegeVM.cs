@@ -5,6 +5,7 @@ using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
@@ -98,7 +99,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             base.Validate();
         }
 
-        public override void DoAdd()
+        public override async Task DoAddAsync()
         {
             if (SelectedItemsID == null && IsAll == false)
             {
@@ -169,10 +170,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
+
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEditAsync(bool updateAllFields = false)
         {
             List<Guid> oldIDs = null;
 
@@ -242,10 +253,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
         }
 
-        public override void DoDelete()
+        public override async Task  DoDeleteAsync()
         {
             List<Guid> oldIDs = null;
 
@@ -264,6 +284,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 DC.DeleteEntity(dp);
             }
             DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
         }
     }
 }

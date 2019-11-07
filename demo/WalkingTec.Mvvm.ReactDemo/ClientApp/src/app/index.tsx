@@ -6,7 +6,8 @@
  * @desc [description]
  */
 import { ConfigProvider } from 'antd';
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+import GlobalConfig from 'global.config';
+import { getConfigProvider, getLocales } from 'locale';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
@@ -15,9 +16,10 @@ import routes from './router';
 @observer
 export default class App extends React.Component<any> {
     public render() {
+        const { language } = GlobalConfig;
         return (
-            <ConfigProvider locale={zhCN}>
-                <IntlProvider locale="en">
+            <ConfigProvider locale={getConfigProvider(language)}>
+                <IntlProvider locale={language} messages={getLocales(language)}>
                     <BrowserRouter >
                         {routes}
                     </BrowserRouter>

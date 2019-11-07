@@ -67,6 +67,7 @@ function AuthentRouter(Component: React.ComponentClass) {
         </AuthentComponent>
     )
 }
+
 @observer
 class AuthentComponent extends React.Component<any> {
     componentDidMount() {

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using System.Collections.Generic;
 
 namespace $ns$
 {
@@ -28,6 +29,17 @@ namespace $ns$
                     x.AddSwaggerGen(c =>
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                        {
+                            Description = "JWT Bearer",
+                            Name = "Authorization",
+                            In = "header",
+                            Type = "apiKey"
+                        });
+                        c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                        {
+                            { "Bearer", new string[] { } }
+                        });
                     });
                     x.AddSpaStaticFiles(configuration =>
                     {

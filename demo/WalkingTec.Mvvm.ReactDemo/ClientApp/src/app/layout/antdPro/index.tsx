@@ -9,11 +9,16 @@ import { renderRoutes } from 'react-router-config';
 import { Link } from 'react-router-dom';
 import Store from 'store/index';
 import RightContent from './GlobalHeader/RightContent';
+import UserMenu from './GlobalHeader/userMenu';
 import TabsPages from './TabsPages';
 import SettingDrawer, { ContentWidth } from './SettingDrawer';
 import './style.less';
+// import { ConfigConsumer } from 'antd/lib/config-provider';
+// import {  } from 'antd';
+// ConfigConsumer
 @observer
 export default class App extends React.Component<any> {
+    static con
     /**
      *settings 变更 事件
      *
@@ -23,6 +28,11 @@ export default class App extends React.Component<any> {
     @action.bound
     onSettingChange(settings) {
         GlobalConfig.settings = settings;
+    }
+    @action.bound
+    changeLang(event) {
+        GlobalConfig.language = event.key;
+        window['g_locale'] = GlobalConfig.language;
     }
     // 菜单 打开 的 key
     defaultOpenKeys = [];
@@ -54,8 +64,11 @@ export default class App extends React.Component<any> {
             this.defaultOpenKeys = this.getDefaultOpenKeys(Store.Meun.ParallelMenu, this.getMenu(nextProps.location.pathname));
         }
     }
+    componentDidMount() {
+    }
     public render() {
         const settings = toJS(GlobalConfig.settings);
+        const { language } = GlobalConfig;
         // window['g_locale']='en-US'
         return (
             <>
@@ -63,10 +76,9 @@ export default class App extends React.Component<any> {
                     logo={GlobalConfig.default.logo}
                     {...settings}
                     rightContentRender={rightProps => (
-                        <RightContent {...rightProps} changeLang={event => {
-                            // window['g_locale'] = event.key
-                        }} />
-
+                        <RightContent {...rightProps} selectedLang={language} changeLang={this.changeLang} >
+                            <UserMenu {...rightProps} {...this.props} />
+                        </RightContent>
                     )}
                     menuHeaderRender={(logo, title) => <Link to="/">{logo}{title}</Link>}
                     menuDataRender={() => toJS(Store.Meun.subMenu)}
@@ -93,7 +105,6 @@ export default class App extends React.Component<any> {
         );
     }
 }
-
 class MainContent extends React.Component<{ contentWidth: ContentWidth, route?: any }> {
     shouldComponentUpdate(nextProps: any, nextState: any, nextContext: any) {
         return !lodash.eq(this.props.contentWidth, nextProps.contentWidth)
