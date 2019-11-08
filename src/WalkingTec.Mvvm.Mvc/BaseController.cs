@@ -252,7 +252,14 @@ namespace WalkingTec.Mvvm.Mvc
             }
             set
             {
-                Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                if (value == null)
+                {
+                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}");
+                }
+                else
+                {
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{value.Id}", value);
+                }
                 _loginUserInfo = value;
             }
         }
