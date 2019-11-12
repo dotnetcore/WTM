@@ -150,14 +150,13 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (value == null)
                 {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                    _loginUserInfo = value;
+                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}");
                 }
                 else
                 {
-                    _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{value.Id}", value);
                 }
+                _loginUserInfo = value;
             }
         }
 
