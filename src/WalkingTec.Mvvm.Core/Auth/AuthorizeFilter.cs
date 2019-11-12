@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.Core.Auth
 {
@@ -24,9 +24,6 @@ namespace WalkingTec.Mvvm.Core.Auth
     /// </summary>
     public class AuthorizeFilter : IAsyncAuthorizationFilter, IFilterFactory
     {
-        private MvcOptions _mvcOptions;
-        private AuthorizationPolicy _effectivePolicy;
-
         /// <summary>
         /// Initializes a new <see cref="AuthorizeFilter"/> instance.
         /// </summary>
@@ -116,6 +113,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             {
                 return Task.FromResult(Policy);
             }
+
             if (PolicyProvider == null)
             {
                 // throw new InvalidOperationException(
@@ -128,55 +126,43 @@ namespace WalkingTec.Mvvm.Core.Auth
             return AuthorizationPolicy.CombineAsync(PolicyProvider, AuthorizeData);
         }
 
-        private async Task<AuthorizationPolicy> GetEffectivePolicyAsync(AuthorizationFilterContext context)
+        internal async Task<AuthorizationPolicy> GetEffectivePolicyAsync(AuthorizationFilterContext context)
         {
-            if (_effectivePolicy != null)
+            // Combine all authorize filters into single effective policy that's only run on the closest filter
+            var builder = new AuthorizationPolicyBuilder(await ComputePolicyAsync());
+            for (var i = 0; i < context.Filters.Count; i++)
             {
-                return _effectivePolicy;
-            }
-
-            var effectivePolicy = await ComputePolicyAsync();
-            var canCache = PolicyProvider == null;
-
-            if (_mvcOptions == null)
-            {
-                _mvcOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value;
-            }
-            //Todo:
-            if (true) //_mvcOptions.AllowCombiningAuthorizeFilters)
-            {
-                if (!context.IsEffectivePolicy(this))
+                if (ReferenceEquals(this, context.Filters[i]))
                 {
-                    return null;
+                    continue;
                 }
 
-                // Combine all authorize filters into single effective policy that's only run on the closest filter
-                var builder = new AuthorizationPolicyBuilder(effectivePolicy);
-                for (var i = 0; i < context.Filters.Count; i++)
+                if (context.Filters[i] is AuthorizeFilter authorizeFilter)
                 {
-                    if (ReferenceEquals(this, context.Filters[i]))
-                    {
-                        continue;
-                    }
-
-                    if (context.Filters[i] is AuthorizeFilter authorizeFilter)
-                    {
-                        // Combine using the explicit policy, or the dynamic policy provider
-                        builder.Combine(await authorizeFilter.ComputePolicyAsync());
-                        canCache = canCache && authorizeFilter.PolicyProvider == null;
-                    }
+                    // Combine using the explicit policy, or the dynamic policy provider
+                    builder.Combine(await authorizeFilter.ComputePolicyAsync());
                 }
-
-                effectivePolicy = builder?.Build() ?? effectivePolicy;
             }
 
-            // We can cache the effective policy when there is no custom policy provider
-            if (canCache)
+            var endpoint = context.HttpContext.GetEndpoint();
+            if (endpoint != null)
             {
-                _effectivePolicy = effectivePolicy;
+                // When doing endpoint routing, MVC does not create filters for any authorization specific metadata i.e [Authorize] does not
+                // get translated into AuthorizeFilter. Consequently, there are some rough edges when an application uses a mix of AuthorizeFilter
+                // explicilty configured by the user (e.g. global auth filter), and uses endpoint metadata.
+                // To keep the behavior of AuthFilter identical to pre-endpoint routing, we will gather auth data from endpoint metadata
+                // and produce a policy using this. This would mean we would have effectively run some auth twice, but it maintains compat.
+                var policyProvider = PolicyProvider ?? context.HttpContext.RequestServices.GetRequiredService<IAuthorizationPolicyProvider>();
+                var endpointAuthorizeData = endpoint.Metadata.GetOrderedMetadata<IAuthorizeData>() ?? Array.Empty<IAuthorizeData>();
+
+                var endpointPolicy = await AuthorizationPolicy.CombineAsync(policyProvider, endpointAuthorizeData);
+                if (endpointPolicy != null)
+                {
+                    builder.Combine(endpointPolicy);
+                }
             }
 
-            return effectivePolicy;
+            return builder.Build();
         }
 
         /// <inheritdoc />
@@ -187,6 +173,12 @@ namespace WalkingTec.Mvvm.Core.Auth
                 throw new ArgumentNullException(nameof(context));
             }
 
+            if (!context.IsEffectivePolicy(this))
+            {
+                return;
+            }
+
+            // IMPORTANT: Changes to authorization logic should be mirrored in security's AuthorizationMiddleware
             var effectivePolicy = await GetEffectivePolicyAsync(context);
             if (effectivePolicy == null)
             {
@@ -198,7 +190,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             var authenticateResult = await policyEvaluator.AuthenticateAsync(effectivePolicy, context.HttpContext);
 
             // Allow Anonymous skips all authorization
-            if (HasAllowAnonymous(context.Filters))
+            if (HasAllowAnonymous(context))
             {
                 return;
             }
@@ -244,14 +236,24 @@ namespace WalkingTec.Mvvm.Core.Auth
             return AuthorizationApplicationModelProvider.GetFilter(policyProvider, AuthorizeData);
         }
 
-        private static bool HasAllowAnonymous(IList<IFilterMetadata> filters)
+        private static bool HasAllowAnonymous(AuthorizationFilterContext context)
         {
+            var filters = context.Filters;
             for (var i = 0; i < filters.Count; i++)
             {
                 if (filters[i] is IAllowAnonymousFilter)
                 {
                     return true;
                 }
+            }
+
+            // When doing endpoint routing, MVC does not add AllowAnonymousFilters for AllowAnonymousAttributes that
+            // were discovered on controllers and actions. To maintain compat with 2.x,
+            // we'll check for the presence of IAllowAnonymous in endpoint metadata.
+            var endpoint = context.HttpContext.GetEndpoint();
+            if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            {
+                return true;
             }
 
             return false;

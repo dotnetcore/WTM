@@ -197,7 +197,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 m.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
-            })            
+            })
             .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -234,7 +234,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             services.Configure<FormOptions>(y =>
             {
-                y.ValueLengthLimit = int.MaxValue-20480;
+                y.ValueLengthLimit = int.MaxValue - 20480;
                 y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
             });
 
@@ -246,7 +246,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton<ITokenService, TokenService>();
 
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
-            if(jwtOptions == null)
+            if (jwtOptions == null)
             {
                 jwtOptions = new JwtOptions();
             }
@@ -344,22 +344,12 @@ namespace WalkingTec.Mvvm.Mvc
                     typeof(_CodeGenController).GetTypeInfo().Assembly,
                     "WalkingTec.Mvvm.Mvc")
             });
+
             app.UseRouting();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseResponseCaching();
 
-            app.UseExceptionHandler("/_Framework/Error");
-
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
-            app.UseSession();
             if (configs.CorsOptions.EnableAll == true)
             {
                 if (configs.CorsOptions?.Policy?.Count > 0)
