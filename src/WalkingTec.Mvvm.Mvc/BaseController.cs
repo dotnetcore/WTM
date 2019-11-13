@@ -594,7 +594,7 @@ namespace WalkingTec.Mvvm.Mvc
         #region CreateDC
         public virtual IDataContext CreateDC(bool isLog = false)
         {
-            string cs = CurrentCS;
+            string cs = CurrentCS??"default";
             if (isLog == true)
             {
                 if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
