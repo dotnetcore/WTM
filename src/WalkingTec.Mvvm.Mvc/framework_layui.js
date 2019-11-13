@@ -514,8 +514,8 @@ window.ff = {
           $('#' + target).html('<option value = "">' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
           if (data.Data !== undefined && data.Data !== null) {
             for (i = 0; i < data.Data.length; i++) {
-              item = data.Data[i];
-              var icon = item.ICon !== undefined && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
+                item = data.Data[i];
+                var icon = item.ICon !== undefined && item.ICon != null && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
               if (item.Selected === true) {
                 $('#' + target).append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
               }
