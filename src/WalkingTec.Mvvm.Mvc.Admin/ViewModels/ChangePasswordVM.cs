@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Admin
+namespace WalkingTec.Mvvm.Admin.ViewModels
 {
     public class ChangePasswordVM : BaseVM
     {
