@@ -2,7 +2,7 @@ import { BasicLayout, GridContent } from '@ant-design/pro-layout';
 import LayoutSpin from "components/other/LayoutSpin";
 import GlobalConfig from 'global.config';
 import lodash from 'lodash';
-import { action, toJS } from 'mobx';
+import { action, toJS, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { renderRoutes } from 'react-router-config';
@@ -13,12 +13,14 @@ import UserMenu from './GlobalHeader/userMenu';
 import TabsPages from './TabsPages';
 import SettingDrawer, { ContentWidth } from './SettingDrawer';
 import './style.less';
+import { Icon } from 'antd';
 // import { ConfigConsumer } from 'antd/lib/config-provider';
 // import {  } from 'antd';
 // ConfigConsumer
 @observer
 export default class App extends React.Component<any> {
-    static con
+    @observable
+    collapse = false;
     /**
      *settings 变更 事件
      *
@@ -66,6 +68,11 @@ export default class App extends React.Component<any> {
     }
     componentDidMount() {
     }
+    @action.bound
+    togglerContent() {
+        this.collapse = !this.collapse;
+    };
+
     public render() {
         const settings = toJS(GlobalConfig.settings);
         const { language } = GlobalConfig;
@@ -78,6 +85,9 @@ export default class App extends React.Component<any> {
                     rightContentRender={rightProps => (
                         <RightContent {...rightProps} selectedLang={language} changeLang={this.changeLang} >
                             <UserMenu {...rightProps} {...this.props} />
+                            <div className={`ant-pro-setting ${settings.navTheme}`} onClick={this.togglerContent}>
+                                <Icon type={ 'setting'} />
+                            </div>
                         </RightContent>
                     )}
                     menuHeaderRender={(logo, title) => <Link to="/">{logo}{title}</Link>}
@@ -100,7 +110,7 @@ export default class App extends React.Component<any> {
                 >
                     {settings.tabsPage && settings.contentWidth !== "Fixed" ? <TabsPages {...this.props} /> : <MainContent {...this.props} contentWidth={settings.contentWidth} />}
                 </BasicLayout>
-                <SettingDrawer settings={settings} onSettingChange={this.onSettingChange} />
+                <SettingDrawer collapse={this.collapse} onCollapseChange={this.togglerContent} settings={settings} onSettingChange={this.onSettingChange} />
             </>
         );
     }
