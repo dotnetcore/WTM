@@ -22,4 +22,5 @@ export default {
     'action.user.apiDocument':'API document',
     'action.user.changePassword':'Change Password',
     'action.user.logout':'Logout',
+    'action.sys.refreshMenu':'Refresh Menu',
 };

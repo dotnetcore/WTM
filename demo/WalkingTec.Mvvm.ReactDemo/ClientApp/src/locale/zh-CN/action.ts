@@ -22,4 +22,5 @@ export default {
     'action.user.apiDocument':'API 文档',
     'action.user.changePassword':'修改密码',
     'action.user.logout':'注销',
+    'action.sys.refreshMenu':'刷新菜单',
 };
