@@ -790,6 +790,27 @@ where S : struct
             }
         }
 
+        public static string GetPropertyNameByFk(this IDataContext self, Type sourceType, string fkname)
+        {
+            try
+            {
+                var test = self.Model.FindEntityType(sourceType).GetForeignKeys().Where(x => x.DependentToPrincipal?.ForeignKey?.Properties[0]?.Name == fkname).FirstOrDefault();
+                if (test != null && test.Properties.Count > 0)
+                {
+                    return test.DependentToPrincipal.Name;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
         public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             if (Ids == null)

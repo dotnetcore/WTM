@@ -334,7 +334,7 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
 
-            app.UseExceptionHandler("/_Framework/Error");
+            app.UseExceptionHandler(configs.ErrorHandler);
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
