@@ -134,11 +134,11 @@ namespace WalkingTec.Mvvm.Doc
             {
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
-                    version = Utils.GetNugetVersion(false);
+                    version = Utils.GetNugetVersion("2.",false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
-                    version = version = Utils.GetNugetVersion(true);
+                    version = Utils.GetNugetVersion("3.",true);
                     break;
                 default:
                     break;
@@ -447,7 +447,7 @@ module.exports = (app) => {{
         {
             if(fileName == "Proj.txt" || fileName == "TestProj.txt" ||
                 fileName == "Program.txt" || fileName == "layui.Program.txt"
-                || fileName == "DefaultProj.txt" || fileName == "MockController.txt" || fileName == "LoginController.txt")
+                || fileName == "DefaultProj.txt" )
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {

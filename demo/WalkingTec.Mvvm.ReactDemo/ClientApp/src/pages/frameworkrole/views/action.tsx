@@ -1,4 +1,4 @@
-﻿import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
+import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { onAuthorizeActions } from 'store/system/authorize';
 import Store from '../store';
-import { InfoForm, InsertForm, UpdateForm } from './forms';
+import { InfoForm, InsertForm, UpdateForm, JurisdictionForm } from './forms';
 import { FormattedMessage } from 'react-intl';
 import { getLocalesTemplate } from 'locale';
 /**
@@ -138,6 +138,15 @@ class RowAction extends React.Component<{
                         type="a"
                     >
                         <UpdateForm loadData={data} />
+                    </DialogForm>
+                </Visible>
+                <Visible visible={onAuthorizeActions(Store, "pages")}>
+                    <Divider type="vertical" />
+                    <DialogForm
+                        title={<FormattedMessage id="action.privilege" />}
+                    type="a"
+                >
+                        <JurisdictionForm loadData={data} />
                     </DialogForm>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
