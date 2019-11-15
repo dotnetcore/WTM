@@ -54,7 +54,8 @@ export default {
                     onChange={(value, option) => {
                         pages.subscribe(data => {
                             props.form.setFieldsValue({
-                                'Entity.Url': lodash.get(lodash.find(data, ['Value', value]), "Url")
+                                'Entity.Url': lodash.get(lodash.find(data, ['Value', value]), "Url"),
+                                'SelectedActionIDs': undefined
                             })
                         })
                     }}
