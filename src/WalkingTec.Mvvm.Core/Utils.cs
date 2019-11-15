@@ -699,10 +699,17 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        public static string GetNugetVersion(bool pre = false)
+        public static string GetNugetVersion(string start = null, bool pre = false)
         {
             NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
-            return v.data[0]?.version;
+            if (string.IsNullOrEmpty(start))
+            {
+                return v.data[0]?.version;
+            }
+            else
+            {
+                return v.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
+            }
         }
     }
 }
