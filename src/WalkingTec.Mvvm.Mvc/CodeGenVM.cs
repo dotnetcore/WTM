@@ -631,8 +631,10 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             else
                             {
+                                var middleType = modelType.GetProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
+                                var middlename = DC.GetPropertyNameByFk(middleType, pro.SubIdField);
                                 selectstring += $@"
-                    {pro.SubField + "_view" + prefix} = DC.Set<{subtype.Name}>().Where(y => x.{pro.FieldName}.Select(z => z.{pro.SubIdField}).Contains(y.ID)).Select(y => y.{pro.SubField}).ToSpratedString(null,"",""),";
+                    {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.Select(y=>y.{middlename}.{pro.SubField}).ToSpratedString(null,"",""), ";
                             }
                             if (subdisplay?.Name != null)
                             {

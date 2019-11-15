@@ -63,8 +63,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     PhotoId = x.PhotoId,
                     CellPhone = x.CellPhone,
                     IsValid = x.IsValid,
-                    RoleName_view = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
-                    GroupName_view = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
+                    RoleName_view = x.UserRoles.Select(y => y.Role.RoleName).ToSpratedString(null, ","),
+                    GroupName_view = x.UserGroups.Select(y => y.Group.GroupName).ToSpratedString(null, ","),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
