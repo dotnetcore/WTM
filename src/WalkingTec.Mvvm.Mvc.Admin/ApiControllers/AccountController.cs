@@ -185,7 +185,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     Text = x.PageName,
                     Url = x.Url,
                     Icon = x.ICon
-                });
+                }).ToList();
                 ms.AddRange(folders);
                 foreach (var item in menus)
                 {
