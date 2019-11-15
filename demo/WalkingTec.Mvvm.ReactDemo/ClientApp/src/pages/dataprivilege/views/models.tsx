@@ -24,8 +24,8 @@ export default {
                 rules: [{ "required": true, "message": "权限类型不能为空" }],
                 formItem: <WtmRadio
                     dataSource={[
-                        { Text: "用户组权限", Value: 0 },
-                        { Text: "用户权限", Value: 1 },
+                        { Text: "用户组权限", Value: '0' },
+                        { Text: "用户权限", Value: '1' },
                     ]} />
             },
             /** 权限名称 */
@@ -97,8 +97,8 @@ export default {
                 rules: [],
                 formItem: <WtmRadio
                     dataSource={[
-                        { Text: "用户组权限", Value: 0 },
-                        { Text: "用户权限", Value: 1 },
+                        { Text: "用户组权限", Value: '0' },
+                        { Text: "用户权限", Value: '1' },
                     ]} />
             }
         }
