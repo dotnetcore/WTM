@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@ant-design/pro-layout": "^4.5.16",
+    "@ant-design/pro-layout": "4.6.2",
     "ag-grid-community": "^21.2.1",
     "ag-grid-enterprise": "^21.2.1",
     "ag-grid-react": "^21.2.1",
