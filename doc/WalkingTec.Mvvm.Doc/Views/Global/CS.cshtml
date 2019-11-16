@@ -81,7 +81,7 @@ public class Program
 
     public static string CSSelector(ActionExecutingContext context)
     {
-        var userinfo = (context.Controller as BaseController).LoginUserInfo;
+        var userinfo = (context.Controller as IBaseController)?.LoginUserInfo;
         if(userinfo == null)
         {
             return "default";

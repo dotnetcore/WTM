@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -47,7 +48,7 @@ namespace WalkingTec.Mvvm.Demo
                             new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
                             new DataPrivilegeInfo<Major>("专业", y => y.MajorName)
                         };
-                        x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx);
+                        x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx,CsSector:CSSelector);
                         x.AddLayui();
                         x.AddSwaggerGen(c =>
                         {
@@ -79,6 +80,26 @@ namespace WalkingTec.Mvvm.Demo
                         x.UseFrameworkService();
                     })
                     .UseUrls(globalConfig.ApplicationUrl);
+        }
+
+        public static string CSSelector(ActionExecutingContext context)
+        {
+            var userinfo = (context.Controller as IBaseController)?.LoginUserInfo;
+            if (userinfo == null)
+            {
+                return "default";
+            }
+            else
+            {
+                if (userinfo.ITCode.StartsWith("a"))
+                {
+                    return "default";
+                }
+                else
+                {
+                    return "default";
+                }
+            }
         }
     }
 }

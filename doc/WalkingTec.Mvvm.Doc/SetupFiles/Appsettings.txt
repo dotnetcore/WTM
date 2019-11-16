@@ -19,6 +19,7 @@
       }
     ]
   },
+  "ErrorHandler": "/_Framework/Error",
   "Languages":"zh,en",
   "UIOptions": {
     "DataTable": {

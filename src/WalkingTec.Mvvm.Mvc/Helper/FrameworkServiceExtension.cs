@@ -288,10 +288,6 @@ namespace WalkingTec.Mvvm.Mvc
             services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.Configure<Core.Auth.CookieOptions>("", options =>
-            {
-
-            });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                     {
@@ -365,7 +361,7 @@ namespace WalkingTec.Mvvm.Mvc
                 });
             }
 
-            app.UseExceptionHandler("/_Framework/Error");
+            app.UseExceptionHandler(configs.ErrorHandler);
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
