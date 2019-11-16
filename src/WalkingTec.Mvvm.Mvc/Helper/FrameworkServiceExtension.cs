@@ -409,7 +409,14 @@ namespace WalkingTec.Mvvm.Mvc
                 StreamReader tr = new StreamReader(context.Request.Body);
                 string body = tr.ReadToEndAsync().Result;
                 context.Request.Body.Position = 0;
-                context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                {
+                    context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                }
+                else
+                {
+                    context.Items["DONOTUSE_REQUESTBODY"] = body;
+                }
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
                 {
