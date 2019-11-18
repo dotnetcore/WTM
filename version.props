@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <Build_BuildNumber>7</Build_BuildNumber>
+    <VersionPrefix>3.0.1</VersionPrefix>
+    <Build_BuildNumber></Build_BuildNumber>
   </PropertyGroup>
 
   <!-- <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"> -->
@@ -11,7 +11,7 @@
         -beta: Beta 版本，通常指可用于下一计划版本的功能完整的版本，但可能包含已知 bug。
         -rc: 候选发布，通常可能为最终（稳定）版本，除非出现重大 bug。
     -->
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''">rc</VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
 
     <FileVersion Condition="'$(Build_BuildNumber)' != ''">$(VersionPrefix).$(Build_BuildNumber)</FileVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
