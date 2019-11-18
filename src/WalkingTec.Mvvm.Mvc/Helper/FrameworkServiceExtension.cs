@@ -367,6 +367,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (InitDataBase == false)
                 {
+                    InitDataBase = true;
                     var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
                     foreach (var m in gd.AllModule)
                     {
@@ -397,7 +398,6 @@ namespace WalkingTec.Mvvm.Mvc
                         dc.DataInit(gd.AllModule, test != null).Wait();
                     }
                     GlobalServices.SetServiceProvider(app.ApplicationServices);
-                    InitDataBase = true;
                 }
                 if (context.Request.Path == "/")
                 {
