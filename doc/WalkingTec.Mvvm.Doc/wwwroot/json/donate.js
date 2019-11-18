@@ -62,6 +62,9 @@
         {"date":"2019-11-06","name":"Hawker","amount":9.99,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"i*y","amount":18.00,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"*松","amount":50.00,"from":"微信","comment":"加油"},
-        {"date":"2019-11-06","name":"*煌","amount":10.00,"from":"微信","comment":"-"}
+        {"date":"2019-11-06","name":"*煌","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-11-10","name":"S*i","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2019-11-12","name":"*延","amount":8.80,"from":"微信","comment":"谢谢刘总的热心帮助"},
+        {"date":"2019-11-18","name":"G*n","amount":18.88,"from":"微信","comment":"-"}
     ]
 }
