@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var linktype = Type.GetType(entity.LinkedType);
                 if (linktype != typeof(FileAttachment))
                 {
-                    var subpros = Type.GetType(entity.LinkedType).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(x=>x.GetMemberType() == typeof(string)).OrderBy(x => x.Name).ToList().ToListItems(x => x.Name, x => x.Name);
+                    var subpros = Type.GetType(entity.LinkedType).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(x=>x.GetMemberType() == typeof(string) && x.Name != "BatchError").OrderBy(x => x.Name).ToList().ToListItems(x => x.Name, x => x.Name);
                     var subproswithname = subpros.Where(x => x.Text.ToLower().Contains("name")).ToList();
                     var subproswithoutname = subpros.Where(x => x.Text.ToLower().Contains("name") == false).ToList();
                     subpros = new List<ComboSelectListItem>();
