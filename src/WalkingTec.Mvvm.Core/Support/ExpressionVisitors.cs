@@ -168,10 +168,11 @@ namespace WalkingTec.Mvvm.Core
                 List<SortInfo> info = new List<SortInfo>() { _sortinfo };
                 Expression rv = null;
                 foreach (var item in info)
-                {
-                    ParameterExpression pe = Expression.Parameter(modelType,"x");
+                {                    
                     var idproperty = modelType.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
-                    Expression pro = Expression.Property(pe, idproperty);
+                    var reftype = idproperty.DeclaringType;
+                    ParameterExpression pe = Expression.Parameter(modelType, "x");
+                    Expression pro = Expression.Property(pe, reftype.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault());
                     Type proType = idproperty.PropertyType;
                     if (item.Direction == SortDir.Asc)
                     {
