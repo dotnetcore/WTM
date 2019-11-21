@@ -55,19 +55,17 @@ namespace WalkingTec.Mvvm.Core
 
         private int? _childrenDepth;
 
+
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        public int ChildrenDepth
+        public int GetChildrenDepth()
         {
-            get
+            if (_childrenDepth == null)
             {
-                if (_childrenDepth == null)
-                {
-                    _childrenDepth = _getHeaderDepth();
-                }
-                return _childrenDepth.Value;
+                _childrenDepth = _getHeaderDepth();
             }
+            return _childrenDepth.Value;
         }
 
         /// <summary>
@@ -528,7 +526,7 @@ namespace WalkingTec.Mvvm.Core
         public virtual IOrderedQueryable<TModel> GetCheckedExportQuery()
         {
             var baseQuery = GetBatchQuery();
-            return baseQuery;           
+            return baseQuery;
         }
 
         /// <summary>
@@ -886,14 +884,14 @@ namespace WalkingTec.Mvvm.Core
             {
                 var aroot = root as List<GridColumn<TModel>>;
                 List<GridColumn<TModel>> remove = null;
-                var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x=>x.PropertyType).FirstOrDefault();
+                var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
                 if (idpro == typeof(string))
                 {
                     remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true).ToList();
                 }
                 else
                 {
-                   remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
                 }
                 foreach (var item in remove)
                 {
