@@ -1,4 +1,4 @@
-﻿//
+//
 // DistributedCacheExtensions.cs
 //
 // Author:
@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             this IDistributedCache cache,
             string key)
         {
-            var value = cache.GetString(InstanceName + key);
+            var value = cache.GetString(InstanceName + key.ToLower());
             if (value == null)
                 return default;
             else
@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             string key,
             CancellationToken token = default)
         {
-            var value = await cache.GetStringAsync(InstanceName + key, token);
+            var value = await cache.GetStringAsync(InstanceName + key.ToLower(), token);
             if (value == null)
                 return default;
             else
@@ -97,7 +97,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             string key,
             out T outValue)
         {
-            var value = cache.GetString(InstanceName + key);
+            var value = cache.GetString(InstanceName + key.ToLower());
             if (value == null)
             {
                 outValue = default;
@@ -121,9 +121,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             DistributedCacheEntryOptions options = null)
         {
             if (options == null)
-                cache.Set(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)));
+                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)));
             else
-                cache.Set(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), options);
+                cache.Set(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), options);
         }
 
         public static async Task AddAsync<T>(
@@ -134,9 +134,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             CancellationToken token = default)
         {
             if (options == null)
-                await cache.SetAsync(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), token);
+                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), token);
             else
-                await cache.SetAsync(InstanceName + key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), options, token);
+                await cache.SetAsync(InstanceName + key.ToLower(), Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, jsonSerializerSettings)), options, token);
         }
 
         #endregion
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             this IDistributedCache cache,
             string key)
         {
-            cache.Remove(InstanceName + key);
+            cache.Remove(InstanceName + key.ToLower());
         }
 
         public static async Task DeleteAsync(
@@ -156,7 +156,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             string key,
             CancellationToken token = default)
         {
-            await cache.RemoveAsync(InstanceName + key, token);
+            await cache.RemoveAsync(InstanceName + key.ToLower(), token);
         }
 
         #endregion
