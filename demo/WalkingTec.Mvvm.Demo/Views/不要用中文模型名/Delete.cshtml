@@ -1,0 +1,16 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs.不要用中文模型名VM
+
+<wt:form vm="@Model">
+	<wt:quote>确定要删除这条数据么：</wt:quote>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.不要" />
+<wt:display field="Entity.用" />
+<wt:display field="Entity.中文" />
+<wt:display field="Entity.模型名" />
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align=" AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

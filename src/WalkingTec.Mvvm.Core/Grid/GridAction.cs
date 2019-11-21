@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -127,10 +128,10 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var rv = $"/{ControllerName}/{ActionName}";
+                var rv = $"/{HttpUtility.UrlEncode(ControllerName)}/{HttpUtility.UrlEncode(ActionName)}";
                 if (!string.IsNullOrEmpty(Area))
                 {
-                    rv = $"/{Area}{rv}";
+                    rv = $"/{HttpUtility.UrlEncode(Area)}{rv}";
                 }
                 if (!string.IsNullOrEmpty(QueryString))
                 {
