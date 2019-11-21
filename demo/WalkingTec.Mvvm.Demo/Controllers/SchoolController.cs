@@ -8,6 +8,7 @@ using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Auth.Attribute;
+using System;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -309,6 +310,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
         }
         #endregion
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(SchoolListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
 
     }
 }
