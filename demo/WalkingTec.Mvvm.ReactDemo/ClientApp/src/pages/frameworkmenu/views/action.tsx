@@ -64,6 +64,8 @@ class PageAction extends React.Component<any, any> {
         const disabled = deletelength < 1;
         return (
             <Row className="data-view-page-action">
+                <Button onClick={Store.onRefreshMenu} icon="reload" > <FormattedMessage id="action.sys.refreshMenu" /></Button>
+                <Divider type="vertical" />
                 <Visible visible={onAuthorizeActions(Store, "insert")}>
                     <DialogForm
                         title={<FormattedMessage id="action.insert" />}

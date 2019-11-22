@@ -206,5 +206,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
         }
         #endregion
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(StudentListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
     }
 }

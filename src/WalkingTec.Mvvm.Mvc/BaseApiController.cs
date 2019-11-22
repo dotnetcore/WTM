@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
                 {
-                    var userIdStr = User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
+                    var userIdStr = User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     Guid userId = Guid.Parse(userIdStr);
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
@@ -150,14 +150,13 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (value == null)
                 {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
-                    _loginUserInfo = value;
+                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}");
                 }
                 else
                 {
-                    _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{value.Id}", value);
                 }
+                _loginUserInfo = value;
             }
         }
 

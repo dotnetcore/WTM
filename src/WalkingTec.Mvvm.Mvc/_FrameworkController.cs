@@ -529,7 +529,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     url = url.Replace("/_framework/outside?url=", "");
                 }
-                if (!string.IsNullOrEmpty(url) && info.IsAccessable(HttpUtility.UrlDecode(url)) == false)
+                if (!string.IsNullOrEmpty(url) && info.IsAccessable(url) == false)
                 {
                     toRemove.Add(menu);
                 }

@@ -359,7 +359,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             #region 生成 Layui 所需的表头
             var rawCols = ListVM?.GetHeaders();
-            var maxDepth = (ListVM?.ChildrenDepth) ?? 1;
+            var maxDepth = (ListVM?.GetChildrenDepth()) ?? 1;
             var layuiCols = new List<List<LayuiColumn>>();
 
             var tempCols = new List<LayuiColumn>();

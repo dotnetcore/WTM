@@ -21,7 +21,9 @@
     "EnableLog": true,
     "LogExceptionOnly": false,
     "IsQuickDebug": true,
+    "ErrorHandler": "/_Framework/Error",
     "PageMode": "Tab",
+    "Languages": "zh,en",
     "CorsOptions": {
       "EnableAll": true, //所有方法是否默认跨域
       "Policy": [
@@ -59,6 +61,24 @@
             }
         ]
     },
+    "JwtOptions": {
+    "Issuer": "http://localhost",
+    "Audience": "http://localhost",
+    "Expires": 3600,
+    "SecurityKey": "superSecretKey@345",
+    "RefreshTokenExpires": 86400,
+    "LoginPath": "/Login/Login"
+  },
+  "CookieOptions": {
+    "Issuer": "http://localhost",
+    "Audience": "http://localhost",
+    "Expires": 3600,
+    "SlidingExpiration": true,
+    "SecurityKey": "superSecretKey@345",
+    "RefreshTokenExpires": 86400,
+    "LoginPath": "/Login/Login"
+  },
+
   "AppSettings": {
     "Key1": "abc",
     "Key2": "123"
@@ -92,12 +112,24 @@
             <td>是否启用日志</td>
           </tr>
           <tr>
+            <td>PageMode</td>
+            <td>页面显示模式，Single或者Tab</td>
+          </tr>
+          <tr>
+            <td>TabMode</td>
+            <td>Tab页显示方式，Default或者Simple</td>
+          </tr>
+          <tr>
             <td>LogExceptionOnly</td>
             <td>当启用日志时，是否只记录异常</td>
           </tr>
           <tr>
             <td>IsQuickDebug</td>
             <td>是否为调试模式，调试模式下会跳过页面权限和数据权限的验证，直接反射所有Controller下的所有方法作为菜单项</td>
+          </tr>
+          <tr>
+            <td>ErrorHandler</td>
+            <td>全局错误处理，默认地址是框架自带的/_Framework/Error</td>
           </tr>
           <tr>
             <td>RPP</td>
@@ -120,16 +152,20 @@
             <td>当附件储存模式选择Local时，指定硬盘目录</td>
           </tr>
           <tr>
-            <td>PageMode</td>
-            <td>多页面的展现方式，可选Single或者Tab</td>
-          </tr>
-          <tr>
             <td>DFSServer</td>
             <td>当附件储存模式选择DFS时，指定DFS服务器的信息</td>
           </tr>
           <tr>
-            <td>AppSettings</td>
-            <td>key，value形式，可配置多个</td>
+            <td>Languages</td>
+            <td>配置框架支持的语言，多种语言用逗号分开，比如zh,en</td>
+          </tr>
+          <tr>
+            <td>JwtOptions</td>
+            <td>配置jwt认证的属性，如过期时间，密钥等</td>
+          </tr>
+          <tr>
+            <td>CookieOptions</td>
+            <td>配置Cookie认证的属性，如过期时间，密钥等</td>
           </tr>
         </tbody>
     </table>

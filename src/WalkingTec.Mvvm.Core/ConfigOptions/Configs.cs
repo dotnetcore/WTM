@@ -55,6 +55,8 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        public string ErrorHandler { get; set; } = "/_Framework/Error";
+
         #region Cookie prefix
 
         private string _cookiePre;

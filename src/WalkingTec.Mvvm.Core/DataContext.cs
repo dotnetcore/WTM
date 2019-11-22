@@ -320,11 +320,15 @@ namespace WalkingTec.Mvvm.Core
                 default:
                     break;
             }
-            var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
-            if (Configs.IsQuickDebug)
+            try
             {
-                optionsBuilder.UseLoggerFactory(LoggerFactory);
+                var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
+                if (Configs.IsQuickDebug)
+                {
+                    optionsBuilder.UseLoggerFactory(LoggerFactory);
+                }
             }
+            catch { }
             base.OnConfiguring(optionsBuilder);
         }
 
