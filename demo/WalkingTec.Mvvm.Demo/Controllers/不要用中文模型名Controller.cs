@@ -1,53 +1,45 @@
-using System;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    [ActionDescription("学生管理（多对多）")]
-    public class StudentController : BaseController
+    
+    [ActionDescription("123")]
+    public partial class 不要用中文模型名Controller : BaseController
     {
         #region 搜索
         [ActionDescription("搜索")]
         public ActionResult Index()
         {
-            var vm = CreateVM<StudentListVM>();
-            return PartialView(vm);
-        }
-        [ActionDescription("搜索（多列表）")]
-        public ActionResult Index2()
-        {
-            var vm = CreateVM<StudentSearchVM>();
-            vm.ValidList.Searcher.IsValid = true;
-            vm.InValidList.Searcher.IsValid = false;
+            var vm = CreateVM<不要用中文模型名ListVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("搜索")]
         [HttpPost]
-        public string Search(StudentListVM vm)
+        public string Search(不要用中文模型名ListVM vm)
         {
             return vm.GetJson(false);
         }
+
         #endregion
 
         #region 新建
         [ActionDescription("新建")]
         public ActionResult Create()
         {
-            var vm = CreateVM<StudentVM>();
+            var vm = CreateVM<不要用中文模型名VM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("新建")]
-        public ActionResult Create(StudentVM vm)
+        public ActionResult Create(不要用中文模型名VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -63,7 +55,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
+                    return FFResult().CloseDialog().RefreshGrid();
                 }
             }
         }
@@ -71,15 +63,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 修改
         [ActionDescription("修改")]
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
 
         [ActionDescription("修改")]
         [HttpPost]
-        public ActionResult Edit(StudentVM vm)
+        [ValidateFormItemOnly]
+        public ActionResult Edit(不要用中文模型名VM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +88,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
+                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
                 }
             }
         }
@@ -103,17 +96,17 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 删除
         [ActionDescription("删除")]
-        public ActionResult Delete(Guid id)
+        public ActionResult Delete(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
 
         [ActionDescription("删除")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection nouse)
+        public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = CreateVM<不要用中文模型名VM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -121,16 +114,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
+                return FFResult().CloseDialog().RefreshGrid();
             }
         }
         #endregion
 
         #region 详细
         [ActionDescription("详细")]
-        public ActionResult Details(Guid id)
+        public ActionResult Details(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -138,15 +131,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(Guid[] IDs)
+        public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult DoBatchEdit(StudentBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchEdit(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
             {
@@ -154,8 +147,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-
-                return FFResult().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
             }
         }
         #endregion
@@ -163,15 +155,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult DoBatchDelete(StudentBatchVM vm, IFormCollection nouse)
+        public ActionResult DoBatchDelete(不要用中文模型名BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -179,7 +171,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
             }
         }
         #endregion
@@ -188,13 +180,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("导入")]
         public ActionResult Import()
         {
-            var vm = CreateVM<StudentImportVM>();
+            var vm = CreateVM<不要用中文模型名ImportVM>();
             return PartialView(vm);
         }
 
         [HttpPost]
         [ActionDescription("导入")]
-        public ActionResult Import(StudentImportVM vm, IFormCollection nouse)
+        public ActionResult Import(不要用中文模型名ImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
             {
@@ -202,18 +194,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
             }
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("导出")]
         [HttpPost]
-        public IActionResult ExportExcel(StudentListVM vm)
+        public IActionResult ExportExcel(不要用中文模型名ListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_不要用中文模型名_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
     }

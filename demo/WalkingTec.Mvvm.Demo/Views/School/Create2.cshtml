@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
+@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
 
 <wt:form vm="@Model">
     <wt:row items-per-row="ItemsPerRowEnum.Two">
@@ -7,7 +7,7 @@
         <wt:combobox field="Entity.SchoolType" />
         <wt:textbox field="Entity.Remark" />
     </wt:row>
-    <wt:grid vm="MajorList" use-local-data="true" hidden-panel="true" hidden-checkbox="true" height="-400"/>
+    <wt:grid vm="MajorList" use-local-data="true" hidden-panel="true" hidden-checkbox="true"  height="-400"/>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />
