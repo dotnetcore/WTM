@@ -296,6 +296,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
+                if(vm.MajorList == null)
+                {
+                    vm.MajorList = new ViewModels.MajorVMs.MajorDetailListVM();
+                }
                 vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
