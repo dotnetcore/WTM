@@ -296,9 +296,9 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                if(vm.MajorList == null)
+                if(vm.Entity.Majors == null)
                 {
-                    vm.MajorList = new ViewModels.MajorVMs.MajorDetailListVM();
+                    vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
                 vm.DoEdit();
                 if (!ModelState.IsValid)
