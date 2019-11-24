@@ -65,6 +65,12 @@
         {"date":"2019-11-06","name":"*煌","amount":10.00,"from":"微信","comment":"-"},
         {"date":"2019-11-10","name":"S*i","amount":2.00,"from":"微信","comment":"-"},
         {"date":"2019-11-12","name":"*延","amount":8.80,"from":"微信","comment":"谢谢刘总的热心帮助"},
-        {"date":"2019-11-18","name":"G*n","amount":18.88,"from":"微信","comment":"-"}
+        {"date":"2019-11-18","name":"G*n","amount":18.88,"from":"微信","comment":"-"},
+        {"date":"2019-11-20","name":"B*l","amount":38.88,"from":"微信","comment":"框架思路不错，加油！"},
+        {"date":"2019-11-20","name":"*加","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2019-11-20","name":"*加","amount":5.00,"from":"微信","comment":"-"},
+        {"date":"2019-11-21","name":"J*o","amount":20.00,"from":"微信","comment":"框架很棒！加油！"},
+        {"date":"2019-11-21","name":"C*s","amount":66.66,"from":"微信","comment":"加油"},
+        {"date":"2019-11-22","name":"x*n","amount":200.00,"from":"微信","comment":"收入不多，感谢作者"}
     ]
 }
