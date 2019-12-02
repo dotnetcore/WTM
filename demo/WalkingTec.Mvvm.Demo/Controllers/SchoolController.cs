@@ -296,6 +296,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
+                if(vm.Entity.Majors == null)
+                {
+                    vm.Entity.Majors = new System.Collections.Generic.List<Major>();
+                }
                 vm.DoEdit();
                 if (!ModelState.IsValid)
                 {
