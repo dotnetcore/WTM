@@ -1091,13 +1091,32 @@ namespace WalkingTec.Mvvm.Mvc
             var modelprops = t.GetRandomValues();
             var mname = t.Name?.Split(',').FirstOrDefault()?.Split('.').LastOrDefault() ?? "";
             string cpros = "";
+            string rv = "";
             foreach (var pro in modelprops)
             {
-                cpros += $@"
+                if (pro.Value == "$fk$")
+                {
+                    var fktype = t.GetProperties().Where(x => x.Name == pro.Key.Substring(0, pro.Key.Length - 2)).Select(x => x.PropertyType).FirstOrDefault();
+                    rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
+                }
+            }
+
+
+            foreach (var pro in modelprops)
+            {
+                if (pro.Value == "$fk$")
+                {
+                    cpros += $@"
+                v.{pro.Key} = Add{pro.Key.Substring(0, pro.Key.Length - 2)}();";
+                }
+                else
+                {
+                    cpros += $@"
                 v.{pro.Key} = {pro.Value};";
+                }
             }
             var idpro = t.GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
-            string rv = $@"
+            rv += $@"
         private {idpro.Name} Add{keyname}()
         {{
             {mname} v = new {mname}();

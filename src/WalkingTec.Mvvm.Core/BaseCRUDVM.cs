@@ -496,8 +496,11 @@ namespace WalkingTec.Mvvm.Core
                                                 }
                                             }
                                         }
-                                        DC.UpdateProperty(i, "UpdateTime");
-                                        DC.UpdateProperty(i, "UpdateBy");
+                                        if (item.GetType().IsSubclassOf(typeof(BasePoco)))
+                                        {
+                                            DC.UpdateProperty(i, "UpdateTime");
+                                            DC.UpdateProperty(i, "UpdateBy");
+                                        }
                                     }
                                 }
                             }
