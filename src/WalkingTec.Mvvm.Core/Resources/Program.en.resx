@@ -825,6 +825,15 @@
   <data name="{0}number" xml:space="preserve">
     <value>The {0} field must be digit</value>
   </data>
+  <data name="{0}range{1}" xml:space="preserve">
+    <value>{0} must be at least {1}</value>
+  </data>
+  <data name="{0}range{1}{2}" xml:space="preserve">
+    <value>{0} must between {1} and {2}</value>
+  </data>
+  <data name="{0}range{2}" xml:space="preserve">
+    <value>{0} must be less than {1}</value>
+  </data>
   <data name="{0}required" xml:space="preserve">
     <value>The {0} field is required</value>
   </data>
