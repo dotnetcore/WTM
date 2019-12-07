@@ -25,13 +25,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         public SchoolVM()
         {
             MajorList = new MajorDetailListVM();
+            SetInclude(x => x.Photos);
         }
+
 
         protected override void InitVM()
         {
-            var ss = DC.Set<School>().ToList();
             TransferItmes = DC.Set<School>().GetSelectListItems(null, null, y => y.SchoolName);
-
             MajorList.CopyContext(this);
         }
 
