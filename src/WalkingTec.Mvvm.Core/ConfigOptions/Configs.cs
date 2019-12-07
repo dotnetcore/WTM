@@ -207,6 +207,8 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public bool IsOldSqlServer { get; set; }
+
         #endregion
 
         #region PageMode

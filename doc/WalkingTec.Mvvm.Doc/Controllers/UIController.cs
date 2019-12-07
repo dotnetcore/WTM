@@ -82,6 +82,14 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("UploadMulti")]
+        public IActionResult UploadMulti()
+        {
+            var vm = CreateVM<SchoolVm>();
+            return PartialView(vm);
+        }
+
+
         [ActionDescription("Selector")]
         public IActionResult Selector()
         {

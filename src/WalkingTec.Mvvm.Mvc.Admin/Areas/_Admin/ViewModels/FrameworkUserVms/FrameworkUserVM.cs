@@ -106,6 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public override async Task DoDeleteAsync()
         {
             await base.DoDeleteAsync();
+            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
         }
 
         public void ChangePassword()
