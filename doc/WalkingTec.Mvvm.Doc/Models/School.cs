@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -37,6 +37,18 @@ namespace WalkingTec.Mvvm.Doc.Models
 
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
+        [Display(Name = "照片")]
+        public List<SchoolPhoto> Photos { get; set; }
+    }
+
+    public class SchoolPhoto : TopBasePoco, ISubFile
+    {
+        public Guid SchoolId { get; set; }
+        public School School { get; set; }
+
+        public Guid FileId { get; set; }
+        public FileAttachment File { get; set; }
+        public int order { get; set; }
     }
 
 }
