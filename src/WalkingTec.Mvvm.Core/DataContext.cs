@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Core
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -300,7 +300,21 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                    try
+                    {
+                        var Configs = GlobalServices.GetRequiredService<Configs>();
+                        if (Configs.IsOldSqlServer == true)
+                        {
+                            optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                        }
+                        else
+                        {
+                            optionsBuilder.UseSqlServer(CSName);
+                        }
+                    }
+                    catch {
+                        optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                    }
                     break;
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);
