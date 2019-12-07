@@ -45,6 +45,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public bool Max { get; set; }
 
+        /// <summary>
+        /// 确认内容（如果不为空则弹出询问框）
+        /// </summary>
+        public string ConfirmTxt { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (IsLink == false)
@@ -69,7 +74,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Click = $"ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"},undefined,{Max.ToString().ToLower()})";
                 }
             }
-            else if(Target == ButtonTargetEnum.self)
+            else if (Target == ButtonTargetEnum.self)
             {
                 if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
                 {
@@ -80,7 +85,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Click = $"ff.BgRequest('{Url}')";
                 }
             }
-            else if(Target == ButtonTargetEnum.newwindow)
+            else if (Target == ButtonTargetEnum.newwindow)
             {
                 if (Url.StartsWith("~"))
                 {
@@ -91,6 +96,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Click = $"ff.SetCookie('#{Url}','{WindowTitle ?? ""}',true);window.open('/Home/PIndex#{Url}')";
                 }
+            }
+            if (!string.IsNullOrEmpty(ConfirmTxt))
+            {
+                Click = $"layer.confirm('{ConfirmTxt}', {{icon: 3, title:'提示'}}, function(index){{ {Click};layer.close(index); }})";
             }
             base.Process(context, output);
         }

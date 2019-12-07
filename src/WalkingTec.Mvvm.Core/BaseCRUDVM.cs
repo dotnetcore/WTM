@@ -507,15 +507,27 @@ namespace WalkingTec.Mvvm.Core
                             //需要删除的数据
                             foreach (var item in toremove)
                             {
-                                foreach (var itempro in itemPros)
+                                //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
+                                if (ftype.IsSubclassOf(typeof(PersistPoco)))
                                 {
-                                    if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
-                                    {
-                                        itempro.SetValue(item, null);
-                                    }
+                                    (item as PersistPoco).IsValid = false;
+                                    (item as PersistPoco).UpdateTime = DateTime.Now;
+                                    (item as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                                    dynamic i = item;
+                                    DC.UpdateEntity(i);
                                 }
-                                dynamic i = item;
-                                DC.DeleteEntity(i);
+                                else
+                                {
+                                    foreach (var itempro in itemPros)
+                                    {
+                                        if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                                        {
+                                            itempro.SetValue(item, null);
+                                        }
+                                    }
+                                    dynamic i = item;
+                                    DC.DeleteEntity(i);
+                                }
                             }
                             //需要添加的数据
                             foreach (var item in toadd)
@@ -542,18 +554,34 @@ namespace WalkingTec.Mvvm.Core
                             if (_entity != null)
                             {
                                 IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
-                                foreach (var item in removeData)
+                                //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
+                                if (removeData is IEnumerable<PersistPoco> removePersistPocoData)
                                 {
-                                    foreach (var itempro in itemPros)
+                                    foreach (var item in removePersistPocoData)
                                     {
-                                        if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
-                                        {
-                                            itempro.SetValue(item, null);
-                                        }
+                                        (item as PersistPoco).IsValid = false;
+                                        (item as PersistPoco).UpdateTime = DateTime.Now;
+                                        (item as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                                        dynamic i = item;
+                                        DC.UpdateEntity(i);
                                     }
-                                    dynamic i = item;
-                                    DC.DeleteEntity(i);
                                 }
+                                else
+                                {
+                                    foreach (var item in removeData)
+                                    {
+                                        foreach (var itempro in itemPros)
+                                        {
+                                            if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                                            {
+                                                itempro.SetValue(item, null);
+                                            }
+                                        }
+                                        dynamic i = item;
+                                        DC.DeleteEntity(i);
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -668,6 +696,18 @@ namespace WalkingTec.Mvvm.Core
                     }
                     f.SetValue(Entity, null);
                 }
+
+                var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
+                    foreach (var sub in subs)
+                    {
+                        fileids.Add(sub.FileId);
+                    }
+                    f.SetValue(Entity, null);
+                }
+
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
                 foreach (var item in fileids)
@@ -678,7 +718,7 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }

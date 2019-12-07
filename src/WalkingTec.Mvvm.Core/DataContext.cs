@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Core
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
