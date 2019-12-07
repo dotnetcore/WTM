@@ -1,8 +1,8 @@
-@model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
+@model WalkingTec.Mvvm.Doc.ViewModels.SchoolVms.SchoolVm
 
-<wt:fieldset field-set-style="Simple" title="Upload">
+<wt:fieldset field-set-style="Simple" title="MultiUpload">
  </wt:fieldset>
-   <p>Upload控件用于文件上传，常用属性有：</p>
+   <p>MultiUpload控件用于文件上传，常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                     <td>Field</td>
-                    <td>绑定字段，比如绑定一个指向FileAttachment的Id字段，必填</td>
+                    <td>绑定字段，必须绑定一个List&lt;ISubFile&gt;字段，必填</td>
                 </tr>
                 <tr>
                     <td>Disabled</td>
@@ -74,10 +74,10 @@
             </tbody>
         </table>
     <wt:quote>
-        <p>Upload控件和框架提供的FileAttachment紧密相连，直接绑定一个指向FileAttachment的Id字段，框架会自动完成附件的保存和删除</p>
+        <p>MultiUpload控件必须绑定一个List&lt;ISubFile&gt;字段， ISubFile是框架提供的一个接口，用于定义子附件，当Model按照这个数据结构进行定义的时候，框架会自动完成多附件的保存和删除</p>
         <p>可以在appsetting文件种设定SaveFileMode来指定框架附件的保存方式，目前支持DataBase,Local和DFS</p>
         <p>下面的例子在选择文件之后没有效果，因为这个文档项目并没有连接真实的数据库</p>
-        <p>请注意Model中管理一个附件的写法</p>
+        <p>请注意Model中定义一个附件数组的写法</p>
     </wt:quote>
         <wt:tab>
           <wt:tabheaders>
@@ -88,7 +88,7 @@
             <wt:tabcontents>
                 <wt:tabcontent>
                     <wt:form vm="@Model" style="max-width:600px;">
-                        <wt:upload field="Entity.PhotoId" upload-type="ImageFile" />
+                        <wt:multiupload field="Entity.Photos" upload-type="ImageFile" />
                         <wt:row align="AlignEnum.Right">
                             <wt:submitbutton disabled="true" />
                             <wt:closebutton disabled="true" />
@@ -98,7 +98,7 @@
                 <wt:tabcontent>
                     <wt:code>
 &ltwt:form vm="@@Model" width="600"&gt
-    &ltwt:upload field="Entity.PhotoId" upload-type="ImageFile"  /&gt
+    &ltwt:upload field="Entity.Photos" upload-type="ImageFile"  /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
@@ -109,30 +109,32 @@
                 </wt:tabcontent>
                 <wt:tabcontent>
                     <wt:code>
-    public class Student : BasePoco
+    public class School : BasePoco
     {
-        [Display(Name = "账号")]
+        [Display(Name = "学校编码")]
         [Required(ErrorMessage = "{0}是必填项")]
+        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        public string SchoolCode { get; set; }
+
+        [Display(Name = "学校名称")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
-        public string LoginName { get; set; }
-
-        [Display(Name = "密码")]
-        [Required(AllowEmptyStrings = false)]
-        [StringLength(32)]
-        public string Password { get; set; }
-
-        [Display(Name = "姓名")]
         [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
-        public string Name { get; set; }
+        public string SchoolName { get; set; }
 
-        //这个Photo和PhotoId一起定义了一个附件
-        [Display(Name = "照片")]
-        public Guid? PhotoId { get; set; }
+        //定义附件列表
+        public List&lt;SchoolPhoto&gt; Photos { get; set; }
+    }
 
-        [Display(Name = "照片")]
-        public FileAttachment Photo { get; set; }
+    //继承ISubFile的附件子表
+    public class SchoolPhoto : TopBasePoco, ISubFile
+    {
+        public int SchoolId { get; set; }
+        public School School { get; set; }
 
+        //ISubFile定义的字段
+        public Guid FileId { get; set; }
+        public FileAttachment File { get; set; }
+        public int order { get; set; }
     }
 
                     </wt:code>
