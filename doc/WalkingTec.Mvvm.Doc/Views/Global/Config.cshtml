@@ -5,85 +5,86 @@
 </style>
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
 <wt:code title="appsettings.json">
- {
-    "ConnectionStrings": [
-    {
-        "Key": "default",
-        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
-    },
-    {
-        "Key": "test",
-        "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
-    }
-    ],
-    "DBType": "SqlServer",
-    "CookiePre": "WTM",
-    "EnableLog": true,
-    "LogExceptionOnly": false,
-    "IsQuickDebug": true,
-    "ErrorHandler": "/_Framework/Error",
-    "PageMode": "Tab",
-    "Languages": "zh,en",
-    "CorsOptions": {
-      "EnableAll": true, //所有方法是否默认跨域
-      "Policy": [
-        {
-          "Name": "Default",
-          "Domain": "http://localhost, https://localhost"
-        }
-      ]
-    },
-    "UIOptions": {
-      "DataTable": {
-        "RPP": 20, 
-      },
-      "ComboBox": {
-        "DefaultEnableSearch": true, 
-      },
-      "DateTime": {
-        "DefaultReadonly": true 
-      }
-    },
-    "FileUploadOptions": {
-        "UploadLimit": 20971520,
-        "SaveFileMode": "Database", 
-        "UploadDir": "D:\\" 
-    },
-    "DFSServer": {
-        "StorageMaxConnection": 100,
-        "TrackerMaxConnection": 100,
-        "ConnectionTimeout": 100,
-        "ConnectionLifeTime": 100,
-        "Trackers": [
-            {
-                "IP": "127.0.0.1",
-                "Port": 22122
-            }
-        ]
-    },
-    "JwtOptions": {
-    "Issuer": "http://localhost",
-    "Audience": "http://localhost",
-    "Expires": 3600,
-    "SecurityKey": "superSecretKey@345",
-    "RefreshTokenExpires": 86400,
-    "LoginPath": "/Login/Login"
+  {
+  "ConnectionStrings": [
+  {
+  "Key": "default",
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
+  },
+  {
+  "Key": "test",
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
+  }
+  ],
+  "DBType": "SqlServer",
+  "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
+  "CookiePre": "WTM",
+  "EnableLog": true,
+  "LogExceptionOnly": false,
+  "IsQuickDebug": true,
+  "ErrorHandler": "/_Framework/Error",
+  "PageMode": "Tab",
+  "Languages": "zh,en",
+  "CorsOptions": {
+  "EnableAll": true, //所有方法是否默认跨域
+  "Policy": [
+  {
+  "Name": "Default",
+  "Domain": "http://localhost, https://localhost"
+  }
+  ]
+  },
+  "UIOptions": {
+  "DataTable": {
+  "RPP": 20,
+  },
+  "ComboBox": {
+  "DefaultEnableSearch": true,
+  },
+  "DateTime": {
+  "DefaultReadonly": true
+  }
+  },
+  "FileUploadOptions": {
+  "UploadLimit": 20971520,
+  "SaveFileMode": "Database",
+  "UploadDir": "D:\\"
+  },
+  "DFSServer": {
+  "StorageMaxConnection": 100,
+  "TrackerMaxConnection": 100,
+  "ConnectionTimeout": 100,
+  "ConnectionLifeTime": 100,
+  "Trackers": [
+  {
+  "IP": "127.0.0.1",
+  "Port": 22122
+  }
+  ]
+  },
+  "JwtOptions": {
+  "Issuer": "http://localhost",
+  "Audience": "http://localhost",
+  "Expires": 3600,
+  "SecurityKey": "superSecretKey@345",
+  "RefreshTokenExpires": 86400,
+  "LoginPath": "/Login/Login"
   },
   "CookieOptions": {
-    "Issuer": "http://localhost",
-    "Audience": "http://localhost",
-    "Expires": 3600,
-    "SlidingExpiration": true,
-    "SecurityKey": "superSecretKey@345",
-    "RefreshTokenExpires": 86400,
-    "LoginPath": "/Login/Login"
+  "Issuer": "http://localhost",
+  "Audience": "http://localhost",
+  "Expires": 3600,
+  "SlidingExpiration": true,
+  "SecurityKey": "superSecretKey@345",
+  "RefreshTokenExpires": 86400,
+  "LoginPath": "/Login/Login"
   },
 
   "AppSettings": {
-    "Key1": "abc",
-    "Key2": "123"
+  "Key1": "abc",
+  "Key2": "123"
   }
-}
+  }
 </wt:code>
 
 <wt:fieldset field-set-style="Simple" title="配置说明">
@@ -102,6 +103,10 @@
           <tr>
             <td>DBType</td>
             <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite,oracle</td>
+          </tr>
+          <tr>
+            <td>IsOldSqlServer</td>
+            <td>如果使用sql server2008或者更老的，请设置为true</td>
           </tr>
           <tr>
             <td>CookiePre</td>

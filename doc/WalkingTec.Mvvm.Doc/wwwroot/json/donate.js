@@ -78,6 +78,7 @@
         {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"},
         {"date":"2019-12-03","name":"*提","amount":8.80,"from":"微信","comment":"-"},
         {"date":"2019-12-04","name":"L*m","amount":5.00,"from":"微信","comment":"-"},
-        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"} 
+        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"},
+        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"} 
     ]
 }
