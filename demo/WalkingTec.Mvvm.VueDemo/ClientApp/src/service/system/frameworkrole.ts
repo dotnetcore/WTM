@@ -64,7 +64,7 @@ const editPrivilege = {
     url: reqPath + "EditPrivilege",
     method: "put"
 };
-
+// 权限列表
 const getPageActions = {
     url: reqPath + "GetPageActions/{ID}",
     method: "get"
@@ -74,6 +74,7 @@ const imported = {
     url: reqPath + "import",
     method: "post"
 };
+
 
 export default {
     search,
