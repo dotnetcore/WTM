@@ -6,6 +6,15 @@
 
 ## v2.4.x
 
+### v2.4.3 / v3.0.4 (2019-12-8)
+
+* **新增：**  增加多附件上传控件，特别鸣谢‘草监牛寺’同学，参见文档 https://wtmdoc.walkingtec.cn/#/UI/UploadMulti
+* **修改：**  Appsettings文件中增加了IsOldSqlServer配置，对于使用sqlserver 2008以前的用户使用
+* **修改：**  修复某些模型生成单元测试时的bug
+* **修改：**  修复自定义ID的模型attach时可能失败的bug
+* **修改：**  修复主子表操作时没有判断PersistPoco的bug
+
+
 ### v2.4.2 (2019-11-22)
 
 * **修改：**  修复Add-Migration报错的问题
