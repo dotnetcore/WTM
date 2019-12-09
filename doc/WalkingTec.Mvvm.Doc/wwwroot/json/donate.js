@@ -42,7 +42,7 @@
         {"date":"2019-10-10","name":"和生","amount":6.66,"from":"微信","comment":"支持一下加油"},
         {"date":"2019-10-12","name":"g*W","amount":10.00,"from":"微信","comment":"-"},
         {"date":"2019-10-13","name":"B*s","amount":2.00,"from":"微信","comment":"-"},
-        {"date":"2019-10-14","name":"*云","amount":20.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-14","name":"*y","amount":20.00,"from":"微信","comment":"-"},
         {"date":"2019-10-15","name":"*丘","amount":5.00,"from":"微信","comment":"-"},
         {"date":"2019-10-21","name":"L*D","amount":8.88,"from":"微信","comment":"-"},
         {"date":"2019-10-21","name":"Paladin","amount":8.00,"from":"微信","comment":"-"},
@@ -59,7 +59,7 @@
         {"date":"2019-10-31","name":"*远","amount":10.24,"from":"微信","comment":"-"},
         {"date":"2019-10-31","name":"雪糕哥","amount":8.88,"from":"微信","comment":"-"},
         {"date":"2019-11-03","name":"*延","amount":9.99,"from":"微信","comment":"很惊喜发现这个框架"},
-        {"date":"2019-11-06","name":"Hawker","amount":9.99,"from":"微信","comment":"-"},
+        {"date":"2019-11-06","name":"Hawker","amount":88.00,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"i*y","amount":18.00,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"*松","amount":50.00,"from":"微信","comment":"加油"},
         {"date":"2019-11-06","name":"*煌","amount":10.00,"from":"微信","comment":"-"},
@@ -75,6 +75,9 @@
         {"date":"2019-11-28","name":"J*n","amount":5.00,"from":"微信","comment":"-"},
         {"date":"2019-11-29","name":"W*e","amount":100.00,"from":"微信","comment":"好框架支持一下"},
         {"date":"2019-11-29","name":"J*n","amount":6.66,"from":"微信","comment":"-"},
-        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"} 
+        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"},
+        {"date":"2019-12-03","name":"*提","amount":8.80,"from":"微信","comment":"-"},
+        {"date":"2019-12-04","name":"L*m","amount":5.00,"from":"微信","comment":"-"},
+        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"}
     ]
 }
