@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td>链接字符串：</td>
-                <td><input name="CS" value="Server=(localdb)\\mssqllocaldb;Database=$dbname$;Trusted_Connection=True;MultipleActiveResultSets=true"/></td>
+                <td><input name="CS" value="Server=(localdb)\\mssqllocaldb;Database=$dbname$;Trusted_Connection=True;"/></td>
             </tr>
             <tr>
                 <td>数据库类型：</td>
