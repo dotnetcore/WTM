@@ -75,6 +75,9 @@
         {"date":"2019-11-28","name":"J*n","amount":5.00,"from":"微信","comment":"-"},
         {"date":"2019-11-29","name":"W*e","amount":100.00,"from":"微信","comment":"好框架支持一下"},
         {"date":"2019-11-29","name":"J*n","amount":6.66,"from":"微信","comment":"-"},
-        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"} 
+        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"},
+        {"date":"2019-12-03","name":"*提","amount":8.80,"from":"微信","comment":"-"},
+        {"date":"2019-12-04","name":"L*m","amount":5.00,"from":"微信","comment":"-"},
+        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"} 
     ]
 }
