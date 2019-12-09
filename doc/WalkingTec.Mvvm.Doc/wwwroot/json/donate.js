@@ -59,7 +59,7 @@
         {"date":"2019-10-31","name":"*远","amount":10.24,"from":"微信","comment":"-"},
         {"date":"2019-10-31","name":"雪糕哥","amount":8.88,"from":"微信","comment":"-"},
         {"date":"2019-11-03","name":"*延","amount":9.99,"from":"微信","comment":"很惊喜发现这个框架"},
-        {"date":"2019-11-06","name":"Hawker","amount":88.,"from":"微信","comment":"-"},
+        {"date":"2019-11-06","name":"Hawker","amount":88.00,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"i*y","amount":18.00,"from":"微信","comment":"-"},
         {"date":"2019-11-06","name":"*松","amount":50.00,"from":"微信","comment":"加油"},
         {"date":"2019-11-06","name":"*煌","amount":10.00,"from":"微信","comment":"-"},
