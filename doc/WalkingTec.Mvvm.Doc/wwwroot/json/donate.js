@@ -42,7 +42,7 @@
         {"date":"2019-10-10","name":"和生","amount":6.66,"from":"微信","comment":"支持一下加油"},
         {"date":"2019-10-12","name":"g*W","amount":10.00,"from":"微信","comment":"-"},
         {"date":"2019-10-13","name":"B*s","amount":2.00,"from":"微信","comment":"-"},
-        {"date":"2019-10-14","name":"*云","amount":20.00,"from":"微信","comment":"-"},
+        {"date":"2019-10-14","name":"*y","amount":20.00,"from":"微信","comment":"-"},
         {"date":"2019-10-15","name":"*丘","amount":5.00,"from":"微信","comment":"-"},
         {"date":"2019-10-21","name":"L*D","amount":8.88,"from":"微信","comment":"-"},
         {"date":"2019-10-21","name":"Paladin","amount":8.00,"from":"微信","comment":"-"},
@@ -78,7 +78,6 @@
         {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"},
         {"date":"2019-12-03","name":"*提","amount":8.80,"from":"微信","comment":"-"},
         {"date":"2019-12-04","name":"L*m","amount":5.00,"from":"微信","comment":"-"},
-        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"},
-        {"date":"2019-11-30","name":"J*s","amount":66.66,"from":"微信","comment":"-"} 
+        {"date":"2019-12-08","name":"*N","amount":500.00,"from":"微信","comment":"-"}
     ]
 }
