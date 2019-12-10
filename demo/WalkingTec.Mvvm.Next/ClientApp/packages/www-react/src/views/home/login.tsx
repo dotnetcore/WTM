@@ -26,7 +26,7 @@ class NormalLoginForm extends React.Component<IAppProps> {
                 <Form.Item>
                     {getFieldDecorator('username', {
                         rules: [{ required: true, message: 'Please input your username!' }],
-                        initialValue: 'LengYX'
+                        initialValue: 'admin'
                     })(
                         <Input
                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}

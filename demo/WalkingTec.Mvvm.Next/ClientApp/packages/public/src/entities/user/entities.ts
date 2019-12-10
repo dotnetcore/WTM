@@ -1,56 +1,119 @@
 import { observable, computed } from 'mobx';
-import { Random } from 'mockjs';
 import differenceInYears from 'date-fns/differenceInYears';
+import { persist, create } from 'mobx-persist';
+import { ReplaySubject } from 'rxjs';
+export interface MenuDataItem {
+    authority?: string[] | string;
+    children?: MenuDataItem[];
+    hideChildrenInMenu?: boolean;
+    hideInMenu?: boolean;
+    icon?: string;
+    locale?: string;
+    name?: string;
+    path: string;
+    [key: string]: any;
+}
 /**
  * 对象 实体
  * @export
  * @class EntitiesUser
  */
 export default class EntitiesUser {
+    constructor() {
+        this.hydrate('entities_user', this).then(() => {
+            this.InitialState.next(this.Id)
+        });
+    }
+    protected InitialState = new ReplaySubject();
+    private hydrate = create({
+        // storage: window.localStorage,   // or AsyncStorage in react-native.
+        // default: localStorage
+        // jsonify: true  // if you use AsyncStorage, here shoud be true
+        // default: true
+    });
     /**
      * 用户 ID
-     *
      * @memberof EntitiesUser
      */
+    @persist
     @observable
-    Id = Random.guid();
+    Id: string | undefined;
+    /**
+     * 用户 ITcode
+     * @type {string}
+     * @memberof EntitiesUser
+     */
+    ITCode: string | undefined;
     /**
      * 姓名
-     *
      * @memberof EntitiesUser
      */
-    @observable
-    Name = Random.cname();
+    Name: string;
+    /**
+     * 角色
+     * @type {any[]}
+     * @memberof EntitiesUser
+     */
+    Roles: any[];
+    /**
+     * 用户组
+     * @type {any[]}
+     * @memberof EntitiesUser
+     */
+    Groups: any[];
     /**
      * 头像
-     *
      * @memberof EntitiesUser
      */
-    @observable
-    Avatar = Random.image('200x100');
+    Avatar: string;
+    private _Birthday: Date;
     /**
-     * 生日
-     *
-     * @memberof EntitiesUser
-     */
-    @observable
-    Birthday = new Date(1995, 1, 1);
+    * 生日
+    * @memberof EntitiesUser
+    */
+    public get Birthday(): Date {
+        return this._Birthday || new Date();
+    }
+    public set Birthday(value: Date) {
+        this._Birthday = value;
+    }
     /**
      * 地址籍贯
-     *
      * @memberof EntitiesUser
      */
-    @observable
-    Address = Random.city();
+    Address: string;
     /**
      * 年龄
-     *
      * @readonly
      * @memberof EntitiesUser
      */
-    @computed
     get Age() {
-        return differenceInYears(new Date(), this.Birthday)
+        const currentTime = new Date();
+        return differenceInYears(currentTime, this.Birthday || currentTime);
+    }
+    /**
+     * 菜单
+     * @type {any[]}
+     * @memberof EntitiesUser
+     */
+    Menus: MenuDataItem[];
+    protected _MenuTrees: MenuDataItem[];
+    /**
+    * 树结构菜单
+    * @type {any[]}
+    * @memberof EntitiesUser
+    */
+    public get MenuTrees(): any[] {
+        return this._MenuTrees;
+    }
+    protected _Actions: any[];
+    /**
+     * 页面操作动作权限
+     * @type {any[]}
+     * @memberof EntitiesUser
+     */
+    public get Actions(): any[] {
+        return this._Actions;
     }
     /**
      * 在线状态 （登陆）

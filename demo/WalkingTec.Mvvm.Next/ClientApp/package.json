@@ -52,6 +52,7 @@
     "babel-runtime": "^6.26.0",
     "docsify": "^4.9.4",
     "docsify-cli": "^4.4.0",
+    "http-proxy-middleware": "^0.20.0",
     "lerna": "^3.19.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",

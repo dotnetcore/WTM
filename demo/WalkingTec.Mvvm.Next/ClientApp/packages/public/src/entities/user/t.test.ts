@@ -1,8 +1,9 @@
 import { EntitiesUserStore } from './index'
+import { Request } from '../../utils/request'
+Request.target = 'http://localhost:5555'
 jest.useFakeTimers()
 it('用户登录：', async () => {
     const Store = new EntitiesUserStore();
-    Store.Request.target = 'http://localhost:5555';
     await Store.onLogin('admin', '000000');
-    console.log(`'状态：${Store.OnlineState} 年龄：${Store.Age} 姓名：${Store.Name}`)
+    console.log(JSON.stringify(Store, null, 4));
 });

@@ -11,6 +11,7 @@ const RootStore = {
     UserStore: new EntitiesUserStore(),
     TimeStore: new EntitiesTimeStore()
 }
+RootStore.UserStore.onCheckLogin()
 export default class App extends React.Component<any> {
     componentDidMount() {
     }
@@ -26,17 +27,14 @@ export default class App extends React.Component<any> {
 }
 class AppLayout extends React.Component<any> {
     public render() {
-        console.log("TCL: App -> componentDidMount -> this.props", this.props)
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider
                     breakpoint="lg"
                     collapsedWidth="0"
                     onBreakpoint={broken => {
-                        console.log(broken);
                     }}
                     onCollapse={(collapsed, type) => {
-                        console.log(collapsed, type);
                     }}
                 >
                     <div className="logo" />

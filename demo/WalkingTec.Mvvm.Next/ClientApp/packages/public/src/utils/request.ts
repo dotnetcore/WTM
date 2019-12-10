@@ -19,17 +19,17 @@ export class Request {
      * 
      * @param target 
      */
-    constructor(
-        public target = "/"
-    ) { }
-    /**
-     * 请求超时设置
-     */
-    timeout = 10000;
-    /**
-     * 抛出 状态 
-     */
-    catchStatus = [400]
+    constructor(options?) {
+        lodash.merge(this.options, options);
+    }
+    static target = "";
+    static responseStatus = {
+        '200': (res: AjaxResponse) => res.response
+    }
+    options = {
+        target: "/",
+        timeout: 10000,
+    }
     /**
      * ajax Observable 管道
      * @param Observable 
@@ -40,37 +40,29 @@ export class Request {
             Request.NProgress();
             Obs.pipe(
                 // 超时时间
-                timeout(this.timeout),
+                timeout(this.options.timeout),
                 // 错误处理
                 catchError((err) => of(err)),
                 // 过滤请求
                 filter((ajax) => {
-                    Request.NProgress("done");
-                    // 数据 Response 
-                    if (ajax instanceof AjaxResponse) {
-                        // 无 响应 数据
-                        if (lodash.isNil(ajax.response)) {
-                            console.warn("响应体为 NULL", ajax)
-                            return false
+                    try {
+                        Request.NProgress("done");
+                        // 数据 Response 
+                        if (ajax instanceof AjaxResponse) {
+                            // 无 响应 数据
+                            if (lodash.isNil(ajax.response)) {
+                                throw { message: 'ajax response undefined' }
+                            }
+                        }
+                        // 错误 超时
+                        if (ajax instanceof AjaxError || ajax instanceof TimeoutError) {
+                            throw ajax
                         }
                         return true
-                    }
-                    // 错误
-                    if (ajax instanceof AjaxError) {
-                        const { response } = ajax;
-                        // 返回 业务处理错误
-                        if (response && lodash.some(this.catchStatus, ajax.status)) {
-                            sub.error(response)
-                        } else {
-                            sub.error(ajax.message)
-                        }
+                    } catch (error) {
+                        sub.error(error);
                         return false
                     }
-                    if (ajax instanceof TimeoutError) {
-                        sub.error(ajax.message)
-                        return false
-                    }
-                    return false
                 }),
                 // 数据过滤
                 map(this.responseMap.bind(this))
@@ -84,14 +76,9 @@ export class Request {
      * 请求 map 转换
      * @param res 
      */
-    responseMap(res: AjaxResponse) {
-        switch (res.status) {
-            case 200:
-                return res.response
-            default:
-                return {}
-                break;
-        }
+    protected responseMap(res: AjaxResponse) {
+        const statusFn = lodash.get(Request.responseStatus, res.status, () => res);
+        return statusFn(res);
     }
     /**
      * 返回请求头
@@ -151,10 +138,10 @@ export class Request {
                 case 'POST':
                 case 'PUT':
                     urlOrRequest.body = Request.formatBody(urlOrRequest.body, "body", urlOrRequest.headers);
-                    urlOrRequest.url = Request.compatibleUrl(this.target, url);
+                    urlOrRequest.url = Request.compatibleUrl(this.options.target, url);
                     break;
                 default:
-                    urlOrRequest.url = Request.compatibleUrl(this.target, url, Request.formatBody(urlOrRequest.body));
+                    urlOrRequest.url = Request.compatibleUrl(this.options.target, url, Request.formatBody(urlOrRequest.body));
                     break;
             }
         }
@@ -189,7 +176,7 @@ export class Request {
                 }
             }
         }
-        return `${address}${url}${endStr}`
+        return `${Request.target}${address}${url}${endStr}`
     }
     /**
      * 格式化 参数

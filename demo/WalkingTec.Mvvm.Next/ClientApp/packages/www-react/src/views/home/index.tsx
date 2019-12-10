@@ -10,10 +10,8 @@ export interface IAppProps {
 @observer
 export default class App extends React.Component<IAppProps> {
     componentDidMount() {
-        console.log("TCL: App -> componentDidMount", this.props)
     }
     UNSAFE_componentWillUpdate(){
-        console.log('TCL: App -> componentWillUpdate')
     }
     public render() {
         if (this.props.UserStore.OnlineState) {
