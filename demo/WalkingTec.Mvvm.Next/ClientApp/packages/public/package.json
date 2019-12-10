@@ -1,0 +1,24 @@
+{
+  "name": "@leng/public",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "typings": "src/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "lengyingxin <lengyingxin8966@gmail.com> (https://github.com/LengYXin)",
+  "license": "ISC",
+  "description": "",
+  "gitHead": "9f986a0907b2f3e0cf982b2175ee554e106dda8e",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}

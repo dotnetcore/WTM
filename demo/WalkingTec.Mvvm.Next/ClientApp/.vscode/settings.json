@@ -1,0 +1,9 @@
+{
+    "npm-scripts.showStartNotification": false,
+    "liveServer.settings.root": "/packages/www-react/build",
+    "liveServer.settings.proxy": {
+        "enable": true,
+        "baseUri": "/api",
+        "proxyUri": "http://localhost:5555/"
+    }
+}
