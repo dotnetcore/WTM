@@ -97,14 +97,16 @@ export default class EntitiesUser {
      * @memberof EntitiesUser
      */
     Menus: MenuDataItem[];
+    @observable
     protected _MenuTrees: MenuDataItem[];
     /**
     * 树结构菜单
     * @type {any[]}
     * @memberof EntitiesUser
     */
-    public get MenuTrees(): any[] {
-        return this._MenuTrees;
+    @computed
+    public get MenuTrees(): MenuDataItem[] {
+        return this._MenuTrees || [];
     }
     protected _Actions: any[];
     /**

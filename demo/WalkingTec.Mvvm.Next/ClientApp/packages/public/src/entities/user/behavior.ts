@@ -80,7 +80,7 @@ export default class EntitiesUserBehavior extends Entities {
             return {
                 ...data,
                 key: data.Id,
-                path: data.Url,
+                path: data.Url || '',
                 name: data.Text,
                 icon: data.Icon || "pic-right",
                 // children: data.Children
@@ -113,11 +113,7 @@ export default class EntitiesUserBehavior extends Entities {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
             data.children = this.formatTree(datalist, data.Id, data.children || []);
             children.push({
-                ...data,
-                key: data.Id,
-                path: data.Url,
-                name: data.Text,
-                icon: data.Icon || "pic-right",
+                ...data
             });
         });
         return children;

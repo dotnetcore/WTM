@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "@leng/public": "^0.0.1",
-    "antd": "^3.26.0",
+    "@ant-design/pro-layout": "^4.9.8",
+    "antd": "^3.26.2",
     "mobx-react": "^6.1.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
