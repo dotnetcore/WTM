@@ -9,7 +9,7 @@
       <a-input
         v-decorator="[
           'userName',
-          { rules: [{ required: true, message: 'Please input your username!' }],initialValue:'LengVue' },
+          { rules: [{ required: true, message: 'Please input your username!' }],initialValue:'admin' },
         ]"
         placeholder="Username"
       >
@@ -34,25 +34,6 @@
   </a-form>
 </template>
 <script>
-// export default {
-//   beforeCreate() {
-//     this.form = this.$form.createForm(this, {
-//       userName: "lengVue",
-//       password: "000000"
-//     });
-//   },
-//   methods: {
-//     handleSubmit(e) {
-//       e.preventDefault();
-//       this.form.validateFields((err, values) => {
-//         if (!err) {
-//           UserStore.onLogin(values.userName, values.password);
-//         }
-
-//       });
-//     }
-//   }
-// };
 import { observer } from "mobx-vue";
 import UserStore from "./user";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -61,10 +42,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class HelloWorld extends Vue {
   UserStore = UserStore;
   beforeCreate() {
-    this.form = this.$form.createForm(this, {
-      userName: "lengVue",
-      password: "000000"
-    });
+    this.form = this.$form.createForm(this, {});
   }
   handleSubmit(e) {
     e.preventDefault();

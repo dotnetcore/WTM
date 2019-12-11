@@ -9,6 +9,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import Info from "./info.vue";
 import Login from "./login.vue";
 import UserStore from "./user";
+UserStore.onCheckLogin()
 @observer
 @Component({
   components: {
