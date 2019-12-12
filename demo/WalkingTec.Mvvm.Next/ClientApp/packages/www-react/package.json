@@ -28,8 +28,8 @@
     "@ant-design/pro-layout": "^4.9.8",
     "antd": "^3.26.2",
     "mobx-react": "^6.1.4",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "~16.11.0",
+    "react-dom": "~16.11.0",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.1.2"
   },

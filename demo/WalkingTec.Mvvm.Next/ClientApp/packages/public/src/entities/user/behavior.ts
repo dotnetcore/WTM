@@ -51,14 +51,20 @@ export default class EntitiesUserBehavior extends Entities {
         }
         this.Loading = true;
         const subscribe = this.InitialState.subscribe(async (Id) => {
-            if (Id) {
-                const res = await Request.ajax("/api/_login/CheckLogin/" + Id).toPromise();
-                this.onVerifyingLanding(res);
+            try {
+                if (Id) {
+                    const res = await Request.ajax("/api/_login/CheckLogin/" + Id).toPromise();
+                    this.onVerifyingLanding(res);
+                }
+            } catch (error) {
+                throw error
             }
-            runInAction(() => {
-                this.Loading = false;
-            })
-            subscribe.unsubscribe();
+            finally {
+                runInAction(() => {
+                    this.Loading = false;
+                })
+                subscribe.unsubscribe();
+            }
         })
     }
     /**

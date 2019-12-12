@@ -1,6 +1,9 @@
 import { EntitiesUserStore } from '@leng/public/src';
 import { Avatar, Button, Card, Descriptions } from 'antd';
 import { inject, observer } from 'mobx-react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import * as React from 'react';
 export interface IAppProps {
     UserStore?: EntitiesUserStore,
@@ -21,6 +24,31 @@ export default class UserInfo extends React.Component<IAppProps> {
                 <Descriptions.Item label="Avatar"> <Avatar src={UserStore.Avatar} /></Descriptions.Item>
                 <Descriptions.Item label="Address">{UserStore.Address}</Descriptions.Item>
             </Descriptions>
+            <TestTable />
         </Card>
+    }
+}
+
+class TestTable extends React.Component<any> {
+    componentDidMount() {
+    }
+    state = {
+        columnDefs: [
+            { headerName: "Make", field: "make" },
+            { headerName: "Model", field: "model" },
+            { headerName: "Price", field: "price" }],
+        rowData: [
+            { make: "Toyota", model: "Celica", price: 35000 },
+            { make: "Ford", model: "Mondeo", price: 32000 },
+            { make: "Porsche", model: "Boxter", price: 72000 }]
+    }
+    render() {
+        const { UserStore } = this.props;
+        const AgGridReactTable: any = AgGridReact;
+        return <div className='ag-theme-balham' style={{ height: '200px', width: '600px' }}>
+            <AgGridReactTable
+                columnDefs={this.state.columnDefs}
+                rowData={this.state.rowData} />
+        </div>
     }
 }
