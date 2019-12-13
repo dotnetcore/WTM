@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
         protected override IEnumerable<IGridColumn<Major_View>> InitGridHeader()
         {
             return new List<GridColumn<Major_View>>{
-                this.MakeGridHeader(x => x.MajorCode),
+                this.MakeGridHeader(x => x.MajorCode).SetSort(),
                 this.MakeGridHeader(x => x.MajorName),
                 this.MakeGridHeader(x => x.MajorType),
                 this.MakeGridHeader(x => x.Remark),
