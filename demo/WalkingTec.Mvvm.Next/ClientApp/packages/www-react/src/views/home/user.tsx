@@ -1,22 +1,24 @@
-import { EntitiesUserStore } from '@leng/public/src';
-import { Avatar, Button, Card, Descriptions } from 'antd';
+import { EntitiesUserStore,EntitiesPageStore } from '@leng/public/src';
+import { Avatar, Button, Card, Descriptions, Pagination } from 'antd';
 import { inject, observer } from 'mobx-react';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import AgGridReact from 'components/grid';
 import * as React from 'react';
 export interface IAppProps {
     UserStore?: EntitiesUserStore,
+    PageStore?: EntitiesPageStore,
 }
-@inject('UserStore')
+@inject('UserStore','PageStore')
 @observer
 export default class UserInfo extends React.Component<IAppProps> {
     componentDidMount() {
         console.log("TCL: App -> componentDidMount -> this.props", this.props)
     }
     render() {
-        const { UserStore } = this.props;
-        return <Card title="用户面板" extra={<Button type="link" onClick={() => UserStore.onOutLogin()} >退出</Button>} style={{ width: 300 }}>
+        const { UserStore,PageStore } = this.props;
+        return <Card title="用户面板" extra={<Button type="link" onClick={() => {
+            // UserStore.onOutLogin()
+            PageStore.onExport()
+        }} >退出</Button>} >
             <Descriptions title="用户信息" column={1}>
                 <Descriptions.Item label="UserName">{UserStore.Name}</Descriptions.Item>
                 <Descriptions.Item label="Birthday">{UserStore.Birthday.toLocaleDateString()}</Descriptions.Item>
@@ -44,11 +46,9 @@ class TestTable extends React.Component<any> {
     }
     render() {
         const { UserStore } = this.props;
-        const AgGridReactTable: any = AgGridReact;
-        return <div className='ag-theme-balham' style={{ height: '200px', width: '600px' }}>
-            <AgGridReactTable
-                columnDefs={this.state.columnDefs}
-                rowData={this.state.rowData} />
-        </div>
+        return <AgGridReact
+            columnDefs={this.state.columnDefs}
+            rowData={this.state.rowData} >
+        </AgGridReact>
     }
 }

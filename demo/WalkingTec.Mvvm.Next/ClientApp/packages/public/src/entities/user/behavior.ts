@@ -1,7 +1,8 @@
 import { action, runInAction } from 'mobx';
+import { AjaxRequest } from "rxjs/ajax";
 import { timer } from 'rxjs';
 import Entities, { MenuDataItem } from './entities';
-import Request from '../../utils/request';
+import Ajax, { Request } from '../../utils/request';
 import lodash from 'lodash';
 // import { MenuDataItem } from '@ant-design/pro-layout';
 
@@ -20,7 +21,7 @@ export default class EntitiesUserBehavior extends Entities {
      * @memberof EntitiesUserBehavior
      */
     @action
-    async  onLogin(userid, password) {
+    async  onLogin(userid, password, request: AjaxRequest = {}) {
         if (this.Loading) {
             return console.warn('onLogin Loadinged')
         }
@@ -28,15 +29,15 @@ export default class EntitiesUserBehavior extends Entities {
         // 模拟一个等待 1秒钟
         // const res = await timer(1000).toPromise();
         try {
-            const res = await Request.ajax(
-                {
-                    method: "post",
-                    url: "/api/_login/Login",
-                    body: { userid, password },
-                    headers: { 'Content-Type': null }
-                }
-            ).toPromise();
+            request = lodash.merge({
+                method: "post",
+                url: "/api/_login/Login",
+                body: { userid, password },
+                headers: { 'Content-Type': null }
+            }, request);
+            const res = await Ajax.ajax(request).toPromise();
             this.onVerifyingLanding(res);
+            return res;
         } catch (error) {
             runInAction(() => {
                 this.Loading = false;
@@ -53,10 +54,11 @@ export default class EntitiesUserBehavior extends Entities {
         const subscribe = this.InitialState.subscribe(async (Id) => {
             try {
                 if (Id) {
-                    const res = await Request.ajax("/api/_login/CheckLogin/" + Id).toPromise();
+                    const res = await Ajax.ajax("/api/_login/CheckLogin/" + Id).toPromise();
                     this.onVerifyingLanding(res);
                 }
             } catch (error) {
+                this.onOutLogin();
                 throw error
             }
             finally {
@@ -74,27 +76,33 @@ export default class EntitiesUserBehavior extends Entities {
      */
     @action
     private onVerifyingLanding(UserInfo: any = {}) {
-        this.OnlineState = true;
-        this.Loading = false;
-        this.Name = lodash.get(UserInfo, 'Name');
-        this.Id = lodash.get(UserInfo, 'Id');
-        this.ITCode = lodash.get(UserInfo, 'ITCode');
-        // 动作
-        this._Actions = lodash.get(UserInfo, 'Attributes.Actions', []);
-        // 格式化 菜单 
-        const Menus = lodash.get(UserInfo, 'Attributes.Menus', []).map(data => {
-            return {
-                ...data,
-                key: data.Id,
-                path: data.Url || '',
-                name: data.Text,
-                icon: data.Icon || "pic-right",
-                // children: data.Children
-            }
-        });
-        this.Menus = lodash.cloneDeep(Menus);
-        this._MenuTrees = this.formatTree(Menus, null, []);
-        this.Loading = false;
+        // jwt
+        if (UserInfo.access_token) {
+            lodash.set(Request.headers, 'Authorization', `${UserInfo.token_type} ${UserInfo.access_token}`);
+        } else {
+            this.OnlineState = true;
+            this.Loading = false;
+            this.Name = lodash.get(UserInfo, 'Name');
+            this.Id = lodash.get(UserInfo, 'Id');
+            this.ITCode = lodash.get(UserInfo, 'ITCode');
+            // 动作
+            this._Actions = lodash.get(UserInfo, 'Attributes.Actions', []);
+            // 格式化 菜单 
+            const Menus = lodash.get(UserInfo, 'Attributes.Menus', []).map(data => {
+                return {
+                    ...data,
+                    key: data.Id,
+                    path: data.Url || '',
+                    name: data.Text,
+                    icon: data.Icon || "pic-right",
+                    // children: data.Children
+                }
+            });
+            this.Menus = lodash.cloneDeep(Menus);
+            this._MenuTrees = this.formatTree(Menus, null, []);
+            this.Loading = false;
+        }
+
     }
     /**
      * 退出登陆

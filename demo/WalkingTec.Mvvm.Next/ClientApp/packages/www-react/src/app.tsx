@@ -1,4 +1,4 @@
-import { EntitiesTimeStore, EntitiesUserStore } from '@leng/public/src';
+import { EntitiesTimeStore, EntitiesUserStore, EntitiesPageStore } from '@leng/public/src';
 import { Icon, Layout, Menu, Spin } from 'antd';
 import { BasicLayout, SettingDrawer } from '@ant-design/pro-layout';
 import lodash from 'lodash';
@@ -11,7 +11,16 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const RootStore = {
     UserStore: new EntitiesUserStore(),
-    TimeStore: new EntitiesTimeStore()
+    TimeStore: new EntitiesTimeStore(),
+    PageStore: new EntitiesPageStore({
+        target: '/api',
+        Search: { url: '/_FrameworkUserBase/Search', },
+        Details: { url: '/_FrameworkUserBase/{id}' },
+        Insert: { url: '/_FrameworkGroup/Add' },
+        Update: { url: '/_FrameworkGroup/Edit' },
+        Delete: { url: '/_FrameworkGroup/BatchDelete' },
+        Export: { url: '/_FrameworkGroup/ExportExcel',body:{} },
+    }),
 }
 RootStore.UserStore.onCheckLogin()
 export default class App extends React.Component<any> {

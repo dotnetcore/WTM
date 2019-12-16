@@ -14,19 +14,36 @@ import { catchError, filter, map, timeout } from "rxjs/operators";
 const CacheRequest = new Map<string, Observable<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
+export interface IRequestOptions {
+    target: string;
+    timeout?: number;
+}
 export class Request {
     /**
      * 
      * @param target 
      */
-    constructor(options?) {
+    constructor(options?: IRequestOptions) {
         lodash.merge(this.options, options);
     }
     static target = "";
     static responseStatus = {
-        '200': (res: AjaxResponse) => res.response
+        '200': (res: AjaxResponse) => {
+            if (lodash.toLower(res.responseType) === "blob") {
+                return res;
+            }
+            return res.response
+        }
     }
-    options = {
+    /**
+     * 请求头
+     * @type {*}
+     * @memberof Request
+     */
+    static headers: any = {
+        'Content-Type': 'application/json'
+    };
+    options: IRequestOptions = {
         target: "/",
         timeout: 10000,
     }
@@ -40,7 +57,7 @@ export class Request {
             Request.NProgress();
             Obs.pipe(
                 // 超时时间
-                timeout(this.options.timeout),
+                timeout(this.options.timeout || 10000),
                 // 错误处理
                 catchError((err) => of(err)),
                 // 过滤请求
@@ -51,7 +68,9 @@ export class Request {
                         if (ajax instanceof AjaxResponse) {
                             // 无 响应 数据
                             if (lodash.isNil(ajax.response)) {
-                                throw { message: 'ajax response undefined' }
+                                throw lodash.merge(ajax, { message: 'ajax response undefined' })
+                            } else if (!lodash.eq(lodash.get(ajax.response, 'Code', 200), 200)) {
+                                throw lodash.merge(ajax, { message: lodash.get(ajax.response, 'Msg') })
                             }
                         }
                         // 错误 超时
@@ -60,6 +79,7 @@ export class Request {
                         }
                         return true
                     } catch (error) {
+                        console.error("TCL: Request -> error", error)
                         sub.error(error);
                         return false
                     }
@@ -77,6 +97,7 @@ export class Request {
      * @param res 
      */
     protected responseMap(res: AjaxResponse) {
+        console.log(`TCL: Response ${res.request.url}`, res.response)
         const statusFn = lodash.get(Request.responseStatus, res.status, () => res);
         return statusFn(res);
     }
@@ -84,7 +105,7 @@ export class Request {
      * 返回请求头
      */
     getHeaders() {
-        return {}
+        return lodash.merge({}, Request.headers)
     }
     /**
      * url 参数 注入
@@ -131,8 +152,10 @@ export class Request {
                 url: urlOrRequest
             }
             urlOrRequest = ajaxRequest;
+            urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
         } else {
             const url = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body)
+            urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
             // GET, POST, PUT, PATCH, DELETE
             switch (lodash.toUpper(urlOrRequest.method)) {
                 case 'POST':
@@ -145,7 +168,7 @@ export class Request {
                     break;
             }
         }
-        urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
+        // console.log("TCL: Request -> ajax -> urlOrRequest", urlOrRequest)
         return this.AjaxObservable(ajax(urlOrRequest))
     }
     /**

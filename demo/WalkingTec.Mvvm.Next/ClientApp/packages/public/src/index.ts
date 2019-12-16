@@ -6,6 +6,7 @@ import { configure } from 'mobx';
 configure({ enforceActions: "observed" });
 export * from "./entities/user";
 export * from "./entities/time";
+export * from "./entities/page";
 export * from "./utils/helps";
 export * from "./utils/regulars";
 
