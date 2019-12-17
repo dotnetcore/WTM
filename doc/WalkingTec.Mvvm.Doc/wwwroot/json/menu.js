@@ -55,7 +55,8 @@
                             ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
-                        { "name": "/Batch", "title": "批量操作VM", "jump": "/VM/Batch" }
+                        { "name": "/Batch", "title": "批量操作VM", "jump": "/VM/Batch" },
+                        { "name": "/Transaction", "title": "事务", "jump": "/VM/Transaction" }
                     ]
                 },
                 {
