@@ -51,7 +51,8 @@
                                 { "name": "/ListAction", "title": "列表简介", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "列表动作按钮", "jump": "/VM/ListAction" },
                                 { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" },
-                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" }
+                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" },
+                                { "name": "/Transaction", "title": "事务", "jump": "/VM/Transaction" }
                             ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
