@@ -23,6 +23,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             ViewData["title"] = "WTM";
             var vm = CreateVM<IndexVM>();
+            string test = ConfigInfo.Key1();
             vm.AllMenu = FFMenus;
             return View(vm);
         }
