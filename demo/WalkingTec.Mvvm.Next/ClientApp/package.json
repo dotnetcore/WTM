@@ -34,8 +34,6 @@
   "dependencies": {
     "ag-grid-community": "22.1.0",
     "ag-grid-enterprise": "22.1.0",
-    "ag-grid-react": "22.1.0",
-    "ag-grid-vue": "22.1.0",
     "core-js": "^3.5.0",
     "date-fns": "^2.8.1",
     "file-saver": "^2.0.2",

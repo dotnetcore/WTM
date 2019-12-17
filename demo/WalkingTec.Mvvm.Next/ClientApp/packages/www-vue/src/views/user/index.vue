@@ -8,8 +8,7 @@ import { observer } from "mobx-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Info from "./info.vue";
 import Login from "./login.vue";
-import UserStore from "./user";
-UserStore.onCheckLogin()
+import rootStore from "../../rootStore";
 @observer
 @Component({
   components: {
@@ -18,7 +17,7 @@ UserStore.onCheckLogin()
   }
 })
 export default class HelloWorld extends Vue {
-  UserStore = UserStore;
+  UserStore = rootStore.UserStore;
 }
 </script>
 

@@ -17,11 +17,11 @@ import { message } from "ant-design-vue";
 import { observable, action } from "mobx";
 import { observer } from "mobx-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import UserStore from "./user";
+import rootStore from "../../rootStore";
 @observer
 @Component
 export default class HelloWorld extends Vue {
-  UserStore = UserStore;
+  UserStore = rootStore.UserStore;
 }
 </script>
 

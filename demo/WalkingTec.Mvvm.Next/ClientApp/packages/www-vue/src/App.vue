@@ -25,7 +25,7 @@ export default {
   min-height: 100vh;
   .logo {
     height: 32px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(143, 57, 57, 0.2);
     margin: 16px;
   }
 }

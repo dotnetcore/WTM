@@ -35,12 +35,12 @@
 </template>
 <script>
 import { observer } from "mobx-vue";
-import UserStore from "./user";
+import rootStore from "../../rootStore";
 import { Component, Prop, Vue } from "vue-property-decorator";
 @observer
 @Component
 export default class HelloWorld extends Vue {
-  UserStore = UserStore;
+  UserStore = rootStore.UserStore;
   beforeCreate() {
     this.form = this.$form.createForm(this, {});
   }
@@ -48,7 +48,7 @@ export default class HelloWorld extends Vue {
     e.preventDefault();
     this.form.validateFields((err, values) => {
       if (!err) {
-        UserStore.onLogin(values.userName, values.password);
+        this.UserStore.onLogin(values.userName, values.password);
       }
     });
   }
