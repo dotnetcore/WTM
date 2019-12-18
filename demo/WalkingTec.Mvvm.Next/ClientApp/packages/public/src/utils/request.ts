@@ -15,7 +15,7 @@ const CacheRequest = new Map<string, Observable<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
 export interface IRequestOptions {
-    target: string;
+    target?: string;
     timeout?: number;
 }
 export class Request {
@@ -161,10 +161,10 @@ export class Request {
                 case 'POST':
                 case 'PUT':
                     urlOrRequest.body = Request.formatBody(urlOrRequest.body, "body", urlOrRequest.headers);
-                    urlOrRequest.url = Request.compatibleUrl(this.options.target, url);
+                    urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url);
                     break;
                 default:
-                    urlOrRequest.url = Request.compatibleUrl(this.options.target, url, Request.formatBody(urlOrRequest.body));
+                    urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url, Request.formatBody(urlOrRequest.body));
                     break;
             }
         }

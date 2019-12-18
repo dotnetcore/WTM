@@ -5,12 +5,16 @@
     @collapse="onCollapse"
     @breakpoint="onBreakpoint"
   >
-    <div class="logo" />
+    <router-link to="/">
+      <div class="logo" />
+    </router-link>
     <a-menu :defaultSelectedKeys="['1']" :defaultOpenKeys="['2']" mode="inline" theme="dark">
       <template v-for="item in UserStore.MenuTrees">
         <a-menu-item v-if="!item.children" :key="item.key">
-          <a-icon type="pie-chart" />
-          <span>{{item.name}}</span>
+          <router-link :to="item.path">
+            <a-icon :type="item.icon || 'pie-chart'" />
+            <span>{{ item.name }}</span>
+          </router-link>
         </a-menu-item>
         <sub-menu v-else :menu-info="item" :key="item.key" />
       </template>
@@ -41,7 +45,7 @@ export default class extends Vue {
 }
 </script>
 <style lang="less">
-.ant-layout-sider{
+.ant-layout-sider {
   user-select: none;
 }
 </style>

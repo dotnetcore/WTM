@@ -23,5 +23,7 @@ export const Regulars = {
         just: /[1-9]\d*/,
         /** 负数 */
         negative: /-[1-9]\d*/
-    }
+    },
+    filename: /.*filename=([a-z\d\.\-_]+);\sfilename.*/i
+
 }

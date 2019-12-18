@@ -96,4 +96,10 @@ export default class EntitiesPage {
      */
     @observable
     LoadingExport = false;
+    /**
+     * 搜索条件的 收缩
+     * @memberof EntitiesPage
+     */
+    @observable
+    FilterCollapse = false;
 }

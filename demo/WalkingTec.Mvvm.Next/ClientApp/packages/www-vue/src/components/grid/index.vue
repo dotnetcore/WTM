@@ -31,6 +31,8 @@ const grid = () =>
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
   mounted() {
+    console.dir(this.$el)
+
     console.log("TCL: HelloWorld -> mounted -> mounted");
   }
   destroyed() {

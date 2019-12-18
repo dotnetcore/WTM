@@ -1,6 +1,7 @@
 import { action, runInAction } from 'mobx';
 import { AjaxRequest } from "rxjs/ajax";
 import { IRequestOptions, Request } from '../../utils/request';
+import { Regulars } from '../../utils/regulars';
 import Entities from './entities';
 import lodash from 'lodash';
 import { saveAs } from 'file-saver';
@@ -35,6 +36,13 @@ export default class EntitiesPageBehavior extends Entities {
         super();
         lodash.merge(this.options, options);
     }
+    /**
+     * 默认的配置
+     *
+     * @static
+     * @type {IPageBehaviorOptions}
+     * @memberof EntitiesPageBehavior
+     */
     static options: IPageBehaviorOptions = {
         target: "/api",
         Search: { method: "POST", body: {} },
@@ -46,11 +54,39 @@ export default class EntitiesPageBehavior extends Entities {
         ExportByIds: { method: "POST", responseType: "blob", body: {} },
         Template: { responseType: "blob", body: {} },
     }
+    /**
+     * 默认的错误处理函数
+     *
+     * @static
+     * @param {*} error
+     * @param {string} type
+     * @param {AjaxRequest} [request]
+     * @memberof EntitiesPageBehavior
+     */
     static onError(error: any, type: string, request?: AjaxRequest) {
         console.error(error.response || error.message || error.status);
     };
+    /**
+     * 配置选项
+     *
+     * @type {IPageBehaviorOptions}
+     * @memberof EntitiesPageBehavior
+     */
     options: IPageBehaviorOptions = lodash.merge(EntitiesPageBehavior.options, {});
+    /**
+     * Request Ajax 
+     *
+     * @memberof EntitiesPageBehavior
+     */
     Request = new Request(this.options);
+    /**
+     * mrge AjaxRequest
+     *
+     * @param {string} type
+     * @param {AjaxRequest} [request={}]
+     * @returns
+     * @memberof EntitiesPageBehavior
+     */
     merge(type: string, request: AjaxRequest = {}) {
         try {
             const req = lodash.get(this.options, type);
@@ -105,7 +141,7 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingDetails = true;
-            request = this.merge('Details', request)
+            request = this.merge('Details', request);
             const res = await this.Request.ajax(request).toPromise();
             runInAction(() => {
                 this.Details = res.Entity;
@@ -132,7 +168,7 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingEdit = true;
-            request = this.merge('Insert', request)
+            request = this.merge('Insert', request);
             const res = await this.Request.ajax(request).toPromise();
             return res
         } catch (error) {
@@ -156,7 +192,7 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingEdit = true;
-            request = this.merge('Update', request)
+            request = this.merge('Update', request);
             const res = await this.Request.ajax(request).toPromise();
             return res
         } catch (error) {
@@ -180,7 +216,7 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingEdit = true;
-            request = this.merge('Delete', request)
+            request = this.merge('Delete', request);
             const res = await this.Request.ajax(request).toPromise();
             return res
         } catch (error) {
@@ -204,7 +240,7 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingImport = true;
-            request = this.merge('Import', request)
+            request = this.merge('Import', request);
             const res = await this.Request.ajax(request).toPromise();
             return res
         } catch (error) {
@@ -228,10 +264,11 @@ export default class EntitiesPageBehavior extends Entities {
                 return console.warn("已请求~")
             }
             this.LoadingExport = true;
-            request = this.merge('Export', request)
+            request = this.merge('Export', request);
             const res = await this.Request.ajax(request).toPromise();
             const disposition = res.xhr.getResponseHeader('content-disposition');
-            saveAs(res.response, 'test.xls')
+            Regulars.filename.test(disposition);
+            saveAs(res.response, RegExp.$1 || `${Date.now()}.xls`);
             return res
         } catch (error) {
             EntitiesPageBehavior.onError(error, 'Export', request);
@@ -241,4 +278,14 @@ export default class EntitiesPageBehavior extends Entities {
             this.LoadingExport = false;
         }
     }
+    /**
+     * 切换 FilterCollapse
+     * @param {*} [Collapse=!this.FilterCollapse]
+     * @memberof EntitiesPageBehavior
+     */
+    @action
+    onToggleFilterCollapse(Collapse = !this.FilterCollapse) {
+        this.FilterCollapse = Collapse
+    };
+    
 }

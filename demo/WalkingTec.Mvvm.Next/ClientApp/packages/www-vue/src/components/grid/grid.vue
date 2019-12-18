@@ -12,7 +12,9 @@
 import { AgGridVue } from "ag-grid-vue/lib/AgGridVue";
 import { LicenseManager } from "ag-grid-enterprise";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { GridOptions } from "ag-grid-community";
+import { GridOptions, GridReadyEvent } from "ag-grid-community";
+import { Subscription, fromEvent } from "rxjs";
+import { Debounce } from "lodash-decorators";
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
@@ -21,9 +23,13 @@ LicenseManager.setLicenseKey(
     AgGridVue
   }
 })
-export default class HelloWorld extends Vue {
+export default class AgGrid extends Vue {
+  @Prop() private msg!: string;
   columnDefs;
   rowData;
+  // 事件对象
+  ResizeEvent: Subscription;
+  GridReadyEvent: GridReadyEvent;
   GridOptions: GridOptions = {
     // columnDefs
     // groupUseEntireRow:true,
@@ -57,16 +63,29 @@ export default class HelloWorld extends Vue {
     },
     masterDetail: true,
     rowGroupPanelShow: "always",
+    defaultColDef: {
+      enableRowGroup: true
+    },
     onGridReady: event => {
-      event.api.sizeColumnsToFit();
+      this.GridReadyEvent = event;
+      this.GridEvents.sizeColumnsToFit();
     }
   };
-  @Prop() private msg!: string;
+  GridEvents = {
+    sizeColumnsToFit: () => this.GridReadyEvent.api.sizeColumnsToFit()
+  };
+  @Debounce(200)
+  onCalculation() {
+    console.log("TCL: AgGrid -> onCalculation -> onCalculation");
+    this.GridEvents.sizeColumnsToFit();
+  }
   mounted() {
-    console.log("TCL: HelloWorld -> mounted -> mounted");
+    this.ResizeEvent = fromEvent(window, "resize").subscribe(e => {
+      this.onCalculation();
+    });
   }
   destroyed() {
-    console.log("TCL: HelloWorld -> destroyed -> destroyed");
+    this.ResizeEvent && this.ResizeEvent.unsubscribe();
   }
   beforeMount() {
     this.columnDefs = [
@@ -89,10 +108,10 @@ export default class HelloWorld extends Vue {
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
-@import '~ant-design-vue/es/style/themes/default.less';
+@import "~ant-design-vue/es/style/themes/default.less";
 .ag-theme-material {
-    .ag-icon-checkbox-checked {
-        color: @primary-color !important;
-    }
+  .ag-icon-checkbox-checked {
+    color: @primary-color !important;
+  }
 }
 </style>

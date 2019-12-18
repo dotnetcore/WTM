@@ -12,10 +12,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
   mounted() {
-    console.log("TCL: HelloWorld -> mounted -> mounted");
   }
   destroyed() {
-    console.log("TCL: HelloWorld -> destroyed -> destroyed");
   }
 }
 </script>
