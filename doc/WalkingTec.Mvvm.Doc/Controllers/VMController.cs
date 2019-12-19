@@ -47,6 +47,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("事务")]
+        public IActionResult Transaction()
+        {
+            return PartialView();
+        }
+
         [ActionDescription("ImportVM")]
         public IActionResult Import()
         {
