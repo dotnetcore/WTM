@@ -105,12 +105,12 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
                 <FormItem {...props} fieId="Entity.UserRoles" layout="row"
-                    // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
+                // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
                 />
             </Col>
             <Col span={24}>
                 <FormItem {...props} fieId="Entity.UserGroups" layout="row"
-                    // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
+                // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
                 />
             </Col>
 
@@ -146,10 +146,14 @@ export class InfoForm extends React.Component<WTM.FormProps, any> {
             <FormItem {...props} fieId="Entity.PhotoId" />
             <FormItem {...props} fieId="Entity.IsValid" />
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserRoles" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")} />
+                <FormItem {...props} fieId="Entity.UserRoles" layout="row"
+                // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserRoles'), "RoleId")}
+                />
             </Col>
             <Col span={24}>
-                <FormItem {...props} fieId="Entity.UserGroups" layout="row" value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")} />
+                <FormItem {...props} fieId="Entity.UserGroups" layout="row"
+                // value={lodash.map(lodash.get(props.defaultValues, 'Entity.UserGroups'), "GroupId")}
+                />
             </Col>
 
         </InfoShellLayout>
