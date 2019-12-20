@@ -23,6 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeAction("School","Edit2","主子表修改","主子表修改", GridActionParameterTypesEnum.SingleId,dialogWidth:800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.ExportExcel, "导出",""),
+                this.MakeAction("School","Download","下载",null, GridActionParameterTypesEnum.SingleId).SetOnClickScript("download"),
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),

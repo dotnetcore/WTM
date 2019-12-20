@@ -103,9 +103,20 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public bool HideOnToolBar { get; set; }
 
+        /// <summary>
+        /// bind to a column name to deside whether or not to show this action
+        /// </summary>
         public string BindVisiableColName { get; set; }
 
+        /// <summary>
+        /// if the dialog need to be maximax
+        /// </summary>
         public bool Max { get; set; }
+
+        /// <summary>
+        /// If this action is to download a file
+        /// </summary>
+        public bool IsDownload { get; set; }
 
         #region 请求链接相关
 
