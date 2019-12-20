@@ -1,7 +1,4 @@
-import lodash from 'lodash';
 import { BindAll } from 'lodash-decorators';
-import { action, observable } from 'mobx';
-import { Random } from 'mockjs';
 import EntitiesBehavior, { IPageBehaviorOptions } from './behavior';
 /**
  * 用户状态

@@ -1,7 +1,23 @@
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { observable } from 'mobx';
 import { create } from 'mobx-persist';
-
+import { Subject, Subscription } from 'rxjs';
+import { AjaxRequest } from 'rxjs/ajax';
+declare type EnumEventType = "onSearch" | "onDetails" | "onInsert" | "onUpdate" | "onDelete" | "onImport" | "onImport" | "onExport";
+// {
+//     onSearch = "onSearch",
+//     onDetails = "onDetails",
+//     onInsert = "onInsert",
+//     onUpdate = "onUpdate",
+//     onDelete = "onDelete",
+//     onImport = "onImport",
+//     onExport = "onExport",
+// }
+declare class EntitiesPageEventSubject {
+    EventType: EnumEventType;
+    AjaxRequest?: AjaxRequest;
+    EventData?: Object;
+}
 /**
  * 对象 实体
  * @export
@@ -17,13 +33,23 @@ export default class EntitiesPage {
         // jsonify: true  // if you use AsyncStorage, here shoud be true
         // default: true
     });
-
+    /**
+     * 事件发布
+     * @memberof EntitiesPage
+     */
+    EventSubject = new Subject<EntitiesPageEventSubject>();
+    /**
+     * 事件订阅
+     * @type {Subscription}
+     * @memberof EntitiesPage
+     */
+    Subscription: Subscription | undefined;
     /**
      * 每页条数
      * @memberof EntitiesPage
      */
     @observable
-    PageSize = 0;
+    PageSize = 20;
     /**
      * 数据总数
      * @memberof EntitiesPage

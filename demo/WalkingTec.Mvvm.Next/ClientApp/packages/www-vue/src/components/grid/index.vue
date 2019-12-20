@@ -1,19 +1,22 @@
 <template>
-  <div>
-    <grid />
-    <pagination />
-  </div>
+  <a-spin tip="Loading..." :spinning="PageStore.Loading">
+    <grid :GridOptions="GridOptions" :rowData="rowData" :columnDefs="columnDefs" />
+    <div style="height:8px"></div>
+    <pagination :PageStore="PageStore" :Pagination="Pagination" />
+  </a-spin>
 </template>
 
 <script lang="ts">
+import { EntitiesPageStore } from "@leng/public/src";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import pagination from "./pagination.vue";
+import { Pagination } from "ant-design-vue";
 const grid = () =>
   ({
     // 需要加载的组件 (应该是一个 `Promise` 对象)
     component: import("./grid.vue"),
     // 异步组件加载时使用的组件
-    //   loading: LoadingComponent,
+    // loading: '<div style="height: 500px;"></div>',
     // 加载失败时使用的组件
     //   error: ErrorComponent,
     // 展示加载时组件的延时时间。默认值是 200 (毫秒)
@@ -28,16 +31,16 @@ const grid = () =>
     pagination
   }
 })
-export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+export default class Grid extends Vue {
+  @Prop() PageStore: EntitiesPageStore;
+  @Prop() GridOptions;
+  @Prop() Pagination: Pagination;
+  @Prop({ default: [] }) rowData!: any;
+  @Prop({ default: [] }) columnDefs!: any;
   mounted() {
-    console.dir(this.$el)
-
-    console.log("TCL: HelloWorld -> mounted -> mounted");
+    console.log("TCL: Grid", this);
   }
-  destroyed() {
-    console.log("TCL: HelloWorld -> destroyed -> destroyed");
-  }
+  destroyed() {}
 }
 </script>
 

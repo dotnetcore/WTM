@@ -117,7 +117,7 @@ export default class EntitiesPageBehavior extends Entities {
             runInAction(() => {
                 this.RowData = res.Data;
                 this.Total = res.Count;
-                this.PageSize = res.PageCount;
+                this.PageSize = lodash.get(this.SearchParams, 'Limit');
                 this.Current = res.Page;
             })
         } catch (error) {
@@ -287,5 +287,45 @@ export default class EntitiesPageBehavior extends Entities {
     onToggleFilterCollapse(Collapse = !this.FilterCollapse) {
         this.FilterCollapse = Collapse
     };
-    
+    /**
+     * 订阅 事件处理
+     * @memberof EntitiesPageBehavior
+     */
+    onSubscribe() {
+        this.Subscription = this.EventSubject.subscribe(event => {
+            console.warn("TCL: PageView -> mounted -> event", event);
+            switch (event.EventType) {
+                case "onSearch":
+                    this.onSearch(event.AjaxRequest);
+                    break;
+                case "onDetails":
+                    this.onDetails(event.AjaxRequest);
+                    break;
+                case "onDelete":
+                    this.onDelete(event.AjaxRequest);
+                    break;
+                case "onInsert":
+                    this.onInsert(event.AjaxRequest);
+                    break;
+                case "onUpdate":
+                    this.onUpdate(event.AjaxRequest);
+                    break;
+                case "onImport":
+                    this.onImport(event.AjaxRequest);
+                    break;
+                case "onExport":
+                    this.onExport(event.AjaxRequest);
+                    break;
+
+            }
+        });
+    }
+    /**
+     * 取消订阅
+     * @memberof EntitiesPageBehavior
+     */
+    onUnsubscribe() {
+        this.Subscription && this.Subscription.unsubscribe();
+        this.Subscription = undefined;
+    }
 }

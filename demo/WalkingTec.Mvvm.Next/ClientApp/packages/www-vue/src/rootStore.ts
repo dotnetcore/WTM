@@ -1,16 +1,18 @@
 import { EntitiesTimeStore, EntitiesUserStore, EntitiesPageStore } from '@leng/public/src';
+import router from './router';
+import lodash from 'lodash';
 const RootStore = {
     UserStore: new EntitiesUserStore(),
     TimeStore: new EntitiesTimeStore(),
-    PageStore: new EntitiesPageStore({
-        target: '/api',
-        Search: { url: '/_FrameworkUserBase/Search', },
-        Details: { url: '/_FrameworkUserBase/{id}' },
-        Insert: { url: '/_FrameworkGroup/Add' },
-        Update: { url: '/_FrameworkGroup/Edit' },
-        Delete: { url: '/_FrameworkGroup/BatchDelete' },
-        Export: { url: '/_FrameworkGroup/ExportExcel', body: {} },
-    }),
 }
 RootStore.UserStore.onCheckLogin();
+// 监控用户登录状态通知
+RootStore.UserStore.UserObservable.subscribe((entitie) => {
+    const isLogin = lodash.eq(router.currentRoute.path, '/login');
+    if ((!entitie.Loading && !entitie.OnlineState)) {
+        !isLogin && router.replace({ path: "/login" })
+    } else {
+        isLogin && router.replace({ path: "/" })
+    }
+});
 export default RootStore

@@ -1,20 +1,47 @@
 <template>
   <a-pagination
-    showSizeChanger
-    :defaultCurrent="3"
-    :total="500"
+    :current="PageStore.Current"
+    :pageSize="PageStore.PageSize"
+    :total="PageStore.Total"
+    :showSizeChanger="Props.showSizeChanger"
+    :hideOnSinglePage="Props.hideOnSinglePage"
+    :size="Props.size"
+    @change="onChange"
+    @showSizeChange="onChange"
   />
 </template>
 
 <script lang="ts">
+import { EntitiesPageStore } from "@leng/public/src";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import lodash from "lodash";
 @Component
-export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+export default class Pagination extends Vue {
+  @Prop() PageStore: EntitiesPageStore;
+  @Prop() Pagination: any;
+  Props = lodash.merge(
+    {
+      hideOnSinglePage: true,
+      showSizeChanger: true,
+      size: "small"
+    },
+    this.Pagination
+  );
+  onChange(current, size) {
+    this.PageStore.EventSubject.next({
+      EventType: "onSearch",
+      AjaxRequest: {
+        body: {
+          Page: current,
+          Limit: size
+        }
+      }
+    });
+  }
   mounted() {
+    console.log("TCL: Pagination -> PageStore", this.PageStore);
   }
-  destroyed() {
-  }
+  destroyed() {}
 }
 </script>
 

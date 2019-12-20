@@ -2,14 +2,15 @@
   <ag-grid-vue
     style="height: 500px;"
     class="ag-theme-material"
-    :gridOptions="GridOptions"
-    :columnDefs="columnDefs"
+    :gridOptions="GridOptionsProps"
     :rowData="rowData"
+    :columnDefs="columnDefs"
   ></ag-grid-vue>
 </template>
 
 <script lang="ts">
 import { AgGridVue } from "ag-grid-vue/lib/AgGridVue";
+import lodash from "lodash";
 import { LicenseManager } from "ag-grid-enterprise";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { GridOptions, GridReadyEvent } from "ag-grid-community";
@@ -24,53 +25,58 @@ LicenseManager.setLicenseKey(
   }
 })
 export default class AgGrid extends Vue {
-  @Prop() private msg!: string;
-  columnDefs;
-  rowData;
+  @Prop() GridOptions: GridOptions;
+  @Prop({ default: [] }) rowData!: any;
+  @Prop({ default: [] }) columnDefs!: any;
   // 事件对象
   ResizeEvent: Subscription;
   GridReadyEvent: GridReadyEvent;
-  GridOptions: GridOptions = {
-    // columnDefs
-    // groupUseEntireRow:true,
-    sideBar: {
-      toolPanels: [
-        {
-          id: "columns",
-          labelDefault: "Columns",
-          labelKey: "columns",
-          iconKey: "columns",
-          toolPanel: "agColumnsToolPanel",
-          toolPanelParams: {
-            // suppressRowGroups: true,
-            suppressValues: true,
-            suppressPivots: true,
-            suppressPivotMode: true
-            // suppressSideButtons: true,
-            // suppressColumnFilter: true,
-            // suppressColumnSelectAll: true,
-            // suppressColumnExpandAll: true
+  GridOptionsProps: GridOptions = lodash.merge<GridOptions, GridOptions>(
+    {
+      // columnDefs
+      // groupUseEntireRow:true,
+      sideBar: {
+        toolPanels: [
+          {
+            id: "columns",
+            labelDefault: "Columns",
+            labelKey: "columns",
+            iconKey: "columns",
+            toolPanel: "agColumnsToolPanel",
+            toolPanelParams: {
+              // suppressRowGroups: true,
+              suppressValues: true,
+              suppressPivots: true,
+              suppressPivotMode: true
+              // suppressSideButtons: true,
+              // suppressColumnFilter: true,
+              // suppressColumnSelectAll: true,
+              // suppressColumnExpandAll: true
+            }
+          },
+          {
+            id: "filters",
+            labelDefault: "Filters",
+            labelKey: "filters",
+            iconKey: "filter",
+            toolPanel: "agFiltersToolPanel"
           }
-        },
-        {
-          id: "filters",
-          labelDefault: "Filters",
-          labelKey: "filters",
-          iconKey: "filter",
-          toolPanel: "agFiltersToolPanel"
-        }
-      ]
+        ]
+      },
+      masterDetail: true,
+      suppressNoRowsOverlay: true,
+      rowGroupPanelShow: "always",
+      defaultColDef: {
+        enableRowGroup: true,
+        resizable: true
+      },
+      onGridReady: event => {
+        this.GridReadyEvent = event;
+        this.GridEvents.sizeColumnsToFit();
+      }
     },
-    masterDetail: true,
-    rowGroupPanelShow: "always",
-    defaultColDef: {
-      enableRowGroup: true
-    },
-    onGridReady: event => {
-      this.GridReadyEvent = event;
-      this.GridEvents.sizeColumnsToFit();
-    }
-  };
+    this.GridOptions
+  );
   GridEvents = {
     sizeColumnsToFit: () => this.GridReadyEvent.api.sizeColumnsToFit()
   };
@@ -83,23 +89,12 @@ export default class AgGrid extends Vue {
     this.ResizeEvent = fromEvent(window, "resize").subscribe(e => {
       this.onCalculation();
     });
+    console.log(this);
   }
   destroyed() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();
   }
-  beforeMount() {
-    this.columnDefs = [
-      { headerName: "Make", field: "make" },
-      { headerName: "Model", field: "model" },
-      { headerName: "Price", field: "price" }
-    ];
-
-    this.rowData = [
-      { make: "Toyota", model: "Celica", price: 35000 },
-      { make: "Ford", model: "Mondeo", price: 32000 },
-      { make: "Porsche", model: "Boxter", price: 72000 }
-    ];
-  }
+  beforeMount() {}
 }
 </script>
 

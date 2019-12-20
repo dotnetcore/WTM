@@ -97,7 +97,7 @@ export class Request {
      * @param res 
      */
     protected responseMap(res: AjaxResponse) {
-        console.log(`TCL: Response ${res.request.url}`, res.response)
+        // console.log(`TCL: Response ${res.request.url}`, res.response)
         const statusFn = lodash.get(Request.responseStatus, res.status, () => res);
         return statusFn(res);
     }
@@ -148,25 +148,22 @@ export class Request {
      */
     ajax(urlOrRequest: string | AjaxRequest) {
         if (lodash.isString(urlOrRequest)) {
-            const ajaxRequest: AjaxRequest = {
+            urlOrRequest = {
                 url: urlOrRequest
-            }
-            urlOrRequest = ajaxRequest;
-            urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
-        } else {
-            const url = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body)
-            urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
-            // GET, POST, PUT, PATCH, DELETE
-            switch (lodash.toUpper(urlOrRequest.method)) {
-                case 'POST':
-                case 'PUT':
-                    urlOrRequest.body = Request.formatBody(urlOrRequest.body, "body", urlOrRequest.headers);
-                    urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url);
-                    break;
-                default:
-                    urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url, Request.formatBody(urlOrRequest.body));
-                    break;
-            }
+            };
+        }
+        urlOrRequest = lodash.cloneDeep(urlOrRequest);
+        const url = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body)
+        urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
+        switch (lodash.toUpper(urlOrRequest.method)) {
+            case 'POST':
+            case 'PUT':
+                urlOrRequest.body = Request.formatBody(urlOrRequest.body, "body", urlOrRequest.headers);
+                urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url);
+                break;
+            default:
+                urlOrRequest.url = Request.compatibleUrl(this.options.target || '', url, Request.formatBody(urlOrRequest.body));
+                break;
         }
         // console.log("TCL: Request -> ajax -> urlOrRequest", urlOrRequest)
         return this.AjaxObservable(ajax(urlOrRequest))

@@ -1,7 +1,9 @@
-import { observable, computed } from 'mobx';
 import differenceInYears from 'date-fns/differenceInYears';
-import { persist, create } from 'mobx-persist';
-import { ReplaySubject } from 'rxjs';
+import lodash from 'lodash';
+import { computed, observable, toJS } from 'mobx';
+import { create, persist } from 'mobx-persist';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, filter, map } from 'rxjs/operators';
 export interface MenuDataItem {
     authority?: string[] | string;
     children?: MenuDataItem[];
@@ -21,10 +23,30 @@ export interface MenuDataItem {
 export default class EntitiesUser {
     constructor() {
         this.hydrate('entities_user', this).then(() => {
-            this.InitialState.next(this.Id)
+            this.UserSubject.next(this)
         });
     }
-    protected InitialState = new ReplaySubject();
+    /**
+     * 用户 状态变更 Subject
+     * @memberof EntitiesUser
+     */
+    protected UserSubject = new BehaviorSubject<EntitiesUser>({} as EntitiesUser);
+    /**
+     * 用户 状态变更 UserObservable
+     * @memberof EntitiesUser
+     */
+    UserObservable = this.UserSubject.pipe(
+        debounceTime(50),
+        filter(user => !lodash.isEmpty(user)),
+        map(user => {
+            user = toJS(user);
+            lodash.unset(user, 'UserSubject');
+            lodash.unset(user, 'hydrate');
+            lodash.unset(user, 'UserObservable');
+            lodash.unset(user, 'formatTree');
+            lodash.unset(user, 'constructor');
+            return user
+        }));
     private hydrate = create({
         // storage: window.localStorage,   // or AsyncStorage in react-native.
         // default: localStorage
@@ -129,5 +151,5 @@ export default class EntitiesUser {
      * @memberof EntitiesUser
      */
     @observable
-    Loading = false;
+    Loading = true;
 }

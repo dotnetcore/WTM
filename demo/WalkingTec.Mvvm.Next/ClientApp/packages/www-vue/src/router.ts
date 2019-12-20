@@ -1,26 +1,40 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import views, { Basics } from './views'
+import layout from './components/layout/index.vue'
 import lodash from 'lodash'
 Vue.use(VueRouter)
 const routes: RouteConfig[] = [
   {
-    path: '/',
-    name: 'home',
-    component: Basics.home
+    path: '/login',
+    name: 'login',
+    component: Basics.login
   },
-  ...lodash.map(views, (value, key) => {
-    return {
-      path: `/${key}`,
-      name: key,
-      component: value
-    }
-  }),
   {
-    path:'*',
-    redirect: "/"
-    // component: Basics.home
+    path: '/',
+    component: layout,
+    children: [
+      {
+        path: '/',
+        name: 'home',
+        component: Basics.home,
+      },
+      ...lodash.map(views, (value, key) => {
+        return {
+          path: `/${key}`,
+          name: key,
+          component: value
+        }
+      }),
+      {
+        path: '*',
+        // redirect: "/"
+        component: views.test
+      },
+    ],
   },
+
+
 ]
 console.log("TCL: routes", routes)
 

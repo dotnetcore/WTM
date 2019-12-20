@@ -1,9 +1,10 @@
-import { action, runInAction } from 'mobx';
+import { action, runInAction, toJS } from 'mobx';
 import { AjaxRequest } from "rxjs/ajax";
 import { timer } from 'rxjs';
 import Entities, { MenuDataItem } from './entities';
 import Ajax, { Request } from '../../utils/request';
 import lodash from 'lodash';
+import { filter } from 'rxjs/operators';
 // import { MenuDataItem } from '@ant-design/pro-layout';
 
 /**
@@ -45,29 +46,30 @@ export default class EntitiesUserBehavior extends Entities {
             throw error
         }
     }
+    /**
+     * CheckLogin
+     * @memberof EntitiesUserBehavior
+     */
     @action
     onCheckLogin() {
-        if (this.Loading) {
-            return console.warn('onCheckLogin Loadinged')
-        }
-        this.Loading = true;
-        const subscribe = this.InitialState.subscribe(async (Id) => {
+        // if (this.Loading) {
+        //     return console.warn('onCheckLogin Loadinged')
+        // }
+        // this.Loading = true;
+        const subscribe = this.UserObservable.subscribe(async ({ Id, Loading, OnlineState }) => {
+            subscribe && subscribe.unsubscribe();
             try {
-                if (Id) {
+                if (Id && Loading) {
                     const res = await Ajax.ajax("/api/_login/CheckLogin/" + Id).toPromise();
-                    this.onVerifyingLanding(res);
+                    return this.onVerifyingLanding(res);
                 }
+                throw ''
             } catch (error) {
                 this.onOutLogin();
-                throw error
-            }
-            finally {
-                runInAction(() => {
-                    this.Loading = false;
-                })
-                subscribe.unsubscribe();
+                // throw error
             }
         })
+
     }
     /**
      * 验证登陆
@@ -101,6 +103,7 @@ export default class EntitiesUserBehavior extends Entities {
             this.Menus = lodash.cloneDeep(Menus);
             this._MenuTrees = this.formatTree(Menus, null, []);
             this.Loading = false;
+            this.UserSubject.next(this)
         }
 
     }
@@ -111,11 +114,13 @@ export default class EntitiesUserBehavior extends Entities {
     @action
     onOutLogin() {
         this.OnlineState = false;
+        this.Loading = false;
         this.Id = undefined;
         this.ITCode = undefined;
         this.Menus = [];
         this._MenuTrees = [];
         this._Actions = [];
+        this.UserSubject.next(this)
     }
     /**
     * 递归 格式化 树
