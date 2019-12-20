@@ -19,7 +19,6 @@ namespace WalkingTec.Mvvm.Doc
     {
         private string version = "";
         private string SwashbuckleVersion = "";
-        private string EFDesignVersion = "";
         public bool EnableLog { get; set; }
 
         public bool LogExceptionOnly { get; set; }
@@ -134,12 +133,10 @@ namespace WalkingTec.Mvvm.Doc
             switch (DotnetVersion)
             {
                 case DotnetVersionEnum.dotnet2_2:
-                    EFDesignVersion = "2.2.4";
                     SwashbuckleVersion = "4.0.1";
                     version = Utils.GetNugetVersion("2.",false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
-                    EFDesignVersion = "3.0.1";
                     SwashbuckleVersion = "5.0.0-rc4";
                     version = Utils.GetNugetVersion("3.",true);
                     break;
@@ -211,7 +208,6 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
-    <PackageReference Include=""Microsoft.EntityFrameworkCore.Design"" Version=""{EFDesignVersion}"" />
 </ItemGroup>
 </Project>
 ");
@@ -228,7 +224,6 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
-    <PackageReference Include=""Microsoft.EntityFrameworkCore.Design"" Version=""{EFDesignVersion}"" />
  </ItemGroup>
   <ItemGroup>
     <Content Remove=""$(SpaRoot)**"" />
