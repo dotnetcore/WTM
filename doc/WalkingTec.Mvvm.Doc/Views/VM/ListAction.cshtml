@@ -38,7 +38,11 @@
       </tr>
       <tr>
         <td>OnClickScript</td>
-        <td>如果设置了OnClickScript，则框架运行指定的js方法</td>
+        <td>
+          如果设置了OnClickScript，则框架运行指定的js方法<br/>
+          比如设置SetOnClickScript("test")，点击按钮时框架会调用页面上的javascript方法: function test(ids,datas){}<br/>
+          ids是勾选的id数组，datas是勾选的所有字段数组
+        </td>
       </tr>
       <tr>
         <td>ShowInRow=true</td>
@@ -57,7 +61,7 @@ protected override List<GridAction> InitGridAction()
 {
     var actions = new List<GridAction>
   {
-    //调用页面上的名为test()的js方法
+    //调用页面上的名为test(ids,datas)的js方法
     this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
     //默认弹出对话框，并在每行显示按钮
     this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowInRow(true).SetQueryString("a=1"),
@@ -72,7 +76,7 @@ protected override List<GridAction> InitGridAction()
 
 <wt:fieldset field-set-style="Simple" title="功能按钮的其他设置">
 </wt:fieldset>
-  <p>通过MakeAction和MakeStandardAction方法来创建功能按钮时，可以使用流函数来对按钮进行更多设置</p>
+  <p>通过MakeAction和MakeStandardAction方法来创建功能按钮时，可以使用流函数SetXXX来对按钮进行更多设置</p>
   <p>功能按钮可以设置的属性有：</p>
       <table lay-filter="parse-table-demo">
         <thead>
@@ -120,6 +124,11 @@ protected override List<GridAction> InitGridAction()
                 <td>IconCls</td>
                 <td>按钮的图标，指定css文件中的某个 class</td>
             </tr>
+            <tr>
+                <td>IsDownload</td>
+                <td>是否为下载按钮，下载按钮指向的url应该返回文件</td>
+            </tr>
+
             <tr>
                 <td>ShowDialog</td>
                 <td>是否需要弹出窗口。有的按钮不需要弹出窗口，如果不弹窗口，则框架只会在后台调用指定方法</td>

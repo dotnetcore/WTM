@@ -741,12 +741,13 @@ if(ids.length == 0){{
                     case GridActionParameterTypesEnum.SingleIdWithNull:
                         script.Append($@"
 var ids = [];
+var objs = [];
 if(data != null && data.ID != null){{
     ids.push(data.ID);
     tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }} else {{
     ids = ff.GetSelections('{Id}');
-    var objs = ff.GetSelectionData('{Id}');
+    objs = ff.GetSelectionData('{Id}');
     if(objs!=null && objs.length > 0){{
         tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
     }}
@@ -782,7 +783,11 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     string actionScript = "";
                     if (string.IsNullOrEmpty(item.OnClickFunc))
                     {
-                        if (item.ShowDialog == true)
+                        if(item.IsDownload == true)
+                        {
+                            actionScript = $"ff.Download(tempUrl,ids);";
+                        }
+                        else if (item.ShowDialog == true)
                         {
                             string width = "null";
                             string height = "null";
@@ -824,7 +829,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     }
                     else
                     {
-                        actionScript = $"{item.OnClickFunc}();";
+                        actionScript = $"{item.OnClickFunc}(ids,objs);";
                     }
                     gridBtnEventStrBuilder.Append($@"
 var isPost = false;

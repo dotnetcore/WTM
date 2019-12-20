@@ -658,6 +658,18 @@ window.ff = {
     form.remove();
   },
 
+    Download: function (url, ids) {
+        var form = $('<form method="POST" action="' + url + '">');
+        if (ids !== undefined && ids !== null) {
+            for (var i = 0; i < ids.length; i++) {
+                form.append($('<input type="hidden" name="Ids" value="' + ids[i] + '">'));
+            }
+        }
+        $('body').append(form);
+        form.submit();
+        form.remove();
+    },
+
   /**
    * RefreshGrid
    * @param {string} dialogid the dialogid
