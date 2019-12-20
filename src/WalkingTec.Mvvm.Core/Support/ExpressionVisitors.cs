@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Core
         {
             //先调用一次Visit，删除所有的where表达式
             var rv = Visit(expression);
-            if(rv.NodeType == ExpressionType.Constant)
+            if (rv.NodeType == ExpressionType.Constant)
             {
                 if ((rv.Type.IsGeneric(typeof(EntityQueryable<>)) || rv.Type.IsGeneric(typeof(EnumerableQuery<>))))
                 {
@@ -132,7 +132,8 @@ namespace WalkingTec.Mvvm.Core
             var parentNode = exp.Arguments[0] as MethodCallExpression;
             if (parentNode == null || (parentNode.Method.Name.ToLower() != "orderby" && parentNode.Method.Name.ToLower() != "orderbydescending"))
             {
-                if(parentNode == null){
+                if (parentNode == null)
+                {
                     return exp.Arguments[0];
                 }
                 return parentNode;
@@ -169,9 +170,10 @@ namespace WalkingTec.Mvvm.Core
                 Expression rv = null;
                 foreach (var item in info)
                 {
-                    ParameterExpression pe = Expression.Parameter(modelType,"x");
                     var idproperty = modelType.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
-                    Expression pro = Expression.Property(pe, idproperty);
+                    var reftype = idproperty.DeclaringType;
+                    ParameterExpression pe = Expression.Parameter(modelType, "x");
+                    Expression pro = Expression.Property(pe, reftype.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault());
                     Type proType = idproperty.PropertyType;
                     if (item.Direction == SortDir.Asc)
                     {
@@ -429,7 +431,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (expression.NodeType == ExpressionType.Constant)
             {
-                if (expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
+                if (expression.Type.IsGeneric(typeof(EntityQueryable<>)) || expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
                 {
                     return expression.Type.GenericTypeArguments[0];
                 }

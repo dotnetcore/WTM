@@ -48,15 +48,9 @@ class Store {
      */
     recursionTree(datalist, ParentId, children: MenuDataItem[] = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
-            data.Children = this.recursionTree(datalist, data.Id, data.Children || []);
-            children.push({
-                key: data.Id,
-                path: data.Url,
-                name: data.Text,
-                icon: data.Icon || "pic-right",
-                children: data.Children,
-                ...data
-            });
+            data = lodash.cloneDeep(data);
+            data.children = this.recursionTree(datalist, data.Id, data.children || []);
+            children.push(data);
         });
         return children;
     }
@@ -64,16 +58,15 @@ class Store {
     @action.bound
     setSubMenu(subMenu) {
         this.ParallelMenu = subMenu.map(data => {
-            return {
-                ...data,
+            return lodash.merge(data, {
                 key: data.Id,
-                path: data.Url,
+                path: data.Url || '',
                 name: data.Text,
                 icon: data.Icon || "pic-right",
-                // children: data.Children
-            }
+                children: []
+            })
         });
-        const menu = this.recursionTree(subMenu, null, []);
+        const menu = this.recursionTree(this.ParallelMenu, null, []);
         console.log(menu)
         this.subMenu = menu
     }

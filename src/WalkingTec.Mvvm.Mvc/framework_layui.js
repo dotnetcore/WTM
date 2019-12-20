@@ -351,7 +351,11 @@ window.ff = {
         }
         else {
           str = "<div  id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + str + "</div>";
-          var area = 'auto';
+            var area = 'auto';
+            if (width > document.body.clientWidth) {
+                max = false;
+                maxed = true;
+            }
           if (width !== undefined && width !== null && height !== undefined && height !== null) {
             area = [width + 'px', height + 'px'];
           }
@@ -440,14 +444,19 @@ window.ff = {
         if (width !== undefined && width !== null && (height === undefined || height === null)) {
           area = width + 'px';
         }
-        if (title === undefined || title === null || title === '') {
-          title = false;
-        }
-        layer.open({
+          var max = true;
+       if (title === undefined || title === null || title === '') {
+           title = false;
+           max = false;
+          }
+          if (width > document.body.clientWidth) {
+              max = false;
+          }
+       var oid = layer.open({
           type: 1
           , title: title
           , area: area
-          , maxmin: true
+           , maxmin: max
           , btn: []
           , shade: 0.8
           , id: windowid //设定一个id，防止重复弹出
@@ -456,6 +465,10 @@ window.ff = {
             ff.SetCookie("windowids", owid);
           }
         });
+          if (width > document.body.clientWidth) {
+              layer.full(oid);
+          }
+
       }
     });
   },
