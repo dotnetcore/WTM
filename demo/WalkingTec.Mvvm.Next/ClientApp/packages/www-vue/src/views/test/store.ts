@@ -10,6 +10,47 @@ export class PageStore extends EntitiesPageStore {
             Delete: { url: '/_FrameworkGroup/BatchDelete' },
             Export: { url: '/_FrameworkGroup/ExportExcel', body: {} },
         });
+        this.ColumnDefs = [
+            {
+                headerName: "类型",
+                field: "LogType"
+            },
+            {
+                headerName: "模块",
+                field: "ModuleName"
+            },
+            {
+                headerName: "动作",
+                field: "ActionName"
+            },
+            {
+                headerName: "ITCode",
+                field: "ITCode"
+            },
+            {
+                headerName: "Url",
+                field: "ActionUrl"
+            },
+            {
+                headerName: "操作时间",
+                field: "ActionTime"
+            },
+            {
+                headerName: "时长",
+                field: "Duration"
+            },
+            {
+                headerName: "IP",
+                field: "IP"
+            },
+            {
+                headerName: "备注",
+                field: "Remark",
+                enableRowGroup: false
+            }
+        ];
+        // 订阅事件处理
+        this.onSubscribe();
     }
 }
 export default PageStore

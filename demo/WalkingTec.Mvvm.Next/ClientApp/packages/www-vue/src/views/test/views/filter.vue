@@ -1,7 +1,7 @@
 <template>
   <a-form class="page-search-form" :form="form" @submit="handleSearch">
     <a-row :gutter="24">
-      <a-col v-for="i in 10" :key="i" :span="8" :style="{ display: i < count ? 'block' : 'none' }">
+      <!-- <a-col v-for="i in 10" :key="i" :span="8" :style="{ display: i < count ? 'block' : 'none' }">
         <a-form-item :label="`Field ${i}`">
           <a-input
             v-decorator="[
@@ -10,12 +10,36 @@
             placeholder="placeholder"
           />
         </a-form-item>
+      </a-col>-->
+      <a-col :span="8">
+        <a-form-item :label="`ITCode`">
+          <a-input
+            v-decorator="[
+                `ITCode`
+              ]"
+            placeholder="placeholder"
+          />
+        </a-form-item>
+      </a-col>
+      <a-col :span="8">
+        <a-form-item :label="`ActionUrl`">
+          <a-input
+            v-decorator="[
+                `ActionUrl`
+              ]"
+            placeholder="placeholder"
+          />
+        </a-form-item>
       </a-col>
     </a-row>
     <a-row>
       <a-col :span="24" :style="{ textAlign: 'right' }">
-        <a-button type="primary" html-type="submit">Search</a-button>
-        <a-button :style="{ marginLeft: '8px' }" @click="handleReset">Clear</a-button>
+        <a-button type="primary" html-type="submit" :disabled="PageStore.Loading">Search</a-button>
+        <a-button
+          :style="{ marginLeft: '8px' }"
+          :disabled="PageStore.Loading"
+          @click="handleReset"
+        >Clear</a-button>
         <a :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
           Collapse
           <a-icon :type="PageStore.FilterCollapse ? 'up' : 'down'" />
@@ -81,23 +105,28 @@ export default {
     });
   },
   methods: {
+    onSearch(body) {
+      this.PageStore.EventSubject.next({
+        EventType: "onSearch",
+        AjaxRequest: {
+          body: {
+            ...body,
+            Page: 1,
+            Limit: 20
+          }
+        }
+      });
+    },
     handleSearch(e) {
       e.preventDefault();
       this.form.validateFields((error, values) => {
-        this.PageStore.EventSubject.next({
-          EventType: "onSearch",
-          AjaxRequest: {
-            body: {
-              Page: 1,
-              Limit: 20
-            }
-          }
-        });
+        this.onSearch(values);
       });
     },
 
     handleReset() {
       this.form.resetFields();
+      this.onSearch({});
     },
 
     toggle() {

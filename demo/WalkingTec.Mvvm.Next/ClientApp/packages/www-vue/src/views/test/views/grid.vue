@@ -3,7 +3,7 @@
     :PageStore="PageStore"
     :GridOptions="GridOptions"
     :rowData="rowData"
-    :columnDefs="GridOptions.columnDefs"
+    :columnDefs="columnDefs"
   />
 </template>
 <script lang="ts">
@@ -19,52 +19,15 @@ import { toJS } from "mobx";
 })
 export default class ViewGrid extends Vue {
   @Prop() PageStore: PageStore;
-  GridOptions: GridOptions = {
-    columnDefs: [
-      {
-        headerName: "类型",
-        field: "LogType"
-      },
-      {
-        headerName: "模块",
-        field: "ModuleName"
-      },
-      {
-        headerName: "动作",
-        field: "ActionName"
-      },
-      {
-        headerName: "ITCode",
-        field: "ITCode"
-      },
-      {
-        headerName: "Url",
-        field: "ActionUrl"
-      },
-      {
-        headerName: "操作时间",
-        field: "ActionTime"
-      },
-      {
-        headerName: "时长",
-        field: "Duration"
-      },
-      {
-        headerName: "IP",
-        field: "IP"
-      },
-      {
-        headerName: "备注",
-        field: "Remark",
-        enableRowGroup: false
-      }
-    ]
-  };
+  GridOptions: GridOptions = {};
   get rowData() {
     return toJS(this.PageStore.RowData);
   }
+  get columnDefs() {
+    return toJS(this.PageStore.ColumnDefs);
+  }
   mounted() {
-    console.log("TCL: ViewGrid -> PageStore", this);
+    
   }
 }
 </script>

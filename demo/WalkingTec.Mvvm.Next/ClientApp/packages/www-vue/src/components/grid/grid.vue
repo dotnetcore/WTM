@@ -67,6 +67,7 @@ export default class AgGrid extends Vue {
       suppressNoRowsOverlay: true,
       rowGroupPanelShow: "always",
       defaultColDef: {
+        minWidth: 150,
         enableRowGroup: true,
         resizable: true
       },

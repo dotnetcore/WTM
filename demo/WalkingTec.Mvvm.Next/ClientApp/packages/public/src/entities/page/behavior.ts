@@ -34,7 +34,7 @@ export interface IPageBehaviorOptions extends IRequestOptions {
 export default class EntitiesPageBehavior extends Entities {
     constructor(options?: IPageBehaviorOptions) {
         super();
-        lodash.merge(this.options, options);
+        lodash.merge(this.options, lodash.cloneDeep(options));
     }
     /**
      * 默认的配置
@@ -72,7 +72,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @type {IPageBehaviorOptions}
      * @memberof EntitiesPageBehavior
      */
-    options: IPageBehaviorOptions = lodash.merge(EntitiesPageBehavior.options, {});
+    options: IPageBehaviorOptions = lodash.merge({}, lodash.cloneDeep(EntitiesPageBehavior.options));
     /**
      * Request Ajax 
      *
@@ -89,11 +89,13 @@ export default class EntitiesPageBehavior extends Entities {
      */
     merge(type: string, request: AjaxRequest = {}) {
         try {
-            const req = lodash.get(this.options, type);
+            const req = lodash.cloneDeep(lodash.get(this.options, type));
             if (lodash.isNil(req) && lodash.isNil(request.url)) {
                 throw ''
             }
-            return lodash.merge<AjaxRequest, AjaxRequest>(req, request)
+            let newRequest = lodash.merge<AjaxRequest, AjaxRequest>(req, request);
+            newRequest.body = lodash.assign(req.body, request.body);
+            return newRequest
         } catch (error) {
             throw `${type} AjaxRequest Null`
         }
@@ -112,8 +114,8 @@ export default class EntitiesPageBehavior extends Entities {
             }
             this.Loading = true;
             request = this.merge('Search', request);
-            this.SearchParams = request.body;
             const res = await this.Request.ajax(request).toPromise();
+            this.SearchParams = request.body;
             runInAction(() => {
                 this.RowData = res.Data;
                 this.Total = res.Count;

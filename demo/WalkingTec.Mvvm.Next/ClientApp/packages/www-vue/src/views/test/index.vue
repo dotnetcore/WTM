@@ -20,11 +20,6 @@ import { Subscription } from "rxjs";
 })
 export default class PageView extends Vue {
   PageStore = new PageStore();
-  constructor() {
-    super();
-    // 订阅事件处理
-    this.PageStore.onSubscribe();
-  }
   mounted() {}
   destroyed() {
     // 销毁订阅
