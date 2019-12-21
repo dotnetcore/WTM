@@ -1260,7 +1260,7 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmTransfer
                     dataSource={{Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
-                    dataKey=""{item.SubIdField}""
+                    mapKey=""{item.SubIdField}""
                 /> ");
 
                             }

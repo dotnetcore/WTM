@@ -324,5 +324,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
+        [HttpPost]
+        public IActionResult Download(long id,long[] ids)
+        {
+            return File(new byte[0], "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
     }
 }
