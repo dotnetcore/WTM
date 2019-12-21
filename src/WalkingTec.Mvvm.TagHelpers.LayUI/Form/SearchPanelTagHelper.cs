@@ -121,6 +121,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
       </div>
     </h2>
     <div class=""layui-colla-content{layuiShow}"" >
+      <input type=""text"" style=""display: none;"">
 ");
             output.PostContent.AppendHtml($@"
     </div>
