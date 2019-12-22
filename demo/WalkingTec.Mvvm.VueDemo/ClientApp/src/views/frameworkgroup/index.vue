@@ -12,7 +12,7 @@
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -26,8 +26,8 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="formDialog.isShow">
-      <dialog-form :ref="formRefName" :is-show.sync="formDialog.isShow" :dialog-data="formDialog.dialogData" :status="formDialog.dialogStatus" @onSearch="onSearch" />
+    <dialog-box :is-show.sync="dialogInfo.isShow">
+      <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     </dialog-box>
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
@@ -43,13 +43,11 @@ import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkgroup";
-// 查询参数 ★★★★★
-const defaultSearchData = {
-    GroupCode: "",
-    GroupName: ""
-};
+// 查询参数/列表 ★★★★★
+import { SEARCH_DATA, TABLE_HEADER } from "./config.js";
+
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
+    mixins: [baseMixin, mixinFunc(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -59,22 +57,11 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    // 表单弹框ref名称
-    formRefName: string = "dialogform";
-    // 表单数据的key，下方相同，主要用在dialog-form组件中 传入数据，在action-mixin的方法openDialog有用到
-    formDialogKey: string = "formDialog";
     // 表单弹出框内容 ★★★★☆
-    formDialog = {
+    dialogInfo = {
         isShow: false,
         dialogData: {},
         dialogStatus: ""
     };
-    // 列表 col ★★★★★
-    tableCols = [
-        { key: "GroupCode", sortable: true, label: "用户组编码" },
-        { key: "GroupName", sortable: true, label: "用户组名称" },
-        { key: "GroupRemark", sortable: true, label: "备注" },
-        { key: "operate", label: "操作", isSlot: true }
-    ];
 }
 </script>

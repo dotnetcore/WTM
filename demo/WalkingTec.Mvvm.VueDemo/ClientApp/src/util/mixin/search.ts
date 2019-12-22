@@ -1,6 +1,7 @@
 /**
  * 查询复用 混入
- * tempSearch: 查询列表参数
+ * SEARCH_DATA: 查询列表参数
+ * TABLE_HEADER: 列表
  * callBack = () => {}
  * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口 返回
  */
@@ -19,12 +20,13 @@ declare module "vue/types/vue" {
         resetFields: any;
     }
 }
-function mixinFunc(tempSearch: any = {}) {
+function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     class mixin extends Vue {
+        tableHeader = TABLE_HEADER;
         searchForm: searchFormType = {
             orderByColumn: null, // 排序字段
             isAsc: null, // asc desc
-            ...tempSearch
+            ...SEARCH_DATA
         };
         // elementui 分页参数
         pageDate = {
@@ -86,8 +88,8 @@ function mixinFunc(tempSearch: any = {}) {
         }
         onSearch() {
             this.pageDate.currentPage = 1;
-            Object.keys(tempSearch).forEach(key => {
-                this.searchForm[key] = tempSearch[key];
+            Object.keys(SEARCH_DATA).forEach(key => {
+                this.searchForm[key] = SEARCH_DATA[key];
             });
             this.fetch();
         }
@@ -100,8 +102,8 @@ function mixinFunc(tempSearch: any = {}) {
         }
         // 重置
         onReset(formName) {
-            Object.keys(tempSearch).forEach(key => {
-                this.searchForm[key] = tempSearch[key];
+            Object.keys(SEARCH_DATA).forEach(key => {
+                this.searchForm[key] = SEARCH_DATA[key];
             });
             this.pageDate.currentPage = 1;
             if (formName) {
