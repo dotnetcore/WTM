@@ -1,3 +1,6 @@
+// 页面中，需要展示的动作按钮；增，改，删，导入，导出
+export const ASSEMBLIES = ["add", "edit", "delete", "export", "imported"];
+
 export const SEARCH_DATA = {
   RoleCode: "",
   RoleName: ""

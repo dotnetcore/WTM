@@ -1,5 +1,5 @@
 <template>
-  <dialog-box :is-show.sync="isShow" :status="status" @close="onClear">
+  <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
     <div class="frameworkuser-form">
       <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-row>
@@ -99,7 +99,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
+      <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
     </div>
   </dialog-box>
 </template>

@@ -34,9 +34,7 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
-      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-    </dialog-box>
+    <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
@@ -45,7 +43,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import baseMixin from "@/util/mixin/base";
-import mixinFunc from "@/util/mixin/search";
+import searchMixin from "@/util/mixin/search";
 import actionMixin from "@/util/mixin/action-mixin";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
@@ -53,10 +51,10 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
 // 查询参数, table列 ★★★★★
-import { DEFAULT_SEARCH_DATA, TABLE_HEADER } from "./config.js";
+import { ASSEMBLIES, DEFAULT_SEARCH_DATA, TABLE_HEADER } from "./config.js";
 
 @Component({
-    mixins: [baseMixin, mixinFunc(DEFAULT_SEARCH_DATA), actionMixin],
+    mixins: [baseMixin, searchMixin(DEFAULT_SEARCH_DATA), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -66,9 +64,9 @@ import { DEFAULT_SEARCH_DATA, TABLE_HEADER } from "./config.js";
     }
 })
 export default class Index extends Vue {
-    @State
-    searchData;
-
+    @State searchData;
+    // 动作
+    assembly = ASSEMBLIES;
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,

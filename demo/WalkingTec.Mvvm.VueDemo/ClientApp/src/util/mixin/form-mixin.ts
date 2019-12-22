@@ -33,6 +33,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         status; // 表单类型
         @Prop({ type: Boolean, default: false })
         isShow; // 弹框是否显示
+
         dialogType = dialogType; // 弹框类型 add/edit/detail
         // 表单数据
         formData = {
@@ -41,17 +42,17 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         // 表单ref name
         refName = defaultFormData.refName || "";
         // 关闭
-        onClear() {
+        onClose() {
             this.$emit("update:isShow", false);
             this.onReset();
         }
         // 重置&清除验证
         onReset() {
             this.setFormData(defaultFormData.formData);
-            // if (key !== "SelectedItemsID") {}
-            if (this.refName) {
+            const el = _.get(this, `$refs[${this.refName}]`);
+            if (this.refName && el) {
                 // 去除搜索中的error信息
-                _.get(this, `$refs[${this.refName}]`).resetFields();
+                el.resetFields();
             }
         }
         // 表单数据 赋值
@@ -93,6 +94,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
          */
         onGetFormData() {
             if (!this["dialogData"]) {
+                console.log(this["dialogData"]);
                 console.error("dialogData 没有id数据");
             }
             if (this["status"] !== this["dialogType"].add) {
