@@ -10,9 +10,7 @@
               </el-col>
               <el-col :span="12">
                   <wtm-form-item ref="Entity.ActionName" label="动作">
-                      <el-select v-model="formData.Entity.ActionName" v-edit:[status]="{list: getFoldersData, key:'Value', label: 'Text'}" filterable placeholder="请选择">
-                          <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
-                      </el-select>
+                      <el-input v-model="formData.Entity.ActionName" v-edit:[status] />
                   </wtm-form-item>
               </el-col>
               <el-col :span="12">
