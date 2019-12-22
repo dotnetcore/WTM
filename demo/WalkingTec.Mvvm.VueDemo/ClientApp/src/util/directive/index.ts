@@ -12,8 +12,8 @@ import config from "@/config/index";
  * key 集合中v-model对应字段名
  * label 集合中 需要展示的字段名
  */
-const domStyleFn = (el, binding, vnode) => {
-    const { value, arg } = binding; // value {list: Array<any>, key: string, label: string}
+const domStyleFn = (el, { value, arg }, vnode) => {
+    // const { value, arg } = binding; // value {list: Array<any>, key: string, label: string}
     const modelVal = vnode.data.model.value; // v-model 值
     let htmlVal: string = modelVal; // 内容value
     let elPre = el.previousSibling || {}; // el前dom，insert添加的dom

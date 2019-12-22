@@ -51,10 +51,10 @@ import ButBox from "@/components/tables/but-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
 // 查询参数, table列 ★★★★★
-import { ASSEMBLIES, DEFAULT_SEARCH_DATA, TABLE_HEADER } from "./config.js";
+import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
 
 @Component({
-    mixins: [baseMixin, searchMixin(DEFAULT_SEARCH_DATA), actionMixin],
+    mixins: [baseMixin, searchMixin(SEARCH_DATA), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -74,15 +74,6 @@ export default class Index extends Vue {
         dialogStatus: ""
     };
     tableHeader = TABLE_HEADER;
-    // 打开详情弹框 ★★★★☆
-    openDialog(status, data = {}) {
-        this.dialogInfo.isShow = true;
-        this.dialogInfo.dialogStatus = status;
-        this.dialogInfo.dialogData = data;
-        this.$nextTick(() => {
-            this.$refs["dialogform"].onGetFormData();
-        });
-    }
     // 查询接口 ★★★★★
     privateRequest(params) {
         params.StartActionTime = params.ActionTime.split(',')[0];
