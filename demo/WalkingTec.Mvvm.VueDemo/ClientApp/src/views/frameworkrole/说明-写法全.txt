@@ -1,3 +1,0 @@
-frameworkrole此功模块，演示写法较全：
-mixin中的方法，在此vue页面中覆盖，但search的不会在此中覆盖
-store中的action，在此vue页面中重命名

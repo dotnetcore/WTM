@@ -2,7 +2,7 @@
   <div class="dataprivilege">
     <card>
       <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
-        <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
+        <el-form slot="search-content" :inline="true" label-width="75px">
           <el-form-item label="ITCode">
             <el-input v-model="searchForm.ITCode" />
           </el-form-item>
@@ -10,9 +10,9 @@
             <el-input v-model="searchForm.ActionUrl" />
           </el-form-item>
         </el-form>
-        <el-form slot="collapse-content" label-width="75px">
+        <el-form slot="collapse-content" :inline="true" label-width="75px">
           <el-form-item label="操作时间">
-            <el-input v-model="searchForm.ActionTime" />
+            <el-date-picker v-model="searchForm.ActionTime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
           </el-form-item>
           <el-form-item label="IP">
             <el-input v-model="searchForm.IP" />
@@ -23,7 +23,7 @@
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
             详情
@@ -52,13 +52,11 @@ import TableBox from "@/components/tables/table-box.vue";
 import ButBox from "@/components/tables/but-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
-// 查询参数 ★★★★★
-const defaultSearchData = {
-    LogType: "",
-    ActionName: ""
-};
+// 查询参数, table列 ★★★★★
+import { DEFAULT_SEARCH_DATA, TABLE_HEADER } from "./config.js";
+
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
+    mixins: [baseMixin, mixinFunc(DEFAULT_SEARCH_DATA), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -68,14 +66,6 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action search;
-    @Action batchDelete;
-    @Action deleted;
-    @Action exportExcel;
-    @Action exportExcelByIds;
-    @Action imported;
-    @Action getExcelTemplate;
-
     @State
     searchData;
 
@@ -85,19 +75,7 @@ export default class Index extends Vue {
         dialogData: {},
         dialogStatus: ""
     };
-    // ★★★★★
-    tableCols = [
-        { key: "LogType", label: "类型" },
-        { key: "ModuleName", label: "模块" },
-        { key: "ActionName", label: "动作" },
-        { key: "ITCode", label: "ITCode" },
-        { key: "ActionUrl", label: "ActionUrl" },
-        { key: "ActionTime", label: "操作时间" },
-        { key: "Duration", label: "时长" },
-        { key: "IP", label: "IP" },
-        { key: "Remark", label: "备注" },
-        { key: "operate", label: "操作", isSlot: true }
-    ];
+    tableHeader = TABLE_HEADER;
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
         this.dialogInfo.isShow = true;
@@ -106,6 +84,12 @@ export default class Index extends Vue {
         this.$nextTick(() => {
             this.$refs["dialogform"].onGetFormData();
         });
+    }
+    // 查询接口 ★★★★★
+    privateRequest(params) {
+        params.StartActionTime = params.ActionTime.split(',')[0];
+        params.EndActionTime = params.ActionTime.split(',')[1];
+        return this.search(params);
     }
 }
 </script>

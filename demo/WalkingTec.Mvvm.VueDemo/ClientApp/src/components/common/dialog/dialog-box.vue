@@ -27,7 +27,8 @@ export default class DialogBox extends Vue {
      * :is-show.sync="XXX"
      */
     onClose() {
-        this.$emit("update:isShow", false);
+        // this.$emit("update:isShow", false);
+        this.$emit("close", false);
     }
 }
 </script>

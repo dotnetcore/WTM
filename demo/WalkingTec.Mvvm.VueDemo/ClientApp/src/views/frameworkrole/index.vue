@@ -12,7 +12,7 @@
                 </el-form>
             </fuzzy-search>
             <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-            <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+            <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
                 <template #operate="rowData">
                     <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
                         详情
@@ -50,18 +50,14 @@ import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import UploadBox from "@/components/common/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
-
 import { listToString, exportXlsx } from "@/util/string";
 import store from "@/store/system/frameworkrole";
-import { createBlob } from "@/util/files";
 
-// 查询参数 ★★★★★
-const defaultSearchData = {
-    RoleCode: "",
-    RoleName: ""
-};
+// 查询参数/列表 ★★★★★
+import { SEARCH_DATA, TABLE_HEADER } from "./config.js";
+
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
+    mixins: [baseMixin, mixinFunc(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -74,20 +70,10 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action("search") searchList;
+    // 差异的方法 单独写出
     @Action("getFrameworkRoles") getFrameworkRoles;
     @Action("getFrameworkGroups") getFrameworkGroups;
-    @Action("batchDelete") deleteIDs;
-    @Action("deleted") deleteAll;
-    @Action("exportExcel") exportExcel;
-    @Action("exportExcelByIds") exportExcelByIds;
-    @Action("imported") imported;
-    @Action("getExcelTemplate") getExcelTemplate;
 
-    // 表单弹框ref名称
-    formRefName: string = "dialogform";
-    // 表单数据的key，下方相同，主要用在dialog-form组件中 传入数据，在action-mixin的方法openDialog有用到
-    formDialogKey: string = "dialogInfo";
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,
@@ -95,111 +81,11 @@ export default class Index extends Vue {
         dialogStatus: "",
         isShowPermission: false
     };
-    // ★★★★★
-    tableCols = [
-        { key: "RoleCode", sortable: true, label: "角色编号" },
-        { key: "RoleName", sortable: true, label: "角色姓名" },
-        { key: "RoleRemark", sortable: true, label: "备注" },
-        { key: "operate", label: "操作", isSlot: true }
-    ];
-    // 导入
-    uploadIsShow = false;
-    // 查询 ★★★★★
-    created() {
-        this["onSearch"]();
-    }
-    // 查询接口 ★★★★★
-    privateRequest(params) {
-        return this.searchList(params);
-    }
-    // 打开详情弹框 ★★★★☆
-    openDialog(status, data = {}) {
-        this[this.formDialogKey].isShow = true;
-        this[this.formDialogKey].dialogStatus = status;
-        this[this.formDialogKey].dialogData = data;
-        this.$nextTick(() => {
-            this.$refs[this.formRefName].onGetFormData();
-        });
-    }
-    // ★★★★★
-    onDelete(params) {
-        this["onConfirm"]().then(() => {
-            const parameters = {
-                ids: [params.ID]
-            };
-            this.deleteAll(parameters).then(res => {
-                this["$notify"]({
-                    title: "删除成功",
-                    type: "success"
-                });
-                this["onHoldSearch"]();
-            });
-        });
-    }
-    // ★★★★★
-    onBatchDelete() {
-        this["onConfirm"]().then(() => {
-            const parameters = {
-                ids: listToString(this["selectData"], "ID")
-            };
-            this.deleteIDs(parameters).then(res => {
-                this["$notify"]({
-                    title: "删除成功",
-                    type: "success"
-                });
-                this["onHoldSearch"]();
-            });
-        });
-    }
-    // ★★★★☆
-    onExportAll() {
-        const parameters = {
-            ...this["searchFormClone"],
-            Page: this["pageDate"].currentPage,
-            Limit: this["pageDate"].pageSize
-        };
-        this.exportExcel(parameters).then(res => {
-            exportXlsx(res, "FrameworkroleExportExcel");
-            this["$notify"]({
-                title: "导出成功",
-                type: "success"
-            });
-        });
-    }
-    // ★★★★☆
-    onExport() {
-        const parameters = listToString(this["selectData"], "ID");
-        this.exportExcelByIds(parameters).then(res => {
-            exportXlsx(res, "FrameworkroleExportExcelByIds");
-            this["$notify"]({
-                title: "导出成功",
-                type: "success"
-            });
-        });
-    }
-    // 下载
-    onDownload() {
-        this.getExcelTemplate().then(res => createBlob(res));
-    }
-    // ★★★★☆
-    onImport(fileData) {
-        console.log("fileData", fileData);
-        const parameters = {
-            UploadFileId: fileData.Id
-        };
-        this.imported(parameters).then(res => {
-            this["$notify"]({
-                title: "导入成功",
-                type: "success"
-            });
-            this["onHoldSearch"]();
-        });
-    }
+
     /**
      * 打开-分配权限
      */
     openPermission(data = {}) {
-        console.log("data", data);
         this.dialogInfo.isShowPermission = true;
         this.$refs["permissionRef"].onGetFormData(data);
     }

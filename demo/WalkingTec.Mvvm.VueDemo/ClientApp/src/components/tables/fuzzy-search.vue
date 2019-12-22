@@ -4,13 +4,11 @@
     <div class="fuzzy-search">
         <div class="flex-container">
             <div v-if="isFuzzy" class="search-input el-input el-input--small">
-                <!-- <span class="search-text" :style="{width:searchLabelWidth?(searchLabelWidth+labelPadding)+'px':'auto'}">搜索</span>
-                    <input v-model.trim="searchKeyWord" :disabled="disabledInput" class="search-input el-input__inner" :style="{width:inputWidth+'px'}" :placeholder="placeholder" @keyup.enter="onSearch"> -->
                 <slot name="search-content" />
             </div>
             <el-button-group v-if="isFuzzy" class="button-group">
                 <el-button type="primary" class="btn-search" :disabled="disabledInput" @click="onSearch">
-                    模糊查询
+                    查询
                 </el-button>
                 <el-button v-if="needCollapse&&$slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
                     <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
@@ -23,7 +21,7 @@
                 <slot name="operation" />
             </div>
         </div>
-        <div class="uds-collapse" :class="{'is-active':!isFuzzy || isActive}" v-show="$slots['collapse-content']">
+        <div class="wtm-collapse" :class="{'is-active':!isFuzzy || isActive}" v-show="$slots['collapse-content']">
             <slot name="collapse-content" />
         </div>
     </div>
@@ -116,7 +114,7 @@ export default class FuzzySearch extends Vue {
         padding-left: 7px;
         padding-right: 7px;
     }
-    .uds-collapse {
+    .wtm-collapse {
         will-change: max-height;
         .transition(all 0.4s ease 0s);
         max-height: 0;

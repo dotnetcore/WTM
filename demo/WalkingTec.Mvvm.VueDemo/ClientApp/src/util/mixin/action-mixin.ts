@@ -24,10 +24,10 @@ export default class actionMixins extends Vue {
     // 表单弹框ref名称
     formRefName: string = "dialogForm";
     // 表单数据的key，下方相同，主要用在dialog-form组件中传入数据
-    formDialogKey: string = "formDialog";
+    formDialogKey: string = "dialogInfo";
 
     // 表单弹出框内容 ★★★★☆
-    formDialog = {
+    dialogInfo = {
         isShow: false,
         dialogData: {},
         dialogStatus: ""
@@ -36,13 +36,14 @@ export default class actionMixins extends Vue {
     uploadIsShow = false;
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
+        console.log('status', status, this.formDialogKey, this[this.formDialogKey])
         this[this.formDialogKey].isShow = true;
         this[this.formDialogKey].dialogStatus = status;
         this[this.formDialogKey].dialogData = data;
-        this.$nextTick(() => {
-            // onGetFormData在form-mixin.tx中
-            this.$refs[this.formRefName].onGetFormData();
-        });
+        // this.$nextTick(() => {
+        //     // onGetFormData在form-mixin.tx中
+        //     this.$refs[this.formRefName].onGetFormData();
+        // });
     }
 
     // 查询接口 ★★★★★

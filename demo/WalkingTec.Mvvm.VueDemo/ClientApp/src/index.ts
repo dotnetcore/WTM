@@ -1,6 +1,5 @@
 import Vue, { DirectiveOptions, ComputedOptions } from "vue";
 import ElementUI from "element-ui";
-import config from "@/config/index";
 import i18n from "@/lang";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/index.less";

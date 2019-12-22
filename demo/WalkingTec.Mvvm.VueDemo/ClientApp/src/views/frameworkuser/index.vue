@@ -6,13 +6,13 @@
           <el-form-item label="账号">
             <el-input v-model="searchForm.ITCode" />
           </el-form-item>
-          <el-form-item label="姓名">
+          <el-form-item label="姓名">{{dialogInfo.isShow}}-
             <el-input v-model="searchForm.Name" />
           </el-form-item>
         </el-form>
       </fuzzy-search>
       <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #PhotoId="rowData">
           <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
         </template>
@@ -32,9 +32,8 @@
         </template>
       </table-box>
     </card>
-    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
-      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-    </dialog-box>
+    <!-- <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus"></dialog-box> -->
+    <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
@@ -51,13 +50,12 @@ import ButBox from "@/components/tables/but-box.vue";
 import UploadBox from "@/components/common/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkuser";
-// 查询参数 ★★★★★
-const defaultSearchData = {
-    ITCode: "",
-    Name: ""
-};
+
+// 查询参数/列表 ★★★★★
+import { SEARCH_DATA, TABLE_HEADER } from "./config.js";
+
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
+    mixins: [baseMixin, mixinFunc(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -68,15 +66,8 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action search;
-    @Action batchDelete;
-    @Action delete;
-    @Action exportExcel;
-    @Action exportExcelByIds;
     @Action getFrameworkRoles;
     @Action getFrameworkGroups;
-    @Action imported;
-    @Action getExcelTemplate;
 
     @State searchData;
     // 弹出框内容 ★★★★☆
@@ -85,31 +76,5 @@ export default class Index extends Vue {
         dialogData: {},
         dialogStatus: ""
     };
-    // ★★★★★
-    tableCols = [
-        { key: "ITCode", sortable: true, label: "账号" },
-        { key: "Name", sortable: true, label: "姓名" },
-        { key: "Sex", sortable: true, label: "性别" },
-        { key: "PhotoId", label: "照片", isSlot: true },
-        { key: "IsValid", label: "是否生效", isSlot: true },
-        { key: "RoleName_view", label: "角色" },
-        { key: "GroupName_view", label: "用户组" },
-        {
-            key: "operate",
-            label: "操作",
-            isSlot: true,
-            width: 130,
-            fixed: "right"
-        }
-    ];
-    // 打开详情弹框 ★★★★☆
-    openDialog(status, data = {}) {
-        this.dialogInfo.isShow = true;
-        this.dialogInfo.dialogStatus = status;
-        this.dialogInfo.dialogData = data;
-        this.$nextTick(() => {
-            this.$refs["dialogform"].onGetFormData();
-        });
-    }
 }
 </script>
