@@ -11,7 +11,7 @@
                     </el-form-item>
                 </el-form>
             </fuzzy-search>
-            <but-box :assembly="['add', 'edit', 'delete', 'export', 'imported']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+            <but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
             <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
                 <template #operate="rowData">
                     <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
@@ -29,9 +29,7 @@
                 </template>
             </table-box>
         </card>
-        <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
-            <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-        </dialog-box>
+        <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
         <permission :is-show.sync="dialogInfo.isShowPermission" ref="permissionRef"></permission>
         <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
     </div>
@@ -41,7 +39,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import baseMixin from "@/util/mixin/base";
-import mixinFunc from "@/util/mixin/search";
+import searchMixin from "@/util/mixin/search";
 import actionMixin from "@/util/mixin/action-mixin";
 import FuzzySearch from "@/components/tables/fuzzy-search.vue";
 import TableBox from "@/components/tables/table-box.vue";
@@ -50,14 +48,13 @@ import DialogBox from "@/components/common/dialog/dialog-box.vue";
 import UploadBox from "@/components/common/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
-import { listToString, exportXlsx } from "@/util/string";
 import store from "@/store/system/frameworkrole";
 
 // 查询参数/列表 ★★★★★
-import { SEARCH_DATA, TABLE_HEADER } from "./config.js";
+import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
 
 @Component({
-    mixins: [baseMixin, mixinFunc(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [baseMixin, searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         FuzzySearch,
@@ -74,6 +71,8 @@ export default class Index extends Vue {
     @Action("getFrameworkRoles") getFrameworkRoles;
     @Action("getFrameworkGroups") getFrameworkGroups;
 
+    // 动作
+    assembly = ASSEMBLIES;
     // 弹出框内容 ★★★★☆
     dialogInfo = {
         isShow: false,

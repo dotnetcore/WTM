@@ -1,28 +1,30 @@
 <template>
-    <div class="frameworkrole-form">
-        <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
-            <el-row>
-                <el-col :span="12">
-                    <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode">
-                        <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName">
-                        <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="24">
-                    <wtm-form-item ref="Entity.RoleRemark" label="备注">
-                        <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
-        <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
-    </div>
+    <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
+        <div class="frameworkrole-form">
+            <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
+                <el-row>
+                    <el-col :span="12">
+                        <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode">
+                            <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
+                        </wtm-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName">
+                            <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
+                        </wtm-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <wtm-form-item ref="Entity.RoleRemark" label="备注">
+                            <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
+                        </wtm-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
+        </div>
+    </dialog-box>
 </template>
 
 <script lang='ts'>
@@ -69,7 +71,7 @@ export default class extends Vue {
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
             // 动态验证会走遍验证，需要清除验证
-            this.$nextTick(() => {
+            this.$refs[defaultFormData.refName] && this.$nextTick(() => {
                 this.$refs[defaultFormData.refName].resetFields();
             });
             return {
@@ -137,7 +139,7 @@ export default class extends Vue {
                     title: "添加成功",
                     type: "success"
                 });
-                this["onClear"]();
+                this["onClose"]();
                 this.$emit("onSearch");
             })
             .catch(error => {
@@ -155,7 +157,7 @@ export default class extends Vue {
                     title: "修改成功",
                     type: "success"
                 });
-                this["onClear"]();
+                this["onClose"]();
                 this.$emit("onSearch");
             })
             .catch(error => {

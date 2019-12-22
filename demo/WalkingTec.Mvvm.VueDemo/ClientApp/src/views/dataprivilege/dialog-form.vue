@@ -48,7 +48,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
+    <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
   </div>
 </template>
 

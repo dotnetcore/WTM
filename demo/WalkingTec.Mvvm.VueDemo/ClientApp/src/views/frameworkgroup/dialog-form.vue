@@ -1,28 +1,30 @@
 <template>
-  <div class="frameworkgroup-form">
-    <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <el-row>
-        <el-col :span="12">
-          <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
-            <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
-        <el-col :span="12">
-          <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName">
-            <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <wtm-form-item ref="Entity.GroupRemark" label="备注">
-            <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <dialog-footer :status="status" @onClear="onClear" @onSubmit="onSubmitForm" />
-  </div>
+  <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
+    <div class="frameworkgroup-form">
+      <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-row>
+          <el-col :span="12">
+            <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
+              <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
+            </wtm-form-item>
+          </el-col>
+          <el-col :span="12">
+            <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName">
+              <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
+            </wtm-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <wtm-form-item ref="Entity.GroupRemark" label="备注">
+              <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
+            </wtm-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
+    </div>
+  </dialog-box>
 </template>
 
 <script lang='ts'>
@@ -53,7 +55,7 @@ export default class Index extends Vue {
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
             // 动态验证会走遍验证，需要清除验证
-            this.$nextTick(() => {
+            this.$refs[defaultFormData.refName] && this.$nextTick(() => {
                 this.$refs[defaultFormData.refName].resetFields();
             });
             return {
