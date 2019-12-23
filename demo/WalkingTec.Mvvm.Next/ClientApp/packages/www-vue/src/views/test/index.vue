@@ -12,15 +12,17 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ViewGrid from "./views/grid.vue";
-import ViewFilter from "./views/filter.vue";
+import { FormFilter } from "./views/forms";
 import PageStore from "./store";
 import { Subscription } from "rxjs";
 @Component({
-  components: { ViewGrid, ViewFilter }
+  components: { ViewGrid, ViewFilter: FormFilter }
 })
 export default class PageView extends Vue {
   PageStore = new PageStore();
-  mounted() {}
+  mounted() {
+    console.warn("TCL: PageView ", this.PageStore);
+  }
   destroyed() {
     // 销毁订阅
     this.PageStore.onUnsubscribe();

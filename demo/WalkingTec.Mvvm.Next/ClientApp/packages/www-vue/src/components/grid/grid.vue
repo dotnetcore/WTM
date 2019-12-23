@@ -83,14 +83,12 @@ export default class AgGrid extends Vue {
   };
   @Debounce(200)
   onCalculation() {
-    console.log("TCL: AgGrid -> onCalculation -> onCalculation");
     this.GridEvents.sizeColumnsToFit();
   }
   mounted() {
     this.ResizeEvent = fromEvent(window, "resize").subscribe(e => {
       this.onCalculation();
     });
-    console.log(this);
   }
   destroyed() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();

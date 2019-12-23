@@ -38,7 +38,6 @@ export default class Grid extends Vue {
   @Prop({ default: [] }) rowData!: any;
   @Prop({ default: [] }) columnDefs!: any;
   mounted() {
-    console.log("TCL: Grid", this);
   }
   destroyed() {}
 }

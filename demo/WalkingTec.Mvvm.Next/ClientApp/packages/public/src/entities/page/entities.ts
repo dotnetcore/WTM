@@ -3,16 +3,7 @@ import { observable } from 'mobx';
 import { create } from 'mobx-persist';
 import { Subject, Subscription } from 'rxjs';
 import { AjaxRequest } from 'rxjs/ajax';
-declare type EnumEventType = "onSearch" | "onDetails" | "onInsert" | "onUpdate" | "onDelete" | "onImport" | "onImport" | "onExport";
-// {
-//     onSearch = "onSearch",
-//     onDetails = "onDetails",
-//     onInsert = "onInsert",
-//     onUpdate = "onUpdate",
-//     onDelete = "onDelete",
-//     onImport = "onImport",
-//     onExport = "onExport",
-// }
+export declare type EnumEventType = "onSearch" | "onDetails" | "onInsert" | "onUpdate" | "onDelete" | "onImport" | "onImport" | "onExport";
 declare class EntitiesPageEventSubject {
     EventType: EnumEventType;
     AjaxRequest?: AjaxRequest;
@@ -128,4 +119,9 @@ export default class EntitiesPage {
      */
     @observable
     FilterCollapse = false;
+    /**
+     * 调试 日志
+     * @memberof EntitiesPage
+     */
+    DeBugLog = false;
 }

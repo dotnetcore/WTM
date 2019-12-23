@@ -36,7 +36,7 @@ const routes: RouteConfig[] = [
 
 
 ]
-console.log("TCL: routes", routes)
+console.table(routes[1].children, ['path', 'name'])
 
 const router = new VueRouter({
   mode: 'history',

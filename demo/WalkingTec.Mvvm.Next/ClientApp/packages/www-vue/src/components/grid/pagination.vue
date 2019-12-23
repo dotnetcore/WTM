@@ -21,7 +21,7 @@ export default class Pagination extends Vue {
   @Prop() Pagination: any;
   Props = lodash.merge(
     {
-      hideOnSinglePage: true,
+      // hideOnSinglePage: true,
       showSizeChanger: true,
       size: "small"
     },
@@ -39,7 +39,6 @@ export default class Pagination extends Vue {
     });
   }
   mounted() {
-    console.log("TCL: Pagination -> PageStore", this.PageStore);
   }
   destroyed() {}
 }

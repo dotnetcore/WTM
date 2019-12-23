@@ -37,10 +37,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class extends Vue {
   UserStore = rootStore.UserStore;
   onCollapse(collapsed, type) {
-    console.log(collapsed, type);
   }
   onBreakpoint(broken) {
-    console.log(broken);
   }
 }
 </script>

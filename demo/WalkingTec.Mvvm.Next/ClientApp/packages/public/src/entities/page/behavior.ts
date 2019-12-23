@@ -2,7 +2,8 @@ import { action, runInAction } from 'mobx';
 import { AjaxRequest } from "rxjs/ajax";
 import { IRequestOptions, Request } from '../../utils/request';
 import { Regulars } from '../../utils/regulars';
-import Entities from './entities';
+import Entities, { EnumEventType } from './entities';
+import { debounceTime, filter, map } from 'rxjs/operators';
 import lodash from 'lodash';
 import { saveAs } from 'file-saver';
 export interface IPageBehaviorOptions extends IRequestOptions {
@@ -95,7 +96,8 @@ export default class EntitiesPageBehavior extends Entities {
             }
             let newRequest = lodash.merge<AjaxRequest, AjaxRequest>(req, request);
             newRequest.body = lodash.assign(req.body, request.body);
-            return newRequest
+            this.DeBugLog && console.table(newRequest);
+            return lodash.cloneDeep(newRequest);
         } catch (error) {
             throw `${type} AjaxRequest Null`
         }
@@ -291,35 +293,19 @@ export default class EntitiesPageBehavior extends Entities {
     };
     /**
      * 订阅 事件处理
+     * 默认只处理 'onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport' 内置事件
      * @memberof EntitiesPageBehavior
      */
-    onSubscribe() {
-        this.Subscription = this.EventSubject.subscribe(event => {
-            console.warn("TCL: PageView -> mounted -> event", event);
-            switch (event.EventType) {
-                case "onSearch":
-                    this.onSearch(event.AjaxRequest);
-                    break;
-                case "onDetails":
-                    this.onDetails(event.AjaxRequest);
-                    break;
-                case "onDelete":
-                    this.onDelete(event.AjaxRequest);
-                    break;
-                case "onInsert":
-                    this.onInsert(event.AjaxRequest);
-                    break;
-                case "onUpdate":
-                    this.onUpdate(event.AjaxRequest);
-                    break;
-                case "onImport":
-                    this.onImport(event.AjaxRequest);
-                    break;
-                case "onExport":
-                    this.onExport(event.AjaxRequest);
-                    break;
-
-            }
+    onCreateSubscribe() {
+        this.Subscription = this.EventSubject.pipe(
+            filter(obj => lodash.includes<EnumEventType>(['onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport'], obj.EventType))
+        ).subscribe(event => {
+            // 查找事件函数
+            const EventFn = lodash.get(this, event.EventType, () => { console.warn(`未解析事件 ${event.EventType}`) });
+            // 日志
+            this.DeBugLog && console.warn(`TCL: ${event.EventType} ->`, event);
+            // 执行
+            EventFn(event.AjaxRequest);
         });
     }
     /**
