@@ -106,6 +106,10 @@ namespace WalkingTec.Mvvm.Core
         public string BindVisiableColName { get; set; }
 
         public bool Max { get; set; }
+        /// <summary>
+        /// 是否为文件下载按钮，若为true，则下载
+        /// </summary>
+        public bool IsFileDownload { get; set; }
 
         #region 请求链接相关
 

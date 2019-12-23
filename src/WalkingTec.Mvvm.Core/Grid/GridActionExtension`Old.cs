@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -84,6 +84,18 @@ namespace WalkingTec.Mvvm.Core
             self.ActionName = actionName;
             return self;
         }
+        /// <summary>
+        /// 动作是否下载文件
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="isFileDownload"></param>
+        /// <returns></returns>
+        public static GridAction SetIsFileDownload(this GridAction self, bool isFileDownload = true)
+        {
+            self.IsFileDownload = isFileDownload;
+            return self;
+        }
+
         /// <summary>
         /// 动作的QueryString
         /// </summary>
