@@ -3,7 +3,6 @@ import 'ant-design-vue/dist/antd.less';
 import './styles/base.less';
 import 'nprogress/nprogress.css';
 import Vue from 'vue';
-import App from './App.vue';
 import router from './router';
 Antd.install(Vue);
 Vue.config.productionTip = false
