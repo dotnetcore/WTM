@@ -412,6 +412,13 @@ namespace WalkingTec.Mvvm.Mvc
             return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
+        [NonAction]
+        public virtual IDataContext CreateDC(string csName)
+        {
+            string cs = csName ?? "default";
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
+        }
+
         #endregion
 
         #region ReInit model
