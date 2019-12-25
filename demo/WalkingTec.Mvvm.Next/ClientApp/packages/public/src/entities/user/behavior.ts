@@ -101,9 +101,9 @@ export default class EntitiesUserBehavior extends Entities {
             });
             this.Menus = lodash.cloneDeep(Menus);
             this._MenuTrees = this.formatTree(Menus, null, []);
-            this.UserSubject.next(this);
             this.Loading = false;
             this.OnlineState = true;
+            this.UserSubject.next(this);
         }
 
     }
