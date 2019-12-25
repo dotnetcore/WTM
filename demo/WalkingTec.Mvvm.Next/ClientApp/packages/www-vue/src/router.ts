@@ -43,9 +43,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-// router.beforeEach((to, from, next) => {
-//   console.log("TCL: from", from)
-//   console.log("TCL: to", to)
-//   next()
-// })
+router.beforeEach((to, from, next) => {
+  console.clear();
+  console.log("TCL: from", from);
+  console.log("TCL: to", to);
+  next()
+})
 export default router
