@@ -117,9 +117,9 @@ export default class EntitiesPageBehavior extends Entities {
             this.Loading = true;
             request = this.merge('Search', request);
             const res = await this.Request.ajax(request).toPromise();
-            this.SearchParams = request.body;
             runInAction(() => {
                 this.RowData = res.Data;
+                this.SearchParams = request.body;
                 this.Total = res.Count;
                 this.PageSize = lodash.get(this.SearchParams, 'Limit');
                 this.Current = res.Page;

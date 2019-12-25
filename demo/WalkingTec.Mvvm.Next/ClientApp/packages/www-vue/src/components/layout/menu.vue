@@ -9,7 +9,7 @@
       <div class="logo" />
     </router-link>
     <a-menu
-      v-if="UserStore.OnlineState"
+     
       :defaultSelectedKeys="selectedKeys"
       :defaultOpenKeys="openKeys"
       mode="inline"
