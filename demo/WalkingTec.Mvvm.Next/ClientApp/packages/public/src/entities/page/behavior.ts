@@ -109,7 +109,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onSearch(request?: AjaxRequest) {
+    async onSearch(request: AjaxRequest = {}) {
         try {
             if (this.Loading) {
                 return console.warn("已请求~")
@@ -139,7 +139,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onDetails(request?: AjaxRequest) {
+    async onDetails(request: AjaxRequest = {}) {
         try {
             if (this.LoadingDetails) {
                 return console.warn("已请求~")
@@ -166,7 +166,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onInsert(request?: AjaxRequest) {
+    async onInsert(request: AjaxRequest = {}) {
         try {
             if (this.LoadingEdit) {
                 return console.warn("已请求~")
@@ -190,7 +190,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onUpdate(request?: AjaxRequest) {
+    async onUpdate(request: AjaxRequest = {}) {
         try {
             if (this.LoadingEdit) {
                 return console.warn("已请求~")
@@ -214,7 +214,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onDelete(request?: AjaxRequest) {
+    async onDelete(request: AjaxRequest = {}) {
         try {
             if (this.LoadingEdit) {
                 return console.warn("已请求~")
@@ -238,7 +238,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onImport(request?: AjaxRequest) {
+    async onImport(request: AjaxRequest = {}) {
         try {
             if (this.LoadingImport) {
                 return console.warn("已请求~")
@@ -262,7 +262,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     @action
-    async onExport(request?: AjaxRequest) {
+    async onExport(request: AjaxRequest = {}) {
         try {
             if (this.LoadingExport) {
                 return console.warn("已请求~")
