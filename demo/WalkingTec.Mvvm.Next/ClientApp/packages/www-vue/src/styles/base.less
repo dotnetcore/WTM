@@ -1,18 +1,36 @@
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/dist/styles/ag-theme-material.css";
+@import "~ant-design-vue/es/style/themes/default.less";
+
+.ag-theme-material {
+    .ag-icon-checkbox-checked {
+        color: @primary-color  !important;
+    }
+
+    .ag-header-cell,
+    .ag-header-group-cell {
+        background: transparent;
+    }
+}
+
 .page-card {
-    &.ant-card{
+    &.ant-card {
         position: initial;
     }
+
     .ant-card-body {
         padding: 12px
     }
 }
 
 .page-divider {
-    margin: 2px 0;
+    margin: 3px 0;
 }
 
 .page-filter-form {
     user-select: none;
+
     .ant-form-item {
         display: flex;
         margin-bottom: 5px;

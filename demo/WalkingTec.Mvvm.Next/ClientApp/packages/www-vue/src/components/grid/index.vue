@@ -1,8 +1,13 @@
 <template>
   <a-spin tip="Loading..." :spinning="PageStore.Loading">
-    <grid :GridOptions="GridOptions" :rowData="rowData" :columnDefs="columnDefs" />
+    <grid 
+    :GridOptions="GridOptions" 
+    :rowData="rowData" 
+    :columnDefs="columnDefs" />
     <div style="height:8px"></div>
-    <pagination :PageStore="PageStore" :Pagination="Pagination" />
+    <div class="grid-pagination">
+      <pagination :PageStore="PageStore" :Pagination="Pagination" />
+    </div>
   </a-spin>
 </template>
 
@@ -45,4 +50,8 @@ export default class Grid extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+.grid-pagination{
+  display: flex;
+  justify-content: flex-end;
+}
 </style>

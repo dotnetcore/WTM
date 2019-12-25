@@ -8,11 +8,12 @@
   },
   "dependencies": {
     "@leng/public": "^0.0.1",
-    "ag-grid-vue": "22.1.0",
-    "ant-design-vue": "^1.4.8",
+    "ag-grid-vue": "22.1.1",
+    "ant-design-vue": "^1.4.10",
     "mobx-vue": "^2.0.10",
     "vue": "^2.6.11",
     "vue-class-component": "^7.1.0",
+    "vue-i18n": "^8.15.3",
     "vue-property-decorator": "^8.3.0",
     "vue-router": "^3.1.3"
   },

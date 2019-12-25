@@ -82,7 +82,6 @@ export default class EntitiesUserBehavior extends Entities {
         if (UserInfo.access_token) {
             lodash.set(Request.headers, 'Authorization', `${UserInfo.token_type} ${UserInfo.access_token}`);
         } else {
-            this.OnlineState = true;
             this.Loading = false;
             this.Name = lodash.get(UserInfo, 'Name');
             this.Id = lodash.get(UserInfo, 'Id');
@@ -102,8 +101,9 @@ export default class EntitiesUserBehavior extends Entities {
             });
             this.Menus = lodash.cloneDeep(Menus);
             this._MenuTrees = this.formatTree(Menus, null, []);
+            this.UserSubject.next(this);
             this.Loading = false;
-            this.UserSubject.next(this)
+            this.OnlineState = true;
         }
 
     }

@@ -32,8 +32,8 @@
   "homepage": "https://github.com/LengYXin/ViewSeparation#readme",
   "description": "",
   "dependencies": {
-    "ag-grid-community": "22.1.0",
-    "ag-grid-enterprise": "22.1.0",
+    "ag-grid-community": "22.1.1",
+    "ag-grid-enterprise": "22.1.1",
     "core-js": "^3.5.0",
     "date-fns": "^2.8.1",
     "file-saver": "^2.0.2",

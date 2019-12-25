@@ -8,7 +8,13 @@
     <router-link to="/">
       <div class="logo" />
     </router-link>
-    <a-menu :defaultSelectedKeys="['1']" :defaultOpenKeys="['2']" mode="inline" theme="dark">
+    <a-menu
+      v-if="UserStore.OnlineState"
+      :defaultSelectedKeys="selectedKeys"
+      :defaultOpenKeys="openKeys"
+      mode="inline"
+      theme="dark"
+    >
       <template v-for="item in UserStore.MenuTrees">
         <a-menu-item v-if="!item.children" :key="item.key">
           <router-link :to="item.path">
@@ -25,6 +31,7 @@
 
 <script lang="ts">
 import SubMenu from "./subMenu.vue";
+import lodash from "lodash";
 import rootStore from "../../rootStore";
 import { observer } from "mobx-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -36,10 +43,35 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 })
 export default class extends Vue {
   UserStore = rootStore.UserStore;
-  onCollapse(collapsed, type) {
+  get pageMenu() {
+    return lodash.find(this.UserStore.Menus, ["path", this.$root.$route.path]);
   }
-  onBreakpoint(broken) {
+  get selectedKeys() {
+    return [lodash.get(this.pageMenu, "key", "")];
   }
+  get openKeys() {
+    const openKeys = this.getDefaultOpenKeys(
+      this.UserStore.Menus,
+      this.pageMenu,
+      []
+    );
+    return openKeys;
+  }
+  //  获取
+  getDefaultOpenKeys(Menus, Menu, OpenKeys = []) {
+    const ParentId = lodash.get(Menu, "ParentId");
+    if (ParentId) {
+      OpenKeys.push(ParentId);
+      const Parent = lodash.find(Menus, ["Id", ParentId]);
+      if (Parent.ParentId) {
+        this.getDefaultOpenKeys(Menus, Parent, OpenKeys);
+      }
+    }
+    return OpenKeys;
+  }
+  mounted() {}
+  onCollapse(collapsed, type) {}
+  onBreakpoint(broken) {}
 }
 </script>
 <style lang="less">

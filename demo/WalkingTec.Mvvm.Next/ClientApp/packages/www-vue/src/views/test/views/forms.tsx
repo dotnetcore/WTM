@@ -7,7 +7,7 @@ import Models from './models';
 import lodash from 'lodash';
 @Form.create({ props: ['PageStore'] })
 @Component
-export class FormFilter extends Vue {
+export class ViewFilter extends Vue {
     @Prop() form: WrappedFormUtils;
     @Prop() PageStore: PageStore;
     onSearch(body?) {
@@ -45,7 +45,7 @@ export class FormFilter extends Vue {
             <Form {...{ class: "page-filter-form" }} on-submit={this.onSubmit} >
                 {renderItems}
                 <div style="text-align: right">
-                    <Button props={{ type: 'primary' }} html-type="submit" >提交</Button>
+                    <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
                     <Divider props={{ type: 'vertical' }} />
                     <Button props={{}} on-click={this.onReset} >Clear</Button>
                     <Divider props={{ type: 'vertical' }} />

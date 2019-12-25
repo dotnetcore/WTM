@@ -1,21 +1,24 @@
 <template>
   <ag-grid-vue
-    style="height: 500px;"
-    class="ag-theme-material"
+    :style="{
+      height:height+'px',
+    }"
+    class="ag-theme-material ag-grid-card"
     :gridOptions="GridOptionsProps"
     :rowData="rowData"
-    :columnDefs="columnDefs"
+    :columnDefs="columnDefsProp"
   ></ag-grid-vue>
 </template>
 
 <script lang="ts">
-import { AgGridVue } from "ag-grid-vue/lib/AgGridVue";
 import lodash from "lodash";
+import { AgGridVue } from "ag-grid-vue/lib/AgGridVue";
 import { LicenseManager } from "ag-grid-enterprise";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { GridOptions, GridReadyEvent } from "ag-grid-community";
+import { GridOptions, GridReadyEvent, ColDef, ColGroupDef } from "ag-grid-community";
 import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
+import localeText from "./localeText";
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
@@ -28,6 +31,66 @@ export default class AgGrid extends Vue {
   @Prop() GridOptions: GridOptions;
   @Prop({ default: [] }) rowData!: any;
   @Prop({ default: [] }) columnDefs!: any;
+  get columnDefsProp(): (ColDef | ColGroupDef)[] {
+    return [
+      {
+        // pivotIndex: 0,
+        rowDrag: false,
+        dndSource: false,
+        lockPosition: true,
+        // dndSourceOnRowDrag: false,
+        suppressMenu: true,
+        suppressSizeToFit: true,
+        suppressMovable: true,
+        suppressNavigable: true,
+        suppressCellFlash: true,
+        // rowGroup: false,
+        enableRowGroup: false,
+        enablePivot: false,
+        enableValue: false,
+        suppressResize: false,
+        editable: false,
+        suppressColumnsToolPanel: true,
+        filter: false,
+        resizable: false,
+        checkboxSelection: true,
+        headerCheckboxSelection: true,
+        width: 70,
+        maxWidth: 70,
+        minWidth: 70,
+        pinned: "left"
+        // ...checkboxSelectionProps
+      },
+      ...this.columnDefs,
+      {
+        headerName: lodash.eq(this.$root.$i18n.locale, "zh-CN")
+          ? "操作"
+          : "Action",
+        rowDrag: false,
+        dndSource: false,
+        lockPosition: true,
+        // dndSourceOnRowDrag: false,
+        suppressMenu: true,
+        suppressSizeToFit: true,
+        suppressMovable: true,
+        suppressNavigable: true,
+        suppressCellFlash: true,
+        // rowGroup: false,
+        enableRowGroup: false,
+        enablePivot: false,
+        enableValue: false,
+        suppressResize: false,
+        editable: false,
+        suppressColumnsToolPanel: true,
+        filter: false,
+        // field: "RowAction",
+        // cellRenderer: "rowAction",
+        pinned: "right"
+        // minWidth: 180,
+        // ...rowActionProps
+      }
+    ];
+  };
   // 事件对象
   ResizeEvent: Subscription;
   GridReadyEvent: GridReadyEvent;
@@ -35,6 +98,9 @@ export default class AgGrid extends Vue {
     {
       // columnDefs
       // groupUseEntireRow:true,
+      localeText: lodash.eq(this.$root.$i18n.locale, "zh-CN")
+        ? localeText
+        : undefined,
       sideBar: {
         toolPanels: [
           {
@@ -73,7 +139,6 @@ export default class AgGrid extends Vue {
       },
       onGridReady: event => {
         this.GridReadyEvent = event;
-        this.GridEvents.sizeColumnsToFit();
       }
     },
     this.GridOptions
@@ -81,13 +146,30 @@ export default class AgGrid extends Vue {
   GridEvents = {
     sizeColumnsToFit: () => this.GridReadyEvent.api.sizeColumnsToFit()
   };
+  height = 500;
   @Debounce(200)
   onCalculation() {
     this.GridEvents.sizeColumnsToFit();
   }
+  @Debounce(200)
+  onSetHeight() {
+    try {
+      const offsetTop = lodash.get(this, "$parent.$el.offsetTop", 0),
+        innerHeight = window.innerHeight,
+        height = innerHeight - offsetTop - 55;
+      this.height = height < 400 ? 400 : height;
+    } catch (error) {
+      console.error("TCL: AgGrid -> onSetHeight", error);
+      this.height = 400;
+    }
+  }
   mounted() {
+    this.onSetHeight();
+    this.onCalculation();
+
     this.ResizeEvent = fromEvent(window, "resize").subscribe(e => {
       this.onCalculation();
+      this.onSetHeight();
     });
   }
   destroyed() {
@@ -99,13 +181,7 @@ export default class AgGrid extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
-@import "~ag-grid-community/dist/styles/ag-theme-material.css";
-@import "~ant-design-vue/es/style/themes/default.less";
-.ag-theme-material {
-  .ag-icon-checkbox-checked {
-    color: @primary-color !important;
-  }
+.ag-grid-card {
+  transition: all 0.2s;
 }
 </style>
