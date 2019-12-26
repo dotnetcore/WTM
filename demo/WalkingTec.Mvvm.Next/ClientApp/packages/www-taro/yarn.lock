@@ -8811,7 +8811,7 @@ stylelint-taro-rn@2.0.0-beta.6:
 
 stylelint@9.3.0:
   version "9.3.0"
-  resolved "https://registry.npm.taobao.org/stylelint/download/stylelint-9.3.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fstylelint%2Fdownload%2Fstylelint-9.3.0.tgz#fe176e4e421ac10eac1a6b6d9f28e908eb58c5db"
+  resolved "https://registry.npm.taobao.org/stylelint/download/stylelint-9.3.0.tgz#fe176e4e421ac10eac1a6b6d9f28e908eb58c5db"
   integrity sha1-/hduTkIawQ6sGmttnyjpCOtYxds=
   dependencies:
     autoprefixer "^8.0.0"
