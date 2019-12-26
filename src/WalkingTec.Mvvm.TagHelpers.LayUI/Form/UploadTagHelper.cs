@@ -18,6 +18,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 上传文件类别
         /// </summary>
         public UploadTypeEnum UploadType { get; set; }
+        
+        /// <summary>
+        /// 是否显示进度条，默认为false
+        /// </summary>
+        public bool? ShowProgress { get; set; }
 
         /// <summary>
         /// 当上传文件类别为ImageFile时，指定缩小的宽度，框架会使用缩小后的图片保存
@@ -115,14 +120,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             output.PostElement.SetHtmlContent($@"
 <input type='hidden' id='{Id}' name='{Field.Name}' value='{Field.Model}' {(Field.Metadata.IsRequired ? " lay-verify=required" : string.Empty)} />
+");    
+            if (ShowProgress != null)
+            {
+                if (ShowProgress == true)
+                {
+                    output.PostElement.AppendHtml($@"
 <div class='layui-progress' lay-showpercent='true' lay-filter='demo'>
     <div class='layui-progress-bar layui-bg-red' lay-percent='0%'></div>
 </div>
+");
+                }
+            }
+            output.PostElement.AppendHtml($@"
 <script>
   function {Id}DoDelete(fileid){{
     $('#{Id}').parents('form').append(""<input type='hidden' id='DeletedFileIds' name='DeletedFileIds' value='""+fileid+""' />"");
     $('#{Id}label').html('');
     $('#{Id}').val('');
+    $('.layui-progress .layui-progress-bar').css('width', '0%');
   }}
   var index = 0;
   var {Id}preview;
