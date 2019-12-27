@@ -67,7 +67,7 @@ export default class AgGrid extends Vue {
         // ...checkboxSelectionProps
       },
       ...this.columnDefs,
-      // 存在 Action 添加 
+      // 存在 Action 添加
       lodash.has(this.GridOptionsProps, "frameworkComponents.Action") && {
         headerName: lodash.eq(this.$root.$i18n.locale, "zh-CN")
           ? "操作"
@@ -89,9 +89,9 @@ export default class AgGrid extends Vue {
         editable: false,
         suppressColumnsToolPanel: true,
         filter: false,
-        // field: "RowAction",
+        field: "Action",
         cellRenderer: "Action",
-        pinned: "right",
+        pinned: "right"
         // minWidth: 50,
         // ...rowActionProps
       }
@@ -145,14 +145,17 @@ export default class AgGrid extends Vue {
       },
       onGridReady: event => {
         this.GridReadyEvent = event;
+      },
+      onColumnVisible: () => {
+        this.onCalculation()
       }
     },
     this.GridOptions
   );
   GridEvents = {
     sizeColumnsToFit: () => {
+      this.GridReadyEvent.columnApi.autoSizeColumn("Action");
       this.GridReadyEvent.api.sizeColumnsToFit();
-      this.GridReadyEvent.columnApi.autoSizeAllColumns();
     }
   };
   height = 500;
