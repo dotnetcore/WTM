@@ -15,7 +15,12 @@ import lodash from "lodash";
 import { AgGridVue } from "ag-grid-vue/lib/AgGridVue";
 import { LicenseManager } from "ag-grid-enterprise";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { GridOptions, GridReadyEvent, ColDef, ColGroupDef } from "ag-grid-community";
+import {
+  GridOptions,
+  GridReadyEvent,
+  ColDef,
+  ColGroupDef
+} from "ag-grid-community";
 import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
 import localeText from "./localeText";
@@ -62,7 +67,8 @@ export default class AgGrid extends Vue {
         // ...checkboxSelectionProps
       },
       ...this.columnDefs,
-      {
+      // 存在 Action 添加 
+      lodash.has(this.GridOptionsProps, "frameworkComponents.Action") && {
         headerName: lodash.eq(this.$root.$i18n.locale, "zh-CN")
           ? "操作"
           : "Action",
@@ -84,13 +90,13 @@ export default class AgGrid extends Vue {
         suppressColumnsToolPanel: true,
         filter: false,
         // field: "RowAction",
-        // cellRenderer: "rowAction",
-        pinned: "right"
-        // minWidth: 180,
+        cellRenderer: "Action",
+        pinned: "right",
+        // minWidth: 50,
         // ...rowActionProps
       }
-    ];
-  };
+    ].filter(Boolean);
+  }
   // 事件对象
   ResizeEvent: Subscription;
   GridReadyEvent: GridReadyEvent;
@@ -144,7 +150,10 @@ export default class AgGrid extends Vue {
     this.GridOptions
   );
   GridEvents = {
-    sizeColumnsToFit: () => this.GridReadyEvent.api.sizeColumnsToFit()
+    sizeColumnsToFit: () => {
+      this.GridReadyEvent.api.sizeColumnsToFit();
+      this.GridReadyEvent.columnApi.autoSizeAllColumns();
+    }
   };
   height = 500;
   @Debounce(200)
