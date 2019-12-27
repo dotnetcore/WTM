@@ -20,13 +20,13 @@
                 </a-menu-item>
                 <a-menu-item @click="UserStore.onOutLogin">
                   <a href="javascript:;">
-                    <a-icon type="logout" /> 注销
+                    <a-icon type="logout" />注销
                   </a>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
             <a-divider type="vertical" />
-            <a href="javascript:;" class="user-item">
+            <a href="javascript:;" class="user-item" @click="onVisible(true)">
               <a-icon type="setting" />
             </a>
             <a-divider type="vertical" />
@@ -42,7 +42,7 @@
                 </a-menu-item>
                 <a-menu-item>
                   <a href="javascript:;">
-                     <span v-html="languageIcons['en-US']"></span> English
+                    <span v-html="languageIcons['en-US']"></span> English
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -54,15 +54,22 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
+    <a-drawer
+      placement="right"
+      :closable="false"
+      @close="onVisible(false)"
+      :visible="visible"
+    >
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-drawer>
   </a-layout>
 </template>
 <script lang="ts">
 import LayoutMenu from "./menu.vue";
-import { observable, action } from "mobx";
-import { observer } from "mobx-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
-@observer
 @Component({
   components: {
     LayoutMenu
@@ -70,6 +77,10 @@ import rootStore from "../../rootStore";
 })
 export default class extends Vue {
   UserStore = rootStore.UserStore;
+  visible = false;
+  onVisible(visible = !this.visible) {
+    this.visible = visible;
+  }
   get languageIcons() {
     return {
       "zh-CN": "🇨🇳",
