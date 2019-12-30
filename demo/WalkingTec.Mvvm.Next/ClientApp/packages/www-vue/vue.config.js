@@ -1,6 +1,7 @@
 const path = require('path');
 module.exports = {
     outputDir: "build",
+    runtimeCompiler: true,
     productionSourceMap: false,
     chainWebpack: (config) => {
         // 修复 public node_modules 重复

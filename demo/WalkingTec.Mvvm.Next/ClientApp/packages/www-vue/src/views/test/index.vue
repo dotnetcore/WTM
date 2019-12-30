@@ -15,7 +15,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ViewGrid from "./views/grid.vue";
 import ViewAction from "./views/action.vue";
-import { ViewFilter } from "./views/forms";
+import ViewFilter from "./views/filter.vue";
 import PageStore from "./store";
 import { Subscription } from "rxjs";
 @Component({

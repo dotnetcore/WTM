@@ -7,11 +7,12 @@ import router from './router';
 import VueI18n from 'vue-i18n';
 import locale from './locale';
 import App from './app.vue';
+import globalconfig from './global.config';
 Vue.use(VueI18n)
 Antd.install(Vue);
 Vue.config.productionTip = false
 const i18n = new VueI18n({
-  locale: 'en-US', // set locale en-US zh-CN
+  locale: globalconfig.settings.language, // set locale en-US zh-CN
   messages: locale
 });
 const Root = new Vue({

@@ -1,9 +1,6 @@
 <template>
   <a-spin tip="Loading..." :spinning="PageStore.Loading">
-    <grid 
-    :GridOptions="GridOptions" 
-    :rowData="rowData" 
-    :columnDefs="columnDefs" />
+    <grid :GridOptions="GridOptions" :rowData="rowDataProps" :columnDefs="columnDefsProps" />
     <div style="height:8px"></div>
     <div class="grid-pagination">
       <pagination :PageStore="PageStore" :Pagination="Pagination" />
@@ -16,6 +13,7 @@ import { EntitiesPageStore } from "@leng/public/src";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import pagination from "./pagination.vue";
 import { Pagination } from "ant-design-vue";
+import { toJS } from "mobx";
 const grid = () =>
   ({
     // 需要加载的组件 (应该是一个 `Promise` 对象)
@@ -40,17 +38,22 @@ export default class Grid extends Vue {
   @Prop() PageStore: EntitiesPageStore;
   @Prop() GridOptions;
   @Prop() Pagination: Pagination;
-  @Prop({ default: [] }) rowData!: any;
-  @Prop({ default: [] }) columnDefs!: any;
-  mounted() {
+  @Prop({ default: () => [] }) rowData!: any;
+  @Prop({ default: () => [] }) columnDefs!: any;
+  get rowDataProps() {
+    return toJS(this.PageStore.RowData);
   }
+  get columnDefsProps() {
+    return toJS(this.PageStore.ColumnDefs);
+  }
+  mounted() {}
   destroyed() {}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.grid-pagination{
+.grid-pagination {
   display: flex;
   justify-content: flex-end;
 }

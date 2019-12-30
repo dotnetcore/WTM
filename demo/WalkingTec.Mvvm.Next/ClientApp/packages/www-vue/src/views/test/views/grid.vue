@@ -2,9 +2,13 @@
   <Grid
     :PageStore="PageStore"
     :GridOptions="GridOptions"
+  />
+  <!-- <Grid
+    :PageStore="PageStore"
+    :GridOptions="GridOptions"
     :rowData="rowData"
     :columnDefs="columnDefs"
-  />
+  /> -->
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -26,12 +30,12 @@ export default class ViewGrid extends Vue {
       Action
     }
   };
-  get rowData() {
-    return toJS(this.PageStore.RowData);
-  }
-  get columnDefs() {
-    return toJS(this.PageStore.ColumnDefs);
-  }
+  // get rowData() {
+  //   return toJS(this.PageStore.RowData);
+  // }
+  // get columnDefs() {
+  //   return toJS(this.PageStore.ColumnDefs);
+  // }
   mounted() {}
 }
 </script>

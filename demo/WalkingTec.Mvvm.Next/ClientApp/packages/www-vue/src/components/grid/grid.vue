@@ -102,6 +102,7 @@ export default class AgGrid extends Vue {
   GridReadyEvent: GridReadyEvent;
   GridOptionsProps: GridOptions = lodash.merge<GridOptions, GridOptions>(
     {
+      // suppressMenuHide:true,
       // columnDefs
       // groupUseEntireRow:true,
       localeText: lodash.eq(this.$root.$i18n.locale, "zh-CN")
