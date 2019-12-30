@@ -150,6 +150,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 postHtml += $@"
     </div>
 <div class=""layui-form-mid layui-word-aux"">{PaddingText}</div>
+</div>
 ";
 
             }

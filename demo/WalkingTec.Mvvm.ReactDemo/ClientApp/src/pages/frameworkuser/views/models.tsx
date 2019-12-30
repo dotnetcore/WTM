@@ -1,6 +1,7 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
+﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
+import { DesValueFormatter } from 'components/decorators';
 import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
@@ -19,70 +20,70 @@ export default {
     editModels(props?): WTM.FormItem {
         return {
             /** 账号 */
-            "Entity.ITCode":{
+            "Entity.ITCode": {
                 label: "账号",
                 rules: [{ "required": true, "message": "账号不能为空" }],
                 formItem: <Input placeholder="请输入 账号" />
             },
             /** 密码 */
-            "Entity.Password":{
+            "Entity.Password": {
                 label: "密码",
                 rules: [{ "required": true, "message": "密码不能为空" }],
                 formItem: <Input placeholder="请输入 密码" />
             },
             /** 邮箱 */
-            "Entity.Email":{
+            "Entity.Email": {
                 label: "邮箱",
                 rules: [],
                 formItem: <Input placeholder="请输入 邮箱" />
             },
             /** 姓名 */
-            "Entity.Name":{
+            "Entity.Name": {
                 label: "姓名",
                 rules: [{ "required": true, "message": "姓名不能为空" }],
                 formItem: <Input placeholder="请输入 姓名" />
             },
             /** 性别 */
-            "Entity.Sex":{
+            "Entity.Sex": {
                 label: "性别",
                 rules: [],
-                formItem: <WtmSelect placeholder="性别" dataSource={[  
+                formItem: <WtmSelect placeholder="性别" dataSource={[
                     { Text: "男", Value: 0 },
                     { Text: "女", Value: 1 }
-                ]}/>
+                ]} />
             },
             /** 手机 */
-            "Entity.CellPhone":{
+            "Entity.CellPhone": {
                 label: "手机",
                 rules: [],
                 formItem: <Input placeholder="请输入 手机" />
             },
             /** 座机 */
-            "Entity.HomePhone":{
+            "Entity.HomePhone": {
                 label: "座机",
                 rules: [],
                 formItem: <Input placeholder="请输入 座机" />
             },
             /** 住址 */
-            "Entity.Address":{
+            "Entity.Address": {
                 label: "住址",
                 rules: [],
                 formItem: <Input placeholder="请输入 住址" />
             },
             /** 邮编 */
-            "Entity.ZipCode":{
+            "Entity.ZipCode": {
                 label: "邮编",
                 rules: [],
                 formItem: <Input placeholder="请输入 邮编" />
             },
             /** 照片 */
-            "Entity.PhotoId":{
+            "Entity.PhotoId": {
                 label: "照片",
                 rules: [],
                 formItem: <WtmUploadImg />
             },
             /** 是否有效 */
-            "Entity.IsValid":{
+            "Entity.IsValid": {
                 label: "是否有效",
                 rules: [
                     // { "required": true, "message": "是否有效不能为空" }
@@ -90,22 +91,22 @@ export default {
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 角色 */
-            "Entity.UserRoles":{
+            "Entity.UserRoles": {
                 label: "角色",
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
-                    // dataKey="RoleId" 废弃
-                /> 
+                    mapKey="RoleId"
+                />
             },
             /** 用户组 */
-            "Entity.UserGroups":{
+            "Entity.UserGroups": {
                 label: "用户组",
                 rules: [],
                 formItem: <WtmTransfer
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
-                    // dataKey="GroupId" 废弃
-                /> 
+                    mapKey="GroupId"
+                />
             }
 
         }
@@ -117,13 +118,13 @@ export default {
     searchModels(props?): WTM.FormItem {
         return {
             /** 账号 */
-            "ITCode":{
+            "ITCode": {
                 label: "账号",
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 姓名 */
-            "Name":{
+            "Name": {
                 label: "姓名",
                 rules: [],
                 formItem: <Input placeholder="" />

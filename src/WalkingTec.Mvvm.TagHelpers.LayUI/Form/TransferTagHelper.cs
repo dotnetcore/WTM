@@ -139,7 +139,7 @@ layui.use(['transfer'],function(){{
   function defaultFunc(data,index,transferIns) {{
     var selectVals = transfer.getData('{Id}');
     /* remove old values */
-    var inputs = $('#'+_id+' input[name='+name+']')
+    var inputs = $('#'+_id+' input[name=""'+name+'""]')
     if(inputs!=null && inputs.length>0){{
       for (var i = 0; i < inputs.length; i++) {{
         inputs[i].remove();
@@ -165,7 +165,7 @@ layui.use(['transfer'],function(){{
     {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $"{ChangeFunc}(data, index,transferIns);")}
     }}
   }});
-  /*s init default value */
+  /* init default value */
   if(defaultVal!=null && defaultVal.length>0){{
     for (var i = 0; i < defaultVal.length; i++) {{
       container.append('<input type=""hidden"" name=""'+name+'"" value=""'+defaultVal[i]+'""/>');
