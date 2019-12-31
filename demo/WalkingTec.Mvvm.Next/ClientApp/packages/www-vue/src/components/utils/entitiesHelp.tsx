@@ -54,7 +54,7 @@ export function createFormItem({ entities }: { entities: any }) {
             computed: {
                 // 计算属性的 getter
                 decorator: function () {
-                    return [key, lodash.merge(item.options, this.options)]
+                    return [key, lodash.merge({}, item.options, this.options)]
                 }
             },
         })
