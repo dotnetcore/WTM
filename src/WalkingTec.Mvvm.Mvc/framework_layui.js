@@ -483,7 +483,10 @@ window.ff = {
       this.SetCookie("windowids", wid);
     }
     else {
-      if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {
+        if (layui.setter == undefined || layui.setter.pageTabs == undefined) {
+            window.close();
+        }
+        else if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {
         $('#LAY_app_body').html('');
       }
       else {
