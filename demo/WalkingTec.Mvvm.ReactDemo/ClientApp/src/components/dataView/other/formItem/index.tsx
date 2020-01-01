@@ -18,7 +18,7 @@ interface IFormItemProps {
     /** 模型 */
     models?: {
         [key: string]: {
-            label: string,
+            label: React.ReactNode,
             rules: any[],
             formItem: React.ReactNode
         };
@@ -146,7 +146,10 @@ export class FormItem extends React.Component<IFormItemProps, any> {
             }
         }
         // console.log(models, renderItem)
-        return <Form.Item label={GlobalConfig.language === "zh-CN" ? model.label : lodash.replace(fieId, 'Entity.', '')} {...itemlayout}>
+        return <Form.Item
+            // label={GlobalConfig.language === "zh-CN" ? model.label : lodash.replace(fieId, 'Entity.', '')} 
+            label={model.label}
+            {...itemlayout}>
             {renderItem}
         </Form.Item >
     }
