@@ -1,4 +1,4 @@
-﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
 import { mergeLocales } from 'locale';
 import React from 'react';
@@ -13,7 +13,7 @@ mergeLocales({
     "en-US": {
         'frameworkrole.RoleCode': 'RoleCode',
         'frameworkrole.RoleName': 'RoleName',
-        'frameworkrole.RoleRemark': 'RoleRemark',
+        'frameworkrole.RoleRemark': 'Remark',
     }
 });
 // 列配置
