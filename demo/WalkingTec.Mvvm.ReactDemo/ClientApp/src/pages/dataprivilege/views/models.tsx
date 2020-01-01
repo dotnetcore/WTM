@@ -1,4 +1,4 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
+import { Input, Switch, Icon, Select, Upload, message, Modal, InputNumber } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
@@ -9,7 +9,7 @@ import { mergeLocales, getLocalesValue } from 'locale';
 import { FormattedMessage } from 'react-intl';
 mergeLocales({
     "zh-CN": {
-        'dataprivilege.required': '{zhText}是必填项',
+        'dataprivilege.required': '{txt}是必填项',
         'dataprivilege.placeholder': '请选择 {zhText}',
         'dataprivilege.DpType': '权限类型',
         'dataprivilege.DpType.dataSource.0': '用户组权限',
@@ -52,7 +52,8 @@ export default {
             /** 权限类型 */
             "DpType": {
                 label: <FormattedMessage id='dataprivilege.DpType' />,
-                rules: [{ "required": true, "message": <FormattedMessage id='dataprivilege.DpType.required' /> }],
+                rules: [{
+                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.DpType')}}/> }],
                 formItem: <WtmRadio
                     dataSource={[
                         { Text: <FormattedMessage id='dataprivilege.DpType.dataSource.0' />, Value: '0' },
@@ -62,8 +63,8 @@ export default {
             /** 权限名称 */
             "Entity.TableName": {
                 label: <FormattedMessage id='dataprivilege.TableName' />,
-                rules: [{ "required": true, "message": <FormattedMessage id='dataprivilege.required' values={{ zhText: '权限名称', enText: 'TableName' }} /> }],
-                formItem: <WtmSelect placeholder={<FormattedMessage id='dataprivilege.placeholder' values={{ zhText: '权限名称', enText: 'TableName' }} />}
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.TableName') }} /> }],
+                formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.TableName') }} />}
                     dataSource={Request.cache({ url: "/api/_DataPrivilege/GetPrivileges" })}
                 />
             },
@@ -71,7 +72,7 @@ export default {
             "SelectedItemsID": {
                 label: <FormattedMessage id='dataprivilege.SelectedItemsID' />,
                 rules: [],
-                formItem: <WtmSelect placeholder={<FormattedMessage id='dataprivilege.placeholder' values={{ zhText: '允许访问', enText: 'SelectedItems' }} />}
+                formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.SelectedItemsID') }} />}
                     mode="multiple"
                     linkage={['Entity.TableName']}
                     dataSource={(props) => {
@@ -85,24 +86,24 @@ export default {
             /** 备注 */
             "IsAll": {
                 label: <FormattedMessage id='dataprivilege.IsAll' />,
-                rules: [{ "required": true, "message": <FormattedMessage id='dataprivilege.required' values={{ zhText: '全部权限', enText: 'All permissions' }} /> }],
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.IsAll') }} /> }],
                 formItem: <WtmSelect
                     dataSource={[
-                        { Text: <FormattedMessage id='dataprivilege.IsAll.true' />, Value: 'true' },
-                        { Text: <FormattedMessage id='dataprivilege.IsAll.false' />, Value: 'false' },
+                        { Text: <FormattedMessage id='tips.bool.true' />, Value: 'true' },
+                        { Text: <FormattedMessage id='tips.bool.false' />, Value: 'false' },
                     ]} />
             },
             /** 用户Id */
             "UserItCode": {
                 label: <FormattedMessage id='dataprivilege.UserItCode' />,
-                rules: [{ "required": true, "message": <FormattedMessage id='dataprivilege.required' values={{ zhText: '用户 Code', enText: 'User Code' }} /> }],
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.UserItCode') }} /> }],
                 formItem: <Input placeholder="" />
             },
             /** 用户组 */
             "Entity.GroupId": {
                 label: <FormattedMessage id='dataprivilege.GroupId' />,
-                rules: [{ "required": true, "message": <FormattedMessage id='dataprivilege.required' values={{ zhText: '用户组', enText: 'User Group' }} /> }],
-                formItem: <WtmSelect placeholder={<FormattedMessage id='dataprivilege.placeholder' values={{ zhText: '用户组', enText: 'User Group' }}/>}
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('dataprivilege.GroupId') }} /> }],
+                formItem: <WtmSelect placeholder={<FormattedMessage id='tips.placeholder.choose' values={{ txt: getLocalesValue('dataprivilege.GroupId') }}/>}
                     dataSource={Request.cache({ url: "/api/_DataPrivilege/GetUserGroups" })}
                 />
             }

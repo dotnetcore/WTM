@@ -1,4 +1,4 @@
-﻿
+
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
 import { mergeLocales } from 'locale';
@@ -16,9 +16,9 @@ mergeLocales({
         'frameworkuser.GroupName_view': '用户组',
     },
     "en-US": {
-        'frameworkuser.ITCode': 'ITCode',
+        'frameworkuser.ITCode': 'Account',
         'frameworkuser.Name': 'Name',
-        'frameworkuser.Sex': 'Sex',
+        'frameworkuser.Sex': 'Gender',
         'frameworkuser.PhotoId': 'Photo',
         'frameworkuser.IsValid': 'IsValid',
         'frameworkuser.RoleName_view': 'RoleName',

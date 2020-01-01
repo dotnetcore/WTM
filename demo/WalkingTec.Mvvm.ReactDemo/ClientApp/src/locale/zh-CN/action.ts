@@ -9,7 +9,7 @@ export default {
     'action.export': ' 导出',
     'action.exportAll': ' 导出全部',
     'action.exportSelect': ' 导出选择',
-    'action.deleteConfirm': ' 确定删除 {text} ?',
+    'action.deleteConfirm': ' 确定删除这{text}条数据么 ?',
     'action.open': ' 展开',
     'action.retract': ' 收起',
     'action.close': ' 关闭',

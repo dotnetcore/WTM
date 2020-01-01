@@ -1,4 +1,4 @@
-﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
 import { mergeLocales } from 'locale';
 import React from 'react';
@@ -13,7 +13,7 @@ mergeLocales({
     "en-US": {
         'dataprivilege.Name': 'Name',
         'dataprivilege.TableName': 'TableName',
-        'dataprivilege.RelateIDs': 'RelateIDs',
+        'dataprivilege.RelateIDs': 'Privileges',
     }
 });
 // 列配置
