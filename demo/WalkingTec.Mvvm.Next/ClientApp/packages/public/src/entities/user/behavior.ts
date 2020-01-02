@@ -99,13 +99,25 @@ export default class EntitiesUserBehavior extends Entities {
                     // children: data.Children
                 }
             });
+            const onAnalysisMenus = async () => {
+                await this.onAnalysisMenus(Menus);
+                this.UserSubject.next(this);
+            }
+            onAnalysisMenus();
+        }
+
+    }
+    /**
+     * 解析菜单 
+     * @memberof EntitiesUserBehavior
+     */
+    async onAnalysisMenus(Menus) {
+        runInAction(() => {
             this.Menus = lodash.cloneDeep(Menus);
             this._MenuTrees = this.formatTree(Menus, null, []);
             this.Loading = false;
             this.OnlineState = true;
-            this.UserSubject.next(this);
-        }
-
+        })
     }
     /**
      * 退出登陆

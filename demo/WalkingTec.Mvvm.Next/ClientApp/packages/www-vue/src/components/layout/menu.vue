@@ -16,7 +16,7 @@
       theme="dark"
     >
       <template v-for="item in UserStore.MenuTrees">
-        <a-menu-item v-if="!item.children" :key="item.key">
+        <a-menu-item v-if="!item.children.length" :key="item.key">
           <router-link :to="item.path">
             <a-icon :type="item.icon || 'pie-chart'" />
             <span>{{ item.name }}</span>

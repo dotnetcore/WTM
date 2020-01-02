@@ -1,10 +1,11 @@
-import { Button, Divider, Form, Icon } from 'ant-design-vue';
+import { Button, Divider, Form, Icon, Row, Col } from 'ant-design-vue';
 import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
 import { renderFormItem, EntitiesItems } from '../utils/entitiesHelp';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import VueI18n from 'vue-i18n';
 import { EntitiesPageStore } from '@leng/public/src';
+import lodash from 'lodash';
 interface Entities {
     filterEntities: (props: any, h: CreateElement) => EntitiesItems
 }
@@ -44,21 +45,32 @@ export class ViewFilterBasics extends Vue {
         this.PageStore.onToggleFilterCollapse();
     };
     render(h: CreateElement) {
+        const showLength = 5;
         const entities = this.Entities.filterEntities(this, h);
-        const renderItems = renderFormItem({ entities, form: this.form }, h);
+        const renderItems = renderFormItem({ entities, form: this.form, ColProps: { xs: 24, sm: 24, md: 12, lg: 8 } }, h);
+        const { length } = renderItems;
+        if (!this.PageStore.FilterCollapse) {
+            renderItems.length = showLength
+        }
         return (
             <Form {...{ class: "page-filter-form" }} on-submit={this.onSubmit} >
-                {renderItems}
-                <div style="text-align: right">
-                    <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
-                    <Divider props={{ type: 'vertical' }} />
-                    <Button props={{}} on-click={this.onReset} >Clear</Button>
-                    <Divider props={{ type: 'vertical' }} />
-                    <a on-click={this.onToggle}>
-                        <span>Collapse</span>
-                        <Icon props={{ type: this.PageStore.FilterCollapse ? 'up' : 'down' }} />
-                    </a>
-                </div>
+                <Row props={{ gutter: 20, type: "flex" }}>
+                    {renderItems}
+                    <Col {...{ class: "page-filter-btns" }} >
+                        <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
+                        <Divider props={{ type: 'vertical' }} />
+                        <Button props={{}} on-click={this.onReset} >Clear</Button>
+                        {length > showLength && (
+                            <span>
+                                <Divider props={{ type: 'vertical' }} />
+                                <a on-click={this.onToggle}>
+                                    <span>Collapse</span>
+                                    <Icon props={{ type: this.PageStore.FilterCollapse ? 'up' : 'down' }} />
+                                </a>
+                            </span>
+                        )}
+                    </Col>
+                </Row>
             </Form >
         )
     }

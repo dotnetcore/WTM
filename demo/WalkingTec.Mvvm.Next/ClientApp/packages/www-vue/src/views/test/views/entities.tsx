@@ -18,7 +18,6 @@ export default {
                 label: "ITCode",
                 options: {
                     rules: [{ required: true, message: "ITCode 不能为空" }],
-                    
                 },
                 children: `<a-input v-decorator />`
             },
@@ -133,6 +132,31 @@ export default {
             },
             /** 姓名 */
             "Name": {
+                label: "姓名",
+                children: <Input />
+            },
+            /** 姓名 */
+            "Name2": {
+                label: "姓名",
+                children: <Input />
+            },
+            /** 姓名 */
+            "Name3": {
+                label: "姓名",
+                children: <Input />
+            },
+            /** 姓名 */
+            "Name4": {
+                label: "姓名",
+                children: <Input />
+            },
+            /** 姓名 */
+            "Name5": {
+                label: "姓名",
+                children: <Input />
+            },
+            /** 姓名 */
+            "Name6": {
                 label: "姓名",
                 children: <Input />
             },

@@ -1,7 +1,7 @@
 <template>
   <ViewActionsBasics :PageStore="PageStore" :params="params">
     <template #Insert>
-      <Entity-ITCode :options="{initialValue:'aaaaa'}" />
+      <Entity-ITCode :decoratorOptions="{initialValue:'aaaaa'}" :disabled="true" />
     </template>
     <template #Update>
       <Entity-Password />
@@ -27,6 +27,7 @@ import lodash from "lodash";
 })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: PageStore;
+  // aggird 组件 自带属性 不可删除
   params = {};
   mounted() {}
 }
