@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,7 +14,6 @@ namespace WalkingTec.Mvvm.Core
         public string Type { get; set; }
 
         public Guid UserId { get; set; }
-        public FrameworkUserBase User { get; set; }
 
         /// <summary>
         /// 创建时间
