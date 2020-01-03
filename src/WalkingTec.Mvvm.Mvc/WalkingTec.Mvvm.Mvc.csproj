@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
@@ -56,8 +56,8 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.0" />
   </ItemGroup>
 
 

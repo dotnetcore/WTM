@@ -300,21 +300,7 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    try
-                    {
-                        var Configs = GlobalServices.GetRequiredService<Configs>();
-                        if (Configs.IsOldSqlServer == true)
-                        {
-                            optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
-                        }
-                        else
-                        {
-                            optionsBuilder.UseSqlServer(CSName);
-                        }
-                    }
-                    catch {
-                        optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
-                    }
+                    optionsBuilder.UseSqlServer(CSName);
                     break;
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>3.2</TypeScriptToolsVersion>
@@ -56,7 +56,7 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
