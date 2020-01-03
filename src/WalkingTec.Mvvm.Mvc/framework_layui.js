@@ -351,7 +351,11 @@ window.ff = {
         }
         else {
           str = "<div  id='" + $.cookie("divid") + "' class='donotuse_pdiv'>" + str + "</div>";
-          var area = 'auto';
+            var area = 'auto';
+            if (width > document.body.clientWidth) {
+                max = false;
+                maxed = true;
+            }
           if (width !== undefined && width !== null && height !== undefined && height !== null) {
             area = [width + 'px', height + 'px'];
           }
@@ -440,14 +444,19 @@ window.ff = {
         if (width !== undefined && width !== null && (height === undefined || height === null)) {
           area = width + 'px';
         }
-        if (title === undefined || title === null || title === '') {
-          title = false;
-        }
-        layer.open({
+          var max = true;
+       if (title === undefined || title === null || title === '') {
+           title = false;
+           max = false;
+          }
+          if (width > document.body.clientWidth) {
+              max = false;
+          }
+       var oid = layer.open({
           type: 1
           , title: title
           , area: area
-          , maxmin: true
+           , maxmin: max
           , btn: []
           , shade: 0.8
           , id: windowid //设定一个id，防止重复弹出
@@ -456,6 +465,10 @@ window.ff = {
             ff.SetCookie("windowids", owid);
           }
         });
+          if (width > document.body.clientWidth) {
+              layer.full(oid);
+          }
+
       }
     });
   },
@@ -470,7 +483,10 @@ window.ff = {
       this.SetCookie("windowids", wid);
     }
     else {
-      if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {
+        if (layui.setter == undefined || layui.setter.pageTabs == undefined) {
+            window.close();
+        }
+        else if (layui.setter.pageTabs === false || $('.layadmin-tabsbody-item').length === 0) {
         $('#LAY_app_body').html('');
       }
       else {
@@ -644,6 +660,18 @@ window.ff = {
     form.submit();
     form.remove();
   },
+
+    Download: function (url, ids) {
+        var form = $('<form method="POST" action="' + url + '">');
+        if (ids !== undefined && ids !== null) {
+            for (var i = 0; i < ids.length; i++) {
+                form.append($('<input type="hidden" name="Ids" value="' + ids[i] + '">'));
+            }
+        }
+        $('body').append(form);
+        form.submit();
+        form.remove();
+    },
 
   /**
    * RefreshGrid

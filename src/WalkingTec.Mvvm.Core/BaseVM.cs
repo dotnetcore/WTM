@@ -311,17 +311,19 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 创建DbContext对象
+        /// Create DbContext
         /// </summary>
-        /// <param name="csName"></param>
-        /// <returns></returns>
-        public virtual IDataContext CreateDC(string csName = null)
+        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
+        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
+        /// <returns>data context</returns>
+        public virtual IDataContext CreateDC(string csName = null, DBTypeEnum? dbtype = null)
         {
             if (string.IsNullOrEmpty(csName))
             {
                 csName = CurrentCS ?? "default";
             }
-            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            var dbt = dbtype ?? ConfigInfo.DbType;
+            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), dbt });
         }
 
         /// <summary>

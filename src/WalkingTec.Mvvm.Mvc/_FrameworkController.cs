@@ -552,13 +552,23 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="menus"></param>
         private void RemoveEmptyMenu(List<Menu> menus)
         {
-            for (int i = 0; i < menus.Count; i++)
+            if (menus == null)
             {
-                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
-                {
-                    menus.RemoveAt(i);
-                    i--;
-                }
+                return;
+            }
+            List<Menu> toRemove = new List<Menu>();
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                    RemoveEmptyMenu(menu.Children);
+                    if ((menu.Children == null || menu.Children.Count == 0) && (menu.Url == null))
+                    {
+                        toRemove.Add(menu);
+                    }
+            }
+            foreach (var remove in toRemove)
+            {
+                menus.Remove(remove);
             }
         }
 

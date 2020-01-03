@@ -306,6 +306,19 @@ namespace WalkingTec.Mvvm.Core
 
 
         /// <summary>
+        /// Set the dialog to be maximized
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="isDownload"></param>
+        /// <returns></returns>
+        public static GridAction SetIsDownload(this GridAction self, bool isDownload = true)
+        {
+            self.IsDownload = isDownload;
+            return self;
+        }
+
+
+        /// <summary>
         /// 是否在每行都显示
         /// </summary>
         /// <param name="self"></param>

@@ -30,8 +30,14 @@ import RequestFiles from 'utils/RequestFiles';
 import { ToImg } from '../help/toImg';
 import localeText from './localeText ';
 import { IntlProvider } from 'react-intl';
-import { getLocales } from 'locale';
-LicenseManager.setLicenseKey('SHI_UK_on_behalf_of_Lenovo_Sweden_MultiApp_1Devs6_November_2019__MTU3Mjk5ODQwMDAwMA==e27a8fba6b8b1b40e95ee08e9e0db2cb');
+import { getLocalesValue, getLocales } from 'locale';
+LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2');
+declare namespace AgGridReactProps {
+    interface ColDef {
+        headerName?: Object;
+    }
+}
+
 interface ITableProps extends AgGridReactProps {
     /** 状态 */
     Store: Store;
@@ -300,8 +306,11 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 });
             // 渲染器
             col.cellRenderer = col.cellRenderer || 'columnsRenderDefault';
-            if (language === "en-US") {
-                col.headerName = col.field;
+            // if (language === "en-US") {
+            //     col.headerName = col.field;
+            // }
+            if (col.field != "RowAction") {
+                col.headerName = getLocalesValue(col.headerName, col.headerName);
             }
             if (col.children) {
                 col.children = col.children.map(colDefMap);
@@ -326,7 +335,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 enableValue: false,
                 suppressResize: false,
                 editable: false,
-                suppressToolPanel: true,
+                suppressFiltersToolPanel: true,
                 suppressAutoSize: true,
                 filter: false,
                 resizable: false,
@@ -340,8 +349,8 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         }
         if (RowAction) {
             columnDefs.push({
-                headerName: "操作",
-                field: "Action",
+                headerName: language === "zh-CN" ? "操作" : 'Action',
+                field: "RowAction",
                 cellRenderer: 'RowAction',
                 pinned: 'right',
                 sortable: false,

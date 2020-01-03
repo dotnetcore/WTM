@@ -117,4 +117,12 @@ namespace WalkingTec.Mvvm.Demo
             }
         }
     }
+
+    public static class ConfigInfoExtension
+    {
+        public static string Key1(this Configs self)
+        {
+            return self.AppSettings["Key1"];
+        }
+    }
 }
