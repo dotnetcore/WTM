@@ -11,15 +11,25 @@ interface FormItem {
 export interface EntitiesItems {
     [key: string]: FormItem
 }
+export interface RenderFormItemParams {
+    entities: any;
+    form: WrappedFormUtils;
+    initialValues?: any;
+    ColProps?: any;
+}
 /**
 * 渲染 模型
 */
-export function renderFormItem({ entities, form, ColProps }: { entities: any, form: WrappedFormUtils, ColProps?: any }, h: CreateElement) {
+export function renderFormItem({ entities, form, initialValues, ColProps }: RenderFormItemParams, h: CreateElement) {
     function render() {
         return lodash.map(entities, (item: FormItem, key) => {
             let itemProps = {
                 label: lodash.isString(item.label) ? item.label : '',
                 labelCol: { span: 6 }
+            }
+            if (initialValues && lodash.hasIn(initialValues, 'key')) {
+                console.log("TCL: render -> initialValues", initialValues)
+                lodash.set(item.options, 'initialValue', lodash.get(initialValues, 'key'));
             }
             return <Col props={ColProps}>
                 <Form.Item props={itemProps} >

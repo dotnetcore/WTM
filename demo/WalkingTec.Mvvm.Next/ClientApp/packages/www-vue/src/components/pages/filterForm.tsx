@@ -6,6 +6,7 @@ import { Component, Prop } from 'vue-property-decorator';
 import VueI18n from 'vue-i18n';
 import { EntitiesPageStore } from '@leng/public/src';
 import lodash from 'lodash';
+import { toJS } from 'mobx';
 interface Entities {
     filterEntities: (props: any, h: CreateElement) => EntitiesItems
 }
@@ -47,7 +48,12 @@ export class ViewFilterBasics extends Vue {
     render(h: CreateElement) {
         const showLength = 5;
         const entities = this.Entities.filterEntities(this, h);
-        const renderItems = renderFormItem({ entities, form: this.form, ColProps: { xs: 24, sm: 24, md: 12, lg: 8 } }, h);
+        const renderItems = renderFormItem({
+            entities,
+            form: this.form,
+            initialValues: toJS(this.PageStore.SearchParams),
+            ColProps: { xs: 24, sm: 24, md: 12, lg: 8 }
+        }, h);
         const { length } = renderItems;
         if (!this.PageStore.FilterCollapse) {
             renderItems.length = showLength

@@ -22,10 +22,10 @@ export class PageStore extends EntitiesPageStore {
                 headerName: "性别", field: "Sex",
             },
             {
-                headerName: "照片", field: "PhotoId",
+                headerName: "照片", field: "PhotoId", cellRenderer: "avatar"
             },
             {
-                headerName: "是否有效", field: "IsValid",
+                headerName: "是否有效", field: "IsValid", cellRenderer: "switch"
             },
             {
                 headerName: "角色", field: "RoleName_view",

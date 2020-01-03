@@ -24,6 +24,7 @@ import {
 import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
 import localeText from "./localeText";
+import frameworkComponents from "./frameworkComponents";
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
@@ -102,6 +103,7 @@ export default class AgGrid extends Vue {
   GridReadyEvent: GridReadyEvent;
   GridOptionsProps: GridOptions = lodash.merge<GridOptions, GridOptions>(
     {
+      frameworkComponents,
       // suppressMenuHide:true,
       // columnDefs
       // groupUseEntireRow:true,
@@ -148,7 +150,7 @@ export default class AgGrid extends Vue {
         this.GridReadyEvent = event;
       },
       onColumnVisible: () => {
-        this.onCalculation()
+        this.onCalculation();
       }
     },
     this.GridOptions
