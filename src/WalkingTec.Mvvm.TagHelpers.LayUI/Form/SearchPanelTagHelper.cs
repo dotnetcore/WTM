@@ -141,12 +141,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 $('#{SearchBtnId}').on('click', function () {{
   var layer = layui.layer;
   table.reload('{GridId}',{{where: $.extend(JSON.parse(JSON.stringify({TableJSVar}.config.where)),ff.GetSearchFormData('{Id}','{Vm.Name}')),
-    done: function(res,curr,count){{
-      if(this.height == undefined){{
-        var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
-        ff.triggerResize();
-      }}
-    }}
+    //done: function(res,curr,count){{
+    //  if(this.height == undefined){{
+    //    var tab = $('#{GridId} + .layui-table-view');tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');
+    //    ff.triggerResize();
+    //  }}
+    //}}
   }})
 }});
     ")}
