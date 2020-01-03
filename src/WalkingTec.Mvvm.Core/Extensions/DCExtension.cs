@@ -848,6 +848,23 @@ where S : struct
                 return FakeNestedTransaction.DefaultTransaction;
             return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction() : FakeNestedTransaction.DefaultTransaction;
         }
+
+        /// <summary>
+        /// 开始一个事务，当使用同一IDataContext时，嵌套的两个事务不会引起冲突，当嵌套的事务执行时引起的异常会通过回滚方法向上层抛出异常
+        /// </summary>
+        /// <param name="self">DataContext</param>
+        /// <param name="isolationLevel"></param>
+        /// <returns>可用的事务实例</returns>
+        public static Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction BeginTransaction(this IDataContext self, System.Data.IsolationLevel isolationLevel)
+        {
+            if (self == null)
+                throw new ArgumentNullException(nameof(self));
+            if (self.Database == null)
+                throw new ArgumentNullException(nameof(self.Database));
+            if (@"Microsoft.EntityFrameworkCore.InMemory".Equals(self.Database.ProviderName, StringComparison.OrdinalIgnoreCase))
+                return FakeNestedTransaction.DefaultTransaction;
+            return self.Database.CurrentTransaction == null ? self.Database.BeginTransaction(isolationLevel) : FakeNestedTransaction.DefaultTransaction;
+        }
     }
 
     public static class DbCommandExtension

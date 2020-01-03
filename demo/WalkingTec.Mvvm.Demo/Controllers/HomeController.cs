@@ -22,9 +22,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult Index()
         {
             ViewData["title"] = "WTM";
-            var vm = CreateVM<IndexVM>();
-            vm.AllMenu = FFMenus;
-            return View(vm);
+            return View();
         }
 
         [AllowAnonymous]

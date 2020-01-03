@@ -456,7 +456,6 @@ layui.use(['table'], function(){{
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
     ,page:{{
-        {(page?string.Empty: "layout:['count'],")}
         rpptext:'{Program._localizer["RecordsPerPage"]}',
         totaltext:'{Program._localizer["Total"]}',
         recordtext:'{Program._localizer["Record"]}',
@@ -484,6 +483,7 @@ layui.use(['table'], function(){{
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
+  if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}}
   {TableJSVar} = table.render({Id}option);
   {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : string.Empty)}
 
@@ -514,7 +514,7 @@ layui.use(['table'], function(){{
 ");
             #endregion
 
-            output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;"">{toolBarBtnStrBuilder}</div>");
+            output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;line-height:35px;"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
 {(string.IsNullOrEmpty(ListVM.DetailGridPrix) ? string.Empty : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
@@ -741,12 +741,13 @@ if(ids.length == 0){{
                     case GridActionParameterTypesEnum.SingleIdWithNull:
                         script.Append($@"
 var ids = [];
+var objs = [];
 if(data != null && data.ID != null){{
     ids.push(data.ID);
     tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }} else {{
     ids = ff.GetSelections('{Id}');
-    var objs = ff.GetSelectionData('{Id}');
+    objs = ff.GetSelectionData('{Id}');
     if(objs!=null && objs.length > 0){{
         tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
     }}
@@ -782,7 +783,11 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     string actionScript = "";
                     if (string.IsNullOrEmpty(item.OnClickFunc))
                     {
-                        if (item.ShowDialog == true)
+                        if(item.IsDownload == true)
+                        {
+                            actionScript = $"ff.Download(tempUrl,ids);";
+                        }
+                        else if (item.ShowDialog == true)
                         {
                             string width = "null";
                             string height = "null";
@@ -824,7 +829,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     }
                     else
                     {
-                        actionScript = $"{item.OnClickFunc}();";
+                        actionScript = $"{item.OnClickFunc}(ids,objs);";
                     }
                     gridBtnEventStrBuilder.Append($@"
 var isPost = false;

@@ -18,6 +18,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 上传文件类别
         /// </summary>
         public UploadTypeEnum UploadType { get; set; }
+        
+        /// <summary>
+        /// 是否显示进度条，默认为false
+        /// </summary>
+        public bool? ShowProgress { get; set; }
 
         /// <summary>
         /// 当上传文件类别为ImageFile时，指定缩小的宽度，框架会使用缩小后的图片保存
@@ -115,11 +120,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             output.PostElement.SetHtmlContent($@"
 <input type='hidden' id='{Id}' name='{Field.Name}' value='{Field.Model}' {(Field.Metadata.IsRequired ? " lay-verify=required" : string.Empty)} />
+");    
+            if (ShowProgress != null)
+            {
+                if (ShowProgress == true)
+                {
+                    output.PostElement.AppendHtml($@"
+<div class='layui-progress' lay-showpercent='true' lay-filter='demo'>
+    <div class='layui-progress-bar layui-bg-red' lay-percent='0%'></div>
+</div>
+");
+                }
+            }
+            output.PostElement.AppendHtml($@"
 <script>
   function {Id}DoDelete(fileid){{
     $('#{Id}').parents('form').append(""<input type='hidden' id='DeletedFileIds' name='DeletedFileIds' value='""+fileid+""' />"");
     $('#{Id}label').html('');
     $('#{Id}').val('');
+    $('.layui-progress .layui-progress-bar').css('width', '0%');
   }}
   var index = 0;
   var {Id}preview;
@@ -132,6 +151,13 @@ layui.use(['upload'],function(){{
     ,size: {FileSize}
     ,accept: 'file'
     {(ext == "" ? "" : $", exts: '{ext}'")}
+    ,xhr: xhrOnProgress
+    ,progress: function (value) {{
+        $('.layui-progress .layui-progress-bar').css(
+            'width',
+            value + '%'
+        );
+    }}
     ,before: function(obj){{
         index = layui.layer.load(2);
         {Id}preview = obj;
@@ -156,6 +182,7 @@ layui.use(['upload'],function(){{
       " : $@"
           $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  {Program._localizer["Delete"]}</button>"");
           $('#{Id}del').on('click',function(){{
+            $('.layui-progress .layui-progress-bar').css('width', '0%');
             {Id}DoDelete(res.Data.Id);
           }});
       "
@@ -167,6 +194,20 @@ layui.use(['upload'],function(){{
     }}
   }});
 }})
+    var xhrOnProgress = function (fun) {{
+        xhrOnProgress.onprogress = fun; //绑定监听
+        //使用闭包实现监听绑
+        return function () {{
+            var xhr = $.ajaxSettings.xhr();
+            //判断监听函数是否为函数
+            if (typeof xhrOnProgress.onprogress !== 'function')
+                return xhr;
+            if (xhrOnProgress.onprogress && xhr.upload) {{
+                xhr.upload.onprogress = xhrOnProgress.onprogress;
+            }}
+            return xhr;
+        }}
+    }}
 </script>
 ");
             if (Field.Model != null && Field.Model.ToString() != Guid.Empty.ToString())

@@ -8,5 +8,11 @@ export default {
     'tips.success.operation':'操作成功',
     'tips.error.operation':'操作失败',
     'tips.error.import':'导入失败',
-    'tips.error.file':'文件错误',
+    'tips.error.file': '文件错误',
+    'tips.error.required':'{txt}是必填项',
+    'tips.placeholder.choose': '请选择{txt}',
+    'tips.placeholder.input': '请输入{txt}',
+    'tips.bool.true': '是',
+    'tips.bool.false': '否',
+    'tips.all': '全部',
 };

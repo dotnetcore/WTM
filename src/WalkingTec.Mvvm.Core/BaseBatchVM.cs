@@ -229,11 +229,10 @@ namespace WalkingTec.Mvvm.Core
                         var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
                         if (proToSet != null && val != null)
                         {
-                            var hasvalue = false;
-                            if (val is StringValues sv && StringValues.IsNullOrEmpty(sv) == false)
+                            var hasvalue = true;
+                            if ( val is StringValues sv && StringValues.IsNullOrEmpty(sv) == true)
                             {
-                                hasvalue = true;
-
+                                hasvalue = false;
                             }
                             if (hasvalue)
                             {
