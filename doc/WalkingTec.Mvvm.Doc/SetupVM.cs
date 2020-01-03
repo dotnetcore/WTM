@@ -473,7 +473,7 @@ module.exports = (app) => {{
             {
                 if (DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
-                    content = content.Replace("2.2", "3.0");
+                    content = content.Replace("2.2", "3.1");
                 }
             }
             return content;
