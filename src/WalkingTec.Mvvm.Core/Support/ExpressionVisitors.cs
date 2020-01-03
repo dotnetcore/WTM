@@ -431,7 +431,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (expression.NodeType == ExpressionType.Constant)
             {
-                if (expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
+                if (expression.Type.IsGeneric(typeof(EntityQueryable<>)) || expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
                 {
                     return expression.Type.GenericTypeArguments[0];
                 }
