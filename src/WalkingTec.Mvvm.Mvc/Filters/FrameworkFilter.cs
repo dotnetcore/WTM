@@ -240,8 +240,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
             if (context.Result is PartialViewResult)
             {
-                var model = (context.Result as PartialViewResult).ViewData.Model as BaseVM;
-                if ((context.Result as PartialViewResult).ViewData.Model == null)
+                var model = (context.Result as PartialViewResult).ViewData?.Model as BaseVM;
+                if (model == null && (context.Result as PartialViewResult).ViewData != null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as PartialViewResult).ViewData.Model = model;
@@ -285,8 +285,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             if (context.Result is ViewResult)
             {
-                var model = (context.Result as ViewResult).ViewData.Model as BaseVM;
-                if ((context.Result as ViewResult).ViewData.Model == null)
+                var model = (context.Result as ViewResult).ViewData?.Model as BaseVM;
+                if (model == null && (context.Result as ViewResult).ViewData != null)
                 {
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;

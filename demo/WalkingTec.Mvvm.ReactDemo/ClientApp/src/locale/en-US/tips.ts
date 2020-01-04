@@ -10,4 +10,10 @@ export default {
     'tips.error.operation':'Operation Error',
     'tips.error.import':'Import Error',
     'tips.error.file':'File Error',
+    'tips.error.required': '{txt} is required',
+    'tips.placeholder.choose': 'Please choose {txt}',
+    'tips.placeholder.input': 'Please input {txt}',
+    'tips.bool.true': 'Yes',
+    'tips.bool.false': 'No',
+    'tips.all': 'All',
 };

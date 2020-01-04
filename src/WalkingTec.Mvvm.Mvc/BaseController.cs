@@ -210,11 +210,15 @@ namespace WalkingTec.Mvvm.Mvc
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                     {
-                        var userInfo = DC.Set<FrameworkUserBase>()
-                                            .Include(x => x.UserRoles)
-                                            .Include(x => x.UserGroups)
-                                            .Where(x => x.ID == userId && x.IsValid == true)
-                                            .SingleOrDefault();
+                        FrameworkUserBase userInfo = null;
+                        if (DC != null)
+                        {
+                            userInfo = DC.Set<FrameworkUserBase>()
+                                                .Include(x => x.UserRoles)
+                                                .Include(x => x.UserGroups)
+                                                .Where(x => x.ID == userId && x.IsValid == true)
+                                                .SingleOrDefault();
+                        }
                         if (userInfo != null)
                         {
                             // 初始化用户信息
@@ -592,6 +596,11 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region CreateDC
+        /// <summary>
+        /// Create a new datacontext with current connectionstring and current database type
+        /// </summary>
+        /// <param name="isLog">if true, use defaultlog connection string</param>
+        /// <returns>data context</returns>
         public virtual IDataContext CreateDC(bool isLog = false)
         {
             string cs = CurrentCS??"default";
@@ -608,6 +617,20 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
+
+        /// <summary>
+        /// Create DataContext
+        /// </summary>
+        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
+        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
+        /// <returns>data context</returns>
+        public virtual IDataContext CreateDC(string csName, DBTypeEnum? dbtype = null)
+        {
+            string cs = csName ?? "default";
+            var dbt = dbtype ?? CurrentDbType;
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), dbt ?? ConfigInfo.DbType });
+        }
+
 
         #endregion
 

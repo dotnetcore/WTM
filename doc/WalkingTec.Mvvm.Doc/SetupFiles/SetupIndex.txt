@@ -1,4 +1,15 @@
 <html>
+<head>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cce7a18264274038f0ee50ef3f9f46ce";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
 <style>
     body{
         margin:0px;
@@ -92,7 +103,7 @@
                 <td>
                     <select name="DotnetVersion">
                         <option value="dotnet2_2">.netcore2.2</option>
-                        <option value="dotnet3_0">.netcore3.0</option>
+                        <option value="dotnet3_0">.netcore3.1</option>
                    </select>
                 </td>
             </tr>

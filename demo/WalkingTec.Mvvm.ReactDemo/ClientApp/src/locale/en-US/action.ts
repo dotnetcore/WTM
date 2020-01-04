@@ -9,7 +9,7 @@ export default {
     'action.export': ' Export',
     'action.exportAll': ' Export All',
     'action.exportSelect': ' Export Select',
-    'action.deleteConfirm': ' Are you sure to delete {text} ?',
+    'action.deleteConfirm': ' Are you sure to delete this {text} items ?',
     'action.open': ' Open',
     'action.retract': ' Retract',
     'action.close': ' Close',
