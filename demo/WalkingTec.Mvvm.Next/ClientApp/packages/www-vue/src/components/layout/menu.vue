@@ -9,7 +9,6 @@
       <div class="logo" />
     </router-link>
     <a-menu
-     
       :defaultSelectedKeys="selectedKeys"
       :defaultOpenKeys="openKeys"
       mode="inline"
@@ -44,10 +43,15 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class extends Vue {
   UserStore = rootStore.UserStore;
   get pageMenu() {
-    return lodash.find(this.UserStore.Menus, ["path", this.$root.$route.path]);
+    const path = lodash.find(this.UserStore.Menus, [
+      "path",
+      this.$root.$route.path
+    ]);
+    return path;
   }
   get selectedKeys() {
-    return [lodash.get(this.pageMenu, "key", "")];
+    const selectedKeys = [lodash.get(this.pageMenu, "key", "")];
+    return selectedKeys;
   }
   get openKeys() {
     const openKeys = this.getDefaultOpenKeys(
@@ -69,7 +73,9 @@ export default class extends Vue {
     }
     return OpenKeys;
   }
-  mounted() {}
+  mounted() {
+    
+  }
   onCollapse(collapsed, type) {}
   onBreakpoint(broken) {}
 }

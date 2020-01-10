@@ -1,6 +1,8 @@
 ﻿import { Input } from 'ant-design-vue';
 import { CreateElement } from 'vue';
 import { EntitiesItems } from '../../../components/utils/entitiesHelp';
+import Request from '@leng/public/src/utils/request';
+
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -17,6 +19,7 @@ export default {
             "Entity.ITCode": {
                 label: "ITCode",
                 options: {
+                    initialValue: 'admin',
                     rules: [{ required: true, message: "ITCode 不能为空" }],
                 },
                 children: `<a-input v-decorator />`
@@ -29,92 +32,88 @@ export default {
                 },
                 children: `<a-input v-decorator />`
             },
-            // /** 邮箱 */
-            // "Entity.Email": {
-            //     label: "邮箱",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 邮箱" />
-            // },
-            // /** 姓名 */
-            // "Entity.Name": {
-            //     label: "姓名",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 姓名" />
-            // },
-            // /** 性别 */
-            // "Entity.Sex": {
-            //     label: "性别",
-            //     options: {
-            //     },
-            //     children: <WtmSelect placeholder="性别" dataSource={[
-            //         { Text: "男", Value: 0 },
-            //         { Text: "女", Value: 1 }
-            //     ]} />
-            // },
-            // /** 手机 */
-            // "Entity.CellPhone": {
-            //     label: "手机",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 手机" />
-            // },
-            // /** 座机 */
-            // "Entity.HomePhone": {
-            //     label: "座机",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 座机" />
-            // },
-            // /** 住址 */
-            // "Entity.Address": {
-            //     label: "住址",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 住址" />
-            // },
+            /** 邮箱 */
+            "Entity.Email": {
+                label: "Email",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 姓名 */
+            "Entity.Name": {
+                label: "Name",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 性别 */
+            "Entity.Sex": {
+                label: "Sex",
+                options: {
+                },
+                dataSource: [
+                    { label: "男", value: 0 },
+                    { label: "女", value: 1 }
+                ],
+                children: `<a-select v-decorator />`
+            },
+            /** 手机 */
+            "Entity.CellPhone": {
+                label: "CellPhone",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 座机 */
+            "Entity.HomePhone": {
+                label: "HomePhone",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 住址 */
+            "Entity.Address": {
+                label: "Address",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
             // /** 邮编 */
-            // "Entity.ZipCode": {
-            //     label: "邮编",
-            //     options: {
-            //     },
-            //     children: <Input placeholder="请输入 邮编" />
-            // },
-            // /** 照片 */
-            // "Entity.PhotoId": {
-            //     label: "照片",
-            //     options: {
-            //     },
-            //     children: <WtmUploadImg />
-            // },
-            // /** 是否有效 */
-            // "Entity.IsValid": {
-            //     label: "是否有效",
-            //     options: {
-            //     },
-            //     children: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
-            // },
-            // /** 角色 */
-            // "Entity.UserRoles": {
-            //     label: "角色",
-            //     options: {
-            //     },
-            //     children: <WtmTransfer
-            //         dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
-            //         mapKey="RoleId"
-            //     />
-            // },
-            // /** 用户组 */
-            // "Entity.UserGroups": {
-            //     label: "用户组",
-            //     options: {
-            //     },
-            //     children: <WtmTransfer
-            //         dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
-            //         mapKey="GroupId"
-            //     />
-            // }
+            "Entity.ZipCode": {
+                label: "ZipCode",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 照片 */
+            "Entity.PhotoId": {
+                label: "PhotoId",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 是否有效 */
+            "Entity.IsValid": {
+                label: "IsValid",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 角色 */
+            "Entity.UserRoles": {
+                label: "UserRoles",
+                options: {
+                },
+                dataSource: Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
+                children: `<a-transfer v-decorator />`
+            },
+            /** 用户组 */
+            "Entity.UserGroups": {
+                label: "UserGroups",
+                options: {
+                },
+                children: `<a-input v-decorator />`
+            }
 
         }
     },
@@ -127,7 +126,7 @@ export default {
             /** 账号 */
             "ITCode": {
                 label: "账号",
-                options: { initialValue: 'admin' },
+                // options: { initialValue: 'admin' },
                 children: <Input />
             },
             /** 姓名 */
@@ -135,32 +134,6 @@ export default {
                 label: "姓名",
                 children: <Input />
             },
-            /** 姓名 */
-            "Name2": {
-                label: "姓名",
-                children: <Input />
-            },
-            /** 姓名 */
-            "Name3": {
-                label: "姓名",
-                children: <Input />
-            },
-            /** 姓名 */
-            "Name4": {
-                label: "姓名",
-                children: <Input />
-            },
-            /** 姓名 */
-            "Name5": {
-                label: "姓名",
-                children: <Input />
-            },
-            /** 姓名 */
-            "Name6": {
-                label: "姓名",
-                children: <Input />
-            },
-
         }
     },
 }

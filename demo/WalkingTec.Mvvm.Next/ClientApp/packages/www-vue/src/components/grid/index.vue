@@ -1,5 +1,6 @@
 <template>
-  <a-spin tip="Loading..." :spinning="PageStore.Loading" class="grid-spin">
+  <a-spin  :spinning="PageStore.Loading" class="grid-spin">
+    <a-icon slot="indicator" type="loading" style="font-size: 30px" spin />
     <grid :GridOptions="GridOptions" :rowData="rowDataProps" :columnDefs="columnDefsProps" />
     <div style="height:8px"></div>
     <div class="grid-pagination">

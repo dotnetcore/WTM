@@ -1,11 +1,49 @@
 <template>
   <ViewActionsBasics :PageStore="PageStore" :params="params">
     <template #Insert>
-      <Entity-ITCode :decoratorOptions="{initialValue:'aaaaa'}" :disabled="true" />
+      <Entity-ITCode />
+      <Entity-Password />
+      <Entity-Email />
+      <Entity-Name />
+      <Entity-Sex />
+      <Entity-CellPhone />
+      <Entity-HomePhone />
+      <Entity-Address />
+      <Entity-ZipCode />
+      <Entity-PhotoId />
+      <Entity-IsValid />
+      <Entity-UserRoles />
+      <Entity-UserGroups />
     </template>
     <template #Update>
+      <Entity-ITCode :disabled="true" />
       <Entity-Password />
-      <Entity-ITCode />
+      <Entity-Email />
+      <Entity-Name />
+      <Entity-Sex />
+      <Entity-CellPhone />
+      <Entity-HomePhone />
+      <Entity-Address />
+      <Entity-ZipCode />
+      <Entity-PhotoId />
+      <Entity-IsValid />
+      <Entity-UserRoles />
+      <Entity-UserGroups />
+    </template>
+    <template #Details>
+      <Entity-ITCode :display="true" />
+      <Entity-Password :display="true" />
+      <Entity-Email :display="true" />
+      <Entity-Name :display="true" />
+      <Entity-Sex :display="true" />
+      <Entity-CellPhone :display="true" />
+      <Entity-HomePhone :display="true" />
+      <Entity-Address :display="true" />
+      <Entity-ZipCode :display="true" />
+      <Entity-PhotoId :display="true" />
+      <Entity-IsValid :display="true" />
+      <Entity-UserRoles :display="true" />
+      <Entity-UserGroups :display="true" />
     </template>
   </ViewActionsBasics>
 </template> 

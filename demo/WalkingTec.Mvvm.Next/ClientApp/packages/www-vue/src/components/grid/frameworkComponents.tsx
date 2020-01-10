@@ -2,11 +2,16 @@ import Vue, { CreateElement } from 'vue';
 import lodash from 'lodash';
 export default {
     'avatar': Vue.component('wtm-avatar', {
-        template: '<a-avatar shape="square" :src="src" />',
+        template: '<a-avatar icon="user" :src="src" v-viewer />',
         computed: {
             // 计算属性的 getter
             src() {
-                return `/api/_file/downloadFile/${lodash.get(this, 'params.value')}`
+                const src = lodash.get(this, 'params.value');
+                if (src) {
+                    return `/api/_file/downloadFile/${src}`
+                }
+                return 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                // return ''
             },
         },
     }),
@@ -20,7 +25,7 @@ export default {
         computed: {
             // 计算属性的 getter
             checked() {
-                return lodash.includes(['true', true],lodash.get(this,'params.value'))
+                return lodash.includes(['true', true], lodash.get(this, 'params.value'))
             },
         },
     }),

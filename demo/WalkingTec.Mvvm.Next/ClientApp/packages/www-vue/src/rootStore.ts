@@ -9,7 +9,7 @@ const RootStore = {
     UserStore: new EntitiesUserStore(),
     TimeStore: new EntitiesTimeStore(),
 }
-// def 获取 测试菜单
+/**    def 获取 测试菜单    */
 if (Globalconfig.development) {
     const devSubMenu = Ajax.ajax('/subMenu.json').pipe(map((data: any[]) => {
         return data.map(x => ({
@@ -32,6 +32,9 @@ if (Globalconfig.development) {
     //     }
     // });
 }
+/**    def 获取 测试菜单    */
+
+
 RootStore.UserStore.onCheckLogin();
 
 export default RootStore

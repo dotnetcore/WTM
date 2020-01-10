@@ -15,6 +15,7 @@
 import { EntitiesPageStore } from "@leng/public/src";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import lodash from "lodash";
+import { toJS } from "mobx";
 @Component
 export default class Pagination extends Vue {
   @Prop() PageStore: EntitiesPageStore;
@@ -31,15 +32,14 @@ export default class Pagination extends Vue {
     this.PageStore.EventSubject.next({
       EventType: "onSearch",
       AjaxRequest: {
-        body: {
+        body: lodash.merge({}, toJS(this.PageStore.SearchParams), {
           Page: current,
           Limit: size
-        }
+        })
       }
     });
   }
-  mounted() {
-  }
+  mounted() {}
   destroyed() {}
 }
 </script>

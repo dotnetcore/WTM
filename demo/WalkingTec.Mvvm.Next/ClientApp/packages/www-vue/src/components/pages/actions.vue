@@ -38,7 +38,7 @@
     <!-- 行 数据  Action-->
     <div v-else-if="isRowAction" class="row-action">
       <slot name="rowAction">
-        <a-button type="link" size="small" @click="onInsert">
+        <a-button type="link" size="small" @click="onDetails">
           <a-icon type="eye" />
         </a-button>
         <a-button type="link" size="small" @click="onUpdate">
@@ -52,6 +52,7 @@
       </slot>
     </div>
     <a-modal
+      class="page-action-modal"
       :title="title"
       :destroyOnClose="true"
       :visible="visible"
@@ -59,7 +60,9 @@
       @ok="onOk"
     >
       <a-form layout="vertical" :form="form" :key="slotName">
-        <slot :name="slotName"></slot>
+        <a-row :gutter="24">
+          <slot :name="slotName"></slot>
+        </a-row>
       </a-form>
     </a-modal>
   </div>
@@ -108,10 +111,27 @@ export default class ViewAction extends Vue {
     this.slotName = "Update";
     this.onVisible(true);
   }
+  onDetails() {
+    this.title = "Details";
+    this.slotName = "Details";
+    this.onVisible(true);
+  }
 }
 </script>
 <style scoped lang="less">
 .page-action {
   text-align: right;
+}
+</style>
+<style  lang="less">
+.page-action-modal.ant-modal {
+  min-width: 70vw;
+  max-width: 99vw;
+  overflow: hidden;
+  top: 50px;
+  .ant-modal-body {
+    max-height: calc(100vh - 200px);
+    overflow: auto; // padding-bottom: 65px;
+  }
 }
 </style>

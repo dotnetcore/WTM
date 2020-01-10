@@ -51,7 +51,7 @@ export default class EntitiesUserBehavior extends Entities {
      * @memberof EntitiesUserBehavior
      */
     @action
-    onCheckLogin() {
+    onCheckLogin(request: AjaxRequest = {}) {
         // if (this.Loading) {
         //     return console.warn('onCheckLogin Loadinged')
         // }
@@ -60,7 +60,9 @@ export default class EntitiesUserBehavior extends Entities {
             subscribe && subscribe.unsubscribe();
             try {
                 if (Id && Loading) {
-                    const res = await Ajax.ajax("/api/_login/CheckLogin/" + Id).toPromise();
+                    const res = await Ajax.ajax(lodash.merge({
+                        url: "/api/_login/CheckLogin/" + Id
+                    }, request)).toPromise();
                     return this.onVerifyingLanding(res);
                 }
                 throw ''
@@ -82,7 +84,7 @@ export default class EntitiesUserBehavior extends Entities {
         if (UserInfo.access_token) {
             lodash.set(Request.headers, 'Authorization', `${UserInfo.token_type} ${UserInfo.access_token}`);
         } else {
-            this.Loading = false;
+            // this.Loading = false;
             this.Name = lodash.get(UserInfo, 'Name');
             this.Id = lodash.get(UserInfo, 'Id');
             this.ITCode = lodash.get(UserInfo, 'ITCode');
@@ -103,7 +105,9 @@ export default class EntitiesUserBehavior extends Entities {
                 await this.onAnalysisMenus(Menus);
                 this.UserSubject.next(this);
             }
-            onAnalysisMenus();
+            lodash.defer(() => {
+                onAnalysisMenus();
+            })
         }
 
     }
@@ -113,7 +117,7 @@ export default class EntitiesUserBehavior extends Entities {
      */
     async onAnalysisMenus(Menus) {
         runInAction(() => {
-            this.Menus = lodash.cloneDeep(Menus);
+            this.Menus = Menus;
             this._MenuTrees = this.formatTree(Menus, null, []);
             this.Loading = false;
             this.OnlineState = true;
@@ -142,10 +146,9 @@ export default class EntitiesUserBehavior extends Entities {
     */
     formatTree(datalist, ParentId, children: MenuDataItem[] = []) {
         lodash.filter(datalist, ['ParentId', ParentId]).map(data => {
+            data = lodash.cloneDeep(data)
             data.children = this.formatTree(datalist, data.Id, data.children || []);
-            children.push({
-                ...data
-            });
+            children.push(data);
         });
         return children;
     }

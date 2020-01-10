@@ -3,6 +3,9 @@ import { observable } from 'mobx';
 import { create } from 'mobx-persist';
 import { Subject, Subscription } from 'rxjs';
 import { AjaxRequest } from 'rxjs/ajax';
+/**
+ * 事件类型
+ */
 export declare type EnumEventType = "onSearch" | "onDetails" | "onInsert" | "onUpdate" | "onDelete" | "onImport" | "onImport" | "onExport";
 declare class EntitiesPageEventSubject {
     EventType: EnumEventType;
