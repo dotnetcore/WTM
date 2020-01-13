@@ -14,14 +14,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Create, "新建", "_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Edit, "修改", "_Admin",dialogWidth: 800),
-                this.MakeAction("FrameworkUser","Password","修改密码","修改密码", GridActionParameterTypesEnum.SingleId,"_Admin",400).SetShowInRow(true),
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Delete, "删除","_Admin",dialogWidth: 800),
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Details, "详细", "_Admin",dialogWidth: 600),
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "批量删除","_Admin", dialogWidth: 800),
-                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Import, "导入","_Admin", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Create, "", "_Admin",dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Edit, "", "_Admin",dialogWidth: 800),
+                this.MakeAction("FrameworkUser","Password",Program._localizer?["ChangePassword"],Program._localizer?["ChangePassword"], GridActionParameterTypesEnum.SingleId,"_Admin",400).SetShowInRow(true),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Delete, "","_Admin",dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Details, "", "_Admin",dialogWidth: 600),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Import, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }
 
@@ -30,12 +30,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             return new List<GridColumn<FrameworkUser_View>>{
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Name),
-                this.MakeGridHeader(x => x.Sex,70),
+                this.MakeGridHeader(x => x.Sex,80),
                 this.MakeGridHeader(x => x.CellPhone,120),
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x=> x.PhotoId,130).SetFormat(PhotoIdFormat),
-                this.MakeGridHeader(x => x.IsValid).SetHeader("启用").SetWidth(70),
+                this.MakeGridHeader(x => x.IsValid).SetHeader(Program._localizer?["Enable"]).SetWidth(70),
                 this.MakeGridHeaderAction(width: 280)
             };
         }
@@ -63,8 +63,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     PhotoId = x.PhotoId,
                     CellPhone = x.CellPhone,
                     IsValid = x.IsValid,
-                    RoleName_view = DC.Set<FrameworkRole>().Where(y => x.UserRoles.Select(z => z.RoleId).Contains(y.ID)).Select(y => y.RoleName).ToSpratedString(null,","),
-                    GroupName_view = DC.Set<FrameworkGroup>().Where(y => x.UserGroups.Select(z => z.GroupId).Contains(y.ID)).Select(y => y.GroupName).ToSpratedString(null, ","),
+                    RoleName_view = x.UserRoles.Select(y => y.Role.RoleName).ToSpratedString(null, ","),
+                    GroupName_view = x.UserGroups.Select(y => y.Group.GroupName).ToSpratedString(null, ","),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);
@@ -75,10 +75,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
     public class FrameworkUser_View : FrameworkUserBase
     {
-        [Display(Name = "角色")]
+        [Display(Name = "Role")]
         public string RoleName_view { get; set; }
 
-        [Display(Name = "用户组")]
+        [Display(Name = "Group")]
         public string GroupName_view { get; set; }
     }
 }

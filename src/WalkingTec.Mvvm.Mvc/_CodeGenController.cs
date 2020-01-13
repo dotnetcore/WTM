@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Type modeltype = Type.GetType(vm.SelectedModel);
                 if(modeltype.IsSubclassOf(typeof(TopBasePoco)) == false)
                 {
-                    ModelState.AddModelError("SelectedModel", "所选模型必须继承TopBasePoco基类");
+                    ModelState.AddModelError("SelectedModel", Program._localizer["SelectedModelMustBeBasePoco"]);
                 }
             }
             if (!ModelState.IsValid)
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().Alert("生成成功！请关闭调试重新编译运行。");
+            return FFResult().Alert(Program._localizer["CodeGenSuccess"]);
         }
 
         [ActionDescription("预览")]
@@ -64,12 +64,12 @@ namespace WalkingTec.Mvvm.Mvc
         {
             if (vm.PreviewFile == "Controller")
             {
-                ViewData["filename"] = vm.ModelName + "Controller.cs";
+                ViewData["filename"] = $"{vm.ModelName}{(vm.IsApi == true ? "Api" : "")}Controller.cs";
                 ViewData["code"] = vm.GenerateController();
             }
             else if(vm.PreviewFile == "Searcher" || vm.PreviewFile.EndsWith("VM"))
             {
-                ViewData["filename"] = vm.ModelName + vm.PreviewFile.Replace("CrudVM","VM") + ".cs";
+                ViewData["filename"] = vm.ModelName + $"{(vm.IsApi == true ? "Api" : "")}" + vm.PreviewFile.Replace("CrudVM","VM") + ".cs";
                 ViewData["code"] = vm.GenerateVM(vm.PreviewFile);
             }
             else if(vm.UI == UIEnum.React)

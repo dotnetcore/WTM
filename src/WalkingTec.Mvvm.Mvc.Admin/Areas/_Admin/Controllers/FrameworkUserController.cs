@@ -1,32 +1,39 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
-
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 {
     [Area("_Admin")]
-    [ActionDescription("用户管理")]
+    [ActionDescription("UserManagement")]
     public class FrameworkUserController : BaseController
     {
         #region 搜索
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         public ActionResult Index()
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher.IsValid = true;
             return PartialView(vm);
         }
+
+        [ActionDescription("Search")]
+        [HttpPost]
+        public string Search(FrameworkUserListVM vm)
+        {
+            return vm.GetJson(false);
+        }
+
         #endregion
 
         #region 新建
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create()
         {
             var vm = CreateVM<FrameworkUserVM>();
@@ -34,8 +41,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("新建")]
-        public ActionResult Create(FrameworkUserVM vm)
+        [ActionDescription("Create")]
+        public async Task<ActionResult> Create(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -43,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -58,18 +65,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改
-        [ActionDescription("修改")]
-        public ActionResult Edit(Guid id)
+        [ActionDescription("Edit")]
+        public ActionResult Edit(string id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
             vm.Entity.Password = null;
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
-        public ActionResult Edit(FrameworkUserVM vm)
+        public async Task<ActionResult> Edit(FrameworkUserVM vm)
         {
             if (ModelState.Any(x => x.Key != "Entity.Password" && x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid))
             {
@@ -78,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             else
             {
                 ModelState.Clear();
-                vm.DoEdit();
+                await vm.DoEditAsync();
                 if (!ModelState.IsValid)
                 {
                     vm.DoReInit();
@@ -93,7 +100,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 修改密码
-        [ActionDescription("修改密码")]
+        [ActionDescription("ChangePassword")]
         public ActionResult Password(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id,passInit:true);
@@ -101,7 +108,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("ChangePassword")]
         [HttpPost]
         public ActionResult Password(FrameworkUserVM vm)
         {
@@ -128,19 +135,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
 
         #region 删除
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public ActionResult Delete(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection nouse)
+        public async Task<ActionResult> Delete(Guid id, IFormCollection nouse)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
-            vm.DoDelete();
+            await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
             {
                 return PartialView(vm);
@@ -153,7 +160,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         #endregion
 
         #region 详细
-        [ActionDescription("详细")]
+        [ActionDescription("Details")]
         public PartialViewResult Details(Guid id)
         {
             var v = CreateVM<FrameworkUserVM>(id);
@@ -163,16 +170,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 批量删除
         [HttpPost]
-        [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        [ActionDescription("BatchDelete")]
+        public ActionResult BatchDelete(string[] IDs)
         {
             var vm = CreateVM<FrameworkUserBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
         [HttpPost]
-        [ActionDescription("批量删除")]
-        public ActionResult DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
+        [ActionDescription("BatchDelete")]
+        public async Task<ActionResult> DoBatchDelete(FrameworkUserBatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
             {
@@ -180,13 +187,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功");
+                List<Guid?> tempids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    tempids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer?["OprationSuccess"]);
             }
         }
         #endregion
 
         #region 导入
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         public ActionResult Import()
         {
             var vm = CreateVM<FrameworkUserImportVM>();
@@ -194,7 +208,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         public ActionResult Import(FrameworkUserImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -203,12 +217,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
 
-        [ActionDescription("启用禁用")]
+        [ActionDescription("Enable")]
         public ActionResult Enable(Guid id, bool enable)
         {
             FrameworkUserBase user = new FrameworkUserBase { ID = id };
@@ -224,6 +238,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(LoginUserInfo.DataPrivileges,null, x=>x.CodeAndName, x => x.ITCode);
             return Json(users);
 
+        }
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(FrameworkUserListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
     }
 }

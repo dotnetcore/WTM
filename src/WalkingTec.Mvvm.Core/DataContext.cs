@@ -1,8 +1,11 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using MySql.Data.MySqlClient;
 using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,7 +33,8 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
-        public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
+        //public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
+        public DbSet<PersistedGrant> PersistedGrants { get; set; }
 
 
 
@@ -75,7 +79,7 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext CreateNew()
         {
-           return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
         }
 
         public IDataContext ReCreate()
@@ -110,7 +114,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -127,7 +131,7 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -141,7 +145,7 @@ namespace WalkingTec.Mvvm.Core
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.Where(x => x.ID == entity.ID).FirstOrDefault() == null)
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
             }
@@ -242,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
             }
 
             // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
-            for (int i = 0; i < allTypes.Count; i++) // 
+            for (int i = 0; i < allTypes.Count; i++) //
             {
                 var item = allTypes[i];
                 var pros = item.GetProperties();
@@ -296,7 +300,21 @@ namespace WalkingTec.Mvvm.Core
             switch (DBType)
             {
                 case DBTypeEnum.SqlServer:
-                    optionsBuilder.UseSqlServer(CSName,op=>op.UseRowNumberForPaging());
+                    try
+                    {
+                        var Configs = GlobalServices.GetRequiredService<Configs>();
+                        if (Configs.IsOldSqlServer == true)
+                        {
+                            optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                        }
+                        else
+                        {
+                            optionsBuilder.UseSqlServer(CSName);
+                        }
+                    }
+                    catch {
+                        optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                    }
                     break;
                 case DBTypeEnum.MySql:
                     optionsBuilder.UseMySql(CSName);
@@ -310,37 +328,56 @@ namespace WalkingTec.Mvvm.Core
                 case DBTypeEnum.SQLite:
                     optionsBuilder.UseSqlite(CSName);
                     break;
+                case DBTypeEnum.Oracle:
+                    optionsBuilder.UseOracle(CSName);
+                    break;
                 default:
                     break;
             }
+            try
+            {
+                var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
+                if (Configs.IsQuickDebug)
+                {
+                    optionsBuilder.UseLoggerFactory(LoggerFactory);
+                }
+            }
+            catch { }
             base.OnConfiguring(optionsBuilder);
         }
+
+        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] {
+            new DebugLoggerProvider()
+        });
 
         /// <summary>
         /// 数据初始化
         /// </summary>
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
-        /// <returns>返回true即数据新建完成，进入初始化操作，返回false即数据库已经存在</returns>
+        /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
         public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
         {
-            if (await Database.EnsureCreatedAsync())
+            bool rv = await Database.EnsureCreatedAsync();
+            //判断是否存在初始数据
+            bool emptydb = false;
+
+            try
+            {
+                emptydb = Set<FrameworkUserBase>().Count() == 0 && Set<FrameworkUserRole>().Count() == 0 && Set<FrameworkMenu>().Count() == 0;
+            }
+            catch { }
+
+            if (emptydb == true)
             {
                 var AllModules = allModules as List<FrameworkModule>;
-                //foreach (var module in AllModules)
-                //{
-                //    module.CreateTime = DateTime.Now;
-                //    module.CreateBy = "admin";
-                //    Set<FrameworkModule>().Add(module);
-                //}
-
                 var roles = new FrameworkRole[]
                 {
-                    new FrameworkRole{ RoleCode = "001", RoleName = "超级管理员"}
+                    new FrameworkRole{ RoleCode = "001", RoleName = Program._localizer["Admin"]}
                 };
                 var users = new FrameworkUserBase[]
                 {
-                    new FrameworkUserBase{ITCode = "admin", Password = Utils.GetMD5String("000000"), IsValid = true, Name="超级管理员"}
+                    new FrameworkUserBase{ITCode = "admin", Password = Utils.GetMD5String("000000"), IsValid = true, Name=Program._localizer["Admin"]}
                 };
                 var userroles = new FrameworkUserRole[]
                 {
@@ -350,8 +387,8 @@ namespace WalkingTec.Mvvm.Core
                 var adminRole = roles[0];
                 if (Set<FrameworkMenu>().Any() == false)
                 {
-                    var systemManagement = GetFolderMenu("系统管理", new List<FrameworkRole> { adminRole }, null);
-                    var logList = IsSpa ? GetMenu2(AllModules,"ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
+                    var systemManagement = GetFolderMenu(Program._localizer["SystemManagement"], new List<FrameworkRole> { adminRole }, null);
+                    var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
                     var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", new List<FrameworkRole> { adminRole }, null, 2);
                     var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", new List<FrameworkRole> { adminRole }, null, 3);
                     var groupList = IsSpa ? GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4) : GetMenu(AllModules, "_Admin", "FrameworkGroup", "Index", new List<FrameworkRole> { adminRole }, null, 4);
@@ -362,14 +399,31 @@ namespace WalkingTec.Mvvm.Core
                         systemManagement.Children.AddRange(new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList });
                         Set<FrameworkMenu>().Add(systemManagement);
                     }
+
+                    if(IsSpa == false)
+                    {
+                        var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole }, null);
+                        apifolder.ShowOnMenu = false;
+                        apifolder.DisplayOrder = 100;
+                        var logList2 = GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) ;
+                        var userList2 = GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2);
+                        var roleList2 = GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3);
+                        var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
+                        var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
+                        var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
+                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2};
+                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
+                        apifolder.Children.AddRange(apis);
+                        Set<FrameworkMenu>().Add(apifolder);
+                    }
                 }
                 Set<FrameworkRole>().AddRange(roles);
                 Set<FrameworkUserBase>().AddRange(users);
                 Set<FrameworkUserRole>().AddRange(userroles);
                 await SaveChangesAsync();
-                return true;
+                rv = false;
             }
-            return false;
+            return rv;
         }
 
         private FrameworkMenu GetFolderMenu(string FolderText, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, bool isShowOnMenu = true, bool isInherite = false)
@@ -427,21 +481,22 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
-            var acts = allModules.Where(x => x.ClassName == controllerName && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
                 menu.Url = "/" + acts[0].Module.ClassName.ToLower();
                 menu.ModuleName = acts[0].Module.ModuleName;
                 menu.PageName = menu.ModuleName;
-                menu.ActionName = "主页面";
-                menu.ClassName = acts[0].Module.ClassName;
+                menu.ActionName = Program._localizer["MainPage"];
+                menu.ClassName = acts[0].Module.FullName;
                 menu.MethodName = null;
-                for (int i = 0; i < acts.Count; i++)
+                for (int i = 0; i < rest.Count; i++)
                 {
-                    if (acts[i] != null)
+                    if (rest[i] != null)
                     {
-                        menu.Children.Add(GetMenuFromAction(acts[i], false, allowedRoles, allowedUsers, (i + 1)));
+                        menu.Children.Add(GetMenuFromAction(rest[i], false, allowedRoles, allowedUsers, (i + 1)));
                     }
                 }
             }
@@ -458,7 +513,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 //ActionId = act.ID,
                 //ModuleId = act.ModuleId,
-                ClassName = act.Module.ClassName,
+                ClassName = act.Module.FullName,
                 MethodName = act.MethodName,
                 Url = act.Url,
                 Privileges = new List<FunctionPrivilege>(),
@@ -475,6 +530,7 @@ namespace WalkingTec.Mvvm.Core
                 menu.PageName = act.Module.ModuleName;
                 menu.ModuleName = act.Module.ModuleName;
                 menu.ActionName = act.ActionName;
+                menu.MethodName = null;
             }
             else
             {
@@ -603,7 +659,34 @@ namespace WalkingTec.Mvvm.Core
                         npgCon.Close();
                     }
                     break;
-
+                case DBTypeEnum.SQLite:
+                case DBTypeEnum.Oracle:
+                    var connection = this.Database.GetDbConnection();
+                    var isClosed = connection.State == ConnectionState.Closed;
+                    if (isClosed)
+                    {
+                        connection.Open();
+                    }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        command.CommandTimeout = 2400;
+                        command.CommandType = commandType;
+                        if (paras != null)
+                        {
+                            foreach (var param in paras)
+                                command.Parameters.Add(param);
+                        }
+                        using (var reader = command.ExecuteReader())
+                        {
+                            table.Load(reader);
+                        }
+                    }
+                    if (isClosed)
+                    {
+                        connection.Close();
+                    }
+                    break;
             }
             return table;
         }
@@ -632,6 +715,12 @@ namespace WalkingTec.Mvvm.Core
                     break;
                 case DBTypeEnum.PgSql:
                     rv = new NpgsqlParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.SQLite:
+                    rv = new SqliteParameter(name, value) { Direction = dir };
+                    break;
+                case DBTypeEnum.Oracle:
+                    rv = new OracleParameter(name, value) { Direction = dir };
                     break;
             }
             return rv;

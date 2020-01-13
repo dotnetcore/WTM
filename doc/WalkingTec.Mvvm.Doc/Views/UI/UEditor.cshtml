@@ -1,0 +1,93 @@
+@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
+
+<wt:fieldset field-set-style="Simple" title="UEditor">
+  <p>富文本框的常用属性有：</p>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:200}">属性</th>
+        <th lay-data="{field:'joinTime', width:600}">描述</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Id</td>
+        <td>控件Id，默认根据绑定字段名称生成</td>
+      </tr>
+      <tr>
+        <td>Field</td>
+        <td>绑定字段，必填</td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>控件Name，默认根据绑定字段名称生成</td>
+      </tr>
+      <tr>
+        <td>LabelText</td>
+        <td>标签内容</td>
+      </tr>
+      <tr>
+        <td>LabelWidth</td>
+        <td>标签的长度，默认为80</td>
+      </tr>
+      <tr>
+        <td>HideLabel</td>
+        <td>是否隐藏标签</td>
+      </tr>
+      <tr>
+        <td>EmptyText</td>
+        <td>无数据时显示的提示文本</td>
+      </tr>
+      <tr>
+        <td>Height</td>
+        <td>富文本框的高度，默认是200px</td>
+      </tr>
+      <tr>
+        <td>Width</td>
+        <td>富文本框的宽度，默认是100%</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="height:10px;">&nbsp;</div>
+  <wt:tab>
+    <wt:tabheaders>
+      <wt:tabheader title="效果" />
+      <wt:tabheader title="代码" />
+    </wt:tabheaders>
+    <wt:tabcontents>
+      <wt:tabcontent>
+        <wt:form vm="@Model" width="800">
+          <wt:ueditor field="Entity.Remark"/>
+          <wt:row align="AlignEnum.Right">
+            <wt:submitbutton disabled="true" />
+            <wt:closebutton disabled="true" />
+          </wt:row>
+        </wt:form>
+      </wt:tabcontent>
+      <wt:tabcontent>
+        <wt:code>
+          &ltwt:form vm="@@Model" width="600"&gt
+            &ltwt:ueditor field="Entity.Remark"  /&gt
+            &ltwt:row align="AlignEnum.Right"&gt
+              &ltwt:submitbutton disabled="true" /&gt
+              &ltwt:closebutton disabled="true" /&gt
+            &lt/wt:row&gt
+          &lt/wt:form&gt
+        </wt:code>
+      </wt:tabcontent>
+    </wt:tabcontents>
+  </wt:tab>
+  <wt:quote>
+    文档项目后台并没有连接真实的数据库，上面列子中上传图片会报错，但实际使用框架的时候并不会报错，框架自带接口可以实现图片的上传和浏览
+    *注意框架会自动过滤&lt; &gt; 等特殊字符，防止注入攻击，但是富文本一般是需要这种字符的，你可以在提交的后台方法上加[StringNeedLTGT]标记，告诉框架不要过滤特殊字符。
+    不过这样一来如果有人恶意录入javascript就无法阻止，你应该在controller里自己进行内容的检查和过滤
+  </wt:quote>
+
+</wt:fieldset>
+
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false
+  });
+</script>

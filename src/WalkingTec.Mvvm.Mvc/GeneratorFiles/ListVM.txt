@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ $othernamespace$
 
 namespace $vmnamespace$
 {
-    public partial class $modelname$ListVM : BasePagedListVM<$modelname$_View, $modelname$Searcher>
+    public partial class $classname$ListVM : BasePagedListVM<$classname$_View, $classname$Searcher>
     {
         protected override List<GridAction> InitGridAction()
         {
@@ -24,21 +24,21 @@ namespace $vmnamespace$
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchEdit, "批量修改","$area$", dialogWidth: 800),
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchDelete, "批量删除","$area$", dialogWidth: 800),
                 this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Import, "导入","$area$", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.ExportExcel, "导出","$area$"),
             };
         }
 
-        protected override IEnumerable<IGridColumn<$modelname$_View>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<$classname$_View>> InitGridHeader()
         {
-            return new List<GridColumn<$modelname$_View>>{$headers$
+            return new List<GridColumn<$classname$_View>>{$headers$
                 this.MakeGridHeaderAction(width: 200)
             };
         }$format$
 
-        public override IOrderedQueryable<$modelname$_View> GetSearchQuery()
+        public override IOrderedQueryable<$classname$_View> GetSearchQuery()
         {
             var query = DC.Set<$modelname$>()$where$
-                .Select(x => new $modelname$_View
+                .Select(x => new $classname$_View
                 {
 				    ID = x.ID,$select$
                 })
@@ -48,7 +48,7 @@ namespace $vmnamespace$
 
     }
 
-    public class $modelname$_View : $modelname${$subpros$
+    public class $classname$_View : $modelname${$subpros$
 
     }
 }

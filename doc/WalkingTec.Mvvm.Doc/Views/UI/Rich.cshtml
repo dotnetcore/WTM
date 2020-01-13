@@ -1,6 +1,7 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
 
 <wt:fieldset field-set-style="Simple" title="RichTextbox">
+</wt:fieldset>
     <p>富文本框的常用属性有：</p>
     <table lay-filter="parse-table-demo">
         <thead>
@@ -56,7 +57,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="800">
+                <wt:form vm="@Model" style="max-width:800px">
                     <wt:richtextbox field="Entity.Remark" height="400" />
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
@@ -79,11 +80,10 @@
     </wt:tab>
     <wt:quote>
         文档项目后台并没有连接真实的数据库，上面列子中上传图片会报错，但实际使用框架的时候并不会报错，框架自带接口可以实现图片的上传和浏览
-        *注意框架会自动过滤&lt; &gt; 等特殊字符，防止注入攻击，但是富文本一般是需要这种字符的，你可以在提交的后台方法上加[StringNeedLTGT]标记，告诉框架不要过滤特殊字符。
+        *注意框架会自动过滤< > 等特殊字符，防止注入攻击，但是富文本一般是需要这种字符的，你可以在提交的后台方法上加[StringNeedLTGT]标记，告诉框架不要过滤特殊字符。
         不过这样一来如果有人恶意录入javascript就无法阻止，你应该在controller里自己进行内容的检查和过滤
     </wt:quote>
 
-</wt:fieldset>
 
     <script>
     layui.use('code',function(){layui.code({ about: false })})

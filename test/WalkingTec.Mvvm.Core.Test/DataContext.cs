@@ -18,5 +18,12 @@ namespace WalkingTec.Mvvm.Core.Test
 
         public DbSet<StudentMajor> StudentMajors { get; set; }
 
+        public DbSet<SchoolWithOtherID> SchoolWithOtherIDs { get; set; }
+        public DbSet<MajorWithOtherID> MajorWithOtherIDs { get; set; }
+        public DbSet<StudentMajorWithOtherID> StudentMajorWithOtherIDs { get; set; }
+        public DbSet<SchoolTop> SchoolTops { get; set; }
+        public DbSet<MajorTop> MajorTops { get; set; }
+        public DbSet<StudentMajorTop> StudentMajorTops { get; set; }
+
     }
 }

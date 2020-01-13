@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    
     [ActionDescription("自定义用户")]
     public class MyUserController : BaseController
     {
@@ -18,6 +20,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             var vm = CreateVM<MyUserListVM>();
             return PartialView(vm);
         }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(MyUserListVM vm)
+        {
+            return vm.GetJson(false);
+        }
+
         #endregion
 
         #region 新建
@@ -78,7 +88,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
+                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID.ToString());
                 }
             }
         }
@@ -121,7 +131,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量修改
         [HttpPost]
         [ActionDescription("批量修改")]
-        public ActionResult BatchEdit(Guid[] IDs)
+        public ActionResult BatchEdit(string[] IDs)
         {
             var vm = CreateVM<MyUserBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -145,7 +155,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         #region 批量删除
         [HttpPost]
         [ActionDescription("批量删除")]
-        public ActionResult BatchDelete(Guid[] IDs)
+        public ActionResult BatchDelete(string[] IDs)
         {
             var vm = CreateVM<MyUserBatchVM>(Ids: IDs);
             return PartialView(vm);
@@ -188,5 +198,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
         }
         #endregion
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(MyUserListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
     }
 }

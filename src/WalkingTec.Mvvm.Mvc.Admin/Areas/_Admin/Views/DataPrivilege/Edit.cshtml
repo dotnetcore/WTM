@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
     <wt:hidden field=" DpType" />
     <wt:combobox field="Entity.TableName" items="TableNames" disabled="true" />
@@ -20,7 +20,7 @@
     </wt:row>
 </wt:form>
 <script>
-    DbTypeChange({ value: $('#DpType').val() });
+    DbTypeChange({ value: $('#DataPrivilegeVM_DpType').val() });
     IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
     function DbTypeChange(data) {
         if (data.value == "UserGroup") {

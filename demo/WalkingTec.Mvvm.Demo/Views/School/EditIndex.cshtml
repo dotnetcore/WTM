@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM2
+@model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolListVM2
 
 <wt:searchpanel vm="@Model" reset-btn="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
@@ -8,7 +8,7 @@
     </wt:row>
 </wt:searchpanel>
 
-<wt:form vm="@Model" id="editindexform">
+<wt:form vm="@Model" id="editindexform" class="layui-form donotuse_fill donotuse_pdiv">
 
     <wt:grid vm="@Model" />
     <wt:row align="AlignEnum.Right">

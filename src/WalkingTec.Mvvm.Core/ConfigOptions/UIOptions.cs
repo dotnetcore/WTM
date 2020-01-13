@@ -5,6 +5,7 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
         public DataTableOptions DataTable { get; set; }
         public ComboBoxOptions ComboBox { get; set; }
         public DateTimeOptions DateTime { get; set; }
+        public SearchPanelOptions SearchPanel { get; set; }
 
         public class DataTableOptions
         {
@@ -30,6 +31,15 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
             /// 默认开启DateTime只读
             /// </summary>
             public bool DefaultReadonly { get; set; }
+        }
+
+        public class SearchPanelOptions
+        {
+
+            /// <summary>
+            /// 默认展开SearchPanel内容
+            /// </summary>
+            public bool DefaultExpand { get; set; }
         }
     }
 }

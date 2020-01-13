@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 {
@@ -13,16 +14,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public List<ComboSelectListItem> TableNames { get; set; }
         public List<ComboSelectListItem> AllItems { get; set; }
         public List<ComboSelectListItem> AllGroups { get; set; }
-        [Display(Name = "允许访问")]
-        public List<Guid?> SelectedItemsID { get; set; }
-        [Display(Name ="用户")]
+        [Display(Name = "AllowedDp")]
+        public List<string> SelectedItemsID { get; set; }
+        [Display(Name ="Account")]
         public string UserItCode { get; set; }
 
-        [Display(Name = "权限类别")]
+        [Display(Name = "DpType")]
         public DpTypeEnum DpType { get; set; }
 
         public DpListVM DpList { get; set; }
-        [Display(Name = "全部权限")]
+        [Display(Name = "AllDp")]
         public bool? IsAll { get; set; }
         public DataPrivilegeVM()
         {
@@ -38,8 +39,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
                 TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             }
-            SelectedItemsID = new List<Guid?>();
-            List<Guid?> rids = null;
+            SelectedItemsID = new List<string>();
+            List<string> rids = null;
             if (DpType == DpTypeEnum.User)
             {
                 rids = DC.Set<DataPrivilege>().Where(x => x.TableName == Entity.TableName && x.UserId == Entity.UserId).Select(x => x.RelateId).ToList();
@@ -72,14 +73,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 if (string.IsNullOrEmpty(UserItCode))
                 {
-                    MSD.AddModelError("UserItCode", "用户为必填项");
+                    MSD.AddModelError("UserItCode", Program._localizer["{0}required", Program._localizer["Account"]]);
                 }
                 else
                 {
                     var user = DC.Set<FrameworkUserBase>().Where(x => x.ITCode == UserItCode).FirstOrDefault();
                     if (user == null)
                     {
-                        MSD.AddModelError("UserItCode", "无法找到账号为" + UserItCode + "的用户");
+                        MSD.AddModelError("UserItCode", Program._localizer["CannotFindUser", UserItCode]);
                     }
                     else
                     {
@@ -91,14 +92,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             {
                 if(Entity.GroupId == null)
                 {
-                    MSD.AddModelError("Entity.GroupId", "用户组为必填项");
+                    MSD.AddModelError("Entity.GroupId", Program._localizer["{0}required", Program._localizer["Group"]]);
                 }
             }
 
             base.Validate();
         }
 
-        public override void DoAdd()
+        public override async Task DoAddAsync()
         {
             if (SelectedItemsID == null && IsAll == false)
             {
@@ -169,10 +170,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
+
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEditAsync(bool updateAllFields = false)
         {
             List<Guid> oldIDs = null;
 
@@ -242,10 +253,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     }
                 }
             }
-            DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
         }
 
-        public override void DoDelete()
+        public override async Task  DoDeleteAsync()
         {
             List<Guid> oldIDs = null;
 
@@ -264,6 +284,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 DC.DeleteEntity(dp);
             }
             DC.SaveChanges();
+            await DC.SaveChangesAsync();
+            if (DpType == DpTypeEnum.User)
+            {
+                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+            }
+            else
+            {
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
+                await LoginUserInfo.RemoveUserCache(userids);
+            }
         }
     }
 }

@@ -14,7 +14,6 @@
     <PackageIconUrl>https://wtmdoc.walkingtec.cn/logo.png</PackageIconUrl>
     <PackageTags>aspnetcore, mvc, mvvm, layui, wtm</PackageTags>
     <PackageReleaseNotes>框架文档地址：https://wtmdoc.walkingtec.cn，QQ群：694148336</PackageReleaseNotes>
-    <IncludeSymbols>false</IncludeSymbols>
     <IncludeSource>false</IncludeSource>
     <MinClientVersion>4.1.0</MinClientVersion>
     <IncludeContentInPack>true</IncludeContentInPack>

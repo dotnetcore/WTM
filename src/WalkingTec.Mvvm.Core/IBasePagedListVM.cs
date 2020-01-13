@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 多级表头深度  默认 1级
         /// </summary>
-        int ChildrenDepth { get; }
+        int GetChildrenDepth();
 
         /// <summary>
         /// GetHeaders
@@ -46,7 +46,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         ///记录批量操作时列表中选择的Id
         /// </summary>
-        List<Guid> Ids { get; set; }
+        List<string> Ids { get; set; }
 
         /// <summary>
         /// 获取Model集合

@@ -1,6 +1,7 @@
 ﻿import { BindAll } from 'lodash-decorators';
 import lodash from 'lodash';
 import DataSource, { ISearchParams } from 'store/dataSource';
+import { message } from 'antd';
 @BindAll()
 export class Store extends DataSource {
     constructor() {
@@ -48,6 +49,14 @@ export class Store extends DataSource {
             }
         });
     }
+    /**
+     * 刷新菜单
+     */
+    async onRefreshMenu() {
+        const res = await this.Observable.Request.ajax('/_FrameworkMenu/RefreshMenu').toPromise();
+        // console.log("TCL: Store -> onRefreshMenu -> res", res)
+        message.info(res.Value)
+    }
     /** 搜索 */
     async onSearch(params?: ISearchParams) {
         try {
@@ -62,7 +71,7 @@ export class Store extends DataSource {
                 return value;
             });
             console.log("TCL: Store -> onSearch -> res.Data", res.Data)
-            
+
             this.DataSource.tableList = res;
             return res;
         } catch (error) {

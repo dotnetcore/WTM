@@ -1,8 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
@@ -37,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "所属学校")]
         [Required()]
-        public Guid? SchoolId { get; set; }
+        public int? SchoolId { get; set; }
 
 
         [Display(Name = "所属学校")]

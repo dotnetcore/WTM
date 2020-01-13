@@ -5,62 +5,86 @@
 </style>
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
 <wt:code title="appsettings.json">
- {
-    "ConnectionStrings": [
-    {
-        "Key": "default",
-        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
-    },
-    {
-        "Key": "test",
-        "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
-    }
-    ],
-    "DBType": "SqlServer",
-    "CookiePre": "WTM",
-    "EnableLog": true,
-    "LogExceptionOnly": false,
-    "IsQuickDebug": true,
-    "PageMode": "Tab",
-    "UIOptions": {
-      "DataTable": {
-        "RPP": 20, 
-      },
-      "ComboBox": {
-        "DefaultEnableSearch": true, 
-      },
-      "DateTime": {
-        "DefaultReadonly": true 
-      }
-    },
-    "FileUploadOptions": {
-        "UploadLimit": 20971520,
-        "SaveFileMode": "Database", 
-        "UploadDir": "D:\\" 
-    },
-    "DFSServer": {
-        "StorageMaxConnection": 100,
-        "TrackerMaxConnection": 100,
-        "ConnectionTimeout": 100,
-        "ConnectionLifeTime": 100,
-        "Trackers": [
-            {
-                "IP": "127.0.0.1",
-                "Port": 22122
-            }
-        ]
-    },
-    "AppSettings": [
-        {
-            "Key": "aaa",
-            "Value": "bbb"
-        },
-        {
-            "Key": "ccc",
-            "Value": "ddd"
-        }
-    ]
-}
+  {
+  "ConnectionStrings": [
+  {
+  "Key": "default",
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
+  },
+  {
+  "Key": "test",
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
+  }
+  ],
+  "DBType": "SqlServer",
+  "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
+  "CookiePre": "WTM",
+  "EnableLog": true,
+  "LogExceptionOnly": false,
+  "IsQuickDebug": true,
+  "ErrorHandler": "/_Framework/Error",
+  "PageMode": "Tab",
+  "Languages": "zh,en",
+  "CorsOptions": {
+  "EnableAll": true, //所有方法是否默认跨域
+  "Policy": [
+  {
+  "Name": "Default",
+  "Domain": "http://localhost, https://localhost"
+  }
+  ]
+  },
+  "UIOptions": {
+  "DataTable": {
+  "RPP": 20,
+  },
+  "ComboBox": {
+  "DefaultEnableSearch": true,
+  },
+  "DateTime": {
+  "DefaultReadonly": true
+  }
+  },
+  "FileUploadOptions": {
+  "UploadLimit": 20971520,
+  "SaveFileMode": "Database",
+  "UploadDir": "D:\\"
+  },
+  "DFSServer": {
+  "StorageMaxConnection": 100,
+  "TrackerMaxConnection": 100,
+  "ConnectionTimeout": 100,
+  "ConnectionLifeTime": 100,
+  "Trackers": [
+  {
+  "IP": "127.0.0.1",
+  "Port": 22122
+  }
+  ]
+  },
+  "JwtOptions": {
+  "Issuer": "http://localhost",
+  "Audience": "http://localhost",
+  "Expires": 3600,
+  "SecurityKey": "superSecretKey@345",
+  "RefreshTokenExpires": 86400,
+  "LoginPath": "/Login/Login"
+  },
+  "CookieOptions": {
+  "Issuer": "http://localhost",
+  "Audience": "http://localhost",
+  "Expires": 3600,
+  "SlidingExpiration": true,
+  "SecurityKey": "superSecretKey@345",
+  "RefreshTokenExpires": 86400,
+  "LoginPath": "/Login/Login"
+  },
+
+  "AppSettings": {
+  "Key1": "abc",
+  "Key2": "123"
+  }
+  }
 </wt:code>
 
 <wt:fieldset field-set-style="Simple" title="配置说明">
@@ -78,7 +102,11 @@
           </tr>
           <tr>
             <td>DBType</td>
-            <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite</td>
+            <td>连接字符串对应的数据库类型，可选mysql,sqlserver,pgsql,sqlite,oracle</td>
+          </tr>
+          <tr>
+            <td>IsOldSqlServer</td>
+            <td>如果使用sql server2008或者更老的，请设置为true</td>
           </tr>
           <tr>
             <td>CookiePre</td>
@@ -89,6 +117,14 @@
             <td>是否启用日志</td>
           </tr>
           <tr>
+            <td>PageMode</td>
+            <td>页面显示模式，Single或者Tab</td>
+          </tr>
+          <tr>
+            <td>TabMode</td>
+            <td>Tab页显示方式，Default或者Simple</td>
+          </tr>
+          <tr>
             <td>LogExceptionOnly</td>
             <td>当启用日志时，是否只记录异常</td>
           </tr>
@@ -97,8 +133,20 @@
             <td>是否为调试模式，调试模式下会跳过页面权限和数据权限的验证，直接反射所有Controller下的所有方法作为菜单项</td>
           </tr>
           <tr>
+            <td>ErrorHandler</td>
+            <td>全局错误处理，默认地址是框架自带的/_Framework/Error</td>
+          </tr>
+          <tr>
             <td>RPP</td>
             <td>默认列表行数</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.EnableAll</td>
+            <td>是否默认对所有方法启用跨域，如果Policy没有配置，则默认对localhost跨域，如果有Policy，则使用第一条Policy对所有方法启动跨域</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.Policy</td>
+            <td>Name是方案名称，在Controller或Controller方法上使用[EnableCors('')]时填写的名称。 Domains是允许跨域的域名，多域名用逗号分隔</td>
           </tr>
           <tr>
             <td>FileUploadOptions.SaveFileMode</td>
@@ -109,16 +157,20 @@
             <td>当附件储存模式选择Local时，指定硬盘目录</td>
           </tr>
           <tr>
-            <td>PageMode</td>
-            <td>多页面的展现方式，可选Single或者Tab</td>
-          </tr>
-          <tr>
             <td>DFSServer</td>
             <td>当附件储存模式选择DFS时，指定DFS服务器的信息</td>
           </tr>
           <tr>
-            <td>AppSettings</td>
-            <td>key，value形式，可配置多个</td>
+            <td>Languages</td>
+            <td>配置框架支持的语言，多种语言用逗号分开，比如zh,en</td>
+          </tr>
+          <tr>
+            <td>JwtOptions</td>
+            <td>配置jwt认证的属性，如过期时间，密钥等</td>
+          </tr>
+          <tr>
+            <td>CookieOptions</td>
+            <td>配置Cookie认证的属性，如过期时间，密钥等</td>
           </tr>
         </tbody>
     </table>

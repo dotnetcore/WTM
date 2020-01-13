@@ -16,6 +16,7 @@
   <script type="text/javascript">
     $(document).ready(function () {
       $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+      $("input[name='VerifyCode']").attr('autocomplete', 'off');
     });
     function verify() {
       $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
@@ -31,6 +32,7 @@
       <img src="~/images/slogen.png" />
     </h4>
     <form action="/Login/Login" method="post">
+    <input type="hidden" name="Redirect" value="@Model.Redirect">
       <ul class="loginForm">
         <li>
           <i><img src="~/images/icon-login04.png" /></i>
@@ -44,12 +46,15 @@
           <i><img src="~/images/icon-login03.png" /></i>
           <input type="text" name="VerifyCode" placeholder="请输入验证码" class="login-input">
           <p class="login-code">
-
-
           </p>
           <img class="login-codeImg" id="verify_code_img">
           <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()" /></i>
         </li>
+        <li style="text-align:right;vertical-align:text-top">
+          <input type="checkbox" name="RememberLogin" value="true" @(Model.RememberLogin?"checked":"")>
+          <span style="font-size:14px; margin-left:5px;">记住我</span>
+        </li>
+
         <li>
           <span class="login-error">@Model.MSD.GetFirstError()</span>
           <button type="submit" class="login-button" style="cursor:pointer">登 录</button>

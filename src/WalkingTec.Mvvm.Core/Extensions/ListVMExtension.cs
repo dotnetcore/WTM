@@ -1,7 +1,5 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -48,7 +46,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             switch (info.FormatType)
             {
                 case ColumnFormatTypeEnum.Dialog:
-                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable).ToString();
+                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed).ToString();
                     break;
                 case ColumnFormatTypeEnum.Redirect:
                     rv = vm.UIService.MakeRedirectButton(info.ButtonType, info.Url, info.Text).ToString();
@@ -136,7 +134,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         foreColor = RowColor;
                     }
-                    (string bgcolor, string forecolor) colors = (null,null);
+                    (string bgcolor, string forecolor) colors = (null, null);
                     if (backColor != string.Empty)
                     {
                         colors.bgcolor = backColor;
@@ -145,7 +143,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         colors.forecolor = foreColor;
                     }
-                    if( string.IsNullOrEmpty(colors.bgcolor) == false || string.IsNullOrEmpty(colors.forecolor) == false)
+                    if (string.IsNullOrEmpty(colors.bgcolor) == false || string.IsNullOrEmpty(colors.forecolor) == false)
                     {
                         colorcolumns.Add(col.Field, colors);
                     }
@@ -271,7 +269,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     if (string.IsNullOrEmpty(self.DetailGridPrix) == false && addHiddenID == false)
                     {
-                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.ID}'/>";
+                        html += $@"<input hidden name='{self.DetailGridPrix}[{index}].ID' value='{sou.GetID()}'/>";
                         addHiddenID = true;
                     }
                     if (inner == false)
@@ -285,7 +283,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             sb.Append($"\"TempIsSelected\":\"{ (isSelected == true ? "1" : "0") }\"");
             foreach (var cc in colorcolumns)
             {
-                if(string.IsNullOrEmpty(cc.Value.Item1) == false)
+                if (string.IsNullOrEmpty(cc.Value.Item1) == false)
                 {
                     string bg = cc.Value.Item1;
                     if (bg.StartsWith("#") == false)
@@ -306,7 +304,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (containsID == false)
             {
-                sb.Append($",\"ID\":\"{sou.ID}\"");
+                sb.Append($",\"ID\":\"{(sou as dynamic).ID}\"");
             }
             // 标识当前行数据是否被选中
             sb.Append($@",""LAY_CHECKED"":{sou.Checked.ToString().ToLower()}");
@@ -315,9 +313,16 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return sb.ToString();
         }
 
-        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
+        /// <summary>
+        /// Get json format string of ListVM's search result
+        /// </summary>
+        /// <typeparam name="T">Model type</typeparam>
+        /// <param name="self">a listvm</param>
+        /// <param name="PlainText">true to return plain text, false to return formated html, such as checkbox,buttons ...</param>
+        /// <returns>json string</returns>
+        public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
         {
-            return $@"{{""Data"":{self.GetDataJson(true)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount}}}";
+            return $@"{{""Data"":{self.GetDataJson(PlainText)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
         }
     }
 }
