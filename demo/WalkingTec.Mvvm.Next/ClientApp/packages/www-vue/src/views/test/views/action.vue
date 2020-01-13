@@ -13,6 +13,8 @@
       <Entity-PhotoId />
       <Entity-IsValid />
       <Entity-UserRoles />
+      <Entity-UserRoles2 />
+      <Entity-UserRoles3 />
       <Entity-UserGroups />
     </template>
     <template #Update>

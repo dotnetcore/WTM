@@ -1,22 +1,124 @@
 import { Col, Form } from 'ant-design-vue';
 import { FieldDecoratorOptions, WrappedFormUtils } from 'ant-design-vue/types/form/form';
 import lodash from 'lodash';
-import Vue, { CreateElement } from 'vue';
-import displayComponents from './display.vue';
 import { Observable } from 'rxjs';
+import Vue, { CreateElement } from 'vue';
+import globalConfig from '../../global.config';
+import displayComponents from './display.vue';
+type ColSpanType = number | string;
+type SpanType = {
+    /**
+   * raster number of cells to occupy, 0 corresponds to display: none
+   * @default none (0)
+   * @type ColSpanType
+   */
+    span?: ColSpanType;
+    /**
+   * <576px and also default setting, could be a span value or an object containing above props
+   * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+   */
+    xs?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+
+    /**
+     * ≥576px, could be a span value or an object containing above props
+     * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+     */
+    sm?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+
+    /**
+     * ≥768px, could be a span value or an object containing above props
+     * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+     */
+    md?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+
+    /**
+     * ≥992px, could be a span value or an object containing above props
+     * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+     */
+    lg?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+
+    /**
+     * ≥1200px, could be a span value or an object containing above props
+     * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+     */
+    xl?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+
+    /**
+     * ≥1600px, could be a span value or an object containing above props
+     * @type { span: ColSpanType, offset: ColSpanType } | ColSpanType
+     */
+    xxl?: { span: ColSpanType; offset: ColSpanType } | ColSpanType;
+};
+declare type dataSource = any[] | Observable<any[]> | Promise<any[]>;
+declare type dataSourceFn = () => dataSource;
 interface FormItem {
+    /**
+     * 显示 标签 文字
+     *
+     * @type {(string | { [key: string]: string })}
+     * @memberof FormItem
+     */
     label: string | { [key: string]: string };
+    /**
+     * 表单 配置  getFieldDecorator
+     * https://www.antdv.com/components/form-cn/
+     * @type {FieldDecoratorOptions}
+     * @memberof FormItem
+     */
     options?: FieldDecoratorOptions;
-    dataSource?: any[] | Observable<any[]> | Promise<any[]>;
+    /**
+     * 数据源 
+     *
+     * @type {(any[] | Observable<any[]> | Promise<any[]>)}
+     * @memberof FormItem
+     */
+    dataSource?: dataSource | dataSourceFn;
+    /**
+     * 栅格布局 Col span   
+     * https://www.antdv.com/components/grid-cn/
+     * @type {SpanType}
+     * @memberof FormItem
+     */
+    span?: SpanType;
+    /**
+     * 表单组件
+     *
+     * @type {*}
+     * @memberof FormItem
+     */
     children: any;
 }
 export interface EntitiesItems {
     [key: string]: FormItem
 }
 export interface RenderFormItemParams {
+    /**
+     * 实体模型
+     *
+     * @type {*}
+     * @memberof RenderFormItemParams
+     */
     entities: any;
+    /**
+     * 表单对象
+     *
+     * @type {WrappedFormUtils}
+     * @memberof RenderFormItemParams
+     */
     form: WrappedFormUtils;
+    /**
+     * 默认值
+     *
+     * @type {*}
+     * @memberof RenderFormItemParams
+     */
     initialValues?: any;
+    /**
+     * 栅格布局 Col span   
+     *
+     * @type {*}
+     * @memberof RenderFormItemParams
+     */
     ColProps?: any;
 }
 /**
@@ -56,7 +158,11 @@ export function createFormItem({ entities }: { entities: any }) {
         // const children = lodash.replace(item.children, 'v-decorator', `v-decorator="['${key}',${options}]"`)
         // const children = createChildrenTemplate(item);
         item = createChildrenTemplate(item)
-        const ColProps = { xs: 24, sm: 24, md: 12, lg: 12 };
+        const span = lodash.get(item, 'span', { xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6, span: undefined }); //lodash.merge({ xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6 }, item.span);
+        let label = item.label;
+        if (lodash.isObject(label)) {
+            label = lodash.get(label, globalConfig.settings.language);
+        }
         return Vue.component(key, {
             components: {
                 display: displayComponents
@@ -64,12 +170,13 @@ export function createFormItem({ entities }: { entities: any }) {
             props: ['options', 'display', 'disabled', 'decoratorOptions'],
             template: `
             <a-col
-               :xs="${ColProps.xs}"
-               :sm="${ColProps.sm}"
-               :md="${ColProps.md}"
-               :lg="${ColProps.lg}"
+               :span="${span.span}"
+               :xs="${span.xs}"
+               :sm="${span.sm}"
+               :md="${span.md}"
+               :lg="${span.lg}"
             >
-                <a-form-item label="${item.label}">
+                <a-form-item label="${label}">
                     <template v-if="isDisplay" >
                       <display v-decorator="decorator" />
                     </template>
@@ -88,23 +195,29 @@ export function createFormItem({ entities }: { entities: any }) {
                     dataSource = options;
                 } else if (lodash.isArray(itemDataSource)) {
                     dataSource = itemDataSource;
-                } else if (itemDataSource instanceof Promise || itemDataSource instanceof Observable) {
+                } else if (itemDataSource instanceof Promise || itemDataSource instanceof Observable || lodash.isFunction(itemDataSource)) {
                     loadData = true
                 }
                 return {
+                    formItem: item,
                     loadData,
                     dataSource
                 }
             },
             mounted() {
                 if (this.loadData) {
-                    this.onLoadData()
+                    this.onLoadData(lodash.get(item, 'dataSource'))
                 }
             },
             methods: {
-                onLoadData: async function () {
-                    const itemDataSource = await lodash.get(item, 'dataSource');
-                    this.dataSource = lodash.map(itemDataSource, (data: any) => {
+                onLoadData: async function (itemDataSource) {
+                    if (lodash.isFunction(itemDataSource)) {
+                        return this.onLoadData(itemDataSource(this))
+                    } else if (itemDataSource instanceof Observable) {
+                        return this.onLoadData(itemDataSource.toPromise())
+                    }
+                    const dataSource = await itemDataSource;
+                    this.dataSource = lodash.map(dataSource, (data: any) => {
                         return {
                             ...data,
                             // select
@@ -145,6 +258,10 @@ export function createFormItem({ entities }: { entities: any }) {
  */
 function createChildrenTemplate(item) {
     item = lodash.cloneDeep(item);
+    let label = item.label;
+    if (lodash.isObject(label)) {
+        label = lodash.get(label, globalConfig.settings.language);
+    }
     let children = lodash.replace(item.children, 'v-decorator', ` 
             v-decorator="decorator" 
             :disabled="isDisabled" 
@@ -152,24 +269,38 @@ function createChildrenTemplate(item) {
         `);
     // placeholder='请输入 ${item.label}'
     switch (true) {
-        // selext 文本框
+        /**
+         *  a-select 
+         *  a-checkbox-group 
+         *  a-radio-group
+         * */
         case lodash.startsWith(item.children, '<a-select'):
+        case lodash.startsWith(item.children, '<a-checkbox-group'):
+        case lodash.startsWith(item.children, '<a-radio-group'):
             children = lodash.replace(children, 'WTM', ` 
                 :options="dataSource"
-                placeholder='请选择 ${item.label}'
+                placeholder='请选择 ${label}'
             `);
             break;
+        // transfer 穿梭框
         case lodash.startsWith(item.children, '<a-transfer'):
             children = lodash.replace(children, 'WTM', ` 
                 :dataSource="dataSource"
                 :render="item=>item.title"
-                placeholder='请选择 ${item.label}'
+                placeholder='请选择 ${label}'
             `);
+            // 设置 vaule 绑定 属性
+            item.options = lodash.merge({ valuePropName: 'targetKeys' }, item.options);
+            break;
+        // a-switch 
+        case lodash.startsWith(item.children, '<a-switch'):
+            // 设置 vaule 绑定 属性
+            item.options = lodash.merge({ valuePropName: 'checked' }, item.options);
             break;
 
         default:
             break;
     }
-    lodash.set(item, 'children', lodash.replace(children, 'WTM', `placeholder='请输入 ${item.label}'`));
+    lodash.set(item, 'children', lodash.replace(children, 'WTM', `placeholder='请输入 ${label}'`));
     return item;
 }
