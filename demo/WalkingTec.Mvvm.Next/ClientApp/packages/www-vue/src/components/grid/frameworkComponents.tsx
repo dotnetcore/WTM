@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue';
 import lodash from 'lodash';
 export default {
-    'avatar': Vue.component('wtm-avatar', {
+    'avatar': Vue.component('wtm-grid-avatar', {
         template: '<a-avatar icon="user" :src="src" v-viewer />',
         computed: {
             // 计算属性的 getter
@@ -15,7 +15,7 @@ export default {
             },
         },
     }),
-    'switch': Vue.component('wtm-switch', {
+    'switch': Vue.component('wtm-grid-switch', {
         template: `
         <a-switch :checked="checked">
             <a-icon type="check" slot="checkedChildren" />

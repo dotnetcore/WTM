@@ -2,7 +2,7 @@ import { Col, Form } from 'ant-design-vue';
 import { FieldDecoratorOptions, WrappedFormUtils } from 'ant-design-vue/types/form/form';
 import lodash from 'lodash';
 import { Observable } from 'rxjs';
-import Vue, { CreateElement } from 'vue';
+import Vue, { CreateElement, Component, AsyncComponent } from 'vue';
 import globalConfig from '../../global.config';
 import displayComponents from './display.vue';
 type ColSpanType = number | string;
@@ -80,6 +80,13 @@ interface FormItem {
      * @memberof FormItem
      */
     span?: SpanType;
+    /**
+     * 注入 组件
+     *
+     * @type {({ [key: string]: Component<any, any, any, any> | AsyncComponent<any, any, any, any> })}
+     * @memberof FormItem
+     */
+    components?: { [key: string]: Component<any, any, any, any> | AsyncComponent<any, any, any, any> };
     /**
      * 表单组件
      *
@@ -163,10 +170,10 @@ export function createFormItem({ entities }: { entities: any }) {
         if (lodash.isObject(label)) {
             label = lodash.get(label, globalConfig.settings.language);
         }
-        return Vue.component(key, {
-            components: {
+        return {
+            components: lodash.merge({
                 display: displayComponents
-            },
+            }, item.components),
             props: ['options', 'display', 'disabled', 'decoratorOptions'],
             template: `
             <a-col
@@ -244,7 +251,8 @@ export function createFormItem({ entities }: { entities: any }) {
                     return lodash.hasIn(this, 'display') ? this.display : false;
                 },
             },
-        })
+        }
+        // Vue.component(key, )
     })
     // 转换 Entity.ITCode ---->  Entity-ITCode //entityItCode
     return lodash.mapKeys(entities, (value, key) => {
