@@ -1,7 +1,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { listToString, exportXlsx } from "@/util/string";
 import { createBlob } from "@/util/files";
-import UploadBox from "@/components/common/upload/index.vue";
+import UploadBox from "@/components/page/upload/index.vue";
 import { Action } from "vuex-class";
 
 /**

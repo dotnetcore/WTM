@@ -107,9 +107,9 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import formMixin from "@/util/mixin/form-mixin";
+import formMixin from "@/vue-custom/mixin/form-mixin";
 import { sexList } from "@/config/entity";
-import uploadImg from "@/components/form/upload-img.vue";
+import uploadImg from "@/components/page/upload-img.vue";
 // 表单结构
 const defaultFormData = {
     // 表单名称

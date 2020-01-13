@@ -44,14 +44,14 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import baseMixin from "@/util/mixin/base";
-import mixinFunc from "@/util/mixin/search";
-import actionMixin from "@/util/mixin/action-mixin";
+import baseMixin from "@/vue-custom/mixin/base";
+import mixinFunc from "@/vue-custom/mixin/search";
+import actionMixin from "@/vue-custom/mixin/action-mixin";
 import store from "@/store/system/dataprivilege";
-import FuzzySearch from "@/components/tables/fuzzy-search.vue";
-import TableBox from "@/components/tables/table-box.vue";
-import ButBox from "@/components/tables/but-box.vue";
-import DialogBox from "@/components/common/dialog/dialog-box.vue";
+import FuzzySearch from "@/components/page/fuzzy-search.vue";
+import TableBox from "@/components/page/table-box.vue";
+import ButBox from "@/components/page/but-box.vue";
+import DialogBox from "@/components/page/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
 // 查询参数
 const defaultSearchData = {

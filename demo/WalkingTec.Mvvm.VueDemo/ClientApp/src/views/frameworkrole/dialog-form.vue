@@ -30,7 +30,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import mixinDialogForm from "@/util/mixin/form-mixin";
+import mixinDialogForm from "@/vue-custom/mixin/form-mixin";
 import { sexList } from "@/config/entity";
 // 表单结构
 const defaultFormData = {

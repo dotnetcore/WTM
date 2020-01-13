@@ -38,14 +38,14 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import baseMixin from "@/util/mixin/base";
-import searchMixin from "@/util/mixin/search";
-import actionMixin from "@/util/mixin/action-mixin";
-import FuzzySearch from "@/components/tables/fuzzy-search.vue";
-import TableBox from "@/components/tables/table-box.vue";
-import ButBox from "@/components/tables/but-box.vue";
-import DialogBox from "@/components/common/dialog/dialog-box.vue";
-import UploadBox from "@/components/common/upload/index.vue";
+import baseMixin from "@/vue-custom/mixin/base";
+import searchMixin from "@/vue-custom/mixin/search";
+import actionMixin from "@/vue-custom/mixin/action-mixin";
+import FuzzySearch from "@/components/page/fuzzy-search.vue";
+import TableBox from "@/components/page/table-box.vue";
+import ButBox from "@/components/page/but-box.vue";
+import DialogBox from "@/components/page/dialog/dialog-box.vue";
+import UploadBox from "@/components/page/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
 import store from "@/store/system/frameworkrole";
