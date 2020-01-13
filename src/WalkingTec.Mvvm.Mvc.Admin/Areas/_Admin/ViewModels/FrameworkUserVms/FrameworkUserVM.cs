@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -12,12 +13,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
     {
         [JsonIgnore]
         public List<ComboSelectListItem> AllRoles { get; set; }
-        [Display(Name = "角色")]
+        [Display(Name = "Role")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
         [JsonIgnore]
         public List<ComboSelectListItem> AllGroups { get; set; }
-        [Display(Name = "用户组")]
+        [Display(Name = "Group")]
         public List<Guid> SelectedGroupIDs { get; set; }
 
 
@@ -57,10 +58,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
         }
 
-        public override void DoAdd()
+        public override async Task DoAddAsync()
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
+                Entity.UserRoles = new List<FrameworkUserRole>();
+                Entity.UserGroups = new List<FrameworkUserGroup>();
                 if (SelectedRolesIDs != null)
                 {
                     foreach (var roleid in SelectedRolesIDs)
@@ -78,37 +81,32 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             }
             Entity.IsValid = true;
             Entity.Password = Utils.GetMD5String(Entity.Password);
-            base.DoAdd();
+            await base.DoAddAsync();
         }
 
-        public override void DoEdit(bool updateAllFields = false)
+        public override async Task DoEditAsync(bool updateAllFields = false)
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                if (SelectedRolesIDs == null || SelectedRolesIDs.Count == 0)
+                Entity.UserRoles = new List<FrameworkUserRole>();
+                Entity.UserGroups = new List<FrameworkUserGroup>();
+                if (SelectedRolesIDs != null)
                 {
-                    FC.Add("Entity.SelectedRolesIDs.DONOTUSECLEAR", "true");
-                }
-                else
-                {
-                    Entity.UserRoles = new List<FrameworkUserRole>();
                     SelectedRolesIDs.ForEach(x => Entity.UserRoles.Add(new FrameworkUserRole { ID = Guid.NewGuid(), UserId = Entity.ID, RoleId = x }));
                 }
-                if (SelectedGroupIDs == null || SelectedGroupIDs.Count == 0)
-                {
-                    FC.Add("Entity.SelectedGroupIDs.DONOTUSECLEAR", "true");
-                }
-                else
+                if (SelectedGroupIDs != null)
                 {
                     SelectedGroupIDs.ForEach(x => Entity.UserGroups.Add(new FrameworkUserGroup { ID = Guid.NewGuid(), UserId = Entity.ID, GroupId = x }));
                 }
             }
-            base.DoEdit(updateAllFields);
+            await base.DoEditAsync(updateAllFields);
+            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
         }
 
-        public override void DoDelete()
+        public override async Task DoDeleteAsync()
         {
-            base.DoDelete();
+            await base.DoDeleteAsync();
+            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
         }
 
         public void ChangePassword()

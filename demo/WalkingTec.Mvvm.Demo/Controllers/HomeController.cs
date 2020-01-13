@@ -1,8 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
 
@@ -14,12 +22,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult Index()
         {
             ViewData["title"] = "WTM";
-            var vm = CreateVM<IndexVM>();
-            vm.AllMenu = FFMenus;
-            return View(vm);
+            return View();
         }
 
-        [Public]
+        [AllowAnonymous]
         public IActionResult PIndex()
         {
             return View();
@@ -48,11 +54,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 });
             }
 
-            var otherLegend = new List<string>() { "legendName" };
+            var otherLegend = new List<string>() { "相关信息" };
             var otherSeries = new List<object>()
             {
                 new {
-                    name = "legendName",
+                    name = "相关信息",
                     type = "bar",
                     data = new int[] {
                         GlobaInfo.AllModels.Count(),
@@ -78,6 +84,27 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             ViewData["debug"] = ConfigInfo.IsQuickDebug;
             return PartialView();
+        }
+
+        [AllRights]
+        public IActionResult UserInfo()
+        {
+            if (HttpContext.Request.Cookies.TryGetValue(CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName, out string cookieValue))
+            {
+                var protectedData = Base64UrlTextEncoder.Decode(cookieValue);
+                var dataProtectionProvider = HttpContext.RequestServices.GetRequiredService<IDataProtectionProvider>();
+                var _dataProtector = dataProtectionProvider
+                                        .CreateProtector(
+                                            "Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationMiddleware",
+                                            CookieAuthenticationDefaults.AuthenticationScheme,
+                                            "v2");
+                var unprotectedData = _dataProtector.Unprotect(protectedData);
+
+                string cookieData = Encoding.UTF8.GetString(unprotectedData);
+                return Json(cookieData);
+            }
+            else
+                return Json("无数据");
         }
 
     }

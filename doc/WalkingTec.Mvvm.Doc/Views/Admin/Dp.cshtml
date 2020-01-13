@@ -1,5 +1,5 @@
 <wt:fieldset field-set-style="Simple" title="数据权限-模块截图">
-    <img width="1200" height="600" src="~/imgs/admin-dataprivilege.png" />
+    <img src="~/imgs/admin-dataprivilege.png" />
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="数据权限-功能介绍">
     数据权限从名字来看，很容易理解，即具有查看和操作某些数据的权限。
@@ -11,12 +11,13 @@
         </wt:quote>
         <wt:code>
 public static IWebHost BuildWebHost(string[] args) =&gt;
-    WebHost.CreateDefaultBuilder(args)
+    WebHost
+    .CreateDefaultBuilder(args)
     .ConfigureServices(x =&gt;
     {
         List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
         pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
-        x.AddFrameworkService(dataPrivilegeSettings: pris);
+        x.AddFrameworkService( dataPrivilegeSettings: pris);
         x.AddLayui();
     })
     .Configure(x =&gt;
@@ -28,15 +29,15 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
         配置如下代码：
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
-x.AddFrameworkService(dataPrivilegeSettings: pris);
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校", m =&gt; m.Name));
+x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>当数据权限有多个的时候，继续在此添加即可，例如：</p>
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校权限", m =&gt; m.Name));
-pris.Add(new DataPrivilegeInfo&lt;Major&gt;("专业权限", m =&gt; m.Name));
-x.AddFrameworkService(dataPrivilegeSettings: pris);
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "专业权限", m =&gt; m.Name));
+x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>
         通过上述配置后，系统可以知道有哪些数据权限。在新建数据权限过程中，"数据权限"字段的下拉列表中，会显示出配置的数据权限的内容。<br />
@@ -52,15 +53,15 @@ x.AddFrameworkService(dataPrivilegeSettings: pris);
       <br /><br />
 
         <li>使用数据权限</li>
-        假设你有一个员工表通过SchoolID关联了学校，在查询的数据列表通过DPWhere(LoginUserInfo.DataPrivileges,x=>x.SchoolID)就可以根据当前登陆用户所配置的数据权限过滤数据
+        假设你有一个员工表通过SchoolID关联了学校，在查询的数据列表通过DPWhere( LoginUserInfo.DataPrivileges, x=>x.SchoolID)就可以根据当前登陆用户所配置的数据权限过滤数据
         <wt:code>
 public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
 {
     var query = DC.Set&lt;Employee&gt;()
-        .CheckEqual(Searcher.CompanyID, x=&gt;x.CompanyID)
-        .CheckContain(Searcher.Name, x=&gt;x.Name)
-        .CheckEqual(Searcher.Sex, x=&gt;x.Sex)
-        .DPWhere(LoginUserInfo.DataPrivileges,x=&gt;x.SchoolID)
+        .CheckEqual( Searcher.CompanyID, x=&gt;x.CompanyID)
+        .CheckContain( Searcher.Name, x=&gt;x.Name)
+        .CheckEqual( Searcher.Sex, x=&gt;x.Sex)
+        .DPWhere( LoginUserInfo.DataPrivileges, x=&gt;x.SchoolID)
         .Select(x =&gt; new Employee_View
         {
             ID = x.ID,

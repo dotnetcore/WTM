@@ -19,6 +19,18 @@ export interface ILoadingDataProps {
     dataSource?: any;
     linkage?: string[];
     renderItem?: (items) => React.ReactNode;
+
+    mapKey?: string;
+    /**
+     * 值转换
+     * @memberof IValueFormatterOptions
+     */
+    valueFormatter?: (value) => any;
+    /**
+     * 值解析
+     * @memberof IValueFormatterOptions
+     */
+    valueAnalysis?: (value) => any;
     [key: string]: any;
 }
 /**
@@ -51,18 +63,51 @@ export function DesLoadingData(options: ILoadingDataOptions = {}) {
                     if (this.props.display) {
                         // 多选的
                         if (lodash.isArray(this.props.value)) {
-                            return this.props.value.map(value => {
-                                const data = lodash.find(this.state.dataSource, ['key', value])
+                            let { value } = this.props;
+                            if (this.props.mapKey) {
+                                value = this.props.valueAnalysis ? this.props.valueAnalysis(value) : lodash.map(value, this.props.mapKey);
+                            }
+                            return value.map(val => {
+                                const data = lodash.find(this.state.dataSource, ['key', val])
                                 return data && <Tag color="geekblue" key={data.key}>{data.title}</Tag>
                             })
                         }
                         return <span>{lodash.get(lodash.find(this.state.dataSource, ["key", this.props.value]), "title")}</span>
                     }
+                    // mapKey 数据转换
+                    if (this.props.mapKey) {
+                        const node = super.render();
+                        let props = {
+                            value: this.props.value,
+                            onChange: (value, ...ags) => {
+                                if (this.props.valueFormatter) {
+                                    value = this.props.valueFormatter(value);
+                                } else if (lodash.isArray(value)) {
+                                    value = value.map(val => {
+                                        if (lodash.isString(val)) {
+                                            val = {
+                                                [this.props.mapKey]: val
+                                            }
+                                        }
+                                        return val
+                                    })
+                                }
+                                this.props.onChange(value, ags);
+                            }
+                        };
+                        if (props.value && lodash.isArray(props.value)) {
+                            props.value = this.props.valueAnalysis ? this.props.valueAnalysis(props.value) : lodash.map(props.value, this.props.mapKey);
+                        }
+                        if (lodash.has(node, 'props.targetKeys')) {
+                            lodash.set(props, 'targetKeys', props.value)
+                        }
+                        return React.cloneElement(node as JSX.Element, props)
+                    }
                     return super.render();
                 }
                 return (
                     <Spin spinning={this.state.spinning} indicator={<Icon type="loading" spin />}>
-                        {super.render()}
+                        <div>loading...</div>
                     </Spin>
                 );
             }

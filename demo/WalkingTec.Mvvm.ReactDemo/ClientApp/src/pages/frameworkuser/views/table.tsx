@@ -1,32 +1,52 @@
-﻿
+
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
+import { mergeLocales } from 'locale';
 import React from 'react';
 import Store from '../store';
 import Action from './action';
-
+mergeLocales({
+    "zh-CN": {
+        'frameworkuser.ITCode': '账号',
+        'frameworkuser.Name': '姓名',
+        'frameworkuser.Sex': '性别',
+        'frameworkuser.PhotoId': '照片',
+        'frameworkuser.IsValid': '是否有效',
+        'frameworkuser.RoleName_view': '角色',
+        'frameworkuser.GroupName_view': '用户组',
+    },
+    "en-US": {
+        'frameworkuser.ITCode': 'Account',
+        'frameworkuser.Name': 'Name',
+        'frameworkuser.Sex': 'Gender',
+        'frameworkuser.PhotoId': 'Photo',
+        'frameworkuser.IsValid': 'IsValid',
+        'frameworkuser.RoleName_view': 'RoleName',
+        'frameworkuser.GroupName_view': 'GroupName',
+    }
+});
 // 列配置
 const columnDefs: (ColDef | ColGroupDef)[] = [
     {
-        headerName: "账号", field: "ITCode",
+        headerName: "frameworkuser.ITCode", field: "ITCode",
     },
     {
-        headerName: "姓名", field: "Name",
+        headerName: "frameworkuser.Name", field: "Name",
     },
     {
-        headerName: "性别", field: "Sex",
+        headerName: "frameworkuser.Sex", field: "Sex",
     },
     {
-        headerName: "照片", field: "PhotoId", cellRenderer: "columnsRenderImg"
+        headerName: "frameworkuser.PhotoId", field: "PhotoId", cellRenderer: "columnsRenderImg", minWidth: 130
     },
     {
-        headerName: "是否有效", field: "IsValid", cellRenderer: "columnsRenderBoolean"
+        headerName: "frameworkuser.IsValid", field: "IsValid", cellRenderer: "columnsRenderBoolean"
     },
     {
-        headerName: "角色", field: "RoleName_view",
+        headerName: "frameworkuser.RoleName_view", field: "RoleName_view",
     },
     {
-        headerName: "用户组", field: "GroupName_view",
+        headerName: "frameworkuser.GroupName_view", field: "GroupName_view",
     },
 ]
 /**

@@ -1,0 +1,70 @@
+@model $vmns$.HomeVMs.LoginVM
+
+
+@{
+  Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/jquery.min.js"></script>
+  <link rel="stylesheet" href="~/sitecss/logincss.css">
+  <title>WTM</title>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+      $("input[name='VerifyCode']").attr('autocomplete', 'off');
+    });
+    function verify() {
+      $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
+    }
+
+  </script>
+</head>
+
+<body class="loginBody">
+  <div class="loginDiv">
+    <h4>
+      <img src="~/images/logo.png" width="80"/>
+      <img src="~/images/slogen.png" />
+    </h4>
+    <form action="/Login/Login" method="post">
+    <input type="hidden" name="Redirect" value="@Model.Redirect">
+      <ul class="loginForm">
+        <li>
+          <i><img src="~/images/icon-login04.png" /></i>
+          <input type="text" name="ITCode" placeholder="请输入用户名" class="login-input" autocomplete="off" value="@Model.ITCode">
+        </li>
+        <li>
+          <i style="width: 16px;"><img src="~/images/icon-login01.png" /></i>
+          <input type="password" name="Password" placeholder="请输入密码" class="login-input" value="@Model.Password">
+        </li>
+        <li>
+          <i><img src="~/images/icon-login03.png" /></i>
+          <input type="text" name="VerifyCode" placeholder="请输入验证码" class="login-input">
+          <p class="login-code">
+          </p>
+          <img class="login-codeImg" id="verify_code_img">
+          <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()" /></i>
+        </li>
+        <li style="text-align:right;vertical-align:text-top">
+          <input type="checkbox" name="RememberLogin" value="true" @(Model.RememberLogin?"checked":"")>
+          <span style="font-size:14px; margin-left:5px;">记住我</span>
+        </li>
+
+        <li>
+          <span class="login-error">@Model.MSD.GetFirstError()</span>
+          <button type="submit" class="login-button" style="cursor:pointer">登 录</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+
+
+</body>
+
+</html>

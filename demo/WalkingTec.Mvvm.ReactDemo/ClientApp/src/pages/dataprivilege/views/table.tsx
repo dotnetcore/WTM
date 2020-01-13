@@ -1,19 +1,31 @@
-﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
+import { mergeLocales } from 'locale';
 import React from 'react';
 import Store from '../store';
 import Action from './action';
-
+mergeLocales({
+    "zh-CN": {
+        'dataprivilege.Name': '授权对象',
+        'dataprivilege.TableName': '权限名称',
+        'dataprivilege.RelateIDs': '权限',
+    },
+    "en-US": {
+        'dataprivilege.Name': 'Name',
+        'dataprivilege.TableName': 'TableName',
+        'dataprivilege.RelateIDs': 'Privileges',
+    }
+});
 // 列配置
 const columnDefs: (ColDef | ColGroupDef)[] = [
     {
-        headerName: "授权对象", field: "Name"
+        headerName: "dataprivilege.Name", field: "Name"
     },
     {
-        headerName: "权限名称", field: "TableName",
+        headerName: "dataprivilege.TableName", field: "TableName",
     },
     {
-        headerName: "权限", field: "RelateIDs",
+        headerName: "dataprivilege.RelateIDs", field: "RelateIDs",
     },
 ]
 /**

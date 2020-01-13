@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "ParentId": null,
     "Id": "401f84d3-5a77-4b30-92c4-9c723ed2934",
@@ -64,5 +64,29 @@
     "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
     "Text": "菜单管理",
     "Url": "/frameworkmenu"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "a975f408-043e-41d6-bbb5",
+    "Text": "三级",
+    "Url": "/_test"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5",
+    "Id": "a975f408-043e-41d6-bbb5-2",
+    "Text": "三级测试",
+    "Url": "/_test2"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5",
+    "Id": "a975f408-043e-41d6-bbb5-3",
+    "Text": "四级",
+    "Url": "/_test"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5-3",
+    "Id": "a975f408-043e-41d6-bbb5-33",
+    "Text": "四级测试",
+    "Url": "/_test3"
   }
 ]

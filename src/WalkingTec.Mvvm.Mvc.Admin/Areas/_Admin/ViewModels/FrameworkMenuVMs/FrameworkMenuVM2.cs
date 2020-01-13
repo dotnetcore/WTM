@@ -14,13 +14,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     public class FrameworkMenuVM2 : BaseCRUDVM<FrameworkMenu>
     {
 
-        [Display(Name = "动作")]
+        [Display(Name = "Action")]
         public List<string> SelectedActionIDs { get; set; }
 
-        [Display(Name = "模块")]
+        [Display(Name = "Module")]
         public string SelectedModule { get; set; }
 
-        [Display(Name = "允许角色")]
+        [Display(Name = "AllowedRole")]
         public List<Guid> SelectedRolesIDs { get; set; }
 
 
@@ -40,8 +40,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             if (Entity.Url != null && Entity.IsInside == true)
             {
-                SelectedModule = modules.Where(x => x.IsApi == true && x.ClassName == Entity.ClassName).FirstOrDefault().ClassName;
-                var urls = modules.Where(x => x.ClassName == SelectedModule && x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
+                SelectedModule = modules.Where(x => x.IsApi == true && x.FullName == Entity.ClassName).FirstOrDefault().FullName;
+                var urls = modules.Where(x => x.FullName == SelectedModule && x.IsApi == true).SelectMany(x => x.Actions).Where(x => x.IgnorePrivillege == false).Select(x => x.Url).ToList();
                 SelectedActionIDs = DC.Set<FrameworkMenu>().Where(x => urls.Contains(x.Url) && x.IsInside == true && x.FolderOnly == false).Select(x => x.MethodName).ToList();
             }
         }
@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
-                    MSD.AddModelError(" error", "该模块已经配置过了");
+                    MSD.AddModelError(" error", Program._localizer["ModuleHasSet"]);
                 }
             }
             base.Validate();
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     if (Entity.DomainId == null)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.StartsWith("@") == false)
+                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false && Entity.Url.StartsWith("@") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
 
@@ -94,21 +94,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
                     var ndc = DC.ReCreate();
-                    var oldIDs = ndc.Set<FrameworkMenu>().Where(x => x.ParentId == Entity.ID).Select(x => x.ID).ToList();
-                    foreach (var oldid in oldIDs)
-                    {
-                        try
-                        {
-                            FrameworkMenu fp = new FrameworkMenu { ID = oldid };
-                            ndc.Set<FrameworkMenu>().Attach(fp);
-                            ndc.DeleteEntity(fp);
-                        }
-                        catch { }
-                    }
-                    ndc.SaveChanges();
-                    var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
+                    var actionsInDB = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.ParentId == Entity.ID).ToList();
+                    var mo = modules.Where(x => x.FullName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.ModuleName = mo.ModuleName;
-                    Entity.ClassName = mo.ClassName;
+                    Entity.ClassName = mo.FullName;
                     Entity.MethodName = null;
 
                     var otherActions = mo.Actions;
@@ -118,6 +107,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     {
                         if (SelectedActionIDs != null && SelectedActionIDs.Contains(action.MethodName))
                         {
+                            Guid aid = action.ID;
+                            var adb = actionsInDB.Where(x => x.Url.ToLower() == action.Url.ToLower()).FirstOrDefault();
+                            if (adb != null)
+                            {
+                                aid = adb.ID;
+                            }
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -133,8 +128,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
                             menu.Url = action.Url;
-                            menu.ClassName = action.Module.ClassName;
+                            menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;
+                            menu.ID = aid;
                             Entity.Children.Add(menu);
                         }
                     }
@@ -164,7 +160,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     if (Entity.DomainId == null)
                     {
-                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.StartsWith("@") == false)
+                        if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false && Entity.Url.StartsWith("@") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
@@ -183,16 +179,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == true && Entity.FolderOnly == false)
                 {
-                    MSD.AddModelError("SelectedModule", "请选择一个模块");
+                    MSD.AddModelError("SelectedModule", Program._localizer["SelectModule"]);
                     return;
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-                    var mo = modules.Where(x => x.ClassName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
+                    var mo = modules.Where(x => x.FullName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.ModuleName = mo.ModuleName;
-                    Entity.ClassName = mo.ClassName;
+                    Entity.ClassName = mo.FullName;
                     Entity.MethodName = null;
 
                     var otherActions = mo.Actions;
@@ -217,7 +213,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionName;
                             menu.Url = action.Url;
-                            menu.ClassName = action.Module.ClassName;
+                            menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;
                             Entity.Children.Add(menu);
                         }

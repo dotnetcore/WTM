@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public StudentVM()
         {
             MajorList = new MajorListVM();
+            MajorList.CopyContext(this);
             SetInclude(x => x.StudentMajor);
         }
 
@@ -29,6 +30,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         public override void DoAdd()
         {
+            Entity.StudentMajor = new List<StudentMajor>();
             if (SelectedMajorIds != null)
             {
                 foreach (var majorid in SelectedMajorIds)

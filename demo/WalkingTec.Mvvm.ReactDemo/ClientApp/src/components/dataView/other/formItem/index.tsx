@@ -1,13 +1,6 @@
-/**
- * @author 冷 (https://github.com/LengYXin)
- * @email lengyingxin8966@gmail.com
- * @create date 2019-02-24 17:06:20
- * @modify date 2019-02-24 17:06:20
- * @desc [description]
- */
+
 import { Icon, Input, Switch } from 'antd';
 import Form, { GetFieldDecoratorOptions, WrappedFormUtils } from 'antd/lib/form/Form';
-import { FormItemProps } from 'antd/lib/form/FormItem';
 import { ToImg } from 'components/dataView';
 import GlobalConfig from 'global.config'; //全局配置
 import lodash from 'lodash';
@@ -25,7 +18,7 @@ interface IFormItemProps {
     /** 模型 */
     models?: {
         [key: string]: {
-            label: string,
+            label: React.ReactNode,
             rules: any[],
             formItem: React.ReactNode
         };
@@ -94,39 +87,69 @@ export class FormItem extends React.Component<IFormItemProps, any> {
         }
         // 布局
         // let itemlayout = layout == "row" ? formItemLayoutRow : formItemLayout;//整行
-        let itemlayout = formItemLayout;
+        let itemlayout: any = formItemLayout;
         if (layout === "row") {
             itemlayout = {
                 labelCol: {
-                    span: labelSpan
+                    lg: labelSpan,
+                    md: labelSpan,
+                    sm: 24,
+                    xs: 24,
                 },
                 wrapperCol: {
-                    span: warppSpan
+                    lg: warppSpan,
+                    md: warppSpan,
+                    sm: 24,
+                    xs: 24,
                 },
             }
             // 富文本 分 2行
             if (lodash.get(model.formItem, "type.wtmType") === "Editor") {
                 itemlayout = {
                     labelCol: {
-                        span: labelSpan
+                        lg: labelSpan,
+                        md: labelSpan,
+                        sm: 24,
+                        xs: 24,
                     },
                     wrapperCol: {
-                        span: 24
+                        lg: 24,
+                        md: 24,
+                        sm: 24,
+                        xs: 24,
                     },
                 }
             }
         } else if (layout === "row-hidden-label") {
             itemlayout = {
                 labelCol: {
-                    span: 0
+                    span: 0,
                 },
                 wrapperCol: {
                     span: 24
                 },
             }
+        } else {
+            itemlayout = {
+                labelCol: {
+                    lg: formItemLayout.labelCol.span,
+                    md: formItemLayout.labelCol.span,
+                    sm: 24,
+                    xs: 24,
+                },
+                wrapperCol: {
+                    lg: formItemLayout.wrapperCol.span,
+                    md: formItemLayout.wrapperCol.span,
+                    sm: 24,
+                    xs: 24,
+                },
+            }
         }
         // console.log(models, renderItem)
-        return <Form.Item label={model.label} {...itemlayout}>
+        return <Form.Item
+            // label={GlobalConfig.language === "zh-CN" ? model.label : lodash.replace(fieId, 'Entity.', '')} 
+            label={model.label}
+            {...itemlayout}>
             {renderItem}
         </Form.Item >
     }

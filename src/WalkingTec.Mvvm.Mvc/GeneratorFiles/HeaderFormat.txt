@@ -1,5 +1,5 @@
-﻿
-        private List<ColumnFormatInfo> $field$Format($modelname$_View entity, object val)
+
+        private List<ColumnFormatInfo> $field$Format($classname$_View entity, object val)
         {
             return new List<ColumnFormatInfo>
             {

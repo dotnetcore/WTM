@@ -1,4 +1,4 @@
-﻿<p>BaseVM是WTM框架中的基础VM，框架中所有内置的VM都继承自它，同时框架要求开发者自定义的VM也都要继承它</p>
+<p>BaseVM是WTM框架中的基础VM，框架中所有内置的VM都继承自它，同时框架要求开发者自定义的VM也都要继承它</p>
 <br />
 <wt:quote>
     BaseVM提供了连接Controller与View之间的，让开发者编写逻辑的地方。如果需要对数据进行增删改查，导入导出等操作，请继承更具体的VM
@@ -21,14 +21,14 @@ using WalkingTec.Mvvm.Core;
 
 public class LoginVM : BaseVM{
 
-    [Display(Name = "账号")]
-    [Required(AllowEmptyStrings = false)]
+    [Display( Name = "账号")]
+    [Required( AllowEmptyStrings = false)]
     [StringLength(10)]
     public string Username { get; set; }
 
-    [Display(Name = "密码")]
-    [Required(AllowEmptyStrings = false)]
-    [StringLength(10,ErrorMessage ="{0}最多输入{1}个字符")]
+    [Display( Name = "密码")]
+    [Required( AllowEmptyStrings = false)]
+    [StringLength(10, ErrorMessage ="{0}最多输入{1}个字符")]
     public string Password { get; set; }
 
     public LoginUserInfo DoLogin()
@@ -124,13 +124,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         public override void Validate()
         {
             //检查原密码是否正确，如不正确则输出错误
-            if (DC.Set<FrameworkUserBase>().Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword)).SingleOrDefault() == null){
-                MSD.AddModelError("OldPassword", "当前密码错误");
+            if (DC.Set<FrameworkUserBase>()
+      .Where(x => x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword))
+      .SingleOrDefault() == null){
+                MSD.AddModelError( "OldPassword", "当前密码错误");
             }
             //检查两次新密码是否输入一致，如不一致则输出错误
-            if (NewPassword != NewPasswordComfirm)
+            if ( NewPassword != NewPasswordComfirm )
             {
-                MSD.AddModelError("NewPasswordComfirm", "两次新密码输入不一致");
+                MSD.AddModelError( "NewPasswordComfirm", "两次新密码输入不一致");
             }
         }
 

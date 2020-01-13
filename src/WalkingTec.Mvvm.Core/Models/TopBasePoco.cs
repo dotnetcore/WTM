@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -56,5 +57,17 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public long ExcelIndex { get; set; }
 
+        public object GetID()
+        {
+            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            var id = idpro.GetValue(this);
+            return id;
+        }
+
+        public Type GetIDType()
+        {
+            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            return idpro.PropertyType;
+        }
     }
 }

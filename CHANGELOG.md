@@ -1,6 +1,160 @@
 # 更新日志
 
+## v3.1.x
+
+3.1版本正式发布，支持.netcore 3.1，与2.4.x最新版本在功能上同步更新
+
+
+## v2.4.x
+
+v2.4.5 (2020-1-4)
+本次为累积更新，修复了一个月以来issue上提出的主要bug
+* **修改：**  修复了获取PersistPoco的下拉选项时，没有过滤IsVaild=false的问题
+* **修改：**  修复了弹出窗口在手机上显示不全的问题
+* **修改：**  修复了UEditor单图上传错误的问题
+* **修改：**  修复当搜索条件只有一个时，在搜索框中按回车键会出现异常页面的问题
+* **修改：**  修复了Transfer 穿梭框显示问题的问题
+* **修改：**  修复了在form表达外使用ImageTagHelper 会获得一个异常的问题
+* **修改：**  修复了textbox加了padding-text之后tab无法切换的问题
+* **修改：**  修复了selector display="true"时，显示错误的问题
+* **修改：**  修复了使用一些第三方控件导致view无法显示的问题
+* **修改：**  修复了代码生成器中点击关闭按钮报错的问题
+* **修改：**  修复了连续三级空菜单没有隐藏的问题
+* **修改：**  React模式系统自带管理模块加入了中英文多语言
+
+* **新增：**  upload控件增加了进度条，通过设置ShowProgress可以选择是否显示（鸣谢 ‘阿拉斯没有家’同学 https://github.com/buffonlwx）
+* **新增：**  ListVM中的GridAction中增加了下载类型的按钮
+* **新增：**  BaseController中的CreateDC方法现在可以使用连接字符串的key，而不需要写死整个连接字符串
+* **新增：**  BaseController中的CreateDC方法现在可以指定数据库类型
+* **新增：**  菜单维护时外部菜单可以使用/aaa/bbb的形式来指定一个内部地址，这样方便大家把一个具体方法配置到左侧菜单上
+
+### v2.4.3 / v3.0.4 (2019-12-8)
+
+* **新增：**  增加多附件上传控件，特别鸣谢‘草监牛寺’同学，参见文档 https://wtmdoc.walkingtec.cn/#/UI/UploadMulti
+* **修改：**  Appsettings文件中增加了IsOldSqlServer配置，对于使用sqlserver 2008以前的用户使用
+* **修改：**  修复某些模型生成单元测试时的bug
+* **修改：**  修复自定义ID的模型attach时可能失败的bug
+* **修改：**  修复主子表操作时没有判断PersistPoco的bug
+
+
+### v2.4.2 (2019-11-22)
+
+* **修改：**  修复Add-Migration报错的问题
+* **修改：**  修复刷新菜单无效的问题
+* **修改：**  修复无法添加多级菜单的问题
+* **修改：**  修复在导出时SearchMode仍然为Search的问题
+* **修改：**  修复权限控制无法识别中文url的问题
+
+### v2.4.1 (2019-11-16)
+
+* **修改：**  修复同时使用Cookie和jwt登陆时报错的bug（不建议混合两种模式）
+
+#### 前后端不分离模式
+* **修改：**  修复Combobox联动由于没有图表而报错的bug
+
+#### React前后端分离模式
+* **新增：**  多语言支持
+* **修改：**  修复菜单地址bug
+* **修改：**  修复菜单管理，数去权限管理页面问题
+
+### v2.4.0 (2019-11-5)
+本次更新为大版本更新，废弃了之前Session的模式，使用Jwt和cookie两种方式进行登陆认证。
+框架目前支持Cookie和Jwt两种模式，继承BaseController和BaseApiController的控制器将默认支持Cookie模式。
+已有使用session认证的代码不需要修改，用户使用过程中并不会感觉到变化。
+用户可以通过[AuthorizeCookie],[AuthorizeJwt],[AuthorizeJwtWithCookie]三种标签来指定Controller的验证方式。
+详情请参考https://wtmdoc.walkingtec.cn/#/Global/jwt
+系统增加了persistedgrants表来存储jwt持久化信息，另外菜单的默认数据也发生了改变，建议已有系统重新生成数据库或手动同步数据库
+
+* **新增：**  Jwt支持
+* **新增：**  Swagger jwt支持
+* **修改：**  修复多语言验证信息bug
+* **修改：**  菜单管理支持不同Area下同名Controller的配置
+
+
 ## v2.3.x
+
+### v2.3.9 (2019-10-19)
+
+* **新增：**  多语言支持。https://wtmdoc.walkingtec.cn/#/Global/MultiLanguages
+老版本升级后会遇到单元测试项目中MockController.cs文件报错，将报错的行替换为
+_controller.GlobaInfo.SetModuleGetFunc(() => new List\<FrameworkModule\>());
+即可。
+
+* **新增：**  dotnet 3.0支持，线上新建项目时可选择dotnetcore3.0版本的项目
+
+#### 前后端不分离模式
+* **新增：**  集成了UEditor。https://wtmdoc.walkingtec.cn/#/UI/UEditor
+* **新增：**  列表按钮现在可以设置Max属性，来控制打开窗体时最大化
+* **修改：**  现在View页面不再强制要求Model必须继承BaseVM
+* **修改：**  修改菜单无法删除的历史遗留bug
+
+### v2.3.6 (2019-9-27)
+
+* **新增：**  Debug模式下，debug窗口会输出ef执行的sql语句
+* **修改：**  移除EnableCors属性，集成dotnetcore自带的Cors实现跨域，并可在appsettings文件中进行配置
+
+#### 前后端不分离模式
+* **修改：**  代码生成器会为Controller生成独立的搜索和导出方法，方便对搜索和导出进行权限控制，之前公共方法仍然保留
+* **修改：**  修复IE11下的显示问题
+* **修改：**  修复PersistPoco导入时没有给IsValid赋值的问题
+* **修改：**  修复SearchPanel中显示树形列表的问题
+
+### v2.3.5 (2019-9-19)
+
+本次更新增加了自定主键功能，除了默认的guid主键外，框架现在还支持自增整形和string类型的主键。
+同时代码生成器也可以准确识别主键类型，生成对应的代码。
+具体使用方式参见文档 https://wtmdoc.walkingtec.cn/#/Model/CustomKey
+
+由于主键不一定是guid了，老项目更新的时候需要手动修改之前的文件，主要是两部分：
+1. Controller里 BatchEdit，BatchDelete中的ids参数由guid[] 变为 string[]
+2. batchvm中的CheckIfCanDelete方法，第一个参数由guid变为object
+3. 老数据库中DataPrivileges表RelatedId字段类型由Guid变为Nvarchar
+改起来还是比较简单的
+
+#### 前后端不分离模式
+* **修改：**  修复layui模式下三级菜单无法显示的bug
+* **修改：**  修复selector控件不能搜索，不初始化的bug
+
+#### React前后端分离模式
+* **新增：**  增加菜单对字体图标的支持
+* **修改：**  修复react模式下三级菜单无法显示的bug
+
+### v2.3.4 (2019-9-5)
+
+#### 前后端不分离模式
+* **新增：**  现在Layui模式可以直接用代码生成器生成api
+* **新增：**  现在Layui模式的菜单管理也可以配置api的权限，包括框架自带的api
+* **新增：**  新建layui项目时自动添加swagger的支持，可以查看api文档
+* **修改：**  修复grid排序时搜索条件不起作用的bug
+
+#### React前后端分离模式
+* **新增：**  新增Tab页关闭其他，关闭当前，关闭所有的功能
+
+### v2.3.3 (2019-9-3)
+
+* **新增：**  新增对Oracle的支持（鸣谢：hd2y）Oracle database version 18c is required.
+* **新增：**  新增对DC使用事务的支持（鸣谢：AaronLucas）
+* **修改：**  更新了默认数据的添加逻辑，现在使用EF的migration不会担心没有初始数据了
+* **修改：**  新生成的项目会在DataContext.cs中自动加入IDesignTimeDbContextFactory类，方便使用Migration
+
+#### 前后端不分离模式
+* **修改：**  现在首页默认不展开菜单
+* **修改：**  直接访问具体url可以准确定位左侧菜单
+* **修改：**  更新默认生成的Login单元测试
+* **修改：**  修复批量修改的一些bug
+* **修改：**  修复维护菜单会改变菜单id的bug
+
+#### React前后端分离模式
+* **修改：**  修复grid中分组之后排序的bug
+* **修改：**  修复grid中有时出现横向滚动条的bug
+* **修改：**  新登陆页面
+
+
+### v2.3.1 (2019-8-31)
+修复了2.3.0版本中的一些bug
+* **修改：**  修复菜单图标显示的问题
+* **修改：**  修复主子表修改报错的问题
+* **修改：**  修复Selector在IIS下无法显示的问题
 
 ### v2.3.0 (2019-8-30)
 
@@ -37,7 +191,7 @@
 #### 前后端不分离模式
 
 * **新增：** GridAction的按钮现在可以通过IsRedirect属性设置在当前页或者Tab页，或者新窗口中显示
-* **修改：** 修复layui普通checkbox样式问题 
+* **修改：** 修复layui普通checkbox样式问题
 * **修改：** 修复菜单添加报错的bug
 * **修改：** 修复多表头显示问题
 * **修改：** 修复GridAction中IconCls属性不起作用的问题

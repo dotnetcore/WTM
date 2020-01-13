@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -30,10 +30,15 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _schoolvm.MSD = new MockMSD();
             _majorvm.MSD = new MockMSD();
             _studentvm.MSD = new MockMSD();
-            
-            _schoolvm.Session.Set("UserInfo", new LoginUserInfo { ITCode = "schooluser" });
-            _majorvm.Session.Set("UserInfo", new LoginUserInfo { ITCode = "majoruser" });
-            _studentvm.Session.Set("UserInfo", new LoginUserInfo { ITCode = "studentuser" });
+
+            _schoolvm.LoginUserInfo = new LoginUserInfo { ITCode = "schooluser" };
+            _majorvm.LoginUserInfo = new LoginUserInfo { ITCode = "majoruser" };
+            _studentvm.LoginUserInfo = new LoginUserInfo { ITCode = "studentuser" };
+
+            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
+            mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
+            mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
+            GlobalServices.SetServiceProvider(mockService.Object);
         }
 
         [TestMethod]

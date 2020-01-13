@@ -7,6 +7,10 @@ declare module '*.gif'
 declare module '*.bmp'
 declare module '*.tiff'
 declare module '*.json'
+declare module "*.module.less" {
+    const classes: { [key: string]: string };
+    export default classes;
+}
 declare namespace WTM {
     /**
      * 动作
@@ -43,7 +47,7 @@ declare namespace WTM {
     }
     interface FormItem {
         [key: string]: {
-            label: string;
+            label: React.ReactNode;
             rules: ValidationRule[];
             formItem: React.ReactNode;
             /** 传递给 formItem 组件的 附加 props table 中有效  */

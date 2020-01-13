@@ -1,4 +1,4 @@
-﻿namespace WalkingTec.Mvvm.Core.ConfigOptions
+namespace WalkingTec.Mvvm.Core.ConfigOptions
 {
     /// <summary>
     /// DefaultConfigConsts
@@ -29,5 +29,10 @@
         /// 默认开启DateTime只读
         /// </summary>
         public const bool DEFAULT_DATETIME_DEFAULT_READONLY = true;
+
+        /// <summary>
+        /// 默认展开SearchPanel内容
+        /// </summary>
+        public const bool DEFAULT_SEARCHPANEL_DEFAULT_EXPAND = true;
     }
 }

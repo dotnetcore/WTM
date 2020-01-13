@@ -1,0 +1,15 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs.不要用中文模型名VM
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.不要" />
+<wt:textbox field="Entity.用" />
+<wt:datetime field="Entity.中文" />
+<wt:combobox field="Entity.模型名" />
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

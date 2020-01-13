@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -15,15 +15,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            this.Id = Guid.NewGuid().ToString().ToLower().Replace("-","");
+            this.Id = Guid.NewGuid().ToString("N").ToLower();
             output.TagName = "div";
             if (TabStyle == TabStyleEnum.Default)
             {
-                output.Attributes.SetAttribute("class", "layui-tab layui-tab-card");
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-card");
             }
             else
             {
-                output.Attributes.SetAttribute("class", "layui-tab layui-tab-brief");                
+                output.Attributes.SetAttribute("class", $"layui-tab layui-tab-brief");
             }
             if(AllowClose == true)
             {
@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", "layui-tab-content");
+            output.Attributes.SetAttribute("class", $"layui-tab-content");
             base.Process(context, output);
         }
     }
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            output.Attributes.SetAttribute("class", "layui-tab-item");
+            output.Attributes.SetAttribute("class", $"layui-tab-item");
             base.Process(context, output);
         }
     }

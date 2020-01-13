@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
     public enum ChartTypeEnum { Bar, Pie, Line }
 
-    [Obsolete("废弃，预计将在下个大版本中移除 wt:chart")]
+    [Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除 wt:chart")]
     [HtmlTargetElement("wt:chart", TagStructure = TagStructure.WithoutEndTag)]
     public class ChartTagHelper : BaseElementTag
     {
@@ -32,14 +32,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Chart
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            Id = "chart" + Guid.NewGuid().ToString().Replace("-", "");
+            Id = "chart" + Guid.NewGuid().ToString("N");
             output.TagName = "div";
             output.Attributes.Add("ischart", "1");
             output.TagMode = TagMode.StartTagAndEndTag;
             var cd = Field?.Model as List<ChartData>;
             if (cd == null)
             {
-                output.Content.SetContent("Field属性必须指定，且必须是List<ChartData>类型");
+                output.Content.SetContent("Field must be set, and has to be of type List<ChartData>");
                 return;
             }
 
