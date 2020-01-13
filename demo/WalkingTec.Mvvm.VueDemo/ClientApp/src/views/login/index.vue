@@ -13,7 +13,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { setCookie } from "@/util/cookie";
 import config from "@/config/index";
-import baseMixin from "@/util/mixin/base";
+import baseMixin from "@/vue-custom/mixin/base";
 
 @Component({
     mixins: [baseMixin]
@@ -26,12 +26,7 @@ export default class Login extends Vue {
     isloading: boolean = false;
     // 登陆
     @Action login;
-    mounted() {
-        // const url = "sdfsdf{id}";
-        // const body = { id: "00000" };
-        // const aaa = _.template(url, { interpolate: /{([\s\S]+?)}/g })(body);
-        // console.log("aaa", aaa);
-    }
+    mounted() {}
     onSubmit() {
         this.isloading = true;
         const params = {

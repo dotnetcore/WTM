@@ -30,7 +30,7 @@
 
 <script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
-import ExportExcel from "@/components/common/export/export-excel.vue";
+import ExportExcel from "@/components/page/export/export-excel.vue";
 import { butType } from "@/config/enum";
 @Component({
     components: {

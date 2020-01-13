@@ -53,7 +53,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import formMixin from "@/util/mixin/form-mixin";
+import formMixin from "@/vue-custom/mixin/form-mixin";
 // 表单结构
 const defaultFormData = {
     // 表单名称

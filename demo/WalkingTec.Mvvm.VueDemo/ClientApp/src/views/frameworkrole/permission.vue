@@ -36,7 +36,7 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import DialogBox from "@/components/common/dialog/dialog-box.vue";
+import DialogBox from "@/components/page/dialog/dialog-box.vue";
 
 // 表单结构
 const defaultFormData = {

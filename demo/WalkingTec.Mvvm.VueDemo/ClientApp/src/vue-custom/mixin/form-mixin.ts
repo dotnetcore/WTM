@@ -1,8 +1,8 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { dialogType } from "@/config/enum";
-import DialogFooter from "@/components/common/dialog/dialog-footer.vue";
-import EditBox from "@/components/common/edit-box.vue";
-import WtmFormItem from "@/components/form/wtm-form-item.vue";
+import DialogFooter from "@/components/page/dialog/dialog-footer.vue";
+import EditBox from "@/components/page/edit-box.vue";
+import WtmFormItem from "@/components/page/wtm-form-item.vue";
 
 /**
  * 弹出框（详情/编辑/创建）
