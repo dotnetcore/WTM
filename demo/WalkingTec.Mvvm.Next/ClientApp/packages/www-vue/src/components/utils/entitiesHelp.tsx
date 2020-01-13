@@ -51,6 +51,7 @@ type SpanType = {
 };
 declare type dataSource = any[] | Observable<any[]> | Promise<any[]>;
 declare type dataSourceFn = () => dataSource;
+declare type components = { [key: string]: Component<any, any, any, any> | AsyncComponent<any, any, any, any> };
 interface FormItem {
     /**
      * 显示 标签 文字
@@ -86,7 +87,7 @@ interface FormItem {
      * @type {({ [key: string]: Component<any, any, any, any> | AsyncComponent<any, any, any, any> })}
      * @memberof FormItem
      */
-    components?: { [key: string]: Component<any, any, any, any> | AsyncComponent<any, any, any, any> };
+    components?: components;
     /**
      * 表单组件
      *
@@ -159,7 +160,7 @@ export function renderFormItem({ entities, form, initialValues, ColProps }: Rend
  * Entity.ITCode ---->  Entity-ITCode //entityItCode
  * @param param0 
  */
-export function createFormItem({ entities }: { entities: any }) {
+export function createFormItem({ entities }: { entities: any }): components {
     entities = lodash.mapValues(entities, (item: FormItem, key) => {
         // const options = JSON.stringify(item.options).replace(/"/g, "'");
         // const children = lodash.replace(item.children, 'v-decorator', `v-decorator="['${key}',${options}]"`)
