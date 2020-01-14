@@ -33,7 +33,10 @@ const stoBase = {
             return { obj: {} };
         }
     },
-    // store > mutations
+    /**
+     *  store > mutations
+     *  返回数据，优先使用Entity，如果类型不一样，自定义mutations
+     */
     mutationsDef: stateKey => {
         return (state, data) => {
             // 接口返回数据结构 如果:{data: {}}

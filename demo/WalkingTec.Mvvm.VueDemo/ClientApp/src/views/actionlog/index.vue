@@ -45,9 +45,6 @@ import { Action, State } from "vuex-class";
 import baseMixin from "@/vue-custom/mixin/base";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
-import FuzzySearch from "@/components/page/fuzzy-search.vue";
-import TableBox from "@/components/page/table-box.vue";
-import ButBox from "@/components/page/but-box.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
 // 查询参数, table列 ★★★★★
@@ -57,10 +54,7 @@ import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
     mixins: [baseMixin, searchMixin(SEARCH_DATA), actionMixin],
     store,
     components: {
-        FuzzySearch,
-        TableBox,
-        DialogForm,
-        ButBox
+        DialogForm
     }
 })
 export default class Index extends Vue {

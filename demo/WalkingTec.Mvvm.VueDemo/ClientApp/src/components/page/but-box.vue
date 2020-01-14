@@ -48,15 +48,9 @@ import { butType } from "@/config/enum";
     }
 })
 export default class ButBox extends Vue {
-    @Prop({
-        type: Array,
-        default: () => Object.keys(butType)
-    })
+    @Prop({ type: Array, default: () => Object.keys(butType) })
     assembly;
-    @Prop({
-        type: Array,
-        default: []
-    })
+    @Prop({ type: Array, default: [] })
     selectedData;
     @Prop({
         type: Object,

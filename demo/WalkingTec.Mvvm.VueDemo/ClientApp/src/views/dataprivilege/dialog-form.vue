@@ -79,9 +79,6 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action add;
-    @Action edit;
-    @Action detail;
     // 用户组
     groups = [];
     // 是否列表

@@ -30,8 +30,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import mixinDialogForm from "@/vue-custom/mixin/form-mixin";
-import { sexList } from "@/config/entity";
+import formMixin from "@/vue-custom/mixin/form-mixin";
 // 表单结构
 const defaultFormData = {
     // 表单名称
@@ -47,26 +46,12 @@ const defaultFormData = {
     }
 };
 
-@Component({ mixins: [mixinDialogForm(defaultFormData)] })
+@Component({ mixins: [formMixin(defaultFormData)] })
 export default class extends Vue {
-    @Action add;
-    @Action edit;
-    @Action detail;
     @Action getFrameworkRoles;
     @Action getFrameworkGroups;
-    @State
-    getFrameworkRolesData;
-    @State
-    getFrameworkGroupsData;
-    // 用户组
-    groups = [];
-    sexList = sexList;
-
-    testerror = "error";
-    // ★★
-    filterMethod = (query, item) => {
-        return item.label.indexOf(query) > -1;
-    };
+    @State getFrameworkRolesData;
+    @State getFrameworkGroupsData;
     // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
@@ -93,76 +78,6 @@ export default class extends Vue {
         } else {
             return {};
         }
-    }
-    /**
-     * 打开详情 ★★★★★
-     */
-    onGetFormData() {
-        if (!this["dialogData"]) {
-            console.log(this["dialogData"]);
-            console.error("dialogData 没有id数据");
-        }
-        if (this["status"] !== this["dialogType"].add) {
-            const parameters = { ID: this["dialogData"].ID };
-            this["detail"](parameters).then(res => {
-                this["setFormData"](res);
-            });
-        } else {
-            this["onReset"]();
-        }
-    }
-    /**
-     * 提交 ★★★★★
-     */
-    onSubmitForm() {
-        this.$refs[this["refName"]].validate(valid => {
-            if (valid) {
-                if (this["status"] === this["dialogType"].add) {
-                    this.onAdd();
-                } else if (this["status"] === this["dialogType"].edit) {
-                    this.onEdit();
-                }
-            }
-        });
-    }
-    /**
-     * 添加 ★★★★★
-     */
-    onAdd(delID: string = "ID") {
-        const parameters = _.cloneDeep(this["formData"]);
-        if (parameters.Entity) {
-            delete parameters.Entity[delID];
-        }
-        this["add"](parameters)
-            .then(res => {
-                this["$notify"]({
-                    title: "添加成功",
-                    type: "success"
-                });
-                this["onClose"]();
-                this.$emit("onSearch");
-            })
-            .catch(error => {
-                this["showResponseValidate"](error.response.data.Form);
-            });
-    }
-    /**
-     * 编辑 ★★★★★
-     */
-    onEdit() {
-        const parameters = _.cloneDeep(this["formData"]);
-        this["edit"](parameters)
-            .then(res => {
-                this["$notify"]({
-                    title: "修改成功",
-                    type: "success"
-                });
-                this["onClose"]();
-                this.$emit("onSearch");
-            })
-            .catch(error => {
-                this["showResponseValidate"](error.response.data.Form);
-            });
     }
 }
 </script>

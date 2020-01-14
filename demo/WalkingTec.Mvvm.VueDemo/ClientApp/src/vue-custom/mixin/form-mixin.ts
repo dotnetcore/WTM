@@ -3,6 +3,7 @@ import { dialogType } from "@/config/enum";
 import DialogFooter from "@/components/page/dialog/dialog-footer.vue";
 import EditBox from "@/components/page/edit-box.vue";
 import WtmFormItem from "@/components/page/wtm-form-item.vue";
+import { Action } from "vuex-class";
 
 /**
  * 弹出框（详情/编辑/创建）
@@ -27,7 +28,11 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         components: { DialogFooter, EditBox, WtmFormItem }
     })
     class formMixins extends Vue {
-        @Prop({ type: Object, default: {} })
+        @Action("add") add; // 添加 》store
+        @Action("edit") edit; // 修改 》store
+        @Action("detail") detail; // 详情 》store
+
+        @Prop({ type: Object, default: () => {} })
         dialogData; // 表单传入数据
         @Prop({ type: String, default: "" })
         status; // 表单类型
@@ -73,8 +78,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                     this.formData[key] = params[key];
                 }
             });
-            console.log("---------------------------------------------");
-            console.log(this.formData, defaultFormData.formData, params);
         }
 
         /**
@@ -143,7 +146,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                         title: "添加成功",
                         type: "success"
                     });
-                    this["onClear"]();
+                    this.onClose();
                     this.$emit("onSearch");
                 })
                 .catch(error => {
@@ -164,7 +167,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
                         title: "修改成功",
                         type: "success"
                     });
-                    this["onClear"]();
+                    this.onClose();
                     this.$emit("onSearch");
                 })
                 .catch(error => {

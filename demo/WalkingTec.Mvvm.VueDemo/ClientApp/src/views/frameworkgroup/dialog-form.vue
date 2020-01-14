@@ -48,9 +48,6 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action add;
-    @Action edit;
-    @Action detail;
     // 验证 ★★★★★
     get rules() {
         if (this["status"] !== this["dialogType"].detail) {
