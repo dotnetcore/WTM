@@ -30,7 +30,7 @@
             </table-box>
         </card>
         <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-        <permission :is-show.sync="dialogInfo.isShowPermission" ref="permissionRef"></permission>
+        <permission :is-show.sync="dialogInfo.isShowPermission" :dialog-data="dialogInfo.dialogData" @onSearch="onSearch"></permission>
         <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
     </div>
 </template>
@@ -41,15 +41,10 @@ import { Action } from "vuex-class";
 import baseMixin from "@/vue-custom/mixin/base";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
-import FuzzySearch from "@/components/page/fuzzy-search.vue";
-import TableBox from "@/components/page/table-box.vue";
-import ButBox from "@/components/page/but-box.vue";
-import DialogBox from "@/components/page/dialog/dialog-box.vue";
 import UploadBox from "@/components/page/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
 import store from "@/store/system/frameworkrole";
-
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
 
@@ -57,11 +52,7 @@ import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
     mixins: [baseMixin, searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
-        FuzzySearch,
-        TableBox,
-        DialogBox,
         DialogForm,
-        ButBox,
         UploadBox,
         Permission
     }
@@ -70,8 +61,7 @@ export default class Index extends Vue {
     // 差异的方法 单独写出
     @Action("getFrameworkRoles") getFrameworkRoles;
     @Action("getFrameworkGroups") getFrameworkGroups;
-
-    // 动作
+    // 动作(按钮)
     assembly = ASSEMBLIES;
     // 弹出框内容 ★★★★☆
     dialogInfo = {
@@ -86,7 +76,7 @@ export default class Index extends Vue {
      */
     openPermission(data = {}) {
         this.dialogInfo.isShowPermission = true;
-        this.$refs["permissionRef"].onGetFormData(data);
+        this.dialogInfo.dialogData = data;
     }
 }
 </script>

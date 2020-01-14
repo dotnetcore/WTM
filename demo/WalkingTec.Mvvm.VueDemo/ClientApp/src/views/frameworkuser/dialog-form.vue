@@ -140,9 +140,6 @@ const defaultFormData = {
     components: { "upload-img": uploadImg }
 })
 export default class Index extends Vue {
-    @Action add;
-    @Action edit;
-    @Action detail;
     @Action getFrameworkRoles;
     @Action getFrameworkGroups;
     @State getFrameworkRolesData;

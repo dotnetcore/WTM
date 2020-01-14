@@ -135,9 +135,6 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action add;
-    @Action edit;
-    @Action detail;
     @Action getActionsByModel;
     @Action getFolders;
     @State getActionsByModelData;

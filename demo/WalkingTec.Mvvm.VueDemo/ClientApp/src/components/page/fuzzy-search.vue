@@ -7,14 +7,14 @@
                 <slot name="search-content" />
             </div>
             <el-button-group v-if="isFuzzy" class="button-group">
-                <el-button type="primary" class="btn-search" :disabled="disabledInput" @click="onSearch">
+                <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
                     查询
                 </el-button>
                 <el-button v-if="needCollapse&&$slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
                     <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
                 </el-button>
             </el-button-group>
-            <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" @click="onReset">
+            <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset" >
                 重置
             </el-button>
             <div :class="{'fr': isFuzzy,'tar': !isFuzzy}">
@@ -107,7 +107,6 @@ export default class FuzzySearch extends Vue {
     .reset-btn {
         position: relative;
         margin-left: 10px;
-        width: 95px;
         vertical-align: text-top;
     }
     .toggle-class {

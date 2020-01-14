@@ -48,10 +48,6 @@ import baseMixin from "@/vue-custom/mixin/base";
 import mixinFunc from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import store from "@/store/system/dataprivilege";
-import FuzzySearch from "@/components/page/fuzzy-search.vue";
-import TableBox from "@/components/page/table-box.vue";
-import ButBox from "@/components/page/but-box.vue";
-import DialogBox from "@/components/page/dialog/dialog-box.vue";
 import DialogForm from "./dialog-form.vue";
 // 查询参数
 const defaultSearchData = {
@@ -62,11 +58,7 @@ const defaultSearchData = {
     mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
     store,
     components: {
-        FuzzySearch,
-        TableBox,
-        DialogBox,
-        DialogForm,
-        ButBox
+        DialogForm
     }
 })
 export default class Index extends Vue {
