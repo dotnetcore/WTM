@@ -674,8 +674,7 @@ where S : struct
                 Expression exp = null;
                 if (ignoreCase == true)
                 {
-                    var tolower = Expression.Call(field.Body, "ToLower", null);
-                    exp = Expression.Call(tolower, "Contains", null, Expression.Constant(val.ToLower()));
+                    exp = Expression.Call(field.Body, "Contains", null, Expression.Constant(val.ToLower()));
                 }
                 else
                 {
