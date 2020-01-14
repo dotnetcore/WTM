@@ -375,10 +375,14 @@ namespace WalkingTec.Mvvm.Mvc
                         //{
                         foreach (var a in m.Actions)
                         {
-                            var u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-                            if (u == null)
+                            string u = null;
+                            if (a.ParasToRunTest != null && a.ParasToRunTest.Any(x => x.ToLower() == "id"))
                             {
-                                u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+                                u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+                            }
+                            else
+                            {
+                                u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
                             }
                             if (u != null && u.EndsWith("/0"))
                             {
@@ -773,6 +777,15 @@ namespace WalkingTec.Mvvm.Mvc
                         else
                         {
                             action.ActionName = action.MethodName;
+                        }
+                        var pars = method.GetParameters();
+                        if (pars != null && pars.Length > 0)
+                        {
+                            action.ParasToRunTest = new List<string>();
+                            foreach (var par in pars)
+                            {
+                                action.ParasToRunTest.Add(par.Name);
+                            }
                         }
                         model.Actions.Add(action);
                     }
