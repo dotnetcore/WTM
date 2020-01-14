@@ -1,7 +1,7 @@
 <template>
-  <ViewActionsBasics :PageStore="PageStore" :params="params">
+  <ViewActionsBasics :PageStore="PageStore" :FieldsChange="FieldsChange" :params="params">
     <template #Insert>
-      <Entity-ITCode />
+      <Entity-ITCode :FieldsChange="FieldsChange" />
       <Entity-Password />
       <Entity-Email />
       <Entity-Name />
@@ -13,7 +13,7 @@
       <Entity-PhotoId />
       <Entity-IsValid />
       <Entity-UserRoles />
-      <Entity-UserRoles2 />
+      <Entity-UserRoles2 :FieldsChange="FieldsChange"/>
       <Entity-UserRoles3 />
       <Entity-UserGroups />
     </template>
@@ -50,6 +50,7 @@
   </ViewActionsBasics>
 </template> 
 <script lang="ts">
+import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { ICellRendererParams } from "ag-grid-community";
 import ViewActionsBasics from "../../../components/pages/actions.vue";
@@ -58,6 +59,7 @@ import { Modal } from "ant-design-vue";
 import PageStore from "../store";
 import Entities from "./entities";
 import lodash from "lodash";
+import { Subject } from "rxjs";
 @Component({
   components: {
     ViewActionsBasics,
@@ -67,6 +69,11 @@ import lodash from "lodash";
 })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: PageStore;
+  FieldsChange = new Subject<{
+    props: any;
+    fields: any;
+    form: WrappedFormUtils;
+  }>();
   // aggird 组件 自带属性 不可删除
   params = {};
   mounted() {}

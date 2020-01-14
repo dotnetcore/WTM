@@ -7,13 +7,18 @@
 */
 import lodash from 'lodash';
 import NProgress from 'nprogress';
-import { Observable, of, TimeoutError } from "rxjs";
+import { Observable, of, TimeoutError, interval } from "rxjs";
 import { ajax, AjaxError, AjaxResponse, AjaxRequest } from "rxjs/ajax";
 import { catchError, filter, map, timeout } from "rxjs/operators";
 /** 缓存 Request 请求 */
-const CacheRequest = new Map<string, Observable<any>>();
+const CacheRequest = new Map<string, Promise<any>>();
 /** 缓存数据 */
 const Cache = new Map<string, any>();
+// 10秒一清理 
+interval(10000).subscribe(obs => {
+    CacheRequest.clear();
+    Cache.clear();
+})
 export interface IRequestOptions {
     target?: string;
     timeout?: number;
@@ -26,14 +31,30 @@ export class Request {
     constructor(options?: IRequestOptions) {
         lodash.merge(this.options, options);
     }
-    static target = "";
-    static responseStatus = {
+    // static target = "";
+    static responseStatus: { [key: string]: (res: AjaxResponse) => any } = {
         '200': (res: AjaxResponse) => {
             if (lodash.toLower(res.responseType) === "blob") {
                 return res;
             }
             return res.response
         }
+    }
+    static filter(ajax): boolean {
+        // 数据 Response 
+        if (ajax instanceof AjaxResponse) {
+            // 无 响应 数据
+            if (lodash.isNil(ajax.response)) {
+                throw lodash.merge(ajax, { message: 'ajax response undefined' })
+            } else if (!lodash.eq(lodash.get(ajax.response, 'Code', 200), 200)) {
+                throw lodash.merge(ajax, { message: lodash.get(ajax.response, 'Msg') })
+            }
+        }
+        // 错误 超时
+        if (ajax instanceof AjaxError || ajax instanceof TimeoutError) {
+            throw ajax
+        }
+        return true
     }
     /**
      * 请求头
@@ -64,20 +85,7 @@ export class Request {
                 filter((ajax) => {
                     try {
                         Request.NProgress("done");
-                        // 数据 Response 
-                        if (ajax instanceof AjaxResponse) {
-                            // 无 响应 数据
-                            if (lodash.isNil(ajax.response)) {
-                                throw lodash.merge(ajax, { message: 'ajax response undefined' })
-                            } else if (!lodash.eq(lodash.get(ajax.response, 'Code', 200), 200)) {
-                                throw lodash.merge(ajax, { message: lodash.get(ajax.response, 'Msg') })
-                            }
-                        }
-                        // 错误 超时
-                        if (ajax instanceof AjaxError || ajax instanceof TimeoutError) {
-                            throw ajax
-                        }
-                        return true
+                        return Request.filter(ajax);
                     } catch (error) {
                         console.error("TCL: Request -> error", error)
                         sub.error(error);
@@ -96,7 +104,7 @@ export class Request {
      * 请求 map 转换
      * @param res 
      */
-    protected responseMap(res: AjaxResponse) {
+    responseMap(res: AjaxResponse) {
         // console.log(`TCL: Response ${res.request.url}`, res.response)
         const statusFn = lodash.get(Request.responseStatus, res.status, () => res);
         return statusFn(res);
@@ -129,16 +137,16 @@ export class Request {
         if (Cache.has(key)) {
             return Cache.get(key);
         }
-        let ajaxObservable: Observable<any>;
+        let ajaxPromise: Promise<any>;
         // 读缓存
         if (CacheRequest.has(key)) {
-            ajaxObservable = CacheRequest.get(key) as Observable<any>;
+            ajaxPromise = CacheRequest.get(key) as Promise<any>;
         } else {
             // 设缓存
-            ajaxObservable = this.ajax(urlOrRequest);
-            CacheRequest.set(key, ajaxObservable);
+            ajaxPromise = this.ajax(urlOrRequest).toPromise();
+            CacheRequest.set(key, ajaxPromise);
         }
-        const data = await ajaxObservable.toPromise();
+        const data = await ajaxPromise;
         Cache.set(key, data);
         return data;
     }
@@ -196,7 +204,7 @@ export class Request {
                 }
             }
         }
-        return `${Request.target}${address}${url}${endStr}`
+        return `${address}${url}${endStr}`
     }
     /**
      * 格式化 参数

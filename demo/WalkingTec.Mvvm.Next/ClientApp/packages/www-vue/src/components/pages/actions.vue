@@ -74,9 +74,15 @@ import { EntitiesPageStore } from "@leng/public/src";
 import { ICellRendererParams } from "ag-grid-community";
 import { Modal } from "ant-design-vue";
 import lodash from "lodash";
+import { Subscriber, Subject } from "rxjs";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: EntitiesPageStore;
+  @Prop() private FieldsChange: Subject<{
+    props: any;
+    fields: any;
+    form: WrappedFormUtils;
+  }>;
   @Prop() private params: ICellRendererParams;
   form: WrappedFormUtils;
   visible = false;
@@ -89,9 +95,20 @@ export default class ViewAction extends Vue {
     return lodash.hasIn(this, "params.data");
   }
   beforeCreate() {
-    this.form = this.$form.createForm(this, {});
+    this.form = this.$form.createForm(this, {
+      onFieldsChange: (props, fields) => {
+        this.FieldsChange.next({ props, fields, form: this.form });
+      }
+      // onValuesChange: (props, values) => {
+      //   console.warn("TCL: ViewAction -> beforeCreate -> props", props, values);
+      // }
+    });
   }
-  mounted() {}
+  mounted() {
+    // this.FormFieldsChange.subscribe(({ props, fields }) => {
+    //   console.log("TCL: ViewAction -> beforeCreate -> props", props, fields);
+    // });
+  }
   onVisible(visible = !this.visible) {
     this.visible = visible;
   }

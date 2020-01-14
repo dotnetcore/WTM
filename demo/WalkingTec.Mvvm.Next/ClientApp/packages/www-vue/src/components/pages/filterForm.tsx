@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Icon, Row, Col } from 'ant-design-vue';
 import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
-import { renderFormItem, EntitiesItems } from '../utils/entitiesHelp';
+import { renderFormItem } from '../utils/entitiesHelp';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import VueI18n from 'vue-i18n';
@@ -8,7 +8,7 @@ import { EntitiesPageStore } from '@leng/public/src';
 import lodash from 'lodash';
 import { toJS } from 'mobx';
 interface Entities {
-    filterEntities: (props: any, h: CreateElement) => EntitiesItems
+    filterEntities: (props: any, h: CreateElement) => any
 }
 @Form.create({ props: ['PageStore', 'Entities'] })
 @Component

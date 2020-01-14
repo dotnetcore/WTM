@@ -1,7 +1,8 @@
 ﻿import Request from '@leng/public/src/utils/request';
 import { Input } from 'ant-design-vue';
 import { CreateElement } from 'vue';
-import { EntitiesItems } from '../../../components/utils/entitiesHelp';
+import { EntitiesItems } from '../../../components/utils/type';
+import lodash from 'lodash';
 
 /**
  * label  标识
@@ -109,7 +110,7 @@ export default {
                 label: { 'zh-CN': '角色', 'en-US': "UserRoles" },
                 options: {
                 },
-                dataSource: Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
+                dataSource: () => Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
                 children: `<a-transfer v-decorator />`
             },
             /** 角色 */
@@ -118,7 +119,14 @@ export default {
                 label: "UserRoles",
                 options: {
                 },
-                dataSource: Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
+                linkage: ['Entity.UserRoles'],
+                dataSource: ({ linkageValue }) => {
+                    const UserRoles = lodash.get(linkageValue, 'Entity.UserRoles', []);
+                    if (UserRoles.length) {
+                        return Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })
+                    }
+                },
+                // dataSource: Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
                 children: `<a-checkbox-group v-decorator />`
             },
             /** 角色 */
@@ -127,7 +135,7 @@ export default {
                 label: "UserRoles",
                 options: {
                 },
-                dataSource: Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
+                dataSource: () => Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
                 children: `<a-radio-group v-decorator />`
             },
             /** 用户组 */
