@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 日期时间选择器
         /// 可选择：年、月、日、时、分、秒
         /// </summary>
-        Datetime,
+        DateTime,
         /// <summary>
         /// 年选择器
         /// 只提供年列表选择
@@ -116,6 +116,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public bool? ShowBottom { get; set; }
 
+
+        /// <summary>
+        /// 只出现确定按钮
+        /// </summary>
+        public bool? ConfirmOnly { get; set; }
+
         /// <summary>
         /// 语言 默认CN
         /// </summary>
@@ -159,9 +165,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public static Dictionary<DateTimeTypeEnum, string> DateTimeFormatDic = new Dictionary<DateTimeTypeEnum, string>()
         {
             { DateTimeTypeEnum.Date,"yyyy-MM-dd"},
-            { DateTimeTypeEnum.Datetime,"yyyy-MM-dd HH:mm:ss"},
+            { DateTimeTypeEnum.DateTime,"yyyy-MM-dd HH:mm:ss"},
             { DateTimeTypeEnum.Year,"yyyy"},
-            { DateTimeTypeEnum.Month,"MM"},
+            { DateTimeTypeEnum.Month,"yyyy-MM"},
             { DateTimeTypeEnum.Time,"HH:mm:ss"},
         };
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -170,23 +176,35 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagOnly;
             output.Attributes.Add("type", "text");
             output.Attributes.Add("name", Field.Name);
-            if (Field.ModelExplorer.ModelType == typeof(string))
-            {
-                Value = Field.Model?.ToString() ?? Value;
-            }
-            else
-            {
-                Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
-            }
-            output.Attributes.Add("value", Value);
-            output.Attributes.Add("class", "layui-input");
-            if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTime.DefaultReadonly)
-                output.Attributes.Add("readonly", "readonly");
 
             if (Range.HasValue && Range.Value && string.IsNullOrEmpty(RangeSplit))
             {
                 RangeSplit = "~";
             }
+
+            if (Field.ModelExplorer.ModelType == typeof(string))
+            {
+                Value = Field.Model?.ToString() ?? Value;
+            }
+            else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
+            {
+                var dateRange = Field.Model as DateRange;
+                if (string.IsNullOrEmpty(Format))
+                    Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                else
+                    Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(Format))
+                    Value = (Field.Model as DateTime?)?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                else
+                    Value = (Field.Model as DateTime?)?.ToString(Format) ?? Value;
+            }
+            output.Attributes.Add("value", Value);
+            output.Attributes.Add("class", "layui-input");
+            if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTime.DefaultReadonly)
+                output.Attributes.Add("readonly", "readonly");
 
             if (!string.IsNullOrEmpty(Min))
             {
@@ -210,6 +228,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Max = $"'{Max}'";
                 }
             }
+
+            if (Lang == null)
+            {
+                if (Enum.TryParse<DateTimeLangEnum>(Program._localizer["LayuiDateLan"], true, out var testlang))
+                {
+                    Lang = testlang;
+                }
+            }
+
             var content = $@"
 <script>
 layui.use(['laydate'],function(){{
@@ -223,6 +250,7 @@ layui.use(['laydate'],function(){{
     {(string.IsNullOrEmpty(Max) ? string.Empty : $",max: {Max}")}
     {(!ZIndex.HasValue ? string.Empty : $",zIndex: {ZIndex.Value}")}
     {(!ShowBottom.HasValue ? string.Empty : $",showBottom: {ShowBottom.Value.ToString().ToLower()}")}
+    {(!ConfirmOnly.HasValue ? string.Empty : ShowBottom.HasValue && ShowBottom.Value && ConfirmOnly.Value || !ShowBottom.HasValue && ConfirmOnly.Value ? $",btns: ['confirm']" : string.Empty)}
     {(!Calendar.HasValue ? string.Empty : $",calendar: {Calendar.Value.ToString().ToLower()}")}
     {(!Lang.HasValue ? string.Empty : $",lang: '{Lang.Value.ToString().ToLower()}'")}
     {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonConvert.SerializeObject(Mark)}")}

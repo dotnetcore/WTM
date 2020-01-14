@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -41,10 +41,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             var newdc = DC as FrameworkContext;
             List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
-            if (ControllerName == "WalkingTec.Mvvm.Mvc._FrameworkController")
+            var urls = newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().ToList();
+            if (ControllerName == "WalkingTec.Mvvm.Mvc.Admin.Controllers.FrameworkMenuController")
             {
                  actions = GlobalServices.GetRequiredService<GlobalData>().AllModule.SelectMany(x=>x.Actions)
-                    .Where(x => x.Module.IsApi == false &&  newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().Contains(x.Url) == false)
+                    .Where(x => urls.Contains(x.Url) == false)
                     .Select(x => new FrameworkAction_ListView
                     {
                         ID = x.ID,
@@ -59,7 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             else
             {
                 actions = GlobalServices.GetRequiredService<GlobalData>().AllModule.SelectMany(x => x.Actions)
-                   .Where(x => x.Module.IsApi == true && newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().Contains(x.Url) == false)
+                   .Where(x => x.Module.IsApi == true && urls.Contains(x.Url) == false)
                    .Select(x => new FrameworkAction_ListView
                     {
                         ID = x.ID,
@@ -94,13 +95,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
     {
         public Guid? ModuleID { get; set; }
 
-        [Display(Name = "模块名称")]
+        [Display(Name = "ModuleName")]
         public string ModuleName { get; set; }
-        [Display(Name = "动作名称")]
+        [Display(Name = "ActionName")]
         public string ActionName { get; set; }
-        [Display(Name = "类名")]
+        [Display(Name = "ClassName")]
         public string ClassName { get; set; }
-        [Display(Name = "方法名")]
+        [Display(Name = "MethodName")]
         public string MethodName { get; set; }
 
         public string AreaName { get; set; }

@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.TagName = "div";
                 output.TagMode = TagMode.StartTagAndEndTag;
-                output.Content.SetContent("无法获得页面关联的VM，请检查<wt:form>是否指定了Vm属性");
+                output.Content.SetContent("VM is not set, please check if <wt:form> set the vm field");
                 return;
             }
             output.TagName = "form";

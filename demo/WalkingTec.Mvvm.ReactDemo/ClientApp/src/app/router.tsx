@@ -1,5 +1,5 @@
-import { Skeleton } from 'antd';
-import globalConfig from 'global.config';
+import Exception from "components/other/Exception";
+import LayoutSpin from "components/other/LayoutSpin";
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import Pages from 'pages/index';
@@ -7,12 +7,12 @@ import Animate from 'rc-animate';
 import React from 'react';
 import { renderRoutes, RouteConfig } from 'react-router-config';
 import Store from 'store';
-import Layout from "./layout/default/index";
+import LayoutPro from "./layout/antdPro";
 import Demo from "./pages/demo";
 import External from "./pages/external";
-import Home from "./pages/home";
 import Login from "./pages/login";
 import System from "./pages/system";
+
 /**
  *  react-router-config 配置文档  https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
  *  react-router 配置文档 https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/Route.md
@@ -23,13 +23,14 @@ const router: RouteConfig[] = [
         * 主页布局 
         */
         path: "/",
-        component: AuthentRouter(Layout),
+        component: AuthentRouter(LayoutPro),
         //  业务路由
         routes: [
             {
                 path: "/",
                 exact: true,
-                component: createCSSTransition(Home)
+                // page 里面有个 echarts 比较大。所以拆开加载比较好
+                component: createCSSTransition(React.lazy(() => import("./pages/home")))
             },
             {
                 path: "/demo/:path?",
@@ -50,7 +51,7 @@ const router: RouteConfig[] = [
             ...initRouters(),
             // 404  首页
             {
-                component: createCSSTransition(External)
+                component: createCSSTransition(Exception)
             }
         ]
     }
@@ -66,15 +67,14 @@ function AuthentRouter(Component: React.ComponentClass) {
         </AuthentComponent>
     )
 }
+
 @observer
 class AuthentComponent extends React.Component<any> {
     componentDidMount() {
     }
     render() {
         if (Store.User.loding) {
-            return <div style={{ height: '100vh', overflow: "hidden", padding: '60px 30px' }}>
-                <Skeleton active paragraph={{ rows: 20 }} />
-            </div>
+            return <LayoutSpin />
         }
         // 用户登陆菜单加载完成进入主界面
         if (Store.User.isLogin) {
@@ -107,9 +107,9 @@ function initRouters() {
  */
 function createCSSTransition(Component: any, classNames = "fade") {
     return class extends React.Component<any, any> {
-        shouldComponentUpdate() {
-            return !globalConfig.tabsPage
-        }
+        // shouldComponentUpdate() {
+        //     return !globalConfig.tabsPage
+        // }
         componentDidMount() {
             // console.log("TCL: extends -> componentDidMount -> this.props", this.props)
         }

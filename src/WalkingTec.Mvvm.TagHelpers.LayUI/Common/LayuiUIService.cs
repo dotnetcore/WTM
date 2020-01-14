@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
 {
     public class LayuiUIService : IUIService
     {
-        public string MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height, string title = null, string buttonID = null, bool showDialog = true, bool resizable = true)
+        public string MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height, string title = null, string buttonID = null, bool showDialog = true, bool resizable = true, bool max = false)
         {
             if (buttonID == null)
             {
@@ -18,7 +19,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             string windowid = Guid.NewGuid().ToString();
             if (showDialog == true)
             {
-                innerClick = $"ff.OpenDialog('{url}', '{windowid}', '{title ?? ""}',{width?.ToString() ?? "null"}, {height?.ToString() ?? "null"});";
+                innerClick = $"ff.OpenDialog('{url}','{Guid.NewGuid().ToNoSplitString()}','{title ?? ""}',{width?.ToString() ?? "null"},{height?.ToString() ?? "null"},undefined,{max.ToString().ToLower()});";
             }
             else
             {
@@ -109,9 +110,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
             return "";
         }
 
-        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default")
+        public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default", bool maxed = false)
         {
-            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}", buttonText, width, height, title, null, true, resizable);
+            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}", buttonText, width, height, title, null, true, resizable, maxed);
         }
 
         public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null)

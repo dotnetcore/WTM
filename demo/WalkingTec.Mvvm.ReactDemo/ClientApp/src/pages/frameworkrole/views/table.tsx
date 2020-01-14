@@ -1,19 +1,31 @@
-﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
+import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
+import { mergeLocales } from 'locale';
 import React from 'react';
 import Store from '../store';
 import Action from './action';
-
+mergeLocales({
+    "zh-CN": {
+        'frameworkrole.RoleCode': '角色编号',
+        'frameworkrole.RoleName': '角色名称',
+        'frameworkrole.RoleRemark': '备注',
+    },
+    "en-US": {
+        'frameworkrole.RoleCode': 'RoleCode',
+        'frameworkrole.RoleName': 'RoleName',
+        'frameworkrole.RoleRemark': 'Remark',
+    }
+});
 // 列配置
 const columnDefs: (ColDef | ColGroupDef)[] = [
     {
-        headerName: "角色编号", field: "RoleCode"
+        headerName: "frameworkrole.RoleCode", field: "RoleCode"
     },
     {
-        headerName: "角色名称", field: "RoleName",
+        headerName: "frameworkrole.RoleName", field: "RoleName",
     },
     {
-        headerName: "备注", field: "RoleRemark",
+        headerName: "frameworkrole.RoleRemark", field: "RoleRemark",
     },
 ]
 /**
@@ -29,9 +41,9 @@ export default class extends React.Component<any, any> {
             // 行操作 
             rowAction={Action.rowAction}
             // 行操作 col props 同 columnDefs配置相同
-            // rowActionCol={{ headerName: "操作" }}
-            // frameworkComponents={{
-            // }}
+            rowActionCol={{ width: 300 }}
+        // frameworkComponents={{
+        // }}
         />
     }
 }

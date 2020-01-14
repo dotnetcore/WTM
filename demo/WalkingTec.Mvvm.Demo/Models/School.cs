@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
@@ -17,6 +17,9 @@ namespace WalkingTec.Mvvm.Demo.Models
 
     public class School : BasePoco
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public new int ID { get; set; }
         [Display(Name = "学校编码")]
         [Required(ErrorMessage = "{0}是必填项")]
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
@@ -26,6 +29,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
         public string SchoolName { get; set; }
+
 
         [Display(Name = "学校类型")]
         [Required(ErrorMessage = "{0}是必填项")]
@@ -37,6 +41,18 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
+
+        public List<SchoolPhoto> Photos { get; set; }
+    }
+
+    public class SchoolPhoto : TopBasePoco, ISubFile
+    {
+        public int SchoolId { get; set; }
+        public School School { get; set; }
+
+        public Guid FileId { get; set; }
+        public FileAttachment File { get; set; }
+        public int order { get; set; }
     }
 
 }

@@ -43,3 +43,8 @@
   -webkit-transition: all .3s;
 }
 
+fieldset img {
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid black
+}

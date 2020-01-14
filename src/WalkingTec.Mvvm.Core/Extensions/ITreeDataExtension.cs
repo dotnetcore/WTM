@@ -108,7 +108,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <summary>
         /// 将树形结构列表转变为标准列表
         /// </summary>
-        /// <typeparam name="T">树形结构类</typeparam>
         /// <param name="self">树形结构实例</param>
         /// <param name="order">排序字段，可以为空</param>
         /// <returns>返回标准列表，所有节点都在同一级上</returns>
@@ -133,7 +132,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <summary>
         /// 获取TreeSelect节点下所有子节点
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="order"></param>
         /// <returns></returns>

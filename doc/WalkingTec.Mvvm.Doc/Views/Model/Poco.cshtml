@@ -1,7 +1,7 @@
-﻿<wt:fieldset field-set-style="Simple" title="TopBasePoco">
+<wt:fieldset field-set-style="Simple" title="TopBasePoco">
     <p>TopBasePoco是框架所有模型的基类，它只定义了一个Guid的主键，所有其他模型都必须直接或间接继承TopBasePoco，否则框架的其他自动化操作无法执行</p>
     <wt:quote>
-        <p>这意味着框架只支持Guid为唯一主键的数据库设计，虽然不同的人对此有不同的看法，但其实任何表的设计都不妨碍再加一个Guid的主键</p>
+        <p>从2.3.5开始，框架支持自定义主键类别，除了Guid之外，还支持自增int，long，以及string类型，请参考<a href="/#/Model/CustomKey">自定义主键</a></p>
     </wt:quote>
 </wt:fieldset>
 

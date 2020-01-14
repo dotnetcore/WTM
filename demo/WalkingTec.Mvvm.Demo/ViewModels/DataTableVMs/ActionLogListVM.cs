@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
@@ -20,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetShowInRow(true).SetQueryString("a=1"),
                 this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
                 this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin")
             };
             return actions;
         }
@@ -41,8 +37,18 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 
         public override DbCommand GetSearchCommand()
         {
-            var sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs");
-
+            string sql = string.Empty;
+            switch (ConfigInfo.DbType)
+            {
+                case DBTypeEnum.MySql:
+                case DBTypeEnum.PgSql:
+                case DBTypeEnum.SQLite:
+                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs limit 10"); break;
+                case DBTypeEnum.SqlServer:
+                    sql = string.Format("SELECT top 10 id, itcode as test1, modulename as test2 from actionlogs"); break;
+                case DBTypeEnum.Oracle:
+                    sql = string.Format("SELECT id, itcode as test1, modulename as test2 from actionlogs fetch next 10 rows only"); break;
+            }
             var cmd = DC.Database.GetDbConnection().CreateCommand();
             cmd.CommandText = sql;
             cmd.CommandType = CommandType.Text;
@@ -54,7 +60,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
         }
     }
 
-    public class CustomView: TopBasePoco
+    public class CustomView : TopBasePoco
     {
         public string test1 { get; set; }
         public string test2 { get; set; }

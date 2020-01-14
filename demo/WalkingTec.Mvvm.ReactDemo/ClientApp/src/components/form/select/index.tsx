@@ -8,6 +8,7 @@
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 import { DesLoadingData, ILoadingDataProps } from 'components/decorators'; //错误
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
 import React from 'react';
 @DesLoadingData()
 export class WtmSelect extends React.Component<ILoadingDataProps & SelectProps<any>, any> {
@@ -18,10 +19,12 @@ export class WtmSelect extends React.Component<ILoadingDataProps & SelectProps<a
     }
     render() {
         const { dataSource, ...props } = this.props;
-        // console.log("TCL: WtmSelect -> render -> props", props)
+        if (props.value === null) {
+            delete props.value
+        }
         return (
             <Select
-                placeholder="Please choose"
+                placeholder={getLocalesTemplate('tips.placeholder.choose',{txt:''})}
                 allowClear
                 showSearch
                 filterOption={(input, option: any) => {

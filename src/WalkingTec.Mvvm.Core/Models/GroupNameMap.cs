@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WalkingTec.Mvvm.Core
@@ -9,19 +9,16 @@ namespace WalkingTec.Mvvm.Core
     [Table("GroupNameMap")]
     public class GroupNameMap : BasePoco
     {
-        [Display(Name = "组名" )]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Required(ErrorMessage ="{0}required")]
         public string GroupName { get; set; }
 
-        [Display(Name = "内网地址头" )]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Required(ErrorMessage ="{0}required")]
         public string IntranetUrlHeader { get; set; }
 
-        [Display(Name = "外网地址头" )]
-        [StringLength(50,ErrorMessage ="{0}最多输入{1}个字符")]
-        [Required(ErrorMessage ="{0}是必填项")]
+        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [Required(ErrorMessage ="{0}required")]
         public string ExtranetUrlHeader { get; set; }
     }
 }

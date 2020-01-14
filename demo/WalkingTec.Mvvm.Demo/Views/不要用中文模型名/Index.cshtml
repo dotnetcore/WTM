@@ -1,0 +1,11 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs.不要用中文模型名ListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.不要" />
+<wt:textbox field="Searcher.用" />
+<wt:datetime field="Searcher.中文" />
+<wt:textbox field="Searcher.模型名" /><wt:combobox field="Searcher.模型名" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/不要用中文模型名/Search"/>

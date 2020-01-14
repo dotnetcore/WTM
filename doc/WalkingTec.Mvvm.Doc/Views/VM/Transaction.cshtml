@@ -1,0 +1,76 @@
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<p>WTM框架支持简单的事务（Transaction）处理</p>
+
+<wt:fieldset field-set-style="Simple" title="事务的简单启用">
+  如果两个或多个Model之间存在事务操作的场景，我们可以对VM进行简单的修改，如下：
+  <wt:code title="AModelVM.cs">
+
+    public class AModelVM : BaseCRUDVM&lt;AModel&gt;
+    {
+      public override void DoAdd()
+      {
+        using (var transaction = DC.BeginTransaction())
+        {
+          try
+          {
+            // add some specific behaviors & logic
+            // .....
+            base.DoAdd();
+            
+            transaction.Commit();
+          }
+          catch (Exception exception)
+          {
+            transaction.Rollback();
+          }
+        }
+      }
+    }
+  </wt:code>
+  <p>AModelVM的DoAdd方法定义了事务,可以在满足一些特定的业务逻辑后被执行Commit操作。</p>
+  <p>如果中间出现异常情况，会执行Rollback。</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="另一BModelVM要与AModelVM一起构成一个事务性操作">
+  <p>当AModelVM执行不成功，BModelVM的操作也需要视为无效操作，可以对BModelVM进行如下修改</p>
+  <wt:code title="BModelVM.cs">
+
+    public class BModelVM : BaseCRUDVM&lt;BModel&gt;
+    {
+      public override void DoAdd()
+      {
+        using (var transaction = DC.BeginTransaction())
+        {
+          try
+          {
+            var a = new AModelVM()
+            {
+              Entity =
+              {
+                //....
+              }
+            };
+            a.CopyContext(this);
+            a.DoAdd();
+
+            base.DoAdd();
+            
+            transaction.Commit();
+          }
+          catch (Exception exception)
+          {
+            transaction.Rollback();
+          }
+        }
+      }
+    }
+  </wt:code>
+  <p>以上代码只是演示操作，事务可以使用到任意需要事务操作的地方，包括但不限于DoEdit,DoDelete。另外，也提供和EF事务一样的IsolationLevel(事务锁定行为)。</p>
+</wt:fieldset>
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+</script>
+

@@ -1,136 +1,133 @@
-﻿<style>
-    fieldset img {
-        width: 800px;
-        border: 1px solid black
-    }
-    a {
-        color: #01aaed
-    }
+<style>
+  a {
+    color: #01aaed
+  }
 </style>
 <wt:fieldset field-set-style="Simple" title="编写第一个业务模块">
-    <wt:quote>
-        <p>使用WTM框架编写业务模块非常简单，你只需要编写Model层，其他的常用功能都可以通过代码生成器快速生成</p>
-        <p>下面演示了如何编写一个学校信息管理的业务模块</p>
-        <p>*以下演示使用了layui前后端不分离的模式，如果你的项目选择的是react前后端分离，操作基本是一样的。</p>
-    </wt:quote>
-    <ul class="doc">
-        <li>
-            首先我们建立一个WTM框架的项目，使用多层的结构，关于如何创建WTM项目，请参考<a href="/#/QuickStart/FirstProject">第一个项目</a><br /><br />
-            建立完毕后，结构如下图<br /><br />
-            <img src="~/imgs/CodeGen1.png" /><br /><br />
-        </li>
-        <li>
-            在Model项目下，我们新建一个学校的Model<br /><br />
-            <wt:code title="School.cs">
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using WalkingTec.Mvvm.Core;
+  <wt:quote>
+    <p>使用WTM框架编写业务模块非常简单，你只需要编写Model层，其他的常用功能都可以通过代码生成器快速生成</p>
+    <p>下面演示了如何编写一个学校信息管理的业务模块</p>
+    <p>*以下演示使用了layui前后端不分离的模式，如果你的项目选择的是react前后端分离，操作基本是一样的。</p>
+  </wt:quote>
+  <ul class="doc">
+    <li>
+      首先我们建立一个WTM框架的项目，使用多层的结构，关于如何创建WTM项目，请参考<a href="/#/QuickStart/FirstProject">第一个项目</a><br /><br />
+      建立完毕后，结构如下图<br /><br />
+      <img src="~/imgs/CodeGen1.png" /><br /><br />
+    </li>
+    <li>
+      在Model项目下，我们新建一个学校的Model<br /><br />
+      <wt:code title="School.cs">
+        using System;
+        using System.Collections.Generic;
+        using System.ComponentModel.DataAnnotations;
+        using System.Text;
+        using WalkingTec.Mvvm.Core;
 
-namespace FirstProject.Model
-{
-    public enum SchoolTypeEnum {
+        namespace FirstProject.Model
+        {
+        public enum SchoolTypeEnum {
         [Display(Name = "公立学校")]
         PUB,
         [Display(Name = "私立学校")]
         PRI
-    }
+        }
 
-    public class School : BasePoco
-    {
-        [Display(Name = "学校编码")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        public class School : BasePoco
+        {
+        [Display( Name = "学校编码")]
+        [Required( ErrorMessage = "{0}是必填项")]
+        [RegularExpression( "^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
         [StringLength(3)]
         public string SchoolCode { get; set; }
 
-        [Display(Name = "学校名称")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display( Name = "学校名称")]
+        [StringLength( 50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
         public string SchoolName { get; set; }
 
-        [Display(Name = "学校类型")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display( Name = "学校类型")]
+        [Required( ErrorMessage = "{0}是必填项")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
-        [Display(Name = "备注")]
+        [Display( Name = "备注")]
         public string Remark { get; set; }
-    }
-}
-            </wt:code>
-        </li>
-        <li>
-            在DataAccess项目中，修改DataContext文件，让数据库可以生成Schools表<br /><br />
-            <wt:code title="DataContext.cs">
-using FirstProject.Model;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WalkingTec.Mvvm.Core;
+        }
+        }
+      </wt:code>
+    </li>
+    <li>
+      在DataAccess项目中，修改DataContext文件，让数据库可以生成Schools表<br /><br />
+      <wt:code title="DataContext.cs">
+        using FirstProject.Model;
+        using Microsoft.EntityFrameworkCore;
+        using System;
+        using System.Collections.Generic;
+        using System.Linq;
+        using WalkingTec.Mvvm.Core;
 
-namespace FirstProject.DataAccess
-{
-    public class DataContext : FrameworkContext
-    {
-        public DbSet&ltSchool&gt Schools { get; set; }
+        namespace FirstProject.DataAccess
+        {
+        public class DataContext : FrameworkContext
+        {
+        public DbSet&lt;School&gt; Schools { get; set; }
 
         public DataContext(string cs, DBTypeEnum dbtype)
         : base(cs, dbtype)
         {
         }
-    }
-}
-            </wt:code>
-        </li>
-        <li>
-            按F5运行，现在我们有一个School的Model，并且让数据库也生成了相应的表<br /><br />
-            <wt:quote>
-                <p>目前EF不支持自动更新数据库，为了演示的方便，当你修改了Model层，可以把原有数据库删掉让EF重新生成新的</p>
-            </wt:quote>
-        </li>
-        <li>
-            下面我们要使用框架自带的代码生成器来生成基础代码，运行程序之后，点右上角的代码生成器<br /><br />
-            <img src="~/imgs/CodeGen2.png" /><br /><br />
-        </li>
-        <li>
-            在代码生成器中，我们选择要生成的Model，填写这个业务模块的名称和Area，然后点击生成<br /><br />
-            <img src="~/imgs/CodeGen3.png" /><br /><br />
-        </li>
-        <li>
-            接下来，我们可以做一些简单的配置，比如哪些字段是表单字段，哪些是列表需要显示的，哪些是搜索条件等等<br /><br />
-            在这里我们把所有字段都作为表单字段，列表字段和导入字段，把学校编码，学校名称和学校类型作为搜索条件，同时把学校类型作为需要批量更新的字段<br /><br />
-            <img src="~/imgs/CodeGen4.png" /><br /><br />
-        </li>
-        <li>
-            点击确定生成代码，我们会看到一个总结性质的页面，告诉我们这次一共会生成多少文件<br /><br />
-            <img src="~/imgs/CodeGen5.png" /><br /><br />
-            在这个界面中，每个文件我们都可以点击预览来查看最终会生成的代码<br /><br />
-            <img src="~/imgs/CodeGen6.png" /><br /><br />
-        </li>
-        <li>
-            确认无误后，点击生成代码来完成最后的生成<br /><br />
-            生成成功后，退出调试，我们会看到解决方案下多出了我们这次生成的代码<br /><br />
-            <img src="~/imgs/CodeGen7.png" /><br /><br />
-            <wt:quote>
-                <p>请注意代码生成器会覆盖原有同名文件，请事先做好备份工作</p>
-            </wt:quote>
-        </li>
-        <li>
-            重新编译项目，再次运行，我们会发现左侧菜单已经有学校管理的模块了，而且增删改查，导入导出，批量修改，批量删除等功能已经实现好了<br /><br />
-            <img src="~/imgs/CodeGen8.png" /><br /><br />
-        </li>
-    </ul>
+        }
+        }
+      </wt:code>
+    </li>
+    <li>
+      将现有数据库删掉，然后按F5运行，现在我们有一个School的Model，并且让数据库也生成了相应的表<br /><br />
+      <wt:quote>
+        <p>目前EF不支持自动更新数据库，为了演示的方便，当你修改了Model层，可以把原有数据库删掉让EF重新生成新的</p>
+        <p>关于更新数据库的更多办法，参考<a href="/#/Data/Migration">数据迁移</a></p>
+      </wt:quote>
+    </li>
+    <li>
+      下面我们要使用框架自带的代码生成器来生成基础代码，运行程序之后，点右上角的代码生成器<br /><br />
+      <img src="~/imgs/CodeGen2.png" /><br /><br />
+    </li>
+    <li>
+      在代码生成器中，我们选择要生成的Model，填写这个业务模块的名称和Area，然后点击生成<br /><br />
+      <img src="~/imgs/CodeGen3.png" /><br /><br />
+    </li>
+    <li>
+      接下来，我们可以做一些简单的配置，比如哪些字段是表单字段，哪些是列表需要显示的，哪些是搜索条件等等<br /><br />
+      在这里我们把所有字段都作为表单字段，列表字段和导入字段，把学校编码，学校名称和学校类型作为搜索条件，同时把学校类型作为需要批量更新的字段<br /><br />
+      <img src="~/imgs/CodeGen4.png" /><br /><br />
+    </li>
+    <li>
+      点击确定生成代码，我们会看到一个总结性质的页面，告诉我们这次一共会生成多少文件<br /><br />
+      <img src="~/imgs/CodeGen5.png" /><br /><br />
+      在这个界面中，每个文件我们都可以点击预览来查看最终会生成的代码<br /><br />
+      <img src="~/imgs/CodeGen6.png" /><br /><br />
+    </li>
+    <li>
+      确认无误后，点击生成代码来完成最后的生成<br /><br />
+      生成成功后，退出调试，我们会看到解决方案下多出了我们这次生成的代码<br /><br />
+      <img src="~/imgs/CodeGen7.png" /><br /><br />
+      <wt:quote>
+        <p>请注意代码生成器会覆盖原有同名文件，请事先做好备份工作</p>
+      </wt:quote>
+    </li>
+    <li>
+      重新编译项目，再次运行，我们会发现左侧菜单已经有学校管理的模块了，而且增删改查，导入导出，批量修改，批量删除等功能已经实现好了<br /><br />
+      <img src="~/imgs/CodeGen8.png" /><br /><br />
+    </li>
+  </ul>
 
-    <wt:quote>
-        <p>意外不意外，惊喜不惊喜，WTM框架就是这么简单。</p>
-        <p>当然我们在这里只是展示了简单的单表操作，对于复杂的一对多和多对多的结构框架依然可以识别并准确生成代码，小伙伴们可以自行尝试</p>
-        <p>**多对多的关系需要手动在中间表的模型类上加[MiddleTable]标记，以便代码生成器可以正确识别</p>
-        <p>绝大多数逻辑都在ViewModel层中，大家可以仔细查看一下ViewModel中生成的代码，并参考本文档的其他章节来了解框架的原理</p>
-    </wt:quote>
+  <wt:quote>
+    <p>意外不意外，惊喜不惊喜，WTM框架就是这么简单。</p>
+    <p>当然我们在这里只是展示了简单的单表操作，对于复杂的一对多和多对多的结构框架依然可以识别并准确生成代码，小伙伴们可以自行尝试</p>
+    <p>**多对多的关系需要手动在中间表的模型类上加[MiddleTable]标记，以便代码生成器可以正确识别</p>
+    <p>绝大多数逻辑都在ViewModel层中，大家可以仔细查看一下ViewModel中生成的代码，并参考本文档的其他章节来了解框架的原理</p>
+  </wt:quote>
 
 </wt:fieldset>
 <script>
-layui.use('code',function(){layui.code({ about: false })})
+  layui.use('code', function () { layui.code({ about: false }) })
 </script>

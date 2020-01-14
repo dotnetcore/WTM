@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,8 +14,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "新建","_Admin", dialogWidth: 800),
-                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }
 
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
-                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader("操作"),
+                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Program._localizer["Operation"]),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
            };
@@ -61,8 +61,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             }
             return new List<ColumnFormatInfo>
             {
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,"修改",800,null,"修改"),
-                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,"删除",null,null,showDialog:false)
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,editurl,Program._localizer["Edit"],800,null,Program._localizer["Edit"]),
+                ColumnFormatInfo.MakeDialogButton(ButtonTypesEnum.Button,delurl,Program._localizer["Delete"],null,null,showDialog:false)
             };
         }
 
@@ -78,11 +78,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user, x.dp.Domain, x.dp.TableName }, x => x.dp.RelateId)
+                    .GroupBy(x => new { x.user.Name, x.user.ID, x.dp.TableName }, x => x.dp.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
-                        TargetId = x.Key.user.ID,
-                        Name = x.Key.user.Name,
+                        TargetId = x.Key.ID,
+                        Name = x.Key.Name,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
                         DpType = (int)Searcher.DpType
@@ -95,15 +95,15 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                     .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, group = group })
                     .CheckContain(Searcher.Name, x => x.group.GroupName)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.group, x.dp.Domain, x.dp.TableName }, x => x.dp.RelateId)
-                    .Select(x => new DataPrivilege_ListView
-                    {
-                        TargetId = x.Key.group.ID,
-                        Name = x.Key.group.GroupName,
-                        TableName = x.Key.TableName,
-                        RelateIDs = x.Count(),
-                        DpType = (int)Searcher.DpType
-                    })
+                       .GroupBy(x => new { x.group.GroupName, x.group.ID, x.dp.TableName }, x => x.dp.RelateId)
+                       .Select(x => new DataPrivilege_ListView
+                       {
+                           TargetId = x.Key.ID,
+                           Name = x.Key.GroupName,
+                           TableName = x.Key.TableName,
+                           RelateIDs = x.Count(),
+                           DpType = (int)Searcher.DpType
+                       })
                     .OrderByDescending(x => x.Name).OrderByDescending(x => x.TableName);
 
             }
@@ -116,15 +116,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     /// </summary>
     public class DataPrivilege_ListView : BasePoco
     {
-        [Display(Name = "授权对象")]
+        [Display(Name = "DpTargetName")]
         public string Name { get; set; }
         public Guid TargetId { get; set; }
-        [Display(Name = "权限名称")]
+        [Display(Name = "DataPrivilegeName")]
         public string TableName { get; set; }
-        [Display(Name = "权限数量")]
+        [Display(Name = "DataPrivilegeCount")]
         public int RelateIDs { get; set; }
         public int DpType { get; set; }
-        [Display(Name = "域名")]
         public string DomainName { get; set; }
 
         public Guid? DomainID { get; set; }

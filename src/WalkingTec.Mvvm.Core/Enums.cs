@@ -26,17 +26,17 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DBTypeEnum { SqlServer, MySql, PgSql,Memory, SQLite }
+    public enum DBTypeEnum { SqlServer, MySql, PgSql, Memory, SQLite, Oracle }
 
     /// <summary>
     /// 页面显示方式
     /// </summary>
-    public enum PageModeEnum { Single, Tab}
+    public enum PageModeEnum { Single, Tab }
 
     /// <summary>
     /// Tab页的显示方式
     /// </summary>
-    public enum TabModeEnum { Default, Simple}
+    public enum TabModeEnum { Default, Simple }
 
     /// <summary>
     /// Notification出现的位置
@@ -106,10 +106,31 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum DateTimeTypeEnum
     {
+        /// <summary>
+        /// 日期选择器
+        /// 可选择：年、月、日
+        /// </summary>
         Date,
-        Time,
-        DateAndTime,
-        Month
+        /// <summary>
+        /// 日期时间选择器
+        /// 可选择：年、月、日、时、分、秒
+        /// </summary>
+        DateTime,
+        /// <summary>
+        /// 年选择器
+        /// 只提供年列表选择
+        /// </summary>
+        Year,
+        /// <summary>
+        /// 年月选择器
+        /// 只提供年、月选择
+        /// </summary>
+        Month,
+        /// <summary>
+        /// 时间选择器
+        /// 只提供时、分、秒选择
+        /// </summary>
+        Time
     };
 
     /// <summary>
@@ -148,10 +169,7 @@ namespace WalkingTec.Mvvm.Core
     }
 
     public enum UIEnum
-    {
-        extjs,
-        bootstrap
-    }
+    { LayUI, React }
 
     public enum NoRightEnum
     {

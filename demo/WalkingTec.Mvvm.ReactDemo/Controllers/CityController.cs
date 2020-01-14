@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,11 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
+using WalkingTec.Mvvm.Core.Auth.Attribute;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {
+    [AuthorizeJwt]
     [Area("aaa")]
     [ActionDescription("地区管理")]
     [ApiController]
@@ -29,7 +31,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("{id}")]
         public CityVM Get(Guid id)
         {
-            var vm = CreateVM<CityVM>(id);            
+            var vm = CreateVM<CityVM>(id);
             return vm;
         }
 
@@ -97,7 +99,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
 		[HttpPost("BatchDelete")]
         [ActionDescription("批量删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<CityBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -132,12 +134,12 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [ActionDescription("勾选导出")]
         [HttpPost("ExportExcelByIds")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<CityListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -14,7 +15,7 @@ using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
-    [Public]
+    [AllowAnonymous]
     [ActionDescription("页面层")]
     public class UIController : BaseController
     {
@@ -81,6 +82,14 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
+        [ActionDescription("UploadMulti")]
+        public IActionResult UploadMulti()
+        {
+            var vm = CreateVM<SchoolVm>();
+            return PartialView(vm);
+        }
+
+
         [ActionDescription("Selector")]
         public IActionResult Selector()
         {
@@ -91,6 +100,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
 
         [ActionDescription("Rich")]
         public IActionResult Rich()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
+        [ActionDescription("UEditor")]
+        public IActionResult UEditor()
         {
             var vm = CreateVM<MajorVm>();
             return PartialView(vm);
@@ -144,6 +160,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             var vm = CreateVM<StudentListVm3>();
             return PartialView(vm);
         }
+
+        [ActionDescription("按钮")]
+        public IActionResult Button()
+        {
+            return PartialView();
+        }
+
 
         public IActionResult GetSchool(string keywords)
         {

@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     a {
         color: #01aaed
     }
@@ -15,16 +15,16 @@ public class Program
         BuildWebHost(args).Run();
     }
 
-    public static IWebHost BuildWebHost(string[] args) =>
+    public static IWebHost BuildWebHost(string[] args) =&gt;
         WebHost.CreateDefaultBuilder(args)
-            .ConfigureServices(x =>
+            .ConfigureServices(x =&gt;
             {
                 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-                pris.Add(new DataPrivilegeInfo&lt;TestRole&gt;("测试角色", y => y.RoleName));
+                pris.Add(new DataPrivilegeInfo&lt;TestRole&gt;("测试角色", y =&gt; y.RoleName));
                 x.AddFrameworkService(dataPrivilegeSettings: pris);
                 x.AddLayui();
             })
-            .Configure(x =>
+            .Configure(x =&gt;
             {
                 x.UseFrameworkService();
             })
