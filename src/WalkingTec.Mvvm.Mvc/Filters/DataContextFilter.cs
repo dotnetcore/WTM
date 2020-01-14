@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
             string cs = "";
+            DBTypeEnum? dbtype = null;
             if (_csfunc != null)
             {
                 cs = _csfunc.Invoke(context);
@@ -65,6 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 break;
                         }
                     }
+                    dbtype = fixcontroller?.DbType ?? fixaction?.DbType;
                 }
                 else
                 {
@@ -73,6 +75,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 cs = Utils.GetCS(cs, mode, controller.ConfigInfo);
             }
             controller.CurrentCS = cs;
+            controller.CurrentDbType = dbtype;
             base.OnActionExecuting(context);
         }
     }

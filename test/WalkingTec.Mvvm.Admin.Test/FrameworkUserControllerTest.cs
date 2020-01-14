@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
@@ -28,7 +28,19 @@ namespace WalkingTec.Mvvm.Admin.Test
         {
             PartialViewResult rv = (PartialViewResult)_controller.Index();
             Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            string rv2 = _controller.Search(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue(rv2.Contains("\"Code\":200"));
         }
+
+        [TestMethod]
+        public void ExportTest()
+        {
+            PartialViewResult rv = (PartialViewResult)_controller.Index();
+            Assert.IsInstanceOfType(rv.Model, typeof(IBasePagedListVM<TopBasePoco, BaseSearcher>));
+            IActionResult rv2 = _controller.ExportExcel(rv.Model as FrameworkUserListVM);
+            Assert.IsTrue((rv2 as FileContentResult).FileContents.Length > 0);
+        }
+
 
         [TestMethod]
         public void CreateTest()
@@ -38,7 +50,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
             FrameworkUserBase v = new FrameworkUserBase();
-            
+
             v.ITCode = "itcode";
             v.Name = "name";
             v.Password = "password";
@@ -70,7 +82,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID);
+            PartialViewResult rv = (PartialViewResult)_controller.Edit(v.ID.ToString());
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserVM));
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
@@ -161,11 +173,12 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.SaveChanges();
             }
 
-            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
+            PartialViewResult rv = (PartialViewResult)_controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserBatchVM));
+            (rv.Model as FrameworkUserBatchVM).ListVM.DoSearch();
 
             FrameworkUserBatchVM vm = rv.Model as FrameworkUserBatchVM;
-            vm.Ids = new Guid[] { v1.ID, v2.ID };
+            vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
             _controller.DoBatchDelete(vm, null);
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))

@@ -1,105 +1,103 @@
 <style>
-    a {
-        color: #01aaed
-    }
+  a {
+    color: #01aaed
+  }
 </style>
 <p>WTM框架提供了ConfigInfo和GlobalInfo这两个主要的全局变量，可以在Controller和VM中调用</p>
 
 <wt:fieldset field-set-style="Simple" title="ConfigInfo属性说明">
-    <table lay-filter="parse-table-demo">
-        <thead>
-            <tr>
-                <th lay-data="{field:'username', width:200}">属性</th>
-                <th lay-data="{field:'joinTime', width:600}">描述</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>ConnectionStrings</td>
-                <td>连接字符串，对应配置文件中的ConnectionStrings</td>
-            </tr>
-            <tr>
-                <td>DBType</td>
-                <td>对应配置文件中的DBType，可选mysql或sqlserver，默认为SqlServer</td>
-            </tr>
-            <tr>
-                <td>CookiePre</td>
-                <td>生成Cookie的前缀，对应配置文件中的CookiePre</td>
-            </tr>
-            <tr>
-                <td>EnableLog</td>
-                <td>是否启用日志，对应配置文件中的EnableLog，默认为false</td>
-            </tr>
-            <tr>
-                <td>LogExceptionOnly</td>
-                <td>当启用日志时，是否只记录异常，对应配置文件中的LogExceptionOnly，默认为false</td>
-            </tr>
-            <tr>
-                <td>IsQuickDebug</td>
-                <td>是否为调试模式，对应配置文件中的IsQuickDebug，默认为false</td>
-            </tr>
-            <tr>
-                <td>RPP</td>
-                <td>列表默认分页行数，对应配置文件中的RPP，默认为20</td>
-            </tr>
-            <tr>
-                <td>SaveFileMode</td>
-                <td>框架附件储存模式，可选Database和local，对应配置文件中的SaveFileMode，默认为Database</td>
-            </tr>
-            <tr>
-                <td>UploadDir</td>
-                <td>当上传文件选择Local时，指定硬盘目录，对应配置文件中的UploadDir</td>
-            </tr>
-            <tr>
-                <td>AppSettings</td>
-                <td>key，value形式，可配置多个，对应配置文件中的AppSettings</td>
-            </tr>
-            <tr>
-                <td>DataPrivilegeSettings</td>
-                <td>在Programe类中的BuildWebHost方法里可以传递系统支持的数据权限</td>
-            </tr>
-        </tbody>
-    </table>
 </wt:fieldset>
-
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'joinTime'}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ConnectionStrings</td>
+      <td>连接字符串，对应配置文件中的ConnectionStrings</td>
+    </tr>
+    <tr>
+      <td>DBType</td>
+      <td>对应配置文件中的DBType，可选mysql或sqlserver，默认为SqlServer</td>
+    </tr>
+    <tr>
+      <td>CookiePre</td>
+      <td>生成Cookie的前缀，对应配置文件中的CookiePre</td>
+    </tr>
+    <tr>
+      <td>EnableLog</td>
+      <td>是否启用日志，对应配置文件中的EnableLog，默认为false</td>
+    </tr>
+    <tr>
+      <td>LogExceptionOnly</td>
+      <td>当启用日志时，是否只记录异常，对应配置文件中的LogExceptionOnly，默认为false</td>
+    </tr>
+    <tr>
+      <td>IsQuickDebug</td>
+      <td>是否为调试模式，对应配置文件中的IsQuickDebug，默认为false</td>
+    </tr>
+    <tr>
+      <td>RPP</td>
+      <td>列表默认分页行数，对应配置文件中的RPP，默认为20</td>
+    </tr>
+    <tr>
+      <td>SaveFileMode</td>
+      <td>框架附件储存模式，可选Database和local，对应配置文件中的SaveFileMode，默认为Database</td>
+    </tr>
+    <tr>
+      <td>UploadDir</td>
+      <td>当上传文件选择Local时，指定硬盘目录，对应配置文件中的UploadDir</td>
+    </tr>
+    <tr>
+      <td>AppSettings</td>
+      <td>key，value形式，可配置多个，对应配置文件中的AppSettings</td>
+    </tr>
+    <tr>
+      <td>DataPrivilegeSettings</td>
+      <td>在Programe类中的BuildWebHost方法里可以传递系统支持的数据权限</td>
+    </tr>
+  </tbody>
+</table>
 <wt:fieldset field-set-style="Simple" title="GlobalInfo属性说明">
-    <table lay-filter="parse-table-demo">
-        <thead>
-            <tr>
-                <th lay-data="{field:'username', width:200}">属性</th>
-                <th lay-data="{field:'joinTime', width:600}">描述</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>AllAssembly</td>
-                <td>获取所有加载的dll</td>
-            </tr>
-            <tr>
-                <td>AllAccessUrls</td>
-                <td>获取不需要页面权限控制的Url</td>
-            </tr>
-            <tr>
-                <td>AllModule</td>
-                <td>获取所有的Module，一个Controller对应一个Module</td>
-            </tr>
-            <tr>
-                <td>AllModels</td>
-                <td>获取所有模型</td>
-            </tr>
-            <tr>
-                <td>AllMenus</td>
-                <td>获取所有菜单项</td>
-            </tr>
-        </tbody>
-    </table>
 </wt:fieldset>
-
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">属性</th>
+      <th lay-data="{field:'joinTime'}">描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AllAssembly</td>
+      <td>获取所有加载的dll</td>
+    </tr>
+    <tr>
+      <td>AllAccessUrls</td>
+      <td>获取不需要页面权限控制的Url</td>
+    </tr>
+    <tr>
+      <td>AllModule</td>
+      <td>获取所有的Module，一个Controller对应一个Module</td>
+    </tr>
+    <tr>
+      <td>AllModels</td>
+      <td>获取所有模型</td>
+    </tr>
+    <tr>
+      <td>AllMenus</td>
+      <td>获取所有菜单项</td>
+    </tr>
+  </tbody>
+</table>
 <script>
-layui.use('code',function(){layui.code({ about: false })})
+  layui.use('code', function () { layui.code({ about: false }) })
 </script>
 <script>
-        layui.table.init('parse-table-demo', {
-        limit: 100, page: false
-        });
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false, cellMinWidth: 50
+  });
 </script>

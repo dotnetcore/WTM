@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -20,13 +21,16 @@ namespace WalkingTec.Mvvm.Core
         public static IList<T> GetEntityList<T>(DataTable table)
         {
             IList<T> entityList = new List<T>();
+
+            var properties = typeof(T).GetProperties().ToLookup(property => property.Name, property => property).ToDictionary(i => i.Key, i => i.First()).Values;
+
             //循环Datable中的每一行
             foreach (DataRow row in table.Rows)
             {
                 //新建Entity
                 T entity = (T)Activator.CreateInstance(typeof(T));
                 //循环Entity的每一个属性
-                foreach (var item in entity.GetType().GetProperties())
+                foreach (var item in properties)
                 {
                     //如果DataTable中有列名和属性名一致，则把单元格内容赋值给Entity的该属性
                     if (row.Table.Columns.Contains(item.Name))

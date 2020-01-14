@@ -5,7 +5,7 @@
  * @modify date 2019-03-08 02:36:43
  * @desc [description]
  */
-import { Button, Divider, message, notification, Skeleton, Spin, Icon } from 'antd';
+import { Button, Divider, message, notification, Skeleton, Spin, Icon, Row, Col } from 'antd';
 import Form, { WrappedFormUtils } from 'antd/lib/form/Form';
 import globalConfig from 'global.config';
 import lodash from 'lodash';
@@ -15,6 +15,7 @@ import { Help } from 'utils/Help';
 import { DesError } from 'components/decorators';
 
 import { InfoShell } from '../infoShell';
+import { FormattedMessage } from 'react-intl';
 declare type Props = {
     form?: WrappedFormUtils;
     // InfoShell?: DrawerProps | ModalProps;
@@ -85,8 +86,8 @@ export class DialogForm extends React.Component<Props, any> {
             title: lodash.get(this.props, 'title', '未设置标题'),
             disabled: lodash.get(this.props, "disabled", false),
             showSubmit: lodash.get(this.props, 'showSubmit', true),
-            closeText: lodash.get(this.props, 'closeText', '关闭'),
-            submitText: lodash.get(this.props, 'submitText', '提交'),
+            closeText: lodash.get(this.props, 'closeText', <FormattedMessage id="action.close" />),
+            submitText: lodash.get(this.props, 'submitText', <FormattedMessage id="action.submit" />),
             icon: lodash.get(this.props, 'icon'),
             type: lodash.get(this.props, 'type', 'button'),
             button: lodash.get(this.props, 'button'),
@@ -214,7 +215,7 @@ class Optimization extends React.Component<{
             </div>
         }
         if (option.showSubmit) {
-            return <Form onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
+            return <Form layout="vertical" onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
                 <Spin tip="Loading..." spinning={this.state.loading} >
                     {children}
                 </Spin>
@@ -296,7 +297,7 @@ export function DialogFormDes(params: {
                 }
                 // 强制 执行加载最少 400 毫秒
                 await new Promise((res, rej) => {
-                    lodash.delay(res, 400 - (Date.now() - time))
+                    lodash.delay(res, 600 - (Date.now() - time))
                 });
                 this.setState({ __details: res, __spinning: false, __key: Help.GUID() })
                 super.componentDidMount && super.componentDidMount()
@@ -304,9 +305,22 @@ export function DialogFormDes(params: {
             render() {
                 const { __spinning, __details, __key } = this.state;
                 // const notLoadData = this.isOnLoadData && !this.props.loadData;
-                return <Spin tip={params.tip || 'Loading...'} spinning={__spinning}>
-                    {__spinning ? <Skeleton paragraph={{ rows: 10 }} /> : <Component {...this.props} defaultValues={__details} />}
-                </Spin>
+                // return <Spin tip={params.tip || 'Loading...'} spinning={__spinning}>
+                return __spinning ? <Row type="flex" align="top" gutter={20}>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                    <Col span={12}>
+                        <Skeleton paragraph={{ rows: 2 }} />
+                    </Col>
+                </Row> : <Component {...this.props} defaultValues={__details} />
+                {/* </Spin> */ }
             }
         }
         lodash.set(Component, 'onFormSubmit', params.onFormSubmit)

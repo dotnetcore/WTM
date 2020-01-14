@@ -1,15 +1,14 @@
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Microsoft.EntityFrameworkCore;
+
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 {
     public class LoginVM : BaseVM
     {
-
         [Display(Name = "账号")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
@@ -19,6 +18,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string Password { get; set; }
+
+        [Display(Name = "记录我的登录")]
+        public bool RememberLogin { get; set; }
 
         public string Redirect { get; set; }
 
@@ -34,7 +36,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         {
             //根据用户名和密码查询用户
             var user = DC.Set<FrameworkUserBase>()
-                .Include(x => x.UserRoles).Include(x=>x.UserGroups)
+                .Include(x => x.UserRoles).Include(x => x.UserGroups)
                 .Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password) && x.IsValid)
                 .SingleOrDefault();
 
@@ -48,8 +50,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
             //查找登录用户的数据权限
             var dpris = DC.Set<DataPrivilege>()
-                .Where(x => x.UserId == user.ID ||  ( x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                .Distinct()
                 .ToList();
+
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo
             {
@@ -66,6 +70,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 //查找登录用户的页面权限
                 var pris = DC.Set<FunctionPrivilege>()
                     .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Distinct()
                     .ToList();
                 rv.FunctionPrivileges = pris;
             }

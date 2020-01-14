@@ -1,7 +1,8 @@
 @model WalkingTec.Mvvm.Doc.ViewModels.StudentVms.StudentVm
 
 <wt:fieldset field-set-style="Simple" title="Upload">
-    <p>Upload控件用于文件上传，常用属性有：</p>
+ </wt:fieldset>
+   <p>Upload控件用于文件上传，常用属性有：</p>
         <table lay-filter="parse-table-demo">
             <thead>
                 <tr>
@@ -70,21 +71,27 @@
                     <td>CustomType</td>
                     <td>如果常用UploadType不支持，可以自定义文件类型限制，例如rar</td>
                 </tr>
+                <tr>
+                  <td>ShowProgress</td>
+                    <td>上传时是否显示进度条</td>
+                </tr>
             </tbody>
         </table>
     <wt:quote>
         <p>Upload控件和框架提供的FileAttachment紧密相连，直接绑定一个指向FileAttachment的Id字段，框架会自动完成附件的保存和删除</p>
         <p>可以在appsetting文件种设定SaveFileMode来指定框架附件的保存方式，目前支持DataBase,Local和DFS</p>
-        <p>下面的例子在选择文件之后没有效果，因为这个文档项目没有支持保存附件的数据库</p>
+        <p>下面的例子在选择文件之后没有效果，因为这个文档项目并没有连接真实的数据库</p>
+        <p>请注意Model中管理一个附件的写法</p>
     </wt:quote>
         <wt:tab>
-            <wt:tabheaders>
-                <wt:tabheader title="效果" />
-                <wt:tabheader title="代码" />
-            </wt:tabheaders>
+          <wt:tabheaders>
+            <wt:tabheader title="效果" />
+            <wt:tabheader title="代码" />
+            <wt:tabheader title="Model" />
+          </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
-                    <wt:form vm="@Model" width="600">
+                    <wt:form vm="@Model" style="max-width:600px;">
                         <wt:upload field="Entity.PhotoId" upload-type="ImageFile" />
                         <wt:row align="AlignEnum.Right">
                             <wt:submitbutton disabled="true" />
@@ -104,9 +111,38 @@
 
                     </wt:code>
                 </wt:tabcontent>
+                <wt:tabcontent>
+                    <wt:code>
+    public class Student : BasePoco
+    {
+        [Display(Name = "账号")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string LoginName { get; set; }
+
+        [Display(Name = "密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(32)]
+        public string Password { get; set; }
+
+        [Display(Name = "姓名")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string Name { get; set; }
+
+        //这个Photo和PhotoId一起定义了一个附件
+        [Display(Name = "照片")]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "照片")]
+        public FileAttachment Photo { get; set; }
+
+    }
+
+                    </wt:code>
+                </wt:tabcontent>
             </wt:tabcontents>
         </wt:tab>
-</wt:fieldset>
 
     <script>
     layui.use('code',function(){layui.code({ about: false })})

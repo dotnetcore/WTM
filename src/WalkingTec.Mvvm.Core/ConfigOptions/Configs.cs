@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
@@ -9,12 +9,12 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public class Configs
     {
-        #region 数据库连接字符串
+        #region ConnectionStrings
 
         private List<KV> _connectStrings;
 
         /// <summary>
-        /// 数据库连接字符串
+        /// ConnectionStrings
         /// </summary>
         public List<KV> ConnectionStrings
         {
@@ -34,12 +34,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 是否是调试模式
+        #region QuickDebug
 
         private bool? _isQuickDebug;
 
         /// <summary>
-        /// 是否启动调试模式
+        /// Is debug mode
         /// </summary>
         public bool IsQuickDebug
         {
@@ -55,12 +55,14 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region Cookie前缀
+        public string ErrorHandler { get; set; } = "/_Framework/Error";
+
+        #region Cookie prefix
 
         private string _cookiePre;
 
         /// <summary>
-        /// 代理，用于系统访问外部网站
+        /// Cookie prefix
         /// </summary>
         public string CookiePre
         {
@@ -76,14 +78,14 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 文件存储方式
+        #region File attachment save mode
 
         private SaveFileModeEnum? _saveFileMode;
 
         /// <summary>
-        /// 文件存储方式
+        /// File attachment save mode
         /// </summary>
-        [Obsolete("该属性已过时，将在以后的版本中删除。推荐的替代方法是使用Configs.FileUploadOptions 配置上传设置。")]
+        [Obsolete("use Configs.FileUploadOptions instead")]
         public SaveFileModeEnum? SaveFileMode
         {
             get
@@ -98,13 +100,13 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 上传文件路径
+        #region File attachment upload path
         private string _uploadDir;
 
         /// <summary>
-        /// 上传文件路径
+        /// File attachment upload path
         /// </summary>
-        [Obsolete("该属性已过时，将在以后的版本中删除。推荐的替代方法是使用Configs.FileUploadOptions 配置上传设置。")]
+        [Obsolete("use Configs.FileUploadOptions instead")]
         public string UploadDir
         {
             get
@@ -119,12 +121,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 是否启用日志
+        #region Enable log
 
         private bool? _enableLog;
 
         /// <summary>
-        /// 是否启动调试模式
+        /// Enable log
         /// </summary>
         public bool EnableLog
         {
@@ -140,12 +142,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 是否在log中只记录一场
+        #region Log exceptions only
 
         private bool? _logExceptionOnly;
 
         /// <summary>
-        /// 是否启动调试模式
+        /// Log exceptions only
         /// </summary>
         public bool LogExceptionOnly
         {
@@ -161,12 +163,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 自动更新数据库
+        #region Auto sync db
 
         private bool? _syncdb;
 
         /// <summary>
-        /// 是否自动更新数据库
+        /// Auto sync db(not supportted)
         /// </summary>
         public bool SyncDB
         {
@@ -182,12 +184,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 数据库类型
+        #region Database type
 
         private DBTypeEnum? _dbtype;
 
         /// <summary>
-        /// 数据库类型
+        /// Database type
         /// </summary>
         public DBTypeEnum DbType
         {
@@ -205,14 +207,16 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public bool IsOldSqlServer { get; set; }
+
         #endregion
 
-        #region 页面显示方式
+        #region PageMode
 
         private PageModeEnum? _pageMode;
 
         /// <summary>
-        /// 数据库类型
+        /// PageMode
         /// </summary>
         public PageModeEnum PageMode
         {
@@ -231,12 +235,12 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        #region Tab页显示方式
+        #region TabMode
 
         private TabModeEnum? _tabMode;
 
         /// <summary>
-        /// 数据库类型
+        /// TabMode
         /// </summary>
         public TabModeEnum TabMode
         {
@@ -255,13 +259,12 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-
-        #region 加密密钥
+        #region EncryptKey
 
         private string _encryptKey;
 
         /// <summary>
-        /// 数据库类型
+        /// EncryptKey
         /// </summary>
         public string EncryptKey
         {
@@ -281,20 +284,20 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 自定义应用配置
+        #region Custom settings
 
-        private List<KV> _appSettings;
+        private Dictionary<string,string> _appSettings;
 
         /// <summary>
-        /// 数据库连接字符串
+        /// Custom settings
         /// </summary>
-        public List<KV> AppSettings
+        public Dictionary<string, string> AppSettings
         {
             get
             {
                 if (_appSettings == null)
                 {
-                    _appSettings = new List<KV>();
+                    _appSettings = new Dictionary<string, string>();
                 }
                 return _appSettings;
             }
@@ -306,10 +309,13 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 数据权限配置
+        #region Data Privilege
 
         private List<IDataPrivilege> _dataPrivilegeSettings;
 
+        /// <summary>
+        /// Data Privilege
+        /// </summary>
         public List<IDataPrivilege> DataPrivilegeSettings
         {
             get
@@ -328,12 +334,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region DFS配置
+        #region DFS Config
 
         private DFS _dfsServer;
 
         /// <summary>
-        /// DFS配置
+        /// DFS Config
         /// </summary>
         public DFS DFSServer
         {
@@ -353,12 +359,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 文件相关设置
+        #region FileOptions
 
         private FileUploadOptions _fileUploadOptions;
 
         /// <summary>
-        /// 文件相关设置
+        /// FileOptions
         /// </summary>
         public FileUploadOptions FileUploadOptions
         {
@@ -395,12 +401,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 界面相关设置
+        #region UIOptions
 
         private UIOptions _uiOptions;
 
         /// <summary>
-        /// 文件相关设置
+        /// UIOptions
         /// </summary>
         public UIOptions UiOptions
         {
@@ -426,6 +432,12 @@ namespace WalkingTec.Mvvm.Core
                         {
                             DefaultReadonly = DefaultConfigConsts.DEFAULT_DATETIME_DEFAULT_READONLY
                         };
+
+                    if (_uiOptions.SearchPanel == null)
+                        _uiOptions.SearchPanel = new UIOptions.SearchPanelOptions
+                        {
+                            DefaultExpand = DefaultConfigConsts.DEFAULT_SEARCHPANEL_DEFAULT_EXPAND
+                        };
                 }
                 return _uiOptions;
             }
@@ -437,12 +449,12 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region 附件是否公开
+        #region Is FileAttachment public
 
         private bool? _isFilePublic;
 
         /// <summary>
-        /// 是否启动调试模式
+        /// Is FileAttachment public
         /// </summary>
         public bool IsFilePublic
         {
@@ -458,6 +470,80 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region UEditorOptions
 
+        private UEditorOptions _ueditorOptions;
+
+        /// <summary>
+        /// UEditor配置
+        /// </summary>
+        /// <value></value>
+        public UEditorOptions UEditorOptions
+        {
+            get
+            {
+                if (_ueditorOptions == null)
+                {
+                    _ueditorOptions = new UEditorOptions();
+                }
+                return _ueditorOptions;
+            }
+            set
+            {
+                _ueditorOptions = value;
+            }
+        }
+        #endregion
+
+        #region Cors configs
+
+        private Cors _cors;
+
+        /// <summary>
+        ///  Cors configs
+        /// </summary>
+        public Cors CorsOptions
+        {
+            get
+            {
+                if (_cors == null)
+                {
+                    _cors = new Cors();
+                    _cors.Policy = new List<CorsPolicy>();
+                }
+                return _cors;
+            }
+            set
+            {
+                _cors = value;
+            }
+        }
+
+        #endregion
+
+        #region Support Languages
+
+        private string _languages;
+
+        /// <summary>
+        /// Support Languages
+        /// </summary>
+        public string Languages
+        {
+            get
+            {
+                if (string.IsNullOrEmpty((_languages)))
+                {
+                    _languages = "zh";
+                }
+                return _languages;
+            }
+            set
+            {
+                _languages = value;
+            }
+        }
+
+        #endregion
     }
 }

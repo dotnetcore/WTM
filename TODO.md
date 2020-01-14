@@ -1,9 +1,14 @@
 # Todo List
 
+## 框架整体
+
+- [ ] Jwt (2019年9月)
+- [ ] 自定义主键 (2019年9月)
+- [ ] 重构文件上传 (2019年10月)
+
 ## LayUI
 
-- [ ] Jwt (2019年8月)
-- [ ] layuiAdmin (2019年9月)
+- [x] layuiAdmin (2019年8月)
 - [ ] Others...
 
 ## React
@@ -16,9 +21,5 @@
 
 ## VUE
 
-- [ ] Element UI (2019年8月)
+- [ ] Element UI (2019年9月)
 - [ ] Others...
-
-## Others
-
-- [ ] ...

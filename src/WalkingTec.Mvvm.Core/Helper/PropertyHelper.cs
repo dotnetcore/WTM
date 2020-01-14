@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -121,9 +122,24 @@ namespace WalkingTec.Mvvm.Core
         public static string GetRegexErrorMessage(this MemberInfo pi)
         {
             string rv = "";
+
             if (pi.GetCustomAttributes(typeof(RegularExpressionAttribute), false).FirstOrDefault() is RegularExpressionAttribute dis && !string.IsNullOrEmpty(dis.ErrorMessage))
             {
                 rv = dis.ErrorMessage;
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
+                {
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
+                }
             }
             else
             {
@@ -139,13 +155,23 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>属性名称</returns>
         public static string GetPropertyDisplayName(this MemberInfo pi)
         {
-
             string rv = "";
             if (pi.GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() is DisplayAttribute dis && !string.IsNullOrEmpty(dis.Name))
             {
-                if (dis.ResourceType == null)
+                rv = dis.Name;
+                if (Core.Program.Buildindll.Any(x => pi.DeclaringType.FullName.StartsWith(x)))
                 {
-                    rv = dis.Name;
+                    if (Program._localizer != null)
+                    {
+                        rv = Program._localizer[rv];
+                    }
+                }
+                else
+                {
+                    if (Program._Callerlocalizer != null)
+                    {
+                        rv = Program._Callerlocalizer[rv];
+                    }
                 }
             }
             else
@@ -204,7 +230,7 @@ namespace WalkingTec.Mvvm.Core
             PropertyInfo rv = null;
             if (me != null)
             {
-                rv = me.Member.DeclaringType.GetProperty(me.Member.Name);
+                rv = me.Member.DeclaringType.GetProperties().Where(x => x.Name == me.Member.Name).FirstOrDefault();
             }
             return rv;
         }
@@ -241,7 +267,7 @@ namespace WalkingTec.Mvvm.Core
             //如果需要显示星号，则判断是否是必填项，如果是必填则在内容后面加上星号
             //所有int，float。。。这种Primitive类型的，肯定都是必填
             Type t = pi.GetMemberType();
-            if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal)))
+            if (t != null && (t.IsPrimitive() || t.IsEnum() || t == typeof(decimal) || t == typeof(Guid)))
             {
                 isRequired = true;
             }
@@ -250,6 +276,10 @@ namespace WalkingTec.Mvvm.Core
                 var test = pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault();
                 //对于其他类，检查是否有RequiredAttribute，如果有就是必填
                 if (pi.GetCustomAttributes(typeof(RequiredAttribute), false).FirstOrDefault() is RequiredAttribute required && required.AllowEmptyStrings == false)
+                {
+                    isRequired = true;
+                }
+                else if (pi.GetCustomAttributes(typeof(KeyAttribute), false).FirstOrDefault() != null)
                 {
                     isRequired = true;
                 }
@@ -269,7 +299,7 @@ namespace WalkingTec.Mvvm.Core
         {
             try
             {
-                property = property.Replace("[]", string.Empty);
+                property = Regex.Replace(property, @"\[[^\]]*\]", string.Empty);
                 List<string> level = new List<string>();
                 if (property.Contains('.'))
                 {
@@ -307,14 +337,16 @@ namespace WalkingTec.Mvvm.Core
                     }
                 }
 
-                var fproperty = tempType.GetMember(level.Last())[0];
-                if (fproperty == null)
+                var memberInfos = tempType.GetMember(level.Last());
+                if (!memberInfos.Any())
                 {
                     return;
                 }
-                if (value == null)
+                var fproperty = memberInfos[0];
+                if (value == null || ((value is StringValues s) && StringValues.IsNullOrEmpty(s)))
                 {
-                    fproperty.SetMemberValue(temp, value, null);
+                    fproperty.SetMemberValue(temp, null, null);
+                    return;
                 }
 
                 bool isArray = false;
@@ -400,7 +432,8 @@ namespace WalkingTec.Mvvm.Core
                     fproperty.SetMemberValue(temp, value, null);
                 }
             }
-            catch{
+            catch
+            {
             }
         }
 
@@ -435,6 +468,13 @@ namespace WalkingTec.Mvvm.Core
         public static void SetMemberValue(this MemberInfo mi, object obj, object val, object[] index = null)
         {
             object newval = val;
+            if(val is string s)
+            {
+                if (string.IsNullOrEmpty(s))
+                {
+                    val = null;
+                }
+            }
             if (val != null && val.GetType() != mi.GetMemberType())
             {
                 newval = val.ConvertValue(mi.GetMemberType());
@@ -496,6 +536,20 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (Core.Program.Buildindll.Any(x => field.DeclaringType.FullName.StartsWith(x)))
+                    {
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
+                    }
                 }
                 else
                 {
@@ -511,14 +565,15 @@ namespace WalkingTec.Mvvm.Core
             FieldInfo field = null;
             string ename = "";
             if (enumType.IsEnum())
-            {   ename = enumType.GetEnumName(value);
+            {
+                ename = enumType.GetEnumName(value);
                 field = enumType.GetField(ename);
             }
             //如果是nullable的枚举
             if (enumType.IsGeneric(typeof(Nullable<>)) && enumType.GetGenericArguments()[0].IsEnum())
             {
-                    ename = enumType.GenericTypeArguments[0].GetEnumName(value);
-                    field = enumType.GenericTypeArguments[0].GetField(ename);
+                ename = enumType.GenericTypeArguments[0].GetEnumName(value);
+                field = enumType.GenericTypeArguments[0].GetField(ename);
             }
 
             if (field != null)
@@ -528,6 +583,20 @@ namespace WalkingTec.Mvvm.Core
                 if (attribs.Count > 0)
                 {
                     rv = ((DisplayAttribute)attribs[0]).GetName();
+                    if (field.DeclaringType.FullName.StartsWith("WalkingTec.Mvvm."))
+                    {
+                        if (Program._localizer != null)
+                        {
+                            rv = Program._localizer[rv];
+                        }
+                    }
+                    else
+                    {
+                        if (Program._Callerlocalizer != null)
+                        {
+                            rv = Program._Callerlocalizer[rv];
+                        }
+                    }
                 }
                 else
                 {
@@ -543,7 +612,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="value">要转换的值</param>
         /// <param name="propertyType">转换后的类型</param>
         /// <returns>转换后的值</returns>
-        private static object ConvertValue(this object value, Type propertyType)
+        public static object ConvertValue(this object value, Type propertyType)
         {
             object val = null;
             if (propertyType.IsGeneric(typeof(Nullable<>)) == true)
@@ -572,7 +641,18 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    val = null;
+                    val = Guid.Empty;
+                }
+            }
+            else if (propertyType == typeof(DateRange))
+            {
+                if (DateRange.TryParse(value.ToString(), out var result))
+                {
+                    val = result;
+                }
+                else
+                {
+                    val = DateRange.Default;
                 }
             }
             else

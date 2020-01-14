@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
 
 <wt:form vm="@Model">
     <wt:row items-per-row="ItemsPerRowEnum.Two">
@@ -14,8 +14,15 @@
         <wt:combobox field="Entity.IsValid" />
         <wt:datetime field="Entity.EnRollDate" />
         <wt:row id="selector">
-            <wt:selector list-vm="MajorList" field="SelectedMajorIds" text-bind="MajorList.EntityList[0].MajorName"  label-text="专业">
-            </wt:selector>
+          <wt:selector list-vm="MajorList" field="SelectedMajorIds" text-bind="MajorList.EntityList[0].MajorName" label-text="专业">
+            <wt:searchpanel vm="MajorList" reset-btn="true">
+              <wt:row items-per-row="ItemsPerRowEnum.Three">
+                <wt:textbox field="MajorList.Searcher.MajorCode" />
+                <wt:textbox field="MajorList.Searcher.MajorName" />
+                <wt:combobox field="MajorList.Searcher.SchoolId" items="MajorList.Searcher.AllSchools" empty-text="全部" />
+              </wt:row>
+            </wt:searchpanel>
+          </wt:selector>
         </wt:row>
     </wt:row>
     <wt:row align="AlignEnum.Right">

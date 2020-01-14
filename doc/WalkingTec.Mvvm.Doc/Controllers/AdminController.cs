@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
-    [Public]
+    [AllowAnonymous]
     [ActionDescription("页面层")]
     public class AdminController : BaseController
     {
@@ -25,21 +26,25 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
         [ActionDescription("角色管理")]
         public IActionResult Role()
         {
             return PartialView();
         }
+
         [ActionDescription("用户组管理")]
         public IActionResult Group()
         {
             return PartialView();
         }
+
         [ActionDescription("菜单管理")]
         public IActionResult Menu()
         {
             return PartialView();
         }
+
         [ActionDescription("数据权限管理")]
         public IActionResult Dp()
         {

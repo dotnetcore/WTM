@@ -1,224 +1,243 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 @using Newtonsoft.Json;
 
-<div class="layui-fluid" id="frontpage" style="padding:0px;">
-  <div class="layui-row layui-col-space15">
-    <div class="layui-col-md8">
-      <div class="layui-row layui-col-space15">
-        <div class="layui-col-md6">
-          <div class="layui-card">
-            <div class="layui-card-header">快捷方式</div>
-            <div class="layui-card-body">
+<div class="layui-row layui-col-space15" id="frontpage">
+  <div class="layui-col-md8">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">快捷方式</div>
+          <div class="layui-card-body">
 
-              <div class="layui-carousel layadmin-carousel layadmin-shortcut">
-                <div carousel-item>
-                  <ul class="layui-row layui-col-space10">
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/FrameworkUser/Index">
-                        <i class="layui-icon layui-icon-username"></i>
-                        <cite>用户</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/FrameworkRole/Index">
-                        <i class="layui-icon layui-icon-tabs"></i>
-                        <cite>角色</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/FrameworkMenu/Index">
-                        <i class="layui-icon layui-icon-app"></i>
-                        <cite>菜单</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/FrameworkGroup/Index">
-                        <i class="layui-icon layui-icon-user"></i>
-                        <cite>用户组</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/DataPrivilege/Index">
-                        <i class="layui-icon layui-icon-auz"></i>
-                        <cite>数据权限</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a lay-href="_Admin/ActionLog/Index">
-                        <i class="layui-icon layui-icon-console"></i>
-                        <cite>日志</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a href="/_codegen/index" target="_blank">
-                        <i class="layui-icon layui-icon-template-1"></i>
-                        <cite>代码生成</cite>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs3">
-                      <a href="https://wtmdoc.walkingtec.cn" target="_blank">
-                        <i class="layui-icon layui-icon-read"></i>
-                        <cite>文档</cite>
-                      </a>
-                    </li>
-                  </ul>
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div class="layui-col-md6">
-          <div class="layui-card">
-            <div class="layui-card-header">WTM开源</div>
-            <div class="layui-card-body">
-
-              <div class="layui-carousel layadmin-carousel layadmin-backlog">
-                <div carousel-item>
-                  <ul class="layui-row layui-col-space10">
-                    <li class="layui-col-xs6">
-                      <a href="https://github.com/dotnetcore/WTM/stargazers" class="layadmin-backlog-body"
-                        target="_blank">
-                        <h3>Star</h3>
-                        <p><cite id="githubstar"></cite></p>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs6">
-                      <a href="https://github.com/dotnetcore/WTM/network/members" class="layadmin-backlog-body"
-                        target="_blank">
-                        <h3>Fork</h3>
-                        <p><cite id="githubfork"></cite></p>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs6">
-                      <a href="https://github.com/dotnetcore/WTM/watchers" class="layadmin-backlog-body"
-                        target="_blank">
-                        <h3>Watch</h3>
-                        <p><cite id="githubwatch"></cite></p>
-                      </a>
-                    </li>
-                    <li class="layui-col-xs6">
-                      <a href="https://github.com/dotnetcore/WTM/issues" class="layadmin-backlog-body" target="_blank">
-                        <h3>Issue</h3>
-                        <p><cite id="githubissue"></cite></p>
-                      </a>
-                    </li>
-                  </ul>
-                  <ul class="layui-row layui-col-space10">
-                    <li class="layui-col-xs12">
-                      <span style="font-size:16px;line-height:50px;">WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~</span>
-
-                      <p style="text-align:center">
-                        <a href="https://github.com/dotnetcore/wtm" target="_blank"
-                          style="background-color:#eee;background-image:linear-gradient(to bottom, #fcfcfc 0, #eee 100%);background-repeat:no-repeat;border:1px solid #d5d5d5;color:#333;padding:3px 10px 3px 8px;font-size:16px;line-height:22px">
-                          <span width="20"
-                            style="width:20px;height:20px;font-size:16px;line-height:22px;box-sizing:border-box; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=')">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                          <span>Stars <cite id="githubstars"></cite></span>
-                        </a>
-                      </p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="layui-col-md6">
-          <div class="layui-card">
-            <div class="layui-card-header">控制器</div>
-            <div class="layui-carousel layadmin-carousel layadmin-dataview">
+            <div class="layui-carousel layadmin-carousel layadmin-shortcut">
               <div carousel-item>
-                <div id="chart_Controller" style=" height:300px;">
-                </div>
+                <ul class="layui-row layui-col-space10">
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/FrameworkUser/Index">
+                      <i class="layui-icon layui-icon-username"></i>
+                      <cite>用户</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/FrameworkRole/Index">
+                      <i class="layui-icon layui-icon-tabs"></i>
+                      <cite>角色</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/FrameworkMenu/Index">
+                      <i class="layui-icon layui-icon-app"></i>
+                      <cite>菜单</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/FrameworkGroup/Index">
+                      <i class="layui-icon layui-icon-user"></i>
+                      <cite>用户组</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/DataPrivilege/Index">
+                      <i class="layui-icon layui-icon-auz"></i>
+                      <cite>数据权限</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a lay-href="_Admin/ActionLog/Index">
+                      <i class="layui-icon layui-icon-console"></i>
+                      <cite>日志</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a href="/_codegen/index" target="_blank">
+                      <i class="layui-icon layui-icon-template-1"></i>
+                      <cite>代码生成</cite>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs3">
+                    <a href="https://wtmdoc.walkingtec.cn" target="_blank">
+                      <i class="layui-icon layui-icon-read"></i>
+                      <cite>文档</cite>
+                    </a>
+                  </li>
+                </ul>
+
               </div>
             </div>
+
           </div>
         </div>
-        <div class="layui-col-md6">
-          <div class="layui-card">
-            <div class="layui-card-header">其他</div>
-            <div class="layui-carousel layadmin-carousel layadmin-dataview">
+      </div>
+      <div class="layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">WTM开源</div>
+          <div class="layui-card-body">
+
+            <div class="layui-carousel layadmin-carousel layadmin-backlog">
               <div carousel-item>
-                <div id="chart_Other" style=" height:300px;">
-                </div>
-              </div>             
-            </div>
-        </div>
-          </div>
-        <div class="layui-col-md12">
-          <div class="layui-card">
-            <div class="layui-card-header">模拟数据</div>
-            <div class="layui-card-body">
+                <ul class="layui-row layui-col-space10">
+                  <li class="layui-col-xs6">
+                    <a href="https://github.com/dotnetcore/WTM/stargazers" class="layadmin-backlog-body"
+                       target="_blank">
+                      <h3>Star</h3>
+                      <p><cite id="githubstar"></cite></p>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs6">
+                    <a href="https://github.com/dotnetcore/WTM/network/members" class="layadmin-backlog-body"
+                       target="_blank">
+                      <h3>Fork</h3>
+                      <p><cite id="githubfork"></cite></p>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs6">
+                    <a href="https://github.com/dotnetcore/WTM/watchers" class="layadmin-backlog-body"
+                       target="_blank">
+                      <h3>Watch</h3>
+                      <p><cite id="githubwatch"></cite></p>
+                    </a>
+                  </li>
+                  <li class="layui-col-xs6">
+                    <a href="https://github.com/dotnetcore/WTM/issues" class="layadmin-backlog-body" target="_blank">
+                      <h3>Issue</h3>
+                      <p><cite id="githubissue"></cite></p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="layui-row layui-col-space10">
+                  <li class="layui-col-xs12">
+                    <span style="font-size:16px;line-height:50px;">WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~</span>
 
-              <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"
-                lay-filter="LAY-index-dataview">
-                <div carousel-item id="LAY-index-dataview">
-                  <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-                  <div></div>
-                  <div></div>
-                </div>
+                    <p style="text-align:center">
+                      <a href="https://github.com/dotnetcore/wtm" target="_blank"
+                         style="background-color:#eee;background-image:linear-gradient(to bottom, #fcfcfc 0, #eee 100%);background-repeat:no-repeat;border:1px solid #d5d5d5;color:#333;padding:3px 10px 3px 8px;font-size:16px;line-height:22px">
+                        <span width="20"
+                              style="width:20px;height:20px;font-size:16px;line-height:22px;box-sizing:border-box; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=')">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span>Stars <cite id="githubstars"></cite></span>
+                      </a>
+                    </p>
+                  </li>
+                </ul>
               </div>
-
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="layui-col-md4">
-      <div class="layui-card">
-        <div class="layui-card-header">版本信息</div>
-        <div class="layui-card-body layui-text">
+      <div class="layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">控制器</div>
+          <div class="layui-carousel layadmin-carousel layadmin-dataview">
+            <div carousel-item>
+              <div id="chart_Controller" style=" height:300px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-md6">
+        <div class="layui-card">
+          <div class="layui-card-header">其他</div>
+          <div class="layui-carousel layadmin-carousel layadmin-dataview">
+            <div carousel-item>
+              <div id="chart_Other" style=" height:300px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">模拟数据</div>
+          <div class="layui-card-body">
+
+            <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"
+                 lay-filter="LAY-index-dataview">
+              <div carousel-item id="LAY-index-dataview">
+                <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layui-col-md4">
+    <div class="layui-card">
+      <div class="layui-card-header">版本信息</div>
+      <div class="layui-card-body layui-text">
+        @if (Model.ConfigInfo.IsQuickDebug == true)
+        {
           <p>你正在使用<font color="Red">调试模式</font>，在调试模式下，框架会：</p>
           <p><span class="layui-badge layui-bg-cyan">1</span>&nbsp;反射所有controller下的Index方法作为左侧菜单</p>
           <p><span class="layui-badge layui-bg-cyan">2</span>&nbsp;登陆时自动添加用户名和密码</p>
           <p><span class="layui-badge layui-bg-cyan">3</span>&nbsp;跳过权限验证</p>
-          <p>修改appsettings文件中的IsQuickDebug可关闭调试模式，<a href="http://wtmdoc.walkingtec.cn/#/QuickStart/FAQ"
-              target="_blank">详见文档</a> </p>
-        </div>
-      </div>
-
-      <div class="layui-card">
-        <div class="layui-card-header">框架特点</div>
-        <div class="layui-card-body layadmin-takerates">
-          <ul>
-            <li><i class="layui-icon layui-icon-ok"></i>一键生成WTM项目</li>
-            <li><i class="layui-icon layui-icon-ok"></i>一键生成增删改查，导入导出，批量操作代码</li>
-            <li><i class="layui-icon layui-icon-ok"></i>支持一对多，多对多关联模型的识别和代码生成</li>
-            <li><i class="layui-icon layui-icon-ok"></i>支持分离和不分离两种模式</li>
-            <li><i class="layui-icon layui-icon-ok"></i>支持sqlserver，mysql，pgsql三种数据库</li>
-            <li><i class="layui-icon layui-icon-ok"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便</li>
-            <li><i class="layui-icon layui-icon-ok"></i>提供了很多基类，封装了绝大部分后台常用操作</li>
-            <li><i class="layui-icon layui-icon-ok"></i>提供了用户，角色，用户组，菜单，日志等常用模块</li>
-            <li><i class="layui-icon layui-icon-ok"></i>支持数据权限的开发和配置</li>
-            <li><i class="layui-icon layui-icon-ok"></i>支持读写分离和数据库分库</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="layui-card">
-        <div class="layui-card-header">
-          作者的话
-          <i class="layui-icon layui-icon-tips" lay-tips="从善如登" lay-offset="5"></i>
-        </div>
-        <div class="layui-card-body layui-text layadmin-text">
-          <p>WTM框架，全称WalkingTec
-            MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。
+          <p>
+            修改appsettings文件中的IsQuickDebug可关闭调试模式，<a href="http://wtmdoc.walkingtec.cn/#/QuickStart/FAQ" target="_blank">详见文档</a>
           </p>
-          <p>国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了， dotnet
-            core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。</p>
-          <p>WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（<a href="http://www.layui.com/"
-              target="_blank">layui.com</a>），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！</p>
-          <p>—— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank">https://github.com/dotnetcore/WTM</a>
+        }
+        else
+        {
+          <p>你正在使用普通模式，普通模式是项目发布后应该使用的模式，框架会：</p>
+          <p><span class="layui-badge layui-bg-cyan">1</span>&nbsp;从数据库读取菜单和权限配置</p>
+          <p><span class="layui-badge layui-bg-cyan">2</span>&nbsp;验证所有访问地址的权限</p>
+          <p><span class="layui-badge layui-bg-cyan">3</span>&nbsp;不再输出各类调试信息</p>
+          <p>
+            修改appsettings文件中的IsQuickDebug可开启调试模式，<a href="http://wtmdoc.walkingtec.cn/#/QuickStart/FAQ" target="_blank">详见文档</a>
           </p>
-          <p>—— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_blank">https://wtmdoc.walkingtec.cn</a></p>
-          <p>—— 框架QQ交流群：694148336</p>
-        </div>
+        }
       </div>
     </div>
 
+    <div class="layui-card">
+      <div class="layui-card-header">框架特点</div>
+      <div class="layui-card-body layadmin-takerates">
+        <ul>
+          <li><i class="layui-icon layui-icon-ok"></i>一键生成WTM项目</li>
+          <li><i class="layui-icon layui-icon-ok"></i>一键生成增删改查，导入导出，批量操作代码</li>
+          <li><i class="layui-icon layui-icon-ok"></i>支持一对多，多对多关联模型的识别和代码生成</li>
+          <li><i class="layui-icon layui-icon-ok"></i>支持分离和不分离两种模式</li>
+          <li><i class="layui-icon layui-icon-ok"></i>支持sqlserver，mysql，pgsql三种数据库</li>
+          <li><i class="layui-icon layui-icon-ok"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便</li>
+          <li><i class="layui-icon layui-icon-ok"></i>提供了很多基类，封装了绝大部分后台常用操作</li>
+          <li><i class="layui-icon layui-icon-ok"></i>提供了用户，角色，用户组，菜单，日志等常用模块</li>
+          <li><i class="layui-icon layui-icon-ok"></i>支持数据权限的开发和配置</li>
+          <li><i class="layui-icon layui-icon-ok"></i>支持读写分离和数据库分库</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="layui-card">
+      <div class="layui-card-header">
+        作者的话
+        <i class="layui-icon layui-icon-tips" lay-tips="从善如登" lay-offset="5"></i>
+      </div>
+      <div class="layui-card-body layui-text layadmin-text">
+        <p>
+          WTM框架，全称WalkingTec
+          MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。
+        </p>
+        <p>
+          国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了， dotnet
+          core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
+        </p>
+        <p>
+          WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（<a href="http://www.layui.com/"
+                                                                 target="_blank">layui.com</a>），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
+        </p>
+        <p>
+          —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank">https://github.com/dotnetcore/WTM</a>
+        </p>
+        <p>—— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_blank">https://wtmdoc.walkingtec.cn</a></p>
+        <p>—— 框架QQ交流群：694148336</p>
+      </div>
+    </div>
   </div>
+
 </div>
 <script>
   $("#frontpage").parent().css("background-color", "#eee");

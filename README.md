@@ -10,11 +10,12 @@ WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 
 
 ## CI Build Status
 
-| Platform | Build Server | Master Status  | Develop Status  |
-|--------- |------------- |---------|---------|
-| Azure Pipelines |  Linux |[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-master-nuget.org)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=4) |[![Build status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-develop-nuget.sundot)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=3)|
-| AppVeyor |  Windows/Linux | - | - |
-| Travis   | Linux/OSX | - | - |
+| Platform | Build Server | SDK | Master Status  | Develop Status  |
+| -------- | ------------ | ---- |---------|---------|
+| Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop) |
+| Azure Pipelines |  Windows/Linux/OSX |  v3.0.100-preview8-013656 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.0?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=18&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.0?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=18&branchName=develop) |
+| AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
+| Travis   | Linux/OSX |  v2.2.300 | - | - |
 
 ## Nuget Packages
 
@@ -69,9 +70,9 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 ****
 
 
-最后感谢各位老板的支持和捐赠，具体捐赠信息请见 https://wtmdoc.walkingtec.cn/#/Home/DonateList 
+最后感谢各位老板的支持和捐赠，具体捐赠信息请见 https://wtmdoc.walkingtec.cn/#/Home/DonateList
 
 如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
 
-<img src="https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5A834WX1RcXAPytEdtUgniaRnVoW9e2HPBGiaibXOru3MfvWylLunMeFBg/0?wx_fmt=jpeg"  height="300" width="300">
+<img src="https://wtmdoc.walkingtec.cn/imgs/zanshang.jpg"  >
 

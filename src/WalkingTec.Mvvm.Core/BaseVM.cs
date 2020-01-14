@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
+
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -17,7 +22,8 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// BaseVM
         /// </summary>
-        public BaseVM() {
+        public BaseVM()
+        {
             FC = new Dictionary<string, object>();
         }
 
@@ -181,22 +187,15 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public object Controller { get; set; }
+
+        public IDistributedCache Cache { get; set; }
+
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo
-        {
-            get
-            {
-                return Session?.Get<LoginUserInfo>("UserInfo");
-            }
-            set
-            {
-                Session?.Set("UserInfo", value);
-            }
-
-        }
+        public LoginUserInfo LoginUserInfo { get; set; }
 
         /// <summary>
         /// 当前Url
@@ -229,6 +228,8 @@ namespace WalkingTec.Mvvm.Core
         public List<Guid> DeletedFileIds { get; set; }
 
         public string ControllerName { get; set; }
+
+        public IStringLocalizer Localizer { get; set; }
         #endregion
 
         #region Event
@@ -305,20 +306,23 @@ namespace WalkingTec.Mvvm.Core
             ConfigInfo = vm.ConfigInfo;
             DataContextCI = vm.DataContextCI;
             UIService = vm.UIService;
+            LoginUserInfo = vm.LoginUserInfo;
         }
 
         /// <summary>
-        /// 创建DbContext对象
+        /// Create DbContext
         /// </summary>
-        /// <param name="csName"></param>
-        /// <returns></returns>
-        public virtual IDataContext CreateDC(string csName = null)
+        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
+        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
+        /// <returns>data context</returns>
+        public virtual IDataContext CreateDC(string csName = null, DBTypeEnum? dbtype = null)
         {
             if (string.IsNullOrEmpty(csName))
             {
-                csName = CurrentCS??"default";
+                csName = CurrentCS ?? "default";
             }
-            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            var dbt = dbtype ?? ConfigInfo.DbType;
+            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), dbt });
         }
 
         /// <summary>

@@ -10,7 +10,8 @@
 </style>
 
 <wt:fieldset field-set-style="Simple" title="Transfer 穿梭框">
-    <p>Transfer的常用属性有：</p>
+ </wt:fieldset>
+   <p>Transfer的常用属性有：</p>
     <table lay-filter="parse-table-demo">
         <thead>
             <tr>
@@ -105,7 +106,7 @@
     </table>
     <wt:quote>
         <p>
-            Transfer 只支持通过设置 Items 属性设置待选择数据源，Items 需要绑定一个 List&lt;ComboSelectListItem&gt;，
+            Transfer 只支持通过设置 Items 属性设置待选择数据源，Items 需要绑定一个 List<ComboSelectListItem>，
             ComboSelectListItem 是框架提供的辅助类，有 Text，Value，Selected 和 Disabled 4个属性，
             其中 Disabled 目前是专门为 Transfer 组件新增的属性，用于禁用某些特定 Item 的修改。
         <p>
@@ -127,7 +128,7 @@
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:form vm="@Model" width="600">
+                <wt:form vm="@Model" style="max-width:600px;">
                     <wt:transfer items="AllSchools" field="TransferSelectedSchools"
                                  left-title="自定义Title1" right-title="自定义Title2"
                                  none-placeholder="没有选中的数据" disabled="false"
@@ -161,7 +162,6 @@
             </wt:tabcontent>
         </wt:tabcontents>
     </wt:tab>
-</wt:fieldset>
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})

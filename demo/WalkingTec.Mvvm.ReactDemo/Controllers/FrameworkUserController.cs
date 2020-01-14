@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,7 +17,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
     /// </summary>
     [ApiController]
     [Route("api/FrameworkUser")]
-    [Public]
+    [AllowAnonymous]
     public class UserController : BaseApiController
     {
 
@@ -103,7 +102,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         [HttpPost("BatchDelete")]
         [ActionDescription("批量删除")]
-        public IActionResult BatchDelete(Guid[] ids)
+        public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -130,20 +129,20 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
-                vm.Searcher = searcher;
-                vm.SearcherMode = ListVMSearchModeEnum.Export;
+            vm.Searcher = searcher;
+            vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
             return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
         [HttpPost("ExportExcelByIds")]
         [ActionDescription("导出")]
-        public IActionResult ExportExcelByIds(Guid[] ids)
+        public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             if (ids != null && ids.Count() > 0)
             {
-                vm.Ids = new List<Guid>(ids);
+                vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
             var data = vm.GenerateExcel();

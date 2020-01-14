@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using WalkingTec.Mvvm.Admin.Api;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
@@ -35,13 +36,13 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
             FrameworkUserBase v = new FrameworkUserBase();
-            
+
             v.ITCode = "itcode";
             v.Name = "name";
             v.Password = "password";
             vm.Entity = v;
             var rv = _controller.Add(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -79,7 +80,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
             var rv = _controller.Edit(vm);
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -128,16 +129,16 @@ namespace WalkingTec.Mvvm.Admin.Test
             }
 
 
-            var rv = _controller.BatchDelete(new Guid[] { v1.ID, v2.ID });
-            Assert.IsInstanceOfType(rv, typeof(OkObjectResult));
+            var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
+            Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
                 Assert.AreEqual(context.Set<FrameworkUserBase>().Count(), 0);
             }
 
-            rv = _controller.BatchDelete(new Guid[] {});
-            Assert.IsInstanceOfType(rv, typeof(OkResult));
+            rv = _controller.BatchDelete(new string[] {});
+            Assert.IsInstanceOfType(rv.Result, typeof(OkResult));
         }
 
         [TestMethod]
@@ -146,7 +147,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             var rv = _controller.ExportExcel(new FrameworkUserSearcher());
             Assert.IsInstanceOfType(rv, typeof(FileResult));
 
-            rv = _controller.ExportExcelByIds(new Guid[] { });
+            rv = _controller.ExportExcelByIds(new string[] { });
             Assert.IsInstanceOfType(rv, typeof(FileResult));
 
             rv = _controller.GetExcelTemplate();

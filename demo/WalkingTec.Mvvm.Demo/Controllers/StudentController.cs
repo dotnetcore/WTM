@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
-    
     [ActionDescription("学生管理（多对多）")]
     public class StudentController : BaseController
     {
@@ -25,6 +27,13 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             vm.ValidList.Searcher.IsValid = true;
             vm.InValidList.Searcher.IsValid = false;
             return PartialView(vm);
+        }
+
+        [ActionDescription("搜索")]
+        [HttpPost]
+        public string Search(StudentListVM vm)
+        {
+            return vm.GetJson(false);
         }
         #endregion
 
@@ -54,7 +63,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGrid(index: 0).CloseDialog().RefreshGrid(index: 1);
+                    return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
                 }
             }
         }
@@ -86,7 +95,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
+                    return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
                 }
             }
         }
@@ -112,7 +121,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid();
+                return FFResult().CloseDialog().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog();
             }
         }
         #endregion
@@ -145,7 +154,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+
+                return FFResult().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
             }
         }
         #endregion
@@ -169,7 +179,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().RefreshGrid(index: 0).RefreshGrid(index: 1).CloseDialog().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
             }
         }
         #endregion
@@ -196,5 +206,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
         }
         #endregion
+
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(StudentListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+        }
+
     }
 }

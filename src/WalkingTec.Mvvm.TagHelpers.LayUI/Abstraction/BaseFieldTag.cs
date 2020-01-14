@@ -88,14 +88,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
                     {
+                        var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
                         output.Attributes.Add("lay-verify", "required");
+                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required", pro.GetPropertyDisplayName()]}");
                     }
                 }
             }
 
             if (LabelText == null)
             {
-                LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
+                if (pro != null)
+                {
+                    LabelText = pro.GetPropertyDisplayName();
+                }
+                else
+                {
+                    LabelText = Field?.Metadata.DisplayName ?? Field?.Metadata.PropertyName;
+                }
                 if (LabelText == null)
                 {
                     HideLabel = true;
@@ -139,7 +149,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 postHtml += $@"
     </div>
-<label class=""layui-form-label"" >{PaddingText}</label>
+<div class=""layui-form-mid layui-word-aux"">{PaddingText}</div>
 </div>
 ";
 
