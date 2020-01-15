@@ -1,14 +1,11 @@
 <template>
-  <Grid
-    :PageStore="PageStore"
-    :GridOptions="GridOptions"
-  />
+  <Grid :PageStore="PageStore" :GridOptions="GridOptions" />
   <!-- <Grid
     :PageStore="PageStore"
     :GridOptions="GridOptions"
     :rowData="rowData"
     :columnDefs="columnDefs"
-  /> -->
+  />-->
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -28,6 +25,9 @@ export default class ViewGrid extends Vue {
     frameworkComponents: {
       // 传递 行 操作组件 自动注册 Action 列
       Action
+    },
+    context: {
+      PageStore: this.PageStore
     }
   };
   // get rowData() {

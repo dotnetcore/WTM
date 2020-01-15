@@ -3,12 +3,12 @@ export class PageStore extends EntitiesPageStore {
     constructor() {
         super({
             target: '/api',
-            Search: { url: '/FrameworkUser/Search', },
-            Details: { url: '/FrameworkUser/{id}' },
-            Insert: { url: '/FrameworkUser/Add' },
-            Update: { url: '/FrameworkUser/Edit' },
-            Delete: { url: '/FrameworkUser/BatchDelete' },
-            Export: { url: '/FrameworkUser/ExportExcel' },
+            Search: { url: '/_FrameworkUserBase/Search', },
+            Details: { url: '/_FrameworkUserBase/{ID}' },
+            Insert: { url: '/_FrameworkUserBase/Add' },
+            Update: { url: '/_FrameworkUserBase/Edit' },
+            Delete: { url: '/_FrameworkUserBase/BatchDelete' },
+            Export: { url: '/_FrameworkUserBase/ExportExcel' },
         });
         this.DeBugLog = true;
         this.ColumnDefs = [

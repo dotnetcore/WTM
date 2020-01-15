@@ -70,6 +70,11 @@ export interface FormItem {
      */
     options?: FieldDecoratorOptions;
     /**
+     * 将 value 转换 为对象 { [mapKey]:value }
+     * 字符串 或者 函数
+     */
+    mapKey?: string;
+    /**
      * 联动
      */
     linkage?: string[];

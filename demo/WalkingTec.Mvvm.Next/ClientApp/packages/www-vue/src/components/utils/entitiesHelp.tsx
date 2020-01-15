@@ -1,13 +1,14 @@
+import { EntitiesPageStore } from '@leng/public/src';
 import { Col, Form } from 'ant-design-vue';
+import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
 import lodash from 'lodash';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, map } from "rxjs/operators";
+import { debounceTime, filter } from "rxjs/operators";
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from "vue-property-decorator";
 import globalConfig from '../../global.config';
 import displayComponents from './display.vue';
 import { FormItem, FormItemComponents, RenderFormItemParams } from './type';
-import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
 /**
 * 渲染 模型
 */
@@ -66,7 +67,11 @@ export function createFormItem({ entities }: { entities: any }): FormItemCompone
                     <a-spin :spinning="spinning" >
                         <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
                         <template v-if="isDisplay" >
-                            <display v-decorator="decorator" />
+                            <display 
+                               v-decorator="decorator" 
+                               :dataSource="dataSource"
+                               :Entitie="Entitie"
+                            />
                         </template>
                         <template v-else >
                             ${item.children}
@@ -78,6 +83,7 @@ export function createFormItem({ entities }: { entities: any }): FormItemCompone
 
         })
         class FieldItem extends Vue {
+            @Prop() private PageStore: EntitiesPageStore;
             @Prop() private FieldsChange: Subject<{
                 props: any;
                 fields: any;
@@ -87,13 +93,18 @@ export function createFormItem({ entities }: { entities: any }): FormItemCompone
             @Prop() private disabled: any;
             @Prop() private decoratorOptions: any;
             FieldsChangeSubscription: Subscription;
-            formItem = item;
+            Entitie = item;
             loadData = false;
             spinning = false;
             dataSource = [];
             // 计算属性的 getter
             get decorator() {
-                return [key, lodash.merge({}, item.options, this.decoratorOptions)]
+                const options = lodash.merge({}, item.options, this.decoratorOptions);
+                // 显示 文本状态 去除 valuePropName 转换
+                if (this.isDisplay) {
+                    lodash.unset(options, 'valuePropName');
+                }
+                return [key, options];
             }
             // 是否禁用
             get isDisabled() {

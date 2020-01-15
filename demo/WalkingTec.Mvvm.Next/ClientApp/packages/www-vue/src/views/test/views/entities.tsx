@@ -110,6 +110,7 @@ export default {
                 label: { 'zh-CN': '角色', 'en-US': "UserRoles" },
                 options: {
                 },
+                mapKey: 'RoleId',
                 dataSource: () => Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" }),
                 children: `<a-transfer v-decorator />`
             },
@@ -140,10 +141,13 @@ export default {
             },
             /** 用户组 */
             "Entity.UserGroups": {
+                span: { span: 24 },
                 label: { 'zh-CN': '用户组', 'en-US': "UserGroups" },
                 options: {
                 },
-                children: `<a-input v-decorator />`
+                mapKey: 'GroupId',
+                dataSource: () => Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" }),
+                children: `<a-transfer v-decorator />`
             }
 
         }

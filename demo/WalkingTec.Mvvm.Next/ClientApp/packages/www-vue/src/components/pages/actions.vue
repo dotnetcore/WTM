@@ -38,10 +38,10 @@
     <!-- 行 数据  Action-->
     <div v-else-if="isRowAction" class="row-action">
       <slot name="rowAction">
-        <a-button type="link" size="small" @click="onDetails">
+        <a-button type="link" size="small" @click="onDetails(RowData)">
           <a-icon type="eye" />
         </a-button>
-        <a-button type="link" size="small" @click="onUpdate">
+        <a-button type="link" size="small" @click="onUpdate(RowData)">
           <a-icon type="edit" />
         </a-button>
         <a-popconfirm title="Are you sure delete this task?" okText="Yes" cancelText="No">
@@ -60,9 +60,12 @@
       @ok="onOk"
     >
       <a-form layout="vertical" :form="form" :key="slotName">
-        <a-row :gutter="24">
-          <slot :name="slotName"></slot>
-        </a-row>
+        <a-spin :spinning="spinning">
+          <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
+          <a-row :gutter="24">
+            <slot :name="slotName"></slot>
+          </a-row>
+        </a-spin>
       </a-form>
     </a-modal>
   </div>
@@ -84,7 +87,9 @@ export default class ViewAction extends Vue {
     form: WrappedFormUtils;
   }>;
   @Prop() private params: ICellRendererParams;
+  @Prop() Entities: any;
   form: WrappedFormUtils;
+  spinning = false;
   visible = false;
   title = "";
   slotName = "";
@@ -93,6 +98,12 @@ export default class ViewAction extends Vue {
   }
   get isRowAction() {
     return lodash.hasIn(this, "params.data");
+  }
+  get RowData() {
+    return lodash.get(this, "params.data");
+  }
+  get PageStoreContext(): EntitiesPageStore {
+    return lodash.get(this, "params.context.PageStore", this.PageStore);
   }
   beforeCreate() {
     this.form = this.$form.createForm(this, {
@@ -114,7 +125,21 @@ export default class ViewAction extends Vue {
   }
   onOk(e?) {
     e && e.preventDefault();
-    this.form.validateFields((error, values) => {
+    if (this.slotName === "Details") {
+      return this.onVisible(false);
+    }
+    this.form.validateFieldsAndScroll((error, values) => {
+      lodash.map(this.Entities, ({ mapKey }, key) => {
+        // 转换 mapKey
+        if (mapKey) {
+          lodash.update(values, key, newValue => {
+            if (lodash.isArray(newValue)) {
+              return lodash.map(newValue, val => ({ [mapKey]: val }));
+            }
+            return newValue;
+          });
+        }
+      });
       console.log("TCL: ViewAction -> onOk -> values", values);
     });
   }
@@ -123,15 +148,32 @@ export default class ViewAction extends Vue {
     this.slotName = "Insert";
     this.onVisible(true);
   }
-  onUpdate() {
+  onUpdate(item) {
     this.title = "Update";
     this.slotName = "Update";
     this.onVisible(true);
+    this.onGetDetails(item);
   }
-  onDetails() {
+  onDetails(item) {
     this.title = "Details";
     this.slotName = "Details";
     this.onVisible(true);
+    this.onGetDetails(item);
+  }
+  async onGetDetails(item) {
+    this.spinning = true;
+    let details = await this.PageStoreContext.onDetails({ body: item });
+    // 转换 mapKey
+    details = lodash.mapValues(this.Entities, (value, key) => {
+      const { mapKey } = value;
+      let newValue = lodash.get(details, key);
+      if (mapKey && lodash.isArray(newValue)) {
+        newValue = lodash.map(newValue, mapKey);
+      }
+      return newValue;
+    });
+    this.spinning = false;
+    this.form.setFieldsValue(details);
   }
 }
 </script>

@@ -37,6 +37,11 @@ export class EntitiesPageStore extends EntitiesBehavior {
                     }
                 }));
                 break;
+            // case 'Details':
+            //     observable = observable.pipe(map(data => {
+            //         return 
+            //     }));
+            //     break;
         }
         return observable
     }
@@ -89,7 +94,7 @@ export class EntitiesPageStore extends EntitiesBehavior {
             this.LoadingDetails = true;
             const res = await this.onObservableFactory('Details', request).toPromise();
             runInAction(() => {
-                this.Details = res.Entity;
+                this.Details = res;
             })
             return res
         } catch (error) {

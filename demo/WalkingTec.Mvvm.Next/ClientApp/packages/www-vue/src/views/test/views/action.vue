@@ -1,7 +1,12 @@
 <template>
-  <ViewActionsBasics :PageStore="PageStore" :FieldsChange="FieldsChange" :params="params">
+  <ViewActionsBasics
+    :PageStore="PageStore"
+    :Entities="Entities"
+    :FieldsChange="FieldsChange"
+    :params="params"
+  >
     <template #Insert>
-      <Entity-ITCode :FieldsChange="FieldsChange" />
+      <Entity-ITCode />
       <Entity-Password />
       <Entity-Email />
       <Entity-Name />
@@ -13,7 +18,7 @@
       <Entity-PhotoId />
       <Entity-IsValid />
       <Entity-UserRoles />
-      <Entity-UserRoles2 :FieldsChange="FieldsChange"/>
+      <Entity-UserRoles2 :FieldsChange="FieldsChange" />
       <Entity-UserRoles3 />
       <Entity-UserGroups />
     </template>
@@ -60,15 +65,18 @@ import PageStore from "../store";
 import Entities from "./entities";
 import lodash from "lodash";
 import { Subject } from "rxjs";
+const entities = Entities.editEntities();
 @Component({
-  components: {
-    ViewActionsBasics,
-    // 创建 实体 组件
-    ...createFormItem({ entities: Entities.editEntities() })
-  }
+  components: lodash.merge(
+    {
+      ViewActionsBasics
+    },
+    createFormItem({ entities })
+  )
 })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: PageStore;
+  Entities = entities;
   FieldsChange = new Subject<{
     props: any;
     fields: any;

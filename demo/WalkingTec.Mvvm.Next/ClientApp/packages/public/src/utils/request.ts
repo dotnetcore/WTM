@@ -120,10 +120,11 @@ export class Request {
      * @param url 
      * @param body 
      */
-    static parameterTemplate(url, body) {
+    static parameterTemplate(url, request: AjaxRequest) {
         try {
-            if (lodash.isObject(body) && /{([\s\S]+?)}/g.test(url)) {
-                url = lodash.template(url, { interpolate: /{([\s\S]+?)}/g })(body);
+            if (lodash.isObject(request.body) && /{([\s\S]+?)}/g.test(url)) {
+                url = lodash.template(url, { interpolate: /{([\s\S]+?)}/g })(request.body);
+                request.body = {}
             }
         } catch (error) { }
         return url
@@ -161,7 +162,7 @@ export class Request {
             };
         }
         urlOrRequest = lodash.cloneDeep(urlOrRequest);
-        const url = Request.parameterTemplate(urlOrRequest.url, urlOrRequest.body)
+        const url = Request.parameterTemplate(urlOrRequest.url, urlOrRequest)
         urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
         switch (lodash.toUpper(urlOrRequest.method)) {
             case 'POST':
