@@ -387,7 +387,10 @@ namespace WalkingTec.Mvvm.Mvc
                             if (u != null && u.EndsWith("/0"))
                             {
                                 u = u.Substring(0, u.Length - 2);
-                                u = u + "/{id}";
+                                if (m.IsApi == true)
+                                {
+                                    u = u + "/{id}";
+                                }
                             }
                             a.Url = u;
                         }
