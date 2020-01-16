@@ -33,6 +33,9 @@ export class Request {
     }
     // static target = "";
     static responseStatus: { [key: string]: (res: AjaxResponse) => any } = {
+        'default': (res: AjaxResponse) => {
+            return res
+        },
         '200': (res: AjaxResponse) => {
             if (lodash.toLower(res.responseType) === "blob") {
                 return res;
@@ -55,6 +58,9 @@ export class Request {
             throw ajax
         }
         return true
+    }
+    static Error(error) {
+        console.error("TCL: Error -> error", error)
     }
     /**
      * 请求头
@@ -87,7 +93,7 @@ export class Request {
                         Request.NProgress("done");
                         return Request.filter(ajax);
                     } catch (error) {
-                        console.error("TCL: Request -> error", error)
+                        Request.Error(error);
                         sub.error(error);
                         return false
                     }
@@ -106,7 +112,8 @@ export class Request {
      */
     responseMap(res: AjaxResponse) {
         // console.log(`TCL: Response ${res.request.url}`, res.response)
-        const statusFn = lodash.get(Request.responseStatus, res.status, () => res);
+        const defaultFn = lodash.get(Request.responseStatus, 'default', () => res);
+        const statusFn = lodash.get(Request.responseStatus, res.status, defaultFn);
         return statusFn(res);
     }
     /**

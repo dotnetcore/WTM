@@ -1,6 +1,15 @@
 import { configure, observable } from 'mobx';
 import { create, persist } from 'mobx-persist';
+import { notification } from 'ant-design-vue';
 import lodash from 'lodash';
+import { Request } from '@leng/public/src';
+Request.Error = (error) => {
+    notification.error({
+        key: 'RequestError' + error.status,
+        description: error.name,
+        message: error.message
+    })
+}
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 // 是否被 Iframe 嵌套

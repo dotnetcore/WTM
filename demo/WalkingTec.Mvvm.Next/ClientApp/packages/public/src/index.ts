@@ -9,4 +9,5 @@ export * from "./entities/time";
 export * from "./entities/page";
 export * from "./utils/helps";
 export * from "./utils/regulars";
+export * from "./utils/request";
 

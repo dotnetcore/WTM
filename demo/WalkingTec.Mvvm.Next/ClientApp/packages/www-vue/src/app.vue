@@ -4,7 +4,7 @@
       <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
     </a-spin>
   </div>
-  <Layout v-else-if="UserStore.OnlineState" />
+  <w-layout v-else-if="UserStore.OnlineState" />
   <Login v-else />
 </template>
 
@@ -13,11 +13,9 @@ import { message } from "ant-design-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Basics } from "./views";
 import RootStore from "./rootStore";
-import Layout from "./components/layout/index.vue";
 @Component({
   components: {
     Login: Basics.login,
-    Layout
   }
 })
 export default class App extends Vue {

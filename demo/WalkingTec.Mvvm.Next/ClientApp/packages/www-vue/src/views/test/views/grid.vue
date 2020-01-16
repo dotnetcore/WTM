@@ -1,6 +1,6 @@
 <template>
-  <Grid :PageStore="PageStore" :GridOptions="GridOptions" />
-  <!-- <Grid
+  <w-grid :PageStore="PageStore" :GridOptions="GridOptions" />
+  <!-- <w-grid
     :PageStore="PageStore"
     :GridOptions="GridOptions"
     :rowData="rowData"
@@ -9,14 +9,12 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Grid from "@/components/grid/index.vue";
 import PageStore from "../store";
 import { GridOptions } from "ag-grid-community";
 import { toJS } from "mobx";
 import Action from "./action.vue";
 @Component({
   components: {
-    Grid
   }
 })
 export default class ViewGrid extends Vue {

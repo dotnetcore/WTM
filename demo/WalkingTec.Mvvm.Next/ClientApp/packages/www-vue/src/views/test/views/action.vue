@@ -1,5 +1,5 @@
 <template>
-  <ViewActionsBasics
+  <w-actions
     :PageStore="PageStore"
     :Entities="Entities"
     :FieldsChange="FieldsChange"
@@ -52,27 +52,21 @@
       <Entity-UserRoles :display="true" />
       <Entity-UserGroups :display="true" />
     </template>
-  </ViewActionsBasics>
+  </w-actions>
 </template> 
 <script lang="ts">
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { ICellRendererParams } from "ag-grid-community";
-import ViewActionsBasics from "../../../components/pages/actions.vue";
-import { createFormItem } from "../../../components/utils/entitiesHelp";
 import { Modal } from "ant-design-vue";
-import PageStore from "../store";
-import Entities from "./entities";
 import lodash from "lodash";
 import { Subject } from "rxjs";
+import wtm from "../../../components";
+import PageStore from "../store";
+import Entities from "./entities";
 const entities = Entities.editEntities();
 @Component({
-  components: lodash.merge(
-    {
-      ViewActionsBasics
-    },
-    createFormItem({ entities })
-  )
+  components: wtm.createFormItem({ entities })
 })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: PageStore;

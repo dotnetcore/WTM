@@ -45,23 +45,24 @@ export class ViewFilterBasics extends Vue {
     onToggle() {
         this.PageStore.onToggleFilterCollapse();
     };
-    render(h: CreateElement) {
+    render(h: CreateElement, context) {
         const showLength = 5;
-        const entities = this.Entities.filterEntities(this, h);
-        const renderItems = renderFormItem({
-            entities,
-            form: this.form,
-            initialValues: toJS(this.PageStore.SearchParams),
-            ColProps: { xs: 24, sm: 24, md: 12, lg: 8 }
-        }, h);
-        const { length } = renderItems;
-        if (!this.PageStore.FilterCollapse) {
-            renderItems.length = showLength
-        }
+        // const entities = this.Entities.filterEntities(this, h);
+        // const renderItems = renderFormItem({
+        //     entities,
+        //     form: this.form,
+        //     initialValues: toJS(this.PageStore.SearchParams),
+        //     ColProps: { xs: 24, sm: 24, md: 12, lg: 8 }
+        // }, h);
+        // const { length } = renderItems;
+        // if (!this.PageStore.FilterCollapse) {
+        //     renderItems.length = showLength
+        // }
         return (
-            <Form {...{ class: "page-filter-form" }} on-submit={this.onSubmit} >
+            <Form {...{ class: "page-filter-form", form: this.form }} on-submit={this.onSubmit} >
                 <Row props={{ gutter: 20, type: "flex" }}>
-                    {renderItems}
+                    {/* {renderItems} */}
+                    {this.$slots.default}
                     <Col {...{ class: "page-filter-btns" }} >
                         <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
                         <Divider props={{ type: 'vertical' }} />

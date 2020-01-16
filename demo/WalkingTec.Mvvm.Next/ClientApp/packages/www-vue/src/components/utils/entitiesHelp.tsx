@@ -40,13 +40,17 @@ export function renderFormItem({ entities, form, initialValues, ColProps }: Rend
  * Entity.ITCode ---->  Entity-ITCode //entityItCode
  * @param param0 
  */
-export function createFormItem({ entities }: { entities: any }): FormItemComponents {
+export function createFormItem({
+    entities,
+    colProps = { xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6, span: undefined }
+}: { entities: any, colProps?: any }): FormItemComponents {
+    // colProps = ;//{ xs: 24, sm: 24, md: 12, lg: 8 }
     entities = lodash.mapValues(entities, (item: FormItem, key) => {
         // const options = JSON.stringify(item.options).replace(/"/g, "'");
         // const children = lodash.replace(item.children, 'v-decorator', `v-decorator="['${key}',${options}]"`)
         // const children = createChildrenTemplate(item);
         item = createChildrenTemplate(item)
-        const span = lodash.get(item, 'span', { xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6, span: undefined }); //lodash.merge({ xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6 }, item.span);
+        const span = lodash.get(item, 'span', colProps); //lodash.merge({ xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6 }, item.span);
         let label = item.label;
         if (lodash.isObject(label)) {
             label = lodash.get(label, globalConfig.settings.language);

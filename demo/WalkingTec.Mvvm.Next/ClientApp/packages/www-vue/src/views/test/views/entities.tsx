@@ -1,8 +1,7 @@
 ﻿import Request from '@leng/public/src/utils/request';
-import { Input } from 'ant-design-vue';
+import lodash from 'lodash';
 import { CreateElement } from 'vue';
 import { EntitiesItems } from '../../../components/utils/type';
-import lodash from 'lodash';
 
 /**
  * label  标识
@@ -156,18 +155,19 @@ export default {
      * 搜索 模型 
      * @param props 
      */
-    filterEntities(props, h: CreateElement): EntitiesItems {
+    filterEntities(props?, h?: CreateElement): EntitiesItems {
         return {
             /** 账号 */
             "ITCode": {
-                label: "账号",
-                // options: { initialValue: 'admin' },
-                children: <Input />
+                label: "ITCode",
+                options: {
+                },
+                children: `<a-input v-decorator />`
             },
             /** 姓名 */
             "Name": {
-                label: "姓名",
-                children: <Input />
+                label:  { 'zh-CN': '姓名', 'en-US': "Name" },
+                children: `<a-input v-decorator />`
             },
         }
     },
