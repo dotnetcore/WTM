@@ -1,5 +1,5 @@
 import { ColDef, ColGroupDef } from 'ag-grid-community';
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import { create } from 'mobx-persist';
 import { Subject, Subscription } from 'rxjs';
 import { AjaxRequest } from 'rxjs/ajax';
@@ -72,6 +72,22 @@ export default class EntitiesPage {
     ColumnDefs: (ColDef | ColGroupDef)[] = [
 
     ];
+    /**
+     * 选择的行 数据
+     * @type {((ColDef | ColGroupDef)[])}
+     * @memberof EntitiesPage
+     */
+    @observable
+    SelectedRows: any[] = [];
+    /**
+     * 计算 是否有已 选择 数据
+     * @readonly
+     * @memberof EntitiesPage
+     */
+    @computed
+    get IsSelectedRows() {
+        return this.SelectedRows.length > 0
+    }
     /**
      * 搜索的参数
      * @type {*}

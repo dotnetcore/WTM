@@ -6,7 +6,7 @@
     <a-divider class="page-divider" />
     <a-card class="page-card">
       <ViewAction :PageStore="PageStore" />
-       <a-divider class="page-divider" />
+      <a-divider class="page-divider" />
       <ViewGrid :PageStore="PageStore" />
     </a-card>
   </div>

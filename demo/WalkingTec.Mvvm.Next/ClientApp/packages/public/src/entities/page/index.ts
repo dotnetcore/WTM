@@ -54,6 +54,7 @@ export class EntitiesPageStore extends EntitiesBehavior {
             lodash.mapValues(response, (value, key, object) => {
                 lodash.set(this, key, value);
             })
+            this.onSelectionChanged([]);
         })
     }
     /**

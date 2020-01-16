@@ -14,8 +14,7 @@ import { GridOptions } from "ag-grid-community";
 import { toJS } from "mobx";
 import Action from "./action.vue";
 @Component({
-  components: {
-  }
+  components: {}
 })
 export default class ViewGrid extends Vue {
   @Prop() PageStore: PageStore;

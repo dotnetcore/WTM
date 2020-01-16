@@ -15,6 +15,12 @@ export default {
      */
     editEntities(props?): EntitiesItems {
         return {
+            /** 唯一标识 的隐藏域 */
+            "Entity.ID": {
+                label: "ID",
+                options: {},
+                children: `<a-input v-decorator />`
+            },
             /** 账号 */
             "Entity.ITCode": {
                 label: "ITCode",
@@ -166,7 +172,7 @@ export default {
             },
             /** 姓名 */
             "Name": {
-                label:  { 'zh-CN': '姓名', 'en-US': "Name" },
+                label: { 'zh-CN': '姓名', 'en-US': "Name" },
                 children: `<a-input v-decorator />`
             },
         }

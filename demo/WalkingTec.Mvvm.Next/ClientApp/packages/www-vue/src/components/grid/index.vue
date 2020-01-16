@@ -1,7 +1,7 @@
 <template>
-  <a-spin  :spinning="PageStore.Loading" class="grid-spin">
+  <a-spin :spinning="PageStore.Loading" class="grid-spin">
     <a-icon slot="indicator" type="loading" style="font-size: 30px" spin />
-    <grid :GridOptions="GridOptions" :rowData="rowDataProps" :columnDefs="columnDefsProps" />
+    <grid :GridOptions="GridOptionsProps" :rowData="rowDataProps" :columnDefs="columnDefsProps" />
     <div style="height:8px"></div>
     <div class="grid-pagination">
       <pagination :PageStore="PageStore" :Pagination="Pagination" />
@@ -15,6 +15,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import pagination from "./pagination.vue";
 import { Pagination } from "ant-design-vue";
 import { toJS } from "mobx";
+import lodash from "lodash";
+import { GridOptions, SelectionChangedEvent } from "ag-grid-community";
 const grid = () =>
   ({
     // 需要加载的组件 (应该是一个 `Promise` 对象)
@@ -46,6 +48,20 @@ export default class Grid extends Vue {
   }
   get columnDefsProps() {
     return toJS(this.PageStore.ColumnDefs);
+  }
+  get GridOptionsProps(): GridOptions {
+    return lodash.merge<GridOptions, GridOptions>(
+      {
+        /**
+         * 选择的 行 数据 回调
+         * @param event
+         */
+        onSelectionChanged: (event: SelectionChangedEvent) => {
+          this.PageStore.onSelectionChanged(event.api.getSelectedRows());
+        }
+      },
+      this.GridOptions
+    );
   }
   mounted() {}
   destroyed() {}

@@ -23,6 +23,7 @@
       <Entity-UserGroups />
     </template>
     <template #Update>
+      <Entity-ID v-show="false" />
       <Entity-ITCode :disabled="true" />
       <Entity-Password />
       <Entity-Email />

@@ -47,7 +47,7 @@ export default class EntitiesPageBehavior extends Entities {
         Search: { method: "POST", body: {} },
         Insert: { method: "POST", body: {} },
         Update: { method: "PUT", body: {} },
-        Delete: { method: "POST", body: {} },
+        Delete: { method: "POST", body: [] },
         Import: { method: "POST", body: {} },
         Export: { method: "POST", responseType: "blob", body: {} },
         ExportByIds: { method: "POST", responseType: "blob", body: {} },
@@ -93,7 +93,7 @@ export default class EntitiesPageBehavior extends Entities {
                 throw ''
             }
             const newRequest = lodash.merge({}, req, request) as AjaxRequest;
-            newRequest.body = lodash.assign({}, req.body, request.body);
+            newRequest.body = lodash.assign(req.body, request.body);
             this.DeBugLog && console.table(newRequest);
             return lodash.cloneDeep(newRequest);
         } catch (error) {
@@ -110,6 +110,14 @@ export default class EntitiesPageBehavior extends Entities {
     onToggleFilterCollapse(Collapse = !this.FilterCollapse) {
         this.FilterCollapse = Collapse
     };
+    /**
+     * 设置 SelectedRows
+     * @param SelectedRows 
+     */
+    @action
+    onSelectionChanged(SelectedRows) {
+        this.SelectedRows = SelectedRows;
+    }
     /**
      * 订阅 事件处理
      * 默认只处理 'onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport' 内置事件

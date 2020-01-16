@@ -15,7 +15,7 @@ import { Basics } from "./views";
 import RootStore from "./rootStore";
 @Component({
   components: {
-    Login: Basics.login,
+    Login: Basics.login
   }
 })
 export default class App extends Vue {
