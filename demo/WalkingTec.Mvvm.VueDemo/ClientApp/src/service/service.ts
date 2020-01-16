@@ -18,15 +18,17 @@ import axios from "axios";
 import { Notification } from "element-ui"; // Message,
 import { contentType } from "@/config/enum";
 // 返回参数数据类型
-function getData(originalData) {
-    const data = {};
-    for (const key in originalData || {}) {
-        if (
-            originalData[key] !== null &&
-            originalData[key] !== undefined &&
-            originalData[key] !== ""
-        ) {
-            data[key] = originalData[key];
+function getData(originalData = {}) {
+    const data = originalData;
+    if (!_.isArray(originalData)) {
+        for (const key in originalData || {}) {
+            if (
+                originalData[key] !== null &&
+                originalData[key] !== undefined &&
+                originalData[key] !== ""
+            ) {
+                data[key] = originalData[key];
+            }
         }
     }
     return data;

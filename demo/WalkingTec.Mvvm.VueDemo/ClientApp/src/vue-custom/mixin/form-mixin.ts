@@ -53,7 +53,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         }
         // 重置&清除验证
         onReset() {
-            this.setFormData(defaultFormData.formData);
+            this.formData = _.cloneDeep(defaultFormData.formData);
             const el = _.get(this, `$refs[${this.refName}]`);
             if (this.refName && el) {
                 // 去除搜索中的error信息
