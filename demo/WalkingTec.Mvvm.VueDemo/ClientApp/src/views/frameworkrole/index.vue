@@ -30,7 +30,7 @@
             </table-box>
         </card>
         <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-        <permission :is-show.sync="dialogInfo.isShowPermission" :dialog-data="dialogInfo.dialogData" @onSearch="onSearch"></permission>
+        <permission :is-show.sync="dialogInfo.isShowPermission" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch"></permission>
         <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
     </div>
 </template>
@@ -75,8 +75,10 @@ export default class Index extends Vue {
      * 打开-分配权限
      */
     openPermission(data = {}) {
-        this.dialogInfo.isShowPermission = true;
         this.dialogInfo.dialogData = data;
+        this.dialogInfo.dialogStatus = this['dialogType'].edit;
+        console.log('this.dialogInfo.dialogStatus', this.dialogInfo.dialogStatus)
+        this.dialogInfo.isShowPermission = true;
     }
 }
 </script>

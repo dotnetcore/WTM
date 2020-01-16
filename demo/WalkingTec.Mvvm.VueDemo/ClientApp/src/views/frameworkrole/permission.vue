@@ -1,23 +1,25 @@
 <template>
     <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
         <div class="frameworkrole-permission-form">
-            <el-form :model="formData" label-width="100px">
+            <el-form :ref="refName" :model="formData" label-width="100px">
                 <el-row>
                     <el-col :span="12">
-                        <wtm-form-item label="角色编号:">{{pageActionsData.Entity.RoleCode}}</wtm-form-item>
+                        <wtm-form-item label="角色编号:">{{formData.Entity.RoleCode}}</wtm-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <wtm-form-item label="角色名称:">{{pageActionsData.Entity.RoleName}}</wtm-form-item>
+                        <wtm-form-item label="角色名称:">{{formData.Entity.RoleName}}</wtm-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
                         <wtm-form-item label="备注:">
-                            <el-table :data="pageActionsData.Pages" stripe border element-loading-text="拼命加载中">
+                            <el-table :data="formData.Pages" stripe border element-loading-text="拼命加载中">
                                 <el-table-column label="页面" prop="Name" width="150"></el-table-column>
                                 <el-table-column label="动作" width="400">
                                     <template slot-scope="scope">
-                                        <span v-for="item in scope.row.AllActions" :key="item.ID">{{ item.Text }}</span>
+                                        <el-checkbox-group v-model="formData.Pages[scope.$index].Actions">
+                                            <el-checkbox v-for="item in formData.Pages[scope.$index].AllActions" :key="item.Value" :label="item.Value">{{ item.Text }}</el-checkbox>
+                                        </el-checkbox-group>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -25,6 +27,7 @@
                     </el-col>
                 </el-row>
             </el-form>
+            <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
         </div>
     </dialog-box>
 </template>
@@ -46,7 +49,7 @@ const defaultFormData = {
             RoleName: "",
             RoleRemark: ""
         },
-        Pages: {}
+        Pages: []
     }
 };
 
@@ -54,28 +57,15 @@ const defaultFormData = {
     mixins: [formMixin(defaultFormData)]
 })
 export default class extends Vue {
-    @Action editPrivilege;
+    @Action("editPrivilege") edit;
     @Action getPageActions;
-    @State getPageActionsData;
-
-    // 表单传入数据
-    formData = {
-        ...defaultFormData.formData
-    };
 
     onGetFormData() {
-        console.log('item:', this["dialogData"].ID);
-        this.getPageActions({ ID: this["dialogData"].ID });
+        this.getPageActions({ ID: this["dialogData"].ID }).then(res => {
+            this['formData'].Entity = { ...res.Entity };
+            this['formData'].Pages = _.cloneDeep(res.Pages.concat());
+        })
     }
 
-    get pageActionsData() {
-        if (this.getPageActionsData.Entity) {
-            return this.getPageActionsData;
-        }
-        return {
-            Entity: {},
-            Pages: []
-        };
-    }
 }
 </script>

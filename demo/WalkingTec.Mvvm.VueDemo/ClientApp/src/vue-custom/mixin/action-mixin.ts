@@ -36,7 +36,6 @@ export default class actionMixins extends Vue {
     uploadIsShow = false;
     // 打开详情弹框 ★★★★☆
     openDialog(status, data = {}) {
-        console.log('status', status, this.formDialogKey, this[this.formDialogKey])
         this[this.formDialogKey].isShow = true;
         this[this.formDialogKey].dialogStatus = status;
         this[this.formDialogKey].dialogData = data;
@@ -56,9 +55,8 @@ export default class actionMixins extends Vue {
      */
     onDelete(params) {
         this["onConfirm"]().then(() => {
-            const parameters = {
-                ids: [params.ID]
-            };
+            const parameters = [params.ID];
+            console.log('parameters:', parameters);
             this.batchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
@@ -73,9 +71,8 @@ export default class actionMixins extends Vue {
      */
     onBatchDelete() {
         this["onConfirm"]().then(() => {
-            const parameters = {
-                ids: listToString(this["selectData"], "ID")
-            };
+            const parameters = listToString(this["selectData"], "ID");
+            console.log('parameters:', parameters);
             this.batchDelete(parameters).then(res => {
                 this["$notify"]({
                     title: "删除成功",
