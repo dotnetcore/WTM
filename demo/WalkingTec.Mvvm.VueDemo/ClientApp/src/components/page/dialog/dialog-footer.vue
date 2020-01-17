@@ -3,7 +3,7 @@
     <el-button @click="onClear">
       关 闭
     </el-button>
-    <el-button v-if="status !== dialogType.detail" type="primary" @click="onSubmit">
+    <el-button v-if="status !== detail" type="primary" @click="onSubmit">
       提 交
     </el-button>
   </div>
@@ -11,17 +11,19 @@
 
 <script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { dialogType } from "@/config/enum";
 @Component
 export default class DialogFooter extends Vue {
     @Prop({ type: String, default: "" })
     status;
-    dialogType = dialogType;
     onClear() {
         this.$emit("onClear");
     }
     onSubmit() {
         this.$emit("onSubmit");
+    }
+
+    get detail() {
+        return this.$dialogType.detail;
     }
 }
 </script>

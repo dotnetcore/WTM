@@ -11,7 +11,6 @@
 
 <script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { globalConfig } from "@/config/global";
 import { SettingsModule } from "@/store/modules/settings";
 
 @Component

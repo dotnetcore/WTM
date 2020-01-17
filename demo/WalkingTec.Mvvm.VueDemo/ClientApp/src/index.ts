@@ -1,4 +1,4 @@
-import Vue, { DirectiveOptions, ComputedOptions } from "vue";
+import Vue from "vue";
 import ElementUI from "element-ui";
 import i18n from "@/lang";
 import "element-ui/lib/theme-chalk/index.css";
@@ -11,41 +11,45 @@ import "@/assets/icon/components";
 import "@/router/permission";
 import { AppModule } from "@/store/modules/app";
 
-import * as directives from "@/vue-custom/directive/index";
-import * as filters from "@/vue-custom/filters/index";
-import * as component from "@/vue-custom/component/index";
+import directives from "@/vue-custom/directive/index";
+import filters from "@/vue-custom/filters/index";
+import component from "@/vue-custom/component/index";
+import prototypes from "@/vue-custom/prototype/index";
+
 Vue.use(ElementUI, {
-    size: AppModule.size, // config.elSize, // Set element-ui default size
-    i18n: (key: string, value: string) => i18n.t(key, value)
+  size: AppModule.size, // config.elSize, // Set element-ui default size
+  i18n: (key: string, value: string) => i18n.t(key, value)
 });
 
 Vue.use(SvgIcon, {
-    tagName: "svg-icon",
-    defaultWidth: "1em",
-    defaultHeight: "1em"
+  tagName: "svg-icon",
+  defaultWidth: "1em",
+  defaultHeight: "1em"
 });
 
 // 指令
-Object.keys(directives).forEach(key => {
-    Vue.directive(
-        key,
-        (directives as { [key: string]: DirectiveOptions })[key]
-    );
+directives.forEach(item => {
+  Vue.directive(item.key, item.value);
 });
 // 过滤器
-Object.keys(filters).forEach(key => {
-    Vue.filter(key, (filters as { [key: string]: Function })[key]);
+filters.forEach(item => {
+  Vue.filter(item.key, item.value);
 });
 // 组件
-Object.keys(component).forEach(key => {
-    Vue.component(_.kebabCase(key), component[key]);
+component.forEach(item => {
+  Vue.component(_.kebabCase(item.key), item.value);
+});
+
+// prototype
+prototypes.forEach(item => {
+  Vue.prototype["$" + item.key] = item.value;
 });
 
 Vue.config.productionTip = false;
 
 new Vue({
-    router,
-    store,
-    i18n,
-    render: h => h(App)
+  router,
+  store,
+  i18n,
+  render: h => h(App)
 }).$mount("#App");

@@ -85,7 +85,7 @@ export default class Index extends Vue {
     whether = whether;
     // 验证
     get rules() {
-        if (this["status"] !== this["dialogType"].detail) {
+        if (this["status"] !== this["$dialogType"].detail) {
             // 动态验证会走遍验证，需要清除验证
             this.$nextTick(function() {
                 _.get(this, `$refs[${defaultFormData.refName}]`).resetFields();

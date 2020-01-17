@@ -9,4 +9,10 @@ import TableBox from "@/components/page/table-box.vue";
 // 操作按钮
 import ButBox from "@/components/page/but-box.vue";
 
-export { Card, DialogBox, FuzzySearch, TableBox, ButBox };
+export default [
+  { key: "Card", value: Card },
+  { key: "DialogBox", value: DialogBox },
+  { key: "FuzzySearch", value: FuzzySearch },
+  { key: "TableBox", value: TableBox },
+  { key: "ButBox", value: ButBox }
+];
