@@ -414,7 +414,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 cs = "defaultlog";
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
+            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
         }
 
         /// <summary>
