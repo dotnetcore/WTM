@@ -1,5 +1,5 @@
 <template>
-  <w-filter :PageStore="PageStore" :FieldsChange="FieldsChange">
+  <w-filter :PageStore="PageStore" :Entities="Entities">
     <ITCode />
     <Name />
   </w-filter>
@@ -22,11 +22,13 @@ const entities = Entities.filterEntities();
 export default class ViewGrid extends Vue {
   @Prop() PageStore: PageStore;
   Entities = entities;
-  FieldsChange = new Subject<{
-    props: any;
-    fields: any;
-    form: WrappedFormUtils;
-  }>();
+  // FieldsChange = new Subject<{
+  //   props: any;
+  //   fields: any;
+  //   form: WrappedFormUtils;
+  // }>();
+  mounted() {
+  }
 }
 </script>
 <style scoped lang="less">

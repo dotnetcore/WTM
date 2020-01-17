@@ -21,17 +21,31 @@ import { Subscriber, Subject } from "rxjs";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: EntitiesPageStore;
-  @Prop() private FieldsChange: Subject<{
+  @Prop({
+    default: () => new Subject()
+  })
+  private FieldsChange: Subject<{
     props: any;
     fields: any;
     form: WrappedFormUtils;
   }>;
+  /**
+   * 实体
+   */
+  @Prop() Entities: any;
   form: WrappedFormUtils;
   spinning = false;
   beforeCreate() {
     this.form = this.$form.createForm(this, {
       onFieldsChange: (props, fields) => {
         this.FieldsChange.next({ props, fields, form: this.form });
+      }
+    });
+  }
+  beforeMount() {
+    lodash.map(this.Entities, ent => {
+      if (lodash.isFunction(ent.onComplete)) {
+        ent.onComplete({ FieldsChange: this.FieldsChange });
       }
     });
   }
@@ -54,7 +68,6 @@ export default class ViewAction extends Vue {
   onSubmit(e?) {
     e && e.preventDefault();
     this.form.validateFields((error, values) => {
-      console.log("TCL: ViewAction -> onSubmit -> values", values);
       this.onSearch(values);
     });
   }

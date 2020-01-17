@@ -1,13 +1,11 @@
 import enus from './en-US/default';
 import zhcn from './zh-CN/default';
 import lodash from 'lodash';
+import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import en_US from 'ant-design-vue/lib/locale-provider/en_US';
 const locales = {
-    'zh-CN': {
-        ...zhcn,
-    },
-    'en-US': {
-        ...enus,
-    }
+    'zh-CN': lodash.merge({}, zh_CN, zhcn),
+    'en-US': lodash.merge({}, en_US, enus),
 };
 /**
  * 获取当前配置语言 的 value

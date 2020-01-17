@@ -93,38 +93,92 @@ import { Subscriber, Subject } from "rxjs";
 import { toJS } from "mobx";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
+  /**
+   * page 状态
+   */
   @Prop() private PageStore: EntitiesPageStore;
-  @Prop() private FieldsChange: Subject<{
+  /**
+   * Field Change 变更 Subject
+   */
+  @Prop({
+    default: () => new Subject()
+  })
+  private FieldsChange: Subject<{
     props: any;
     fields: any;
     form: WrappedFormUtils;
   }>;
+  /**
+   * ag grid 行 参数
+   */
   @Prop() private params: ICellRendererParams;
+  /**
+   * 实体
+   */
   @Prop() Entities: any;
+  /**
+   * 详情 数据 唯一标识 属性
+   */
   @Prop({ default: () => "ID" }) GUID: string;
+  /**
+   * 表单域
+   */
   form: WrappedFormUtils;
+  /**
+   * 加载状态
+   */
   spinning = false;
+  /**
+   * 显示 隐藏 状态
+   */
   visible = false;
+  /**
+   * 标题
+   */
   title = "";
+  /**
+   * slot key
+   */
   slotName = "";
+  /**
+   * 是否 是 页面 操作
+   */
   get isPageAction() {
     return !lodash.hasIn(this, "params.rowIndex");
   }
+  /**
+   * 是否 是 aggrid 行操作
+   */
   get isRowAction() {
     return lodash.hasIn(this, "params.data");
   }
+  /**
+   * 行 操作 的 当前操作 数据
+   */
   get RowData() {
     return lodash.get(this, "params.data");
   }
+  /**
+   * 获取 页面 状态，aggrid 行操作的状态在 context 中
+   */
   get PageStoreContext(): EntitiesPageStore {
     return lodash.get(this, "params.context.PageStore", this.PageStore);
   }
+  /**
+   * 禁用 修改按钮
+   */
   get disabledUpdate() {
     return this.PageStoreContext.SelectedRows.length !== 1;
   }
+  /**
+   * 禁用 删除按钮
+   */
   get disabledDelete() {
     return !this.PageStoreContext.IsSelectedRows;
   }
+  /**
+   * 组件 创建 初始化 表单域
+   */
   beforeCreate() {
     this.form = this.$form.createForm(this, {
       onFieldsChange: (props, fields) => {
@@ -135,11 +189,24 @@ export default class ViewAction extends Vue {
       // }
     });
   }
+  beforeMount() {
+     lodash.map(this.Entities, ent => {
+      if (lodash.isFunction(ent.onComplete)) {
+        ent.onComplete({ FieldsChange: this.FieldsChange });
+      }
+    });
+  }
+  /**
+   * 组件挂载
+   */
   mounted() {
     // this.FormFieldsChange.subscribe(({ props, fields }) => {
-    //   console.log("TCL: ViewAction -> beforeCreate -> props", props, fields);
+    // console.log("TCL: ViewAction -> beforeCreate -> props", this.Entities);
     // });
   }
+  /**
+   *  更改 显示 弹框状态
+   */
   onVisible(visible = !this.visible) {
     this.visible = visible;
   }
@@ -283,7 +350,9 @@ export default class ViewAction extends Vue {
     this.form.setFieldsValue(details);
   }
 }
-
+/**
+ *  上传 组件
+ */
 @Component({
   template: `
     <a-upload-dragger

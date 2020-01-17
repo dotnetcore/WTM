@@ -13,34 +13,34 @@
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <a href="javascript:;">1st menu item</a>
+                  <a href="/_codegen?ui=react" target="_blank"><a-icon type="code" /> <span v-t="'action.user.codeGenerator'"></span></a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a href="javascript:;">2nd menu item</a>
+                  <a href="/swagger" target="_blank"><a-icon type="bars" /> <span v-t="'action.user.apiDocument'"></span></a>
                 </a-menu-item>
                 <a-menu-item @click="UserStore.onOutLogin">
                   <a href="javascript:;">
-                    <a-icon type="logout" />注销
+                    <a-icon type="logout" /> <span v-t="'action.user.logout'"></span>
                   </a>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
-            <a-divider type="vertical" />
+            <!-- <a-divider type="vertical" />
             <a href="javascript:;" class="user-item" @click="onVisible(true)">
               <a-icon type="setting" />
-            </a>
+            </a> -->
             <a-divider type="vertical" />
             <a-dropdown>
               <a href="javascript:;" class="user-item">
                 <a-icon type="global" />
               </a>
-              <a-menu slot="overlay">
-                <a-menu-item>
+              <a-menu @click="onLanguage" :selectedKeys="[$i18n.locale]" slot="overlay">
+                <a-menu-item key="zh-CN">
                   <a href="javascript:;">
                     <span v-html="languageIcons['zh-CN']"></span> 简体中文
                   </a>
                 </a-menu-item>
-                <a-menu-item>
+                <a-menu-item key="en-US">
                   <a href="javascript:;">
                     <span v-html="languageIcons['en-US']"></span> English
                   </a>
@@ -54,15 +54,8 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-drawer
-      placement="right"
-      :closable="false"
-      @close="onVisible(false)"
-      :visible="visible"
-    >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+    <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible">
+      
     </a-drawer>
   </a-layout>
 </template>
@@ -70,6 +63,7 @@
 import LayoutMenu from "./menu.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
+import Globalconfig from "../../global.config";
 @Component({
   components: {
     LayoutMenu
@@ -88,6 +82,10 @@ export default class extends Vue {
       "en-US": "🇬🇧",
       "pt-BR": "🇧🇷"
     };
+  }
+  onLanguage({ item, key, keyPath }) {
+    this.$i18n.locale = key;
+    Globalconfig.onSetLanguage(key);
   }
 }
 </script>

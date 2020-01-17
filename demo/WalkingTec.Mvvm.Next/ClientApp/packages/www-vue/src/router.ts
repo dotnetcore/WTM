@@ -35,8 +35,8 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  console.log("TCL: from " + RootStore.UserStore.Loading, from);
-  console.log("TCL: to", to);
+  // console.log("TCL: from " + RootStore.UserStore.Loading, from);
+  // console.log("TCL: to", to);
   // if (RootStore.UserStore.Loading) {
   //   next(false)
   // } else {

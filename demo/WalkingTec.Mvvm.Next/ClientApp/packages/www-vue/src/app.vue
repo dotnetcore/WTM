@@ -1,11 +1,13 @@
 <template>
-  <div v-if="UserStore.Id&&UserStore.Loading" class="user-loading">
-    <a-spin>
-      <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
-    </a-spin>
-  </div>
-  <w-layout v-else-if="UserStore.OnlineState" />
-  <Login v-else />
+  <a-locale-provider :locale="locale">
+    <div v-if="UserStore.Id&&UserStore.Loading" class="user-loading">
+      <a-spin>
+        <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
+      </a-spin>
+    </div>
+    <w-layout v-else-if="UserStore.OnlineState" />
+    <Login v-else />
+  </a-locale-provider>
 </template>
 
 <script lang="ts">
@@ -13,6 +15,9 @@ import { message } from "ant-design-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Basics } from "./views";
 import RootStore from "./rootStore";
+import Globalconfig from "./global.config";
+import locale from "./locale";
+import lodash from "lodash";
 @Component({
   components: {
     Login: Basics.login
@@ -20,6 +25,9 @@ import RootStore from "./rootStore";
 })
 export default class App extends Vue {
   UserStore = RootStore.UserStore;
+  get locale() {
+    return lodash.get(locale, Globalconfig.settings.language, locale["zh-CN"]);
+  }
   mounted() {}
   destroyed() {}
 }

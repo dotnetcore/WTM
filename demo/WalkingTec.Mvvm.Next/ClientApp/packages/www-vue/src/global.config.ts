@@ -1,8 +1,12 @@
-import { configure, observable } from 'mobx';
+import { configure, observable, action } from 'mobx';
 import { create, persist } from 'mobx-persist';
 import { notification } from 'ant-design-vue';
 import lodash from 'lodash';
 import { Request } from '@leng/public/src';
+import 'moment/locale/zh-cn';
+import moment from 'moment';
+moment.locale('zh-cn');
+// 设置 请求出错 通知
 Request.Error = (error) => {
     notification.error({
         key: 'RequestError' + error.status,
@@ -16,16 +20,12 @@ configure({ enforceActions: "observed" });
 const isIframe = window.self !== window.top;
 class ConfigStore {
     constructor() {
-        this.hydrate(this.settings.title, this)
-            // post hydration
-            .then(() => {
-                console.warn("TCL: ConfigStore -> ", this)
-            })
+       
     }
     hydrate = create({
         storage: window.localStorage,   // 存储的对象
         jsonify: true, // 格式化 json
-        debounce: 1000,
+        // debounce: 1000,
     });
     /**
     * 开发环境
@@ -61,6 +61,12 @@ class ConfigStore {
      * 分页默认 条数
      */
     defaultPageSize = 20;
+    @action
+    onSetLanguage(language) {
+        this.settings.language = language;
+        // 不清楚 为啥改了 没效果 执行页面刷新
+        window.location.reload()
+    }
 }
 const GlobalConfig = new ConfigStore();
 

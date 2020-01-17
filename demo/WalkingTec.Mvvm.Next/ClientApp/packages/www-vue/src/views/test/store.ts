@@ -1,4 +1,5 @@
 import { EntitiesPageStore } from '@leng/public/src';
+import lodash from 'lodash';
 export class PageStore extends EntitiesPageStore {
     constructor() {
         super({
@@ -14,6 +15,8 @@ export class PageStore extends EntitiesPageStore {
         this.ColumnDefs = [
             {
                 headerName: "账号", field: "ITCode",
+                // 自定义 多语言 
+                // headerValueGetter: (params) => ({ 'zh-CN': '姓名', 'en-US': "Name" }[lodash.get(params, 'context.locale')])
             },
             {
                 headerName: "姓名", field: "Name",

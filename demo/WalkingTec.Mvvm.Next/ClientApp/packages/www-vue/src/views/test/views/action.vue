@@ -1,10 +1,5 @@
 <template>
-  <w-actions
-    :PageStore="PageStore"
-    :Entities="Entities"
-    :FieldsChange="FieldsChange"
-    :params="params"
-  >
+  <w-actions :PageStore="PageStore" :Entities="Entities" :params="params">
     <template #Insert>
       <Entity-ITCode />
       <Entity-Password />
@@ -16,9 +11,9 @@
       <Entity-Address />
       <Entity-ZipCode />
       <Entity-PhotoId />
-      <Entity-IsValid />
+      <Entity-IsValid v-show="false" />
       <Entity-UserRoles />
-      <Entity-UserRoles2 :FieldsChange="FieldsChange" />
+      <Entity-UserRoles2 />
       <Entity-UserRoles3 />
       <Entity-UserGroups />
     </template>
@@ -72,11 +67,11 @@ const entities = Entities.editEntities();
 export default class ViewAction extends Vue {
   @Prop() private PageStore: PageStore;
   Entities = entities;
-  FieldsChange = new Subject<{
-    props: any;
-    fields: any;
-    form: WrappedFormUtils;
-  }>();
+  // FieldsChange = new Subject<{
+  //   props: any;
+  //   fields: any;
+  //   form: WrappedFormUtils;
+  // }>();
   // aggird 组件 自带属性 不可删除
   params = {};
   mounted() {}
