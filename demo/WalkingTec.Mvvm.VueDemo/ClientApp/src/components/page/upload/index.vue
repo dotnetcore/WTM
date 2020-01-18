@@ -1,5 +1,5 @@
 <template>
-  <dialog-box :is-show="isShow" title="导入" width="40%" @close="onClose">
+  <wtm-dialog-box :is-show="isShow" title="导入" width="40%" @close="onClose">
     <div>
       <span>导入说明：请下载模版，然后在把信息输入到模版中</span>
       <el-divider direction="vertical" />
@@ -14,7 +14,7 @@
         将文件拖到此处，或<em>点击上传</em>
       </div>
     </el-upload>
-  </dialog-box>
+  </wtm-dialog-box>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";

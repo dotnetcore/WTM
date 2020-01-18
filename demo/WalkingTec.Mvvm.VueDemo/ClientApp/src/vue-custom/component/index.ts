@@ -11,8 +11,8 @@ import ButBox from "@/components/page/but-box.vue";
 
 export default [
   { key: "Card", value: Card },
-  { key: "DialogBox", value: DialogBox },
-  { key: "FuzzySearch", value: FuzzySearch },
-  { key: "TableBox", value: TableBox },
-  { key: "ButBox", value: ButBox }
+  { key: "WtmDialogBox", value: DialogBox },
+  { key: "WtmFuzzySearch", value: FuzzySearch },
+  { key: "WtmTableBox", value: TableBox },
+  { key: "WtmButBox", value: ButBox }
 ];

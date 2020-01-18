@@ -1,5 +1,5 @@
 <template>
-    <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
         <div class="frameworkrole-permission-form">
             <el-form :ref="refName" :model="formData" label-width="100px">
                 <el-row>
@@ -29,7 +29,7 @@
             </el-form>
             <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
         </div>
-    </dialog-box>
+    </wtm-dialog-box>
 </template>
 
 <script lang='ts'>
@@ -57,15 +57,16 @@ const defaultFormData = {
     mixins: [formMixin(defaultFormData)]
 })
 export default class extends Vue {
-    @Action("editPrivilege") edit;
-    @Action getPageActions;
+    @Action("editPrivilege")
+    edit;
+    @Action
+    getPageActions;
 
     onGetFormData() {
         this.getPageActions({ ID: this["dialogData"].ID }).then(res => {
-            this['formData'].Entity = { ...res.Entity };
-            this['formData'].Pages = _.cloneDeep(res.Pages.concat());
-        })
+            this["formData"].Entity = { ...res.Entity };
+            this["formData"].Pages = _.cloneDeep(res.Pages.concat());
+        });
     }
-
 }
 </script>
