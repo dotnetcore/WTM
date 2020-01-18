@@ -1,31 +1,31 @@
 <template>
-  <div class="but-box">
-    <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList.add" type="primary" icon="el-icon-plus" @click="onAdd">
-      添加
-    </el-button>
-    <el-button v-assembly:[assembly]="butTypes.edit" v-visible="actionList.edit" type="primary" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
-      修改
-    </el-button>
-    <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList.batchDelete" type="primary" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
-      删除
-    </el-button>
-    <el-button v-assembly:[assembly]="butTypes.imported" type="primary" icon="el-icon-upload" @click="onImported">
-      导入
-    </el-button>
-    <el-dropdown v-visible="[actionList.exportExcel,actionList.exportExcelByIds]" class="dropdown-box" @command="onCommand">
-      <el-button v-assembly:[assembly]="butTypes.export" type="primary">
-        <i class="el-icon-download" /> <span>导出</span> <i class="el-icon-arrow-down el-icon--right" />
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item v-visible="actionList.exportExcel" command="onExportAll">
-          导出全部
-        </el-dropdown-item>
-        <el-dropdown-item v-visible="actionList.exportExcelByIds" command="onExport">
-          导出勾选
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </div>
+    <div class="but-box">
+        <el-button v-assembly:[assembly]="butTypes.add" v-visible="permissionList.add" type="primary" icon="el-icon-plus" @click="onAdd">
+            添加
+        </el-button>
+        <el-button v-assembly:[assembly]="butTypes.edit" v-visible="permissionList.edit" type="primary" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
+            修改
+        </el-button>
+        <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="permissionList.batchDelete" type="primary" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
+            删除
+        </el-button>
+        <el-button v-assembly:[assembly]="butTypes.imported" type="primary" icon="el-icon-upload" @click="onImported">
+            导入
+        </el-button>
+        <el-dropdown v-visible="[permissionList.exportExcel,permissionList.exportExcelByIds]" class="dropdown-box" @command="onCommand">
+            <el-button v-assembly:[assembly]="butTypes.export" type="primary">
+                <i class="el-icon-download" /> <span>导出</span> <i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-visible="permissionList.exportExcel" command="onExportAll">
+                    导出全部
+                </el-dropdown-item>
+                <el-dropdown-item v-visible="permissionList.exportExcelByIds" command="onExport">
+                    导出勾选
+                </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+    </div>
 </template>
 
 <script lang='ts'>
@@ -66,7 +66,7 @@ export default class ButBox extends Vue {
             return {};
         }
     })
-    actionList;
+    permissionList;
     butTypes = butType;
     get isDisabledEdit() {
         if (this.selectedData.length === 1) {

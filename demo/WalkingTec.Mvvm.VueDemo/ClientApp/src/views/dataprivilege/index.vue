@@ -19,16 +19,16 @@
           </el-form-item>
         </el-form>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
+      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
       <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
-          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
+          <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
           </el-button>
-          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
+          <el-button v-visible="permissionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
             修改
           </el-button>
-          <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
+          <el-button v-visible="permissionList.deleted" type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
             删除
           </el-button>
         </template>

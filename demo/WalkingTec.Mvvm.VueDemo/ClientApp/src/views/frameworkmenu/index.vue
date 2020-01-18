@@ -1,16 +1,16 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+      <but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
       <table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableHeader" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
-          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
+          <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
           </el-button>
-          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
+          <el-button v-visible="permissionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
             修改
           </el-button>
-          <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
+          <el-button v-visible="permissionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
             删除
           </el-button>
         </template>

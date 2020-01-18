@@ -10,13 +10,13 @@ const visible: DirectiveOptions = {
     }
     if (_.isArray(binding.value)) {
       const fslist = _.filter(binding.value, item =>
-        UserModule.actionList.includes(item)
+        UserModule.permissionList.includes(item)
       );
       if (fslist.length < 1) {
         el.parentNode && el.parentNode.removeChild(el);
       }
     } else {
-      if (!UserModule.actionList.includes(_.toLower(binding.value))) {
+      if (!UserModule.permissionList.includes(_.toLower(binding.value))) {
         el.parentNode && el.parentNode.removeChild(el);
       }
     }
