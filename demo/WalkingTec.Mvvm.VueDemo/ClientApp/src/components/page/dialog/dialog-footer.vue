@@ -23,7 +23,7 @@ export default class DialogFooter extends Vue {
     }
 
     get detail() {
-        return this.$dialogType.detail;
+        return this.$actionType.detail;
     }
 }
 </script>

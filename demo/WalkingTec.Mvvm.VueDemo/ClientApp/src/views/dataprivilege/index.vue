@@ -19,13 +19,13 @@
           </el-form-item>
         </el-form>
       </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" />
+      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="actionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
       <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
-          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
+          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
           </el-button>
-          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
+          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
             修改
           </el-button>
           <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
@@ -62,13 +62,20 @@ const defaultSearchData = {
     }
 })
 export default class Index extends Vue {
-    @Action search;
-    @Action batchDelete;
-    @Action delete;
-    @Action exportExcel;
-    @Action exportExcelByIds;
-    @Action privilegesList;
-    @Action getExcelTemplate;
+    @Action
+    search;
+    @Action
+    batchDelete;
+    @Action
+    delete;
+    @Action
+    exportExcel;
+    @Action
+    exportExcelByIds;
+    @Action
+    privilegesList;
+    @Action
+    getExcelTemplate;
     @State
     privilegesListData;
     exportParams = {};

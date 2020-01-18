@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="24">
             <wtm-form-item ref="Entity.IsInside" label="地址类型" prop="Entity.IsInside">
-              <edit-box :is-edit="status !== dialogType.detail">
+              <edit-box :is-edit="status !== $actionType.detail">
                 <el-radio-group v-model="formData.Entity.IsInside">
                   <el-radio :label="true">
                     内部地址
@@ -31,7 +31,7 @@
           </el-col>
           <el-col :span="12">
             <wtm-form-item label="动作名称">
-              <edit-box :is-edit="status !== dialogType.detail">
+              <edit-box :is-edit="status !== $actionType.detail">
                 <el-select v-model="formData.Entity.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
                   <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
                 </el-select>
@@ -135,18 +135,23 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinDialogForm(defaultFormData)] })
 export default class Index extends Vue {
-    @Action getActionsByModel;
-    @Action getFolders;
-    @State getActionsByModelData;
-    @State getFoldersData;
+    @Action
+    getActionsByModel;
+    @Action
+    getFolders;
+    @State
+    getActionsByModelData;
+    @State
+    getFoldersData;
 
     // 验证 ★★★★★
     get rules() {
-        if (this["status"] !== this["dialogType"].detail) {
+        if (this["status"] !== this["$actionType"].detail) {
             // 动态验证会走遍验证，需要清除验证
-            this.$refs[defaultFormData.refName] && this.$nextTick(() => {
-                this.$refs[defaultFormData.refName].resetFields();
-            });
+            this.$refs[defaultFormData.refName] &&
+                this.$nextTick(() => {
+                    this.$refs[defaultFormData.refName].resetFields();
+                });
             return {
                 GroupCode: [
                     {

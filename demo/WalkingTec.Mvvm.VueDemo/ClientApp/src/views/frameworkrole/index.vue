@@ -11,13 +11,13 @@
                     </el-form-item>
                 </el-form>
             </fuzzy-search>
-            <but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" @onAdd="openDialog(dialogType.add)" @onEdit="openDialog(dialogType.edit, arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+            <but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" @onAdd="onAdd()" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
             <table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
                 <template #operate="rowData">
-                    <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="openDialog(dialogType.detail, rowData.row)">
+                    <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
                         详情
                     </el-button>
-                    <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="openDialog(dialogType.edit, rowData.row)">
+                    <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
                         修改
                     </el-button>
                     <el-button type="text" size="small" class="view-btn" @click="openPermission(rowData.row)">
@@ -59,8 +59,10 @@ import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
 })
 export default class Index extends Vue {
     // 差异的方法 单独写出
-    @Action("getFrameworkRoles") getFrameworkRoles;
-    @Action("getFrameworkGroups") getFrameworkGroups;
+    @Action("getFrameworkRoles")
+    getFrameworkRoles;
+    @Action("getFrameworkGroups")
+    getFrameworkGroups;
     // 动作(按钮)
     assembly = ASSEMBLIES;
     // 弹出框内容 ★★★★☆
@@ -76,8 +78,11 @@ export default class Index extends Vue {
      */
     openPermission(data = {}) {
         this.dialogInfo.dialogData = data;
-        this.dialogInfo.dialogStatus = this['dialogType'].edit;
-        console.log('this.dialogInfo.dialogStatus', this.dialogInfo.dialogStatus)
+        this.dialogInfo.dialogStatus = this["$actionType"].edit;
+        console.log(
+            "this.dialogInfo.dialogStatus",
+            this.dialogInfo.dialogStatus
+        );
         this.dialogInfo.isShowPermission = true;
     }
 }

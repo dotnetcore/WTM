@@ -50,11 +50,12 @@ const defaultFormData = {
 export default class Index extends Vue {
     // 验证 ★★★★★
     get rules() {
-        if (this["status"] !== this["dialogType"].detail) {
+        if (this["status"] !== this["$actionType"].detail) {
             // 动态验证会走遍验证，需要清除验证
-            this.$refs[defaultFormData.refName] && this.$nextTick(() => {
-                this.$refs[defaultFormData.refName].resetFields();
-            });
+            this.$refs[defaultFormData.refName] &&
+                this.$nextTick(() => {
+                    this.$refs[defaultFormData.refName].resetFields();
+                });
             return {
                 GroupCode: [
                     {
