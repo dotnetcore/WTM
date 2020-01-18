@@ -3,7 +3,7 @@ import { State } from "vuex-class";
 
 @Component
 export default class BaseMixins extends Vue {
-  @State actionList;
+  @State permissionList;
 
   // 跳转
   onPath(path) {
