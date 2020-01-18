@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -418,7 +419,11 @@ namespace WalkingTec.Mvvm.Mvc
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
                     context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
                 }
-                await next.Invoke();
+                try
+                {
+                    await next.Invoke();
+                }
+                catch(ConnectionResetException){}
                 if (context.Response.StatusCode == 404)
                 {
                     await context.Response.WriteAsync(string.Empty);
