@@ -1,7 +1,7 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
+      <wtm-fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
           <el-form-item label="权限名称" prop="car_model">
             <el-select v-model="searchForm.type" clearable placeholder="请选择" value="" multiple>
@@ -18,9 +18,9 @@
             </el-radio>
           </el-form-item>
         </el-form>
-      </fuzzy-search>
-      <but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
-      <table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
+      </wtm-fuzzy-search>
+      <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
+      <wtm-table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
@@ -32,11 +32,11 @@
             删除
           </el-button>
         </template>
-      </table-box>
+      </wtm-table-box>
     </card>
-    <dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
+    <wtm-dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
       <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
-    </dialog-box>
+    </wtm-dialog-box>
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>

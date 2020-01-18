@@ -1,5 +1,5 @@
 <template>
-  <dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
+  <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
     <div class="frameworkuser-form">
       <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-row>
@@ -101,7 +101,7 @@
       </el-form>
       <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
     </div>
-  </dialog-box>
+  </wtm-dialog-box>
 </template>
 
 <script lang='ts'>
