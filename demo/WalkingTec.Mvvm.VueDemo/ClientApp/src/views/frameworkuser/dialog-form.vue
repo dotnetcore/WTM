@@ -63,7 +63,7 @@
           </el-col>
           <el-col :span="12">
             <wtm-form-item label="头像">
-              <edit-box :is-edit="status !== dialogType.detail">
+              <edit-box :is-edit="status !== $actionType.detail">
                 <upload-img :photo-id.sync="formData.Entity.PhotoId" />
                 <template #editValue>
                   <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/'+formData.Entity.PhotoId" class="avatar">
@@ -75,7 +75,7 @@
         <el-row>
           <el-col :span="24">
             <wtm-form-item label="是否有效" prop="IsValid">
-              <edit-box :is-edit="status !== dialogType.detail">
+              <edit-box :is-edit="status !== $actionType.detail">
                 <el-switch v-model="formData.Entity.IsValid" />
                 <template #editValue>
                   {{ formData.Entity.IsValid===true ? "是" : "否" }}
@@ -140,10 +140,14 @@ const defaultFormData = {
     components: { "upload-img": uploadImg }
 })
 export default class Index extends Vue {
-    @Action getFrameworkRoles;
-    @Action getFrameworkGroups;
-    @State getFrameworkRolesData;
-    @State getFrameworkGroupsData;
+    @Action
+    getFrameworkRoles;
+    @Action
+    getFrameworkGroups;
+    @State
+    getFrameworkRolesData;
+    @State
+    getFrameworkGroupsData;
     // 用户组
     groups = [];
     sexList = sexList;
@@ -153,7 +157,7 @@ export default class Index extends Vue {
     };
     // 验证 ★★★★★
     get rules() {
-        if (this["status"] !== this["dialogType"].detail) {
+        if (this["status"] !== this["$actionType"].detail) {
             // // 动态验证会走遍验证，需要清除验证
             // this.$nextTick(() => {
             //     this.$refs[defaultFormData.refName].resetFields();
@@ -192,7 +196,7 @@ export default class Index extends Vue {
                 key: item.Value,
                 label: item.Text,
                 // 判断是否修改
-                disabled: this["status"] === this["dialogType"].detail
+                disabled: this["status"] === this["$actionType"].detail
             };
         });
     }
@@ -202,7 +206,7 @@ export default class Index extends Vue {
             return {
                 key: item.Value,
                 label: item.Text,
-                disabled: this["status"] === this["dialogType"].detail
+                disabled: this["status"] === this["$actionType"].detail
             };
         });
     }
@@ -217,7 +221,7 @@ export default class Index extends Vue {
             console.log(this["dialogData"]);
             console.error("dialogData 没有id数据");
         }
-        if (this["status"] !== this["dialogType"].add) {
+        if (this["status"] !== this["$actionType"].add) {
             const parameters = { ID: this["dialogData"].ID };
             this.detail(parameters).then(res => {
                 this["setFormData"](res);
@@ -234,9 +238,9 @@ export default class Index extends Vue {
             if (valid) {
                 this.updTransferToData("UserRoles");
                 this.updTransferToData("UserGroups");
-                if (this["status"] === this["dialogType"].add) {
+                if (this["status"] === this["$actionType"].add) {
                     this.onAdd();
-                } else if (this["status"] === this["dialogType"].edit) {
+                } else if (this["status"] === this["$actionType"].edit) {
                     this.onEdit();
                 }
             }

@@ -1,5 +1,4 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import { dialogType } from "@/config/enum";
 import DialogFooter from "@/components/page/dialog/dialog-footer.vue";
 import EditBox from "@/components/page/edit-box.vue";
 import WtmFormItem from "@/components/page/wtm-form-item.vue";
@@ -9,7 +8,7 @@ import { Action } from "vuex-class";
  * 弹出框（详情/编辑/创建）
  * dialogData：被编辑数据
  * status：弹出框的状态
- * dialogType： 弹出框的状态-枚举
+ * actionType: 弹出框的状态-枚举
  * formData：提交表单结构
  *
  * @param defaultFormData
@@ -39,7 +38,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     @Prop({ type: Boolean, default: false })
     isShow; // 弹框是否显示
 
-    dialogType = dialogType; // 弹框类型 add/edit/detail
     // 表单数据
     formData = {
       ..._.cloneDeep(defaultFormData.formData)
@@ -97,7 +95,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         console.log(this["dialogData"]);
         console.error("dialogData 没有id数据");
       }
-      if (this["status"] !== this["$dialogType"].add) {
+      if (this["status"] !== this["$actionType"].add) {
         const parameters = { ID: this["dialogData"].ID };
         this["detail"](parameters).then(res => {
           // 判断是否 有Entity 属性，赋值全部
@@ -118,9 +116,9 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     onSubmitForm() {
       this.$refs[this.refName].validate(valid => {
         if (valid) {
-          if (this["status"] === this["$dialogType"].add) {
+          if (this["status"] === this["$actionType"].add) {
             this.onAdd();
-          } else if (this["status"] === this["$dialogType"].edit) {
+          } else if (this["status"] === this["$actionType"].edit) {
             this.onEdit();
           }
         }

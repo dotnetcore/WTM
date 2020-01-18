@@ -1,3 +1,3 @@
-import { dialogType } from "@/config/enum";
+import { actionType } from "@/config/enum";
 
-export default [{ key: "dialogType", value: dialogType }];
+export default [{ key: "actionType", value: actionType }];
