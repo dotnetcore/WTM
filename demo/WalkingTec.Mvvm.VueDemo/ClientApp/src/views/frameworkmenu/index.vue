@@ -1,8 +1,8 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
-      <table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableHeader" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
+      <wtm-but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+      <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableHeader" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
@@ -14,7 +14,7 @@
             删除
           </el-button>
         </template>
-      </table-box>
+      </wtm-table-box>
     </card>
     <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
@@ -51,15 +51,6 @@ export default class Index extends Vue {
         dialogData: {},
         dialogStatus: ""
     };
-    // 打开详情弹框 ★★★★☆
-    openDialog(status, data = {}) {
-        this.dialogInfo.isShow = true;
-        this.dialogInfo.dialogStatus = status;
-        this.dialogInfo.dialogData = data;
-        this.$nextTick(() => {
-            this.$refs["dialogform"].onGetFormData();
-        });
-    }
     // tabledata返回tree
     get treeData() {
         const list = this["tableData"];

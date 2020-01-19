@@ -19,7 +19,7 @@
           </el-form-item>
         </el-form>
       </wtm-fuzzy-search>
-      <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit(arguments[0])" @onDelete="onBatchDelete" />
+      <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onBatchDelete" />
       <wtm-table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
