@@ -3,4 +3,4 @@
     <div id="Lay_app_body_main" class="layadmin-tabsbody-item layui-show" style="height:100%"></div>
   </div>
 </div>
-<script>layui.use('index', function () { layui.admin.pageType = "console";})</script>
+<script>layui.use('pindex')</script>
