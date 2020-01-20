@@ -148,8 +148,7 @@ export default class Index extends Vue {
     getFrameworkRolesData;
     @State
     getFrameworkGroupsData;
-    // 用户组
-    groups = [];
+
     sexList = sexList;
     // ★★
     filterMethod = (query, item) => {
@@ -159,9 +158,10 @@ export default class Index extends Vue {
     get rules() {
         if (this["status"] !== this["$actionType"].detail) {
             // 动态验证会走遍验证，暂时需要清除验证
-            this.$nextTick(() => {
-                this.$refs[defaultFormData.refName].resetFields();
-            });
+            this.$refs[defaultFormData.refName] &&
+                this.$nextTick(() => {
+                    this.$refs[defaultFormData.refName].resetFields();
+                });
             return {
                 "Entity.ITCode": [
                     {

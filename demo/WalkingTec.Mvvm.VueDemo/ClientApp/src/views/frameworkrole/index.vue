@@ -11,7 +11,7 @@
                     </el-form-item>
                 </el-form>
             </wtm-fuzzy-search>
-            <wtm-but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+            <wtm-but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" :eventFn="eventFn" />
             <wtm-table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
                 <template #operate="rowData">
                     <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
@@ -29,8 +29,8 @@
                 </template>
             </wtm-table-box>
         </card>
-        <dialog-form :ref="formRefName" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
-        <permission :is-show.sync="dialogInfo.isShowPermission" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch"></permission>
+        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onSearch" />
+        <permission :is-show.sync="isShowPermission" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onSearch" />
         <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
     </div>
 </template>
@@ -46,7 +46,7 @@ import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
 import store from "@/store/system/frameworkrole";
 // 查询参数/列表 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
+import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
 
 @Component({
     mixins: [baseMixin, searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
@@ -64,26 +64,17 @@ export default class Index extends Vue {
     @Action("getFrameworkGroups")
     getFrameworkGroups;
     // 动作(按钮)
-    assembly = ASSEMBLIES;
-    // 弹出框内容 ★★★★☆
-    dialogInfo = {
-        isShow: false,
-        dialogData: {},
-        dialogStatus: "",
-        isShowPermission: false
-    };
+    assembly: Array<string> = ASSEMBLIES;
+    //
+    isShowPermission: boolean = false;
 
     /**
      * 打开-分配权限
      */
     openPermission(data = {}) {
-        this.dialogInfo.dialogData = data;
-        this.dialogInfo.dialogStatus = this["$actionType"].edit;
-        console.log(
-            "this.dialogInfo.dialogStatus",
-            this.dialogInfo.dialogStatus
-        );
-        this.dialogInfo.isShowPermission = true;
+        this.dialogData = data;
+        this.dialogStatus = this["$actionType"].edit;
+        this.isShowPermission = true;
     }
 }
 </script>

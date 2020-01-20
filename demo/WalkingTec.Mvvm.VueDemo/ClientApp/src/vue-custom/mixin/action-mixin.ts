@@ -4,6 +4,19 @@ import { createBlob } from "@/util/files";
 import UploadBox from "@/components/page/upload/index.vue";
 import { Action } from "vuex-class";
 
+type EventFunction = (data: Object | String | Array<any>) => void;
+type DefaultFunction = () => void;
+
+export interface IEventFn {
+  onAdd?: DefaultFunction;
+  onEdit?: EventFunction;
+  onDelete?: EventFunction;
+  onBatchDelete?: EventFunction;
+  onImported?: DefaultFunction;
+  onExportAll?: DefaultFunction;
+  onExport?: EventFunction;
+}
+
 /**
  * 首页中的按钮部分，添加/修改/删除/导出/导出
  */
@@ -21,31 +34,30 @@ export default class actionMixins extends Vue {
   @Action("detail") detail;
   @Action("imported") imported;
   @Action("getExcelTemplate") getExcelTemplate;
-  // 表单弹框ref名称
-  formRefName: string = "dialogForm";
-  // 表单数据的key，下方相同，主要用在dialog-form组件中传入数据
-  formDialogKey: string = "dialogInfo";
 
   // 表单弹出框内容 ★★★★☆
-  dialogInfo = {
-    isShow: false,
-    dialogData: {},
-    dialogStatus: ""
-  };
+  dialogIsShow: Boolean = false;
+  // 打开选中数据
+  dialogData: Object = {};
+  // 打开详情状态（增删改查）
+  dialogStatus: String = "";
   // 导入
-  uploadIsShow = false;
-  // 打开详情弹框 ★★★★☆
+  uploadIsShow: Boolean = false;
+  /**
+   * 打开详情弹框（默认框） ★★★★☆
+   * @param status
+   * @param data
+   */
   openDialog(status, data = {}) {
-    this[this.formDialogKey].isShow = true;
-    this[this.formDialogKey].dialogStatus = status;
-    this[this.formDialogKey].dialogData = data;
-    // this.$nextTick(() => {
-    //     // onGetFormData在form-mixin.tx中
-    //     this.$refs[this.formRefName].onGetFormData();
-    // });
+    this.dialogIsShow = true;
+    this.dialogStatus = status;
+    this.dialogData = data;
   }
 
-  // 查询接口 ★★★★★
+  /**
+   * 查询接口 ★★★★★
+   * @param params
+   */
   privateRequest(params) {
     return this.search(params);
   }
@@ -76,7 +88,6 @@ export default class actionMixins extends Vue {
   onDelete(params) {
     this["onConfirm"]().then(() => {
       const parameters = [params.ID];
-      console.log("parameters:", parameters);
       this.batchDelete(parameters).then(res => {
         this["$notify"]({
           title: "删除成功",
@@ -92,7 +103,6 @@ export default class actionMixins extends Vue {
   onBatchDelete() {
     this["onConfirm"]().then(() => {
       const parameters = listToString(this["selectData"], "ID");
-      console.log("parameters:", parameters);
       this.batchDelete(parameters).then(res => {
         this["$notify"]({
           title: "删除成功",
@@ -159,5 +169,19 @@ export default class actionMixins extends Vue {
       });
       this["onHoldSearch"]();
     });
+  }
+  /**
+   * 事件方法list
+   */
+  get eventFn(): IEventFn {
+    return {
+      onAdd: this.onAdd,
+      onEdit: this.onEdit,
+      onDelete: this.onDelete,
+      onBatchDelete: this.onBatchDelete,
+      onImported: this.onImported,
+      onExportAll: this.onExportAll,
+      onExport: this.onExport
+    };
   }
 }

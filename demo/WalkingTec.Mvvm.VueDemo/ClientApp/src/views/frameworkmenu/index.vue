@@ -1,7 +1,7 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <wtm-but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onBatchDelete" @onExport="onExport" @onExportAll="onExportAll" @onImported="onImported" />
+      <wtm-but-box :assembly="assembly" :action-list="permissionList" :selected-data="selectData" :eventFn="eventFn" />
       <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :is-selection="true" :tb-column="tableHeader" :data="treeData" :loading="loading" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
@@ -16,7 +16,7 @@
         </template>
       </wtm-table-box>
     </card>
-    <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" @onSearch="onSearch" />
+    <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onSearch" />
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
@@ -40,17 +40,8 @@ import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
     }
 })
 export default class Index extends Vue {
-    @State
-    searchData;
-
     // 动作
     assembly = ASSEMBLIES;
-    // 弹出框内容 ★★★★☆
-    dialogInfo = {
-        isShow: false,
-        dialogData: {},
-        dialogStatus: ""
-    };
     // tabledata返回tree
     get treeData() {
         const list = this["tableData"];

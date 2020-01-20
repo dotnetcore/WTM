@@ -43,7 +43,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
       ..._.cloneDeep(defaultFormData.formData)
     };
     // 表单ref name
-    refName = defaultFormData.refName || "";
+    refName: string = defaultFormData.refName || "";
     // 关闭
     onClose() {
       this.$emit("update:isShow", false);
