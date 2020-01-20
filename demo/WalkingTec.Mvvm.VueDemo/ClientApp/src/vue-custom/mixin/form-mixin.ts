@@ -52,13 +52,12 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     // 重置&清除验证
     onReset() {
       this.formData = _.cloneDeep(defaultFormData.formData);
-      const el = _.get(this, `$refs[${this.refName}]`);
-      if (this.refName && el) {
-        // 去除搜索中的error信息
-        el.resetFields();
-      }
+      this.cleanValidate();
     }
-    // 表单数据 赋值
+    /**
+     * 表单数据 赋值
+     * @param params
+     */
     setFormData(params) {
       Object.keys(defaultFormData.formData).forEach(key => {
         if (
@@ -80,17 +79,24 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
      */
     showResponseValidate(resForms: {}) {
       Object.keys(resForms).forEach(key => {
-        if (this.$refs[key]) {
-          this.$refs[key].showError(resForms[key]);
+        const formItem = this.$refs[key];
+        if (formItem) {
+          formItem.showError(resForms[key]);
         }
       });
     }
-
+    /**
+     * 清理验证
+     */
+    cleanValidate(refName?: string) {
+      const refForm = _.get(this, `$refs[${refName || this.refName}]`);
+      refForm && this.$nextTick(() => refForm.resetFields());
+    }
     // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
     /**
      * 打开详情 ★★★★★
      */
-    onGetFormData() {
+    onBindFormData() {
       if (!this["dialogData"]) {
         console.log(this["dialogData"]);
         console.error("dialogData 没有id数据");
@@ -104,12 +110,16 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
           } else {
             this.setFormData(res.Entity);
           }
-          this["endFormData"] && this["endFormData"]();
+          this["afterBindFormData"]();
         });
       } else {
         this.onReset();
       }
     }
+    /**
+     * 查询详情-绑定数据 之后
+     */
+    afterBindFormData() {}
     /**
      * 提交 ★★★★★
      */

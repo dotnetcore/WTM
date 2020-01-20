@@ -1,105 +1,103 @@
 <template>
-  <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
-    <div class="frameworkmenu-form">
-      <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-row>
-          <el-col :span="24">
-            <wtm-form-item ref="Entity.IsInside" label="地址类型" prop="Entity.IsInside">
-              <edit-box :is-edit="status !== $actionType.detail">
-                <el-radio-group v-model="formData.Entity.IsInside">
-                  <el-radio :label="true">
-                    内部地址
-                  </el-radio>
-                  <el-radio :label="false">
-                    外部地址
-                  </el-radio>
-                </el-radio-group>
-                <template #editValue>
-                  {{ formData.Entity.IsInside==='true' ? "内部地址" : "外部地址" }}
-                </template>
-              </edit-box>
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-show="formData.Entity.IsInside">
-          <el-col :span="12">
-            <wtm-form-item label="模块名称">
-              <el-select v-model="SelectedModule" v-edit:[status]="{list: pageNameList, key:'modelName', label: 'name'}" filterable placeholder="请选择" @change="onSelectedAction">
-                <el-option v-for="item in pageNameList" :key="item.modelName" :label="item.name" :value="item.modelName" />
+  <wtm-dialog-box componentClass="frameworkmenu-form" :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
+    <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
+      <el-row>
+        <el-col :span="24">
+          <wtm-form-item ref="Entity.IsInside" label="地址类型" prop="Entity.IsInside">
+            <edit-box :is-edit="status !== $actionType.detail">
+              <el-radio-group v-model="formData.Entity.IsInside">
+                <el-radio :label="true">
+                  内部地址
+                </el-radio>
+                <el-radio :label="false">
+                  外部地址
+                </el-radio>
+              </el-radio-group>
+              <template #editValue>
+                {{ formData.Entity.IsInside==='true' ? "内部地址" : "外部地址" }}
+              </template>
+            </edit-box>
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-show="formData.Entity.IsInside">
+        <el-col :span="12">
+          <wtm-form-item label="模块名称">
+            <el-select v-model="SelectedModule" v-edit:[status]="{list: pageNameList, key:'modelName', label: 'name'}" filterable placeholder="请选择" @change="onSelectedAction">
+              <el-option v-for="item in pageNameList" :key="item.modelName" :label="item.name" :value="item.modelName" />
+            </el-select>
+          </wtm-form-item>
+        </el-col>
+        <el-col :span="12">
+          <wtm-form-item label="动作名称">
+            <edit-box :is-edit="status !== $actionType.detail">
+              <el-select v-model="formData.Entity.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
+                <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
               </el-select>
-            </wtm-form-item>
-          </el-col>
-          <el-col :span="12">
-            <wtm-form-item label="动作名称">
-              <edit-box :is-edit="status !== $actionType.detail">
-                <el-select v-model="formData.Entity.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
-                  <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
-                </el-select>
-                <template #editValue>
-                  动作名称 value
-                </template>
-              </edit-box>
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-show="!formData.Entity.IsInside">
-          <el-col :span="24">
-            <wtm-form-item ref="Entity.Url" label="Url">
-              <el-input v-model="formData.Entity.Url" v-edit:[status] />
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.PageName" label="页面名称">
-              <el-input v-model="formData.Entity.PageName" v-edit:[status] placeholder="请输入内容" />
-            </wtm-form-item>
-          </el-col>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.ParentId" label="父目录">
-              <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: getFoldersData, key:'Value', label: 'Text'}" filterable placeholder="请选择">
-                <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
-              </el-select>
-            </wtm-form-item>
-          </el-col>
-        </el-row>
+              <template #editValue>
+                动作名称 value
+              </template>
+            </edit-box>
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-show="!formData.Entity.IsInside">
+        <el-col :span="24">
+          <wtm-form-item ref="Entity.Url" label="Url">
+            <el-input v-model="formData.Entity.Url" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.PageName" label="页面名称">
+            <el-input v-model="formData.Entity.PageName" v-edit:[status] placeholder="请输入内容" />
+          </wtm-form-item>
+        </el-col>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.ParentId" label="父目录">
+            <el-select v-model="formData.Entity.ParentId" v-edit:[status]="{list: getFoldersData, key:'Value', label: 'Text'}" filterable placeholder="请选择">
+              <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
+            </el-select>
+          </wtm-form-item>
+        </el-col>
+      </el-row>
 
-        <el-row>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.FolderOnly" label="目录">
-              <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] />
-            </wtm-form-item>
-          </el-col>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.ShowOnMenu" label="菜单显示">
-              <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] />
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.IsPublic" label="公开">
-              <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] />
-            </wtm-form-item>
-          </el-col>
-          <el-col :span="12">
-            <wtm-form-item ref="Entity.DisplayOrder" label="顺序">
-              <el-input v-model="formData.Entity.DisplayOrder" v-edit:[status] placeholder="请输入顺序" />
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <wtm-form-item ref="Entity.ICon" label="图标">
-              <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: [], key:'value', label: 'label'}" filterable placeholder="请选择">
-                <el-option v-for="item in []" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </wtm-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
-    </div>
+      <el-row>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.FolderOnly" label="目录">
+            <el-switch v-model="formData.Entity.FolderOnly" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.ShowOnMenu" label="菜单显示">
+            <el-switch v-model="formData.Entity.ShowOnMenu" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.IsPublic" label="公开">
+            <el-switch v-model="formData.Entity.IsPublic" v-edit:[status] />
+          </wtm-form-item>
+        </el-col>
+        <el-col :span="12">
+          <wtm-form-item ref="Entity.DisplayOrder" label="顺序">
+            <el-input v-model="formData.Entity.DisplayOrder" v-edit:[status] placeholder="请输入顺序" />
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <wtm-form-item ref="Entity.ICon" label="图标">
+            <el-select v-model="formData.Entity.ICon" v-edit:[status]="{list: [], key:'value', label: 'label'}" filterable placeholder="请选择">
+              <el-option v-for="item in []" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </wtm-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
   </wtm-dialog-box>
 </template>
 
@@ -148,10 +146,7 @@ export default class Index extends Vue {
     get rules() {
         if (this["status"] !== this["$actionType"].detail) {
             // 动态验证会走遍验证，需要清除验证
-            this.$refs[defaultFormData.refName] &&
-                this.$nextTick(() => {
-                    this.$refs[defaultFormData.refName].resetFields();
-                });
+            this.cleanValidate();
             return {
                 GroupCode: [
                     {
@@ -201,9 +196,9 @@ export default class Index extends Vue {
         this.getFolders();
     }
     /**
-     * 查询详情-end-调用
+     * 查询详情-after-调用
      */
-    endFormData() {
+    afterBindFormData() {
         const val = _.get(this, `formData.Entity.SelectedModule`);
         val &&
             this.getActionsByModel({
