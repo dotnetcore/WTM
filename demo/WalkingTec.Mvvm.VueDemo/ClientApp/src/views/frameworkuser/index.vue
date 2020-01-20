@@ -48,7 +48,7 @@ import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkuser";
 
 // 查询参数/列表 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config.js";
+import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
 
 @Component({
     mixins: [baseMixin, searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],

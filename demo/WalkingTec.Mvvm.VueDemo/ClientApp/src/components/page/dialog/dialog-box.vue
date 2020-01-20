@@ -1,9 +1,9 @@
 <template>
-  <div class="dialog-box">
-    <el-dialog v-el-draggable-dialog v-if="isDialog" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="$listeners">
+  <div class="dialog-wrap">
+    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="$listeners">
       <slot />
     </el-dialog>
-    <el-drawer v-else class="el-drawer-box" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" v-on="$listeners">
+    <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" v-on="$listeners">
       <slot />
     </el-drawer>
   </div>
@@ -17,7 +17,8 @@ import { SettingsModule } from "@/store/modules/settings";
 export default class DialogBox extends Vue {
     @Prop({ type: Boolean, default: false })
     isShow;
-
+    @Prop({ type: String, default: "" })
+    componentClass;
     get isDialog() {
         return SettingsModule.isDialog;
     }
@@ -32,9 +33,9 @@ export default class DialogBox extends Vue {
 }
 </script>
 <style lang="less">
-.dialog-box {
+.dialog-wrap {
 }
-.el-drawer-box {
+.el-drawer-wrap {
     .el-drawer {
         overflow: auto;
     }

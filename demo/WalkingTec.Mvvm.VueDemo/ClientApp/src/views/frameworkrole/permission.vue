@@ -1,5 +1,5 @@
 <template>
-    <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onGetFormData">
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
         <div class="frameworkrole-permission-form">
             <el-form :ref="refName" :model="formData" label-width="100px">
                 <el-row>
@@ -62,7 +62,7 @@ export default class extends Vue {
     @Action
     getPageActions;
 
-    onGetFormData() {
+    onBindFormData() {
         this.getPageActions({ ID: this["dialogData"].ID }).then(res => {
             this["formData"].Entity = { ...res.Entity };
             this["formData"].Pages = _.cloneDeep(res.Pages.concat());

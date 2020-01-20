@@ -9,9 +9,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class WtmFormItem extends Vue {
-    created() {
-        console.log(this);
-    }
+    created() {}
     showError(msg) {
         this.$refs["elItem"].clearValidate();
         if (msg) {
