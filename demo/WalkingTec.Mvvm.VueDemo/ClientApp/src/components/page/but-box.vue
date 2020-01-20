@@ -32,6 +32,10 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import ExportExcel from "@/components/page/export/export-excel.vue";
 import { butType } from "@/config/enum";
+import { IEventFn } from "@/vue-custom/mixin/action-mixin";
+
+function noop() {}
+
 @Component({
     components: {
         ExportExcel
@@ -48,17 +52,20 @@ import { butType } from "@/config/enum";
     }
 })
 export default class ButBox extends Vue {
+    // 增删改查 操作权限集合
     @Prop({ type: Array, default: () => Object.keys(butType) })
     assembly;
+    // 父级选中的对象
     @Prop({ type: Array, default: [] })
     selectedData;
+    // 导出参数 url地址
     @Prop({
         type: Object,
         default: () => {
             return { params: {}, url: "" };
         }
     })
-    exportOption; // 导出参数 url地址
+    exportOption;
     // 权限列表
     @Prop({
         type: Object,
@@ -67,6 +74,24 @@ export default class ButBox extends Vue {
         }
     })
     permissionList;
+
+    // 方法事件
+    @Prop({
+        type: Object,
+        default: (): IEventFn => {
+            return {
+                onAdd: noop,
+                onEdit: noop,
+                onDelete: noop,
+                onBatchDelete: noop,
+                onImported: noop,
+                onExportAll: noop,
+                onExport: noop
+            };
+        }
+    })
+    eventFn;
+
     butTypes = butType;
     get isDisabledEdit() {
         if (this.selectedData.length === 1) {
@@ -81,31 +106,53 @@ export default class ButBox extends Vue {
         return true;
     }
     onAdd() {
-        this.$emit("onAdd");
+        this.eventFn.onAdd ? this.eventFn.onAdd() : this.$emit("onAdd");
     }
     onEdit() {
         if (!this.isDisabledEdit) {
-            this.$emit("onEdit", this.selectedData[0]);
+            this.eventFn.onEdit
+                ? this.eventFn.onEdit(this.selectedData[0])
+                : this.$emit("onEdit", this.selectedData[0]);
         }
     }
+
+    onBatchDelete() {
+        if (!this.isDisabledEelete) {
+            this.eventFn.onBatchDelete
+                ? this.eventFn.onBatchDelete(this.selectedData)
+                : this.$emit("onBatchDelete", this.selectedData);
+        }
+    }
+
     onDelete() {
         if (!this.isDisabledEelete) {
-            this.$emit("onDelete", this.selectedData);
+            this.eventFn.onDelete
+                ? this.eventFn.onDelete(this.selectedData[0])
+                : this.$emit("onDelete", this.selectedData[0]);
         }
     }
     onImported() {
-        this.$emit("onImported");
+        this.eventFn.onImported
+            ? this.eventFn.onImported()
+            : this.$emit("onImported");
+    }
+    onExportAll() {
+        this.eventFn.onExportAll
+            ? this.eventFn.onExportAll()
+            : this.$emit("onExportAll");
+    }
+    onExport() {
+        this.eventFn.onExport
+            ? this.eventFn.onExport()
+            : this.$emit("onExport");
     }
     onCommand(command) {
-        this.$emit(command);
+        if (command === "onExportAll") {
+            this.onExportAll();
+        } else if (command === "onExport") {
+            this.onExport();
+        }
     }
-    // onExportAll() {
-    //     console.log("onExportAll");
-    //     this.$emit("onExportAll");
-    // }
-    // onExport() {
-    //     this.$emit("onExport", this.selectedData);
-    // }
 }
 </script>
 <style lang="less" rel="stylesheet/less">

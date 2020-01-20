@@ -19,7 +19,7 @@
           </el-form-item>
         </el-form>
       </wtm-fuzzy-search>
-      <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onBatchDelete" />
+      <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" :eventFn="eventFn" />
       <wtm-table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
@@ -34,9 +34,7 @@
         </template>
       </wtm-table-box>
     </card>
-    <wtm-dialog-box :is-show.sync="dialogInfo.isShow" :status="dialogInfo.dialogStatus">
-      <dialog-form ref="dialogform" :is-show.sync="dialogInfo.isShow" :dialog-data="dialogInfo.dialogData" :status="dialogInfo.dialogStatus" />
-    </wtm-dialog-box>
+    <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onSearch" />
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </div>
 </template>
@@ -63,28 +61,11 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    search;
-    @Action
-    batchDelete;
-    @Action
-    delete;
-    @Action
-    exportExcel;
-    @Action
-    exportExcelByIds;
-    @Action
     privilegesList;
-    @Action
-    getExcelTemplate;
     @State
     privilegesListData;
     exportParams = {};
-    // 弹出框内容
-    dialogInfo = {
-        isShow: false,
-        dialogData: {},
-        dialogStatus: ""
-    };
+
     tableCols = [
         { key: "Name", sortable: true, label: "授权对象" },
         { key: "TableName", sortable: true, label: "权限名称" },
@@ -94,15 +75,6 @@ export default class Index extends Vue {
     created() {
         this.privilegesList();
         this["onSearch"]();
-    }
-    // 打开详情弹框 ★★★★☆
-    openDialog(status, data = {}) {
-        this.dialogInfo.isShow = true;
-        this.dialogInfo.dialogStatus = status;
-        this.dialogInfo.dialogData = data;
-        this.$nextTick(() => {
-            this.$refs["dialogform"].onGetFormData();
-        });
     }
 }
 </script>

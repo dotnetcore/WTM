@@ -3,8 +3,8 @@ import { State } from "vuex-class";
 
 @Component
 export default class BaseMixins extends Vue {
+  // api 授权权限列表
   @State permissionList;
-
   // 跳转
   onPath(path) {
     this.$router.push({
