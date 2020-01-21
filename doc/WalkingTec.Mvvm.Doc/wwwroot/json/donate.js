@@ -90,6 +90,14 @@
         {"date":"2019-12-23","name":"*发","amount":50.00,"from":"微信","comment":"-"},
         {"date":"2019-12-27","name":"*酒","amount":30.00,"from":"微信","comment":"白描~再次感谢老大了"},
         {"date":"2020-01-02","name":"F*i","amount":100.00,"from":"微信","comment":"-"},
-        {"date":"2020-01-03","name":"**","amount":99.00,"from":"微信","comment":"-"}
+        {"date":"2020-01-03","name":"**","amount":9.99,"from":"微信","comment":"-"},
+        {"date":"2020-01-07","name":"*将","amount":20.00,"from":"微信","comment":"-"},
+        {"date":"2020-01-13","name":"*华","amount":6.66,"from":"微信","comment":"支持一下"},
+        {"date":"2020-01-14","name":"K*h","amount":2.20,"from":"微信","comment":"-"},
+        {"date":"2020-01-15","name":"M*o","amount":10.00,"from":"微信","comment":"很惊艳，国产框架加油"},
+        {"date":"2020-01-16","name":"*安","amount":99.00,"from":"微信","comment":"非常好的框架，加油"},
+        {"date":"2020-01-16","name":"*泰","amount":200.00,"from":"微信","comment":"-"},
+        {"date":"2020-01-17","name":"（*）","amount":1.00,"from":"微信","comment":"-"},
+        {"date":"2020-01-19","name":"*王","amount":60.00,"from":"微信","comment":"-"}
     ]
 }
