@@ -320,7 +320,7 @@ namespace WalkingTec.Mvvm.Core
                     cs = "default";
                 }
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
+            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
 
         #endregion

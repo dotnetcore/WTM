@@ -11,18 +11,18 @@ namespace WalkingTec.Mvvm.Core
     {
         #region ConnectionStrings
 
-        private List<KV> _connectStrings;
+        private List<CS> _connectStrings;
 
         /// <summary>
         /// ConnectionStrings
         /// </summary>
-        public List<KV> ConnectionStrings
+        public List<CS> ConnectionStrings
         {
             get
             {
                 if (_connectStrings == null)
                 {
-                    _connectStrings = new List<KV>();
+                    _connectStrings = new List<CS>();
                 }
                 return _connectStrings;
             }

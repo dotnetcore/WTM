@@ -21,10 +21,8 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// FrameworkContext
     /// </summary>
-    public partial class FrameworkContext : DbContext, IDataContext
+    public partial class FrameworkContext : EmptyContext, IDataContext
     {
-        //public DbSet<FrameworkModule> BaseFrameworkModules { get; set; }
-        //public DbSet<FrameworkAction> BaseFrameworkActions { get; set; }
         public DbSet<FrameworkMenu> BaseFrameworkMenus { get; set; }
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
@@ -36,30 +34,13 @@ namespace WalkingTec.Mvvm.Core
         //public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
 
-
-
-        /// <summary>
-        /// Commited
-        /// </summary>
-        public bool Commited { get; set; }
-
-        /// <summary>
-        /// IsFake
-        /// </summary>
-        public bool IsFake { get; set; }
-
-        /// <summary>
-        /// CSName
-        /// </summary>
-        public string CSName { get; set; }
-
-        public DBTypeEnum DBType { get; set; }
         /// <summary>
         /// FrameworkContext
         /// </summary>
         public FrameworkContext()
         {
             CSName = "default";
+            DBType = DBTypeEnum.SqlServer;
         }
 
         /// <summary>
@@ -77,133 +58,10 @@ namespace WalkingTec.Mvvm.Core
             DBType = dbtype;
         }
 
-        public IDataContext CreateNew()
+        public FrameworkContext(CS cs)
         {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
-        }
-
-        public IDataContext ReCreate()
-        {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
-        }
-        /// <summary>
-        /// 将一个实体设为填加状态
-        /// </summary>
-        /// <param name="entity">实体</param>
-        public void AddEntity<T>(T entity) where T : TopBasePoco
-        {
-            this.Entry(entity).State = EntityState.Added;
-        }
-
-        /// <summary>
-        /// 将一个实体设为修改状态
-        /// </summary>
-        /// <param name="entity">实体</param>
-        public void UpdateEntity<T>(T entity) where T : TopBasePoco
-        {
-            this.Entry(entity).State = EntityState.Modified;
-        }
-
-        /// <summary>
-        /// 将一个实体的某个字段设为修改状态，用于只更新个别字段的情况
-        /// </summary>
-        /// <typeparam name="T">实体类</typeparam>
-        /// <param name="entity">实体</param>
-        /// <param name="fieldExp">要设定为修改状态的字段</param>
-        public void UpdateProperty<T>(T entity, Expression<Func<T, object>> fieldExp)
-            where T : TopBasePoco
-        {
-            var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
-            {
-                set.Attach(entity);
-            }
-            this.Entry(entity).Property(fieldExp).IsModified = true;
-        }
-
-        /// <summary>
-        /// UpdateProperty
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="fieldName"></param>
-        public void UpdateProperty<T>(T entity, string fieldName)
-            where T : TopBasePoco
-        {
-            var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
-            {
-                set.Attach(entity);
-            }
-            this.Entry(entity).Property(fieldName).IsModified = true;
-        }
-
-        /// <summary>
-        /// 将一个实体设定为删除状态
-        /// </summary>
-        /// <param name="entity">实体</param>
-        public void DeleteEntity<T>(T entity) where T : TopBasePoco
-        {
-            var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
-            {
-                set.Attach(entity);
-            }
-            set.Remove(entity);
-        }
-
-        /// <summary>
-        /// CascadeDelete
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        public void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>
-        {
-            if (entity != null && entity.ID != Guid.Empty)
-            {
-                var set = this.Set<T>();
-                var entities = set.Where(x => x.ParentId == entity.ID).ToList();
-                if (entities.Count > 0)
-                {
-                    foreach (var item in entities)
-                    {
-                        CascadeDelete(item);
-                    }
-                }
-                DeleteEntity(entity);
-            }
-        }
-
-        /// <summary>
-        /// GetCoreType
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public Type GetCoreType(Type t)
-        {
-            if (t != null && t.IsNullable())
-            {
-                if (!t.GetTypeInfo().IsValueType)
-                {
-                    return t;
-                }
-                else
-                {
-                    if ("DateTime".Equals(t.GenericTypeArguments[0].Name))
-                    {
-                        return typeof(string);
-                    }
-                    return Nullable.GetUnderlyingType(t);
-                }
-            }
-            else
-            {
-                if ("DateTime".Equals(t.Name))
-                {
-                    return typeof(string);
-                }
-                return t;
-            }
+            CSName = cs.Value;
+            DBType = cs.DbType.Value;
         }
 
         /// <summary>
@@ -217,138 +75,9 @@ namespace WalkingTec.Mvvm.Core
             //用户和用户搜索条件级联删除
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            var modelAsms = Utils.GetAllAssembly();
-
-            var allTypes = new List<Type>();// 所有 DbSet<> 的泛型类型
-
-            #region 获取所有 DbSet<T> 的泛型类型 T 及其 List<T> 类型属性对应的类型 T
-
-            // 获取所有 DbSet<T> 的泛型类型 T
-            foreach (var asm in modelAsms)
-            {
-                var dcModule = asm.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x)).ToList();
-                if (dcModule != null && dcModule.Count > 0)
-                {
-                    foreach (var module in dcModule)
-                    {
-                        foreach (var pro in module.GetProperties())
-                        {
-                            if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
-                            {
-                                if (!allTypes.Contains(pro.PropertyType.GenericTypeArguments[0], new TypeComparer()))
-                                {
-                                    allTypes.Add(pro.PropertyType.GenericTypeArguments[0]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 获取类型 T 下 List<S> 类型的属性对应的类型 S，且S 必须是 TopBasePoco 的子类，只有这些类会生成库
-            for (int i = 0; i < allTypes.Count; i++) //
-            {
-                var item = allTypes[i];
-                var pros = item.GetProperties();
-                foreach (var pro in pros)
-                {
-                    if (typeof(TopBasePoco).IsAssignableFrom(pro.PropertyType))
-                    {
-                        if (allTypes.Contains(pro.PropertyType) == false)
-                        {
-                            allTypes.Add(pro.PropertyType);
-                        }
-                    }
-                    else
-                    {
-                        if (pro.PropertyType.IsGenericType && pro.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                        {
-                            var inner = pro.PropertyType.GetGenericArguments()[0];
-                            if (typeof(TopBasePoco).IsAssignableFrom(inner))
-                            {
-                                if (allTypes.Contains(inner) == false)
-                                {
-                                    allTypes.Add(inner);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            foreach (var item in allTypes)
-            {
-                if (typeof(BasePoco).IsAssignableFrom(item))
-                {
-                    //给所有model的CreateTime字段加索引
-                    //最终实现的是类似 modelBuilder.Entity<ActionLog>().HasIndex("CreateTime") 这种语句调用
-                    //由于循环的多语言类是动态的，所以用反射和Lambda来实现
-                    var entity = typeof(ModelBuilder).GetMethod("Entity", Type.EmptyTypes).MakeGenericMethod(item).Invoke(modelBuilder, null);
-                    typeof(EntityTypeBuilder<>).MakeGenericType(item).GetMethod("HasIndex", new Type[] { typeof(string[]) }).Invoke(entity, new object[] { new string[] { "CreateTime" } });
-                }
-            }
+            base.OnModelCreating(modelBuilder);
         }
 
-        /// <summary>
-        /// OnConfiguring
-        /// </summary>
-        /// <param name="optionsBuilder"></param>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            switch (DBType)
-            {
-                case DBTypeEnum.SqlServer:
-                    try
-                    {
-                        var Configs = GlobalServices.GetRequiredService<Configs>();
-                        if (Configs.IsOldSqlServer == true)
-                        {
-                            optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
-                        }
-                        else
-                        {
-                            optionsBuilder.UseSqlServer(CSName);
-                        }
-                    }
-                    catch {
-                        optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
-                    }
-                    break;
-                case DBTypeEnum.MySql:
-                    optionsBuilder.UseMySql(CSName);
-                    break;
-                case DBTypeEnum.PgSql:
-                    optionsBuilder.UseNpgsql(CSName);
-                    break;
-                case DBTypeEnum.Memory:
-                    optionsBuilder.UseInMemoryDatabase(CSName);
-                    break;
-                case DBTypeEnum.SQLite:
-                    optionsBuilder.UseSqlite(CSName);
-                    break;
-                case DBTypeEnum.Oracle:
-                    optionsBuilder.UseOracle(CSName);
-                    break;
-                default:
-                    break;
-            }
-            try
-            {
-                var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
-                if (Configs.IsQuickDebug)
-                {
-                    optionsBuilder.UseLoggerFactory(LoggerFactory);
-                }
-            }
-            catch { }
-            base.OnConfiguring(optionsBuilder);
-        }
-
-        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] {
-            new DebugLoggerProvider()
-        });
 
         /// <summary>
         /// 数据初始化
@@ -356,7 +85,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="allModules"></param>
         /// <param name="IsSpa"></param>
         /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
-        public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
+        public async override Task<bool> DataInit(object allModules, bool IsSpa)
         {
             bool rv = await Database.EnsureCreatedAsync();
             //判断是否存在初始数据
@@ -556,6 +285,266 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
+    }
+
+    public partial class EmptyContext : DbContext, IDataContext
+    {
+        /// <summary>
+        /// Commited
+        /// </summary>
+        public bool Commited { get; set; }
+
+        /// <summary>
+        /// IsFake
+        /// </summary>
+        public bool IsFake { get; set; }
+
+        /// <summary>
+        /// CSName
+        /// </summary>
+        public string CSName { get; set; }
+
+        public DBTypeEnum DBType { get; set; }
+        /// <summary>
+        /// FrameworkContext
+        /// </summary>
+        public EmptyContext()
+        {
+            CSName = "default";
+            DBType = DBTypeEnum.SqlServer;
+        }
+
+        /// <summary>
+        /// FrameworkContext
+        /// </summary>
+        /// <param name="cs"></param>
+        public EmptyContext(string cs)
+        {
+            CSName = cs;
+        }
+
+        public EmptyContext(string cs, DBTypeEnum dbtype)
+        {
+            CSName = cs;
+            DBType = dbtype;
+        }
+
+        public EmptyContext(CS cs)
+        {
+            CSName = cs.Value;
+            DBType = cs.DbType.Value;
+        }
+
+        public IDataContext CreateNew()
+        {
+            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+        }
+
+        public IDataContext ReCreate()
+        {
+            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+        }
+        /// <summary>
+        /// 将一个实体设为填加状态
+        /// </summary>
+        /// <param name="entity">实体</param>
+        public void AddEntity<T>(T entity) where T : TopBasePoco
+        {
+            this.Entry(entity).State = EntityState.Added;
+        }
+
+        /// <summary>
+        /// 将一个实体设为修改状态
+        /// </summary>
+        /// <param name="entity">实体</param>
+        public void UpdateEntity<T>(T entity) where T : TopBasePoco
+        {
+            this.Entry(entity).State = EntityState.Modified;
+        }
+
+        /// <summary>
+        /// 将一个实体的某个字段设为修改状态，用于只更新个别字段的情况
+        /// </summary>
+        /// <typeparam name="T">实体类</typeparam>
+        /// <param name="entity">实体</param>
+        /// <param name="fieldExp">要设定为修改状态的字段</param>
+        public void UpdateProperty<T>(T entity, Expression<Func<T, object>> fieldExp)
+            where T : TopBasePoco
+        {
+            var set = this.Set<T>();
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            {
+                set.Attach(entity);
+            }
+            this.Entry(entity).Property(fieldExp).IsModified = true;
+        }
+
+        /// <summary>
+        /// UpdateProperty
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="fieldName"></param>
+        public void UpdateProperty<T>(T entity, string fieldName)
+            where T : TopBasePoco
+        {
+            var set = this.Set<T>();
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            {
+                set.Attach(entity);
+            }
+            this.Entry(entity).Property(fieldName).IsModified = true;
+        }
+
+        /// <summary>
+        /// 将一个实体设定为删除状态
+        /// </summary>
+        /// <param name="entity">实体</param>
+        public void DeleteEntity<T>(T entity) where T : TopBasePoco
+        {
+            var set = this.Set<T>();
+            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            {
+                set.Attach(entity);
+            }
+            set.Remove(entity);
+        }
+
+        /// <summary>
+        /// CascadeDelete
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        public void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>
+        {
+            if (entity != null && entity.ID != Guid.Empty)
+            {
+                var set = this.Set<T>();
+                var entities = set.Where(x => x.ParentId == entity.ID).ToList();
+                if (entities.Count > 0)
+                {
+                    foreach (var item in entities)
+                    {
+                        CascadeDelete(item);
+                    }
+                }
+                DeleteEntity(entity);
+            }
+        }
+
+        /// <summary>
+        /// GetCoreType
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Type GetCoreType(Type t)
+        {
+            if (t != null && t.IsNullable())
+            {
+                if (!t.GetTypeInfo().IsValueType)
+                {
+                    return t;
+                }
+                else
+                {
+                    if ("DateTime".Equals(t.GenericTypeArguments[0].Name))
+                    {
+                        return typeof(string);
+                    }
+                    return Nullable.GetUnderlyingType(t);
+                }
+            }
+            else
+            {
+                if ("DateTime".Equals(t.Name))
+                {
+                    return typeof(string);
+                }
+                return t;
+            }
+        }
+
+        /// <summary>
+        /// OnModelCreating
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+        }
+
+        /// <summary>
+        /// OnConfiguring
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            switch (DBType)
+            {
+                case DBTypeEnum.SqlServer:
+                    try
+                    {
+                        var Configs = GlobalServices.GetRequiredService<Configs>();
+                        if (Configs.IsOldSqlServer == true)
+                        {
+                            optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                        }
+                        else
+                        {
+                            optionsBuilder.UseSqlServer(CSName);
+                        }
+                    }
+                    catch
+                    {
+                        optionsBuilder.UseSqlServer(CSName, op => op.UseRowNumberForPaging());
+                    }
+                    break;
+                case DBTypeEnum.MySql:
+                    optionsBuilder.UseMySql(CSName);
+                    break;
+                case DBTypeEnum.PgSql:
+                    optionsBuilder.UseNpgsql(CSName);
+                    break;
+                case DBTypeEnum.Memory:
+                    optionsBuilder.UseInMemoryDatabase(CSName);
+                    break;
+                case DBTypeEnum.SQLite:
+                    optionsBuilder.UseSqlite(CSName);
+                    break;
+                case DBTypeEnum.Oracle:
+                    optionsBuilder.UseOracle(CSName);
+                    break;
+                default:
+                    break;
+            }
+            try
+            {
+                var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
+                if (Configs.IsQuickDebug)
+                {
+                    optionsBuilder.UseLoggerFactory(LoggerFactory);
+                }
+            }
+            catch { }
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] {
+            new DebugLoggerProvider()
+        });
+
+        /// <summary>
+        /// 数据初始化
+        /// </summary>
+        /// <param name="allModules"></param>
+        /// <param name="IsSpa"></param>
+        /// <returns>返回true表示需要进行初始化数据操作，返回false即数据库已经存在或不需要初始化数据</returns>
+        public async virtual Task<bool> DataInit(object allModules, bool IsSpa)
+        {
+            bool rv = await Database.EnsureCreatedAsync();
+            return rv;
+        }
+
         #region 执行存储过程返回datatable
         /// <summary>
         /// 执行存储过程，返回datatable结果集
@@ -726,4 +715,5 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
     }
+
 }
