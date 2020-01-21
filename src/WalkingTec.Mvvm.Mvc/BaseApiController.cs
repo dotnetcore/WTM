@@ -214,7 +214,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.ConfigInfo = ConfigInfo;
             rv.Cache = Cache;
             rv.LoginUserInfo = LoginUserInfo;
-            rv.DataContextCI = GlobaInfo?.DataContextCI;
+            rv.DataContextCI = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x=>x.DcConstructor).FirstOrDefault();
             rv.DC = this.DC;
             rv.MSD = new ModelStateServiceProvider(ModelState);
             rv.FC = new Dictionary<string, object>();
@@ -414,21 +414,19 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 cs = "defaultlog";
             }
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).Select(x => x.Value).FirstOrDefault(), CurrentDbType ?? ConfigInfo.DbType });
+            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
         }
 
         /// <summary>
         /// Create DataContext
         /// </summary>
         /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
-        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
         /// <returns>data context</returns>
         [NonAction]
-        public virtual IDataContext CreateDC(string csName, DBTypeEnum? dbtype=null)
+        public virtual IDataContext CreateDC(string csName)
         {
             string cs = csName ?? "default";
-            var dbt = dbtype ?? CurrentDbType;
-            return (IDataContext)GlobaInfo?.DataContextCI?.Invoke(new object[] { ConfigInfo?.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), dbt ?? ConfigInfo.DbType });
+            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
         }
 
         #endregion
