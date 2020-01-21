@@ -77,8 +77,7 @@ namespace WalkingTec.Mvvm.Core.Auth
         private IDataContext CreateDC()
         {
             string cs = "default";
-            var globalIngo = GlobalServices.GetRequiredService<GlobalData>();
-            return (IDataContext)globalIngo.DataContextCI?.Invoke(new object[] { _configs.ConnectionStrings?.Where(x => x.Key.ToLower() == cs).Select(x => x.Value).FirstOrDefault(), _configs.DbType });
+            return _configs.ConnectionStrings.Where(x=>x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
 
 
