@@ -95,7 +95,6 @@ namespace WalkingTec.Mvvm.Mvc
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
-            services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
             if (dataPrivilegeSettings != null)
             {
@@ -105,6 +104,9 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 con.DataPrivilegeSettings = new List<IDataPrivilege>();
             }
+            SetDbContextCI(gd.AllAssembly, con);
+            gd.AllModels = GetAllModels(con);
+            services.AddSingleton(gd);
             services.AddSingleton(con);
             services.AddResponseCaching();
             services.AddMemoryCache();
@@ -399,10 +401,10 @@ namespace WalkingTec.Mvvm.Mvc
                     }
 
                     var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-                    var cs = configs.ConnectionStrings.Select(x => x.Value);
+                    var cs = configs.ConnectionStrings;
                     foreach (var item in cs)
                     {
-                        var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
+                        var dc = item.CreateDC();
                         dc.DataInit(gd.AllModule, test != null).Wait();
                     }
                     GlobalServices.SetServiceProvider(app.ApplicationServices);
@@ -484,8 +486,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 gd.AllAssembly.Add(layui);
             }
-            gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
-            gd.AllModels = GetAllModels(gd.DataContextCI);
             var controllers = GetAllControllers(gd.AllAssembly);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
@@ -502,7 +502,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
                 {
-                    var data = GetAllMenus(gd.AllModule, gd.DataContextCI);
+                    var data = GetAllMenus(gd.AllModule);
                     cache.Add(menuCacheKey, data);
                     menus = data;
                 }
@@ -516,7 +516,7 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule, ConstructorInfo constructorInfo)
+        private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule)
         {
             var ConfigInfo = GlobalServices.GetService<Configs>();
             var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
@@ -552,7 +552,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 try
                 {
-                    using (var dc = (IDataContext)constructorInfo?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType }))
+                    using (var dc = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .Include(x => x.Domain)
@@ -591,35 +591,54 @@ namespace WalkingTec.Mvvm.Mvc
         /// 获取DbContextCI
         /// </summary>
         /// <returns></returns>
-        private static ConstructorInfo GetDbContextCI(List<Assembly> AllAssembly)
+        private static void SetDbContextCI(List<Assembly> AllAssembly, Configs con)
         {
-            ConstructorInfo ci = null;
+            List<ConstructorInfo> cis = new List<ConstructorInfo>();
             foreach (var ass in AllAssembly)
             {
                 try
                 {
-                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext").ToList();
-                    ci = t.Where(x => x.Name != "FrameworkContext").FirstOrDefault()?.GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) });
-                    if (ci != null)
+                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext" && x.Name != "FrameworkContext" && x.Name != "EmptyContext").ToList();
+                    foreach (var st in t)
                     {
-                        break;
+                        var ci = st.GetConstructor(new Type[] { typeof(CS) });
+                        if (ci != null)
+                        {
+                            cis.Add(ci);
+                        }
                     }
                 }
                 catch { }
             }
-            return ci;
+            foreach (var item in con.ConnectionStrings)
+            {
+                string dcname = item.DbContext;
+                if (string.IsNullOrEmpty(dcname))
+                {
+                    dcname = "DataContext";
+                }
+                item.DcConstructor = cis.Where(x => x.DeclaringType.Name.ToLower() == dcname.ToLower()).FirstOrDefault();
+                if (item.DcConstructor == null)
+                {
+                    item.DcConstructor = cis.FirstOrDefault();
+                }
+                if (item.DbType == null)
+                {
+                    item.DbType = con.DbType;
+                }
+            }
         }
 
         /// <summary>
         /// 获取所有 Model
         /// </summary>
         /// <returns></returns>
-        private static List<Type> GetAllModels(ConstructorInfo dbContextCI)
+        private static List<Type> GetAllModels(Configs con)
         {
             var models = new List<Type>();
 
             //获取所有模型
-            var pros = dbContextCI?.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            var pros = con.ConnectionStrings.SelectMany(x => x.DcConstructor.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
             if (pros != null)
             {
                 foreach (var pro in pros)
