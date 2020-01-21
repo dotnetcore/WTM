@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.Log = ctrl.Log;
                     model.CurrentUrl = ctrl.BaseUrl;
                     model.ConfigInfo = (Configs)context.HttpContext.RequestServices.GetService(typeof(Configs));
-                    model.DataContextCI = ((GlobalData)context.HttpContext.RequestServices.GetService(typeof(GlobalData))).DataContextCI;
+                    model.DataContextCI = model.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == ctrl.CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
                     model.Localizer = ctrl.Localizer;
