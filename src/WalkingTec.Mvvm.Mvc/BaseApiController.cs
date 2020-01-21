@@ -414,7 +414,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 cs = "defaultlog";
             }
-            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
+            return ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace WalkingTec.Mvvm.Mvc
         public virtual IDataContext CreateDC(string csName)
         {
             string cs = csName ?? "default";
-            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault().CreateDC();
+            return ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
         }
 
         #endregion
