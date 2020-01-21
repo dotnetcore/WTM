@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css';
 import Vue from 'vue';
 import router from './router';
 import VueI18n from 'vue-i18n';
-import locale from './locale';
+import locale, { createVueI18n } from './locale';
 import App from './app.vue';
 import Globalconfig from './global.config';
 import wtm from './components';
@@ -18,10 +18,7 @@ Globalconfig.hydrate(Globalconfig.settings.title, Globalconfig)
   // post hydration
   .then(() => {
     console.warn("TCL: Globalconfig", Globalconfig)
-    const i18n = new VueI18n({
-      locale: Globalconfig.settings.language, // set locale en-US zh-CN
-      messages: locale
-    });
+    const i18n = createVueI18n();
     const Root = new Vue({
       i18n,
       router,

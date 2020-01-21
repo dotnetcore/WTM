@@ -32,8 +32,12 @@
         <a-divider type="vertical" />
         <a-dropdown>
           <a-menu slot="overlay">
-            <a-menu-item key="1">导出全部</a-menu-item>
-            <a-menu-item :disabled="disabledDelete" key="2">导出勾选</a-menu-item>
+            <a-menu-item key="1" @click="onExport">导出全部</a-menu-item>
+            <a-menu-item
+              :disabled="disabledDelete"
+              key="2"
+              @click="onExportByIds(PageStoreContext.SelectedRows)"
+            >导出勾选</a-menu-item>
           </a-menu>
           <a-button>
             <span v-t="'action.export'" />
@@ -91,6 +95,8 @@ import { Modal } from "ant-design-vue";
 import lodash from "lodash";
 import { Subscriber, Subject } from "rxjs";
 import { toJS } from "mobx";
+import ImportUpload from "./importUpload.vue";
+// import { i18n } from "../../locale";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
   /**
@@ -190,7 +196,7 @@ export default class ViewAction extends Vue {
     });
   }
   beforeMount() {
-     lodash.map(this.Entities, ent => {
+    lodash.map(this.Entities, ent => {
       if (lodash.isFunction(ent.onComplete)) {
         ent.onComplete({ FieldsChange: this.FieldsChange });
       }
@@ -297,8 +303,24 @@ export default class ViewAction extends Vue {
   onImport() {
     this.$confirm({
       class: "page-import",
+      // destroyOnClose:true,
+      // content: new Vue({ i18n, render: h => h(ImportUpload) })
       content: h =>
-        h(ImportContent, { props: { PageStore: this.PageStoreContext } })
+        h(ImportUpload, {
+          props: {
+            PageStore: this.PageStoreContext,
+            i18n: lodash.get(this, "_i18n")
+          }
+          // $i18n: this.$root.$i18n
+        })
+    });
+  }
+  onExport() {
+    this.PageStoreContext.onExport();
+  }
+  onExportByIds(items) {
+    this.PageStoreContext.onExport("ExportByIds", {
+      body: lodash.map(items, this.GUID)
     });
   }
   /**
@@ -350,33 +372,6 @@ export default class ViewAction extends Vue {
     this.form.setFieldsValue(details);
   }
 }
-/**
- *  上传 组件
- */
-@Component({
-  template: `
-    <a-upload-dragger
-      name="file"
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-    >
-      <p class="ant-upload-drag-icon">
-        <a-icon type="inbox" />
-      </p>
-      <p class="ant-upload-text">Click or drag file to this area to upload</p>
-      <p class="ant-upload-hint">
-        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-        band files
-      </p>
-    </a-upload-dragger>
-  `
-})
-class ImportContent extends Vue {
-  @Prop() private PageStore: EntitiesPageStore;
-  created() {}
-  mounted() {
-    console.log("TCL: ImportContent -> PageStore", this.PageStore);
-  }
-}
 </script>
 <style scoped lang="less">
 .page-action {
@@ -397,6 +392,9 @@ class ImportContent extends Vue {
 .page-import {
   .ant-modal-confirm-body .ant-modal-confirm-content {
     margin: 0;
+  }
+  .ant-modal-confirm-body > .anticon {
+    display: none;
   }
 }
 </style>

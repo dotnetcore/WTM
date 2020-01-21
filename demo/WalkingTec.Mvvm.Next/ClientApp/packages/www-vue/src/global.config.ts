@@ -3,8 +3,10 @@ import { create, persist } from 'mobx-persist';
 import { notification } from 'ant-design-vue';
 import lodash from 'lodash';
 import { Request } from '@leng/public/src';
+import { EntitiesPageStore } from '@leng/public/src';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
+const development = process.env.NODE_ENV === "development"
 moment.locale('zh-cn');
 // 设置 请求出错 通知
 Request.Error = (error) => {
@@ -14,13 +16,20 @@ Request.Error = (error) => {
         message: error.message
     })
 }
+EntitiesPageStore.onError = (error) => {
+    notification.error({
+        key: 'PageStoreError',
+        description: '',
+        message: error.message
+    })
+};
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 // 是否被 Iframe 嵌套
 const isIframe = window.self !== window.top;
 class ConfigStore {
     constructor() {
-       
+
     }
     hydrate = create({
         storage: window.localStorage,   // 存储的对象
@@ -30,7 +39,7 @@ class ConfigStore {
     /**
     * 开发环境
     */
-    development = process.env.NODE_ENV === "development";
+    development = development;
     /**
      * ant Pro 布局 设置  https://github.com/ant-design/ant-design-pro-layout/blob/master/README.zh-CN.md#MenuDataItem
      * @type {Settings}

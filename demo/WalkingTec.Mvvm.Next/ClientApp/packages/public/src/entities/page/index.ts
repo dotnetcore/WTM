@@ -205,19 +205,19 @@ export class EntitiesPageStore extends EntitiesBehavior {
      * @memberof EntitiesPageStore
      */
     @action
-    async onExport(request: AjaxRequest = {}) {
+    async onExport(type: 'Export' | 'Template' | 'ExportByIds' = 'Export', request: AjaxRequest = {}) {
         try {
             if (this.LoadingExport) {
                 return console.warn("已请求~")
             }
             this.LoadingExport = true;
-            const res = await this.onObservableFactory('Export', request).toPromise();
+            const res = await this.onObservableFactory(type, request).toPromise();
             const disposition = res.xhr.getResponseHeader('content-disposition');
             Regulars.filename.test(disposition);
             saveAs(res.response, RegExp.$1 || `${Date.now()}.xls`);
             return res
         } catch (error) {
-            EntitiesPageStore.onError(error, 'Export', request);
+            EntitiesPageStore.onError(error, type, request);
             throw error
         }
         finally {

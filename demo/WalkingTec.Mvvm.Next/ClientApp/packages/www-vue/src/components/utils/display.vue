@@ -11,16 +11,19 @@ export default class display extends Vue {
   @Prop() private dataSource: any[];
   get valueText() {
     if (
-      lodash.isArray(this.value) &&
+      // lodash.isArray(this.value) &&
       lodash.isArray(this.dataSource) &&
       this.dataSource.length
     ) {
-      return lodash
-        .map(this.value, val => {
-          const data = lodash.find(this.dataSource, ["key", val]);
-          return `
-        <div class="ant-tag ant-tag-blue">${data.label}</div>
-        `;
+      let { value } = this;
+      if (!lodash.isArray(value)) {
+        value = [value];
+      }
+      return lodash.map(value, val => {
+          const data = lodash.find(this.dataSource, ["value", val]);
+          if (data && data.label) {
+            return `<div class="ant-tag ant-tag-blue">${data.label}</div>`;
+          }
         })
         .join(" ");
     }

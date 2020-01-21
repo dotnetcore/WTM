@@ -33,7 +33,8 @@ export interface IPageBehaviorOptions extends IRequestOptions {
 export default class EntitiesPageBehavior extends Entities {
     constructor(options?: IPageBehaviorOptions) {
         super();
-        lodash.merge(this.options, lodash.cloneDeep(options));
+        lodash.merge(this.options, options);
+        this.Request = new Request(this.options);
     }
     /**
      * 默认的配置
@@ -43,14 +44,14 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     static options: IPageBehaviorOptions = {
-        target: "/api",
+        target: "",
         Search: { method: "POST", body: {} },
         Insert: { method: "POST", body: {} },
         Update: { method: "PUT", body: {} },
         Delete: { method: "POST", body: [] },
         Import: { method: "POST", body: {} },
         Export: { method: "POST", responseType: "blob", body: {} },
-        ExportByIds: { method: "POST", responseType: "blob", body: {} },
+        ExportByIds: { method: "POST", responseType: "blob", body: [] },
         Template: { responseType: "blob", body: {} },
     }
     /**
@@ -63,7 +64,7 @@ export default class EntitiesPageBehavior extends Entities {
      * @memberof EntitiesPageBehavior
      */
     static onError(error: any, type: string, request?: AjaxRequest) {
-        console.error(error.response || error.message || error.status);
+        console.error(error);
     };
     /**
      * 配置选项
@@ -71,13 +72,13 @@ export default class EntitiesPageBehavior extends Entities {
      * @type {IPageBehaviorOptions}
      * @memberof EntitiesPageBehavior
      */
-    options: IPageBehaviorOptions = lodash.merge({}, lodash.cloneDeep(EntitiesPageBehavior.options));
+    options: IPageBehaviorOptions = lodash.cloneDeep(EntitiesPageBehavior.options);
     /**
      * Request Ajax 
      *
      * @memberof EntitiesPageBehavior
      */
-    Request = new Request(this.options);
+    Request: Request;
     /**
      * mrge AjaxRequest
      *
@@ -89,15 +90,18 @@ export default class EntitiesPageBehavior extends Entities {
     merge(type: string, request: AjaxRequest = {}) {
         try {
             const req = lodash.get(this.options, type);
-            if (lodash.isNil(req) && lodash.isNil(request.url)) {
-                throw ''
-            }
             const newRequest = lodash.merge({}, req, request) as AjaxRequest;
-            newRequest.body = lodash.assign(req.body, request.body);
+            if (lodash.isNil(newRequest.url)) {
+                throw req
+            }
+            newRequest.body = request.body//lodash.assign(req.body, request.body);
             this.DeBugLog && console.table(newRequest);
             return lodash.cloneDeep(newRequest);
         } catch (error) {
-            throw `${type} AjaxRequest Null`
+            throw {
+                message: `${type} AjaxRequest Null`,
+                request: error
+            }
         }
     };
 

@@ -3,6 +3,8 @@ import { observable, computed } from 'mobx';
 import { create } from 'mobx-persist';
 import { Subject, Subscription } from 'rxjs';
 import { AjaxRequest } from 'rxjs/ajax';
+import lodash from 'lodash';
+
 /**
  * 事件类型
  */
@@ -142,5 +144,11 @@ export default class EntitiesPage {
      * 调试 日志
      * @memberof EntitiesPage
      */
-    DeBugLog = false;
+    get DeBugLog() {
+        try {
+            return process.env.NODE_ENV === "development"
+        } catch (error) {
+            return false
+        }
+    };
 }
