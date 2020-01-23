@@ -14,6 +14,12 @@ namespace WalkingTec.Mvvm.Demo
         {
         }
 
+        public DataContext(string cs,DBTypeEnum dbtype)
+            : base(cs, dbtype)
+        {
+
+        }
+
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
