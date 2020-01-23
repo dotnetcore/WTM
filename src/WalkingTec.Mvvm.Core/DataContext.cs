@@ -333,12 +333,26 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext CreateNew()
         {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS)}).Invoke(new object[] { ConnectionString }); ;
+            if (ConnectionString != null)
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+            }
+            else
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+            }
         }
 
         public IDataContext ReCreate()
         {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+            if (ConnectionString != null)
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+            }
+            else
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+            }
         }
         /// <summary>
         /// 将一个实体设为填加状态
