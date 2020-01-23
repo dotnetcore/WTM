@@ -97,7 +97,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         }
 
         /// <summary>
-        /// 重置按钮 Id
+        /// Reset button Id
         /// </summary>
         private string ResetBtnId => $"{RESET_BTN_ID_PREFIX}{ListVM.UniqueId}";
 
@@ -106,11 +106,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public bool ResetBtn { get; set; }
 
+        /// <summary>
+        /// Is expanded
+        /// </summary>
+        public bool? Expanded { get; set; }
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
-            var layuiShow = GlobalServices.GetRequiredService<Configs>().UiOptions.SearchPanel.DefaultExpand ? " layui-show" : string.Empty;
+            bool show = false;
+            if(Expanded != null)
+            {
+                show = Expanded.Value;
+            }
+            else
+            {
+                show = GlobalServices.GetRequiredService<Configs>().UiOptions.SearchPanel.DefaultExpand;
+            }
+            var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"
 <div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
   <div class=""layui-colla-item"">

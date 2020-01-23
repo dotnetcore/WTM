@@ -37,31 +37,24 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// FrameworkContext
         /// </summary>
-        public FrameworkContext()
+        public FrameworkContext() : base()
         {
-            CSName = "default";
-            DBType = DBTypeEnum.SqlServer;
         }
 
         /// <summary>
         /// FrameworkContext
         /// </summary>
         /// <param name="cs"></param>
-        public FrameworkContext(string cs)
+        public FrameworkContext(string cs):base(cs)
         {
-            CSName = cs;
         }
 
-        public FrameworkContext(string cs, DBTypeEnum dbtype)
+        public FrameworkContext(string cs, DBTypeEnum dbtype):base(cs,dbtype)
         {
-            CSName = cs;
-            DBType = dbtype;
         }
 
-        public FrameworkContext(CS cs)
+        public FrameworkContext(CS cs) : base(cs)
         {
-            CSName = cs.Value;
-            DBType = cs.DbType.Value;
         }
 
         /// <summary>
@@ -305,6 +298,8 @@ namespace WalkingTec.Mvvm.Core
         public string CSName { get; set; }
 
         public DBTypeEnum DBType { get; set; }
+
+        public CS ConnectionString { get; set; }
         /// <summary>
         /// FrameworkContext
         /// </summary>
@@ -333,16 +328,31 @@ namespace WalkingTec.Mvvm.Core
         {
             CSName = cs.Value;
             DBType = cs.DbType.Value;
+            ConnectionString = cs;
         }
 
         public IDataContext CreateNew()
         {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+            if (ConnectionString != null)
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+            }
+            else
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+            }
         }
 
         public IDataContext ReCreate()
         {
-            return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType }); ;
+            if (ConnectionString != null)
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(CS) }).Invoke(new object[] { ConnectionString }); ;
+            }
+            else
+            {
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+            }
         }
         /// <summary>
         /// 将一个实体设为填加状态
