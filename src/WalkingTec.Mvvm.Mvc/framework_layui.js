@@ -12,32 +12,45 @@ window.ff = {
   DONOTUSE_Text_PleaseSelect: "",
   DONOTUSE_Text_FailedLoadData: "",
 
-  SetCookie: function (name, value, allwindow) {
-    var cookiePrefix = '', windowGuid = '';
+    SetCookie: function (name, value, allwindow) {
+        try {
+            var cookiePrefix = '', windowGuid = '';
 
-    if ("undefined" !== typeof DONOTUSE_COOKIEPRE) {
-      cookiePrefix = DONOTUSE_COOKIEPRE;
-    }
-    if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
-      windowGuid = DONOTUSE_WINDOWGUID;
-    }
+            if ("undefined" !== typeof DONOTUSE_COOKIEPRE) {
+                cookiePrefix = DONOTUSE_COOKIEPRE;
+            }
+            if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
+                windowGuid = DONOTUSE_WINDOWGUID;
+            }
 
-    if (allwindow) {
-      $.cookie(cookiePrefix + name, value);
-    }
-    else {
-      $.cookie(cookiePrefix + windowGuid + name, value);
-    }
+            if (allwindow) {
+                $.cookie(cookiePrefix + name, value);
+            }
+            else {
+                $.cookie(cookiePrefix + windowGuid + name, value);
+            }
+        }
+        catch (e) {  }
   },
 
-  GetCookie: function (name, allwindow) {
-    if (allwindow) {
-      return $.cookie(DONOTUSE_COOKIEPRE + name);
-    }
-    else {
-      return $.cookie(DONOTUSE_COOKIEPRE + DONOTUSE_WINDOWGUID + name);
+    GetCookie: function (name, allwindow) {
+        try {
+            var cookiePrefix = '', windowGuid = '';
+            if ("undefined" !== typeof DONOTUSE_COOKIEPRE) {
+                cookiePrefix = DONOTUSE_COOKIEPRE;
+            }
+            if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
+                windowGuid = DONOTUSE_WINDOWGUID;
+            }
+           if (allwindow) {
+               return $.cookie(cookiePrefix + name);
+            }
+            else {
+               return $.cookie(cookiePrefix + windowGuid + name);
 
-    }
+            }
+        }
+        catch(e){ }
   },
 
   GetSelections: function (gridId) {
@@ -314,8 +327,10 @@ window.ff = {
     else {
       wid += "," + windowid;
     }
-    this.SetCookie("windowids", wid);
-    this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
+      this.SetCookie("windowids", wid);
+      if ("undefined" !== typeof DONOTUSE_WINDOWGUID) {
+          this.SetCookie("windowguid", DONOTUSE_WINDOWGUID, true);
+      }
     var getpost = "GET";
     if (para !== undefined) {
       getpost = "Post";
