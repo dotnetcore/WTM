@@ -10,7 +10,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/layui/css/layui.css">
   <script src="/jquery.min.js"></script>
+  <script src="/jquery.cookie.js"></script>
+  <script src="/layui/layui.js"></script>
+  <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
   <link rel="stylesheet" href="~/sitecss/logincss.css">
   <title>WTM</title>
   <script type="text/javascript">
@@ -21,18 +25,18 @@
     function verify() {
       $('#verify_code_img').attr('src', '/_framework/GetVerifyCode?id=' + Math.random());
     }
-
+    layui.use('layer');
   </script>
 </head>
 
 <body class="loginBody">
   <div class="loginDiv">
     <h4>
-      <img src="~/images/logo.png" width="80"/>
+      <img src="~/images/logo.png" width="80" />
       <img src="~/images/slogen.png" />
     </h4>
     <form action="/Login/Login" method="post">
-    <input type="hidden" name="Redirect" value="@Model.Redirect">
+      <input type="hidden" name="Redirect" value="@Model.Redirect">
       <ul class="loginForm">
         <li>
           <i><img src="~/images/icon-login04.png" /></i>
@@ -51,13 +55,14 @@
           <i class="login-code"><img src="~/images/icon-login02.png" onclick="verify()" /></i>
         </li>
         <li style="text-align:right;vertical-align:text-top">
-          <input type="checkbox" name="RememberLogin" value="true" @(Model.RememberLogin?"checked":"")>
+          <input type="checkbox" name="RememberLogin" value="true" @(Model.RememberLogin ? "checked" : "")>
           <span style="font-size:14px; margin-left:5px;">记住我</span>
         </li>
 
         <li>
           <span class="login-error">@Model.MSD.GetFirstError()</span>
           <button type="submit" class="login-button" style="cursor:pointer">登 录</button>
+          <wt:linkbutton window-title="注册" class="login-button" style="cursor:pointer" target="ButtonTargetEnum.Layer" window-width="500" window-height="500" url="/Login/Reg" text="注 册" />
         </li>
       </ul>
     </form>

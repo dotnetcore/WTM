@@ -291,6 +291,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
+                context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
             }
             base.OnActionExecuted(context);
         }

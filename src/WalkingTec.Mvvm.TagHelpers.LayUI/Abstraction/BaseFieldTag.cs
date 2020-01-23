@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field?.Name : Name);
             }
-            if (Disabled)
+            if (Disabled && (Field?.Model != null || (this is ComboBoxTagHelper)==false))
             {
                 output.Attributes.SetAttribute("readonly", string.Empty);
                 output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
