@@ -2,23 +2,15 @@
     <wtm-dialog-box componentClass="frameworkrole-form" :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
         <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
             <el-row>
-                <el-col :span="12">
-                    <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode">
-                        <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName">
-                        <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="24">
-                    <wtm-form-item ref="Entity.RoleRemark" label="备注">
-                        <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
-                    </wtm-form-item>
-                </el-col>
+                <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode" :span="12">
+                    <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
+                </wtm-form-item>
+                <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName" :span="12">
+                    <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
+                </wtm-form-item>
+                <wtm-form-item ref="Entity.RoleRemark" label="备注" :span="24">
+                    <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
+                </wtm-form-item>
             </el-row>
         </el-form>
         <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />

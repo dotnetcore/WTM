@@ -17,7 +17,7 @@
           <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
         </template>
         <template #IsValid="rowData">
-          <el-switch v-model="rowData.row.IsValid" disabled />
+          <el-switch :value="rowData.row.IsValid === 'true' || rowData.row.IsValid === true" disabled />
         </template>
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
