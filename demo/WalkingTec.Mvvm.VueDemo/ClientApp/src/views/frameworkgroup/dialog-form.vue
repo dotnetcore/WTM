@@ -2,23 +2,15 @@
   <wtm-dialog-box componentClass="frameworkgroup-form" :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
     <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
       <el-row>
-        <el-col :span="12">
-          <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
-            <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
-        <el-col :span="12">
-          <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName">
-            <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <wtm-form-item ref="Entity.GroupRemark" label="备注">
-            <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
-          </wtm-form-item>
-        </el-col>
+        <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode" :span="12">
+          <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
+        </wtm-form-item>
+        <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName" :span="12">
+          <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
+        </wtm-form-item>
+        <wtm-form-item ref="Entity.GroupRemark" label="备注" :span="24">
+          <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
+        </wtm-form-item>
       </el-row>
     </el-form>
     <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
