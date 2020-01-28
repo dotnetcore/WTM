@@ -278,3 +278,4 @@ paket-files/
 __pycache__/
 *.pyc
 /nuget.exe
+/demo/WalkingTec.Mvvm.VueDemo/ClientApp/yarn.lock
