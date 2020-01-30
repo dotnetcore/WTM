@@ -1,32 +1,30 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>3.1.2</VersionPrefix>
-    <Build_BuildNumber></Build_BuildNumber>
+    <VersionPrefix>3.1.3</VersionPrefix>
   </PropertyGroup>
 
-  <!-- <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'"> -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <!--
         -alpha: Alpha 版本，通常用于开发过程和试验。
         -beta: Beta 版本，通常指可用于下一计划版本的功能完整的版本，但可能包含已知 bug。
         -rc: 候选发布，通常可能为最终（稳定）版本，除非出现重大 bug。
     -->
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">alpha</VersionSuffix>
 
     <FileVersion Condition="'$(Build_BuildNumber)' != ''">$(VersionPrefix).$(Build_BuildNumber)</FileVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
 
-    <Version Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)$(Build_BuildNumber)</Version>
+    <Version Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(Build_BuildNumber)</Version>
     <Version Condition="'$(VersionSuffix)' == '' AND '$(Build_BuildNumber)' == ''">$(VersionPrefix)</Version>
 
-    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)$(Build_BuildNumber)</PackageVersion>
+    <PackageVersion Condition="'$(VersionSuffix)' != '' AND '$(Build_BuildNumber)' != ''">$(VersionPrefix)-$(VersionSuffix)-$(Build_BuildNumber)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
   </PropertyGroup>
 
-  <!-- <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <FileVersion>$(VersionPrefix)</FileVersion>
     <Version>$(VersionPrefix)</Version>
     <PackageVersion>$(VersionPrefix)</PackageVersion>
-  </PropertyGroup> -->
+  </PropertyGroup>
 
 </Project>
