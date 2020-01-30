@@ -14,7 +14,7 @@
                     <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
                 </el-button>
             </el-button-group>
-            <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset" >
+            <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
                 重置
             </el-button>
             <div :class="{'fr': isFuzzy,'tar': !isFuzzy}">
@@ -71,7 +71,7 @@ export default class FuzzySearch extends Vue {
     background-color: #f5f5f5;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
-    padding: 15px 0 10px;
+    padding: 15px 10px 10px;
     .search-text {
         display: inline-block;
         margin-left: 10px;

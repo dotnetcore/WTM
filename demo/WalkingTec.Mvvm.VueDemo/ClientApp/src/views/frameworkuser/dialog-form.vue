@@ -46,11 +46,17 @@
                         {{ formData.Entity.IsValid===true ? "是" : "否" }}
                     </template>
                 </wtm-form-item>
-                <wtm-form-item ref="Entity.UserRoles" label="角色" :span="24">
+                <wtm-form-item ref="Entity.UserRoles" label="角色" :status="status" :span="24">
                     <el-transfer v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
+                    <template #editValue>
+                        <el-tag v-for="item of detailRoles" :key="item.key">{{item.label}}</el-tag>
+                    </template>
                 </wtm-form-item>
-                <wtm-form-item ref="Entity.UserGroups" label="用户组" :span="24">
+                <wtm-form-item ref="Entity.UserGroups" label="用户组" :status="status" :span="24">
                     <el-transfer v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
+                    <template #editValue>
+                        <el-tag v-for="item of detailGroups" :key="item.key">{{item.label}}</el-tag>
+                    </template>
                 </wtm-form-item>
             </el-row>
         </el-form>
@@ -150,7 +156,7 @@ export default class Index extends Vue {
             return {};
         }
     }
-    // ★★
+    // 角色列表数据
     get userRolesData() {
         return this.getFrameworkRolesData.map(item => {
             return {
@@ -161,7 +167,7 @@ export default class Index extends Vue {
             };
         });
     }
-    // ★★
+    // 用户组列表数据
     get userGroupsData() {
         return this.getFrameworkGroupsData.map(item => {
             return {
@@ -170,6 +176,18 @@ export default class Index extends Vue {
                 disabled: this["status"] === this["$actionType"].detail
             };
         });
+    }
+    // 详情展示
+    get detailRoles() {
+        return this.userRolesData.filter(item =>
+            this.UserRoles.includes(item.key)
+        );
+    }
+    // 详情展示
+    get detailGroups() {
+        return this.userGroupsData.filter(item =>
+            this.UserGroups.includes(item.key)
+        );
     }
 
     /**
@@ -247,6 +265,9 @@ export default class Index extends Vue {
 </script>
 <style lang='less'>
 .frameworkuser-form {
+    .el-tag {
+        margin-right: 10px;
+    }
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;

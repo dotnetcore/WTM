@@ -19,7 +19,7 @@
       <el-row v-show="formData.Entity.IsInside">
         <wtm-form-item label="模块名称" :span="12">
           <el-select v-model="SelectedModule" filterable placeholder="请选择" @change="onSelectedAction">
-            <el-option v-for="item in pageNameList" :key="item.modelName" :label="item.name" :value="item.modelName" />
+            <el-option v-for="item in pageNameList" :key="item.Value" :label="item.Text" :value="item.Value" />
           </el-select>
           <template #editValue>
             {{ pageNameList[SelectedModule].name }}
@@ -83,7 +83,7 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import mixinDialogForm from "@/vue-custom/mixin/form-mixin";
+import mixinForm from "@/vue-custom/mixin/form-mixin";
 import user from "@/store/common/user";
 
 // 表单结构
@@ -110,7 +110,7 @@ const defaultFormData = {
     }
 };
 
-@Component({ mixins: [mixinDialogForm(defaultFormData)] })
+@Component({ mixins: [mixinForm(defaultFormData)] })
 export default class Index extends Vue {
     @Action
     getActionsByModel;
@@ -154,9 +154,9 @@ export default class Index extends Vue {
             .filter(item => item.meta.ParentId)
             .map(item => {
                 return {
-                    name: item.name,
+                    Text: item.name,
                     id: item.meta.Id,
-                    modelName: item.path.substr(1).toLowerCase()
+                    Value: item.path.substr(1).toLowerCase()
                 };
             });
     }
