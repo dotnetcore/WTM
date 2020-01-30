@@ -11,11 +11,6 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <None Remove="SetupFiles\Mvc\LoginController3.txt" />
-    <None Remove="SetupFiles\test\MockController3.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
@@ -59,7 +54,6 @@
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
   </ItemGroup>
-
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
