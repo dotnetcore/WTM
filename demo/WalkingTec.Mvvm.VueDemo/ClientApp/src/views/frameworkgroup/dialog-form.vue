@@ -44,14 +44,14 @@ export default class Index extends Vue {
             // 动态验证会走遍验证，需要清除验证
             this.cleanValidate();
             return {
-                GroupCode: [
+                "Entity.GroupCode": [
                     {
                         required: true,
                         message: "请输入用户组编号",
                         trigger: "blur"
                     }
                 ],
-                GroupName: [
+                "Entity.GroupName": [
                     {
                         required: true,
                         message: "请输入用户组名称",

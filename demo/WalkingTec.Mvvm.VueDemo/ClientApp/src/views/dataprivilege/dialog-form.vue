@@ -12,14 +12,15 @@
             </el-radio>
           </el-radio-group>
         </wtm-form-item>
-        <wtm-form-item label="用户组" prop="GroupId" :span="24">
-          <el-select v-model="formData.Entity.GroupId" v-edit:[status]="{list: groups, key:'value', label: 'label'}" placeholder="请选择用户组">
-            <el-option v-for="(item,index) of groups" :key="index" :label="item.GroupName" :value="item.ID" />
+        <wtm-form-item label="用户组" prop="Entity.GroupId" :span="24">
+          <el-select v-model="formData.Entity.GroupId" v-edit:[status]="{list: getUserGroupsData, key:'Value', label: 'Text'}" placeholder="请选择用户组">
+            <el-option v-for="(item,index) of getUserGroupsData" :key="index" :label="item.Text" :value="item.Value" />
           </el-select>
         </wtm-form-item>
-        <wtm-form-item label="权限名称" prop="ID" :span="12">
+        <wtm-form-item label="权限名称" prop="Entity.ID" :span="12">
           <el-select v-model="formData.Entity.ID" v-edit:[status] placeholder="请选择权限名称">
-            <el-option label="School" value="7adfad26-b175-4e42-9061-ca7df8eaabdc" />
+            <el-option label="School" :value="'7adfad26-b175-4e42-9061-ca7df8eaabdc'" />
+            <el-option v-for="(item,index) of getPrivilegesData" :key="index" :label="item.Text" :value="item.Value" />
           </el-select>
         </wtm-form-item>
         <wtm-form-item label="全部权限" prop="IsAll" :span="12">
@@ -27,9 +28,9 @@
             <el-option v-for="(item, index) of whether" :key="index" :label="item.label" :value="item.value" />
           </el-select>
         </wtm-form-item>
-        <wtm-form-item label="允许访问" prop="SelectedItemsID" :span="24">
+        <!-- <wtm-form-item label="允许访问" prop="SelectedItemsID" :span="24">
           <el-select v-model="formData.SelectedItemsID" v-edit:[status] multiple filterable placeholder="请选择允许访问" />
-        </wtm-form-item>
+        </wtm-form-item> -->
       </el-row>
     </el-form>
     <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
@@ -38,10 +39,9 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
 import cache from "@/util/cache";
-import config from "@/config/index";
 import { whether } from "@/config/entity";
 // 表单结构
 const defaultFormData = {
@@ -63,8 +63,14 @@ const defaultFormData = {
 
 @Component({ mixins: [mixinForm(defaultFormData)] })
 export default class Index extends Vue {
-    // 用户组
-    groups = [];
+    @Action
+    getUserGroups;
+    @Action
+    getPrivileges;
+    @State
+    getUserGroupsData;
+    @State
+    getPrivilegesData;
     // 是否列表
     whether = whether;
     // 验证
@@ -87,10 +93,17 @@ export default class Index extends Vue {
                         trigger: "change"
                     }
                 ],
-                ID: [
+                "Entity.ID": [
                     {
                         required: true,
                         message: "请选择权限名称",
+                        trigger: "change"
+                    }
+                ],
+                "Entity.GroupId": [
+                    {
+                        required: true,
+                        message: "请选择用户组",
                         trigger: "change"
                     }
                 ]
@@ -101,7 +114,8 @@ export default class Index extends Vue {
     }
 
     created() {
-        this.groups = cache.getStorage(config.tokenKey, true).Groups || [];
+        this.getUserGroups();
+        this.getPrivileges();
     }
 }
 </script>

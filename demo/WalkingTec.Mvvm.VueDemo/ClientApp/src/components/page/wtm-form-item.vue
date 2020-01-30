@@ -1,6 +1,6 @@
 <template>
   <el-col :span="$attrs.span || 24">
-    <el-form-item ref="elItem" v-bind="$attrs">
+    <el-form-item class="form-item" ref="elItem" v-bind="$attrs">
       <slot v-if="isEdit" />
       <template v-else>
         <img v-if="isImg" :src="value">
@@ -33,7 +33,6 @@ export default class WtmFormItem extends Vue {
         return this.status !== this.$actionType.detail;
     }
 
-    mounted() {}
     showError(msg) {
         this.$refs["elItem"].clearValidate();
         if (msg) {
@@ -45,6 +44,8 @@ export default class WtmFormItem extends Vue {
 </script>
 <style lang='less'>
 .form-item {
-    display: inline-block;
+    .el-form-item__label::after {
+        content: ":";
+    }
 }
 </style>
