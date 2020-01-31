@@ -7,8 +7,27 @@
   <p>从2.4.0开始，框架支持Cookie和Jwt两种模式
 </wt:quote>
 
-<wt:fieldset field-set-style="Simple" title="指定认证方式">
+<wt:fieldset field-set-style="Simple" title="CookieAuth及JwtAuth说明">
+<p>
+  <P>token: CookieAuth 与 JwtAuth 所生成的 token 默认均只包含 Id 及 Name 属性（后期计划可自定义配置 Claim）;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    已颁发的 token 不会在系统重启之后就立即失效。token 的有效期都在 token 里面保存;
+  </P>
+  <br>
+
+  <P>关于token刷新：/api/_Account/RefreshToken 接口是给 JwtAuth 用的，用于手动刷新 token，<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    CookieAuth 所对应的中间件中（Authentication）会自动检测 token 有效时间，并自动刷新 token 有效期<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    （默认实现中 token 的刷新时间是设置时间的一半时间即 3600s 后会刷新）;
+  </P>
+  <br>
+  <P>用户信息：用户信息相关数据均只存在于内存中，用户请求到达后端后根据 token 中的用户 Id 获取用户信息（后期计划可自定义开发并配置用户信息存储）;</P>
+
+</p>
 </wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="指定认证方式">
 <p>
   在Controller或方法上加[AuthorizeCookie],[AuthorizeJwt],[AuthorizeJwtWithCookie]标记，可以指定认证方式
 </p>
@@ -34,6 +53,7 @@
     </tr>
   </tbody>
 </table>
+</wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="配置文件">
   <p>appsettings中多加了JwtOptions和CookieOptions两个部分，来配置过期时间等具体参数</p>
