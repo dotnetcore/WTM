@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -19,5 +20,12 @@ namespace WalkingTec.Mvvm.Demo
 
         public DbSet<不要用中文模型名> 不要中文 { get; set; }
 
+
+        public override async Task<bool> DataInit(object allModules, bool IsSpa)
+        {
+            var state = await base.DataInit(allModules, IsSpa);
+
+            return state;
+        }
     }
 }
