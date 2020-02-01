@@ -143,7 +143,6 @@ namespace WalkingTec.Mvvm.Core
                 Set<FrameworkUserBase>().AddRange(users);
                 Set<FrameworkUserRole>().AddRange(userroles);
                 await SaveChangesAsync();
-                rv = false;
             }
             return rv;
         }
