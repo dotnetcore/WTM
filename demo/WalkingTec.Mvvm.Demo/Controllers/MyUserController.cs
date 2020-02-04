@@ -11,6 +11,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     [ActionDescription("自定义用户")]
+    [FixConnection(CsName = "abc")]
     public class MyUserController : BaseController
     {
         #region 搜索
