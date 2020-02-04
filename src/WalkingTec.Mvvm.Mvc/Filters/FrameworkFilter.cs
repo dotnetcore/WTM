@@ -305,12 +305,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
+            var nolog = ctrlActDesc.MethodInfo.IsDefined(typeof(NoLogAttribute), false) || ctrlActDesc.ControllerTypeInfo.IsDefined(typeof(NoLogAttribute), false);
+
             //如果是来自Error，则已经记录过日志，跳过
             if (ctrlActDesc.ControllerName == "_Framework" && ctrlActDesc.ActionName == "Error")
             {
                 return;
             }
-            if (ctrl.ConfigInfo.EnableLog == true)
+            if (ctrl.ConfigInfo.EnableLog == true && nolog == false)
             {
                 if (ctrl.ConfigInfo.LogExceptionOnly == false || context.Exception != null)
                 {
