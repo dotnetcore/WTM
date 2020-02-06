@@ -69,7 +69,7 @@
     </div>
     <a-modal
       class="page-action-modal"
-      :title="title"
+      :title="$t(title)"
       :destroyOnClose="true"
       :visible="visible"
       @cancel="onVisible(false)"
@@ -96,6 +96,7 @@ import lodash from "lodash";
 import { Subscriber, Subject } from "rxjs";
 import { toJS } from "mobx";
 import ImportUpload from "./importUpload.vue";
+import { messages } from "./messages";
 // import { i18n } from "../../locale";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
@@ -186,14 +187,19 @@ export default class ViewAction extends Vue {
    * 组件 创建 初始化 表单域
    */
   beforeCreate() {
-    this.form = this.$form.createForm(this, {
+    const options = {
       onFieldsChange: (props, fields) => {
         this.FieldsChange.next({ props, fields, form: this.form });
-      }
+      },
+      validateMessages: messages
       // onValuesChange: (props, values) => {
       //   console.warn("TCL: ViewAction -> beforeCreate -> props", props, values);
       // }
-    });
+    };
+    if(this.$root.$i18n.locale === "en-US"){
+      delete options.validateMessages
+    }
+    this.form = this.$form.createForm(this,options);
   }
   beforeMount() {
     lodash.map(this.Entities, ent => {
@@ -287,7 +293,7 @@ export default class ViewAction extends Vue {
    * 添加 按钮 事件
    */
   onInsert() {
-    this.title = "Insert";
+    this.title = "action.insert";
     this.slotName = "Insert";
     this.onVisible(true);
   }
@@ -295,7 +301,7 @@ export default class ViewAction extends Vue {
    * 修改 按钮 事件
    */
   onUpdate(item) {
-    this.title = "Update";
+    this.title = "action.update";
     this.slotName = "Update";
     this.onVisible(true);
     this.onGetDetails(item);
@@ -327,7 +333,7 @@ export default class ViewAction extends Vue {
    * 详情按钮事件
    */
   onDetails(item) {
-    this.title = "Details";
+    this.title = "action.info";
     this.slotName = "Details";
     this.onVisible(true);
     this.onGetDetails(item);

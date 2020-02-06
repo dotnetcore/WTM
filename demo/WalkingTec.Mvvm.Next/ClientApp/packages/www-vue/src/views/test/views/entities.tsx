@@ -7,6 +7,7 @@ import { EntitiesItems } from '../../../components/utils/type';
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
  * children  表单组件
+ * 验证消息 https://github.com/yiminghe/async-validator#messages
  */
 export default {
     /**
