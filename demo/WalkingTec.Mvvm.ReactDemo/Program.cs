@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                 {
                     var pris = new List<IDataPrivilege>
                         {
-                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
+                            new DataPrivilegeInfo<FrameworkRole>("测试角色", y => y.RoleName),
                         };
                     x.AddFrameworkService(dataPrivilegeSettings: pris);
                     x.AddLayui();
