@@ -23,8 +23,8 @@ export class InsertForm extends React.Component<any, any> {
         const Isall = Models.getValue(props, "IsAll", true) == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" value='0' />
-            <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
-            <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            {(!Isgroup)&& <FormItem {...props} fieId="UserItCode"  />}
+            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupId" />}
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" value='true' />
@@ -63,8 +63,8 @@ export class UpdateForm extends React.Component<WTM.FormProps, any> {
         const Isall = Models.getValue(props, "IsAll") == "true"
         return <InfoShellLayout>
             <FormItem {...props} fieId="DpType" layout="row" />
-            <FormItem {...props} fieId="UserItCode" hidden={Isgroup} />
-            <FormItem {...props} fieId="Entity.GroupId" hidden={!Isgroup} />
+            {(!Isgroup)&& <FormItem {...props} fieId="UserItCode"  />}
+            {(Isgroup)&& <FormItem {...props} fieId="Entity.GroupId" />}
             <Col span={24}></Col>
             <FormItem {...props} fieId="Entity.TableName" />
             <FormItem {...props} fieId="IsAll" />
