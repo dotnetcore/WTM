@@ -92,26 +92,22 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("[action]")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<ActionResult> Delete(string ModelName, Guid Id, DpTypeEnum Type)
         {
-            var vm = CreateVM<DataPrivilegeBatchVM>();
-            if (ids != null && ids.Count() > 0)
+            DataPrivilegeVM vm = null;
+            if (Type == DpTypeEnum.User)
             {
-                vm.Ids = ids;
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
             }
             else
             {
-                return Ok();
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(ids.Count());
-            }
+            await vm.DoDeleteAsync();
+            return Ok(1);
         }
+
+
 
         [AllRights]
         [HttpGet("[action]")]
