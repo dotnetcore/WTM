@@ -283,7 +283,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 DC.Set<DataPrivilege>().Attach(dp);
                 DC.DeleteEntity(dp);
             }
-            DC.SaveChanges();
             await DC.SaveChangesAsync();
             if (DpType == DpTypeEnum.User)
             {
