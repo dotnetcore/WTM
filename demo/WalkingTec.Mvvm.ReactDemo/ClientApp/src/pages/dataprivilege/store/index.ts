@@ -1,4 +1,4 @@
-﻿import { BindAll } from 'lodash-decorators';
+import { BindAll } from 'lodash-decorators';
 import DataSource from 'store/dataSource';
 import { notification } from 'antd';
 import { url } from 'inspector';
@@ -65,7 +65,7 @@ export class Store extends DataSource {
     async onDelete(params) {
         this.PageState.tableLoading = true;
         try {
-            const res = await this.Observable.onDelete({ ModelName: params.TableName, Type: params.DpType, Id: params.ID })
+            const res = await this.Observable.onDelete({ ModelName: params.TableName, Type: params.DpType, Id: params.TargetId })
             notification.success({ message: getLocalesValue('tips.success.operation') });
             this.DataSource.selectedRowKeys = [];
             // 刷新数据
