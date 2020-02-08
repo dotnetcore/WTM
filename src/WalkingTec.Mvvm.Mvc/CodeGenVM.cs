@@ -386,7 +386,7 @@ namespace WalkingTec.Mvvm.Mvc
 , {ModelName.ToLower()}: {{
         name: '{ModuleName.ToLower()}',
         path: '/{ModelName.ToLower()}',
-        controller: '{ModelName}',
+        controller: '{ControllerNs},{ModelName}',
         component: React.lazy(() => import('./{ModelName.ToLower()}'))
     }}
 /**WTM**/
