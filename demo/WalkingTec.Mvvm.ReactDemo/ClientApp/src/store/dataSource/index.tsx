@@ -274,7 +274,7 @@ class PageObservable {
    * 删除
    * @param ids 
    */
-  onDelete(ids: string[]) {
+  onDelete(ids) {
     return this.Request.ajax({ ...this.options.Apis.delete, body: ids }).toPromise()
   }
   /**

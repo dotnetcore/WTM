@@ -561,7 +561,7 @@ layui.use(['table'], function(){{
                     ShowTotal = item.ShowTotal
                 };
                 // 非编辑状态且有字段名的情况下，设置template
-                if ((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
+                if (string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false)
                     tempCol.Templet = new JRaw(getTemplate(item.Field));
 
                 NeedShowTotal |= item.ShowTotal == true;

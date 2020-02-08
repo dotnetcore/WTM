@@ -55,7 +55,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public ComboBoxTagHelper()
         {
-            EmptyText = Program._localizer["PleaseSelect"];
+            if (EmptyText == null)
+            {
+                EmptyText = Program._localizer["PleaseSelect"];
+            }
             EnableSearch = GlobalServices.GetRequiredService<Configs>().UiOptions.ComboBox.DefaultEnableSearch;
         }
 
