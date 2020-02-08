@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-wrap">
-    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="$listeners">
+    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" :title="titleValue" v-on="$listeners">
       <slot />
     </el-dialog>
     <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" v-on="$listeners">
@@ -19,8 +19,14 @@ export default class DialogBox extends Vue {
     isShow;
     @Prop({ type: String, default: "" })
     componentClass;
+    @Prop({ type: String, default: "" })
+    status;
+
     get isDialog() {
         return SettingsModule.isDialog;
+    }
+    get titleValue() {
+        return this.$t(`table.${this.status}`);
     }
     // /**
     //  * 用法调用 携带sync

@@ -12,7 +12,7 @@
             </el-radio>
           </el-radio-group>
         </wtm-form-item>
-        <wtm-form-item label="用户组" prop="Entity.GroupId" :span="24">
+        <wtm-form-item label="用户组" prop="Entity.GroupId" :span="12">
           <el-select v-model="formData.Entity.GroupId" v-edit:[status]="{list: getUserGroupsData, key:'Value', label: 'Text'}" placeholder="请选择用户组">
             <el-option v-for="(item,index) of getUserGroupsData" :key="index" :label="item.Text" :value="item.Value" />
           </el-select>

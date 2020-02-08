@@ -8,7 +8,7 @@
       </el-button>
     </div>
     <el-divider />
-    <el-upload class="upload-box" drag :action="uploadApi" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" multiple>
+    <el-upload class="upload-box" drag :action="uploadApi" :show-file-list="false" :on-success="handleAvatarSuccess" :on-error="onError" multiple>
       <i class="el-icon-upload" />
       <div class="el-upload__text">
         将文件拖到此处，或<em>点击上传</em>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { upload } from "@/service/common/index";
+
 @Component
 export default class Upload extends Vue {
     @Prop({ type: Boolean, default: false })
@@ -27,7 +28,7 @@ export default class Upload extends Vue {
     onClose() {
         this.$emit("update:isShow", false);
     }
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
         if (res.Id) {
             this.$emit("onImport", res);
             this.onClose();
@@ -35,11 +36,14 @@ export default class Upload extends Vue {
             this["$message"].error("上传失败!");
         }
     }
-    beforeAvatarUpload(file) {
-        console.log("file", file);
-    }
     onDownload() {
         this.$emit("onDownload");
+    }
+    /**
+     * 导出错误
+     */
+    onError(err) {
+        this["$message"].error(`上传失败,${err}`);
     }
 }
 </script>

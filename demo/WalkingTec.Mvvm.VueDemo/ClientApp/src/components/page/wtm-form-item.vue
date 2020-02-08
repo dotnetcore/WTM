@@ -44,6 +44,7 @@ export default class WtmFormItem extends Vue {
 </script>
 <style lang='less'>
 .form-item {
+    width: 90%;
     .el-form-item__label::after {
         content: ":";
     }

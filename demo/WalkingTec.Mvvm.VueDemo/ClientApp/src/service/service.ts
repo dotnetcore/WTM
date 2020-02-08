@@ -88,6 +88,48 @@ class requestBase {
     }
     return url;
   }
+  /**
+   * 错误信息
+   *
+   *  if (res.response && res.response.status === 400) {
+        msg = res.response.data.Message[0];
+      }
+   */
+  requestError(res) {
+    let msg = "接口错误";
+    const { response, data, message } = res;
+    // 导入文件错误信息
+    const filterError = (ID?: string) => {
+      let notifyMsg: string = "模版错误！";
+      if (ID) {
+        notifyMsg = `导入时发生错误, 请查看<a style="text-decoration: underline;" href="/api/_file/downloadFile/${ID}"><i>错误文件</i></a>`;
+      }
+      Notification({
+        title: "导入失败",
+        dangerouslyUseHTMLString: true,
+        type: "error",
+        message: notifyMsg
+      });
+    };
+    // 错误类型判断
+    if (response) {
+      const { Message, Form } = response.data;
+      if (Message) {
+        msg = Message[0];
+      } else if (Form["Entity.Import"]) {
+        filterError(Form["Entity.ErrorFileId"]);
+        return;
+      }
+    } else if (data) {
+      msg = data.message;
+    } else if (message) {
+      msg = message;
+    }
+    Notification.error({
+      title: "错误",
+      message: msg
+    });
+  }
 }
 
 const rBase = new requestBase();
@@ -131,18 +173,7 @@ const _request = (option, serverHost?) => {
       return response;
     })
     .catch(res => {
-      let msg = "接口错误";
-      if (res.response && res.response.data.Message) {
-        msg = res.response.data.Message[0];
-      } else if (res.data) {
-        msg = res.data.message;
-      } else if (res.message) {
-        msg = res.message;
-      }
-      Notification.error({
-        title: "错误",
-        message: msg
-      });
+      rBase.requestError(res);
       throw res;
     });
 };
