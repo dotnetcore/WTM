@@ -8,7 +8,7 @@
                 <wtm-form-item ref="Entity.RoleName" label="角色名称" prop="Entity.RoleName" :span="12">
                     <el-input v-model="formData.Entity.RoleName" v-edit:[status] />
                 </wtm-form-item>
-                <wtm-form-item ref="Entity.RoleRemark" label="备注" :span="24">
+                <wtm-form-item ref="Entity.RoleRemark" label="备注" :span="12">
                     <el-input v-model="formData.Entity.RoleRemark" v-edit:[status] />
                 </wtm-form-item>
             </el-row>

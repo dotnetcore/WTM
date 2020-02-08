@@ -30,3 +30,9 @@ export const TABLE_HEADER: Array<object> = [
   { key: "Remark", label: "备注" },
   { key: "operate", label: "操作", isSlot: true }
 ];
+
+export const logTypes: Array<any> = [
+  { Value: 0, Text: "普通" },
+  { Value: 1, Text: "异常" },
+  { Value: 2, Text: "调试" }
+];

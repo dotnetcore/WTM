@@ -14,7 +14,7 @@
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="'/api/_file/downloadFile/'+avatar" class="user-avatar">
+          <img :src="photoUrl" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -84,6 +84,14 @@ export default class extends Vue {
 
     get avatar() {
         return UserModule.info["PhotoId"];
+    }
+
+    get photoUrl() {
+        if (this.avatar) {
+            return "/api/_file/downloadFile/" + this.avatar;
+        } else {
+            return "static/img/user.png";
+        }
     }
 
     private toggleSideBar() {

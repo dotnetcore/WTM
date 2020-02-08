@@ -1,7 +1,7 @@
 <template>
   <div class="dataprivilege">
     <card>
-      <wtm-fuzzy-search ref="fuzzySearch" :search-label-width="75" placeholder="手机号" @onReset="onReset" @onSearch="onSearchForm">
+      <wtm-fuzzy-search ref="fuzzySearch" :search-label-width="75" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" :inline="true" label-width="75px">
           <el-form-item label="ITCode">
             <el-input v-model="searchForm.ITCode" />
@@ -18,7 +18,9 @@
             <el-input v-model="searchForm.IP" />
           </el-form-item>
           <el-form-item label="类型">
-            <el-input v-model="searchForm.LogType" />
+            <el-select v-model="searchForm.LogType">
+              <el-option v-for="(item, index) of logTypes" :key="index" :label="item.Text" :value="item.Value" />
+            </el-select>
           </el-form-item>
         </el-form>
       </wtm-fuzzy-search>
@@ -48,7 +50,7 @@ import actionMixin from "@/vue-custom/mixin/action-mixin";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
 // 查询参数, table列 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
+import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER, logTypes } from "./config";
 
 @Component({
     mixins: [baseMixin, searchMixin(SEARCH_DATA), actionMixin],
@@ -62,10 +64,13 @@ export default class Index extends Vue {
     assembly = ASSEMBLIES;
 
     tableHeader = TABLE_HEADER;
+    logTypes = logTypes;
     // 查询接口 ★★★★★
     privateRequest(params) {
-        params.StartActionTime = params.ActionTime.split(",")[0];
-        params.EndActionTime = params.ActionTime.split(",")[1];
+        if (params.ActionTime) {
+            params.StartActionTime = params.ActionTime.split(",")[0];
+            params.EndActionTime = params.ActionTime.split(",")[1];
+        }
         return this.search(params);
     }
 }
