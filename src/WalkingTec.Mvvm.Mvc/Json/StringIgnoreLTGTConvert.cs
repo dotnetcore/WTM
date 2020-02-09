@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace WalkingTec.Mvvm.Mvc.Json
@@ -39,9 +39,8 @@ namespace WalkingTec.Mvvm.Mvc.Json
             }
             catch (Exception)
             {
-                throw new Exception($"Error converting value {reader.Value} to type '{objectType}'");
             }
-            throw new Exception($"Unexpected token {reader.TokenType} when parsing string");
+            return null;
         }
     }
 }
