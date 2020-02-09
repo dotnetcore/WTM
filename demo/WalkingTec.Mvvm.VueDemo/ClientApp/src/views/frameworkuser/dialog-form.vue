@@ -5,7 +5,7 @@
                 <wtm-form-item ref="Entity.ITCode" label="账号" prop="Entity.ITCode" :span="12">
                     <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
                 </wtm-form-item>
-                <wtm-form-item ref="Entity.Password" label="密码" prop="Entity.Password" :span="12">
+                <wtm-form-item v-if="status===$actionType.add" ref="Entity.Password" label="密码" prop="Entity.Password" :span="12">
                     <el-input v-model="formData.Entity.Password" v-edit:[status] />
                 </wtm-form-item>
                 <wtm-form-item ref="Entity.Email" label="邮箱" :span="12">
@@ -40,7 +40,7 @@
                         <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/'+formData.Entity.PhotoId" class="avatar">
                     </template>
                 </wtm-form-item>
-                <wtm-form-item ref="Entity.IsValid" label="是否有效" prop="IsValid" :status="status" :span="24">
+                <wtm-form-item ref="Entity.IsValid" label="是否有效" prop="IsValid" :status="status" :span="12">
                     <el-switch v-model="formData.Entity.IsValid" />
                     <template #editValue>
                         {{ formData.Entity.IsValid===true ? "是" : "否" }}
@@ -281,13 +281,14 @@ export default class Index extends Vue {
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
         text-align: center;
     }
     .avatar {
-        width: 178px;
+        // width: 178px;
+        min-width: 100px;
         height: 178px;
         display: block;
     }

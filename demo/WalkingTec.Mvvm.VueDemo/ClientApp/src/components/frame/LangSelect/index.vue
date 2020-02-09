@@ -1,38 +1,17 @@
 <template>
-  <el-dropdown
-    trigger="click"
-    class="international"
-    @command="handleSetLanguage"
-  >
-    <div>
-      <svg-icon
-        name="language"
-        class="international-icon"
-      />
-    </div>
+  <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
+    <svg-icon name="language" class="international-icon" />
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item
-        :disabled="language==='zh'"
-        command="zh"
-      >
+      <el-dropdown-item :disabled="language==='zh'" command="zh">
         中文
       </el-dropdown-item>
-      <el-dropdown-item
-        :disabled="language==='en'"
-        command="en"
-      >
+      <el-dropdown-item :disabled="language==='en'" command="en">
         English
       </el-dropdown-item>
-      <el-dropdown-item
-        :disabled="language==='es'"
-        command="es"
-      >
+      <el-dropdown-item :disabled="language==='es'" command="es">
         Español
       </el-dropdown-item>
-      <el-dropdown-item
-        :disabled="language==='ja'"
-        command="ja"
-      >
+      <el-dropdown-item :disabled="language==='ja'" command="ja">
         日本語
       </el-dropdown-item>
     </el-dropdown-menu>
@@ -40,24 +19,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import { AppModule } from '@/store/modules/app'
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { AppModule } from "@/store/modules/app";
 
 @Component({
-  name: 'Login'
+    name: "Login"
 })
 export default class extends Vue {
-  get language() {
-    return AppModule.language
-  }
+    get language() {
+        return AppModule.language;
+    }
 
-  private handleSetLanguage(lang: string) {
-    this.$i18n.locale = lang
-    AppModule.SetLanguage(lang)
-    this.$message({
-      message: 'Switch Language Success',
-      type: 'success'
-    })
-  }
+    private handleSetLanguage(lang: string) {
+        this.$i18n.locale = lang;
+        AppModule.SetLanguage(lang);
+        this.$message({
+            message: "Switch Language Success",
+            type: "success"
+        });
+    }
 }
 </script>
+<style lang="scss" scoped>
+.international-icon {
+    font-size: 16px;
+}
+</style>

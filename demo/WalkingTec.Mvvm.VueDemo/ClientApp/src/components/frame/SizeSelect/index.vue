@@ -1,8 +1,6 @@
 <template>
   <el-dropdown id="size-select" trigger="click" @command="handleSetSize">
-    <div>
-      <svg-icon class="size-icon" name="size" />
-    </div>
+    <svg-icon class="size-icon" name="size" />
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
         {{item.label }}
@@ -50,3 +48,8 @@ export default class extends Vue {
     }
 }
 </script>
+<style lang="scss" scoped>
+.size-icon {
+    font-size: 16px;
+}
+</style>

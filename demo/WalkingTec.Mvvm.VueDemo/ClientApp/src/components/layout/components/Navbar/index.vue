@@ -12,17 +12,17 @@
         </el-tooltip>
         <lang-select class="right-menu-item hover-effect" />
       </template>
+      <div class="right-menu-item">
+        <i class="el-icon-s-tools navbar-setting" @click="settingShow=true" />
+        <el-drawer :with-header="false" :visible.sync="settingShow" direction="rtl" size="260px">
+          <settings />
+        </el-drawer>
+      </div>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="photoUrl" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <!-- <router-link to="/profile/">
-            <el-dropdown-item>
-              {{ $t('navbar.profile') }}
-            </el-dropdown-item>
-          </router-link> -->
           <router-link to="/">
             <el-dropdown-item>
               {{ $t('navbar.dashboard') }}
@@ -60,6 +60,7 @@ import HeaderSearch from "@/components/frame/HeaderSearch/index.vue";
 import LangSelect from "@/components/frame/LangSelect/index.vue";
 import Screenfull from "@/components/frame/Screenfull/index.vue";
 import SizeSelect from "@/components/frame/SizeSelect/index.vue";
+import Settings from "../Settings/index.vue";
 
 @Component({
     name: "Navbar",
@@ -70,10 +71,13 @@ import SizeSelect from "@/components/frame/SizeSelect/index.vue";
         HeaderSearch,
         LangSelect,
         Screenfull,
-        SizeSelect
+        SizeSelect,
+        Settings
     }
 })
 export default class extends Vue {
+    private settingShow = false;
+
     get sidebar() {
         return AppModule.sidebar;
     }
@@ -100,7 +104,7 @@ export default class extends Vue {
 
     private async logout() {
         await UserModule.LogOut();
-        this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+        this.$router.push(`/login.html?redirect=${this.$route.fullPath}`);
     }
 }
 </script>
@@ -140,7 +144,7 @@ export default class extends Vue {
         float: right;
         height: 100%;
         line-height: 50px;
-
+        font-size: 16px;
         &:focus {
             outline: none;
         }
@@ -149,7 +153,6 @@ export default class extends Vue {
             display: inline-block;
             padding: 0 8px;
             height: 100%;
-            font-size: 18px;
             color: #5a5e66;
             vertical-align: text-bottom;
 
@@ -185,6 +188,11 @@ export default class extends Vue {
                     font-size: 12px;
                 }
             }
+        }
+
+        .navbar-setting {
+            font-size: 18px;
+            color: #000;
         }
     }
 }

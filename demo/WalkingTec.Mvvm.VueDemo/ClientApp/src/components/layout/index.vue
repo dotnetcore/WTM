@@ -1,18 +1,15 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="classObj.mobile && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
-    <div :class="{hasTagsView: showTagsView}" class="main-container">
-      <div :class="{'fixed-header': fixedHeader}">
-        <navbar />
-        <tags-view v-if="showTagsView" />
-      </div>
-      <app-main />
-      <right-panel v-if="showSettings">
-        <settings />
-      </right-panel>
+    <div :class="classObj" class="app-wrapper">
+        <div v-if="classObj.mobile && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+        <sidebar class="sidebar-container" />
+        <div :class="{hasTagsView: showTagsView}" class="main-container">
+            <div :class="{'fixed-header': fixedHeader}">
+                <navbar />
+                <tags-view v-if="showTagsView" />
+            </div>
+            <app-main />
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -20,8 +17,7 @@ import { Component } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
 import { DeviceType, AppModule } from "@/store/modules/app";
 import { SettingsModule } from "@/store/modules/settings";
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from "./components";
-import RightPanel from "@/components/frame/RightPanel/index.vue";
+import { AppMain, Navbar, Sidebar, TagsView } from "./components";
 import ResizeMixin from "./mixin/resize";
 
 @Component({
@@ -29,8 +25,6 @@ import ResizeMixin from "./mixin/resize";
     components: {
         AppMain,
         Navbar,
-        RightPanel,
-        Settings,
         Sidebar,
         TagsView
     }
@@ -43,10 +37,6 @@ export default class extends mixins(ResizeMixin) {
             withoutAnimation: this.sidebar.withoutAnimation,
             mobile: this.device === DeviceType.Mobile
         };
-    }
-
-    get showSettings() {
-        return SettingsModule.showSettings;
     }
 
     get showTagsView() {

@@ -10,7 +10,7 @@ export const ASSEMBLIES: Array<string> = [
 export const SEARCH_DATA = {
   ITCode: "",
   ActionUrl: "",
-  LogType: "",
+  LogType: [],
   ActionName: "",
   ActionTime: [],
   StartActionTime: "",
