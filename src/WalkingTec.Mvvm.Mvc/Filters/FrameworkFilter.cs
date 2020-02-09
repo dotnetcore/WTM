@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     if (ctrl is BaseApiController apictrl)
                     {
-                        apictrl.TryValidateModel(model);
+                        //apictrl.TryValidateModel(model);
                         apictrl.HttpContext.Request.Body.Position = 0;
                         StreamReader tr = new StreamReader(apictrl.HttpContext.Request.Body);
                         string body = tr.ReadToEnd();
