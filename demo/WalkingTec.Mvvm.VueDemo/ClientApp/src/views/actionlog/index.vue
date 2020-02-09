@@ -18,7 +18,7 @@
             <el-input v-model="searchForm.IP" />
           </el-form-item>
           <el-form-item label="类型">
-            <el-select v-model="searchForm.LogType">
+            <el-select v-model="searchForm.LogType" multiple>
               <el-option v-for="(item, index) of logTypes" :key="index" :label="item.Text" :value="item.Value" />
             </el-select>
           </el-form-item>

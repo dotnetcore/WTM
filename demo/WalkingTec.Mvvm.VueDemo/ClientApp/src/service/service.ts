@@ -116,7 +116,7 @@ class requestBase {
       const { Message, Form } = response.data;
       if (Message) {
         msg = Message[0];
-      } else if (Form["Entity.Import"]) {
+      } else if (Form && Form["Entity.Import"]) {
         filterError(Form["Entity.ErrorFileId"]);
         return;
       }
