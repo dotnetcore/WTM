@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     if (ctrl is BaseApiController apictrl)
                     {
-                        apictrl.TryValidateModel(model);
+                        //apictrl.TryValidateModel(model);
                         if (context.HttpContext.Items.ContainsKey("DONOTUSE_REQUESTBODY"))
                         {
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
