@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -27,11 +27,17 @@ namespace WalkingTec.Mvvm.VueDemo
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
                     });
+                    x.AddSpaStaticFiles(configuration =>
+                    {
+                        configuration.RootPath = "ClientApp/dist";
+                    });
+
                 })
                 .Configure(x =>
                 {
                     var env = x.ApplicationServices.GetService<IHostingEnvironment>();
                     x.UseDeveloperExceptionPage();
+                    x.UseSpaStaticFiles();
                     if (env.IsDevelopment())
                     {
                         x.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions

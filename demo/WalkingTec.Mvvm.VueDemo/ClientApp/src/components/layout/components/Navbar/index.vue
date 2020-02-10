@@ -23,26 +23,29 @@
           <img :src="photoUrl" class="user-avatar">
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              {{ $t('navbar.dashboard') }}
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/dotnetcore/WTM">
-            <el-dropdown-item>
-              {{ $t('navbar.github') }}
-            </el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://wtmdoc.walkingtec.cn/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <a target="_blank" href="http://wtmdoc.walkingtec.cn/setup">
-            <el-dropdown-item>{{$t('navbar.generation')}}</el-dropdown-item>
-          </a>
+            <router-link to="/">
+                <el-dropdown-item>
+                    {{ $t('navbar.dashboard') }}
+                </el-dropdown-item>
+            </router-link>
+            <a target="_blank" href="https://github.com/dotnetcore/WTM">
+                <el-dropdown-item>
+                    {{ $t('navbar.github') }}
+                </el-dropdown-item>
+            </a>
+            <a target="_blank" href="https://wtmdoc.walkingtec.cn/">
+                <el-dropdown-item>{{$t('navbar.doc')}}</el-dropdown-item>
+            </a>
+            <a target="_blank" href="/_codegen?ui=vue">
+                <el-dropdown-item>{{$t('navbar.generation')}}</el-dropdown-item>
+            </a>
+            <a target="_blank" href="/swagger">
+                <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
+            </a>
 
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
+            <el-dropdown-item divided>
+                <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>

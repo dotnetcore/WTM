@@ -67,11 +67,13 @@ export default {
   navbar: {
     logOut: "退出登录",
     dashboard: "首页",
-    github: "项目地址",
+    github: "开源地址",
+      doc: "项目文档",
+    api: "Api文档",
     theme: "换肤",
     size: "布局大小",
     profile: "个人中心",
-    generation: "在线生成"
+    generation: "代码生成"
   },
   login: {
     title: "系统登录",
