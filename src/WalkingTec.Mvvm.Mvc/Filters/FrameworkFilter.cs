@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.Log = ctrl.Log;
                     model.CurrentUrl = ctrl.BaseUrl;
                     model.ConfigInfo = (Configs)context.HttpContext.RequestServices.GetService(typeof(Configs));
-                    model.DataContextCI = ((GlobalData)context.HttpContext.RequestServices.GetService(typeof(GlobalData))).DataContextCI;
+                    model.DataContextCI = model.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == ctrl.CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
                     model.Localizer = ctrl.Localizer;
@@ -109,7 +109,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     if (ctrl is BaseApiController apictrl)
                     {
-                        apictrl.TryValidateModel(model);
+                        //apictrl.TryValidateModel(model);
                         apictrl.HttpContext.Request.Body.Position = 0;
                         StreamReader tr = new StreamReader(apictrl.HttpContext.Request.Body);
                         string body = tr.ReadToEnd();
@@ -291,6 +291,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model = ctrl.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
+                context.HttpContext.Response.Cookies.Append("divid", model?.ViewDivId);
             }
             base.OnActionExecuted(context);
         }
@@ -304,12 +305,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
+            var nolog = ctrlActDesc.MethodInfo.IsDefined(typeof(NoLogAttribute), false) || ctrlActDesc.ControllerTypeInfo.IsDefined(typeof(NoLogAttribute), false);
+
             //如果是来自Error，则已经记录过日志，跳过
             if (ctrlActDesc.ControllerName == "_Framework" && ctrlActDesc.ActionName == "Error")
             {
                 return;
             }
-            if (ctrl.ConfigInfo.EnableLog == true)
+            if (ctrl.ConfigInfo.EnableLog == true && nolog == false)
             {
                 if (ctrl.ConfigInfo.LogExceptionOnly == false || context.Exception != null)
                 {
