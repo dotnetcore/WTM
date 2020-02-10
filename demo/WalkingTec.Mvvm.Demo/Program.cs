@@ -1,17 +1,10 @@
-using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using Swashbuckle.AspNetCore.Swagger;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -39,75 +32,37 @@ namespace WalkingTec.Mvvm.Demo
             if (!string.IsNullOrEmpty(ASPNETCORE_URLS))
                 globalConfig.ApplicationUrl = ASPNETCORE_URLS;
 
-            return
-                WebHost.CreateDefaultBuilder(args)
-                    .ConfigureServices((hostingCtx, x) =>
+            return WebHost
+                    .CreateDefaultBuilder(args)
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .ConfigureAppConfiguration((hostingCtx, config) =>
                     {
-                        var pris = new List<IDataPrivilege>
+                        var env = hostingCtx.HostingEnvironment;
+
+                        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                        if (env.IsDevelopment())
                         {
-                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
-                            new DataPrivilegeInfo<Major>("专业", y => y.MajorName)
-                        };
-                        x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx,CsSector:CSSelector);
-                        x.AddLayui();
-                        x.AddSwaggerGen(c =>
-                        {
-                            c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-                            c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                            var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                            if (appAssembly != null)
                             {
-                                Description = "JWT Bearer",
-                                Name = "Authorization",
-                                In = "header",
-                                Type = "apiKey"
-                            });
-                            c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-                            {
-                                { "Bearer", new string[] { } }
-                            });
-                        });
-                    })
-                    .Configure(x =>
-                    {
-                        var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                        if (configs.IsQuickDebug == true)
-                        {
-                            x.UseSwagger();
-                            x.UseSwaggerUI(c =>
-                            {
-                                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                            });
+                                config.AddUserSecrets(appAssembly, optional: true);
+                            }
                         }
-                        x.UseFrameworkService();
+
+                        config.AddEnvironmentVariables();
+                        if (args != null) config.AddCommandLine(args);
                     })
-                    .UseUrls(globalConfig.ApplicationUrl);
-        }
-
-        public static string CSSelector(ActionExecutingContext context)
-        {
-            var userinfo = (context.Controller as IBaseController)?.LoginUserInfo;
-            if (userinfo == null)
-            {
-                return "default";
-            }
-            else
-            {
-                if (userinfo.ITCode.StartsWith("a"))
-                {
-                    return "default";
-                }
-                else
-                {
-                    return "default";
-                }
-            }
-        }
-    }
-
-    public static class ConfigInfoExtension
-    {
-        public static string Key1(this Configs self)
-        {
-            return self.AppSettings["Key1"];
+                    .ConfigureLogging((hostingCtx, logging) =>
+                    {
+                        logging.AddConfiguration(hostingCtx.Configuration.GetSection("Logging"));
+                        logging.AddConsole();
+                        logging.AddDebug();
+                    })
+                    .UseUrls(globalConfig.ApplicationUrl)
+                    .UseStartup<Startup>();
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using System.Reflection;
+
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Doc
 {
@@ -9,20 +12,50 @@ namespace WalkingTec.Mvvm.Doc
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
-                {
-                    x.AddFrameworkService();
-                    x.AddLayui();
-                })
-                .Configure(x =>
-                {
-                    x.UseFrameworkService();
-                })
-                .Build();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args);
+
+            if (args != null) configurationBuilder.AddCommandLine(args);
+            var hostingConfig = configurationBuilder.Build();
+
+            return WebHost
+                    .CreateDefaultBuilder(args)
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .ConfigureAppConfiguration((hostingCtx, config) =>
+                    {
+                        var env = hostingCtx.HostingEnvironment;
+
+                        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                        if (env.IsDevelopment())
+                        {
+                            var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                            if (appAssembly != null)
+                            {
+                                config.AddUserSecrets(appAssembly, optional: true);
+                            }
+                        }
+
+                        config.AddEnvironmentVariables();
+                        if (args != null) config.AddCommandLine(args);
+                    })
+                    .ConfigureLogging((hostingCtx, logging) =>
+                    {
+                        logging.AddConfiguration(hostingCtx.Configuration.GetSection("Logging"));
+                        logging.AddConsole();
+                        logging.AddDebug();
+                    })
+                    .UseStartup<Startup>();
+        }
     }
 }

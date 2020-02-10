@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WalkingTec.Mvvm.ReactDemo.Models;
+
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo
 {

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using System.Reflection;
+
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -14,42 +12,50 @@ namespace WalkingTec.Mvvm.VueDemo
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
-                {
-                    x.AddFrameworkService();
-                    x.AddLayui();
-                    x.AddSwaggerGen(c =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(args);
+
+            if (args != null) configurationBuilder.AddCommandLine(args);
+            var hostingConfig = configurationBuilder.Build();
+
+            return WebHost
+                    .CreateDefaultBuilder(args)
+                    .UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .ConfigureAppConfiguration((hostingCtx, config) =>
                     {
-                        c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-                    });
-                })
-                .Configure(x =>
-                {
-                    var env = x.ApplicationServices.GetService<IHostingEnvironment>();
-                    x.UseDeveloperExceptionPage();
-                    if (env.IsDevelopment())
-                    {
-                        x.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                        var env = hostingCtx.HostingEnvironment;
+
+                        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                        if (env.IsDevelopment())
                         {
-                            HotModuleReplacement = false,
-                            ConfigFile = "config/webpack.dev.js",
-                            ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
+                            var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                            if (appAssembly != null)
+                            {
+                                config.AddUserSecrets(appAssembly, optional: true);
+                            }
+                        }
 
-                        });
-                    }
-                    x.UseSwagger();
-                    x.UseSwaggerUI(c =>
+                        config.AddEnvironmentVariables();
+                        if (args != null) config.AddCommandLine(args);
+                    })
+                    .ConfigureLogging((hostingCtx, logging) =>
                     {
-                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                    });
-                    x.UseFrameworkService();
-                })
-                .Build();
-
+                        logging.AddConfiguration(hostingCtx.Configuration.GetSection("Logging"));
+                        logging.AddConsole();
+                        logging.AddDebug();
+                    })
+                    .UseStartup<Startup>();
+        }
     }
 }
