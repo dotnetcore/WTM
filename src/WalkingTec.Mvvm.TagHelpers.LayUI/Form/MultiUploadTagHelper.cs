@@ -198,7 +198,7 @@ layui.use(['upload'],function(){{
               {Id}DoDelete(res.Data.Id);
             }});
       " : $@"
-           $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del""+res.Data.Id+""' style='color:white;margin-left:0px;'>""+res.Data.Name +""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/>"");
+           $('#{Id}label').append(""<label id='label""+res.Data.Id+""'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del""+res.Data.Id+""' style='color:white;margin-left:0px;'>""+res.Data.Name +""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/></label>"");
            $('#del'+res.Data.Id).on('click',function(){{
               {Id}DoDelete(res.Data.Id);
           }});
@@ -241,7 +241,7 @@ $.ajax({{
               {Id}DoDelete('{fileId}');
             }});
     " : $@"
-        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/>"");
+        $('#{Id}label').append(""<label id='label{fileId}'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/></label>"");
         $('#{Id}del').on('click',function(){{
           {Id}DoDelete('{fileId}');
         }});

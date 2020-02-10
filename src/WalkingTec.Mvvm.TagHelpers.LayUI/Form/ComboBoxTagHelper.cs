@@ -55,7 +55,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public ComboBoxTagHelper()
         {
-            EmptyText = Program._localizer["PleaseSelect"];
+            if (EmptyText == null)
+            {
+                EmptyText = Program._localizer["PleaseSelect"];
+            }
             EnableSearch = GlobalServices.GetRequiredService<Configs>().UiOptions.ComboBox.DefaultEnableSearch;
         }
 
@@ -185,7 +188,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count>1 ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count>1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }
