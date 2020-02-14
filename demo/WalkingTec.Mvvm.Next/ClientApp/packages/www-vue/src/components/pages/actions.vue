@@ -196,10 +196,10 @@ export default class ViewAction extends Vue {
       //   console.warn("TCL: ViewAction -> beforeCreate -> props", props, values);
       // }
     };
-    if(this.$root.$i18n.locale === "en-US"){
-      delete options.validateMessages
+    if (this.$root.$i18n.locale === "en-US") {
+      delete options.validateMessages;
     }
-    this.form = this.$form.createForm(this,options);
+    this.form = this.$form.createForm(this, options);
   }
   beforeMount() {
     lodash.map(this.Entities, ent => {
@@ -232,6 +232,7 @@ export default class ViewAction extends Vue {
     }
     this.form.validateFieldsAndScroll(async (error, values) => {
       if (error) {
+        console.log("TCL: onOk -> values", values);
         return console.error(error);
       }
       lodash.map(this.Entities, ({ mapKey }, key) => {

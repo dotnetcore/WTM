@@ -76,6 +76,31 @@ class ConfigStore {
         // 不清楚 为啥改了 没效果 执行页面刷新
         window.location.reload()
     }
+    /**
+     * 文件服务
+     * @returns
+     * @memberof ConfigStore
+     */
+    onCreateFileService(server?) {
+        return lodash.merge({
+            fileUpload: {
+                src: "/api/_file/upload",
+                method: "post"
+            },
+            fileDelete: {
+                src: "/api/_file/deleteFile/{id}",
+                method: "get"
+            },
+            fileGet: {
+                src: "/api/_file/getFile",
+                method: "get"
+            },
+            fileDownload: {
+                src: "/api/_file/downloadFile",
+                method: "get"
+            }
+        }, server);
+    }
 }
 const GlobalConfig = new ConfigStore();
 

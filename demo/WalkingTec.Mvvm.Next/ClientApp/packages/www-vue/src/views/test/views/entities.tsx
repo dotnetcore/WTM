@@ -97,7 +97,7 @@ export default {
                 label: { 'zh-CN': '照片', 'en-US': "Photo" },
                 options: {
                 },
-                children: `<a-input v-decorator />`
+                children: `<w-avatar v-decorator />`
             },
             /** 是否有效 */
             "Entity.IsValid": {
