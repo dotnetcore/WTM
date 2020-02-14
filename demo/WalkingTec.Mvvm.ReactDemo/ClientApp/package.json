@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@ant-design/pro-layout": "4.6.2",
-    "ag-grid-community": "^22.1.1",
-    "ag-grid-enterprise": "^22.1.1",
-    "ag-grid-react": "^22.1.1",
+    "ag-grid-community": "21.2.2",
+    "ag-grid-enterprise": "21.2.2",
+    "ag-grid-react": "21.2.2",
     "antd": "^3.23.6",
     "braft-editor": "^2.3.8",
     "core-js": "^3.3.3",
