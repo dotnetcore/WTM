@@ -90,6 +90,8 @@ export default class EntitiesUserBehavior extends Entities {
             this.ITCode = lodash.get(UserInfo, 'ITCode');
             // 动作
             this._Actions = lodash.get(UserInfo, 'Attributes.Actions', []);
+            const PhotoId = lodash.get(UserInfo, 'PhotoId');
+            this.Avatar = PhotoId ? `/api/_file/getFile/${PhotoId}` : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png';
             // 格式化 菜单 
             const Menus = lodash.get(UserInfo, 'Attributes.Menus', []).map(data => {
                 return {

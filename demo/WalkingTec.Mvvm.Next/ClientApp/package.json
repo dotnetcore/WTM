@@ -17,7 +17,7 @@
     "init": "yarn install && lerna bootstrap",
     "docs": "docsify serve docs",
     "clean": "lerna clean",
-    "clean-all": "rimraf node_modules package-lock.json packages/*/package-lock.json yarn.lock packages/*/yarn.lock  && npm run clean",
+    "clean-all": "rimraf node_modules && npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -32,8 +32,8 @@
   "homepage": "https://github.com/LengYXin/ViewSeparation#readme",
   "description": "",
   "dependencies": {
-    "ag-grid-community": "22.1.1",
-    "ag-grid-enterprise": "22.1.1",
+    "ag-grid-community": "21.2.2",
+    "ag-grid-enterprise": "21.2.2",
     "core-js": "^3.6.1",
     "crypto-js": "^3.1.9-1",
     "date-fns": "^2.8.1",

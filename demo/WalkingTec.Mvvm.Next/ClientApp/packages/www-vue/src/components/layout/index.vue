@@ -8,19 +8,26 @@
           <a-col :span="12" class="app-layout-user">
             <a-dropdown>
               <a href="javascript:;" class="user-item">
-                <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                <a-avatar :src="UserStore.Avatar" /> 
                 <span v-html="UserStore.Name"></span>
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <a href="/_codegen?ui=react" target="_blank"><a-icon type="code" /> <span v-t="'action.user.codeGenerator'"></span></a>
+                  <a href="/_codegen?ui=react" target="_blank">
+                    <a-icon type="code" />
+                    <span v-t="'action.user.codeGenerator'"></span>
+                  </a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a href="/swagger" target="_blank"><a-icon type="bars" /> <span v-t="'action.user.apiDocument'"></span></a>
+                  <a href="/swagger" target="_blank">
+                    <a-icon type="bars" />
+                    <span v-t="'action.user.apiDocument'"></span>
+                  </a>
                 </a-menu-item>
                 <a-menu-item @click="UserStore.onOutLogin">
                   <a href="javascript:;">
-                    <a-icon type="logout" /> <span v-t="'action.user.logout'"></span>
+                    <a-icon type="logout" />
+                    <span v-t="'action.user.logout'"></span>
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -28,7 +35,7 @@
             <!-- <a-divider type="vertical" />
             <a href="javascript:;" class="user-item" @click="onVisible(true)">
               <a-icon type="setting" />
-            </a> -->
+            </a>-->
             <a-divider type="vertical" />
             <a-dropdown>
               <a href="javascript:;" class="user-item">
@@ -54,16 +61,16 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible">
-      
-    </a-drawer>
+    <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible"></a-drawer>
   </a-layout>
 </template>
 <script lang="ts">
 import LayoutMenu from "./menu.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
+import lodash from "lodash";
 import Globalconfig from "../../global.config";
+const fileService = Globalconfig.onCreateFileService();
 @Component({
   components: {
     LayoutMenu
@@ -75,6 +82,14 @@ export default class extends Vue {
   onVisible(visible = !this.visible) {
     this.visible = visible;
   }
+  // get src() {
+  //   const src = lodash.get(this.UserStore.Avatar, "params.value");
+  //   if (src) {
+  //     return `${fileService.fileGet.src}/${src}`;
+  //   }
+  //   return "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+  //   // return ''
+  // }
   get languageIcons() {
     return {
       "zh-CN": "🇨🇳",

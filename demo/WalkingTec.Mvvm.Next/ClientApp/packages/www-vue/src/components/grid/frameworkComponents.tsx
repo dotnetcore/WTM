@@ -1,5 +1,7 @@
+import globalConfig from "../../global.config";
 import Vue, { CreateElement } from 'vue';
 import lodash from 'lodash';
+const fileService = globalConfig.onCreateFileService();
 export default {
     'avatar': Vue.component('wtm-grid-avatar', {
         template: '<a-avatar icon="user" :src="src" v-viewer />',
@@ -8,7 +10,7 @@ export default {
             src() {
                 const src = lodash.get(this, 'params.value');
                 if (src) {
-                    return `/api/_file/downloadFile/${src}`
+                    return `${fileService.fileGet.src}/${src}`
                 }
                 return 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
                 // return ''

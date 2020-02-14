@@ -309,6 +309,7 @@ export default class ViewAction extends Vue {
   }
   onImport() {
     this.$confirm({
+      parentContext:null,
       class: "page-import",
       // destroyOnClose:true,
       // content: new Vue({ i18n, render: h => h(ImportUpload) })
