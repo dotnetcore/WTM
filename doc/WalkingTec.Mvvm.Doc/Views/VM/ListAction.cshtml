@@ -57,9 +57,9 @@
   <wt:quote>列表按钮的默认行为显示在列表上方，点击后弹出模式对话框显示页面</wt:quote>
   <p>以下代码片段展示了按钮的多种设置方法</p>
   <wt:code title="InitGridAction">
-protected override List<GridAction> InitGridAction()
+protected override List&lt;GridAction&gt; InitGridAction()
 {
-    var actions = new List<GridAction>
+    var actions = new List&lt;GridAction&gt;
   {
     //调用页面上的名为test(ids,datas)的js方法
     this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
