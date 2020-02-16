@@ -1,6 +1,7 @@
 <template>
     <div id="header-search" :class="{'show': show}" class="header-search">
-        <svg-icon class="search-icon" name="search" @click.stop="click" />
+        <!-- <svg-icon class="search-icon" name="search" @click.stop="onClick" /> -->
+        <i class="el-icon-search" @click.stop="onClick"></i>
         <el-select ref="headerSearchSelect" v-model="search" :remote-method="querySearch" filterable default-first-option remote placeholder="Search" class="header-search-select" @change="change">
             <el-option v-for="item in options" :key="item.path" :value="item" :label="item.meta.title.join(' > ')" />
         </el-select>
@@ -62,7 +63,7 @@ export default class extends Vue {
         this.searchPool = this.generateRoutes(this.routes);
     }
 
-    private click() {
+    private onClick() {
         this.show = !this.show;
         if (this.show) {
             this.$refs.headerSearchSelect &&
@@ -171,8 +172,6 @@ export default class extends Vue {
 
 <style lang="scss" scoped>
 .header-search {
-    font-size: 0 !important;
-
     .search-icon {
         cursor: pointer;
         font-size: 16px;

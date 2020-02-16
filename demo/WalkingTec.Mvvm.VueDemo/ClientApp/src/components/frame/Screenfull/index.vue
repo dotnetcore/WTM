@@ -1,53 +1,54 @@
 <template>
   <div id="screenfull">
-    <svg-icon
+    <!-- <svg-icon
       :name="isFullscreen? 'exit-fullscreen': 'fullscreen'"
-      @click="click"
-    />
+      @click="onClick"
+    /> -->
+    <i class="el-icon-full-screen" @click.stop="onClick"></i>
   </div>
 </template>
 
 <script lang="ts">
-import screenfull from 'screenfull'
-import { Component, Vue } from 'vue-property-decorator'
+import screenfull from "screenfull";
+import { Component, Vue } from "vue-property-decorator";
 
-const sf = screenfull
+const sf = screenfull;
 
 @Component({
-  name: 'Screenfull'
+    name: "Screenfull"
 })
 export default class extends Vue {
-  private isFullscreen = false
+    private isFullscreen = false;
 
-  mounted() {
-    if (sf && sf.enabled) {
-      sf.on('change', this.change)
+    mounted() {
+        if (sf && sf.enabled) {
+            sf.on("change", this.change);
+        }
     }
-  }
 
-  beforeDestory() {
-    if (sf && sf.enabled) {
-      sf.off('change', this.change)
+    beforeDestory() {
+        if (sf && sf.enabled) {
+            sf.off("change", this.change);
+        }
     }
-  }
 
-  private change() {
-    if (sf && sf.enabled) {
-      this.isFullscreen = sf.isFullscreen
+    private change() {
+        if (sf && sf.enabled) {
+            this.isFullscreen = sf.isFullscreen;
+        }
     }
-  }
 
-  private click() {
-    if (sf) {
-      if (!sf.enabled) {
-        this.$message({
-          message: 'you browser can not work',
-          type: 'warning'
-        })
-        return false
-      }
-      sf.toggle()
+    private onClick() {
+        if (sf) {
+            if (!sf.enabled) {
+                this.$message({
+                    message: "you browser can not work",
+                    type: "warning"
+                });
+                return false;
+            }
+            sf.toggle();
+        }
     }
-  }
 }
 </script>

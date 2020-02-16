@@ -1,6 +1,7 @@
 <template>
   <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
-    <svg-icon name="language" class="international-icon" />
+    <!-- <svg-icon name="language" class="international-icon" /> -->
+    <i class="el-icon-orange"></i>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item :disabled="language==='zh'" command="zh">
         中文
@@ -41,7 +42,7 @@ export default class extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.international-icon {
+i {
     font-size: 16px;
 }
 </style>

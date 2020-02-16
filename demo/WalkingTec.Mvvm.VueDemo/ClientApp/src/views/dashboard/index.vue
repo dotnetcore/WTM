@@ -1,26 +1,127 @@
 <template>
     <div class="dashboard-container">
-        <el-row :gutter="20">
-            <el-col :span="8">
-                <el-card shadow="hover">
-                    <div slot="header">WTM—做最好的.netcore开源框架</div>
-                    WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework,
-                    当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。
-                </el-card>
+        <el-row :gutter="10">
+            <el-col :span="16">
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        <el-card shadow="hover">
+                            <div slot="header">快捷方式</div>
+                            <el-row class="lump-wrap" :gutter="10">
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                                <el-col :span="6">
+                                    <i class="el-icon-edit"></i>
+                                    <span>用户</span>
+                                </el-col>
+                            </el-row>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-card shadow="hover">
+                            <div slot="header"><span>WTM开源</span></div>
+                            <el-row class="lump-wrap cxt-left" :gutter="10">
+                                <el-col :span="12">
+                                    <div>
+                                        <h3>star</h3>
+                                        <p>1000</p>
+                                    </div>
+                                </el-col>
+                                <el-col :span="12">
+                                    <div>
+                                        <h3>star</h3>
+                                        <p>1000</p>
+                                    </div>
+                                </el-col>
+                                <el-col :span="12">
+                                    <div>
+                                        <h3>star</h3>
+                                        <p>1000</p>
+                                    </div>
+                                </el-col>
+                                <el-col :span="12">
+                                    <div>
+                                        <h3>star</h3>
+                                        <p>1000</p>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-card shadow="hover">
+                            <div slot="header">WTM开源</div>
+                            WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~
+                            <br />
+                            <iframe src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                        </el-card>
+                    </el-col>
+                </el-row>
             </el-col>
             <el-col :span="8">
-                <el-card shadow="hover">
-                    <div slot="header">WTM开源</div>
-                    WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~
-                    <br />
-                    <iframe src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
-                </el-card>
-            </el-col>
-            <el-col :span="8">
-                <el-card shadow="hover">
-                    <div slot="header">即刻体验WTM之美</div>
-                    现在就点 这里 立刻生成第一个WTM项目吧
-                </el-card>
+                <el-col :span="24">
+                    <el-card shadow="hover">
+                        <div slot="header">框架特点</div>
+                        <i class="el-icon-check"></i>一键生成WTM项目<br />
+                        <i class="el-icon-check"></i>一键生成增删改查，导入导出，批量操作代码<br />
+                        <i class="el-icon-check"></i>支持一对多，多对多关联模型的识别和代码生成<br />
+                        <i class="el-icon-check"></i>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
+                        <i class="el-icon-check"></i>支持sqlserver，mysql，pgsql三种数据库<br />
+                        <i class="el-icon-check"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
+                        <i class="el-icon-check"></i>提供了很多基类，封装了绝大部分后台常用操作<br />
+                        <i class="el-icon-check"></i>提供了用户，角色，用户组，菜单，日志等常用模块<br />
+                        <i class="el-icon-check"></i>支持数据权限的开发和配置<br />
+                        <i class="el-icon-check"></i>支持读写分离和数据库分库
+                    </el-card>
+                </el-col>
+                <el-col :span="24">
+                    <el-card shadow="hover">
+                        <div slot="header">作者的话</div>
+                        <p>
+                            WTM框架，全称WalkingTec MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。
+                        </p>
+                        <p>
+                            国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了， dotnet core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
+                        </p>
+                        <p>
+                            WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
+                        </p>
+                        <p>
+                            —— 框架开源地址：https://github.com/dotnetcore/WTM
+                        </p>
+                        <p>
+                            —— 框架在线文档：https://wtmdoc.walkingtec.cn
+                        </p>
+                        <p>
+                            —— 框架QQ交流群：694148336
+                        </p>
+                    </el-card>
+                </el-col>
             </el-col>
         </el-row>
         <el-row :gutter="20">
@@ -50,6 +151,7 @@ export default class extends Vue {
 }
 </script>
 <style lang="less" rel="stylesheet/less">
+@import "~@/assets/css/mixin.less";
 .dashboard-container {
     padding: 10px;
     .el-row {
@@ -60,8 +162,51 @@ export default class extends Vue {
         font-size: 14px;
     }
     .el-card {
-        font-size: 16px;
+        font-size: 14px;
         color: #666;
+    }
+    .lump-wrap {
+        margin-bottom: 0;
+        min-height: 160px;
+        &.cxt-left {
+            .el-col {
+                .flexalign(flex-start);
+                box-sizing: border-box;
+                padding-bottom: 10px;
+                div {
+                    background-color: #f8f8f8;
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 0 5px;
+                }
+            }
+        }
+        .el-col {
+            .center(column);
+            i {
+                width: 100%;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                border-radius: 2px;
+                font-size: 30px;
+                background-color: #f8f8f8;
+            }
+            span {
+                color: #666;
+                font-size: 14px;
+            }
+            h3 {
+                padding-bottom: 10px;
+                font-size: 12px;
+            }
+            p {
+                font-style: normal;
+                font-size: 30px;
+                font-weight: 300;
+                color: #009688;
+            }
+        }
     }
 }
 </style>

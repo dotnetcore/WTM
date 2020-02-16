@@ -18,7 +18,7 @@
             <el-input v-model="searchForm.IP" />
           </el-form-item>
           <el-form-item label="类型">
-            <el-select v-model="searchForm.LogType" multiple>
+            <el-select v-model="searchForm.LogType" multiple :collapse-tags="false">
               <el-option v-for="(item, index) of logTypes" :key="index" :label="item.Text" :value="item.Value" />
             </el-select>
           </el-form-item>
@@ -65,8 +65,12 @@ export default class Index extends Vue {
 
     tableHeader = TABLE_HEADER;
     logTypes = logTypes;
+
     // 查询接口 ★★★★★
     privateRequest(params) {
+        if (params.LogType) {
+            params.LogType = params.LogType.split(",");
+        }
         if (params.ActionTime) {
             params.StartActionTime = params.ActionTime.split(",")[0];
             params.EndActionTime = params.ActionTime.split(",")[1];

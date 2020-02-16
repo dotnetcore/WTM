@@ -1,12 +1,15 @@
 <template>
-  <el-dropdown id="size-select" trigger="click" @command="handleSetSize">
-    <svg-icon class="size-icon" name="size" />
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
-        {{item.label }}
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+    <el-dropdown id="size-select" trigger="click" @command="handleSetSize">
+        <!-- <svg-icon class="size-icon" name="size" /> -->
+        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+            <i class="el-icon-s-operation"></i>
+        </el-tooltip>
+        <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
+                {{item.label }}
+            </el-dropdown-item>
+        </el-dropdown-menu>
+    </el-dropdown>
 </template>
 
 <script lang="ts">
@@ -49,7 +52,7 @@ export default class extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.size-icon {
+i {
     font-size: 16px;
 }
 </style>
