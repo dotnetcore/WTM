@@ -5,21 +5,20 @@ import { DirectiveOptions } from "vue";
  * v-edit:[status]
  * status： 增/删/改 状态
  * 2. 集合字段
- * v-edit:[status]="{list: Array<any>, key: string, label: string}"
+ * v-edit:[status]="Array<any>"
  * list 过滤集合
  * key 集合中v-model对应字段名
  * label 集合中 需要展示的字段名
  */
 const domStyleFn = (el, { value, arg }, vnode) => {
-  // const { value, arg } = binding; // value {list: Array<any>, key: string, label: string}
+  // const { value, arg } = binding; // value Array<any>
   const modelVal = vnode.data.model.value; // v-model 值
   let htmlVal: string = modelVal; // 内容value
   let elPre = el.previousSibling || {}; // el前dom，insert添加的dom
-  if (value && modelVal) {
+  if (Array.isArray(value) && modelVal) {
     try {
-      const { list, key, label } = value;
       // 参数判断
-      htmlVal = list.filter(res => res[key] === modelVal)[0][label];
+      htmlVal = value.filter(res => res["Value"] === modelVal)[0]["Text"];
     } catch (error) {
       console.warn("dirEdit,指令结构不符合要求", error);
       htmlVal = modelVal;
@@ -37,14 +36,14 @@ const domStyleFn = (el, { value, arg }, vnode) => {
 };
 // 编辑
 const edit: DirectiveOptions = {
-  inserted: (el, binding, vnode) => {
+  inserted: (el, { value, arg, expression }, vnode) => {
     // el前添加dom
     const div = document.createElement("div");
-    div.innerHTML = `<span id="${binding.expression}" style="display: none;"></span>`;
+    div.innerHTML = `<span id="${expression}" style="display: none;"></span>`;
     el.parentNode && el.parentNode.insertBefore(div.childNodes[0], el);
-    domStyleFn(el, binding, vnode);
+    domStyleFn(el, { value, arg }, vnode);
   },
-  update: (el, binding, vnode) => domStyleFn(el, binding, vnode)
+  update: (el, { value, arg }, vnode) => domStyleFn(el, { value, arg }, vnode)
 };
 
 export default edit;

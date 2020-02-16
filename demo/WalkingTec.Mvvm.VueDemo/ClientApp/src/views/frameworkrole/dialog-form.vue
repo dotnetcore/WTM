@@ -47,30 +47,22 @@ export default class extends Vue {
     @State
     getFrameworkGroupsData;
     // 验证 ★★★★★
-    get rules() {
-        if (this["status"] !== this["$actionType"].detail) {
-            // 动态验证会走遍验证，需要清除验证
-            this.cleanValidate();
-            return {
-                "Entity.RoleCode": [
-                    {
-                        required: true,
-                        message: "请输入角色编号",
-                        trigger: "blur"
-                    }
-                ],
-                "Entity.RoleName": [
-                    {
-                        required: true,
-                        message: "请输入角色名称",
-                        trigger: "blur"
-                    }
-                ]
-            };
-        } else {
-            return {};
-        }
-    }
+    rules = {
+        "Entity.RoleCode": [
+            {
+                required: true,
+                message: "请输入角色编号",
+                trigger: "blur"
+            }
+        ],
+        "Entity.RoleName": [
+            {
+                required: true,
+                message: "请输入角色名称",
+                trigger: "blur"
+            }
+        ]
+    };
 }
 </script>
 <style lang='less'>

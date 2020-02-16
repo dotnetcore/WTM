@@ -35,7 +35,7 @@ class Menu {
     return routerItem;
   }
   /**
-   * 返回同一级菜单
+   * 返回同一级菜单（打平一级）
    * @param menu
    */
   getParallelMenu(menu: any[]) {

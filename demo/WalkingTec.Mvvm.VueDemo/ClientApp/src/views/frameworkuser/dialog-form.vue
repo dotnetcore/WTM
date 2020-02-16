@@ -16,10 +16,10 @@
                 </wtm-form-item>
                 <wtm-form-item ref="Entity.Sex" label="性别" :status="status" :span="12">
                     <el-select v-model="formData.Entity.Sex">
-                        <el-option v-for="(item, index) of sexList" :key="index" :label="item.label" :value="item.value" />
+                        <el-option v-for="(item, index) of sexList" :key="index" :label="item.Text" :value="item.Value" />
                     </el-select>
                     <template #editValue>
-                        {{ sexList[formData.Entity.Sex].label }}
+                        {{ sexList[formData.Entity.Sex].Text }}
                     </template>
                 </wtm-form-item>
                 <wtm-form-item ref="Entity.CellPhone" label="手机号" :span="12">
