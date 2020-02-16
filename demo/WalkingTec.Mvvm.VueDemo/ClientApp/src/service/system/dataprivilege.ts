@@ -11,6 +11,13 @@ const add = {
   url: reqPath + "add",
   method: "post"
 };
+
+// 详情
+const get = {
+  url: reqPath + "get",
+  method: "get"
+};
+
 // 列表
 const search = {
   url: reqPath + "search",
@@ -46,9 +53,16 @@ const getUserGroups = {
   method: "get",
   dataType: "array"
 };
-// 用户组
+// 权限名称
 const getPrivileges = {
   url: reqPath + "GetPrivileges",
+  method: "get",
+  dataType: "array"
+};
+
+// 角色
+const getPrivilegeByTableName = {
+  url: reqPath + "GetPrivilegeByTableName",
   method: "get",
   dataType: "array"
 };
@@ -62,5 +76,7 @@ export default {
   privilegesList,
   imported,
   getUserGroups,
-  getPrivileges
+  getPrivileges,
+  getPrivilegeByTableName,
+  get
 };

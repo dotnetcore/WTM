@@ -101,7 +101,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         console.error("dialogData 没有id数据");
       }
       if (this["status"] !== this["$actionType"].add) {
-        const parameters = { ID: this["dialogData"].ID };
+        const parameters = { ...this["dialogData"], ID: this["dialogData"].ID };
         this["detail"](parameters).then(res => {
           // 判断是否 有Entity 属性，赋值全部
           if (this.formData.hasOwnProperty("Entity")) {
@@ -109,7 +109,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
           } else {
             this.setFormData(res.Entity);
           }
-          this["afterBindFormData"]();
+          this["afterBindFormData"](res);
         });
       } else {
         this.onReset();
@@ -118,7 +118,9 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     /**
      * 查询详情-绑定数据 之后
      */
-    afterBindFormData() {}
+    afterBindFormData(data: object) {
+      console.log("data:", data);
+    }
     /**
      * 提交 ★★★★★
      */

@@ -5,7 +5,7 @@
  */
 import _request from "@/service/service";
 import { firstUpperCase } from "@/util/string";
-import attributes from "@/store/common/attributes";
+import attributes from "./attributes";
 
 interface StoreType {
   state: {};

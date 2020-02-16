@@ -1,0 +1,36 @@
+/**
+ * 页面集合
+ */
+export default {
+  actionlog: {
+    name: "日志管理",
+    path: "/actionlog",
+    controller: "WalkingTec.Mvvm.Admin.Api,ActionLog"
+  },
+  frameworkgroup: {
+    name: "用户组管理",
+    path: "/frameworkgroup",
+    controller: "WalkingTec.Mvvm.Admin.Api,FrameworkGroup"
+  },
+  frameworkrole: {
+    name: "角色管理",
+    path: "/frameworkrole",
+    controller: "WalkingTec.Mvvm.Admin.Api,FrameworkRole"
+  },
+  frameworkuserbase: {
+    name: "用户管理",
+    path: "/frameworkuser",
+    controller: "WalkingTec.Mvvm.Admin.Api,FrameworkUser"
+  },
+  frameworkmenu: {
+    name: "菜单管理",
+    path: "/frameworkmenu",
+    controller: "WalkingTec.Mvvm.Admin.Api,FrameworkMenu"
+  },
+  dataprivilege: {
+    name: "数据权限",
+    path: "/dataprivilege",
+    controller: "WalkingTec.Mvvm.Admin.Api,DataPrivilege"
+  }
+  /**WTM**/
+};

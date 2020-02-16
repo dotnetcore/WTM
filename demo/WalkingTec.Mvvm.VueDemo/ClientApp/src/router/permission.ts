@@ -7,6 +7,7 @@ import { RoutesModule } from "@/store/modules/routes";
 import i18n from "@/lang"; // Internationalization
 import settings from "../settings";
 import router from "./index";
+import pageList from "@/views/index";
 
 NProgress.configure({ showSpinner: false });
 
@@ -28,6 +29,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
     if (UserModule.roles.length === 0) {
       try {
         await UserModule.GetUserInfo();
+        RoutesModule.PageList(pageList);
         RoutesModule.GenerateRoutes(UserModule.menus);
         router.addRoutes(RoutesModule.dynamicRoutes);
         next({ ...to, replace: true });

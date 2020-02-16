@@ -18,19 +18,19 @@
       </el-row>
       <el-row v-show="formData.Entity.IsInside">
         <wtm-form-item label="模块名称" :span="12">
-          <el-select v-model="SelectedModule" filterable placeholder="请选择" @change="onSelectedAction">
-            <el-option v-for="item in pageNameList" :key="item.Value" :label="item.Text" :value="item.Value" />
+          <el-select v-model="formData.SelectedModule" filterable placeholder="请选择" @change="onSelectedAction">
+            <el-option v-for="item in moduleList" :key="item.Value" :label="item.Text" :value="item.Value" />
           </el-select>
           <template #editValue>
-            {{ pageNameList[SelectedModule].name }}
+            {{ moduleList[formData.SelectedModule].Text }}
           </template>
         </wtm-form-item>
         <wtm-form-item label="动作名称" :status="status" :span="12">
-          <el-select v-model="formData.Entity.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
+          <el-select v-model="formData.SelectedActionIDs" v-edit:[status] multiple placeholder="请选择">
             <el-option v-for="item in getActionsByModelData" :key="item.Value" :label="item.Text" :value="item.Value" />
           </el-select>
           <template #editValue>
-            {{formData.Entity.SelectedActionIDs}}
+            {{formData.SelectedActionIDs}}
           </template>
         </wtm-form-item>
       </el-row>
@@ -84,7 +84,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
-import user from "@/store/common/user";
+import { RoutesModule } from "@/store/modules/routes";
 
 // 表单结构
 const defaultFormData = {
@@ -149,48 +149,38 @@ export default class Index extends Vue {
     /**
      * 模版集合
      */
-    get pageNameList() {
-        return user.parallelMenus
-            .filter(item => item.meta.ParentId)
-            .map(item => {
-                return {
-                    Text: item.name,
-                    id: item.meta.Id,
-                    Value: item.path.substr(1).toLowerCase()
-                };
-            });
+    get moduleList() {
+        return RoutesModule.pageList;
     }
-    /**
-     * 列表数据 区分大小写 无法对应，增加get，set
-     * formData.SelectedModule
-     */
-    get SelectedModule() {
-        const val = _.get(this, `formData.Entity.SelectedModule`);
-        return val ? val.toLowerCase() : "";
-    }
-    set SelectedModule(newValue) {
-        _.set(this, `formData.Entity.SelectedModule`, newValue);
-    }
+    // /**
+    //  * 列表数据 区分大小写 无法对应，增加get，set
+    //  * formData.SelectedModule
+    //  */
+    // get SelectedModule() {
+    //     const val = _.get(this, `formData.Entity.SelectedModule`);
+    //     return val ? val.toLowerCase() : "";
+    // }
+    // set SelectedModule(newValue) {
+    //     _.set(this, `formData.Entity.SelectedModule`, newValue);
+    // }
     created() {
         this.getFolders();
     }
     /**
      * 查询详情-after-调用
      */
-    afterBindFormData() {
-        const val = _.get(this, `formData.Entity.SelectedModule`);
-        val &&
-            this.getActionsByModel({
-                ModelName: val
-            });
+    afterBindFormData(data) {
+        _.set(this, `formData.SelectedModule`, data.SelectedModule);
+        _.set(this, `formData.SelectedActionIDs`, data.SelectedActionIDs);
+        this.onSelectedAction(false);
     }
     /**
      * 动作名称
      */
-    onSelectedAction() {
-        _.set(this, `formData.Entity.SelectedActionIDs`, []);
+    onSelectedAction(isClear) {
+        isClear && _.set(this, `formData.SelectedActionIDs`, []);
         this.getActionsByModel({
-            ModelName: _.get(this, `formData.Entity.SelectedModule`)
+            ModelName: _.get(this, `formData.SelectedModule`)
         });
     }
 }

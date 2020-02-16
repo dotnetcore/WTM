@@ -1,23 +1,23 @@
 // 性别
 export const sexList: Array<any> = [
   {
-    value: 0,
-    label: "男"
+    Value: 0,
+    Text: "男"
   },
   {
-    value: 1,
-    label: "女"
+    Value: 1,
+    Text: "女"
   }
 ];
 
 // 是否
 export const whether: Array<any> = [
   {
-    value: true,
-    label: "是"
+    Value: true,
+    Text: "是"
   },
   {
-    value: false,
-    label: "否"
+    Value: false,
+    Text: "否"
   }
 ];

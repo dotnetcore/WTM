@@ -4,9 +4,8 @@
       <wtm-fuzzy-search ref="fuzzySearch" :search-label-width="75" @onReset="onReset" @onSearch="onSearchForm">
         <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
           <el-form-item label="权限名称" prop="car_model">
-            <el-select v-model="searchForm.type" clearable placeholder="请选择" value="" multiple>
-              <el-option key="22" value="dd" label="ss" />
-              <el-option key="33" value="eee" label="xx" />
+            <el-select v-model="searchForm.TableName" clearable multiple placeholder="请选择权限名称">
+              <el-option v-for="(item,index) of getPrivilegesData" :key="index" :label="item.Text" :value="item.Value" />
             </el-select>
           </el-form-item>
           <el-form-item label="权限类型" prop="car_model">
@@ -20,7 +19,7 @@
         </el-form>
       </wtm-fuzzy-search>
       <wtm-but-box :assembly="['add', 'edit', 'delete', 'export']" :action-list="permissionList" :selected-data="selectData" :eventFn="eventFn" />
-      <wtm-table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" @onSelectionChange="onSelectionChange" @sort-change="onSortChange">
+      <wtm-table-box :is-selection="true" :tb-column="tableCols" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
         <template #operate="rowData">
           <el-button v-visible="permissionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
             详情
@@ -28,7 +27,7 @@
           <el-button v-visible="permissionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
             修改
           </el-button>
-          <el-button v-visible="permissionList.deleted" type="text" size="small" class="view-btn" @onDelete="onDelete(rowData.row)">
+          <el-button v-visible="permissionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
             删除
           </el-button>
         </template>
@@ -61,9 +60,9 @@ const defaultSearchData = {
 })
 export default class Index extends Vue {
     @Action
-    privilegesList;
+    getPrivileges;
     @State
-    privilegesListData;
+    getPrivilegesData;
     exportParams = {};
 
     tableCols = [
@@ -73,7 +72,7 @@ export default class Index extends Vue {
         { key: "operate", label: "操作", isSlot: true }
     ];
     created() {
-        this.privilegesList();
+        this.getPrivileges();
         this["onSearch"]();
     }
 }
