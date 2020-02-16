@@ -1,55 +1,53 @@
 <template>
-  <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-    <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <header-search class="right-menu-item" />
-        <error-log class="errLog-container right-menu-item hover-effect" />
-        <screenfull class="right-menu-item hover-effect" />
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="right-menu-item hover-effect" />
-        </el-tooltip>
-        <lang-select class="right-menu-item hover-effect" />
-      </template>
-      <div class="right-menu-item">
-        <i class="el-icon-s-tools navbar-setting" @click="settingShow=true" />
-        <el-drawer :with-header="false" :visible.sync="settingShow" direction="rtl" size="260px">
-          <settings />
-        </el-drawer>
-      </div>
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="photoUrl" class="user-avatar">
-        </div>
-        <el-dropdown-menu slot="dropdown">
-            <router-link to="/">
-                <el-dropdown-item>
-                    {{ $t('navbar.dashboard') }}
-                </el-dropdown-item>
-            </router-link>
-            <a target="_blank" href="https://github.com/dotnetcore/WTM">
-                <el-dropdown-item>
-                    {{ $t('navbar.github') }}
-                </el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://wtmdoc.walkingtec.cn/">
-                <el-dropdown-item>{{$t('navbar.doc')}}</el-dropdown-item>
-            </a>
-            <a target="_blank" href="/_codegen?ui=vue">
-                <el-dropdown-item>{{$t('navbar.generation')}}</el-dropdown-item>
-            </a>
-            <a target="_blank" href="/swagger">
-                <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
-            </a>
+    <div class="navbar">
+        <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+        <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+        <div class="right-menu">
+            <template v-if="device!=='mobile'">
+                <header-search class="right-menu-item" />
+                <error-log class="errLog-container right-menu-item hover-effect" />
+                <screenfull class="right-menu-item hover-effect" />
+                <size-select class="right-menu-item hover-effect" />
+                <lang-select class="right-menu-item hover-effect" />
+            </template>
+            <div class="right-menu-item">
+                <i class="el-icon-setting" @click="settingShow=true" />
+                <el-drawer :with-header="false" :visible.sync="settingShow" direction="rtl" size="260px">
+                    <settings />
+                </el-drawer>
+            </div>
+            <el-dropdown class="avatar-container right-menu-item hover-effect">
+                <div class="avatar-wrapper">
+                    <img :src="photoUrl" class="user-avatar">
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                    <router-link to="/">
+                        <el-dropdown-item>
+                            {{ $t('navbar.dashboard') }}
+                        </el-dropdown-item>
+                    </router-link>
+                    <a target="_blank" href="https://github.com/dotnetcore/WTM">
+                        <el-dropdown-item>
+                            {{ $t('navbar.github') }}
+                        </el-dropdown-item>
+                    </a>
+                    <a target="_blank" href="https://wtmdoc.walkingtec.cn/">
+                        <el-dropdown-item>{{$t('navbar.doc')}}</el-dropdown-item>
+                    </a>
+                    <a target="_blank" href="/_codegen?ui=vue">
+                        <el-dropdown-item>{{$t('navbar.generation')}}</el-dropdown-item>
+                    </a>
+                    <a target="_blank" href="/swagger">
+                        <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
+                    </a>
 
-            <el-dropdown-item divided>
-                <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-            </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+                    <el-dropdown-item divided>
+                        <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -151,7 +149,6 @@ export default class extends Vue {
         &:focus {
             outline: none;
         }
-
         .right-menu-item {
             display: inline-block;
             padding: 0 8px;
@@ -191,11 +188,6 @@ export default class extends Vue {
                     font-size: 12px;
                 }
             }
-        }
-
-        .navbar-setting {
-            font-size: 18px;
-            color: #000;
         }
     }
 }

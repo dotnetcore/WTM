@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-wrap">
-    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" :title="titleValue" v-on="$listeners">
+    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" :title="titleValue" v-on="$listeners">
       <slot />
     </el-dialog>
     <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" v-on="$listeners">
@@ -39,7 +39,14 @@ export default class DialogBox extends Vue {
 }
 </script>
 <style lang="less">
-.dialog-wrap {
+.el-dialog-wrap {
+    .el-dialog {
+        max-height: 80%;
+        overflow: auto;
+        // .el-dialog__body {
+        //     max-height: calc(100% - 60px);
+        // }
+    }
 }
 .el-drawer-wrap {
     .el-drawer {

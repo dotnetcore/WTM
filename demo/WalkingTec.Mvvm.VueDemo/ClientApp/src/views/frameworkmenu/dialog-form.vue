@@ -45,7 +45,7 @@
         </wtm-form-item>
         <wtm-form-item ref="Entity.ParentId" label="父目录" :span="12">
           <el-select v-model="formData.Entity.ParentId" filterable placeholder="请选择">
-            <el-option v-for="item in getFoldersData" :key="item.id" :label="item.Text" :value="item.Value" />
+            <el-option v-for="item in getFoldersData" :key="item.Value" :label="item.Text" :value="item.Value" />
           </el-select>
           <template #editValue>
             {{ getFoldersData[formData.Entity.ParentId].Text }}
