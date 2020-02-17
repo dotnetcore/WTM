@@ -1,8 +1,10 @@
 <template>
   <w-filter :PageStore="PageStore" :Entities="Entities">
     <ITCode />
-    <Name />
-    <Entity-Sex />
+    <ActionUrl />
+    <ActionTime />
+    <IP />
+    <LogType />
   </w-filter>
 </template>
 <script lang="ts">

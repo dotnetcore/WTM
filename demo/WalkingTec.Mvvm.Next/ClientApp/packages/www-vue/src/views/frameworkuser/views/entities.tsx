@@ -176,6 +176,17 @@ export default {
                 label: { 'zh-CN': '姓名', 'en-US': "Name" },
                 children: `<a-input v-decorator />`
             },
+             /** 性别 */
+             "Entity.Sex": {
+                label: { 'zh-CN': '性别', 'en-US': "Sex" },
+                options: {
+                },
+                dataSource: [
+                    { label: "男", value: 0 },
+                    { label: "女", value: 1 }
+                ],
+                children: `<a-select v-decorator />`
+            },
         }
     },
 }

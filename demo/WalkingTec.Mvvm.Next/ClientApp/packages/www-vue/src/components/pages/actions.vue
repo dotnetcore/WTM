@@ -3,17 +3,18 @@
     <!-- Page Action-->
     <div v-if="isPageAction" class="page-action">
       <slot name="pageAction">
-        <a-button @click="onInsert">
+        <a-button v-if="CurrentPageActions.insert" @click="onInsert">
           <a-icon type="plus" />
           <span v-t="'action.insert'" />
         </a-button>
-        <a-divider type="vertical" />
-        <a-button @click="onUpdate" :disabled="disabledUpdate">
+        <a-divider v-if="CurrentPageActions.update" type="vertical" />
+        <a-button v-if="CurrentPageActions.update" @click="onUpdate" :disabled="disabledUpdate">
           <a-icon type="edit" />
           <span v-t="'action.update'" />
         </a-button>
-        <a-divider type="vertical" />
+        <a-divider v-if="CurrentPageActions.delete" type="vertical" />
         <a-popconfirm
+         v-if="CurrentPageActions.delete"
           title="Are you sure delete this task?"
           @confirm="onDelete(PageStoreContext.SelectedRows)"
           okText="Yes"
@@ -24,13 +25,13 @@
             <span v-t="'action.delete'" />
           </a-button>
         </a-popconfirm>
-        <a-divider type="vertical" />
-        <a-button @click="onImport">
+        <a-divider v-if="CurrentPageActions.import" type="vertical" />
+        <a-button v-if="CurrentPageActions.import" @click="onImport">
           <a-icon type="cloud-upload" />
           <span v-t="'action.import'" />
         </a-button>
-        <a-divider type="vertical" />
-        <a-dropdown>
+        <a-divider v-if="CurrentPageActions.export" type="vertical" />
+        <a-dropdown v-if="CurrentPageActions.export">
           <a-menu slot="overlay">
             <a-menu-item key="1" @click="onExport">导出全部</a-menu-item>
             <a-menu-item
@@ -49,13 +50,14 @@
     <!-- 行 数据  Action-->
     <div v-else-if="isRowAction" class="row-action">
       <slot name="rowAction">
-        <a-button type="link" size="small" @click="onDetails(RowData)">
+        <a-button v-if="CurrentPageActions.details" type="link" size="small" @click="onDetails(RowData)">
           <a-icon type="eye" />
         </a-button>
-        <a-button type="link" size="small" @click="onUpdate(RowData)">
+        <a-button v-if="CurrentPageActions.update"  type="link" size="small" @click="onUpdate(RowData)">
           <a-icon type="edit" />
         </a-button>
         <a-popconfirm
+          v-if="CurrentPageActions.delete" 
           title="Are you sure delete this task?"
           @confirm="onDelete([RowData])"
           okText="Yes"
@@ -105,6 +107,10 @@ export default class ViewAction extends Vue {
    */
   @Prop() private PageStore: EntitiesPageStore;
   /**
+   * 拥有哪些操作
+   */
+  @Prop() private PageActions: any;
+  /**
    * Field Change 变更 Subject
    */
   @Prop({
@@ -119,6 +125,7 @@ export default class ViewAction extends Vue {
    * ag grid 行 参数
    */
   @Prop() private params: ICellRendererParams;
+
   /**
    * 实体
    */
@@ -147,6 +154,20 @@ export default class ViewAction extends Vue {
    * slot key
    */
   slotName = "";
+  /**
+   * 是否 是 页面 操作
+   */
+  get CurrentPageActions() {
+    return lodash.merge({
+      insert:true,
+      update:true,
+      delete:true,
+      import:true,
+      export:true,
+      details:true,
+      // update:true,
+    }, this.PageActions);
+  }
   /**
    * 是否 是 页面 操作
    */
@@ -309,7 +330,7 @@ export default class ViewAction extends Vue {
   }
   onImport() {
     this.$confirm({
-      parentContext:null,
+      parentContext: null,
       class: "page-import",
       // destroyOnClose:true,
       // content: new Vue({ i18n, render: h => h(ImportUpload) })

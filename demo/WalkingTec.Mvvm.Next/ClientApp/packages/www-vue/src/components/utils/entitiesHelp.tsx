@@ -49,6 +49,10 @@ declare type CreateFormItem = {
      * col span
      */
     colProps?: SpanType
+    /**
+     * labelCol span
+     */
+    labelCol?: SpanType
 };
 /**
  * 模型转换为 驼峰 form-item  组件 
@@ -59,7 +63,8 @@ declare type CreateFormItem = {
 export function createFormItem({
     entities,
     async = true,
-    colProps = { xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6, span: undefined }
+    colProps = { xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6, span: undefined },
+    labelCol = {},
 }: CreateFormItem): FormItemComponents {
     // colProps = ;//{ xs: 24, sm: 24, md: 12, lg: 8 }
     // const FieldsChange = new Subject<{
@@ -85,13 +90,13 @@ export function createFormItem({
             const asyncComponent = new Observable(sub => {
                 // 设置 组件 的 onComplete 初始化 完成函数
                 lodash.set(item, 'onComplete', (params) => {
-                    sub.next(createFieldItem(lodash.merge({ item, span, label, key }, params)))
+                    sub.next(createFieldItem(lodash.merge({ item, span, label, labelCol, key }, params)))
                     sub.complete()
                 });
             }).toPromise();
             return () => asyncComponent
         }
-        return createFieldItem({ item, span, label, key })
+        return createFieldItem({ item, span, label, labelCol, key })
     })
     // 转换 Entity.ITCode ---->  Entity-ITCode //entityItCode
     return lodash.mapKeys(entities, (value, key) => {
@@ -103,7 +108,7 @@ export function createFormItem({
  *  创建 Field 组件
  * @param param0 
  */
-function createFieldItem({ item, label, span, key, FieldsChange }: any) {
+function createFieldItem({ item, label, labelCol, span, key, FieldsChange }: any) {
     @Component({
         components: lodash.merge({
             display: displayComponents
@@ -116,7 +121,7 @@ function createFieldItem({ item, label, span, key, FieldsChange }: any) {
            :md="${span.md}"
            :lg="${span.lg}"
         >
-            <a-form-item label="${label}">
+            <a-form-item label="${label}" :label-col="labelCol" >
                 <a-spin :spinning="spinning" >
                     <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
                     <template v-if="isDisplay" >
@@ -167,6 +172,9 @@ function createFieldItem({ item, label, span, key, FieldsChange }: any) {
         // 是否只显示状态
         get isDisplay() {
             return lodash.hasIn(this, 'display') ? this.display : false;
+        }
+        get labelCol() {
+            return lodash.merge({}, labelCol)
         }
         /**
          * 初始化 数据状态
