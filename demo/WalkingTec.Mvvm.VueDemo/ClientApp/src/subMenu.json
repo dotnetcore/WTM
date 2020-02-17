@@ -9,7 +9,7 @@
     "ParentId": null,
     "Id": "301f84d3-5a77-4b30-92c4-9c723ed2937",
     "Text": "动态页面",
-    "Url": "@StaticPage/_CodeGen/Index?ui=react"
+    "Url": "/external?url=123"
   },
   {
     "ParentId": null,

@@ -1,12 +1,20 @@
 <template>
-  <div class="app-login-form">
-    <h1>WalkingTec MVVM</h1>
-    <el-input v-model="formData.username" class="form-item" placeholder="请输入账号" prefix-icon="el-icon-user" size="mini" />
-    <el-input v-model="formData.password" class="form-item" placeholder="请输入密码" prefix-icon="el-icon-lock" size="mini" show-password />
-    <el-button class="form-item" size="mini" type="primary" :loading="isloading" @click="onSubmit">
-      Log in
-    </el-button>
-  </div>
+    <el-card class="app-login-form">
+        <el-form :model="formData" label-width="0">
+            <h1>WalkingTec MVVM</h1>
+            <el-form-item>
+                <el-input v-model="formData.userid" placeholder="请输入账号" prefix-icon="el-icon-user" />
+            </el-form-item>
+            <el-form-item>
+                <el-input v-model="formData.password" @keyup.enter.native="onSubmit" placeholder="请输入密码" prefix-icon="el-icon-lock" show-password />
+            </el-form-item>
+            <el-form-item>
+                <el-button class="submit-but" type="primary" :loading="isloading" :disabled="isDisabled" @click="onSubmit">
+                    Log in
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
@@ -19,21 +27,21 @@ import baseMixin from "@/vue-custom/mixin/base";
     mixins: [baseMixin]
 })
 export default class Login extends Vue {
+    @Action
+    login;
+
     formData = {
-        username: "admin",
-        password: "000000"
+        userid: config.development ? "admin" : "",
+        password: config.development ? "000000" : ""
     };
     isloading: boolean = false;
-    // 登陆
-    @Action login;
-    mounted() {}
+    get isDisabled() {
+        const { userid, password } = this.formData;
+        return !(!!userid && !!password);
+    }
     onSubmit() {
         this.isloading = true;
-        const params = {
-            userid: this.formData.username,
-            password: this.formData.password
-        };
-        this["login"](params)
+        this["login"](this.formData)
             .then(res => {
                 this.isloading = false;
                 setCookie(config.tokenKey, res.Id);
@@ -48,51 +56,19 @@ export default class Login extends Vue {
 <style lang="less">
 @import "~@/assets/css/variable.less";
 @import "~@/assets/css/mixin.less";
-// vwUnit
 .app-login-form {
-    color: #fff;
-    .center();
-    flex-direction: column;
-    .login-header-logo {
-        width: 179vw * @vwUnit;
-        height: 61vw * @vwUnit;
-    }
-    & > h1 {
-        font-size: 40px;
-        margin-top: 30vw * @vwUnit;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 1);
-        letter-spacing: 8vw * @vwUnit;
-        & > span {
-            font-weight: 600;
-        }
-    }
-    & > h4 {
-        font-size: 20px;
-        margin-top: 1vw * @vwUnit;
-        font-weight: 300;
-    }
-    .form-item {
-        width: 390vw * @vwUnit;
-        margin-top: 30vw * @vwUnit;
-        &.item-verificationCode {
-            margin-top: 40vw * @vwUnit;
-            display: flex;
-            .verific {
-                margin-left: 8vw * @vwUnit;
-                align-self: flex-end;
-            }
-        }
+    padding: 40px;
+    box-sizing: border-box;
+    min-width: 500px;
+    min-height: 400px;
+    margin-right: 144px;
+    & h1 {
+        font-size: 50px;
+        text-align: center;
+        margin-bottom: 20px;
     }
     .submit-but {
-        margin-top: 40vw * @vwUnit;
-        width: 210vw * @vwUnit;
-        height: 50vw * @vwUnit;
-        border-radius: 25vw * @vwUnit;
-        background: #fff;
-        color: #000000;
-        font-size: 16px;
-        font-weight: 400;
+        width: 100%;
     }
 }
 </style>

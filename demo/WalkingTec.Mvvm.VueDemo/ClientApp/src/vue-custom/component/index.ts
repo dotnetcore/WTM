@@ -1,5 +1,5 @@
 // 内容布局
-import Card from "@/components/layout/components/card.vue";
+import Card from "@/components/layout/components/Card/index.vue";
 // 弹出框
 import DialogBox from "@/components/page/dialog/dialog-box.vue";
 // 查询
