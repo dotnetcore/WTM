@@ -48,7 +48,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
-import cache from "@/util/cache";
 import { whether } from "@/config/entity";
 // 表单结构
 const defaultFormData = {
