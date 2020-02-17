@@ -8,25 +8,26 @@
           <a-col :span="12" class="app-layout-user">
             <a-dropdown>
               <a href="javascript:;" class="user-item">
-                <a-avatar :src="UserStore.Avatar" /> 
+                <a-avatar :src="UserStore.Avatar" />
+                <a-divider type="vertical" />
                 <span v-html="UserStore.Name"></span>
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
                   <a href="/_codegen?ui=react" target="_blank">
-                    <a-icon type="code" />
+                    <a-icon type="code" /><a-divider type="vertical" />
                     <span v-t="'action.user.codeGenerator'"></span>
                   </a>
                 </a-menu-item>
                 <a-menu-item>
                   <a href="/swagger" target="_blank">
-                    <a-icon type="bars" />
+                    <a-icon type="bars" /><a-divider type="vertical" />
                     <span v-t="'action.user.apiDocument'"></span>
                   </a>
                 </a-menu-item>
                 <a-menu-item @click="UserStore.onOutLogin">
                   <a href="javascript:;">
-                    <a-icon type="logout" />
+                    <a-icon type="logout" /><a-divider type="vertical" />
                     <span v-t="'action.user.logout'"></span>
                   </a>
                 </a-menu-item>
@@ -44,12 +45,12 @@
               <a-menu @click="onLanguage" :selectedKeys="[$i18n.locale]" slot="overlay">
                 <a-menu-item key="zh-CN">
                   <a href="javascript:;">
-                    <span v-html="languageIcons['zh-CN']"></span> 简体中文
+                    <span v-html="languageIcons['zh-CN']"></span><a-divider type="vertical" />简体中文
                   </a>
                 </a-menu-item>
                 <a-menu-item key="en-US">
                   <a href="javascript:;">
-                    <span v-html="languageIcons['en-US']"></span> English
+                    <span v-html="languageIcons['en-US']"></span><a-divider type="vertical" />English
                   </a>
                 </a-menu-item>
               </a-menu>

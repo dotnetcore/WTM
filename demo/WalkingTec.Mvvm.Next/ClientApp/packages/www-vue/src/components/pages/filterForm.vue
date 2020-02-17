@@ -3,9 +3,9 @@
     <a-row :gutter="24" type="flex">
       <slot></slot>
       <a-col class="page-filter-btns">
-        <a-button type="primary" htmlType="submit">提交</a-button>
+        <a-button type="primary" htmlType="submit"><span v-t="'action.search'"></span></a-button>
         <a-divider type="vertical" />
-        <a-button @click="onReset">Clear</a-button>
+        <a-button @click="onReset"><span v-t="'action.reset'"></span></a-button>
       </a-col>
     </a-row>
   </a-form>

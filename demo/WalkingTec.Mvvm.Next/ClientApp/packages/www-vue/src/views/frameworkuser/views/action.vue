@@ -20,7 +20,7 @@
     <template #Update>
       <Entity-ID v-show="false" />
       <Entity-ITCode :disabled="true" />
-      <Entity-Password />
+      <!-- <Entity-Password v-show="false" /> -->
       <Entity-Email />
       <Entity-Name />
       <Entity-Sex />

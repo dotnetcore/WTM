@@ -10,11 +10,11 @@ const routes: RouteConfig[] = [
   //   name: 'login',
   //   component: Basics.login
   // },
-  {
-    path: '/',
-    name: 'home',
-    component: views.user.component,
-  },
+  // {
+  //   path: '/',
+  //   name: 'home',
+  //   component: views.user.component,
+  // },
   ...lodash.map(views, (value) => {
     return {
       path: value.path,
@@ -22,11 +22,11 @@ const routes: RouteConfig[] = [
       component: value.component
     }
   }),
-  {
-    path: '*',
-    // redirect: "/"
-    component: views.user.component
-  },
+  // {
+  //   path: '*',
+  //   // redirect: "/"
+  //   component: views.user.component
+  // },
 ]
 console.table(routes, ['path', 'name'])
 const router = new VueRouter({

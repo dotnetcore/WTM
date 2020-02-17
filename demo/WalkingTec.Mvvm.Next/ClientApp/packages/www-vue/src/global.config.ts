@@ -10,13 +10,16 @@ const development = process.env.NODE_ENV === "development"
 moment.locale('zh-cn');
 // 设置 请求出错 通知
 Request.Error = (error) => {
+    if (error.status === 400) {
+        return
+    }
     notification.error({
         key: 'RequestError' + error.status,
         description: error.name,
         message: error.message
     })
 }
-EntitiesPageStore.onError = (error) => {
+EntitiesPageStore.onError = (error, type) => {
     notification.error({
         key: 'PageStoreError',
         description: '',

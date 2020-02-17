@@ -95,7 +95,7 @@ import { Modal } from "ant-design-vue";
 import lodash from "lodash";
 import { Subscriber, Subject } from "rxjs";
 import { toJS } from "mobx";
-import ImportUpload from "./importUpload.vue";
+import ImportUpload from "../upload/import.vue";
 import { messages } from "./messages";
 // import { i18n } from "../../locale";
 @Component({ components: {} })
