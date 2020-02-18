@@ -97,7 +97,9 @@ export default {
                 label: { 'zh-CN': '照片', 'en-US': "Photo" },
                 options: {
                 },
-                children: `<w-avatar v-decorator />`
+                children: `<w-avatar v-decorator />`,
+                // children: `<a-upload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" v-decorator v-display> <a-button> <a-icon type="upload" /> Click to Upload </a-button>
+                // </a-upload>`
             },
             /** 是否有效 */
             "Entity.IsValid": {
