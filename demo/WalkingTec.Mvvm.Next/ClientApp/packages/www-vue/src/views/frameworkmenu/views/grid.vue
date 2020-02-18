@@ -8,6 +8,7 @@
   />-->
 </template>
 <script lang="ts">
+import lodash from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PageStore from "../store";
 import { GridOptions } from "ag-grid-community";
@@ -30,7 +31,8 @@ export default class ViewGrid extends Vue {
     groupDefaultExpanded: -1,
     getDataPath: data => data.treePath,
     autoGroupColumnDef: {
-      headerName: "页面名称",
+      // headerName: "页面名称",
+      headerValueGetter: (params) => ({ 'zh-CN': '页面名称', 'en-US': "PageName" }[lodash.get(params, 'context.locale')]),
       cellRendererParams: { suppressCount: true }
     }
   };
