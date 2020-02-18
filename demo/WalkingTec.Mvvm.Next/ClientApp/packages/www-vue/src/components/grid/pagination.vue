@@ -6,6 +6,7 @@
     :showSizeChanger="Props.showSizeChanger"
     :hideOnSinglePage="Props.hideOnSinglePage"
     :size="Props.size"
+    :pageSizeOptions="pageSizeOptions"
     @change="onChange"
     @showSizeChange="onChange"
   />
@@ -20,6 +21,7 @@ import { toJS } from "mobx";
 export default class Pagination extends Vue {
   @Prop() PageStore: EntitiesPageStore;
   @Prop() Pagination: any;
+  pageSizeOptions = ["10", "20", "50", "100", "200"];
   Props = lodash.merge(
     {
       // hideOnSinglePage: true,

@@ -14,8 +14,8 @@
         </a-button>
         <a-divider v-if="CurrentPageActions.delete" type="vertical" />
         <a-popconfirm
-         v-if="CurrentPageActions.delete"
-          title="Are you sure delete this task?"
+          v-if="CurrentPageActions.delete"
+          :title="$t('action.deleteConfirmMultiple', { text:SelectedRowsLength  })"
           @confirm="onDelete(PageStoreContext.SelectedRows)"
           okText="Yes"
           cancelText="No"
@@ -50,15 +50,25 @@
     <!-- 行 数据  Action-->
     <div v-else-if="isRowAction" class="row-action">
       <slot name="rowAction">
-        <a-button v-if="CurrentPageActions.details" type="link" size="small" @click="onDetails(RowData)">
+        <a-button
+          v-if="CurrentPageActions.details"
+          type="link"
+          size="small"
+          @click="onDetails(RowData)"
+        >
           <a-icon type="eye" />
         </a-button>
-        <a-button v-if="CurrentPageActions.update"  type="link" size="small" @click="onUpdate(RowData)">
+        <a-button
+          v-if="CurrentPageActions.update"
+          type="link"
+          size="small"
+          @click="onUpdate(RowData)"
+        >
           <a-icon type="edit" />
         </a-button>
         <a-popconfirm
-          v-if="CurrentPageActions.delete" 
-          title="Are you sure delete this task?"
+          v-if="CurrentPageActions.delete"
+          :title="$t('action.deleteConfirm')"
           @confirm="onDelete([RowData])"
           okText="Yes"
           cancelText="No"
@@ -158,15 +168,18 @@ export default class ViewAction extends Vue {
    * 是否 是 页面 操作
    */
   get CurrentPageActions() {
-    return lodash.merge({
-      insert:true,
-      update:true,
-      delete:true,
-      import:true,
-      export:true,
-      details:true,
-      // update:true,
-    }, this.PageActions);
+    return lodash.merge(
+      {
+        insert: true,
+        update: true,
+        delete: true,
+        import: true,
+        export: true,
+        details: true
+        // update:true,
+      },
+      this.PageActions
+    );
   }
   /**
    * 是否 是 页面 操作
@@ -196,13 +209,19 @@ export default class ViewAction extends Vue {
    * 禁用 修改按钮
    */
   get disabledUpdate() {
-    return this.PageStoreContext.SelectedRows.length !== 1;
+    return this.SelectedRowsLength !== 1;
   }
   /**
    * 禁用 删除按钮
    */
   get disabledDelete() {
     return !this.PageStoreContext.IsSelectedRows;
+  }
+  /**
+   * 选择的行 数据 长度
+   */
+  get SelectedRowsLength() {
+    return this.PageStoreContext.SelectedRows.length;
   }
   /**
    * 组件 创建 初始化 表单域

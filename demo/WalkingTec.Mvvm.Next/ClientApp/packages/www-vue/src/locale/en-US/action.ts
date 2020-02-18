@@ -9,7 +9,8 @@ export default {
     'action.export': ' Export',
     'action.exportAll': ' Export All',
     'action.exportSelect': ' Export Select',
-    'action.deleteConfirm': ' Are you sure to delete {text} ?',
+    'action.deleteConfirm': ' Are you sure to delete ?',
+    'action.deleteConfirmMultiple': ' Are you sure to delete {text} Bar data?',
     'action.open': ' Open',
     'action.retract': ' Retract',
     'action.close': ' Close',
@@ -24,4 +25,6 @@ export default {
     'action.user.logout':'Logout',
     'action.sys.refreshMenu': 'Refresh Menu',
     'action.privilege':'Privilege',
+    'placeholder.input': 'Please input {label}',
+    'placeholder.choice': 'Please choose {label}',
 };

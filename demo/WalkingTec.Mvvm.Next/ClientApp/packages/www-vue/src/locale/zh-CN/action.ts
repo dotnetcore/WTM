@@ -9,7 +9,8 @@ export default {
     'action.export': ' 导出',
     'action.exportAll': ' 导出全部',
     'action.exportSelect': ' 导出选择',
-    'action.deleteConfirm': ' 确定删除 {text} ?',
+    'action.deleteConfirm': ' 确定删除 ?',
+    'action.deleteConfirmMultiple': ' 确定删除 {text} 条数据?',
     'action.open': ' 展开',
     'action.retract': ' 收起',
     'action.close': ' 关闭',
@@ -24,4 +25,6 @@ export default {
     'action.user.logout':'注销',
     'action.sys.refreshMenu':'刷新菜单',
     'action.privilege': '分配权限',
+    'placeholder.input': '请输入 {label}',
+    'placeholder.choice': '请选择 {label}',
 };

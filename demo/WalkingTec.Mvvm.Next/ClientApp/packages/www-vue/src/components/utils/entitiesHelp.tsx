@@ -303,7 +303,7 @@ function createChildrenTemplate(item) {
             :disabled="isDisabled" 
             WTM
         `);
-    // placeholder='请输入 ${item.label}'
+    let placeholder = `$t('placeholder.input', { label:'${label}'  })`
     switch (true) {
         /**
          *  a-select 
@@ -313,17 +313,19 @@ function createChildrenTemplate(item) {
         case lodash.startsWith(item.children, '<a-select'):
         case lodash.startsWith(item.children, '<a-checkbox-group'):
         case lodash.startsWith(item.children, '<a-radio-group'):
+            placeholder = lodash.replace(placeholder, 'placeholder.input', 'placeholder.choice')
             children = lodash.replace(children, 'WTM', ` 
                 :options="dataSource"
-                placeholder='请选择 ${label}'
+                :placeholder="${placeholder}"
             `);
             break;
         // transfer 穿梭框
         case lodash.startsWith(item.children, '<a-transfer'):
+            placeholder = lodash.replace(placeholder, 'placeholder.input', 'placeholder.choice')
             children = lodash.replace(children, 'WTM', ` 
                 :dataSource="dataSource"
                 :render="item=>item.title"
-                placeholder='请选择 ${label}'
+                :placeholder="${placeholder}"
             `);
             // 设置 vaule 绑定 属性
             item.options = lodash.merge({ valuePropName: 'targetKeys' }, item.options);
@@ -337,6 +339,6 @@ function createChildrenTemplate(item) {
         default:
             break;
     }
-    lodash.set(item, 'children', lodash.replace(children, 'WTM', `placeholder='请输入 ${label}'`));
+    lodash.set(item, 'children', lodash.replace(children, 'WTM', `:placeholder="${placeholder}"`));
     return item;
 }

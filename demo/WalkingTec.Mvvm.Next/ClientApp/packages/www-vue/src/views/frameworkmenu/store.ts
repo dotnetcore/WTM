@@ -63,7 +63,7 @@ export class PageStore extends EntitiesPageStore {
         response.RowData = response.RowData.map(value => {
             value.treePath = [value.PageName];
             if (value.ParentID) {
-                value.treePath = this.recursionTree(response.RowData.Data, value.ParentID, value.treePath);
+                value.treePath = this.recursionTree(response.RowData, value.ParentID, value.treePath);
             }
             return value;
         });

@@ -16,31 +16,6 @@ export default {
      */
     editEntities(props?): EntitiesItems {
         return {
-            /** 模块 */
-            "Entity.ModuleName": {
-                label: "模块",
-                options: {},
-                children: `<a-input v-decorator />`
-            },
-            /** 动作 */
-            "Entity.ActionName": {
-                label: "动作",
-                options: {
-                },
-                children: `<a-input v-decorator />`
-            },
-            /** 性别 */
-            "Entity.Sex": {
-                label: { 'zh-CN': '性别', 'en-US': "Sex" },
-                options: {
-                },
-                dataSource: [
-                    { label: "男", value: 0 },
-                    { label: "女", value: 1 }
-                ],
-                children: `<a-select v-decorator />`
-            },
-
         }
     },
     /**
@@ -73,7 +48,7 @@ export default {
             },
             /** LogType */
             "LogType": {
-                label: { 'zh-CN': '性别', 'en-US': "Sex" },
+                label: "类型",
                 dataSource: [
                     { label: "普通", value: 0 },
                     { label: "异常", value: 1 },
