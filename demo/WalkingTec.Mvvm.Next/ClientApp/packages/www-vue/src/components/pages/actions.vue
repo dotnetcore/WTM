@@ -2,6 +2,7 @@
   <div>
     <!-- Page Action-->
     <div v-if="isPageAction" class="page-action">
+      <slot name="pageActionLeft"></slot>
       <slot name="pageAction">
         <a-button v-if="CurrentPageActions.insert" @click="onInsert">
           <a-icon type="plus" />
@@ -46,9 +47,11 @@
           </a-button>
         </a-dropdown>
       </slot>
+      <slot name="pageActionRight"></slot>
     </div>
     <!-- 行 数据  Action-->
     <div v-else-if="isRowAction" class="row-action">
+      <slot name="rowActionLeft"></slot>
       <slot name="rowAction">
         <a-button
           v-if="CurrentPageActions.details"
@@ -78,6 +81,7 @@
           </a-button>
         </a-popconfirm>
       </slot>
+      <slot name="rowActionRight"></slot>
     </div>
     <a-modal
       class="page-action-modal"

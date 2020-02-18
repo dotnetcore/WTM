@@ -48,7 +48,8 @@ export class Request {
         if (ajax instanceof AjaxResponse) {
             // 无 响应 数据
             if (lodash.isNil(ajax.response)) {
-                throw lodash.merge(ajax, { message: 'ajax response undefined' })
+                console.error('ajax response undefined', lodash.merge(ajax, { message: 'ajax response undefined' }))
+                // throw lodash.merge(ajax, { message: 'ajax response undefined' })
             } else if (!lodash.eq(lodash.get(ajax.response, 'Code', 200), 200)) {
                 throw lodash.merge(ajax, { message: lodash.get(ajax.response, 'Msg') })
             }

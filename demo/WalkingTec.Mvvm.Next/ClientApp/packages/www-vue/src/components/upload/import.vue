@@ -25,7 +25,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { EntitiesPageStore } from "@leng/public/src";
 import { ICellRendererParams } from "ag-grid-community";
-import globalConfig from "../../global.config";
 import lodash from "lodash";
 import { toJS } from "mobx";
 // import { i18n } from "../../locale";
@@ -39,7 +38,7 @@ export default class ImportContent extends Vue {
   get _i18n() {
     return this.i18n;
   }
-  fileService = globalConfig.onCreateFileService();
+  fileService = this.$GlobalConfig.onCreateFileService();
   success = false;
   created() {}
   mounted() {}

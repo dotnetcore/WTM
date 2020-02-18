@@ -66,8 +66,6 @@ import LayoutMenu from "./menu.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
 import lodash from "lodash";
-import Globalconfig from "../../global.config";
-const fileService = Globalconfig.onCreateFileService();
 @Component({
   components: {
     LayoutMenu
@@ -93,7 +91,7 @@ export default class extends Vue {
   }
   onLanguage({ item, key, keyPath }) {
     this.$i18n.locale = key;
-    Globalconfig.onSetLanguage(key);
+    this.$GlobalConfig.onSetLanguage(key);
   }
 }
 </script>

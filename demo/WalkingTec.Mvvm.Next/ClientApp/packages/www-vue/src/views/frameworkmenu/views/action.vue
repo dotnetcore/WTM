@@ -1,14 +1,15 @@
 <template>
   <w-actions :PageStore="PageStore" :Entities="Entities" :params="params">
-    <template #Insert>
-     
+    <template #pageActionLeft>
+      <a-button @click="onRefreshMenu">
+        <a-icon type="reload" />
+        <span v-text="RefreshMenuText" />
+      </a-button>
+      <a-divider type="vertical" />
     </template>
-    <template #Update>
-     
-    </template>
-    <template #Details>
-     
-    </template>
+    <template #Insert></template>
+    <template #Update></template>
+    <template #Details></template>
   </w-actions>
 </template> 
 <script lang="ts">
@@ -36,6 +37,28 @@ export default class ViewAction extends Vue {
   // aggird 组件 自带属性 不可删除
   params = {};
   mounted() {}
+  async onRefreshMenu() {
+    try {
+      await this.PageStore.onRefreshMenu();
+      this.$message.success(`Success`);
+      this.PageStore.EventSubject.next({
+        EventType: "onSearch",
+        AjaxRequest: {
+          body: {
+            Page: 1
+          }
+        }
+      });
+    } catch (error) {
+      this.$message.error(`Error`);
+    }
+  }
+  get RefreshMenuText() {
+    return lodash.get(
+      { "zh-CN": "刷新菜单", "en-US": "RefreshMenu" },
+      this.$i18n.locale
+    );
+  }
 }
 </script>
 <style scoped lang="less">

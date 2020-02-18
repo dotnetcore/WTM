@@ -18,8 +18,6 @@ import LayoutHeader from "./header.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
 import lodash from "lodash";
-import Globalconfig from "../../global.config";
-const fileService = Globalconfig.onCreateFileService();
 @Component({
   components: {
     LayoutMenu,

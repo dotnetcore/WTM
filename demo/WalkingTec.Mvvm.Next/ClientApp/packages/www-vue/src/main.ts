@@ -13,7 +13,8 @@ import wtm from './components';
 wtm.install(Vue);
 Vue.use(VueI18n)
 Antd.install(Vue);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.prototype.$GlobalConfig = Globalconfig;
 Globalconfig.hydrate(Globalconfig.settings.title, Globalconfig)
   // post hydration
   .then(() => {

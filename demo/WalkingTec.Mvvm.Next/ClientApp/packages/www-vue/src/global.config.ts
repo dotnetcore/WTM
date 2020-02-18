@@ -106,5 +106,9 @@ class ConfigStore {
     }
 }
 const GlobalConfig = new ConfigStore();
-
+declare module 'vue/types/vue' {
+    interface Vue {
+      $GlobalConfig: ConfigStore;
+    }
+  }
 export default GlobalConfig

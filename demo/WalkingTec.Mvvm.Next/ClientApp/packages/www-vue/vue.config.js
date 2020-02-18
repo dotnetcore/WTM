@@ -22,6 +22,11 @@ module.exports = {
                 changeOrigin: true,
                 logLevel: "debug",
             },
+            '/swagger': {
+                target: 'http://localhost:5555/',
+                changeOrigin: true,
+                logLevel: "debug",
+            },
         }
     }
 }

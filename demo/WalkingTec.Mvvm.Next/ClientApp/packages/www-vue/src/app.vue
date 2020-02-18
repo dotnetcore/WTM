@@ -15,7 +15,6 @@ import { message } from "ant-design-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Basics } from "./views";
 import RootStore from "./rootStore";
-import Globalconfig from "./global.config";
 import locale from "./locale";
 import lodash from "lodash";
 @Component({
@@ -26,7 +25,7 @@ import lodash from "lodash";
 export default class App extends Vue {
   UserStore = RootStore.UserStore;
   get locale() {
-    return lodash.get(locale, Globalconfig.settings.language, locale["zh-CN"]);
+    return lodash.get(locale, this.$GlobalConfig.settings.language, locale["zh-CN"]);
   }
   mounted() {}
   destroyed() {}

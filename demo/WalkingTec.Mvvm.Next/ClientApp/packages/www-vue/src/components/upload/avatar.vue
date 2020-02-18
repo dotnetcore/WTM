@@ -17,7 +17,6 @@
   </a-upload>
 </template>
 <script lang="ts">
-import globalConfig from "../../global.config";
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -38,7 +37,7 @@ export default class avatar extends Vue {
     }
     return this.base64Str;
   }
-  fileService = globalConfig.onCreateFileService();
+  fileService = this.$GlobalConfig.onCreateFileService();
 
   handleChange(info) {
     if (info.file.status === "uploading") {
