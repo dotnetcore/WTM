@@ -60,6 +60,20 @@ declare type CreateFormItem = {
  * 默认 返回 异步组件
  * @param param0 
  */
+export function createFilterFormItem({
+    entities,
+    ...props
+}: CreateFormItem): FormItemComponents {
+    return createFormItem({
+        entities, colProps: { xs: 24, sm: 24, md: 12, lg: 8 }, labelCol: { span: 6 }, ...props
+    })
+}
+/**
+ * 模型转换为 驼峰 form-item  组件 
+ * Entity.ITCode ---->  Entity-ITCode //entityItCode
+ * 默认 返回 异步组件
+ * @param param0 
+ */
 export function createFormItem({
     entities,
     async = true,

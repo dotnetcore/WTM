@@ -17,10 +17,8 @@ import PageStore from "../store";
 import Entities from "./entities";
 const entities = Entities.filterEntities();
 @Component({
-  components: wtm.createFormItem({
-    entities,
-    colProps: { xs: 24, sm: 24, md: 12, lg: 8 },
-    labelCol: { span: 6 }
+  components: wtm.createFilterFormItem({
+    entities
   })
 })
 export default class ViewGrid extends Vue {

@@ -6,7 +6,7 @@ import layout from './layout/index.vue';
 import filterForm from './pages/filterForm.vue';
 import actions from './pages/actions.vue';
 import avatar from './upload/avatar.vue';
-import { createFormItem, renderFormItem } from './utils/entitiesHelp';
+import { createFormItem, renderFormItem, createFilterFormItem } from './utils/entitiesHelp';
 function install(vue: typeof Vue) {
     directive.install(vue);
     vue.component('w-grid', grid);
@@ -17,6 +17,7 @@ function install(vue: typeof Vue) {
 }
 export default {
     install,
+    createFilterFormItem,
     createFormItem,
     renderFormItem
 }
