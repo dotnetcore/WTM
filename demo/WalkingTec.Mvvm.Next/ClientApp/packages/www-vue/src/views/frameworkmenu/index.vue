@@ -1,9 +1,8 @@
 <template>
   <div class="app-page">
-    <!-- <a-card class="page-card">
+    <a-card class="page-card" v-show="false">
       <ViewFilter :PageStore="PageStore" />
-    </a-card> 
-    <a-divider class="page-divider" />-->
+    </a-card>
     <a-card class="page-card">
       <ViewAction :PageStore="PageStore" />
       <a-divider class="page-divider" />
