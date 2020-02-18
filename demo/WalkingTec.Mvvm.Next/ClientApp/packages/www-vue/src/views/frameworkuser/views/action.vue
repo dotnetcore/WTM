@@ -16,6 +16,11 @@
       <Entity-UserRoles2 />
       <Entity-UserRoles3 />
       <Entity-UserGroups />
+      <!-- <a-form-item label="Note" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        <a-input
+          v-decorator="['note', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+        />
+    </a-form-item> -->
     </template>
     <template #Update>
       <Entity-ID v-show="false" />

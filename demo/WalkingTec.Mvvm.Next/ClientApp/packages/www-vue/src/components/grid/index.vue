@@ -16,7 +16,7 @@ import pagination from "./pagination.vue";
 import { Pagination } from "ant-design-vue";
 import { toJS } from "mobx";
 import lodash from "lodash";
-import { GridOptions, SelectionChangedEvent } from "ag-grid-community";
+import { GridOptions, SelectionChangedEvent, ColDef } from "ag-grid-community";
 // const grid = () =>
 //   ({
 //     // 需要加载的组件 (应该是一个 `Promise` 对象)
@@ -48,12 +48,29 @@ export default class Grid extends Vue {
   }
   get columnDefsProps() {
     let ColumnDefs = toJS(this.PageStore.ColumnDefs);
-    if (this.$root.$i18n.locale === "en-US") {
-      ColumnDefs = lodash.map(ColumnDefs, col => {
+    ColumnDefs = lodash.map(ColumnDefs, (col: ColDef) => {
+      // 默认情况下 使用 field 当英文
+      if (this.$root.$i18n.locale === "en-US") {
         col.headerName = col["field"];
-        return col;
+      }
+      // 根据 数据 定制 样式
+      col.cellStyle = lodash.get(col, "cellStyle", props => {
+        if (props.data) {
+          // 前景色
+          const forecolor = lodash.get(
+            props.data,
+            props.colDef.field + "__forecolor"
+          );
+          // 背景色
+          const backcolor = lodash.get(
+            props.data,
+            props.colDef.field + "__bgcolor"
+          );
+          return { color: forecolor, backgroundColor: backcolor };
+        }
       });
-    }
+      return col;
+    });
     return ColumnDefs;
   }
   get GridOptionsProps(): GridOptions {
