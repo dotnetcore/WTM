@@ -65,7 +65,7 @@ export function createFilterFormItem({
     ...props
 }: CreateFormItem): FormItemComponents {
     return createFormItem({
-        entities, colProps: { xs: 24, sm: 24, md: 12, lg: 8 }, labelCol: { span: 6 }, ...props
+        entities, colProps: { xs: 24, sm: 24, md: 12, lg: 8, xl: 6, xxl: 6 }, labelCol: { span: 6 }, ...props
     })
 }
 /**

@@ -3,9 +3,13 @@
     <a-row :gutter="24" type="flex">
       <slot></slot>
       <a-col class="page-filter-btns">
-        <a-button type="primary" htmlType="submit"><span v-t="'action.search'"></span></a-button>
+        <a-button type="primary" htmlType="submit">
+          <span v-t="'action.search'"></span>
+        </a-button>
         <a-divider type="vertical" />
-        <a-button @click="onReset"><span v-t="'action.reset'"></span></a-button>
+        <a-button @click="onReset">
+          <span v-t="'action.reset'"></span>
+        </a-button>
       </a-col>
     </a-row>
   </a-form>
@@ -90,7 +94,9 @@ export default class ViewAction extends Vue {
     display: flex;
     margin-bottom: 5px;
   }
-
+  .ant-calendar-picker {
+    width: 100%;
+  }
   .ant-form-item-control-wrapper {
     flex: 1;
   }
