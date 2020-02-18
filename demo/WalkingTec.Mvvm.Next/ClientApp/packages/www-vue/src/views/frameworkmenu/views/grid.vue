@@ -27,6 +27,7 @@ export default class ViewGrid extends Vue {
     context: {
       PageStore: this.PageStore
     },
+    rowGroupPanelShow:null,
     treeData: true,
     groupDefaultExpanded: -1,
     getDataPath: data => data.treePath,
