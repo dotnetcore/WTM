@@ -35,7 +35,7 @@ export class PageStore extends EntitiesPageStore {
      * 刷新菜单
      */
     async onRefreshMenu() {
-        const res = await this.Request.ajax('/api_FrameworkMenu/RefreshMenu').toPromise();
+        const res = await this.Request.ajax('/api/_FrameworkMenu/RefreshMenu').toPromise();
         // console.log("TCL: Store -> onRefreshMenu -> res", res)
         // message.info(res.Value)
     }
