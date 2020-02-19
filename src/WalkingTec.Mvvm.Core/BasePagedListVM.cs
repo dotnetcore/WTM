@@ -46,6 +46,7 @@ namespace WalkingTec.Mvvm.Core
         where TSearcher : BaseSearcher
     {
 
+        [JsonIgnore]
         public string TotalText { get; set; } = Program._localizer?["Total"];
 
         public virtual DbCommand GetSearchCommand()
@@ -384,33 +385,40 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 是否已经搜索过
         /// </summary>
+        [JsonIgnore]
         public bool IsSearched { get; set; }
 
+        [JsonIgnore]
         public bool PassSearch { get; set; }
         /// <summary>
         /// 查询模式
         /// </summary>
+        [JsonIgnore]
         public ListVMSearchModeEnum SearcherMode { get; set; }
 
         /// <summary>
         /// 是否需要分页
         /// </summary>
+        [JsonIgnore]
         public bool NeedPage { get; set; }
 
         /// <summary>
         /// 数据列表
         /// </summary>
+        [JsonIgnore]
         public List<TModel> EntityList { get; set; }
 
 
         /// <summary>
         /// 搜索条件
         /// </summary>
+        [JsonIgnore]
         public TSearcher Searcher { get; set; }
 
         /// <summary>
         /// 使用 VM 的 Id 来生成 SearcherDiv 的 Id
         /// </summary>
+        [JsonIgnore]
         public string SearcherDivId
         {
             get { return this.UniqueId + "Searcher"; }

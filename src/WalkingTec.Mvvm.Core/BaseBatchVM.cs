@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     /// <typeparam name="TModel">批量修改的VM</typeparam>
     /// <typeparam name="TLinkModel">批量列表VM</typeparam>
-    public class BaseBatchVM<TModel, TLinkModel> : BaseVM, IBaseBatchVM<TLinkModel> where TModel : TopBasePoco where TLinkModel : BaseVM
+    public class BaseBatchVM<TModel, TLinkModel> : BaseVM, IBaseBatchVM<TLinkModel> where TModel : TopBasePoco,new() where TLinkModel : BaseVM
     {
         /// <summary>
         /// 批量修改的VM
