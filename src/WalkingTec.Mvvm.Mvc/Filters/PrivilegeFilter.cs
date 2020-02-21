@@ -28,12 +28,17 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
             var lg = GlobalServices.GetRequiredService<LinkGenerator>();
-            var u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
-            if (u == null)
+
+            string u = null;
+            if (ad.Parameters.Any(x=>x.Name.ToLower() == "id"))
             {
                 u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"], id = 0 });
             }
-            if (u.EndsWith("/0"))
+            else
+            {
+                u = lg.GetPathByAction(ad.ActionName, ad.ControllerName, new { area = context.RouteData.Values["area"] });
+            }
+            if (u != null && u.EndsWith("/0"))
             {
                 u = u.Substring(0, u.Length - 2);
                 if (controller is BaseApiController)
@@ -41,6 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     u = u + "/{id}";
                 }
             }
+
             controller.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent(); ;
 
 
