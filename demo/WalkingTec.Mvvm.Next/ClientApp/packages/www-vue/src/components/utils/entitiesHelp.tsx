@@ -122,7 +122,7 @@ export function createFormItem({
  *  创建 Field 组件
  * @param param0 
  */
-function createFieldItem({ item, label, labelCol, span, key, FieldsChange }: any) {
+function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form }: any) {
     @Component({
         components: lodash.merge({
             display: displayComponents
@@ -181,11 +181,23 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange }: any
         }
         // 是否禁用
         get isDisabled() {
-            return lodash.hasIn(this, 'disabled') ? this.disabled : false;
+            if (lodash.isNil(this.disabled)) {
+                return false
+            }
+            if (lodash.isBoolean(this.disabled)) {
+                return this.disabled
+            }
+            return true
         }
         // 是否只显示状态
         get isDisplay() {
-            return lodash.hasIn(this, 'display') ? this.display : false;
+            if (lodash.isNil(this.display)) {
+                return false
+            }
+            if (lodash.isBoolean(this.display)) {
+                return this.display
+            }
+            return true
         }
         get labelCol() {
             return lodash.merge({}, labelCol)
@@ -301,6 +313,7 @@ function createChildrenTemplate(item) {
     let children = lodash.replace(item.children, 'v-decorator', ` 
             v-decorator="decorator" 
             :disabled="isDisabled" 
+            allowClear
             WTM
         `);
     let placeholder = `$t('placeholder.input', { label:'${label}'  })`

@@ -24,7 +24,7 @@
     </template>
     <template #Update>
       <Entity-ID v-show="false" />
-      <Entity-ITCode :disabled="true" />
+      <Entity-ITCode disabled />
       <!-- <Entity-Password v-show="false" /> -->
       <Entity-Email />
       <Entity-Name />
@@ -39,19 +39,19 @@
       <Entity-UserGroups />
     </template>
     <template #Details>
-      <Entity-ITCode :display="true" />
-      <Entity-Password :display="true" />
-      <Entity-Email :display="true" />
-      <Entity-Name :display="true" />
-      <Entity-Sex :display="true" />
-      <Entity-CellPhone :display="true" />
-      <Entity-HomePhone :display="true" />
-      <Entity-Address :display="true" />
-      <Entity-ZipCode :display="true" />
-      <Entity-PhotoId :display="true" />
-      <Entity-IsValid :display="true" />
-      <Entity-UserRoles :display="true" />
-      <Entity-UserGroups :display="true" />
+      <Entity-ITCode display />
+      <Entity-Password display />
+      <Entity-Email display />
+      <Entity-Name display />
+      <Entity-Sex display />
+      <Entity-CellPhone display />
+      <Entity-HomePhone display />
+      <Entity-Address display />
+      <Entity-ZipCode display />
+      <Entity-PhotoId display />
+      <Entity-IsValid display />
+      <Entity-UserRoles display />
+      <Entity-UserGroups display />
     </template>
   </w-actions>
 </template> 

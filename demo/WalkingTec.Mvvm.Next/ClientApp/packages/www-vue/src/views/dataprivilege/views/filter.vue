@@ -1,6 +1,7 @@
 <template>
   <w-filter :PageStore="PageStore" :Entities="Entities">
-  
+    <TableName />
+    <DpType />
   </w-filter>
 </template>
 <script lang="ts">

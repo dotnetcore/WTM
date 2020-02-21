@@ -1,13 +1,20 @@
 <template>
   <w-actions :PageStore="PageStore" :Entities="Entities" :params="params">
     <template #Insert>
-     
+     <Entity-GroupCode/>
+     <Entity-GroupName/>
+     <Entity-GroupRemark/>
     </template>
     <template #Update>
-     
+     <Entity-ID v-show="false"/>
+     <Entity-GroupCode/>
+     <Entity-GroupName/>
+     <Entity-GroupRemark/>
     </template>
     <template #Details>
-     
+     <Entity-GroupCode display/>
+     <Entity-GroupName display/>
+     <Entity-GroupRemark display/>
     </template>
   </w-actions>
 </template> 

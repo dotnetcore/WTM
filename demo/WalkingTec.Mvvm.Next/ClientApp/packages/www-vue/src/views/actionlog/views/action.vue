@@ -6,7 +6,15 @@
     :params="params"
   >
     <template #Details>
-      <Entity-ModuleName :display="true" />
+      <Entity-ModuleName display/>
+      <Entity-ActionName display/>
+      <Entity-ITCode display/>
+      <Entity-ActionUrl display/>
+      <Entity-ActionTime display/>
+      <Entity-Duration display/>
+      <Entity-Remark display/>
+      <Entity-IP display/>
+      <Entity-LogType display/>
     </template>
   </w-actions>
 </template> 

@@ -5,7 +5,7 @@ export class PageStore extends EntitiesPageStore {
         super({
             // target: 'https://www.baidu.com/',
             Search: { url: '/api/_dataprivilege/Search', },
-            Details: { url: '/api/_dataprivilege/{ID}' },
+            Details: { url: '/api/_dataprivilege/get' },
             Insert: { url: '/api/_dataprivilege/Add' },
             Update: { url: '/api/_dataprivilege/Edit' },
             Delete: { url: '/api/_dataprivilege/BatchDelete' },

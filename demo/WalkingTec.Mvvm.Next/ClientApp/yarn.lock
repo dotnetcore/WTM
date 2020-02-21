@@ -3027,6 +3027,11 @@ gzip-size@^5.0.0:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.npm.taobao.org/hammerjs/download/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
+
 handlebars@^4.4.0:
   version "4.7.3"
   resolved "https://registry.npm.taobao.org/handlebars/download/handlebars-4.7.3.tgz?cache=0&sync_timestamp=1580879611396&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhandlebars%2Fdownload%2Fhandlebars-4.7.3.tgz#8ece2797826886cf8082d1726ff21d2a022550ee"

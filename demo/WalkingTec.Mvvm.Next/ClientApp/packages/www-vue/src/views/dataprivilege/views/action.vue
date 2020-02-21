@@ -1,13 +1,29 @@
 <template>
-  <w-actions :PageStore="PageStore" :Entities="Entities" :params="params">
+  <w-actions :PageStore="PageStore" :Entities="Entities" :params="params" @fieldsChange="onFieldsChange">
     <template #Insert>
-     
+      <DpType />
+      <IsAll />
+      <Entity-TableName />
+      <SelectedItemsID v-if="!IsAll" />
+      <UserItCode />
+      <Entity-GroupId />
     </template>
     <template #Update>
-     
+      <Entity-ID v-show="false"/>
+      <DpType />
+      <IsAll />
+      <Entity-TableName />
+      <SelectedItemsID v-if="!IsAll" />
+      <UserItCode />
+      <Entity-GroupId />
     </template>
     <template #Details>
-     
+      <DpType display/>
+      <Entity-TableName display/>
+      <SelectedItemsID display/>
+      <IsAll display/>
+      <UserItCode display/>
+      <Entity-GroupId display/>
     </template>
   </w-actions>
 </template> 
@@ -35,6 +51,12 @@ export default class ViewAction extends Vue {
   // }>();
   // aggird 组件 自带属性 不可删除
   params = {};
+  IsAll=true;
+  onFieldsChange(props,fields){
+    if(lodash.hasIn(fields, 'IsAll.value')){
+        this.IsAll=lodash.get(fields, 'IsAll.value');
+    }
+  }
   mounted() {}
 }
 </script>

@@ -47,14 +47,16 @@ export default class ViewAction extends Vue {
     });
   }
   beforeMount() {
-    lodash.map(this.Entities, ent => {
+    lodash.map(this.Entities, ent =>  {
       if (lodash.isFunction(ent.onComplete)) {
         ent.onComplete({ FieldsChange: this.FieldsChange });
       }
     });
+    lodash.delay(()=>this.onSubmit(),200)
+     
   }
   mounted() {
-    this.onSubmit();
+    // this.onSubmit();
   }
   onSearch(body?) {
     this.PageStore.EventSubject.next({

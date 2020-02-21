@@ -1,6 +1,7 @@
 <template>
   <w-filter :PageStore="PageStore" :Entities="Entities">
-  
+  <GroupCode/>
+  <GroupName/>
   </w-filter>
 </template>
 <script lang="ts">
