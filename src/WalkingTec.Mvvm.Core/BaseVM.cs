@@ -55,11 +55,6 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        /// <summary>
-        /// 上传文件的Id，方便导入等操作中进行绑定，这类操作需要上传文件但不需要记录在数据库中，所以Model层中没有文件Id的字段
-        /// </summary>
-        [Display(Name = "UploadFile")]
-        public Guid? UploadFileId { get; set; }
 
         /// <summary>
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
@@ -117,6 +112,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取当前使用的连接字符串
         /// </summary>
+        [JsonIgnore]
         public string CurrentCS { get; set; }
 
         /// <summary>
@@ -187,8 +183,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        [JsonIgnore]
         public object Controller { get; set; }
 
+        [JsonIgnore]
         public IDistributedCache Cache { get; set; }
 
         /// <summary>
@@ -227,6 +225,7 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public List<Guid> DeletedFileIds { get; set; }
 
+        [JsonIgnore]
         public string ControllerName { get; set; }
 
         [JsonIgnore]
