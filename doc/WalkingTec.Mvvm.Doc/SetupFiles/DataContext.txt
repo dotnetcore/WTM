@@ -9,6 +9,11 @@ namespace $ns$
 {
     public class DataContext : FrameworkContext
     {
+        public DataContext(CS cs)
+             : base(cs)
+        {
+        }
+
         public DataContext(string cs, DBTypeEnum dbtype)
              : base(cs, dbtype)
         {

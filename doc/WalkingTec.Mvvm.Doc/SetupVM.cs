@@ -19,6 +19,8 @@ namespace WalkingTec.Mvvm.Doc
     {
         private string version = "";
         private string SwashbuckleVersion = "";
+        private string EFDesignVersion = "";
+
         public bool EnableLog { get; set; }
 
         public bool LogExceptionOnly { get; set; }
@@ -134,10 +136,12 @@ namespace WalkingTec.Mvvm.Doc
             {
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
+                    EFDesignVersion = "2.2.4";
                     version = Utils.GetNugetVersion("2.",false);
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
+                    EFDesignVersion = "3.1.0";
                     version = Utils.GetNugetVersion("3.",true);
                     break;
                 default:
@@ -208,6 +212,7 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
+    <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""{EFDesignVersion}"" />
 </ItemGroup>
 </Project>
 ");
@@ -224,6 +229,7 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.TagHelpers.LayUI"" Version=""{version}"" />
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
+    <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""{EFDesignVersion}"" />
  </ItemGroup>
   <ItemGroup>
     <Content Remove=""$(SpaRoot)**"" />
@@ -380,10 +386,12 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}ChangePassword.cshtml", GetResource("home.ChangePassword.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}Layout.cshtml", GetResource("home.layout.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}Login.cshtml", GetResource("home.Login.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}Reg.cshtml", GetResource("home.Reg.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}PIndex.cshtml", GetResource("home.PIndex.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}FrontPage.cshtml", GetResource("home.FrontPage.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}RegVM.cs", GetResource("vms.RegVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Shared{Path.DirectorySeparatorChar}_Layout.cshtml", GetResource("layui.Layout.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Program.cs", GetResource("layui.Program.txt", "Mvc").Replace("$ns$", MainNs), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}_ViewImports.cshtml", GetResource("layui.ViewImports.txt", "Mvc"), Encoding.UTF8);
