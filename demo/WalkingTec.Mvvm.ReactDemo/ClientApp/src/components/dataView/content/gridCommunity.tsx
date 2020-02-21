@@ -335,7 +335,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 enableValue: false,
                 suppressResize: false,
                 editable: false,
-                suppressFiltersToolPanel: true,
+                suppressToolPanel: true,
                 suppressAutoSize: true,
                 filter: false,
                 resizable: false,

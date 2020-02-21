@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.Core
         public FrameworkContext(CS cs) : base(cs)
         {
         }
+        public FrameworkContext(DbContextOptions<FrameworkContext> options) : base(options) { }
 
         /// <summary>
         /// OnModelCreating
@@ -329,6 +330,8 @@ namespace WalkingTec.Mvvm.Core
             DBType = cs.DbType.Value;
             ConnectionString = cs;
         }
+
+        public EmptyContext(DbContextOptions<FrameworkContext> options) : base(options) { }
 
         public IDataContext CreateNew()
         {
