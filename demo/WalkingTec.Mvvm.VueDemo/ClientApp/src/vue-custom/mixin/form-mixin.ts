@@ -101,7 +101,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         console.error("dialogData 没有id数据");
       }
       if (this["status"] !== this["$actionType"].add) {
-        const parameters = { ...this["dialogData"], ID: this["dialogData"].ID };
+        const parameters = { ...this["dialogData"], id: this["dialogData"].ID };
         this["detail"](parameters).then(res => {
           // 判断是否 有Entity 属性，赋值全部
           if (this.formData.hasOwnProperty("Entity")) {
@@ -118,7 +118,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     /**
      * 查询详情-绑定数据 之后
      */
-    afterBindFormData(data: object) {
+    afterBindFormData(data?: object) {
       console.log("data:", data);
     }
     /**

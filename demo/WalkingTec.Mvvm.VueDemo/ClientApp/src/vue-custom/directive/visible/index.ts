@@ -2,21 +2,24 @@ import { UserModule } from "@/store/modules/user";
 import config from "@/config/index";
 import { DirectiveOptions } from "vue";
 
-// 按钮action权限
+/**
+ * 按钮 action权限
+ */
 const visible: DirectiveOptions = {
-  inserted: (el, binding, vnode) => {
+  inserted: (el, { value }, vnode) => {
     if (config.development) {
       return;
     }
-    if (_.isArray(binding.value)) {
-      const fslist = _.filter(binding.value, item =>
-        UserModule.permissionList.includes(item)
-      );
+    const actions = UserModule.actionList;
+    if (_.isArray(value)) {
+      const fslist = _.filter(value, item => actions.includes(item));
       if (fslist.length < 1) {
         el.parentNode && el.parentNode.removeChild(el);
       }
     } else {
-      if (!UserModule.permissionList.includes(_.toLower(binding.value))) {
+      // console.log("binding.value", value);
+      // console.log(!actions.includes(value));
+      if (!actions.includes(value)) {
         el.parentNode && el.parentNode.removeChild(el);
       }
     }

@@ -15,6 +15,6 @@ export const SEARCH_DATA = {
 export const TABLE_HEADER: Array<object> = [
   { key: "PageName", sortable: true, label: "页面名称", align: "left" },
   { key: "DisplayOrder", sortable: true, label: "顺序" },
-  { key: "ICon", sortable: true, label: "图标" },
+  { key: "ICon", sortable: true, label: "图标", isSlot: true },
   { key: "operate", label: "操作", isSlot: true }
 ];

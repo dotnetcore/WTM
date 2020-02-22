@@ -9,7 +9,7 @@ const search = {
 };
 // 添加
 const add = {
-  url: reqPath + "add",
+  url: reqPath + "Add",
   method: "post"
 };
 const edit = {
@@ -18,7 +18,7 @@ const edit = {
 };
 // 详情
 const detail = {
-  url: reqPath + "{ID}",
+  url: reqPath + "{id}",
   method: "get"
 };
 // 批量删除
@@ -28,7 +28,7 @@ const batchDelete = {
 };
 // 删除 -------
 const deleted = {
-  url: reqPath + "Delete/{ID}",
+  url: reqPath + "Delete/{id}",
   method: "get"
 };
 // 导出
@@ -73,7 +73,7 @@ const getFolders = {
 
 // 导入
 const imported = {
-  url: reqPath + "import",
+  url: reqPath + "Import",
   method: "post"
 };
 export default {

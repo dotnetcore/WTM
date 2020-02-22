@@ -7,14 +7,9 @@
             <el-card shadow="hover">
               <div slot="header">快捷方式</div>
               <el-row class="lump-wrap" :gutter="10">
-                <el-col
-                  :span="6"
-                  v-for="item of shortcutList"
-                  :key="item.Value"
-                >
+                <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
                   <router-link class="link-a" :to="{ path: item.Url }">
-                    <i class="el-icon-edit"></i>{{ item.Text }}</router-link
-                  >
+                    <i class="el-icon-edit"></i>{{ item.Text }}</router-link>
                 </el-col>
               </el-row>
             </el-card>
@@ -25,26 +20,26 @@
               <el-row class="lump-wrap cxt-left" :gutter="10">
                 <el-col :span="12">
                   <div>
-                    <h3>star</h3>
-                    <p>1000</p>
+                    <h3>Star</h3>
+                    <p>{{getGithubInfoData.stargazers_count || 10000}}</p>
                   </div>
                 </el-col>
                 <el-col :span="12">
                   <div>
-                    <h3>star</h3>
-                    <p>1000</p>
+                    <h3>Fork</h3>
+                    <p>{{getGithubInfoData.forks_count || 10000}}</p>
                   </div>
                 </el-col>
                 <el-col :span="12">
                   <div>
-                    <h3>star</h3>
-                    <p>1000</p>
+                    <h3>Watch</h3>
+                    <p>{{getGithubInfoData.subscribers_count || 10000}}</p>
                   </div>
                 </el-col>
                 <el-col :span="12">
                   <div>
-                    <h3>star</h3>
-                    <p>1000</p>
+                    <h3>Issue</h3>
+                    <p>{{getGithubInfoData.open_issues_count || 10000}}</p>
                   </div>
                 </el-col>
               </el-row>
@@ -55,13 +50,7 @@
               <div slot="header">WTM开源</div>
               WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~
               <br />
-              <iframe
-                src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large"
-                frameborder="0"
-                scrolling="0"
-                width="160px"
-                height="30px"
-              ></iframe>
+              <iframe src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
             </el-card>
           </el-col>
           <el-col :span="24">
@@ -74,20 +63,13 @@
           <el-card shadow="hover">
             <div slot="header">框架特点</div>
             <i class="el-icon-check"></i>一键生成WTM项目<br />
-            <i class="el-icon-check"></i
-            >一键生成增删改查，导入导出，批量操作代码<br />
-            <i class="el-icon-check"></i
-            >支持一对多，多对多关联模型的识别和代码生成<br />
-            <i class="el-icon-check"></i
-            >支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
-            <i class="el-icon-check"></i
-            >支持sqlserver，mysql，pgsql三种数据库<br />
-            <i class="el-icon-check"></i
-            >封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
-            <i class="el-icon-check"></i
-            >提供了很多基类，封装了绝大部分后台常用操作<br />
-            <i class="el-icon-check"></i
-            >提供了用户，角色，用户组，菜单，日志等常用模块<br />
+            <i class="el-icon-check"></i>一键生成增删改查，导入导出，批量操作代码<br />
+            <i class="el-icon-check"></i>支持一对多，多对多关联模型的识别和代码生成<br />
+            <i class="el-icon-check"></i>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
+            <i class="el-icon-check"></i>支持sqlserver，mysql，pgsql三种数据库<br />
+            <i class="el-icon-check"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
+            <i class="el-icon-check"></i>提供了很多基类，封装了绝大部分后台常用操作<br />
+            <i class="el-icon-check"></i>提供了用户，角色，用户组，菜单，日志等常用模块<br />
             <i class="el-icon-check"></i>支持数据权限的开发和配置<br />
             <i class="el-icon-check"></i>支持读写分离和数据库分库
           </el-card>
@@ -132,88 +114,98 @@
 import { Component, Vue } from "vue-property-decorator";
 import { RoutesModule } from "@/store/modules/routes";
 import EChartsModule from "./echarts";
+import { Action, State } from "vuex-class";
+import store from "@/store/system/dashboard";
 @Component({
-  name: "Dashboard",
-  components: {
-    EChartsModule
-  }
+    name: "Dashboard",
+    store,
+    components: {
+        EChartsModule
+    }
 })
 export default class extends Vue {
-  value: Date = new Date();
-  shortcuts: any[] = [
-    "日志管理",
-    "用户组管理",
-    "角色管理",
-    "用户管理",
-    "菜单管理",
-    "数据权限"
-  ];
-  get shortcutList() {
-    console.log(RoutesModule.pageList);
-    return RoutesModule.pageList.filter(item =>
-      this.shortcuts.includes(item.Text)
-    );
-  }
+    value: Date = new Date();
+    shortcuts: any[] = [
+        "日志管理",
+        "用户组管理",
+        "角色管理",
+        "用户管理",
+        "菜单管理",
+        "数据权限"
+    ];
+    get shortcutList() {
+        console.log(RoutesModule.pageList);
+        return RoutesModule.pageList.filter(item =>
+            this.shortcuts.includes(item.Text)
+        );
+    }
+    @Action
+    getGithubInfo;
+    @State
+    getGithubInfoData;
+    mounted() {
+        this.getGithubInfo();
+    }
 }
 </script>
 <style lang="less" rel="stylesheet/less">
 @import "~@/assets/css/mixin.less";
 .dashboard-container {
-  padding: 10px;
-  .el-row {
-    margin-bottom: 20px;
-  }
-  .el-card__header {
-    color: #333;
-    font-size: 14px;
-  }
-  .el-card {
-    font-size: 14px;
-    color: #666;
-  }
-  .lump-wrap {
-    margin-bottom: 0;
-    min-height: 160px;
-    &.cxt-left {
-      .el-col {
-        .flexalign(flex-start);
-        box-sizing: border-box;
-        padding-bottom: 10px;
-        div {
-          background-color: #f8f8f8;
-          width: 100%;
-          box-sizing: border-box;
-          padding: 0 5px;
-        }
-      }
+    padding: 10px;
+    .el-row {
+        margin-bottom: 20px;
     }
-    .el-col {
-      .center(column);
-      i {
-        width: 100%;
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
-        border-radius: 2px;
-        font-size: 30px;
-        background-color: #f8f8f8;
-      }
-      h3 {
-        padding-bottom: 10px;
-        font-size: 12px;
-      }
-      p {
-        font-style: normal;
-        font-size: 30px;
-        font-weight: 300;
-        color: #009688;
-      }
-      .link-a {
-        color: #666;
+    .el-card__header {
+        color: #333;
         font-size: 14px;
-        text-align: center;
-      }
     }
-  }
+    .el-card {
+        font-size: 14px;
+        color: #666;
+    }
+    .lump-wrap {
+        margin-bottom: 0;
+        min-height: 160px;
+        &.cxt-left {
+            .el-col {
+                .flexalign(flex-start);
+                box-sizing: border-box;
+                padding-bottom: 10px;
+                div {
+                    background-color: #f8f8f8;
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 0 5px;
+                }
+            }
+        }
+        .el-col {
+            .center(column);
+            i {
+                width: 100%;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                border-radius: 2px;
+                font-size: 30px;
+                background-color: #f8f8f8;
+            }
+            h3 {
+                padding-bottom: 10px;
+                font-size: 12px;
+            }
+            p {
+                font-style: normal;
+                font-size: 30px;
+                font-weight: 300;
+                color: #009688;
+            }
+            .link-a {
+                color: #666;
+                font-size: 14px;
+                text-align: center;
+            }
+        }
+    }
 }
 </style>

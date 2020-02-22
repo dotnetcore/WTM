@@ -15,7 +15,7 @@ export interface IUserState {
   token: string;
   name: string;
   roles: Array<any>;
-  permissionList: string[];
+  actionList: string[];
   menus: any[];
   info: any;
 }
@@ -25,7 +25,7 @@ class User extends VuexModule implements IUserState {
   public token = getToken() || "";
   public name = "";
   public roles: Array<any> = [];
-  public permissionList: string[] = [];
+  public actionList: string[] = [];
   public menus: Array<any> = [];
   public info = {};
 
@@ -45,8 +45,8 @@ class User extends VuexModule implements IUserState {
   }
 
   @Mutation
-  private SET_ACTIONS(permissionList: string[]) {
-    this.permissionList = permissionList;
+  private SET_ACTIONS(actionList: string[]) {
+    this.actionList = actionList;
   }
 
   @Mutation
@@ -89,7 +89,6 @@ class User extends VuexModule implements IUserState {
     // 单页面
     this.ResetToken();
   }
-
   /********************* 单页面 需要如下***********************/
   @Action
   public async Login(userInfo: { username: string; password: string }) {
