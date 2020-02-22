@@ -637,8 +637,8 @@ window.ff = {
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (filter.hasOwnProperty(item.name)) {
         var temp = filter[item.name];
-        if (!(temp instanceof Array));
-        temp = [temp];
+        if (!(temp instanceof Array))
+          temp = [temp];
         temp.push(item.value);
         filter[item.name] = temp;
       }
