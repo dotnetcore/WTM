@@ -439,7 +439,7 @@ var {Id}option = null;
 /* 监听工具条 */
 function wtToolBarFunc_{Id}(obj){{ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter=""对应的值""
 var data = obj.data, layEvent = obj.event, tr = obj.tr; //获得当前行 tr 的DOM对象
-{(gridBtnEventStrBuilder.Length == 0 ? string.Empty : $@"switch(layEvent){{{gridBtnEventStrBuilder}default:break;}}")}
+{(gridBtnEventStrBuilder.Length == 0 ? string.Empty : $@"var ids; var objs;switch(layEvent){{{gridBtnEventStrBuilder}default:break;}}")}
 return;
 }}
 layui.use(['table'], function(){{
@@ -561,7 +561,7 @@ layui.use(['table'], function(){{
                     ShowTotal = item.ShowTotal
                 };
                 // 非编辑状态且有字段名的情况下，设置template
-                if ((item.EditType == EditTypeEnum.Text || item.EditType == null) && string.IsNullOrEmpty(item.Field) == false)
+                if (string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false)
                     tempCol.Templet = new JRaw(getTemplate(item.Field));
 
                 NeedShowTotal |= item.ShowTotal == true;
@@ -708,7 +708,7 @@ layui.use(['table'], function(){{
                     case GridActionParameterTypesEnum.SingleId:
                         script.Append($@"
 if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
-    var ids = ff.GetSelections('{Id}');
+    ids = ff.GetSelections('{Id}');
     if(ids.length == 0){{
         layui.layer.msg('{Program._localizer["SelectOneRow"]}');
         return;
@@ -717,12 +717,14 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
         return;
     }}else{{
         tempUrl = tempUrl + '&id=' + ids[0];
-        var objs = ff.GetSelectionData('{Id}');
+        objs = ff.GetSelectionData('{Id}');
         if(objs!=null && objs.length > 0){{
             tempUrl = ff.concatWhereStr(tempUrl,whereStr,objs[0]);
         }}
     }}
 }}else{{
+    ids = [data.ID];
+    objs = [data];
     tempUrl = tempUrl + '&id=' + data.ID;
     tempUrl = ff.concatWhereStr(tempUrl,whereStr,data);
 }}

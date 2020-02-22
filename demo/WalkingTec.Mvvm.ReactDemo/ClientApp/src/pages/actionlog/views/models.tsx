@@ -146,7 +146,7 @@ export default {
             "LogType":{
                 label: <FormattedMessage id='actionlog.LogType' />,
                 rules: [],
-                formItem: <WtmSelect placeholder={getLocalesValue('tips.all')} dataSource={[  
+                formItem: <WtmSelect placeholder={getLocalesValue('tips.all')} mode="multiple" dataSource={[  
                     { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 0 },
                     { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 1 },
                     { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 }

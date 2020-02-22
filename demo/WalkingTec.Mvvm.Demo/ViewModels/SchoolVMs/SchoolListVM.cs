@@ -9,6 +9,19 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
+        public override string SetFullRowBgColor(object entity)
+        {
+            var t = entity as School_View;
+            if (t.SchoolType == SchoolTypeEnum.PRI)
+            {
+                return "FF0000";
+            }
+            else
+            {
+                return base.SetFullRowBgColor(entity);
+            }
+        }
+
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
