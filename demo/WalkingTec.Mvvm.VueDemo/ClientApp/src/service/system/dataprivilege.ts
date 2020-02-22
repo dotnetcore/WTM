@@ -8,19 +8,19 @@ const privilegesList = {
 };
 // 添加
 const add = {
-  url: reqPath + "add",
+  url: reqPath + "Add",
   method: "post"
 };
 
 // 详情
 const get = {
-  url: reqPath + "get",
+  url: reqPath + "Get",
   method: "get"
 };
 
 // 列表
 const search = {
-  url: reqPath + "search",
+  url: reqPath + "Search",
   method: "post",
   dataType: "array"
 };
@@ -43,7 +43,7 @@ const edit = {
 
 // 导入
 const imported = {
-  url: reqPath + "import",
+  url: reqPath + "Import",
   method: "post"
 };
 

@@ -10,20 +10,36 @@ import { DirectiveOptions } from "vue";
  * key 集合中v-model对应字段名
  * label 集合中 需要展示的字段名
  */
-const domStyleFn = (el, { value, arg }, vnode) => {
+const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
   // const { value, arg } = binding; // value Array<any>
   const modelVal = vnode.data.model.value; // v-model 值
   let htmlVal: string = modelVal; // 内容value
   let elPre = el.previousSibling || {}; // el前dom，insert添加的dom
-  if (Array.isArray(value) && modelVal) {
-    try {
-      // 参数判断
-      htmlVal = value.filter(res => res["Value"] === modelVal)[0]["Text"];
-    } catch (error) {
-      console.warn("dirEdit,指令结构不符合要求", error);
-      htmlVal = modelVal;
+  const sourceArr = _.isArray(sourceVal);
+  const sourceObj = _.isPlainObject(sourceVal);
+  const valArr = _.isArray(modelVal);
+  const valStr = _.isString(modelVal);
+  const valNum = _.isNumber(modelVal);
+  const valBoo = _.isBoolean(modelVal);
+
+  try {
+    if (sourceArr && valArr) {
+      htmlVal = sourceVal
+        .filter(res => modelVal.includes(res["Value"]))
+        .map(item => item.Text)
+        .join(",");
+    } else if (sourceArr && (valStr || valNum || valBoo)) {
+      htmlVal = sourceVal.filter(res => res["Value"] === modelVal)[0]["Text"];
+    } else if (sourceObj && valStr) {
+      htmlVal = sourceVal[modelVal];
+    } else if (!sourceVal && valBoo) {
+      htmlVal = modelVal ? "是" : "否";
     }
+  } catch (error) {
+    console.warn("dirEdit,指令结构不符合要求", error);
+    htmlVal = modelVal;
   }
+
   // 添加&修改 展示组件
   if (arg === "add" || arg === "edit") {
     el.style.display = "inline-block";

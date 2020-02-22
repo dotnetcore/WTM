@@ -1,7 +1,7 @@
 /**
- * 根据service 创建store 注：store如果没有逻辑可以用
- *
- * 目前创建 state，actions，mutations 部分
+ * 根据service中 创建store 初始结构
+ * 注：store如果没有逻辑可以用
+ * 目前只创建 state，actions，mutations 部分
  */
 import _request from "@/service/service";
 import { firstUpperCase } from "@/util/string";
@@ -16,8 +16,8 @@ interface StoreType {
 }
 
 const stoBase = {
-  // 接口列表key
-  apiKeys: "permissionList",
+  // 接口列表key（service中）
+  apiKeys: "actionList",
   // 返回命名
   getKeyName: key => {
     const upperKey = firstUpperCase(key);
@@ -66,7 +66,7 @@ const stoBase = {
  */
 export default (serviceUnit, callback?: Function) => {
   const store: StoreType = {
-    state: { [stoBase.apiKeys]: {} }, // permissionList 接口列表
+    state: { [stoBase.apiKeys]: {} }, // actionList 接口列表
     actions: {},
     mutations: {},
     modules: {}
@@ -93,5 +93,6 @@ export default (serviceUnit, callback?: Function) => {
   store.modules = {
     attributes
   };
+  console.log("store::::", store);
   return store;
 };
