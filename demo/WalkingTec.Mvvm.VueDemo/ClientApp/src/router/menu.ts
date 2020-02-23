@@ -1,21 +1,21 @@
 import { RouteConfig } from "vue-router";
 import config from "@/config/index";
 import Layout from "@/components/layout/index.vue";
+import { isExternal } from "@/util/validate";
 const development = config.development;
 interface routerItem {
   children: [];
   path: string;
   meta: {};
 }
-
+let url_index = 0;
 class Menu {
   constructor() {}
   /**
    * 返回vue-router格式
    * @param menuItem
-   * @param originalMenu
    */
-  private getRouterItem(menuItem, originalMenu: any[] = []) {
+  private getRouterItem(menuItem) {
     const routerItem: RouteConfig = {
       path: menuItem.Url || "",
       name: menuItem.Text,
@@ -29,8 +29,25 @@ class Menu {
       }
     };
     if (menuItem.Url) {
-      routerItem.component = () =>
-        import("@/views" + menuItem.Url + "/index.vue");
+      // 判断是否需要 external
+      if (
+        isExternal(menuItem.Url) ||
+        _.startsWith(menuItem.Url, config.staticPage)
+      ) {
+        routerItem.component = () => import("@/views/external/index.vue");
+        routerItem.path = `/external_${++url_index}`;
+        const url = isExternal(menuItem.Url)
+          ? menuItem.Url
+          : _.replace(
+              menuItem.Url,
+              config.staticPage,
+              `${window.location.origin}`
+            );
+        routerItem.props = { default: true, url: url };
+      } else {
+        routerItem.component = () =>
+          import("@/views" + menuItem.Url + "/index.vue");
+      }
     }
     return routerItem;
   }
@@ -43,7 +60,7 @@ class Menu {
       menu = require("@/subMenu.json");
     }
     return _.map(menu, menuItem => {
-      return this.getRouterItem(menuItem, menu);
+      return this.getRouterItem(menuItem);
     });
   }
   /**
@@ -61,24 +78,18 @@ class Menu {
    * @param datalist
    * @param ParentId 父级id
    * @param children
-   * @param originalMenu 原始数据
    */
   private recursionTree(
     datalist,
     ParentId = null,
-    children: RouteConfig[] = [],
-    originalMenu: any[] = []
+    children: RouteConfig[] = []
   ): RouteConfig[] {
     _.filter(datalist, ["ParentId", ParentId]).map(menuItem => {
-      const routerItem: RouteConfig = this.getRouterItem(
-        menuItem,
-        originalMenu
-      );
+      const routerItem: RouteConfig = this.getRouterItem(menuItem);
       routerItem.children = this.recursionTree(
         datalist,
         menuItem.Id,
-        menuItem.children || [],
-        originalMenu
+        menuItem.children || []
       );
       if (
         ParentId === null &&
@@ -86,11 +97,10 @@ class Menu {
         routerItem.children.length === 0
       ) {
         routerItem.children.push({
-          meta: routerItem.meta,
-          path: "index",
-          component: routerItem.component
+          ...routerItem,
+          path: "",
+          children: undefined
         });
-        // delete routerItem.meta;
         routerItem.component = Layout;
       }
       children.push(routerItem);
@@ -99,9 +109,9 @@ class Menu {
   }
 
   /**
-   * tree打平一级菜单
+   * (tree)递归 格式化 打平一级菜单
    */
-  generateRoutesFromMenu(
+  private generateRoutesFromMenu(
     menu,
     routes: Array<routerItem> = [],
     parentMenu?: routerItem

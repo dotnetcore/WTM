@@ -9,7 +9,7 @@ import { getToken, setToken, removeToken } from "@/util/cookie";
 import { resetRouter } from "@/router";
 import store from "@/store/modules";
 import _request from "@/service/service";
-import serviceUrl from "@/service/index";
+import serviceUrl from "@/service/modules/user";
 
 export interface IUserState {
   token: string;

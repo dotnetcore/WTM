@@ -40,14 +40,20 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
-    path: "external-link",
+    path: "/external",
     component: Layout,
     children: [
       {
-        path: "https://www.baidu.com",
+        path: "",
+        component: () => import("@/views/external/index.vue"),
+        name: "外链",
         meta: {
           title: "externalLink",
           icon: "el-icon-link"
+        },
+        // props: { default: true, url: "" }
+        props: router => {
+          return { ...router.query };
         }
       }
     ]

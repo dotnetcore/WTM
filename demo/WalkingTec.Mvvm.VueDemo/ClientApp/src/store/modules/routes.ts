@@ -64,7 +64,8 @@ class Routes extends VuexModule implements IRoutesModule {
         pagesList.push({
           Text: item.name,
           Value: item.controller,
-          Url: item.path
+          Url: item.path,
+          Icon: item.icon
         });
       }
     });

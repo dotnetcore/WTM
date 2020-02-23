@@ -9,7 +9,7 @@
               <el-row class="lump-wrap" :gutter="10">
                 <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
                   <router-link class="link-a" :to="{ path: item.Url }">
-                    <i class="el-icon-edit"></i>{{ item.Text }}</router-link>
+                    <i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</router-link>
                 </el-col>
               </el-row>
             </el-card>
@@ -45,14 +45,14 @@
               </el-row>
             </el-card>
           </el-col>
-          <el-col :span="24">
+          <!-- <el-col :span="24">
             <el-card shadow="hover">
               <div slot="header">WTM开源</div>
               WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~
               <br />
               <iframe src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
             </el-card>
-          </el-col>
+          </el-col> -->
           <el-col :span="24">
             <e-charts-module />
           </el-col>
@@ -90,14 +90,22 @@
               WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
             </p>
             <p>
-              —— 框架开源地址：https://github.com/dotnetcore/WTM
+              —— 框架开源地址：<el-link href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</el-link>
             </p>
             <p>
-              —— 框架在线文档：https://wtmdoc.walkingtec.cn
+              —— 框架在线文档：<el-link href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</el-link>
             </p>
             <p>
               —— 框架QQ交流群：694148336
             </p>
+          </el-card>
+        </el-col>
+        <el-col :span="24">
+          <el-card shadow="hover">
+            <div slot="header">即刻体验WTM之美</div>
+            <h2>
+              现在就点 <a href="https://wtmdoc.walkingtec.cn/setup" target="_blank" style="color:#009688">这里</a> 立刻生成第一个WTM项目吧
+            </h2>
           </el-card>
         </el-col>
       </el-col>
@@ -134,7 +142,6 @@ export default class extends Vue {
         "数据权限"
     ];
     get shortcutList() {
-        console.log(RoutesModule.pageList);
         return RoutesModule.pageList.filter(item =>
             this.shortcuts.includes(item.Text)
         );
@@ -152,6 +159,9 @@ export default class extends Vue {
 @import "~@/assets/css/mixin.less";
 .dashboard-container {
     padding: 10px;
+    p {
+        text-indent: 2em;
+    }
     .el-row {
         margin-bottom: 20px;
     }
@@ -175,7 +185,7 @@ export default class extends Vue {
                     background-color: #f8f8f8;
                     width: 100%;
                     box-sizing: border-box;
-                    padding: 0 5px;
+                    padding: 0 10px;
                 }
             }
         }
@@ -191,7 +201,7 @@ export default class extends Vue {
                 background-color: #f8f8f8;
             }
             h3 {
-                padding-bottom: 10px;
+                padding: 5px 0;
                 font-size: 12px;
             }
             p {
@@ -199,6 +209,7 @@ export default class extends Vue {
                 font-size: 30px;
                 font-weight: 300;
                 color: #009688;
+                text-indent: 0;
             }
             .link-a {
                 color: #666;

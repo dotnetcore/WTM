@@ -1,31 +1,31 @@
 <template>
-  <div v-if="!item.meta || !item.meta.hidden" :class="[
+    <div v-if="!item.meta || !item.meta.hidden" :class="[
       'menu-wrapper',
       isCollapse ? 'simple-mode' : 'full-mode',
       { 'first-level': isFirstLevel }
     ]">
-    <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
-      <sidebar-item-link v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
-        <el-menu-item :index="resolvePath(theOnlyOneChild.path)" :class="{ 'submenu-title-noDropdown': isFirstLevel }">
-          <i :class="[theOnlyOneChild.meta.icon || 'el-icon-files']" class="i-icon"></i>
-          <span v-if="theOnlyOneChild.meta.title" slot="title">{{
-            $t("route." + theOnlyOneChild.meta.title)
-            }}</span>
-        </el-menu-item>
-      </sidebar-item-link>
-    </template>
-    <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
-      <template slot="title">
-        <i :class="[item.meta.icon || 'el-icon-files']" class="i-icon"></i>
-        <span v-if="item.meta && item.meta.title" slot="title">
-          {{ $t("route." + item.meta.title) }}
-        </span>
-      </template>
-      <template v-if="item.children">
-        <sidebar-item v-for="child in item.children" :key="child.path" :item="child" :is-collapse="isCollapse" :is-first-level="false" :base-path="resolvePath(child.path)" class="nest-menu" />
-      </template>
-    </el-submenu>
-  </div>
+        <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
+            <sidebar-item-link v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
+                <el-menu-item :index="resolvePath(theOnlyOneChild.path)" :class="{ 'submenu-title-noDropdown': isFirstLevel }">
+                    <i :class="[theOnlyOneChild.meta.icon || 'el-icon-files']" class="i-icon"></i>
+                    <span v-if="theOnlyOneChild.meta.title" slot="title">{{
+                        $t("route." + theOnlyOneChild.meta.title)
+                        }}</span>
+                </el-menu-item>
+            </sidebar-item-link>
+        </template>
+        <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
+            <template slot="title">
+                <i :class="[item.meta.icon || 'el-icon-files']" class="i-icon"></i>
+                <span v-if="item.meta && item.meta.title" slot="title">
+                    {{ $t("route." + item.meta.title) }}
+                </span>
+            </template>
+            <template v-if="item.children">
+                <sidebar-item v-for="child in item.children" :key="child.path" :item="child" :is-collapse="isCollapse" :is-first-level="false" :base-path="resolvePath(child.path)" class="nest-menu" />
+            </template>
+        </el-submenu>
+    </div>
 </template>
 
 <script lang="ts">

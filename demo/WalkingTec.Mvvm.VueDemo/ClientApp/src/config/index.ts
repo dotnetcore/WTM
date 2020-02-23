@@ -17,6 +17,10 @@ const config = {
    */
   elSize: "small",
   /**
+   * iframe 嵌入页面标示
+   */
+  staticPage: "@StaticPage",
+  /**
    * debugger调试
    */
   development: true

@@ -1,12 +1,12 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
-    <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
-        <span v-if="item.redirect === 'noredirect' || index === breadcrumbs.length-1" class="no-redirect">{{ $t('route.' + item.meta.title) }}</span>
-        <a v-else @click.prevent="handleLink(item)">{{ $t('route.' + item.meta.title) }}</a>
-      </el-breadcrumb-item>
-    </transition-group>
-  </el-breadcrumb>
+    <el-breadcrumb class="app-breadcrumb" separator="/">
+        <transition-group name="breadcrumb">
+            <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
+                <span v-if="item.redirect === 'noredirect' || index === breadcrumbs.length-1" class="no-redirect">{{ $t('route.' + item.meta.title) }}</span>
+                <a v-else @click.prevent="handleLink(item)">{{ $t('route.' + item.meta.title) }}</a>
+            </el-breadcrumb-item>
+        </transition-group>
+    </el-breadcrumb>
 </template>
 
 <script lang="ts">
@@ -64,7 +64,6 @@ export default class extends Vue {
     }
 
     private pathCompile(path: string) {
-        // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
         const { params } = this.$route;
         const toPath = pathToRegexp.compile(path);
         return toPath(params);
@@ -81,7 +80,13 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
+.app-breadcrumb {
+    left: -100px;
+    -webkit-transition: all 0.5s ease-in;
+    -moz-transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in;
+}
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
     font-weight: 400 !important;
