@@ -95,7 +95,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .message-title {
   font-size: 16px;
   color: #333;

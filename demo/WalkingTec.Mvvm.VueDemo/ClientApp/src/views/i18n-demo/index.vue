@@ -143,7 +143,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .box-card {
     width: 600px;
     max-width: 100%;
