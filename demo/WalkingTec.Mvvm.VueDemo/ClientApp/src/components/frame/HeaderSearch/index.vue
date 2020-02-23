@@ -1,6 +1,5 @@
 <template>
     <div id="header-search" :class="{'show': show}" class="header-search">
-        <!-- <svg-icon class="search-icon" name="search" @click.stop="onClick" /> -->
         <i class="el-icon-search" @click.stop="onClick"></i>
         <el-select ref="headerSearchSelect" v-model="search" :remote-method="querySearch" filterable default-first-option remote placeholder="Search" class="header-search-select" @change="change">
             <el-option v-for="item in options" :key="item.path" :value="item" :label="item.meta.title.join(' > ')" />
@@ -170,7 +169,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .header-search {
     .search-icon {
         cursor: pointer;
