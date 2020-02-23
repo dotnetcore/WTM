@@ -66,7 +66,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 .scroll-container {
     .el-scrollbar__bar {
         bottom: 0px;
@@ -78,7 +78,7 @@ export default class extends Vue {
 }
 </style>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .scroll-container {
     white-space: nowrap;
     position: relative;

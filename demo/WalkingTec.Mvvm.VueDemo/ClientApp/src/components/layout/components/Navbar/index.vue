@@ -110,7 +110,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .navbar {
     height: 50px;
     overflow: hidden;

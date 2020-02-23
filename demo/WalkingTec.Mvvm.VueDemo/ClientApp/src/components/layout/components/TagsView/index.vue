@@ -215,7 +215,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 // Reset element css of el-icon-close
 .tags-view-wrapper {
     .tags-view-item {
@@ -242,7 +242,7 @@ export default class extends Vue {
     }
 }
 </style>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .tags-view-container {
     height: 34px;
     width: 100%;

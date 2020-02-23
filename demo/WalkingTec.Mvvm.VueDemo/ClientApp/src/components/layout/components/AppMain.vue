@@ -26,7 +26,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .app-main {
     /* 50= navbar  50  */
     min-height: calc(100vh - 50px);

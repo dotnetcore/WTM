@@ -55,7 +55,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .upload-container {
     width: 100%;
     position: relative;

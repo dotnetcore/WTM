@@ -66,7 +66,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 .sidebar-container {
     // reset element-ui css
     .horizontal-collapse-transition {
@@ -94,7 +94,7 @@ export default class extends Vue {
 }
 </style>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .el-scrollbar {
     height: 100%;
 }

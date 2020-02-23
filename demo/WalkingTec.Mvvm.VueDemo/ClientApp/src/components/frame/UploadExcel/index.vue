@@ -143,7 +143,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .excel-upload-input {
   display: none;
   z-index: -9999;
