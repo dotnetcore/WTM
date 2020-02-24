@@ -2,6 +2,7 @@
   <a-modal
     v-if="$GlobalConfig.settings.infoType==='Modal'"
     wrapClassName="page-action-modal"
+    :class="slotName"
     key="page-action-modal"
     :destroyOnClose="true"
     :visible="visible"

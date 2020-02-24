@@ -111,10 +111,10 @@
       :visible="visible"
       :width="width"
       :slotName="slotName"
-      :form="form"
       :title="$t(title)"
       :spinning="spinning"
       :PageStore="PageStoreContext"
+      :class="slotName"
       @cancel="onVisible(false)"
       @submit="onSubmit"
     >
