@@ -1,6 +1,10 @@
 <template>
   <span v-if="childrenType==='span'" v-html="valueText"></span>
-  <w-avatar v-else-if="childrenType==='avatar'" :value="value" :disabled="true" />
+  <w-avatar v-else-if="childrenType==='avatar'" :value="value" disabled />
+  <a-switch v-else-if="childrenType==='switch'" :checked="value" disabled>
+    <a-icon type="check" slot="checkedChildren" />
+    <a-icon type="close" slot="unCheckedChildren" />
+  </a-switch>
 </template> 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -13,6 +17,9 @@ export default class display extends Vue {
   get childrenType() {
     if (lodash.startsWith(this.Entitie.children, "<w-avatar")) {
       return "avatar";
+    }
+    if (lodash.startsWith(this.Entitie.children, "<a-switch")) {
+      return "switch";
     }
     return "span";
   }

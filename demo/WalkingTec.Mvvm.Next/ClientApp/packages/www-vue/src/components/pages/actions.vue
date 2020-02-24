@@ -85,10 +85,12 @@
     </div>
     <a-modal
       class="page-action-modal"
+      :class="slotName"
       key="page-action-modal"
       :title="$t(title)"
       :destroyOnClose="true"
       :visible="visible"
+      :width="width"
       @cancel="onVisible(false)"
       @ok="onOk"
     >
@@ -152,6 +154,7 @@ export default class ViewAction extends Vue {
    * 详情 数据 唯一标识 属性
    */
   @Prop({ default: () => "ID" }) GUID: string;
+  @Prop({ default: () => "70vw" }) width: string | number;
   /**
    * 表单域
    */
@@ -249,6 +252,7 @@ export default class ViewAction extends Vue {
       delete options.validateMessages;
     }
     this.form = this.$form.createForm(this, options);
+    // console.log("TCL: ViewAction -> beforeCreate -> this", this);
   }
   beforeMount() {
     // 初始化  异步 组件
@@ -285,8 +289,12 @@ export default class ViewAction extends Vue {
         console.log("TCL: onOk -> values", values);
         return console.error(error);
       }
+      // 提供了 submit 事件 走提供的事件
+      if (lodash.has(this, "_events.submit")) {
+        return this.$emit("submit", values, this.slotName, this);
+      }
+      // 转换 mapKey
       lodash.map(this.Entities, ({ mapKey }, key) => {
-        // 转换 mapKey
         if (mapKey) {
           lodash.update(values, key, newValue => {
             if (lodash.isArray(newValue)) {
@@ -357,6 +365,9 @@ export default class ViewAction extends Vue {
     this.onVisible(true);
     this.onGetDetails(item);
   }
+  /**
+   * 导入
+   */
   onImport() {
     this.$confirm({
       parentContext: null,
@@ -373,9 +384,15 @@ export default class ViewAction extends Vue {
         })
     });
   }
+  /**
+   * 导出
+   */
   onExport() {
     this.PageStoreContext.onExport();
   }
+  /**
+   * 导出 勾选
+   */
   onExportByIds(items) {
     this.PageStoreContext.onExport("ExportByIds", {
       body: lodash.map(items, this.GUID)
@@ -438,13 +455,18 @@ export default class ViewAction extends Vue {
 </style>
 <style  lang="less">
 .page-action-modal.ant-modal {
-  min-width: 70vw;
-  max-width: 99vw;
+  // min-width: 70vw;
+  // max-width: 99vw;
   overflow: hidden;
   top: 50px;
   .ant-modal-body {
     max-height: calc(100vh - 200px);
     overflow: auto; // padding-bottom: 65px;
+  }
+  &.Details {
+    .ant-modal-footer button.ant-btn-primary {
+      display: none;
+    }
   }
 }
 .page-import {

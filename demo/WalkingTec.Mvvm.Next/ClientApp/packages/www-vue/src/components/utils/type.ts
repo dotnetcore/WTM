@@ -91,7 +91,7 @@ export interface FormItem {
      * @type {SpanType}
      * @memberof FormItem
      */
-    span?: SpanType;
+    span?: SpanType | ColSpanType;
     /**
      * 注入 组件
      *

@@ -27,15 +27,30 @@ export default class ViewGrid extends Vue {
     context: {
       PageStore: this.PageStore
     },
-    rowGroupPanelShow:null,
+    rowGroupPanelShow: null,
     treeData: true,
     groupDefaultExpanded: -1,
     getDataPath: data => data.treePath,
     autoGroupColumnDef: {
       // headerName: "页面名称",
-      headerValueGetter: (params) => ({ 'zh-CN': '页面名称', 'en-US': "PageName" }[lodash.get(params, 'context.locale')]),
+      headerValueGetter: params =>
+        ({ "zh-CN": "页面名称", "en-US": "PageName" }[
+          lodash.get(params, "context.locale")
+        ]),
       cellRendererParams: { suppressCount: true }
-    }
+    },
+    columnDefs: [
+      {
+        headerName: "顺序",
+        field: "DisplayOrder"
+        // 自定义 多语言
+        // headerValueGetter: (params) => ({ 'zh-CN': '姓名', 'en-US': "Name" }[lodash.get(params, 'context.locale')])
+      },
+      {
+        headerName: "图标",
+        field: "ICon"
+      }
+    ]
   };
   // get rowData() {
   //   return toJS(this.PageStore.RowData);

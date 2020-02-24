@@ -39,7 +39,7 @@ import { GridOptions, SelectionChangedEvent, ColDef } from "ag-grid-community";
 })
 export default class Grid extends Vue {
   @Prop() PageStore: EntitiesPageStore;
-  @Prop() GridOptions;
+  @Prop() GridOptions: GridOptions;
   @Prop() Pagination: Pagination;
   @Prop({ default: () => [] }) rowData!: any;
   @Prop({ default: () => [] }) columnDefs!: any;
@@ -47,7 +47,10 @@ export default class Grid extends Vue {
     return toJS(this.PageStore.RowData);
   }
   get columnDefsProps() {
-    let ColumnDefs = toJS(this.PageStore.ColumnDefs);
+    let ColumnDefs = lodash.merge(
+      toJS(this.PageStore.ColumnDefs),
+      this.GridOptions.columnDefs
+    );
     ColumnDefs = lodash.map(ColumnDefs, (col: ColDef) => {
       // 默认情况下 使用 field 当英文
       if (this.$root.$i18n.locale === "en-US") {

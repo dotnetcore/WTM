@@ -25,7 +25,23 @@ export default class ViewGrid extends Vue {
     },
     context: {
       PageStore: this.PageStore
-    }
+    },
+    columnDefs: [
+      {
+        headerName: "角色编号",
+        field: "RoleCode"
+        // 自定义 多语言
+        // headerValueGetter: (params) => ({ 'zh-CN': '姓名', 'en-US': "Name" }[lodash.get(params, 'context.locale')])
+      },
+      {
+        headerName: "角色名称",
+        field: "RoleName"
+      },
+      {
+        headerName: "备注",
+        field: "RoleRemark"
+      }
+    ]
   };
   // get rowData() {
   //   return toJS(this.PageStore.RowData);

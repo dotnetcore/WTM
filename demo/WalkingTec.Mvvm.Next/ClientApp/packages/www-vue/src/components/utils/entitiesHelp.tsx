@@ -91,7 +91,10 @@ export function createFormItem({
         // const children = lodash.replace(item.children, 'v-decorator', `v-decorator="['${key}',${options}]"`)
         // const children = createChildrenTemplate(item);
         item = createChildrenTemplate(item)
-        const span = lodash.get(item, 'span', colProps); //lodash.merge({ xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6 }, item.span);
+        let span: any = lodash.get(item, 'span', colProps); //lodash.merge({ xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 6 }, item.span);
+        if (lodash.isNumber() || lodash.isString(span)) {
+            span = { span: span };
+        }
         let label = item.label;
         if (lodash.isObject(label)) {
             label = lodash.get(label, globalConfig.settings.language);

@@ -6,8 +6,9 @@ import { Request } from '@leng/public/src';
 import { EntitiesPageStore } from '@leng/public/src';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
-const development = process.env.NODE_ENV === "development"
-moment.locale('zh-cn');
+const development = process.env.NODE_ENV === "development";
+const language = lodash.get(window, 'navigator.language', 'zh-CN');
+moment.locale(language);
 // 设置 请求出错 通知
 Request.Error = (error) => {
     if (error.status === 400) {
@@ -20,6 +21,9 @@ Request.Error = (error) => {
     })
 }
 EntitiesPageStore.onError = (error, type) => {
+    if (error.status === 400) {
+        return
+    }
     notification.error({
         key: 'PageStoreError',
         description: '',
@@ -51,7 +55,7 @@ class ConfigStore {
     @persist("object")
     @observable
     settings = {
-        language: lodash.get(window, 'navigator.language', 'zh-CN'),
+        language: language,
         // layout 的 左上角 的 title
         title: 'WalkingTec MVVM',
         // 使用 IconFont 的图标配置
@@ -108,7 +112,7 @@ class ConfigStore {
 const GlobalConfig = new ConfigStore();
 declare module 'vue/types/vue' {
     interface Vue {
-      $GlobalConfig: ConfigStore;
+        $GlobalConfig: ConfigStore;
     }
-  }
+}
 export default GlobalConfig

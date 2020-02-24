@@ -16,7 +16,7 @@ export default {
      */
     editEntities(props?): EntitiesItems {
         return {
-            "Entity.ID":{
+            "Entity.ID": {
                 label: "",
                 options: {
                 },
@@ -24,10 +24,11 @@ export default {
             },
             /** 权限类型 */
             "DpType": {
-                
                 label: "权限类型",
+                span: 24,
                 options: {
-                    rules: [{ required: true }]
+                    rules: [{ required: true }],
+                    initialValue: 0,
                 },
                 dataSource: [
                     { label: "用户组权限", value: 0 },
@@ -37,17 +38,18 @@ export default {
             },
             /** 权限名称 */
             "Entity.TableName": {
-                
                 label: "权限名称",
+                span: 24,
                 options: {
+                    rules: [{ required: true }],
                 },
                 dataSource: Request.cache({ url: "/api/_DataPrivilege/GetPrivileges" }),
                 children: `<a-select v-decorator />`
             },
             /** 允许访问 */
             "SelectedItemsID": {
-                
                 label: "允许访问",
+                span: 24,
                 options: {
                 },
                 linkage: ['Entity.TableName'],
@@ -61,8 +63,8 @@ export default {
             },
             /** 全部权限 */
             "IsAll": {
-                
                 label: "全部权限",
+                span: 24,
                 options: {
                     initialValue: true
                 },
@@ -73,17 +75,19 @@ export default {
             },
             /** 用户Id */
             "UserItCode": {
-                
                 label: "用户账户",
+                span: 24,
                 options: {
+                    rules: [{ required: true }],
                 },
                 children: `<a-input v-decorator />`
             },
             /** 用户组 */
             "Entity.GroupId": {
-                
                 label: "用户组",
+                span: 24,
                 options: {
+                    rules: [{ required: true }],
                 },
                 dataSource: Request.cache({ url: "/api/_DataPrivilege/GetUserGroups" }),
                 children: `<a-select v-decorator />`
@@ -107,7 +111,7 @@ export default {
             "DpType": {
                 label: "权限类型",
                 options: {
-                    initialValue:0
+                    initialValue: 0
                 },
                 dataSource: [
                     { label: "用户组权限", value: 0 },

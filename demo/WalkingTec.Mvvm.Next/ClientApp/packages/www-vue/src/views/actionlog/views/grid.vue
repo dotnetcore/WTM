@@ -25,7 +25,46 @@ export default class ViewGrid extends Vue {
     },
     context: {
       PageStore: this.PageStore
-    }
+    },
+    columnDefs: [
+      {
+        headerName: "类型",
+        field: "LogType"
+      },
+      {
+        headerName: "模块",
+        field: "ModuleName"
+      },
+      {
+        headerName: "动作",
+        field: "ActionName"
+      },
+      {
+        headerName: "ITCode",
+        field: "ITCode"
+      },
+      {
+        headerName: "Url",
+        field: "ActionUrl"
+      },
+      {
+        headerName: "操作时间",
+        field: "ActionTime"
+      },
+      {
+        headerName: "时长",
+        field: "Duration"
+      },
+      {
+        headerName: "IP",
+        field: "IP"
+      },
+      {
+        headerName: "备注",
+        field: "Remark",
+        enableRowGroup: false
+      }
+    ]
   };
   // get rowData() {
   //   return toJS(this.PageStore.RowData);
