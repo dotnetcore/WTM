@@ -18,6 +18,7 @@
           v-if="CurrentPageActions.delete"
           :title="$t('action.deleteConfirmMultiple', { text:SelectedRowsLength  })"
           @confirm="onDelete(PageStoreContext.SelectedRows)"
+          :trigger="disabledDelete?'focus':'click'"
           okText="Yes"
           cancelText="No"
         >
@@ -440,15 +441,15 @@ export default class ViewAction extends Vue {
       });
       this.$notification.success({
         description: "",
-        message: `Delete Success`
+        message: this.$t("tips.success.operation") as any
       });
       this.onSearch();
     } catch (error) {
       console.error("TCL: onDelete -> error", error);
-      // this.$notification.error({
-      //   description: "",
-      //   message: error.message
-      // });
+      this.$notification.error({
+        description: "",
+        message: this.$t("tips.error.operation") as any
+      });
     }
   }
   /**
