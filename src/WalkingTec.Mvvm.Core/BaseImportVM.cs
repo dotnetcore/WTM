@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
@@ -36,36 +37,48 @@ namespace WalkingTec.Mvvm.Core
     {
         #region 字段、属性
         /// <summary>
+        /// 上传文件的Id，方便导入等操作中进行绑定，这类操作需要上传文件但不需要记录在数据库中，所以Model层中没有文件Id的字段
+        /// </summary>
+        [Display(Name = "UploadFile")]
+        public Guid? UploadFileId { get; set; }
+        /// <summary>
         /// 下载模板显示名称
         /// </summary>
+        [JsonIgnore]
         public string FileDisplayName { get; set; }
 
         /// <summary>
         /// 错误列表
         /// </summary>
+        [JsonIgnore]
         public TemplateErrorListVM ErrorListVM { get; set; }
 
         /// <summary>
         /// 是否验证模板类型（当其他系统模板导入到某模块时可设置为False）
         /// </summary>
+        [JsonIgnore]
         public bool ValidityTemplateType { get; set; }
 
         /// <summary>
         /// 下载模版页面的参数
         /// </summary>
+        [JsonIgnore]
         public Dictionary<string, string> Parms { get; set; }
 
+        [JsonIgnore]
         protected List<T> TemplateData;
 
 
         /// <summary>
         /// 要导入的Model列表
         /// </summary>
+        [JsonIgnore]
         public List<P> EntityList { get; set; }
 
         /// <summary>
         /// 模版
         /// </summary>
+        [JsonIgnore]
         public T Template { get; set; }
 
         //Model数据是否已被赋值
