@@ -85,6 +85,7 @@
     </div>
     <a-modal
       class="page-action-modal"
+      key="page-action-modal"
       :title="$t(title)"
       :destroyOnClose="true"
       :visible="visible"
@@ -93,7 +94,7 @@
     >
       <!-- <template #title>
        <h1></h1>
-      </template> -->
+      </template>-->
       <a-form layout="vertical" :form="form" :key="slotName">
         <a-spin :spinning="spinning">
           <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
@@ -237,7 +238,7 @@ export default class ViewAction extends Vue {
     const options = {
       onFieldsChange: (props, fields) => {
         this.FieldsChange.next({ props, fields, form: this.form });
-        this.$emit("fieldsChange", props,fields);
+        this.$emit("fieldsChange", props, fields);
       },
       validateMessages: messages
       // onValuesChange: (props, values) => {
@@ -253,7 +254,7 @@ export default class ViewAction extends Vue {
     // 初始化  异步 组件
     lodash.map(this.Entities, ent => {
       if (lodash.isFunction(ent.onComplete)) {
-        ent.onComplete({ FieldsChange: this.FieldsChange,form:this.form });
+        ent.onComplete({ FieldsChange: this.FieldsChange, form: this.form });
       }
     });
   }
