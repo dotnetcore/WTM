@@ -23,6 +23,8 @@ export interface IPageBehaviorOptions extends IRequestOptions {
     ExportByIds?: AjaxRequest;
     /** 模板 */
     Template?: AjaxRequest;
+    /** 其他 */
+    [key: string]: AjaxRequest | any;
 }
 /**
  * 对象 动作 行为 

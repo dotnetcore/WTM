@@ -34,12 +34,13 @@
         <a-divider v-if="CurrentPageActions.export" type="vertical" />
         <a-dropdown v-if="CurrentPageActions.export">
           <a-menu slot="overlay">
-            <a-menu-item key="1" @click="onExport">导出全部</a-menu-item>
+            <a-menu-item key="1" @click="onExport" v-t="'action.exportAll'"></a-menu-item>
             <a-menu-item
               :disabled="disabledDelete"
               key="2"
               @click="onExportByIds(PageStoreContext.SelectedRows)"
-            >导出勾选</a-menu-item>
+              v-t="'action.exportSelect'"
+            ></a-menu-item>
           </a-menu>
           <a-button>
             <span v-t="'action.export'" />
@@ -83,20 +84,19 @@
       </slot>
       <slot name="rowActionRight"></slot>
     </div>
-    <a-modal
-      class="page-action-modal"
+    <!-- <a-modal
+      wrapClassName="page-action-modal"
       :class="slotName"
       key="page-action-modal"
-      :title="$t(title)"
       :destroyOnClose="true"
       :visible="visible"
       :width="width"
       @cancel="onVisible(false)"
       @ok="onOk"
     >
-      <!-- <template #title>
-       <h1></h1>
-      </template>-->
+      <template #title>
+        <h4 v-w-swipe="'page-action-modal'" v-t="title" class="page-action-modal-title" />
+      </template>
       <a-form layout="vertical" :form="form" :key="slotName">
         <a-spin :spinning="spinning">
           <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
@@ -105,7 +105,29 @@
           </a-row>
         </a-spin>
       </a-form>
-    </a-modal>
+    </a-modal>-->
+    <w-modal
+      :visible="visible"
+      :width="width"
+      :slotName="slotName"
+      :form="form"
+      :title="$t(title)"
+      :spinning="spinning"
+      :PageStore="PageStoreContext"
+      @cancel="onVisible(false)"
+      @submit="onSubmit"
+    >
+      <template>
+        <a-form layout="vertical" :form="form" :key="slotName">
+          <a-spin :spinning="spinning">
+            <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
+            <a-row :gutter="24">
+              <slot :name="slotName"></slot>
+            </a-row>
+          </a-spin>
+        </a-form>
+      </template>
+    </w-modal>
   </div>
 </template> 
 <script lang="ts">
@@ -118,9 +140,10 @@ import lodash from "lodash";
 import { Subscriber, Subject } from "rxjs";
 import { toJS } from "mobx";
 import ImportUpload from "../upload/import.vue";
+import WModal from "./modal.vue";
 import { messages } from "./messages";
 // import { i18n } from "../../locale";
-@Component({ components: {} })
+@Component({ components: { WModal } })
 export default class ViewAction extends Vue {
   /**
    * page 状态
@@ -162,15 +185,15 @@ export default class ViewAction extends Vue {
   /**
    * 加载状态
    */
+  title = "";
+  /**
+   * 加载状态
+   */
   spinning = false;
   /**
    * 显示 隐藏 状态
    */
   visible = false;
-  /**
-   * 标题
-   */
-  title = "";
   /**
    * slot key
    */
@@ -181,12 +204,12 @@ export default class ViewAction extends Vue {
   get CurrentPageActions() {
     return lodash.merge(
       {
-        insert: true,
-        update: true,
-        delete: true,
-        import: true,
-        export: true,
-        details: true
+        insert: lodash.hasIn(this.PageStoreContext, "options.Insert.url"),
+        update: lodash.hasIn(this.PageStoreContext, "options.Update.url"),
+        delete: lodash.hasIn(this.PageStoreContext, "options.Delete.url"),
+        import: lodash.hasIn(this.PageStoreContext, "options.Import.url"),
+        export: lodash.hasIn(this.PageStoreContext, "options.Export.url"),
+        details: lodash.hasIn(this.PageStoreContext, "options.Details.url")
         // update:true,
       },
       this.PageActions
@@ -279,7 +302,7 @@ export default class ViewAction extends Vue {
   /**
    * 表单 提交处理
    */
-  onOk(e?) {
+  onSubmit(e?) {
     e && e.preventDefault();
     if (this.slotName === "Details") {
       return this.onVisible(false);
@@ -451,30 +474,5 @@ export default class ViewAction extends Vue {
 <style scoped lang="less">
 .page-action {
   text-align: right;
-}
-</style>
-<style  lang="less">
-.page-action-modal.ant-modal {
-  // min-width: 70vw;
-  // max-width: 99vw;
-  overflow: hidden;
-  top: 50px;
-  .ant-modal-body {
-    max-height: calc(100vh - 200px);
-    overflow: auto; // padding-bottom: 65px;
-  }
-  &.Details {
-    .ant-modal-footer button.ant-btn-primary {
-      display: none;
-    }
-  }
-}
-.page-import {
-  .ant-modal-confirm-body .ant-modal-confirm-content {
-    margin: 0;
-  }
-  .ant-modal-confirm-body > .anticon {
-    display: none;
-  }
 }
 </style>

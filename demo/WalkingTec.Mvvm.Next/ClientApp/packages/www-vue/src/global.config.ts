@@ -11,7 +11,7 @@ const language = lodash.get(window, 'navigator.language', 'zh-CN');
 moment.locale(language);
 // 设置 请求出错 通知
 Request.Error = (error) => {
-    if (error.status === 400) {
+    if (error.status === 400 || lodash.get(error, 'request.url', '').indexOf('CheckLogin')) {
         return
     }
     notification.error({

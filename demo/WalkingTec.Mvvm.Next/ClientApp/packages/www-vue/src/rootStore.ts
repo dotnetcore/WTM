@@ -7,7 +7,7 @@ import Globalconfig from './global.config';
 
 const RootStore = {
     UserStore: new EntitiesUserStore(),
-    TimeStore: new EntitiesTimeStore(),
+    // TimeStore: new EntitiesTimeStore(),
 }
 /**    def 获取 测试菜单    */
 if (Globalconfig.development) {

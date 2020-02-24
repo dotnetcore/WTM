@@ -147,7 +147,8 @@ export default class AgGrid extends Vue {
       defaultColDef: {
         minWidth: 150,
         enableRowGroup: true,
-        resizable: true
+        resizable: true,
+        filter: true,
       },
       onGridReady: event => {
         this.GridReadyEvent = event;

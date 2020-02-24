@@ -1,10 +1,10 @@
 <template>
   <w-actions
     :PageStore="PageStore"
-    :PageActions="{insert:false,update:false,import:false}"
     :Entities="Entities"
     :params="params"
   >
+    <!-- :PageActions="{insert:false,update:false,import:false}" -->
     <template #Details>
       <Entity-ModuleName display/>
       <Entity-ActionName display/>

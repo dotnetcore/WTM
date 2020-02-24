@@ -25,6 +25,7 @@ export default {
             /** 用户组编码 */
             "Entity.GroupCode": {
                 label: "用户组编码",
+                span:24,
                 options: {
                     rules: [{ required: true }]
                 },
@@ -33,6 +34,7 @@ export default {
             /** 用户组名称 */
             "Entity.GroupName": {
                 label: "用户组名称",
+                span:24,
                 options: {
                     rules: [{ required: true }]
                 },
@@ -41,6 +43,7 @@ export default {
             /** 备注 */
             "Entity.GroupRemark": {
                 label: "备注",
+                span:24,
                 options: {
                 },
                 children: `<a-input v-decorator />`

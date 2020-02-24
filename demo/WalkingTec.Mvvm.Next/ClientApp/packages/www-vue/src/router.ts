@@ -15,25 +15,18 @@ const routes: RouteConfig[] = [
   //   name: 'home',
   //   component: views.user.component,
   // },
-  ...lodash.map(views, (value) => {
-    return {
-      path: value.path,
-      name: value.name,
-      component: value.component
-    }
-  }),
   // {
   //   path: '*',
   //   // redirect: "/"
   //   component: views.user.component
   // },
 ]
-console.table(routes, ['path', 'name'])
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
+
 router.beforeEach((to, from, next) => {
   // console.log("TCL: from " + RootStore.UserStore.Loading, from);
   // console.log("TCL: to", to);
@@ -43,19 +36,19 @@ router.beforeEach((to, from, next) => {
   next()
   // }
 })
-// router.onReady(() => {
-//   console.warn('onReady');
-//   // 监控用户登录状态通知
-//   // const LoginSubscription = RootStore.UserStore.UserObservable.subscribe((entitie) => {
-//   //   console.warn("TCL: entitie", entitie)
-//   //   // LoginSubscription.unsubscribe();
-//   //   const isLogin = lodash.eq(router.currentRoute.path, '/login');
-//   //   if ((!entitie.Loading && !entitie.OnlineState)) {
-//   //     !isLogin && router.replace({ path: "/login" })
-//   //   } else {
-//   //     isLogin && router.replace({ path: "/" });
-//   //   }
-//   // });
-// })
+// 登陆成功 注册路由
+RootStore.UserStore.UserObservable.subscribe((entitie) => {
+  if ((!entitie.Loading) && entitie.OnlineState) {
+    const addRoutes = lodash.map(views, (value) => {
+      return {
+        path: value.path,
+        name: value.name,
+        component: value.component
+      }
+    });
+    router.addRoutes(addRoutes);
+    console.table(addRoutes, ['path', 'name'])
+  }
+});
 
 export default router

@@ -6,7 +6,7 @@
     @breakpoint="onBreakpoint"
   >
     <router-link to="/">
-      <div class="logo" />
+      <div class="layout-title" v-text="$GlobalConfig.settings.title" />
     </router-link>
     <a-menu
       :defaultSelectedKeys="selectedKeys"
@@ -73,9 +73,7 @@ export default class extends Vue {
     }
     return OpenKeys;
   }
-  mounted() {
-    
-  }
+  mounted() {}
   onCollapse(collapsed, type) {}
   onBreakpoint(broken) {}
 }
@@ -83,5 +81,13 @@ export default class extends Vue {
 <style lang="less">
 .ant-layout-sider {
   user-select: none;
+}
+.layout-title {
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+  background: rgba(143, 57, 57, 0.2);
+  color: #fff;
+  margin: 16px;
 }
 </style>

@@ -2,7 +2,7 @@ import Vue, { CreateElement } from 'vue';
 import lodash from 'lodash';
 export default {
     'avatar': Vue.component('wtm-grid-avatar', {
-        template: '<a-avatar icon="user" :src="src" v-viewer />',
+        template: '<a-avatar icon="user" :src="src" v-w-viewer />',
         computed: {
             fileService(){
                 return this.$GlobalConfig.onCreateFileService();
@@ -20,7 +20,7 @@ export default {
     }),
     'switch': Vue.component('wtm-grid-switch', {
         template: `
-        <a-switch :checked="checked">
+        <a-switch :checked="checked" disabled>
             <a-icon type="check" slot="checkedChildren" />
             <a-icon type="close" slot="unCheckedChildren" />
         </a-switch>
