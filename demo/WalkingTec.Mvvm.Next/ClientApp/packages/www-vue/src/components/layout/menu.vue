@@ -32,9 +32,9 @@
 import SubMenu from "./subMenu.vue";
 import lodash from "lodash";
 import rootStore from "../../rootStore";
-import { observer } from "mobx-vue";
+// import { observer } from "mobx-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
-@observer
+// @observer
 @Component({
   components: {
     "sub-menu": SubMenu

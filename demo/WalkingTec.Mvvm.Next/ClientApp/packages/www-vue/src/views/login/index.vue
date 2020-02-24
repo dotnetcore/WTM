@@ -36,10 +36,10 @@
   </div>
 </template>
 <script lang="ts">
-import { observer } from "mobx-vue";
+// import { observer } from "mobx-vue";
 import rootStore from "../../rootStore";
 import { Component, Prop, Vue } from "vue-property-decorator";
-@observer
+// @observer
 @Component
 export default class Login extends Vue {
   UserStore = rootStore.UserStore;
