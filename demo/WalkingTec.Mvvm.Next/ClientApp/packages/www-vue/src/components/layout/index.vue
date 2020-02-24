@@ -6,7 +6,7 @@
         <LayoutHeader />
       </a-layout-header>
       <a-layout-content class="app-layout-content">
-        <router-view></router-view>
+        <LayoutContent/>
       </a-layout-content>
     </a-layout>
     <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible"></a-drawer>
@@ -14,6 +14,7 @@
 </template>
 <script lang="ts">
 import LayoutMenu from "./menu.vue";
+import LayoutContent from "./content.vue";
 import LayoutHeader from "./header.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
@@ -21,7 +22,8 @@ import lodash from "lodash";
 @Component({
   components: {
     LayoutMenu,
-    LayoutHeader
+    LayoutHeader,
+    LayoutContent
   }
 })
 export default class extends Vue {

@@ -1,9 +1,9 @@
 <template>
   <div class="app-page">
-    <a-card class="page-card" v-show="false">
+    <a-card class="page-card" :bordered="false" v-show="false">
       <ViewFilter :PageStore="PageStore" />
     </a-card>
-    <a-card class="page-card">
+    <a-card class="page-card" :bordered="false">
       <ViewAction :PageStore="PageStore" />
       <a-divider class="page-divider" />
       <ViewGrid :PageStore="PageStore" />

@@ -9,8 +9,8 @@
       <div class="layout-title" v-text="$GlobalConfig.settings.title" />
     </router-link>
     <a-menu
-      :defaultSelectedKeys="selectedKeys"
-      :defaultOpenKeys="openKeys"
+      :selectedKeys="selectedKeys"
+      :openKeys="openKeys"
       mode="inline"
       theme="dark"
     >
