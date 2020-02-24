@@ -7,6 +7,32 @@
 
 ## v2.4.x
 
+v2.4.6(2020-2-22)
+本次更新加入了在连接字符串上指定数据库类型和DataContext的功能，并修复了近一阶段的bug。
+* **新增：**  现在在appsettings中的ConnectionStrings里面可以指定每一个连接字符串的DbType和DbContext
+* **新增：**  现在新增了一个EmptyContext基类，FrameworkContext会包含框架自带的表，而EmptyContext不会，这对于我们使用WTM连接其他系统的数据库十分有用
+* **注意：**  老版本升级时需要在DataContext文件中加入一个新的构造函数：
+        public DataContext(CS cs)
+             : base(cs)
+        {
+        }
+* **新增：**  增加了NoLog标记，用来指定某个方法不记录系统日志
+* **修改：**  移除了不必要的验证，提升webapi的响应速度
+* **新增：**  Layui模式下登陆页面新增了用户注册的演示页面
+* **修改：**  修复了layui模式下autocomplete textbox在有初始值时的js错误
+* **修改：**  修复了layui模式下可编辑grid表头错位的bug
+* **修改：**  修复了PIndex页面的js错误
+* **修改：**  移除了React模式下对node-sass的依赖
+* **修改：**  移除了React模式下数据权限管理的bug
+* **修改：**  修复了WebApi在非调试模式下权限认证的bug
+* **修改：**  修复了代码生成器生成React菜单的bug
+* **修改：**  修复了代码生成器生成标记了[Range(xxx.Max)]字段的bug
+
+
+
+
+
+
 v2.4.5 (2020-1-4)
 本次为累积更新，修复了一个月以来issue上提出的主要bug
 * **修改：**  修复了获取PersistPoco的下拉选项时，没有过滤IsVaild=false的问题
