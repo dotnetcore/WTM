@@ -178,7 +178,6 @@ export default class AgGrid extends Vue {
         height = innerHeight - offsetTop - 55;
       this.height = height < 400 ? 400 : height;
     } catch (error) {
-      console.error("TCL: AgGrid -> onSetHeight", error);
       this.height = 400;
     }
   }

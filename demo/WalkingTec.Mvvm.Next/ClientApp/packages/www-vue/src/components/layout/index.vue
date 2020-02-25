@@ -2,12 +2,8 @@
   <a-layout class="app-layout">
     <LayoutMenu />
     <a-layout>
-      <a-layout-header class="app-layout-header">
         <LayoutHeader />
-      </a-layout-header>
-      <a-layout-content class="app-layout-content">
         <LayoutContent/>
-      </a-layout-content>
     </a-layout>
     <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible"></a-drawer>
   </a-layout>
@@ -42,8 +38,42 @@ export default class extends Vue {
     background: rgba(143, 57, 57, 0.2);
     margin: 16px;
   }
+  >.ant-layout-sider{
+     position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    z-index: 10;
+  }
+  >.ant-layout{
+    padding-left:200px;
+       @media (max-width: 992px){
+    padding-left:0;
+    }
+  }
+  .app-layout-header{
+    position: fixed;
+    top: 0;
+    right: 0;
+    // width: calc(100% - 200px);
+    left: 200px;
+      @media (max-width: 992px){
+    left: 0;
+    }
+  }
+  .app-layout-content{
+    padding-top:104px
+  }
+  .layout-tabs > .ant-tabs-bar {
+    position: fixed;
+    right: 0;
+    top: 64px;
+    z-index: 7;
+     left: 200px;
+      @media (max-width: 992px){
+    left: 0;
+    }
 }
-.app-layout-content {
-  margin: 8px;
 }
+
 </style>

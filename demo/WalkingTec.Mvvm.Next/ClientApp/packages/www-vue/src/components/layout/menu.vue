@@ -10,7 +10,7 @@
     </router-link>
     <a-menu
       :selectedKeys="selectedKeys"
-      :openKeys="openKeys"
+      :defaultOpenKeys="openKeys"
       mode="inline"
       theme="dark"
     >
