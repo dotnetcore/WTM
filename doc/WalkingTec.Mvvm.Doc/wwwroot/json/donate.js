@@ -142,11 +142,13 @@
         {"date":"2020-02-16","name":"CWY","amount":2.00,"from":"微信","comment":"-"},
         {"date":"2020-02-16","name":"C*Y","amount":2.00,"from":"微信","comment":"-"},
         {"date":"2020-02-16","name":"*钧","amount":5.00,"from":"微信","comment":"-"},
-        {"date":"2020-02-16","name":"牛恒绗","amount":8.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-16","name":"Reese the Fatl","amount":8.00,"from":"微信","comment":"-"},
         {"date":"2020-02-20","name":"y*t","amount":10.00,"from":"微信","comment":"-"},
         {"date":"2020-02-20","name":"*风","amount":88.00,"from":"微信","comment":"-"},
         {"date":"2020-02-21","name":"$XuFeng","amount":2.00,"from":"微信","comment":"-"},
         {"date":"2020-02-21","name":"$XuFeng","amount":2.00,"from":"微信","comment":"-"},
-        {"date":"2020-02-21","name":"M*g","amount":5.00,"from":"微信","comment":"-"}
+        {"date":"2020-02-21","name":"M*g","amount":5.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-22","name":"*子","amount":5.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-22","name":"y*t","amount":10.00,"from":"微信","comment":"-"}
     ]
 }
