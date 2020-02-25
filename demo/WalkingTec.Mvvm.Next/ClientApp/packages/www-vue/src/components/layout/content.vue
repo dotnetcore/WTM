@@ -1,5 +1,8 @@
 <template>
- <a-layout-content class="app-layout-content" :class="{ 'layout-content-tabs': $GlobalConfig.settings.tabsPage }">
+  <a-layout-content
+    class="app-layout-content"
+    :class="{ 'layout-content-tabs': $GlobalConfig.settings.tabsPage }"
+  >
     <a-tabs
       v-if="$GlobalConfig.settings.tabsPage"
       class="layout-tabs"
@@ -9,7 +12,11 @@
       :activeKey="$route.fullPath"
       @edit="onEdit"
     >
-      <a-tab-pane v-for="page in TabPages" :key="page.fullPath" :closable="true">
+      <a-tab-pane
+        v-for="page in TabPages"
+        :key="page.fullPath"
+        :closable="true"
+      >
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
@@ -44,36 +51,35 @@ export default class extends Vue {
     }
     this.TabPages.push(this.$route);
   }
-  onEdit(targetKey, action){
-    this.$router.back()
-    lodash.remove(this.TabPages,["fullPath", targetKey]);
+  onEdit(targetKey, action) {
+    this.$router.back();
+    lodash.remove(this.TabPages, ["fullPath", targetKey]);
   }
 }
 </script>
 <style lang="less">
 .layout-tabs {
-
-  &.ant-tabs{
-    position:initial;
+  &.ant-tabs {
+    position: initial;
   }
-    .ant-tabs-nav-container{
-  background:#fff;
+  .ant-tabs-nav-container {
+    background: #fff;
   }
   .ant-tabs-bar {
     margin: 0;
   }
-  .ant-tabs-tabpane{
-    padding:8px
+  .ant-tabs-tabpane {
+    padding: 8px;
   }
 }
 .app-layout-content {
   margin: 8px;
-      position: relative;
-  &.layout-content-tabs{
-    margin:0 
+  position: relative;
+  &.layout-content-tabs {
+    margin: 0;
   }
- a{
-text-decoration:none
- } 
+  a {
+    text-decoration: none;
+  }
 }
 </style>

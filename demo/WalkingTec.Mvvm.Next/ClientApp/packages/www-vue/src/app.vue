@@ -1,6 +1,6 @@
 <template>
   <a-locale-provider :locale="locale">
-    <div v-if="UserStore.Id&&UserStore.Loading" class="user-loading">
+    <div v-if="UserStore.Id && UserStore.Loading" class="user-loading">
       <a-spin>
         <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
       </a-spin>
@@ -25,7 +25,11 @@ import lodash from "lodash";
 export default class App extends Vue {
   UserStore = RootStore.UserStore;
   get locale() {
-    return lodash.get(locale, this.$GlobalConfig.settings.language, locale["zh-CN"]);
+    return lodash.get(
+      locale,
+      this.$GlobalConfig.settings.language,
+      locale["zh-CN"]
+    );
   }
   mounted() {}
   destroyed() {}

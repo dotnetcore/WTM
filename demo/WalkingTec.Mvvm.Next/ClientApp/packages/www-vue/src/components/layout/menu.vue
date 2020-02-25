@@ -27,7 +27,6 @@
   </a-layout-sider>
 </template>
 
-
 <script lang="ts">
 import SubMenu from "./subMenu.vue";
 import lodash from "lodash";
