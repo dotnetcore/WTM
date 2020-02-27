@@ -33,7 +33,6 @@
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
-import baseMixin from "@/vue-custom/mixin/base";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import DialogForm from "./dialog-form.vue";
@@ -42,7 +41,7 @@ import store from "@/store/system/frameworkgroup";
 import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
 
 @Component({
-    mixins: [baseMixin, searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         DialogForm

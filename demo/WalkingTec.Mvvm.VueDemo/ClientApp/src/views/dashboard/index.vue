@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-container">
     <el-row :gutter="10">
-      <el-col :span="16">
+      <el-col :span="16" :md="16" :xs="24" :sm="24">
         <el-row :gutter="10">
-          <el-col :span="12">
+          <el-col :span="12" :xs="24">
             <el-card shadow="hover">
               <div slot="header">快捷方式</div>
               <el-row class="lump-wrap" :gutter="10">
@@ -14,7 +14,7 @@
               </el-row>
             </el-card>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="12" :xs="24">
             <el-card shadow="hover">
               <div slot="header"><span>WTM开源</span></div>
               <el-row class="lump-wrap cxt-left" :gutter="10">
@@ -45,20 +45,12 @@
               </el-row>
             </el-card>
           </el-col>
-          <!-- <el-col :span="24">
-            <el-card shadow="hover">
-              <div slot="header">WTM开源</div>
-              WTM是纯开源免费框架，如果喜欢，来GitHub赏个星~~
-              <br />
-              <iframe src="https://ghbtns.com/github-btn.html?user=dotnetcore&repo=wtm&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
-            </el-card>
-          </el-col> -->
-          <el-col :span="24">
+          <el-col :span="24" :sm="24">
             <e-charts-module />
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" :md="8" :xs="24" :sm="24">
         <el-col :span="24">
           <el-card shadow="hover">
             <div slot="header">框架特点</div>

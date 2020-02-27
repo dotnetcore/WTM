@@ -54,7 +54,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
  * $attrs作用域赋给el-table，el-pagination需要通过prop自定义
  */
 @Component
-export default class FuzzySearch extends Vue {
+export default class TableBox extends Vue {
     @Prop(Boolean)
     loading;
     @Prop({ type: Boolean, default: false })

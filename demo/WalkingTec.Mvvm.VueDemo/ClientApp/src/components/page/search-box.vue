@@ -1,30 +1,27 @@
 <template>
-    <!-- <el-card class="fuzzy-card">
-    </el-card> -->
-    <div class="fuzzy-search">
-        <div class="flex-container">
-            <div v-if="isFuzzy" class="search-input el-input el-input--small">
-                <slot name="search-content" />
-            </div>
-            <el-button-group v-if="isFuzzy" class="button-group">
-                <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
-                    查询
-                </el-button>
-                <el-button v-if="needCollapse&&$slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
-                    <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
-                </el-button>
-            </el-button-group>
-            <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
-                重置
-            </el-button>
-            <div :class="{'fr': isFuzzy,'tar': !isFuzzy}">
-                <slot name="operation" />
-            </div>
-        </div>
-        <div class="wtm-collapse" :class="{'is-active':!isFuzzy || isActive}" v-show="$slots['collapse-content']">
-            <slot name="collapse-content" />
-        </div>
-    </div>
+    <el-card class="fuzzy-search" shadow="never">
+        <el-form :inline="true" label-width="75px">
+            <el-row class="flex-container">
+                <slot v-if="isFuzzy" />
+                <template v-if="$slots['collapse-content'] && isActive">
+                    <slot name="collapse-content" />
+                </template>
+                <wtm-form-item class="search-but-box">
+                    <el-button-group v-if="isFuzzy" class="button-group">
+                        <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
+                            查询
+                        </el-button>
+                        <el-button v-if="needCollapse&&$slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
+                            <i class="fa arrow-down el-icon-arrow-down" :class="{'is-active': isActive}" />
+                        </el-button>
+                    </el-button-group>
+                    <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
+                        重置
+                    </el-button>
+                </wtm-form-item>
+            </el-row>
+        </el-form>
+    </el-card>
 </template>
 
 <script lang='ts'>
@@ -33,8 +30,6 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 export default class FuzzySearch extends Vue {
     @Prop({ default: 200 })
     inputWidth!: number;
-    // @Prop({ default: "" })
-    // placeholder!: string;
     @Prop({ default: true })
     isFuzzy!: boolean;
     @Prop({ default: "" })
@@ -45,20 +40,31 @@ export default class FuzzySearch extends Vue {
     needResetBtn!: boolean;
     @Prop({ default: false }) // 禁用input，通常是在加载的时候禁用
     disabledInput!: boolean;
-    @Prop({ default: 0 })
+    @Prop({ default: 75 })
     searchLabelWidth!: number;
     @Prop({ default: "fuzzy" })
     fuzzyField!: string;
+    @Prop({ type: Object, default: null }) // 执行事件集合
+    searchEvent!: object;
+
     labelPadding: number = -30;
     isActive: boolean = false;
     onSearch() {
-        this.$emit("onSearch");
+        if (this.searchEvent && this.searchEvent["onSearch"]) {
+            this.searchEvent["onSearch"]();
+        } else {
+            this.$emit("onSearch");
+        }
     }
     toggleCollapse() {
         this.isActive = !this.isActive;
     }
     onReset() {
-        this.$emit("onReset");
+        if (this.searchEvent && this.searchEvent["onReset"]) {
+            this.searchEvent["onReset"]();
+        } else {
+            this.$emit("onReset");
+        }
     }
 }
 </script>
@@ -69,9 +75,6 @@ export default class FuzzySearch extends Vue {
 }
 .fuzzy-search {
     background-color: #f5f5f5;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    padding: 15px 10px 10px;
     .search-text {
         display: inline-block;
         margin-left: 10px;
@@ -85,9 +88,10 @@ export default class FuzzySearch extends Vue {
     }
     .search-input {
         width: auto;
-        display: inline-block;
-        height: 40px;
-        padding-right: 20px;
+        float: left;
+    }
+    .search-but {
+        height: 100%;
     }
     .button-group {
         margin-left: 24px;
@@ -126,7 +130,7 @@ export default class FuzzySearch extends Vue {
         }
         &.is-active {
             opacity: 1;
-            margin: 10px 0;
+            // margin: 10px 0;
             max-height: 500px;
         }
     }
@@ -136,6 +140,11 @@ export default class FuzzySearch extends Vue {
     }
     .flex-container {
         overflow: hidden;
+        .search-but-box {
+            .el-form-item__content {
+                line-height: 0;
+            }
+        }
     }
 }
 </style>

@@ -41,7 +41,6 @@
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import baseMixin from "@/vue-custom/mixin/base";
 import mixinFunc from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import store from "@/store/system/dataprivilege";
@@ -52,7 +51,7 @@ const defaultSearchData = {
     DomainID: ""
 };
 @Component({
-    mixins: [baseMixin, mixinFunc(defaultSearchData), actionMixin],
+    mixins: [mixinFunc(defaultSearchData), actionMixin],
     store,
     components: {
         DialogForm

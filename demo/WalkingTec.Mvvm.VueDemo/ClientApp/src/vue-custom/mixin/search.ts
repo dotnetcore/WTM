@@ -39,7 +39,15 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     loading: boolean = false; // 加载中
     tableData: Array<any> = []; // 列表数据
     selectData: Array<any> = []; // 列表选中数据
-
+    /**
+     * 返回事件集合
+     */
+    get searchEvent() {
+      return {
+        onSearch: this.onSearch,
+        onReset: this.onReset
+      };
+    }
     // 查询 ★★★★★
     created() {
       this.onSearch();
@@ -88,9 +96,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     }
     onSearch() {
       this.pageDate.currentPage = 1;
-      Object.keys(SEARCH_DATA).forEach(key => {
-        this.searchForm[key] = SEARCH_DATA[key];
-      });
       this.fetch();
     }
     onHoldSearch() {
@@ -98,6 +103,9 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     }
     onSearchForm() {
       this.pageDate.currentPage = 1;
+      Object.keys(SEARCH_DATA).forEach(key => {
+        this.searchForm[key] = SEARCH_DATA[key];
+      });
       this.fetch();
     }
     // 重置
@@ -121,7 +129,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     // 翻页
     handleCurrentChange(currentpage) {
       this.pageDate.currentPage = currentpage;
-      console.log("currentpage", currentpage);
       this.fetch(true);
     }
     // 排序
@@ -139,7 +146,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       this.fetch();
     }
     onSelectionChange(selectData: Array<any>) {
-      console.log("selectData", selectData);
       this.selectData = selectData;
     }
   }
