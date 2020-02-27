@@ -2,7 +2,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { listToString, exportXlsx } from "@/util/string";
 import { createBlob } from "@/util/files";
 import UploadBox from "@/components/page/upload/index.vue";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
 
 type EventFunction = (data: Object | String | Array<any>) => void;
 type DefaultFunction = () => void;
@@ -34,7 +34,8 @@ export default class actionMixins extends Vue {
   @Action("detail") detail;
   @Action("imported") imported;
   @Action("getExcelTemplate") getExcelTemplate;
-
+  // api 授权权限列表
+  @State actionList;
   // 表单弹出框内容 ★★★★☆
   dialogIsShow: Boolean = false;
   // 打开选中数据
@@ -86,7 +87,7 @@ export default class actionMixins extends Vue {
    * @param params
    */
   onDelete(params) {
-    this["onConfirm"]().then(() => {
+    this.onConfirm().then(() => {
       const parameters = [params.ID];
       this.batchDelete(parameters).then(res => {
         this["$notify"]({
@@ -101,7 +102,7 @@ export default class actionMixins extends Vue {
    * 多个删除★★★★★
    */
   onBatchDelete() {
-    this["onConfirm"]().then(() => {
+    this.onConfirm().then(() => {
       const parameters = listToString(this["selectData"], "ID");
       this.batchDelete(parameters).then(res => {
         this["$notify"]({
@@ -168,6 +169,17 @@ export default class actionMixins extends Vue {
         type: "success"
       });
       this["onHoldSearch"]();
+    });
+  }
+  /**
+   * 删除确认
+   * @param title
+   */
+  onConfirm(title: string = "确认删除, 是否继续?") {
+    return this["$confirm"](title, "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
     });
   }
   /**

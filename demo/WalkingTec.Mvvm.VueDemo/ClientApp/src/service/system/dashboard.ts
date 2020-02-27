@@ -1,5 +1,4 @@
-import config from "@/config/index";
-const reqPath = config.headerApi + "/_framework";
+const reqPath = "/_framework";
 
 // github info
 const getGithubInfo = {

@@ -1,5 +1,5 @@
 <template>
-  <el-col :span="$attrs.span || 24">
+  <el-col :lg="size.lg" :sm="size.sm" :xs="size.xs">
     <el-form-item class="form-item" ref="elItem" v-bind="$attrs">
       <slot v-if="isEdit" />
       <template v-else>
@@ -33,6 +33,15 @@ export default class WtmFormItem extends Vue {
         return this.status !== this.$actionType.detail;
     }
 
+    get size() {
+        const span = parseInt(this.$attrs.span) || 6;
+        return {
+            lg: span,
+            sm: span + 4,
+            xs: 24
+        };
+    }
+
     showError(msg) {
         this.$refs["elItem"].clearValidate();
         if (msg) {
@@ -44,7 +53,12 @@ export default class WtmFormItem extends Vue {
 </script>
 <style lang='less'>
 .form-item {
-    width: 90%;
+    margin-bottom: 0;
+    padding: 10px 0;
+    &.el-form-item--small.el-form-item {
+        margin-bottom: 0;
+    }
+    // width: 90%;
     .el-form-item__label::after {
         content: ":";
     }

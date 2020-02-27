@@ -21,15 +21,13 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { setCookie } from "@/util/cookie";
 import config from "@/config/index";
-import baseMixin from "@/vue-custom/mixin/base";
 
 @Component({
-    mixins: [baseMixin]
+    mixins: []
 })
 export default class Login extends Vue {
     @Action
     login;
-
     formData = {
         userid: config.development ? "admin" : "",
         password: config.development ? "000000" : ""
@@ -45,7 +43,7 @@ export default class Login extends Vue {
             .then(res => {
                 this.isloading = false;
                 setCookie(config.tokenKey, res.Id);
-                this["onHref"]("/index.html");
+                location.href = "/index.html";
             })
             .catch(() => {
                 this.isloading = false;

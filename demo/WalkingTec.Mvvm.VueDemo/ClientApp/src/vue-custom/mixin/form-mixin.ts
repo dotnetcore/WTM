@@ -1,6 +1,5 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import DialogFooter from "@/components/page/dialog/dialog-footer.vue";
-import WtmFormItem from "@/components/page/wtm-form-item.vue";
 import { Action } from "vuex-class";
 
 /**
@@ -23,7 +22,7 @@ interface formdata {
 }
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
   @Component({
-    components: { DialogFooter, WtmFormItem }
+    components: { DialogFooter }
   })
   class formMixins extends Vue {
     @Action("add") add; // 添加 》store
