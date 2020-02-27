@@ -11,6 +11,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolVM : BaseCRUDVM<School>
     {
+        [JsonIgnore]
         public MajorDetailListVM MajorList { get; set; }
 
         public int? Slider0 { get; set; }

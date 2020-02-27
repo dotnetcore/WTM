@@ -163,8 +163,9 @@
             <wt:tabcontent>
                 <wt:form vm="@Model" style="max-width:600px;">
                     <wt:combobox field="SelectedSchool3" label-text="学校" items="AllSchools" link-field="SelectedMajor" trigger-url="/UI/GetMajorBySchool"/>
-                    <wt:combobox field="SelectedMajor" label-text="专业"/>
-                    <wt:row align="AlignEnum.Right">
+                    <wt:combobox field="SelectedMajor" label-text="专业" link-field="SelectedStudent" trigger-url="/UI/GetStudentByMajor"/>
+                     <wt:combobox field="SelectedStudent" label-text="学生"/>
+                   <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
                         <wt:closebutton disabled="true" />
                     </wt:row>
@@ -174,7 +175,8 @@
                 <wt:code>
 &ltwt:form vm="@@Model" width="600"&gt
     &ltwt:combobox field="SelectedSchool3" label-text="学校" items="AllSchools" link-field="SelectedMajor" trigger-url="/UI/GetMajorBySchool"/&gt
-    &ltwt:combobox field="SelectedMajor" label-text="专业"/&gt
+    &ltwt:combobox field="SelectedMajor" label-text="专业" link-field="SelectedStudent" trigger-url="/UI/GetStudentByMajor"/&gt
+    &ltwt:combobox field="SelectedStudent" label-text="学生" /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
@@ -211,6 +213,21 @@ public IActionResult GetMajorBySchool(string id)
     var rv = schools.Where(x =&gt x.SchoolName == id).SelectMany(x=&gtx.Majors).Select(x =&gt new { Text = x.MajorName, Value = x.ID }).ToList();
     return Json(rv);
 }
+
+  public IActionResult GetStudentByMajor(string id)
+  {
+      //生成专业名+学生1，2，3这种模拟数据返回到前台
+      List&lt;ComboSelectListItem&gt; rv = new List&lt;ComboSelectListItem&gt;();
+      for(int i = 1; i &lt;= 5; i++)
+      {
+          rv.Add(new ComboSelectListItem
+          {
+              Text = id + "学生" + i
+          }); ;
+      }
+      return Json(rv);
+  }
+
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>

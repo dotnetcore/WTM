@@ -11,8 +11,10 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Mvc\home\Reg.txt" />
     <None Remove="SetupFiles\Mvc\LoginController3.txt" />
     <None Remove="SetupFiles\test\MockController3.txt" />
+    <None Remove="SetupFiles\vms\RegVM.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +30,7 @@
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Reg.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\PIndex.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Layout.txt" />
@@ -57,6 +60,7 @@
     <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
     <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\RegVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
   </ItemGroup>
 

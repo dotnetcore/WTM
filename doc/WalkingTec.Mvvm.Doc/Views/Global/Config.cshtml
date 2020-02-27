@@ -9,11 +9,15 @@
   "ConnectionStrings": [
   {
   "Key": "default",
-  "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true",
+  "DbType":"SqlServer",
+  "DbContext":"DataContext"
   },
   {
   "Key": "test",
-  "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
+  "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true",
+  "DbType":"Mysql",
+  "DbContext":"DataContext2"
   }
   ],
   "DBType": "SqlServer",
@@ -98,7 +102,9 @@
         <tbody>
           <tr>
             <td>ConnectionStrings</td>
-            <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default</td>
+            <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default<br/>
+                从2.4.6和3.1.3版本开始，连接字符串上可以单独指定 DbType和DbContext
+            </td>
           </tr>
           <tr>
             <td>DBType</td>
