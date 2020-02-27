@@ -104,6 +104,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Select(x => x.MenuItem)
                     .Where(x => x.MethodName == null)
+                    .OrderBy(x=>x.DisplayOrder)
                     .Select(x => new SimpleMenu
                     {
                         Id = x.ID.ToString().ToLower(),
@@ -178,7 +179,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                                     Url = x.Url,
                                     Icon = x.ICon
                                 });
-                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
+                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x=>x.DisplayOrder).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),

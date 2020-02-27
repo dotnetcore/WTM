@@ -57,16 +57,20 @@
   <wt:quote>列表按钮的默认行为显示在列表上方，点击后弹出模式对话框显示页面</wt:quote>
   <p>以下代码片段展示了按钮的多种设置方法</p>
   <wt:code title="InitGridAction">
-protected override List<GridAction> InitGridAction()
+protected override List&lt;GridAction&gt; InitGridAction()
 {
-    var actions = new List<GridAction>
+    var actions = new List&lt;GridAction&gt;
   {
     //调用页面上的名为test(ids,datas)的js方法
     this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
-    //默认弹出对话框，并在每行显示按钮
-    this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowInRow(true).SetQueryString("a=1"),
+
+    //默认弹出对话框，并在每行显示按钮。通过whereStr指定将当前数据的ModelName字段的值拼接到url中,通过SetQueryString将固定的字符串拼到url中
+    //下面这个语句最终访问的url为 ： /_Admin/ActionLog/Details?id=xxx&ModelName=xxx&a=1
+    this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin",whereStr:x=>x.ModuleName).SetShowInRow(true).SetQueryString("a=1"),
+
     //设置IsRedirect和ShowDialog为true，弹出新浏览器窗口，并在每行显示按钮
     this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
+
     //设置IsRedirect为true，ShowDialog为false，在本窗口或tab页上显示，并在每行显示按钮
     this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
   };

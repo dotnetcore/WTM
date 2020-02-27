@@ -1,0 +1,15 @@
+@model $vmns$.HomeVMs.RegVM
+
+
+<p style="text-align:center;margin-top:10px;font-size:16px">新用户注册</p>
+<wt:form vm="@Model">
+  <wt:textbox field="ITCode" />
+  <wt:textbox field="Name" />
+  <wt:textbox is-password="true" field="Password" />
+  <wt:textbox is-password="true" field="NewPasswordComfirm" />
+  <wt:textbox field="Email" />
+  <wt:textbox field="CellPhone" />
+  <wt:row align="AlignEnum.Center">
+    <wt:submitbutton size=" ButtonSizeEnum.Normal" />
+  </wt:row>
+</wt:form>
