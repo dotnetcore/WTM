@@ -21,13 +21,14 @@ import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import store from "@/store/system/frameworkmenu";
+import DialogForm from "./dialog-form.vue";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
 
 @Component({
     mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
-    components: {}
+    components: { DialogForm }
 })
 export default class Index extends Vue {
     // 动作

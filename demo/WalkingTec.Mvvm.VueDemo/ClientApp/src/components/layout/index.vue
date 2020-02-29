@@ -53,8 +53,8 @@ export default class extends mixins(ResizeMixin) {
 }
 </script>
 
-<style lang="scss" scoped>
-@import "@/assets/styles/_variables.scss";
+<style lang="less" scoped>
+@import "~@/assets/css/variable.less";
 .app-wrapper {
     &:after {
         content: "";
@@ -79,13 +79,13 @@ export default class extends mixins(ResizeMixin) {
 .main-container {
     min-height: 100%;
     transition: margin-left 0.28s;
-    margin-left: $sideBarWidth;
+    margin-left: @sideBarWidth;
     position: relative;
 }
 
 .sidebar-container {
     transition: width 0.28s;
-    width: $sideBarWidth !important;
+    width: @sideBarWidth !important;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -101,7 +101,7 @@ export default class extends mixins(ResizeMixin) {
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    width: calc(100% - @sideBarWidth);
     transition: width 0.28s;
 }
 
@@ -127,7 +127,7 @@ export default class extends mixins(ResizeMixin) {
 
     .sidebar-container {
         transition: transform 0.28s;
-        width: $sideBarWidth !important;
+        width: @sideBarWidth !important;
     }
 
     &.openSidebar {
@@ -139,7 +139,7 @@ export default class extends mixins(ResizeMixin) {
         .sidebar-container {
             pointer-events: none;
             transition-duration: 0.3s;
-            transform: translate3d(-$sideBarWidth, 0, 0);
+            transform: translate3d(-@sideBarWidth, 0, 0);
         }
     }
 

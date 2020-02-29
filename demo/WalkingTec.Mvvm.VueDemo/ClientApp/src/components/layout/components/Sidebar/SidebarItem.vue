@@ -104,21 +104,21 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
-@import "@/assets/styles/_variables.scss";
+<style lang="less">
+@import "~@/assets/css/variable.less";
 
 .el-submenu.is-active > .el-submenu__title {
-    color: $subMenuActiveText !important;
+    color: @subMenuActiveText !important;
 }
 
 .full-mode {
     .nest-menu .el-submenu > .el-submenu__title,
     .el-submenu .el-menu-item {
-        min-width: $sideBarWidth !important;
-        background-color: $subMenuBg !important;
+        min-width: @sideBarWidth !important;
+        background-color: @subMenuBg !important;
 
         &:hover {
-            background-color: $subMenuHover !important;
+            background-color: @subMenuHover !important;
         }
     }
 }

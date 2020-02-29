@@ -75,6 +75,9 @@ export default class WtmFormItem extends Vue {
             this.$refs["elItem"].validateState = "error";
         }
     }
+    clearValidate() {
+        this.$refs["elItem"].clearValidate();
+    }
 }
 </script>
 <style lang="less" scoped>

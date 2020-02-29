@@ -16,7 +16,7 @@ import { RoutesModule } from "@/store/modules/routes";
 import { SettingsModule } from "@/store/modules/settings";
 import SidebarItem from "./SidebarItem.vue";
 import SidebarLogo from "./SidebarLogo.vue";
-import variables from "@/assets/styles/_variables.scss";
+import { style as variables} from "@/config/index";
 
 @Component({
     name: "SideBar",
