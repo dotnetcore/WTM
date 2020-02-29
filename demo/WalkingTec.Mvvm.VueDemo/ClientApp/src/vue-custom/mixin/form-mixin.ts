@@ -41,6 +41,8 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     };
     // 表单ref name
     refName: string = defaultFormData.refName || "";
+    // 异步验证, 失败组件集合
+    asynValidateEl: Array<any> = [];
     // 关闭
     onClose() {
       this.$emit("update:isShow", false);
@@ -79,6 +81,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         const formItem = this.$refs[key];
         if (formItem) {
           formItem.showError(resForms[key]);
+          this.asynValidateEl.push(key);
         }
       });
     }
@@ -86,6 +89,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
      * 清理验证
      */
     cleanValidate(refName?: string) {
+      this.asynValidateEl.forEach(key => this.$refs[key].clearValidate());
       const refForm = _.get(this, `$refs[${refName || this.refName}]`);
       refForm && this.$nextTick(() => refForm.resetFields());
     }

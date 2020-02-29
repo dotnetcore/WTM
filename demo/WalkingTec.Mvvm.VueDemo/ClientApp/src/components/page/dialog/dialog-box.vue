@@ -124,4 +124,33 @@ export default class DialogBox extends Vue {
         padding: 0 15px 15px;
     }
 }
+@media only screen and (min-width: 1200px) {
+    .el-dialog-wrap {
+        .el-dialog {
+            width: 60%;
+        }
+    }
+}
+@media only screen and (max-width: 1119px) {
+    .el-dialog-wrap {
+        .el-dialog {
+            width: 70%;
+        }
+    }
+}
+@media only screen and (max-width: 992px) {
+    .el-dialog-wrap {
+        .el-dialog {
+            width: 80%;
+        }
+    }
+}
+@media only screen and (max-width: 768px) {
+    .el-dialog-wrap {
+        .el-dialog {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
 </style>
