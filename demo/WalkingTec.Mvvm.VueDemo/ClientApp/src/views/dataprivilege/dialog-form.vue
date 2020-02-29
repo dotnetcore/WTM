@@ -1,46 +1,41 @@
 <template>
-  <wtm-dialog-box componentClass="dataprivilege-add" :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
-    <el-form :ref="refName" :model="formData" :rules="rules" label-width="100px" class="demo-ruleForm">
-      <el-row>
-        <wtm-form-item label="权限类型" prop="DpType" :status="status" :span="24">
-          <el-radio-group v-model="formData.DpType" v-edit:[status]>
-            <el-radio :label="0">
-              用户组权限
-            </el-radio>
-            <el-radio :label="1">
-              用户权限
-            </el-radio>
-          </el-radio-group>
-          <template #editValue>
-            {{ formData.DpType === 0 ? "用户组权限" : "用户权限" }}
-          </template>
-        </wtm-form-item>
-        <wtm-form-item v-if="formData.DpType === 0" label="用户组" prop="Entity.GroupId" :span="12">
-          <el-select v-model="formData.Entity.GroupId" v-edit:[status]="getUserGroupsData" placeholder="请选择用户组">
-            <el-option v-for="(item,index) of getUserGroupsData" :key="index" :label="item.Text" :value="item.Value" />
-          </el-select>
-        </wtm-form-item>
-        <wtm-form-item v-if="formData.DpType === 1" label="用户Id" prop="UserItCode" ref="UserItCode" :span="12">
-          <el-input v-model="formData.UserItCode" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item label="权限名称" prop="Entity.TableName" ref="Entity.TableName" :span="12">
-          <el-select v-model="formData.Entity.TableName" v-edit:[status]="getPrivilegesData" placeholder="请选择权限名称" @change="onPrivileges">
-            <el-option v-for="(item,index) of getPrivilegesData" :key="index" :label="item.Text" :value="item.Value" />
-          </el-select>
-        </wtm-form-item>
-        <wtm-form-item label="全部权限" prop="IsAll" :span="12">
-          <el-select v-model="formData.IsAll" v-edit:[status]="whether" placeholder="请选择全部权限">
-            <el-option v-for="(item, index) of whether" :key="index" :label="item.Text" :value="item.Value" />
-          </el-select>
-        </wtm-form-item>
-        <wtm-form-item label="允许访问" prop="SelectedItemsID" :span="12">
-          <el-select v-model="formData.SelectedItemsID" v-edit:[status] :disabled="formData.IsAll" multiple filterable placeholder="请选择允许访问">
-            <el-option v-for="(item, index) of getPrivilegeByTableNameData" :key="index" :label="item.Text" :value="item.Value" />
-          </el-select>
-        </wtm-form-item>
-      </el-row>
-    </el-form>
-    <dialog-footer :status="status" @onClear="onClose" @onSubmit="onSubmitForm" />
+  <wtm-dialog-box componentClass="dataprivilege-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
+    <wtm-form-item label="权限类型" prop="DpType" :status="status" :span="24">
+      <el-radio-group v-model="formData.DpType" v-edit:[status]>
+        <el-radio :label="0">
+          用户组权限
+        </el-radio>
+        <el-radio :label="1">
+          用户权限
+        </el-radio>
+      </el-radio-group>
+      <template #editValue>
+        {{ formData.DpType === 0 ? "用户组权限" : "用户权限" }}
+      </template>
+    </wtm-form-item>
+    <wtm-form-item v-if="formData.DpType === 0" label="用户组" prop="Entity.GroupId">
+      <el-select v-model="formData.Entity.GroupId" v-edit:[status]="getUserGroupsData" placeholder="请选择用户组">
+        <el-option v-for="(item,index) of getUserGroupsData" :key="index" :label="item.Text" :value="item.Value" />
+      </el-select>
+    </wtm-form-item>
+    <wtm-form-item v-if="formData.DpType === 1" label="用户Id" prop="UserItCode" ref="UserItCode">
+      <el-input v-model="formData.UserItCode" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item label="权限名称" prop="Entity.TableName" ref="Entity.TableName">
+      <el-select v-model="formData.Entity.TableName" v-edit:[status]="getPrivilegesData" placeholder="请选择权限名称" @change="onPrivileges">
+        <el-option v-for="(item,index) of getPrivilegesData" :key="index" :label="item.Text" :value="item.Value" />
+      </el-select>
+    </wtm-form-item>
+    <wtm-form-item label="全部权限" prop="IsAll">
+      <el-select v-model="formData.IsAll" v-edit:[status]="whether" placeholder="请选择全部权限">
+        <el-option v-for="(item, index) of whether" :key="index" :label="item.Text" :value="item.Value" />
+      </el-select>
+    </wtm-form-item>
+    <wtm-form-item label="允许访问" prop="SelectedItemsID">
+      <el-select v-model="formData.SelectedItemsID" v-edit:[status] :disabled="formData.IsAll" multiple filterable placeholder="请选择允许访问">
+        <el-option v-for="(item, index) of getPrivilegeByTableNameData" :key="index" :label="item.Text" :value="item.Value" />
+      </el-select>
+    </wtm-form-item>
   </wtm-dialog-box>
 </template>
 
@@ -85,7 +80,7 @@ export default class Index extends Vue {
     @State
     getPrivilegeByTableNameData;
     // 是否列表
-    whether = whether;
+    whether: Array<any> = whether;
     rules = {
         DpType: [
             {
@@ -151,7 +146,3 @@ export default class Index extends Vue {
     }
 }
 </script>
-<style lang='less'>
-.dataprivilege-add {
-}
-</style>

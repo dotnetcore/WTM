@@ -1,6 +1,6 @@
 <template>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="onClear">
+    <el-button @click="onClose">
       关 闭
     </el-button>
     <el-button v-if="status !== detail" type="primary" @click="onSubmit">
@@ -15,15 +15,16 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 export default class DialogFooter extends Vue {
     @Prop({ type: String, default: "" })
     status;
-    onClear() {
-        this.$emit("onClear");
-    }
-    onSubmit() {
-        this.$emit("onSubmit");
-    }
 
     get detail() {
         return this.$actionType.detail;
+    }
+
+    onClose() {
+        this.$emit("onClose");
+    }
+    onSubmit() {
+        this.$emit("onSubmit");
     }
 }
 </script>

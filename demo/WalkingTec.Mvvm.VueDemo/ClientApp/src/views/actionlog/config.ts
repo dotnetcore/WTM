@@ -22,7 +22,7 @@ export const TABLE_HEADER: Array<object> = [
   { key: "Duration", label: "时长" },
   { key: "IP", label: "IP" },
   { key: "Remark", label: "备注" },
-  { key: "operate", label: "操作", isSlot: true }
+  { isOperate: true, label: "操作", actions: ["detail", "deleted"] } //操作列
 ];
 
 export const logTypes: Array<any> = [

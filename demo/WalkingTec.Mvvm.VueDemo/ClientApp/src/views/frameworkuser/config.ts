@@ -20,5 +20,5 @@ export const TABLE_HEADER: Array<object> = [
   { key: "IsValid", label: "是否生效", isSlot: true },
   { key: "RoleName_view", label: "角色" },
   { key: "GroupName_view", label: "用户组" },
-  { key: "operate", label: "操作", isSlot: true, width: 130, fixed: "right" }
+  { isOperate: true, label: "操作", actions: ["detail", "edit", "deleted"] } //操作列
 ];

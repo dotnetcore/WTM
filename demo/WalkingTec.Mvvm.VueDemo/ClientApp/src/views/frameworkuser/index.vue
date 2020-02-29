@@ -1,40 +1,29 @@
 <template>
-  <div class="dataprivilege">
-    <card>
-      <wtm-fuzzy-search ref="fuzzySearch" :search-label-width="75" @onReset="onReset" @onSearch="onSearchForm">
-        <el-form slot="search-content" ref="searchForm" class="form-class" :inline="true" label-width="75px">
-          <el-form-item label="账号">
-            <el-input v-model="searchForm.ITCode" />
-          </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="searchForm.Name" />
-          </el-form-item>
-        </el-form>
-      </wtm-fuzzy-search>
-      <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :eventFn="eventFn" />
-      <wtm-table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
-        <template #PhotoId="rowData">
-          <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
-        </template>
-        <template #IsValid="rowData">
-          <el-switch :value="rowData.row.IsValid === 'true' || rowData.row.IsValid === true" disabled />
-        </template>
-        <template #operate="rowData">
-          <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
-            详情
-          </el-button>
-          <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
-            修改
-          </el-button>
-          <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
-            删除
-          </el-button>
-        </template>
-      </wtm-table-box>
-    </card>
+  <card class="dataprivilege">
+    <wtm-search-box :events="searchEvent">
+      <wtm-form-item label="账号">
+        <el-input v-model="searchForm.ITCode" />
+      </wtm-form-item>
+      <wtm-form-item label="姓名">
+        <el-input v-model="searchForm.Name" />
+      </wtm-form-item>
+    </wtm-search-box>
+    <!-- 操作按钮 -->
+    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
+    <!-- 列表 -->
+    <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
+      <template #PhotoId="rowData">
+        <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
+      </template>
+      <template #IsValid="rowData">
+        <el-switch :value="rowData.row.IsValid === 'true' || rowData.row.IsValid === true" disabled />
+      </template>
+    </wtm-table-box>
+    <!-- 弹出框 -->
     <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+    <!-- 导入 -->
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
-  </div>
+  </card>
 </template>
 
 <script lang='ts'>

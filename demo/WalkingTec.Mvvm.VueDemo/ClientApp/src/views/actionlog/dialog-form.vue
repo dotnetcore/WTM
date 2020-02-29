@@ -1,38 +1,33 @@
 <template>
-    <wtm-dialog-box componentClass="frameworkmenu-form" :is-show.sync="isShow" :status="status" @close="onClose" @open="onBindFormData">
-        <el-form :ref="refName" :model="formData" label-width="100px" class="demo-ruleForm">
-            <el-row>
-                <wtm-form-item ref="Entity.ModuleName" label="模块" :span="12">
-                    <el-input v-model="formData.Entity.ModuleName" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.ActionName" label="动作" :span="12">
-                    <el-input v-model="formData.Entity.ActionName" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.ITCode" label="ITCode" :span="12">
-                    <el-switch v-model="formData.Entity.ITCode" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.ActionUrl" label="Url" :span="12">
-                    <el-switch v-model="formData.Entity.ActionUrl" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.ActionTime" label="操作时间" :span="12">
-                    <el-switch v-model="formData.Entity.ActionTime" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.Duration" label="时长" :span="12">
-                    <el-switch v-model="formData.Entity.Duration" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.IP" label="IP" :span="12">
-                    <el-switch v-model="formData.Entity.IP" v-edit:[status] />
-                </wtm-form-item>
-                <wtm-form-item ref="Entity.Remark" label="备注" :span="12">
-                    <el-switch v-model="formData.Entity.Remark" v-edit:[status] />
-                </wtm-form-item>
-            </el-row>
-        </el-form>
-        <dialog-footer :status="status" @onClear="onClose" />
-    </wtm-dialog-box>
+  <wtm-dialog-box componentClass="frameworkmenu-form" :ref="refName" :is-show.sync="isShow" :status="status" :model="formData" @close="onClose" @open="onBindFormData">
+    <wtm-form-item ref="Entity.ModuleName" label="模块">
+      <el-input v-model="formData.Entity.ModuleName" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.ActionName" label="动作">
+      <el-input v-model="formData.Entity.ActionName" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.ITCode" label="ITCode">
+      <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.ActionUrl" label="Url">
+      <el-input v-model="formData.Entity.ActionUrl" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.ActionTime" label="操作时间">
+      <el-input v-model="formData.Entity.ActionTime" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Duration" label="时长">
+      <el-input v-model="formData.Entity.Duration" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.IP" label="IP">
+      <el-input v-model="formData.Entity.IP" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Remark" label="备注">
+      <el-input v-model="formData.Entity.Remark" v-edit:[status] />
+    </wtm-form-item>
+  </wtm-dialog-box>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import formMixin from "@/vue-custom/mixin/form-mixin";
@@ -50,20 +45,14 @@ const defaultFormData = {
             ActionUrl: "",
             IP: "",
             ITCode: 0,
-            LogType: true,
-            Duration: false,
-            Remark: false
+            LogType: "",
+            Duration: "",
+            Remark: ""
         }
     }
 };
 
 @Component({ mixins: [formMixin(defaultFormData)] })
-export default class Index extends Vue {
-    @Action
-    detail;
-    @State
-    getFoldersData;
-}
+export default class Index extends Vue {}
 </script>
-<style lang='less'>
-</style>
+<style lang="less"></style>

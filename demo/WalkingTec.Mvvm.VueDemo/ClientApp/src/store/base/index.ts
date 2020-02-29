@@ -93,6 +93,5 @@ export default (serviceUnit, callback?: Function) => {
   store.modules = {
     attributes
   };
-  console.log("store::::", store);
   return store;
 };
