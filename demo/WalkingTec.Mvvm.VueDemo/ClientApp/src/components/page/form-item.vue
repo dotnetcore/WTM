@@ -1,19 +1,19 @@
 <template>
-  <el-col :lg="size.lg" :sm="size.sm" :xs="size.xs">
-    <el-form-item class="form-item" ref="elItem" v-bind="$attrs">
-      <slot v-if="isEdit" />
-      <template v-else>
-        <img v-if="isImg" :src="value">
-        <slot v-else name="editValue">
-          <!--后备内容 -->
-          {{ value }}
-        </slot>
-      </template>
-    </el-form-item>
-  </el-col>
+    <el-col :lg="size.lg" :sm="size.sm" :xs="size.xs">
+        <el-form-item ref="elItem" :class="[parentCmpt.componentName === 'wtmSearch' ? 'form-item-search' : 'form-item']" v-bind="$attrs">
+            <slot v-if="isEdit" />
+            <template v-else>
+                <img v-if="isImg" :src="value" />
+                <slot v-else name="editValue">
+                    <!--后备内容 -->
+                    {{ value }}
+                </slot>
+            </template>
+        </el-form-item>
+    </el-col>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 /**
  *
@@ -34,14 +34,40 @@ export default class WtmFormItem extends Vue {
     }
 
     get size() {
-        const span = parseInt(this.$attrs.span) || 6;
+        const dfltSpan = this.parentCmpt["span"];
+        const span = parseInt(this.$attrs.span) || dfltSpan;
         return {
             lg: span,
             sm: span + 4,
             xs: 24
         };
     }
-
+    // this.$parent.$options.
+    /**
+     * 上级组件name
+     * 判断应用父级组件
+     * wtmSearch： 默认6
+     * wtmDialog： 默认12
+     */
+    get parentCmpt() {
+        let parent = this.$parent;
+        let parentName: string = parent.componentName;
+        while (!["wtmSearch", "wtmDialog"].includes(parentName)) {
+            parent = parent.$parent;
+            parentName = parent.componentName;
+        }
+        let span: number = 6;
+        switch (parentName) {
+            case "wtmDialog":
+                span = (parent || {}).span || 12;
+                break;
+            case "wtmSearch":
+            default:
+                span = (parent || {}).span || 6;
+                break;
+        }
+        return Object.assign(parent, { span });
+    }
     showError(msg) {
         this.$refs["elItem"].clearValidate();
         if (msg) {
@@ -51,14 +77,16 @@ export default class WtmFormItem extends Vue {
     }
 }
 </script>
-<style lang='less'>
-.form-item {
+<style lang="less" scoped>
+.form-item-search {
+    display: flex;
     margin-bottom: 0;
     padding: 10px 0;
-    &.el-form-item--small.el-form-item {
-        margin-bottom: 0;
-    }
-    // width: 90%;
+}
+.form-item {
+    // &.el-form-item--small.el-form-item {
+    //     margin-bottom: 0;
+    // }
     .el-form-item__label::after {
         content: ":";
     }

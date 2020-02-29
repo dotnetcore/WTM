@@ -6,7 +6,7 @@
         <el-button v-assembly:[assembly]="butTypes.edit" v-visible="actionList[actionKeys.edit]" type="primary" :disabled="isDisabledEdit" icon="el-icon-edit" @click="onEdit">
             修改
         </el-button>
-        <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList[actionKeys.batchDelete]" type="primary" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onDelete">
+        <el-button v-assembly:[assembly]="butTypes.deleted" v-visible="actionList[actionKeys.batchDelete]" type="primary" :disabled="isDisabledEelete" icon="el-icon-delete" @click="onBatchDelete">
             删除
         </el-button>
         <el-button v-assembly:[assembly]="butTypes.imported" v-visible="actionList[actionKeys.import]" type="primary" icon="el-icon-upload" @click="onImported">
@@ -105,7 +105,7 @@ export default class ButBox extends Vue {
             };
         }
     })
-    eventFn;
+    events;
 
     butTypes = butType;
     get isDisabledEdit() {
@@ -122,44 +122,44 @@ export default class ButBox extends Vue {
     }
 
     onAdd() {
-        this.eventFn.onAdd ? this.eventFn.onAdd() : this.$emit("onAdd");
+        this.events.onAdd ? this.events.onAdd() : this.$emit("onAdd");
     }
     onEdit() {
         if (!this.isDisabledEdit) {
-            this.eventFn.onEdit
-                ? this.eventFn.onEdit(this.selectedData[0])
+            this.events.onEdit
+                ? this.events.onEdit(this.selectedData[0])
                 : this.$emit("onEdit", this.selectedData[0]);
         }
     }
 
     onBatchDelete() {
         if (!this.isDisabledEelete) {
-            this.eventFn.onBatchDelete
-                ? this.eventFn.onBatchDelete(this.selectedData)
+            this.events.onBatchDelete
+                ? this.events.onBatchDelete(this.selectedData)
                 : this.$emit("onBatchDelete", this.selectedData);
         }
     }
 
     onDelete() {
         if (!this.isDisabledEelete) {
-            this.eventFn.onDelete
-                ? this.eventFn.onDelete(this.selectedData[0])
+            this.events.onDelete
+                ? this.events.onDelete(this.selectedData[0])
                 : this.$emit("onDelete", this.selectedData[0]);
         }
     }
     onImported() {
-        this.eventFn.onImported
-            ? this.eventFn.onImported()
+        this.events.onImported
+            ? this.events.onImported()
             : this.$emit("onImported");
     }
     onExportAll() {
-        this.eventFn.onExportAll
-            ? this.eventFn.onExportAll()
+        this.events.onExportAll
+            ? this.events.onExportAll()
             : this.$emit("onExportAll");
     }
     onExport() {
-        this.eventFn.onExport
-            ? this.eventFn.onExport()
+        this.events.onExport
+            ? this.events.onExport()
             : this.$emit("onExport");
     }
     onCommand(command) {

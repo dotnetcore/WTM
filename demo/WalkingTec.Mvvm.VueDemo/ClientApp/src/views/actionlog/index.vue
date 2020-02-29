@@ -1,6 +1,6 @@
 <template>
   <card class="dataprivilege">
-    <wtm-search-box :searchEvent="searchEvent">
+    <wtm-search-box :events="searchEvent">
       <wtm-form-item label="ITCode">
         <el-input v-model="searchForm.ITCode" />
       </wtm-form-item>
@@ -8,7 +8,7 @@
         <el-input v-model="searchForm.ActionUrl" />
       </wtm-form-item>
       <template slot="collapse-content">
-        <wtm-form-item label="操作时间" :span="10">
+        <wtm-form-item label="操作时间" :span="12">
           <el-date-picker v-model="searchForm.ActionTime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
         </wtm-form-item>
         <wtm-form-item label="IP">
@@ -21,23 +21,18 @@
         </wtm-form-item>
       </template>
     </wtm-search-box>
-    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :eventFn="eventFn" />
-    <wtm-table-box :is-selection="true" :tb-column="tableHeader" :data="tableData" :loading="loading" :page-date="pageDate" @size-change="handleSizeChange" @current-change="handleCurrentChange" @selection-change="onSelectionChange" @sort-change="onSortChange">
-      <template #operate="rowData">
-        <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
-          详情
-        </el-button>
-        <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
-          删除
-        </el-button>
-      </template>
-    </wtm-table-box>
+    <!-- 操作按钮 -->
+    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
+    <!-- 列表 -->
+    <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" />
+    <!-- 弹出框 -->
     <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+    <!-- 导入 -->
     <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
   </card>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
@@ -48,7 +43,7 @@ import store from "@/store/system/actionlog";
 import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER, logTypes } from "./config";
 
 @Component({
-    mixins: [searchMixin(SEARCH_DATA), actionMixin],
+    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
     store,
     components: {
         DialogForm
@@ -58,7 +53,6 @@ export default class Index extends Vue {
     // 动作
     assembly = ASSEMBLIES;
 
-    tableHeader = TABLE_HEADER;
     logTypes = logTypes;
 
     // 查询接口 ★★★★★

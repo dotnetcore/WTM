@@ -28,7 +28,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       isAsc: null, // asc desc
       ...SEARCH_DATA
     };
-    // elementui 分页参数
     pageDate = {
       pageSizes: [10, 25, 50, 100],
       pageSize: 10,
@@ -40,12 +39,42 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     tableData: Array<any> = []; // 列表数据
     selectData: Array<any> = []; // 列表选中数据
     /**
-     * 返回事件集合
+     * 返回wtm-table-box事件集合
+     * 包含el-table/el-pagination组件事件，命名定义要与组件（el-table，el-pagination）事件相同 可生效
+     * el-table：sort-change
+     * el-pagination：size-change，current-change，selection-change
+     * 注：
+     *    1. 需要添加elementui其他事件，可以在组件中写，不用添加此对象里；
+     *    2. 可以定义方法覆盖事件；
+     * 例如：
+     * <wtm-table-box :events="searchEvent" @sort-change="()=>{覆盖方法}" @header-click="()=>{自定义方法}">
      */
     get searchEvent() {
       return {
         onSearch: this.onSearch,
-        onReset: this.onReset
+        onReset: this.onReset,
+        "size-change": this.handleSizeChange,
+        "current-change": this.handleCurrentChange,
+        "selection-change": this.onSelectionChange,
+        "sort-change": this.onSortChange
+      };
+    }
+    /**
+     * 返回wtm-table-box属性集合
+     * 包含el-table/el-pagination组件属性，命名与组件事件相同
+     * wtm-table-box：loading组件加载判断。。。
+     * el-table：data,is-selection,tb-header
+     * el-pagination：pageSizes,pageSize,currentPage,pageTotal
+     * 注：
+     *    如searchEvent对象 一样；
+     */
+    get searchAttrs() {
+      return {
+        loading: this.loading,
+        data: this.tableData,
+        isSelection: true,
+        tbHeader: this.tableHeader,
+        ...this.pageDate
       };
     }
     // 查询 ★★★★★
@@ -128,6 +157,7 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     }
     // 翻页
     handleCurrentChange(currentpage) {
+      console.log("handleCurrentChange", currentpage);
       this.pageDate.currentPage = currentpage;
       this.fetch(true);
     }
@@ -146,6 +176,7 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       this.fetch();
     }
     onSelectionChange(selectData: Array<any>) {
+      console.log("selectData", selectData);
       this.selectData = selectData;
     }
   }

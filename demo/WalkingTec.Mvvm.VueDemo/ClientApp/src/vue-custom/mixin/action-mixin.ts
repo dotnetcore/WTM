@@ -7,9 +7,10 @@ import { Action, State } from "vuex-class";
 type EventFunction = (data: Object | String | Array<any>) => void;
 type DefaultFunction = () => void;
 
-export interface IEventFn {
+export interface IActionEvent {
   onAdd?: DefaultFunction;
   onEdit?: EventFunction;
+  onDetail?: EventFunction;
   onDelete?: EventFunction;
   onBatchDelete?: EventFunction;
   onImported?: DefaultFunction;
@@ -44,6 +45,22 @@ export default class actionMixins extends Vue {
   dialogStatus: String = "";
   // 导入
   uploadIsShow: Boolean = false;
+
+  /**
+   * 事件方法list
+   */
+  get actionEvent(): IActionEvent {
+    return {
+      onAdd: this.onAdd,
+      onEdit: this.onEdit,
+      onDetail: this.onDetail,
+      onDelete: this.onDelete,
+      onBatchDelete: this.onBatchDelete,
+      onImported: this.onImported,
+      onExportAll: this.onExportAll,
+      onExport: this.onExport
+    };
+  }
   /**
    * 打开详情弹框（默认框） ★★★★☆
    * @param status
@@ -104,6 +121,7 @@ export default class actionMixins extends Vue {
   onBatchDelete() {
     this.onConfirm().then(() => {
       const parameters = listToString(this["selectData"], "ID");
+      console.log('this["selectData"]', this["selectData"], parameters);
       this.batchDelete(parameters).then(res => {
         this["$notify"]({
           title: "删除成功",
@@ -181,19 +199,5 @@ export default class actionMixins extends Vue {
       cancelButtonText: "取消",
       type: "warning"
     });
-  }
-  /**
-   * 事件方法list
-   */
-  get eventFn(): IEventFn {
-    return {
-      onAdd: this.onAdd,
-      onEdit: this.onEdit,
-      onDelete: this.onDelete,
-      onBatchDelete: this.onBatchDelete,
-      onImported: this.onImported,
-      onExportAll: this.onExportAll,
-      onExport: this.onExport
-    };
   }
 }

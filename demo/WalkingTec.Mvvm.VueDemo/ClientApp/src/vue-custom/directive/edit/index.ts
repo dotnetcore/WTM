@@ -36,7 +36,11 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
       htmlVal = modelVal ? "是" : "否";
     }
   } catch (error) {
-    console.warn("dirEdit,指令结构不符合要求", error);
+    console.warn(
+      `dirEdit,指令接受的'${modelVal}'结构不符合要求`,
+      sourceVal,
+      error
+    );
     htmlVal = modelVal;
   }
 
