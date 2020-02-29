@@ -147,9 +147,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]/{id}")]
-        public IActionResult CheckLogin(Guid id)
+        public IActionResult CheckLogin(Guid? id)
         {
-            if (LoginUserInfo?.Id != id)
+            if (LoginUserInfo == null || LoginUserInfo?.Id == Guid.Empty)
             {
                 return BadRequest();
             }
