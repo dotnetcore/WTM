@@ -1,22 +1,22 @@
 <template>
-  <div class="dialog-wrap">
-    <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" :title="title" v-on="$listeners">
-      <el-form ref="ref_name" :model="model" :rules="rules" :label-width="labelWidth">
-        <el-row>
-          <slot />
-        </el-row>
-      </el-form>
-      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
-    </el-dialog>
-    <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :visible="isShow" direction="rtl" size="50%" v-on="$listeners">
-      <el-form ref="ref_name" :model="model" :rules="rules" :label-width="labelWidth">
-        <el-row>
-          <slot />
-        </el-row>
-      </el-form>
-      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
-    </el-drawer>
-  </div>
+    <div class="dialog-wrap">
+        <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" class="el-dialog-wrap" v-bind="dialogAttrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
+            <el-form ref="ref_name" :model="modelPvt" :rules="dialogAttrs.rules" :label-width="dialogAttrs.labelWidth">
+                <el-row>
+                    <slot />
+                </el-row>
+            </el-form>
+            <dialog-footer :status="dialogAttrs.status" @onClose="onClose" @onSubmit="onSubmit" />
+        </el-dialog>
+        <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="dialogAttrs" :visible="isShow" direction="rtl" size="50%" v-on="dialogEvent">
+            <el-form ref="ref_name" :model="modelPvt" :rules="dialogAttrs.rules" :label-width="dialogAttrs.labelWidth">
+                <el-row>
+                    <slot />
+                </el-row>
+            </el-form>
+            <dialog-footer :status="dialogAttrs.status" @onClose="onClose" @onSubmit="onSubmit" />
+        </el-drawer>
+    </div>
 </template>
 
 <script lang='ts'>
@@ -48,27 +48,61 @@ export default class DialogBox extends Vue {
     labelWidth;
     @Prop({ type: Object, default: () => {} })
     rules; // 验证
-    @Prop({ type: Object, default: () => {} })
+    @Prop({ type: Object })
     model; // formData
+    @Prop({ type: String, default: "" })
+    title; // title
 
+    @Prop({ type: Object, default: () => {} })
+    events; // 事件集合
+    @Prop({ type: Object, default: () => {} })
+    attrs; // 属性集合
+
+    // 事件
+    get dialogEvent() {
+        const envObj = Object.assign({}, this.events, this.$listeners);
+        return envObj;
+    }
+    // 属性
+    get dialogAttrs() {
+        const attrsObj = Object.assign(
+            { labelWidth: this.labelWidth },
+            this.attrs,
+            this.$attrs
+        );
+        return {
+            ...attrsObj,
+            title: this.titlePvt
+        };
+    }
+    /**
+     * 弹出模式
+     */
     get isDialog() {
         return SettingsModule.isDialog;
     }
-    get title() {
-        return this.$t(`table.${this.status}`);
+    // title
+    get titlePvt() {
+        return this.title || this.$t(`table.${this.status}`);
+    }
+    get modelPvt() {
+        if (!this.model || this.model === {}) {
+            return this.dialogAttrs.model || {};
+        }
+        return this.model;
     }
     /**
      * 关闭事件
      */
     get onClose() {
-        return this.$listeners.close;
+        return this.dialogEvent.close;
     }
     /**
      * 提交事件
      */
     get onSubmit() {
-        if (!!this.$listeners.onSubmit) {
-            return this.$listeners.onSubmit;
+        if (!!this.dialogEvent.onSubmit) {
+            return this.dialogEvent.onSubmit;
         } else {
             return () => {};
         }
@@ -92,7 +126,6 @@ export default class DialogBox extends Vue {
      */
     resetFields() {
         const refForm = _.get(this, `$refs.ref_name`);
-        console.log("refForm", refForm);
         refForm.resetFields();
     }
 

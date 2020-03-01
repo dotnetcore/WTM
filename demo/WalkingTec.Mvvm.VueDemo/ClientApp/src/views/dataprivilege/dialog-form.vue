@@ -1,5 +1,5 @@
 <template>
-  <wtm-dialog-box componentClass="dataprivilege-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
+  <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
     <wtm-form-item label="权限类型" prop="DpType" :status="status" :span="24">
       <el-radio-group v-model="formData.DpType" v-edit:[status]>
         <el-radio :label="0">

@@ -88,11 +88,10 @@ export default class TableBox extends Vue {
     pageTotal; // 总量
     @Prop({ type: String, default: "total, sizes, prev, pager, next, jumper" })
     layout; // 分页参数
-
-    @Prop({ type: Object, default: {} }) // 事件集合
-    events!: object;
-    @Prop({ type: Object, default: {} }) // 属性集合
-    attrs!: object;
+    @Prop({ type: Object, default: {} })
+    events!: object; // 事件集合
+    @Prop({ type: Object, default: {} })
+    attrs!: object; // 属性集合
     // 选中列
     selCols: string[] = [];
     // 展行选择

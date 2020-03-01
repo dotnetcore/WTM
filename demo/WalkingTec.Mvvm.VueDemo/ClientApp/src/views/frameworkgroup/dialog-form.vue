@@ -1,5 +1,5 @@
 <template>
-  <wtm-dialog-box componentClass="frameworkgroup-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
+  <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
     <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
       <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
     </wtm-form-item>

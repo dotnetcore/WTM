@@ -1,62 +1,66 @@
 <template>
-    <wtm-dialog-box componentClass="frameworkuser-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
-        <wtm-form-item ref="Entity.ITCode" label="账号" prop="Entity.ITCode">
-            <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item v-if="status===$actionType.add" ref="Entity.Password" label="密码" prop="Entity.Password">
-            <el-input v-model="formData.Entity.Password" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Email" label="邮箱">
-            <el-input v-model="formData.Entity.Email" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Name" label="姓名" prop="Entity.Name">
-            <el-input v-model="formData.Entity.Name" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Sex" label="性别">
-            <el-select v-model="formData.Entity.Sex" v-edit:[status]="sexList">
-                <el-option v-for="(item, index) of sexList" :key="index" :label="item.Text" :value="item.Value" />
-            </el-select>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.CellPhone" label="手机号">
-            <el-input v-model="formData.Entity.CellPhone" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.HomePhone" label="座机">
-            <el-input v-model="formData.Entity.HomePhone" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Address" label="住址">
-            <el-input v-model="formData.Entity.Address" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.ZipCode" label="邮编">
-            <el-input v-model="formData.Entity.ZipCode" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.PhotoId" label="头像" :status="status">
-            <upload-img :photo-id.sync="formData.Entity.PhotoId" />
-            <template #editValue>
-                <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/'+formData.Entity.PhotoId" class="avatar">
-            </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.IsValid" label="是否有效" prop="IsValid" :status="status">
-            <el-switch v-model="formData.Entity.IsValid" />
-            <template #editValue>
-                {{ formData.Entity.IsValid===true ? "是" : "否" }}
-            </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.UserRoles" label="角色" :status="status" :span="24">
-            <el-transfer v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
-            <template #editValue>
-                <el-tag v-for="item of detailRoles" :key="item.key">{{item.label}}</el-tag>
-            </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.UserGroups" label="用户组" :status="status" :span="24">
-            <el-transfer v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
-            <template #editValue>
-                <el-tag v-for="item of detailGroups" :key="item.key">{{item.label}}</el-tag>
-            </template>
-        </wtm-form-item>
-    </wtm-dialog-box>
+  <wtm-dialog-box componentClass="frameworkuser-form" :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
+    <wtm-form-item ref="Entity.ITCode" label="账号" prop="Entity.ITCode">
+      <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item v-if="status === $actionType.add" ref="Entity.Password" label="密码" prop="Entity.Password">
+      <el-input v-model="formData.Entity.Password" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Email" label="邮箱">
+      <el-input v-model="formData.Entity.Email" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Name" label="姓名" prop="Entity.Name">
+      <el-input v-model="formData.Entity.Name" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Sex" label="性别">
+      <el-select v-model="formData.Entity.Sex" v-edit:[status]="sexList">
+        <el-option v-for="(item, index) of sexList" :key="index" :label="item.Text" :value="item.Value" />
+      </el-select>
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.CellPhone" label="手机号">
+      <el-input v-model="formData.Entity.CellPhone" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.HomePhone" label="座机">
+      <el-input v-model="formData.Entity.HomePhone" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.Address" label="住址">
+      <el-input v-model="formData.Entity.Address" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.ZipCode" label="邮编">
+      <el-input v-model="formData.Entity.ZipCode" v-edit:[status] />
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.PhotoId" label="头像" :status="status">
+      <upload-img :photo-id.sync="formData.Entity.PhotoId" />
+      <template #editValue>
+        <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/' + formData.Entity.PhotoId" class="avatar" />
+      </template>
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.IsValid" label="是否有效" prop="IsValid" :status="status">
+      <el-switch v-model="formData.Entity.IsValid" />
+      <template #editValue>
+        {{ formData.Entity.IsValid === true ? "是" : "否" }}
+      </template>
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.UserRoles" label="角色" :status="status" :span="24">
+      <el-transfer v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
+      <template #editValue>
+        <el-tag v-for="item of detailRoles" :key="item.key">{{
+          item.label
+          }}</el-tag>
+      </template>
+    </wtm-form-item>
+    <wtm-form-item ref="Entity.UserGroups" label="用户组" :status="status" :span="24">
+      <el-transfer v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
+      <template #editValue>
+        <el-tag v-for="item of detailGroups" :key="item.key">{{
+          item.label
+          }}</el-tag>
+      </template>
+    </wtm-form-item>
+  </wtm-dialog-box>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import formMixin from "@/vue-custom/mixin/form-mixin";
@@ -243,7 +247,7 @@ export default class Index extends Vue {
     }
 }
 </script>
-<style lang='less'>
+<style lang="less">
 .frameworkuser-form {
     .el-tag {
         margin-right: 10px;
