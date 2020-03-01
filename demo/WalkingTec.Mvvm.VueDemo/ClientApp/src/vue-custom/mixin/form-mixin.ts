@@ -11,9 +11,13 @@ import { Action } from "vuex-class";
  * @param defaultFormData
  * defaultFormData 结构
  * {
- * refName: 表单名称
- * formData: 表单数据
+ *    refName: 表单名称
+ *    formData: 表单数据
  * }
+ *
+ * 注：
+ *     个性化请求，可以在组件中重新定义
+ *
  */
 interface formdata {
   refName?: string;
@@ -40,9 +44,32 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
       ..._.cloneDeep(defaultFormData.formData)
     };
     // 表单ref name
-    refName: string = defaultFormData.refName || "";
+    refName: string = defaultFormData.refName || "refName";
     // 异步验证, 失败组件集合
     asynValidateEl: Array<any> = [];
+    // 校验
+    rules: object = {};
+    /**
+     * wtm-dialog-box所需属性
+     */
+    get formAttrs() {
+      return {
+        rules: this.rules,
+        model: this.formData,
+        status: this.status
+      };
+    }
+    /**
+     * wtm-dialog-box所需方法
+     */
+    get formEvent() {
+      return {
+        close: this.onClose,
+        open: this.onBindFormData,
+        onSubmit: this.onSubmitForm
+      };
+    }
+
     // 关闭
     onClose() {
       this.$emit("update:isShow", false);
@@ -72,7 +99,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         }
       });
     }
-
     /**
      * 展示验证
      */
@@ -93,9 +119,8 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
       const refForm = _.get(this, `$refs[${refName || this.refName}]`);
       refForm && this.$nextTick(() => refForm.resetFields());
     }
-    // ---------------------------vue组件中的事件，可以在组件中重新定义 start---------------------------------
     /**
-     * 打开详情 ★★★★★
+     * 打开详情
      */
     onBindFormData() {
       if (!this["dialogData"]) {
@@ -124,7 +149,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
       console.log("data:", data);
     }
     /**
-     * 提交 ★★★★★
+     * 提交
      */
     onSubmitForm() {
       this.$refs[this.refName].validate(valid => {
@@ -138,7 +163,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
       });
     }
     /**
-     * 添加 ★★★★★
+     * 添加
      */
     onAdd(delID: string = "ID") {
       let parameters = _.cloneDeep(this["formData"]);
@@ -162,7 +187,7 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
         });
     }
     /**
-     * 编辑 ★★★★★
+     * 编辑
      */
     onEdit() {
       let parameters = _.cloneDeep(this["formData"]);
@@ -182,7 +207,6 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
           this.showResponseValidate(error.response.data.Form);
         });
     }
-    // ---------------------------vue组件重新定义 end---------------------------------
   }
   return formMixins;
 }

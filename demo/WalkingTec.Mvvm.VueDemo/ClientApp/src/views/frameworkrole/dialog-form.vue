@@ -1,5 +1,5 @@
 <template>
-    <wtm-dialog-box componentClass="frameworkrole-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
+    <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
         <wtm-form-item ref="Entity.RoleCode" label="角色编号" prop="Entity.RoleCode">
             <el-input v-model="formData.Entity.RoleCode" v-edit:[status] />
         </wtm-form-item>

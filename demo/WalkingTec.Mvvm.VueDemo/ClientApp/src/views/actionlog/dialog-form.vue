@@ -1,5 +1,5 @@
 <template>
-  <wtm-dialog-box componentClass="frameworkmenu-form" :ref="refName" :is-show.sync="isShow" :status="status" :model="formData" @close="onClose" @open="onBindFormData">
+  <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
     <wtm-form-item ref="Entity.ModuleName" label="模块">
       <el-input v-model="formData.Entity.ModuleName" v-edit:[status] />
     </wtm-form-item>
@@ -55,4 +55,3 @@ const defaultFormData = {
 @Component({ mixins: [formMixin(defaultFormData)] })
 export default class Index extends Vue {}
 </script>
-<style lang="less"></style>

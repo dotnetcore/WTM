@@ -1,5 +1,5 @@
 <template>
-  <wtm-dialog-box componentClass="frameworkmenu-form" :ref="refName" :rules="rules" :is-show.sync="isShow" :model="formData" :status="status" @close="onClose" @open="onBindFormData" @onSubmit="onSubmitForm">
+  <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
     <el-row>
       <wtm-form-item ref="Entity.IsInside" label="地址类型" prop="Entity.IsInside" :status="status" :span="24">
         <el-radio-group v-model="formData.Entity.IsInside">
