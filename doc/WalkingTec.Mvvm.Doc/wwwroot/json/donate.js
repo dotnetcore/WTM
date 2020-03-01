@@ -149,6 +149,14 @@
         {"date":"2020-02-21","name":"$XuFeng","amount":2.00,"from":"微信","comment":"-"},
         {"date":"2020-02-21","name":"M*g","amount":5.00,"from":"微信","comment":"-"},
         {"date":"2020-02-22","name":"*子","amount":5.00,"from":"微信","comment":"-"},
-        {"date":"2020-02-22","name":"y*t","amount":10.00,"from":"微信","comment":"-"}
+        {"date":"2020-02-22","name":"y*t","amount":10.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-23","name":"h*y","amount":20.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-25","name":"蒙恩","amount":6.66,"from":"微信","comment":"-"},
+        {"date":"2020-02-25","name":"华灯","amount":16.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-25","name":"Zi","amount":1.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-28","name":"薪钧","amount":20.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-28","name":"伟","amount":168.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-28","name":"美志达王冬","amount":50.00,"from":"微信","comment":"-"},
+        {"date":"2020-02-28","name":"雪骥","amount":100.00,"from":"微信","comment":"-"}
     ]
 }
