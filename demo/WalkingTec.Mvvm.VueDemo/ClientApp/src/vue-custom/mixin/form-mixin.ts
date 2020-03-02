@@ -9,19 +9,14 @@ import { Action } from "vuex-class";
  * formData：提交表单结构
  *
  * @param defaultFormData
- * defaultFormData 结构
- * {
- *    refName: 表单名称
- *    formData: 表单数据
- * }
  *
  * 注：
  *     个性化请求，可以在组件中重新定义
  *
  */
 interface formdata {
-  refName?: string;
-  formData: object;
+  refName?: string; // 表单名称
+  formData: object; // 表单数据
 }
 function mixinFunc(defaultFormData: formdata = { formData: {} }) {
   @Component({

@@ -13,12 +13,12 @@
         {{ formData.DpType === 0 ? "用户组权限" : "用户权限" }}
       </template>
     </wtm-form-item>
-    <wtm-form-item v-if="formData.DpType === 0" label="用户组" prop="Entity.GroupId">
+    <wtm-form-item :isShow="formData.DpType === 0" label="用户组" :prop="formData.DpType === 0 ? 'Entity.GroupId' : ''">
       <el-select v-model="formData.Entity.GroupId" v-edit:[status]="getUserGroupsData" placeholder="请选择用户组">
         <el-option v-for="(item,index) of getUserGroupsData" :key="index" :label="item.Text" :value="item.Value" />
       </el-select>
     </wtm-form-item>
-    <wtm-form-item v-if="formData.DpType === 1" label="用户Id" prop="UserItCode" ref="UserItCode">
+    <wtm-form-item :isShow="formData.DpType === 1" label="用户Id" :prop="formData.DpType === 1 ? 'UserItCode' : ''" ref="UserItCode">
       <el-input v-model="formData.UserItCode" v-edit:[status] />
     </wtm-form-item>
     <wtm-form-item label="权限名称" prop="Entity.TableName" ref="Entity.TableName">
@@ -115,7 +115,7 @@ export default class Index extends Vue {
         UserItCode: [
             {
                 required: true,
-                message: "用户Id",
+                message: "请输入用户Id",
                 trigger: "blur"
             }
         ]

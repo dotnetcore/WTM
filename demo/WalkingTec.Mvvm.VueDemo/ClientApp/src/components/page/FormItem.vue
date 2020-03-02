@@ -1,6 +1,6 @@
 <template>
-    <el-col :lg="size.lg" :sm="size.sm" :xs="size.xs">
-        <el-form-item ref="elItem" :class="[parentCmpt.componentName === 'wtmSearch' ? 'form-item-search' : 'form-item']" v-bind="$attrs">
+    <el-col v-show="isShow" :lg="size.lg" :sm="size.sm" :xs="size.xs">
+        <el-form-item ref="elItem" :class="[parentName === 'wtmSearch' ? 'form-item-search' : 'form-item']" v-bind="$attrs">
             <slot v-if="isEdit" />
             <template v-else>
                 <img v-if="isImg" :src="value" />
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Inject, Ref } from "vue-property-decorator";
 /**
  *
  * Prop:
@@ -22,61 +22,72 @@ import { Component, Vue, Prop } from "vue-property-decorator";
  */
 @Component
 export default class WtmFormItem extends Vue {
+    @Inject("componentName")
+    parentName; // 父级组件name
+    @Ref("elItem")
+    readonly elItem; // el-form-item
+    @Prop({ type: Boolean, default: true })
+    isShow;
     @Prop({ type: String }) // required
     status;
     @Prop({ type: String, default: "" })
     value;
     @Prop({ type: Boolean, default: false })
     isImg;
-
+    /**
+     * 是否修改
+     */
     get isEdit() {
         return this.status !== this.$actionType.detail;
     }
-
+    /**
+     * span大小
+     */
     get size() {
-        const dfltSpan = this.parentCmpt["span"];
-        const span = parseInt(this.$attrs.span) || dfltSpan;
+        const span = parseInt(this.$attrs.span) || this.parentCmpt.span;
         return {
             lg: span,
+            md: span + 2,
             sm: span + 4,
             xs: 24
         };
     }
-    // this.$parent.$options.
     /**
-     * 上级组件name
+     * 上级组件
      * 判断应用父级组件
-     * wtmSearch： 默认6
-     * wtmDialog： 默认12
+     *      wtmSearch： 默认6
+     *      wtmDialog： 默认12
+     * 注：
+     *      当前只有span
      */
     get parentCmpt() {
-        let parent = this.$parent;
-        let parentName: string = parent.componentName;
-        while (!["wtmSearch", "wtmDialog"].includes(parentName)) {
-            parent = parent.$parent;
-            parentName = parent.componentName;
-        }
         let span: number = 6;
-        switch (parentName) {
+        switch (this.parentName) {
             case "wtmDialog":
-                span = (parent || {}).span || 12;
+                span = 12;
                 break;
             case "wtmSearch":
             default:
-                span = (parent || {}).span || 6;
+                span = 6;
                 break;
         }
-        return Object.assign(parent, { span });
+        return { span };
     }
+    /**
+     * 指定错误
+     */
     showError(msg) {
-        this.$refs["elItem"].clearValidate();
+        this.elItem.clearValidate();
         if (msg) {
-            this.$refs["elItem"].validateMessage = msg;
-            this.$refs["elItem"].validateState = "error";
+            this.elItem.validateMessage = msg;
+            this.elItem.validateState = "error";
         }
     }
+    /**
+     * 清理错误
+     */
     clearValidate() {
-        this.$refs["elItem"].clearValidate();
+        this.elItem.clearValidate();
     }
 }
 </script>

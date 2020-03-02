@@ -85,6 +85,7 @@ export default class DialogBox extends Vue {
     get titlePvt() {
         return this.title || this.$t(`table.${this.status}`);
     }
+    // 表单model
     get modelPvt() {
         if (!this.model || this.model === {}) {
             return this.dialogAttrs.model || {};
@@ -108,13 +109,6 @@ export default class DialogBox extends Vue {
         }
     }
     /**
-     * 透传el-form组件
-     */
-    get elForm() {
-        const refForm = _.get(this, `$refs.ref_name`);
-        return refForm;
-    }
-    /**
      * 透传el-form，validate事件
      */
     get validate() {
@@ -127,6 +121,13 @@ export default class DialogBox extends Vue {
     resetFields() {
         const refForm = _.get(this, `$refs.ref_name`);
         refForm.resetFields();
+    }
+    /**
+     * 透传el-form组件
+     */
+    get elForm() {
+        const refForm = _.get(this, `$refs.ref_name`);
+        return refForm;
     }
 
     // /**

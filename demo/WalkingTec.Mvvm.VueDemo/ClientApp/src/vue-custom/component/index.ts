@@ -1,20 +1,24 @@
 // 内容布局
 import Card from "@/components/layout/components/Card/index.vue";
 // 弹出框
-import DialogBox from "@/components/page/dialog/dialog-box.vue";
+import DialogBox from "@/components/page/DialogBox/index.vue";
 // 查询
-import SearchBox from "@/components/page/search-box.vue";
+import SearchBox from "@/components/page/SearchBox.vue";
 // 列表
-import TableBox from "@/components/page/table-box.vue";
+import TableBox from "@/components/page/TableBox/index.vue";
 // 操作按钮
-import ButBox from "@/components/page/but-box.vue";
+import ButBox from "@/components/page/ButtonBox.vue";
 // 表单项
-import FormItem from "@/components/page/form-item.vue";
+import FormItem from "@/components/page/FormItem.vue";
+// flex控制
+import FlexBox from "@/components/page/FlexBox.vue";
+
 export default [
   { key: "Card", value: Card },
   { key: "WtmDialogBox", value: DialogBox },
   { key: "WtmSearchBox", value: SearchBox },
   { key: "WtmTableBox", value: TableBox },
   { key: "WtmButBox", value: ButBox },
-  { key: "WtmFormItem", value: FormItem }
+  { key: "WtmFormItem", value: FormItem },
+  { key: "WtmFlexBox", value: FlexBox }
 ];

@@ -75,5 +75,8 @@ export default class Index extends Vue {
         this.dialogStatus = this["$actionType"].edit;
         this.isShowPermission = true;
     }
+    mounted() {
+        console.log("this", this);
+    }
 }
 </script>

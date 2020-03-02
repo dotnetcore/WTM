@@ -37,7 +37,7 @@ export default class actionMixins extends Vue {
   @Action("getExcelTemplate") getExcelTemplate;
   // api 授权权限列表
   @State actionList;
-  // 表单弹出框内容 ★★★★☆
+  // 表单弹出框内容
   dialogIsShow: Boolean = false;
   // 打开选中数据
   dialogData: Object = {};
@@ -62,7 +62,7 @@ export default class actionMixins extends Vue {
     };
   }
   /**
-   * 打开详情弹框（默认框） ★★★★☆
+   * 打开详情弹框（默认框）
    * @param status
    * @param data
    */
@@ -100,7 +100,7 @@ export default class actionMixins extends Vue {
     this.openDialog(this.$actionType.detail, data);
   }
   /**
-   * 单个删除 ★★★★★
+   * 单个删除
    * @param params
    */
   onDelete(params) {
@@ -116,7 +116,7 @@ export default class actionMixins extends Vue {
     });
   }
   /**
-   * 多个删除★★★★★
+   * 多个删除
    */
   onBatchDelete() {
     this.onConfirm().then(() => {
@@ -132,7 +132,7 @@ export default class actionMixins extends Vue {
     });
   }
   /**
-   * 导出全部 ★★★★☆
+   * 导出全部
    */
   onExportAll() {
     const parameters = {
@@ -149,7 +149,7 @@ export default class actionMixins extends Vue {
     });
   }
   /**
-   * 导出单个 ★★★★☆
+   * 导出单个
    */
   onExport() {
     const parameters = listToString(this["selectData"], "ID");
