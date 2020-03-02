@@ -1,27 +1,27 @@
 <template>
-  <el-card class="fuzzy-search" shadow="never">
-    <el-form :inline="true" label-width="75px">
-      <el-row class="flex-container">
-        <slot v-if="isFuzzy" />
-        <template v-if="$slots['collapse-content'] && isActive">
-          <slot name="collapse-content" />
-        </template>
-        <wtm-form-item class="search-but-box">
-          <el-button-group v-if="isFuzzy" class="button-group">
-            <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
-              查询
-            </el-button>
-            <el-button v-if="needCollapse && $slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
-              <i class="fa arrow-down el-icon-arrow-down" :class="{ 'is-active': isActive }" />
-            </el-button>
-          </el-button-group>
-          <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
-            重置
-          </el-button>
-        </wtm-form-item>
-      </el-row>
-    </el-form>
-  </el-card>
+    <el-card class="fuzzy-search" shadow="never">
+        <el-form :inline="true" label-width="75px">
+            <el-row class="flex-container">
+                <slot v-if="isFuzzy" />
+                <template v-if="$slots['collapse-content'] && isActive">
+                    <slot name="collapse-content" />
+                </template>
+                <wtm-form-item class="search-but-box">
+                    <el-button-group v-if="isFuzzy" class="button-group">
+                        <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
+                            查询
+                        </el-button>
+                        <el-button v-if="needCollapse && $slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
+                            <i class="fa arrow-down el-icon-arrow-down" :class="{ 'is-active': isActive }" />
+                        </el-button>
+                    </el-button-group>
+                    <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
+                        重置
+                    </el-button>
+                </wtm-form-item>
+            </el-row>
+        </el-form>
+    </el-card>
 </template>
 
 <script lang="ts">
@@ -29,7 +29,7 @@ import { Component, Vue, Prop, Watch, Provide } from "vue-property-decorator";
 @Component({
     name: "wtm-search"
 })
-export default class FuzzySearch extends Vue {
+export default class WtmSearch extends Vue {
     @Provide()
     componentName = "wtmSearch";
 
@@ -47,8 +47,6 @@ export default class FuzzySearch extends Vue {
     disabledInput!: boolean;
     @Prop({ default: 75 })
     searchLabelWidth!: number;
-    @Prop({ default: "fuzzy" })
-    fuzzyField!: string;
     @Prop({ type: Object, default: null }) // 执行事件集合
     events!: object;
 

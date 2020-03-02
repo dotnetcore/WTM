@@ -108,12 +108,16 @@ export default class ButBox extends Vue {
     events;
 
     butTypes = butType;
+    /**
+     * 判断选中数据数量
+     */
     get isDisabledEdit() {
         if (this.selectedData.length === 1) {
             return false;
         }
         return true;
     }
+    // 判读是否有选中值
     get isDisabledEelete() {
         if (this.selectedData.length > 0) {
             return false;
@@ -131,7 +135,6 @@ export default class ButBox extends Vue {
                 : this.$emit("onEdit", this.selectedData[0]);
         }
     }
-
     onBatchDelete() {
         if (!this.isDisabledEelete) {
             this.events.onBatchDelete
@@ -158,9 +161,7 @@ export default class ButBox extends Vue {
             : this.$emit("onExportAll");
     }
     onExport() {
-        this.events.onExport
-            ? this.events.onExport()
-            : this.$emit("onExport");
+        this.events.onExport ? this.events.onExport() : this.$emit("onExport");
     }
     onCommand(command) {
         if (command === "onExportAll") {

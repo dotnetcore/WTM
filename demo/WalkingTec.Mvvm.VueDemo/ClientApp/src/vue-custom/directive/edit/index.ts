@@ -57,13 +57,23 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
 // 编辑
 const edit: DirectiveOptions = {
   inserted: (el, { value, arg, expression }, vnode) => {
+    console.log("expression", expression);
+    console.log("arg", arg);
     // el前添加dom
     const div = document.createElement("div");
-    div.innerHTML = `<span id="${expression}" style="display: none;"></span>`;
+    div.innerHTML = `<span id="${expression ||
+      uuid()}" style="display: none;"></span>`;
     el.parentNode && el.parentNode.insertBefore(div.childNodes[0], el);
     domStyleFn(el, { value, arg }, vnode);
   },
   update: (el, { value, arg }, vnode) => domStyleFn(el, { value, arg }, vnode)
 };
-
+// uuid
+const uuid = () => {
+  return "xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 export default edit;

@@ -38,7 +38,7 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import store from "@/store/modules/export";
 import mixin from "./mixin";
 import { TweenLite } from "gsap/TweenMax";
-import FlexBox from "@/components/page/flex-box.vue";
+import FlexBox from "@/components/page/FlexBox.vue";
 import { getUrlByParamArr } from "@/util/params";
 type progressLineType = {
     progressClone: number;

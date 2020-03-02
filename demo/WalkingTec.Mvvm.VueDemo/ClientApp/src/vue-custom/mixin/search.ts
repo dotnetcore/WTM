@@ -3,7 +3,9 @@
  * SEARCH_DATA: 查询列表参数
  * TABLE_HEADER: 列表
  * callBack = () => {}
- * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口 返回
+ * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口
+ * 注：
+ *    当前方法（privateRequest）放到action-mixin中
  */
 import { Component, Vue, Prop } from "vue-property-decorator";
 type searchFormType = {
@@ -77,11 +79,13 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
         ...this.pageDate
       };
     }
-    // 查询 ★★★★★
     created() {
       this.onSearch();
     }
-    // 查询
+    /**
+     * 查询
+     * @param changePage
+     */
     fetch(changePage?: boolean) {
       this.loading = true;
       // 翻页的时候，请求参数不变。
@@ -94,11 +98,7 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
         Limit: this.pageDate.pageSize
       };
       for (const key in params) {
-        if (
-          params[key] === "" ||
-          // params[key] === null ||
-          params[key] === undefined
-        ) {
+        if (params[key] === "" || params[key] === undefined) {
           delete params[key];
         } else if (Array.isArray(params[key])) {
           //数组类型的参数，变为字符串join (',')
@@ -127,41 +127,49 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       this.pageDate.currentPage = 1;
       this.fetch();
     }
+    /**
+     * 保持参数查询
+     */
     onHoldSearch() {
       this.fetch();
     }
-    onSearchForm() {
-      this.pageDate.currentPage = 1;
-      Object.keys(SEARCH_DATA).forEach(key => {
-        this.searchForm[key] = SEARCH_DATA[key];
-      });
-      this.fetch();
-    }
-    // 重置
+    /**
+     * 重置
+     * @param formName 表单name
+     */
     onReset(formName) {
+      this.pageDate.currentPage = 1;
       Object.keys(SEARCH_DATA).forEach(key => {
         this.searchForm[key] = SEARCH_DATA[key];
       });
-      this.pageDate.currentPage = 1;
       if (formName) {
         //去除搜索中的error信息
         _.get(this, `$refs[${formName}]`).resetFields();
       }
       this.onSearch();
     }
-    // 页码大小
+    /**
+     * 页码大小
+     * @param size
+     */
     handleSizeChange(size) {
       this.pageDate.currentPage = 1;
       this.pageDate.pageSize = size;
       this.fetch(true);
     }
-    // 翻页
+    /**
+     * 翻页
+     * @param currentpage
+     */
     handleCurrentChange(currentpage) {
-      console.log("handleCurrentChange", currentpage);
       this.pageDate.currentPage = currentpage;
       this.fetch(true);
     }
-    // 排序
+    /**
+     * 排序
+     * @param prop 字段
+     * @param order 顺序
+     */
     onSortChange({ prop, order }) {
       this.searchForm.orderByColumn = prop;
       this.pageDate.currentPage = 1;
@@ -175,8 +183,11 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       }
       this.fetch();
     }
+    /**
+     * 选中数据
+     * @param selectData
+     */
     onSelectionChange(selectData: Array<any>) {
-      console.log("selectData", selectData);
       this.selectData = selectData;
     }
   }
