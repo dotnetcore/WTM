@@ -1,6 +1,8 @@
 import login from "./login/index.vue";
+import home from "./home/index.vue";
 export const Basics = {
-    login
+    login,
+    home
 };
 export default {
     actionlog: {

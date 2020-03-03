@@ -20,10 +20,13 @@
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
-            <span>{{ page.name }}</span>
+            <span>{{ page.name || "404" }}</span>
           </router-link>
         </template>
-        <router-view :name="page.meta.pageKey"></router-view>
+        <router-view
+          :name="page.meta.pageKey || '404'"
+        ></router-view>
+        <!-- <router-view v-else></router-view> -->
       </a-tab-pane>
     </a-tabs>
     <router-view v-else></router-view>
