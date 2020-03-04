@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         private BaseCRUDVM<School> _schoolvm = new BaseCRUDVM<School>();
         private BaseCRUDVM<Major> _majorvm = new BaseCRUDVM<Major>();
         private BaseCRUDVM<Student> _studentvm = new BaseCRUDVM<Student>();
+        private BaseCRUDVM<SchoolIncVersion> _schoolivvm = new BaseCRUDVM<SchoolIncVersion>();
         private string _seed;
 
         public BaseCRUDVMTest()
@@ -22,18 +23,22 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _schoolvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             _studentvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _schoolivvm.DC = new DataContext (_seed, DBTypeEnum.Memory);
 
             _schoolvm.Session = new MockSession();
             _majorvm.Session = new MockSession();
             _studentvm.Session = new MockSession();
+            _schoolivvm.Session = new MockSession ();
 
             _schoolvm.MSD = new MockMSD();
             _majorvm.MSD = new MockMSD();
             _studentvm.MSD = new MockMSD();
+            _schoolivvm.MSD = new MockMSD ();
 
             _schoolvm.LoginUserInfo = new LoginUserInfo { ITCode = "schooluser" };
             _majorvm.LoginUserInfo = new LoginUserInfo { ITCode = "majoruser" };
             _studentvm.LoginUserInfo = new LoginUserInfo { ITCode = "studentuser" };
+            _schoolivvm.LoginUserInfo = new LoginUserInfo { ITCode = "schoolivuser" };
 
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
@@ -698,6 +703,55 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             OptMajorvm.Validate();
             Assert.IsTrue(OptMajorvm.MSD.Keys.Count() > 0);
 
+        }
+
+        [TestMethod]
+        [Description ("单表添加")]
+        [DataTestMethod]
+        [DataRow ("111", "test1", SchoolTypeEnum.PRI, "remark1")]
+        public void IncVersionAddModify (string code, string name, SchoolTypeEnum schooltype, string remark) {
+            SchoolIncVersion s = new SchoolIncVersion();
+            s.SchoolCode = code;
+            s.SchoolName = name;
+            s.SchoolType = schooltype;
+            s.Remark = remark;
+            _schoolivvm.Entity = s;
+            _schoolivvm.DoAdd ();
+
+            using (var context = new DataContext (_seed, DBTypeEnum.Memory)) {
+                var rv = context.Set<SchoolIncVersion>().ToList()[0];
+                Assert.AreEqual (code, rv.SchoolCode);
+                Assert.AreEqual (name, rv.SchoolName);
+                Assert.AreEqual (schooltype, rv.SchoolType);
+                Assert.AreEqual (remark, rv.Remark);
+                Assert.AreEqual ("schooluser", rv.CreateBy);
+                Assert.AreEqual (0, rv.IncVersion);
+                Assert.IsTrue (DateTime.Now.Subtract (rv.CreateTime.Value).Seconds < 10);
+            }
+            //Assert.IsTrue (_schoolivvm.MSD.Count == 0);
+
+            using (var context = new DataContext (_seed, DBTypeEnum.Memory)) {
+                SchoolIncVersion s2 = new SchoolIncVersion();
+                s2.SchoolCode = code;
+                s2.SchoolName = name;
+                s2.SchoolType = schooltype;
+                s2.Remark = $"{remark}a";
+                s2.ID = s.ID;
+                _schoolivvm.DC = context;
+                _schoolivvm.Entity = s2;
+                _schoolivvm.DoEdit (true);
+            }
+
+            using (var context = new DataContext (_seed, DBTypeEnum.Memory)) {
+                var rv = context.Set<SchoolIncVersion>().ToList()[0];
+                Assert.AreEqual (code, rv.SchoolCode);
+                Assert.AreEqual (name, rv.SchoolName);
+                Assert.AreEqual (schooltype, rv.SchoolType);
+                Assert.AreEqual ($"{remark}a", rv.Remark);
+                Assert.AreEqual ("schooluser", rv.CreateBy);
+                Assert.AreEqual (1, rv.IncVersion);
+                Assert.IsTrue (DateTime.Now.Subtract (rv.CreateTime.Value).Seconds < 10);
+            }
         }
 
         class MajorVM1 : BaseCRUDVM<Major>

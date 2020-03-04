@@ -265,6 +265,11 @@ namespace WalkingTec.Mvvm.Core
                 }
             }
 
+            if (typeof (TModel).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
+            {
+                (Entity as IncVersionPoco).IncVersion = 0;
+            }
+
             if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
             {
                 (Entity as PersistPoco).IsValid = true;
@@ -393,6 +398,10 @@ namespace WalkingTec.Mvvm.Core
                     ent.UpdateBy = LoginUserInfo?.ITCode;
                 }
             }
+            if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(IncVersionPoco)))
+            {
+                (Entity as IncVersionPoco).IncVersion++;
+            }
             var pros = typeof(TModel).GetProperties();
 
             #region 更新子表
@@ -429,6 +438,10 @@ namespace WalkingTec.Mvvm.Core
                                     {
                                         ent.UpdateBy = LoginUserInfo?.ITCode;
                                     }
+                                }
+                                if (subtype.IsSubclassOf (typeof (IncVersionPoco)))
+                                {
+                                    (newitem as IncVersionPoco).IncVersion++;
                                 }
                                 //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
                                 foreach (var itempro in itemPros)
@@ -502,6 +515,10 @@ namespace WalkingTec.Mvvm.Core
                                         {
                                             DC.UpdateProperty(i, "UpdateTime");
                                             DC.UpdateProperty(i, "UpdateBy");
+                                        }
+                                        if (item.GetType ().IsSubclassOf (typeof (IncVersionPoco)))
+                                        {
+                                            DC.UpdateProperty (i, "IncVersion");
                                         }
                                     }
                                 }
@@ -614,6 +631,16 @@ namespace WalkingTec.Mvvm.Core
                     {
                         DC.UpdateProperty(Entity, "UpdateTime");
                         DC.UpdateProperty(Entity, "UpdateBy");
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(IncVersionPoco)))
+                {
+                    try
+                    {
+                        DC.UpdateProperty(Entity, "IncVersion");
                     }
                     catch (Exception)
                     {

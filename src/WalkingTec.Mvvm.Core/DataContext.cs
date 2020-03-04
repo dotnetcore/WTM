@@ -389,6 +389,9 @@ namespace WalkingTec.Mvvm.Core
             {
                 set.Attach(entity);
             }
+            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco))) {
+                set.CheckEqual ((entity as IncVersionPoco).IncVersion - 1, (x) => (x as IncVersionPoco).IncVersion);
+            }
             this.Entry(entity).Property(fieldExp).IsModified = true;
         }
 
@@ -405,6 +408,10 @@ namespace WalkingTec.Mvvm.Core
             if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
             {
                 set.Attach(entity);
+            }
+            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
+            {
+                set.CheckEqual ((entity as IncVersionPoco).IncVersion - 1, (x) => (x as IncVersionPoco).IncVersion);
             }
             this.Entry(entity).Property(fieldName).IsModified = true;
         }
