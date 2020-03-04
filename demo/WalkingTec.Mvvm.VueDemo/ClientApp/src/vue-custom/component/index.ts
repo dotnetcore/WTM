@@ -12,6 +12,8 @@ import ButBox from "@/components/page/ButtonBox.vue";
 import FormItem from "@/components/page/FormItem.vue";
 // flex控制
 import FlexBox from "@/components/page/FlexBox.vue";
+// Create Form
+import CreateForm from "@/components/page/CreateForm";
 
 export default [
   { key: "Card", value: Card },
@@ -20,5 +22,6 @@ export default [
   { key: "WtmTableBox", value: TableBox },
   { key: "WtmButBox", value: ButBox },
   { key: "WtmFormItem", value: FormItem },
-  { key: "WtmFlexBox", value: FlexBox }
+  { key: "WtmFlexBox", value: FlexBox },
+  { key: "WtmCreateForm", value: CreateForm }
 ];

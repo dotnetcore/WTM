@@ -41,6 +41,7 @@
     "@typescript-eslint/eslint-plugin": "^2.3.3",
     "@typescript-eslint/parser": "^2.3.3",
     "@typescript-eslint/typescript-estree": "^2.3.3",
+    "@vue/babel-preset-jsx": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.29",
     "aspnet-webpack": "2.0.3",
     "babel-core": "^7.0.0-bridge.0",
