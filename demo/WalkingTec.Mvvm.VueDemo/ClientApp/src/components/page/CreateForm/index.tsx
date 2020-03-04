@@ -16,10 +16,16 @@ export default class CreateForm extends Vue {
         : null;
       return componentObj.wtmformItem(h, item, contentComp);
     });
-
+    const testSubmit = () => {
+      console.log("formData", JSON.stringify(formData));
+    };
     return (
-      <el-form ref="form" v-model={formData} {...{ props: options.formProps }}>
+      <el-form
+        ref="form"
+        {...{ props: options.formProps, attrs: { model: formData } }}
+      >
         <el-row>{components}</el-row>
+        <el-button onClick={testSubmit}>提交</el-button>
       </el-form>
     );
   }
