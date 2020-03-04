@@ -11,7 +11,7 @@ interface StoreType {
   state: {};
   actions: {};
   mutations: {};
-  modules: {};
+  modules?: {};
   getters?: {};
 }
 

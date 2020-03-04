@@ -22,7 +22,7 @@ import { Component, Vue, Prop, Inject, Ref } from "vue-property-decorator";
  */
 @Component
 export default class WtmFormItem extends Vue {
-    @Inject("componentName")
+    @Inject({ from: "componentName", default: "" })
     parentName; // 父级组件name
     @Ref("elItem")
     readonly elItem; // el-form-item
