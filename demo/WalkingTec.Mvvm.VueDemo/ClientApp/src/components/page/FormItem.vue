@@ -73,6 +73,11 @@ export default class WtmFormItem extends Vue {
         }
         return { span };
     }
+
+    mounted() {
+        console.log("formitem $attrs", this.$attrs);
+    }
+
     /**
      * 指定错误
      */
