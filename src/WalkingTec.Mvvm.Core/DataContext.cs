@@ -372,6 +372,15 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="entity">实体</param>
         public void UpdateEntity<T>(T entity) where T : TopBasePoco
         {
+            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
+            {
+                var set = this.Set<T>();
+                T t = set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault();
+                if ((t as IncVersionPoco).IncVersion + 1 != (entity as IncVersionPoco).IncVersion) {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
+            }
             this.Entry(entity).State = EntityState.Modified;
         }
 
@@ -385,12 +394,18 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            T t = set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault();
+            if (t == null)
             {
                 set.Attach(entity);
             }
-            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco))) {
-                set.CheckEqual ((entity as IncVersionPoco).IncVersion - 1, (x) => (x as IncVersionPoco).IncVersion);
+            else if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
+            {
+                if ((t as IncVersionPoco).IncVersion + 1 != (entity as IncVersionPoco).IncVersion)
+                {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
             }
             this.Entry(entity).Property(fieldExp).IsModified = true;
         }
@@ -405,13 +420,18 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            T t = set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault();
+            if (t == null)
             {
                 set.Attach(entity);
             }
-            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
+            if (fieldName == "IncVersion" && typeof (T).GetTypeInfo ().IsSubclassOf (typeof (IncVersionPoco)))
             {
-                set.CheckEqual ((entity as IncVersionPoco).IncVersion - 1, (x) => (x as IncVersionPoco).IncVersion);
+                if ((t as IncVersionPoco).IncVersion + 1 != (entity as IncVersionPoco).IncVersion)
+                {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
             }
             this.Entry(entity).Property(fieldName).IsModified = true;
         }

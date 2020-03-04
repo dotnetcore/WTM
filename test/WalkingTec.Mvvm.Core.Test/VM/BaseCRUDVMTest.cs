@@ -727,23 +727,53 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual ("schoolivuser", rv.CreateBy);
                 Assert.AreEqual (0, rv.IncVersion);
                 Assert.IsTrue (DateTime.Now.Subtract (rv.CreateTime.Value).Seconds < 10);
-            }
-            //Assert.IsTrue (_schoolivvm.MSD.Count == 0);
 
-            using (var context = new DataContext (_seed, DBTypeEnum.Memory)) {
+                //
+
                 SchoolIncVersion s2 = new SchoolIncVersion();
                 s2.SchoolCode = code;
                 s2.SchoolName = name;
                 s2.SchoolType = schooltype;
                 s2.Remark = $"{remark}a";
                 s2.ID = s.ID;
+                s2.IncVersion = 0;
                 _schoolivvm.DC = context;
                 _schoolivvm.Entity = s2;
                 _schoolivvm.DoEdit (true);
-            }
 
-            using (var context = new DataContext (_seed, DBTypeEnum.Memory)) {
-                var rv = context.Set<SchoolIncVersion>().ToList()[0];
+                //
+
+                rv = context.Set<SchoolIncVersion>().ToList()[0];
+                Assert.AreEqual (code, rv.SchoolCode);
+                Assert.AreEqual (name, rv.SchoolName);
+                Assert.AreEqual (schooltype, rv.SchoolType);
+                Assert.AreEqual ($"{remark}a", rv.Remark);
+                Assert.AreEqual ("schoolivuser", rv.UpdateBy);
+                Assert.AreEqual (1, rv.IncVersion);
+                Assert.IsTrue (DateTime.Now.Subtract (rv.UpdateTime.Value).Seconds < 10);
+
+                //
+
+                SchoolIncVersion s3 = new SchoolIncVersion();
+                s3.SchoolCode = code;
+                s3.SchoolName = name;
+                s3.SchoolType = schooltype;
+                s3.Remark = $"{remark}b";
+                s3.ID = s.ID;
+                s3.IncVersion = 0;
+                _schoolivvm.DC = context;
+                _schoolivvm.Entity = s3;
+                try
+                {
+                    _schoolivvm.DoEdit (true);
+                }
+                catch (Exception)
+                {
+                }
+
+                //
+
+                rv = context.Set<SchoolIncVersion>().ToList()[0];
                 Assert.AreEqual (code, rv.SchoolCode);
                 Assert.AreEqual (name, rv.SchoolName);
                 Assert.AreEqual (schooltype, rv.SchoolType);
