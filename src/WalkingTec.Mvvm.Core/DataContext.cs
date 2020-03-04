@@ -56,6 +56,7 @@ namespace WalkingTec.Mvvm.Core
         public FrameworkContext(CS cs) : base(cs)
         {
         }
+        public FrameworkContext(DbContextOptions<FrameworkContext> options) : base(options) { }
 
         /// <summary>
         /// OnModelCreating
@@ -67,7 +68,8 @@ namespace WalkingTec.Mvvm.Core
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
             //用户和用户搜索条件级联删除
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-
+            modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -329,6 +331,8 @@ namespace WalkingTec.Mvvm.Core
             DBType = cs.DbType.Value;
             ConnectionString = cs;
         }
+
+        public EmptyContext(DbContextOptions<FrameworkContext> options) : base(options) { }
 
         public IDataContext CreateNew()
         {

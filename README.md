@@ -74,5 +74,5 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
 
-<img src="https://wtmdoc.walkingtec.cn/imgs/zanshang.jpg"  >
+<img src="./doc/WalkingTec.Mvvm.Doc/wwwroot/imgs/WTM-Ali.png"  height="300" width="300">
 

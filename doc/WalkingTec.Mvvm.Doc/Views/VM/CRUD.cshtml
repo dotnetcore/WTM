@@ -20,93 +20,93 @@
     [ActionDescription("学校管理")]
     public class SchoolController : BaseController
     {
-    #region 新建
-    [ActionDescription("新建")]
-    public ActionResult Create()
-    {
-    var vm = CreateVM&ltSchoolVM&gt();
-    return PartialView(vm);
-    }
+      #region 新建
+      [ActionDescription("新建")]
+      public ActionResult Create()
+      {
+        var vm = CreateVM&ltSchoolVM&gt();
+        return PartialView(vm);
+      }
 
-    [HttpPost]
-    [ActionDescription("新建")]
-    public ActionResult Create(SchoolVM vm)
-    {
-    if (!ModelState.IsValid)
-    {
-    return PartialView(vm);
-    }
-    else
-    {
-    vm.DoAdd();
-    return FFResult()
-    .CloseDialog()
-    .RefreshGrid();
-    }
-    }
-    #endregion
+      [HttpPost]
+      [ActionDescription("新建")]
+      public ActionResult Create(SchoolVM vm)
+      {
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          vm.DoAdd();
+          return FFResult()
+          .CloseDialog()
+          .RefreshGrid();
+        }
+      }
+      #endregion
 
-    #region 修改
-    [ActionDescription("修改")]
-    public ActionResult Edit(Guid id)
-    {
-    var vm = CreateVM&ltSchoolVM&gt(id);
-    return PartialView(vm);
-    }
+      #region 修改
+      [ActionDescription("修改")]
+      public ActionResult Edit(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
 
-    [ActionDescription("修改")]
-    [HttpPost]
-    public ActionResult Edit(SchoolVM vm)
-    {
-    if (!ModelState.IsValid)
-    {
-    return PartialView(vm);
-    }
-    else
-    {
-    vm.DoEdit();
-    return FFResult()
-    .CloseDialog()
-    .RefreshGridRow( vm.Entity.ID);
-    }
-    }
-    #endregion
+      [ActionDescription("修改")]
+      [HttpPost]
+      public ActionResult Edit(SchoolVM vm)
+      {
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          vm.DoEdit();
+          return FFResult()
+          .CloseDialog()
+          .RefreshGridRow( vm.Entity.ID);
+        }
+      }
+      #endregion
 
-    #region 删除
-    [ActionDescription("删除")]
-    public ActionResult Delete(Guid id)
-    {
-    var vm = CreateVM&ltSchoolVM&gt(id);
-    return PartialView(vm);
-    }
+      #region 删除
+      [ActionDescription("删除")]
+      public ActionResult Delete(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
 
-    [ActionDescription("删除")]
-    [HttpPost]
-    public ActionResult Delete(Guid id, IFormCollection nouse)
-    {
-    var vm = CreateVM&ltSchoolVM&gt(id);
-    vm.DoDelete();
-    if (!ModelState.IsValid)
-    {
-    return PartialView(vm);
-    }
-    else
-    {
-    return FFResult()
-    .CloseDialog()
-    .RefreshGrid();
-    }
-    }
-    #endregion
+      [ActionDescription("删除")]
+      [HttpPost]
+      public ActionResult Delete(Guid id, IFormCollection nouse)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        vm.DoDelete();
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          return FFResult()
+          .CloseDialog()
+          .RefreshGrid();
+        }
+      }
+      #endregion
 
-    #region 详细
-    [ActionDescription("详细")]
-    public ActionResult Details(Guid id)
-    {
-    var vm = CreateVM&ltSchoolVM&gt(id);
-    return PartialView(vm);
-    }
-    #endregion
+      #region 详细
+      [ActionDescription("详细")]
+      public ActionResult Details(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
+      #endregion
 
     }
   </wt:code>

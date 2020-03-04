@@ -542,7 +542,7 @@ window.ff = {
         }
 
         if (controltype === "combo") {
-          $('#' + target).html('<option value = "">' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+            $('#' + target).html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
           if (data.Data !== undefined && data.Data !== null) {
             for (i = 0; i < data.Data.length; i++) {
                 item = data.Data[i];
@@ -555,8 +555,14 @@ window.ff = {
               }
             }
           }
-          form.render('select');
-        }
+            var linkto = $('#' + target).attr("linkto");
+            while (linkto !== undefined) {
+                var t = $('#' + linkto);
+                t.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+                linkto = t.attr("linkto");
+            }
+            form.render('select');
+       }
         if (controltype === "checkbox") {
           $('#' + target).html('');
           for (i = 0; i < data.Data.length; i++) {
@@ -631,8 +637,8 @@ window.ff = {
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (filter.hasOwnProperty(item.name)) {
         var temp = filter[item.name];
-        if (!(temp instanceof Array));
-        temp = [temp];
+        if (!(temp instanceof Array))
+          temp = [temp];
         temp.push(item.value);
         filter[item.name] = temp;
       }

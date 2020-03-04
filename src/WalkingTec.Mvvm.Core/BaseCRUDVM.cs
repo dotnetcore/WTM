@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +15,7 @@ namespace WalkingTec.Mvvm.Core
     /// 单表增删改查VM的接口
     /// </summary>
     /// <typeparam name="T">继承TopBasePoco的类</typeparam>
-    public interface IBaseCRUDVM<out T> where T : TopBasePoco
+    public interface IBaseCRUDVM<out T> where T : TopBasePoco,new()
     {
         T Entity { get; }
         /// <summary>
@@ -73,9 +74,10 @@ namespace WalkingTec.Mvvm.Core
     /// 单表增删改查基类，所有单表操作的VM应该继承这个基类
     /// </summary>
     /// <typeparam name="TModel">继承TopBasePoco的类</typeparam>
-    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco
+    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco,new()
     {
         public TModel Entity { get; set; }
+        [JsonIgnore]
         public bool ByPassBaseValidation { get; set; }
 
         //保存读取时Include的内容
@@ -707,9 +709,14 @@ namespace WalkingTec.Mvvm.Core
                     }
                     f.SetValue(Entity, null);
                 }
-
-                DC.DeleteEntity(Entity);
-                DC.SaveChanges();
+                using (var newdc = DC.ReCreate())
+                {
+                    TModel m = new TModel();
+                    m.SetPropertyValue("ID", Entity.GetID());
+                    newdc.Set<TModel>().Attach(m);
+                    newdc.DeleteEntity(m);
+                    newdc.SaveChanges();
+                }
                 foreach (var item in fileids)
                 {
                     FileAttachmentVM ofa = new FileAttachmentVM();
