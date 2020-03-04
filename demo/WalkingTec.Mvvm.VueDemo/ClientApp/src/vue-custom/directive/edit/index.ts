@@ -1,18 +1,27 @@
 import { DirectiveOptions } from "vue";
 /**
+ * 组件状态展示 编辑/文本
+ *
+ * 组件类型 使用：
  * 1. 文本字段
- * edit 指令-是否编辑
- * v-edit:[status]
- * status： 增/删/改 状态
+ *    v-edit:[status]
+ *    status： 增/删/改 状态
  * 2. 集合字段
- * v-edit:[status]="Array<any>"
- * list 过滤集合
- * key 集合中v-model对应字段名
- * label 集合中 需要展示的字段名
+ *    v-edit:[status]="list"
+ *    list:Array<any> 过滤集合,格式 [{Value,Text}]
+ *    status： 增/删/改 状态
+ *
  */
 const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
   // const { value, arg } = binding; // value Array<any>
-  const modelVal = vnode.data.model.value; // v-model 值
+  let modelVal = "";
+  if (vnode.data.model) {
+    modelVal = vnode.data.model.value; // v-model 值
+  } else if (vnode.componentOptions.propsData) {
+    modelVal = vnode.componentOptions.propsData.value; // value 值
+  } else {
+    console.error(`dirEdit指令接收参数：v-model或value错误`);
+  }
   let htmlVal: string = modelVal; // 内容value
   let elPre = el.previousSibling || {}; // el前dom，insert添加的dom
   const sourceArr = _.isArray(sourceVal);
@@ -21,7 +30,6 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
   const valStr = _.isString(modelVal);
   const valNum = _.isNumber(modelVal);
   const valBoo = _.isBoolean(modelVal);
-
   try {
     if (sourceArr && valArr) {
       htmlVal = sourceVal
@@ -36,11 +44,7 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
       htmlVal = modelVal ? "是" : "否";
     }
   } catch (error) {
-    console.warn(
-      `dirEdit,指令接受的'${modelVal}'结构不符合要求`,
-      sourceVal,
-      error
-    );
+    console.warn(`dirEdit,指令接受的'${modelVal}'结构不符合要求`, error);
     htmlVal = modelVal;
   }
 
@@ -57,8 +61,6 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
 // 编辑
 const edit: DirectiveOptions = {
   inserted: (el, { value, arg, expression }, vnode) => {
-    console.log("expression", expression);
-    console.log("arg", arg);
     // el前添加dom
     const div = document.createElement("div");
     div.innerHTML = `<span id="${expression ||

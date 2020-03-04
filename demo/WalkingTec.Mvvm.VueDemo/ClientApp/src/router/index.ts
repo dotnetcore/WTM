@@ -40,6 +40,21 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: "/demo",
+    component: Layout,
+    children: [
+      {
+        path: "index",
+        component: () => import("@/views/demo/index.vue"),
+        name: "demo",
+        meta: {
+          title: "demo",
+          icon: "el-icon-orange"
+        }
+      }
+    ]
+  },
+  {
     path: "/external",
     component: Layout,
     children: [
