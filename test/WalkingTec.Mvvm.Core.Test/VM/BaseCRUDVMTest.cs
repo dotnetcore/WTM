@@ -706,7 +706,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         }
 
         [TestMethod]
-        [Description ("单表添加")]
+        [Description ("IncVersion新增修改")]
         [DataTestMethod]
         [DataRow ("111", "test1", SchoolTypeEnum.PRI, "remark1")]
         public void IncVersionAddModify (string code, string name, SchoolTypeEnum schooltype, string remark) {
@@ -724,7 +724,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual (name, rv.SchoolName);
                 Assert.AreEqual (schooltype, rv.SchoolType);
                 Assert.AreEqual (remark, rv.Remark);
-                Assert.AreEqual ("schooluser", rv.CreateBy);
+                Assert.AreEqual ("schoolivuser", rv.CreateBy);
                 Assert.AreEqual (0, rv.IncVersion);
                 Assert.IsTrue (DateTime.Now.Subtract (rv.CreateTime.Value).Seconds < 10);
             }
@@ -748,9 +748,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual (name, rv.SchoolName);
                 Assert.AreEqual (schooltype, rv.SchoolType);
                 Assert.AreEqual ($"{remark}a", rv.Remark);
-                Assert.AreEqual ("schooluser", rv.CreateBy);
+                Assert.AreEqual ("schoolivuser", rv.UpdateBy);
                 Assert.AreEqual (1, rv.IncVersion);
-                Assert.IsTrue (DateTime.Now.Subtract (rv.CreateTime.Value).Seconds < 10);
+                Assert.IsTrue (DateTime.Now.Subtract (rv.UpdateTime.Value).Seconds < 10);
             }
         }
 
