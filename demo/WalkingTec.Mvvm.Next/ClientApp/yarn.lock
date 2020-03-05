@@ -991,10 +991,10 @@
   resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-13.7.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-13.7.1.tgz#238eb34a66431b71d2aaddeaa7db166f25971a0d"
   integrity sha1-I46zSmZDG3HSqt3qp9sWbyWXGg0=
 
-"@types/node@^12.12.27":
-  version "12.12.27"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.27.tgz#d7506f73160ad30fcebbcf5b8b7d2d976e649e42"
-  integrity sha1-11BvcxYK0w/Ou89bi30tl25knkI=
+"@types/node@^12.12.29":
+  version "12.12.29"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.29.tgz?cache=0&sync_timestamp=1582916461374&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.29.tgz#46275f028b4e463b9ac5fefc1d08bc66cc193f25"
+  integrity sha1-RidfAotORjuaxf78HQi8ZswZPyU=
 
 "@types/yargs-parser@*":
   version "15.0.0"
@@ -2070,10 +2070,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.npm.taobao.org/date-fns/download/date-fns-2.9.0.tgz#d0b175a5c37ed5f17b97e2272bbc1fa5aec677d2"
-  integrity sha1-0LF1pcN+1fF7l+InK7wfpa7Gd9I=
+date-fns@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.npm.taobao.org/date-fns/download/date-fns-2.10.0.tgz#abd10604d8bafb0bcbd2ba2e9b0563b922ae4b6b"
+  integrity sha1-q9EGBNi6+wvL0roumwVjuSKuS2s=
 
 dateformat@^3.0.0:
   version "3.0.3"
@@ -3176,10 +3176,10 @@ http-proxy-agent@^2.1.0:
     agent-base "4"
     debug "3.1.0"
 
-http-proxy-middleware@^0.21.0:
-  version "0.21.0"
-  resolved "https://registry.npm.taobao.org/http-proxy-middleware/download/http-proxy-middleware-0.21.0.tgz#c6b1ca05174b5fbc57bee9485ffa0fa2f0dabeb0"
-  integrity sha1-xrHKBRdLX7xXvulIX/oPovDavrA=
+http-proxy-middleware@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/http-proxy-middleware/download/http-proxy-middleware-1.0.1.tgz#a87ee6564991faca4844ae4ab1cf4221279c28f0"
+  integrity sha1-qH7mVkmR+spIRK5Ksc9CISecKPA=
   dependencies:
     "@types/http-proxy" "^1.17.3"
     http-proxy "^1.18.0"
@@ -3231,6 +3231,11 @@ iferr@^0.1.5:
   version "0.1.5"
   resolved "https://registry.npm.taobao.org/iferr/download/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
+
+iframe-resizer@^4.2.10:
+  version "4.2.10"
+  resolved "https://registry.npm.taobao.org/iframe-resizer/download/iframe-resizer-4.2.10.tgz#c61c9119bb1bf31931fc3c3bb025e1891b18502c"
+  integrity sha1-xhyRGbsb8xkx/Dw7sCXhiRsYUCw=
 
 ignore-walk@^3.0.1:
   version "3.0.3"
@@ -4281,10 +4286,10 @@ mobx-persist@^0.4.1:
   dependencies:
     serializr "^1.1.11"
 
-mobx@^4.15.4:
-  version "4.15.4"
-  resolved "https://registry.npm.taobao.org/mobx/download/mobx-4.15.4.tgz#644eac80bdd15793855194e764c475041101b406"
-  integrity sha1-ZE6sgL3RV5OFUZTnZMR1BBEBtAY=
+mobx@^5.15.4:
+  version "5.15.4"
+  resolved "https://registry.npm.taobao.org/mobx/download/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
+  integrity sha1-naGoTpe6YkYi9OVaC/MwD7kxwqs=
 
 mockjs@^1.1.0:
   version "1.1.0"
