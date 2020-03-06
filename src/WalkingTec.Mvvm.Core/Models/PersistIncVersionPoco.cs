@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace WalkingTec.Mvvm.Core
 {
     /// <summary>
-    /// 乐观锁Model类，使用此类会新加一个单调递增的版本标识
+    /// 所有持久化model的基类，所有的不应被物理删除的model都应该继承这个类
     /// </summary>
-    public class IncVersionPoco : BasePoco
-    {
+    public class PersistIncVersionPoco : PersistPoco {
         /// <summary>
         /// IncVersion
         /// </summary>

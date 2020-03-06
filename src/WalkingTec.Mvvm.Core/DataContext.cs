@@ -381,6 +381,14 @@ namespace WalkingTec.Mvvm.Core
                 }
                 this.Entry (t).State = EntityState.Detached;
             }
+            if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (PersistIncVersionPoco))) {
+                var set = this.Set<T>();
+                T t = set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault();
+                if ((t as PersistIncVersionPoco).IncVersion + 1 != (entity as PersistIncVersionPoco).IncVersion) {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
+            }
             this.Entry(entity).State = EntityState.Modified;
         }
 
@@ -403,6 +411,11 @@ namespace WalkingTec.Mvvm.Core
             {
                 if ((t as IncVersionPoco).IncVersion + 1 != (entity as IncVersionPoco).IncVersion)
                 {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
+            } else if (typeof (T).GetTypeInfo ().IsSubclassOf (typeof (PersistIncVersionPoco))) {
+                if ((t as PersistIncVersionPoco).IncVersion + 1 != (entity as PersistIncVersionPoco).IncVersion) {
                     throw new Exception ("数据版本号不匹配");
                 }
                 this.Entry (t).State = EntityState.Detached;
@@ -429,6 +442,12 @@ namespace WalkingTec.Mvvm.Core
             {
                 if ((t as IncVersionPoco).IncVersion + 1 != (entity as IncVersionPoco).IncVersion)
                 {
+                    throw new Exception ("数据版本号不匹配");
+                }
+                this.Entry (t).State = EntityState.Detached;
+            }
+            if (fieldName == "IncVersion" && typeof (T).GetTypeInfo ().IsSubclassOf (typeof (PersistIncVersionPoco))) {
+                if ((t as PersistIncVersionPoco).IncVersion + 1 != (entity as PersistIncVersionPoco).IncVersion) {
                     throw new Exception ("数据版本号不匹配");
                 }
                 this.Entry (t).State = EntityState.Detached;

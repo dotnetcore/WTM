@@ -636,6 +636,9 @@ namespace WalkingTec.Mvvm.Core
                     {
                         (item as IncVersionPoco).IncVersion = 0;
                     }
+                    if (typeof (PersistIncVersionPoco).IsAssignableFrom (item.GetType ())) {
+                        (item as PersistIncVersionPoco).IncVersion = 0;
+                    }
 
                     DC.Set<P>().Add(item);
                 }
