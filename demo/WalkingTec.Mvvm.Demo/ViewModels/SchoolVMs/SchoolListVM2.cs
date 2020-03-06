@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
-    public class SchoolListVM2 : BasePagedListVM<School_View, SchoolSearcher>
+    public class SchoolListVM2 : BasePagedListVM<School, SchoolSearcher>
     {
         public SchoolListVM2()
         {
@@ -27,9 +27,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<School>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
+            return new List<GridColumn<School>>{
                 this.MakeGridHeader(x => x.SchoolCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.SchoolName).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.SchoolType).SetEditType(EditTypeEnum.ComboBox,typeof(SchoolTypeEnum).ToListItems(null,true)),
@@ -41,13 +41,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             };
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override IOrderedQueryable<School> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
-                .Select(x => new School_View
+                .Select(x => new School
                 {
                     ID = x.ID,
                     SchoolCode = x.SchoolCode,
