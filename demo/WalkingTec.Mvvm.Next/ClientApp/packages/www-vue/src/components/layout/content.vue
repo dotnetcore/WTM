@@ -34,14 +34,16 @@
         <!-- <router-view v-else></router-view> -->
       </a-tab-pane>
     </a-tabs>
-    <keep-alive>
-      <router-view
-        class="layout-page-view"
-        :style="{
-          minHeight: height + 'px'
-        }"
-      ></router-view>
-    </keep-alive>
+    <div
+      class="layout-page-view"
+      :style="{
+        height: height + 'px'
+      }"
+    >
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </div>
   </a-layout-content>
 </template>
 <script lang="ts">
@@ -75,7 +77,7 @@ export default class extends Vue {
     }
 
     this.TabPages.push(this.$route);
-    console.log("extends -> onPushTabPages -> this.TabPages", this.TabPages)
+    // console.log("extends -> onPushTabPages -> this.TabPages", this.TabPages)
   }
   onEdit(targetKey, action) {
     // this.$router.back();
@@ -96,7 +98,7 @@ export default class extends Vue {
   @Debounce(200)
   onSetHeight() {
     try {
-      const offsetTop = lodash.get(this, "$el.firstChild.offsetTop", 0) + 5,
+      const offsetTop = lodash.get(this, "$el.firstChild.offsetTop", 0), //+ 5,
         innerHeight = window.innerHeight,
         height = innerHeight - offsetTop;
       this.height = height;
@@ -116,11 +118,12 @@ export default class extends Vue {
   }
   .ant-tabs-bar {
     margin: 0;
+    box-shadow: 0 1px 10px rgba(0, 21, 41, 0.08);
   }
   .ant-tabs-tabpane {
     padding: 0;
   }
-  .ant-tabs-nav .ant-tabs-tab-active{
+  .ant-tabs-nav .ant-tabs-tab-active {
     font-weight: 400;
   }
 }
@@ -134,10 +137,11 @@ export default class extends Vue {
     text-decoration: none;
   }
 }
-.layout-page-view {
-  padding: 6px;
+// .layout-page-view {}
+.layout-page-view > div.app-page {
+  margin: 0 6px;
 }
-iframe.layout-page-view {
-  padding: 0;
-}
+// iframe.layout-page-view {
+//   padding: 0;
+// }
 </style>

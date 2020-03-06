@@ -35,14 +35,14 @@ const routes: RouteConfig[] = [
     path: '/',
     name: "Home",
     // meta: { pageKey: 'home' },
-    component:Basics.home,
+    component: Basics.home,
     // components
   },
   {
     path: '/external/:url',
     name: "external",
     // meta: { pageKey: 'external' },
-    component:Basics.external,
+    component: Basics.external,
     // components
   }
 ]
@@ -61,6 +61,11 @@ const router = new VueRouter({
 //   // } else {
 //   next()
 //   // }
+// })
+// router.beforeResolve((to, from, next) => {
+//   next((vm) => {
+//   console.log("vm", vm)
+//   })
 // })
 // 登陆成功 注册路由
 RootStore.UserStore.UserObservable.subscribe((entitie) => {

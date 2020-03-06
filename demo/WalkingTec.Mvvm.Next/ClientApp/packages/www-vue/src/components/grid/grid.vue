@@ -1,7 +1,7 @@
 <template>
   <ag-grid-vue
     :style="{
-      height:height+'px',
+      height: height + 'px'
     }"
     class="ag-theme-material ag-grid-card"
     :gridOptions="GridOptionsProps"
@@ -25,6 +25,7 @@ import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
 import localeText from "./localeText";
 import frameworkComponents from "./frameworkComponents";
+import { filter } from "rxjs/operators";
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
@@ -57,7 +58,7 @@ export default class AgGrid extends Vue {
         suppressResize: false,
         editable: false,
         // suppressColumnsToolPanel: true,
-        suppressToolPanel:true,
+        suppressToolPanel: true,
         filter: false,
         resizable: false,
         checkboxSelection: true,
@@ -90,7 +91,7 @@ export default class AgGrid extends Vue {
         suppressResize: false,
         editable: false,
         // suppressColumnsToolPanel: true,
-        suppressToolPanel:true,
+        suppressToolPanel: true,
         filter: false,
         field: "Action",
         cellRenderer: "Action",
@@ -148,7 +149,7 @@ export default class AgGrid extends Vue {
         minWidth: 150,
         enableRowGroup: true,
         resizable: true,
-        filter: true,
+        filter: true
       },
       onGridReady: event => {
         this.GridReadyEvent = event;
@@ -175,8 +176,9 @@ export default class AgGrid extends Vue {
     try {
       const offsetTop = lodash.get(this, "$parent.$el.offsetTop", 0),
         innerHeight = window.innerHeight,
-        height = innerHeight - offsetTop - 55;
+        height = innerHeight - offsetTop - 50;
       this.height = height < 400 ? 400 : height;
+      // console.log("AgGrid -> onSetHeight -> this.height", this.height, this);
     } catch (error) {
       this.height = 400;
     }
@@ -184,11 +186,15 @@ export default class AgGrid extends Vue {
   mounted() {
     this.onSetHeight();
     this.onCalculation();
-
-    this.ResizeEvent = fromEvent(window, "resize").subscribe(e => {
-      this.onCalculation();
-      this.onSetHeight();
-    });
+    this.ResizeEvent = fromEvent(window, "resize")
+      .pipe(
+        // 当前 节点 在 dom 树中
+        filter(() => lodash.get(this, "$el.isConnected", false))
+      )
+      .subscribe(e => {
+        this.onCalculation();
+        this.onSetHeight();
+      });
   }
   destroyed() {
     this.ResizeEvent && this.ResizeEvent.unsubscribe();

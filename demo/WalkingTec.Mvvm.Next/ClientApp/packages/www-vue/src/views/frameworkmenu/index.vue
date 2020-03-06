@@ -5,7 +5,7 @@
     </a-card>
     <a-card class="page-card" :bordered="false">
       <ViewAction :PageStore="PageStore" />
-      <a-divider class="page-divider" />
+      <a-divider style="margin:10px" />
       <ViewGrid :PageStore="PageStore" />
     </a-card>
   </div>

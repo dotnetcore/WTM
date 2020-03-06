@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class="home">
     hemo
   </div>
 </template>
@@ -11,4 +11,7 @@ export default class Login extends Vue {
 }
 </script>
 <style scoped lang="less">
+.home{
+  height: 999px;
+}
 </style>
