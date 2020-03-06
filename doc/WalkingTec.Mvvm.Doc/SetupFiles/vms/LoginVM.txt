@@ -5,70 +5,74 @@ using WalkingTec.Mvvm.Core;
 
 namespace $vmns$.HomeVMs
 {
-    public class RegVM : BaseVM
+    public class LoginVM : BaseVM
     {
         [Display(Name = "账号")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50)]
         public string ITCode { get; set; }
 
-        [Display(Name = "姓名")]
-        [Required(AllowEmptyStrings = false)]
-        [StringLength(50)]
-        public string Name { get; set; }
-
         [Display(Name = "密码")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         public string Password { get; set; }
 
-        [Display(Name = "确认密码")]
-        [Required(AllowEmptyStrings = false)]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
-        public string NewPasswordComfirm { get; set; }
+        [Display(Name = "记录我的登录")]
+        public bool RememberLogin { get; set; }
 
-        [Display(Name = "邮箱")]
-        public string Email { get; set; }
+        public string Redirect { get; set; }
 
-        [Display(Name = "手机")]
-        public string CellPhone { get; set; }
+        [Display(Name = "验证码")]
+        public string VerifyCode { get; set; }
 
         /// <summary>
         /// 进行登录
         /// </summary>
+        /// <param name="ignorePris">外部传递的页面权限</param>
         /// <returns>登录用户的信息</returns>
-        public bool DoReg()
+        public LoginUserInfo DoLogin(bool ignorePris = false)
         {
-            //检查两次新密码是否输入一致，如不一致则输出错误
-            if (Password != NewPasswordComfirm)
+            //根据用户名和密码查询用户
+            var user = DC.Set<FrameworkUserBase>()
+                .Include(x => x.UserRoles).Include(x => x.UserGroups)
+                .Where(x => x.ITCode.ToLower() == ITCode.ToLower() && x.Password == Utils.GetMD5String(Password) && x.IsValid)
+                .SingleOrDefault();
+
+            //如果没有找到则输出错误
+            if (user == null)
             {
-                MSD.AddModelError("NewPasswordComfirm", Localizer["PasswordNotSame"]);
-                return false;
+                MSD.AddModelError("", "登录失败");
+                return null;
             }
+            var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
+            var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
+            //查找登录用户的数据权限
+            var dpris = DC.Set<DataPrivilege>()
+                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                .Distinct()
+                .ToList();
 
-
-            //检查itcode是否重复
-            var exist = DC.Set<FrameworkUserBase>().Any(x => x.ITCode.ToLower() == ITCode.ToLower());
-
-            if (exist == true)
+            //生成并返回登录用户信息
+            LoginUserInfo rv = new LoginUserInfo
             {
-                MSD.AddModelError("ITCode", "账号重复");
-                return false;
-            }
-
-            FrameworkUserBase user = new FrameworkUserBase
-            {
-                ITCode = ITCode,
-                Name = Name,
-                Password = Utils.GetMD5String(Password),
-                IsValid = true,
-                CellPhone = CellPhone,
-                Email = Email
+                Id = user.ID,
+                ITCode = user.ITCode,
+                Name = user.Name,
+                PhotoId = user.PhotoId,
+                Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
+                Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
+                DataPrivileges = dpris
             };
-
-            DC.Set<FrameworkUserBase>().Add(user);
-            DC.SaveChanges();
-            return true;
+            if (ignorePris == false)
+            {
+                //查找登录用户的页面权限
+                var pris = DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Distinct()
+                    .ToList();
+                rv.FunctionPrivileges = pris;
+            }
+            return rv;
         }
     }
 }
