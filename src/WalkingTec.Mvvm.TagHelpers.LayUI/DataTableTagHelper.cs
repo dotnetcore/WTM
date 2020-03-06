@@ -248,6 +248,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 是否显示汇总行
         /// </summary>
         public bool NeedShowTotal { get; set; }
+
+        /// <summary>
+        /// 是否显示打印
+        /// </summary>
+        public bool? NeedShowPrint { get; set; }
+
+        /// <summary>
+        /// 是否显示删选列按钮
+        /// </summary>
+        public bool? NeedShowFilter { get; set; }
         /// <summary>
         /// 排除的搜索条件
         /// </summary>
@@ -305,9 +315,44 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("lay-filter", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
 
+            var config = GlobalServices.GetRequiredService<Configs>();
+
+
+            if (UseLocalData == false)
+            {
+                if (NeedShowPrint == null)
+                {
+                    NeedShowPrint = config?.UiOptions.DataTable.ShowPrint;
+                }
+                if (NeedShowFilter == null)
+                {
+                    NeedShowFilter = config?.UiOptions.DataTable.ShowFilter;
+                }
+            }
+            var righttoolbar = ",defaultToolbar: []";
+            int lefttoolbarmergin = -120;
+            if(NeedShowFilter == true && NeedShowPrint == true)
+            {
+                righttoolbar = ",defaultToolbar: ['filter', 'print']";
+                lefttoolbarmergin = -45;
+            }
+            else
+            {
+                if(NeedShowFilter == true)
+                {
+                    righttoolbar = ",defaultToolbar: ['filter']";
+                    lefttoolbarmergin = -80;
+                }
+                if (NeedShowPrint == true)
+                {
+                    righttoolbar = ",defaultToolbar: ['print']";
+                    lefttoolbarmergin = -80;
+                }
+            }
+
             if (Limit == null)
             {
-                Limit = GlobalServices.GetRequiredService<Configs>()?.UiOptions.DataTable.RPP;
+                Limit = config?.UiOptions.DataTable.RPP;
             }
             if (Limits == null)
             {
@@ -426,7 +471,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             #endregion
 
             #region DataTable
-
+            var toolbardef = "";
+            if(toolBarBtnStrBuilder.Length > 0 || NeedShowFilter == true || NeedShowPrint == true)
+            {
+                toolbardef = $" ,toolbar: '#{ToolBarId}2'";
+            }
             var vmName = string.Empty;
             if (VMType != null)
             {
@@ -450,19 +499,21 @@ layui.use(['table'], function(){{
     ,text:{{
         none:'{Program._localizer["NoData"]}'
     }}
+    {toolbardef}
+    {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
-    ,page:{{
+    {(page ? $@",page:{{
         rpptext:'{Program._localizer["RecordsPerPage"]}',
         totaltext:'{Program._localizer["Total"]}',
         recordtext:'{Program._localizer["Record"]}',
         gototext:'{Program._localizer["Goto"]}',
         pagetext:'{Program._localizer["Page"]}',
         oktext:'{Program._localizer["GotoButtonText"]}',
-    }}
+    }}":",page:false")}
     {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(page
         ? (Limits == null || Limits.Length == 0
@@ -483,7 +534,7 @@ layui.use(['table'], function(){{
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
-  if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}}
+  {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
   {TableJSVar} = table.render({Id}option);
   {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : string.Empty)}
 
@@ -509,12 +560,15 @@ layui.use(['table'], function(){{
   }});
 }})
 </script>
+<script type=""text / html"" id=""{ToolBarId}2"" >
+<div style=""text-align:right;margin-right:{lefttoolbarmergin}px"">{toolBarBtnStrBuilder}</div>
+</script>
 <!-- Grid 行内按钮 -->
 <script type=""text/html"" id=""{ToolBarId}"">{rowBtnStrBuilder}</script>
 ");
             #endregion
 
-            output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;line-height:35px;"">{toolBarBtnStrBuilder}</div>");
+            //output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;line-height:35px;"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
 {(string.IsNullOrEmpty(ListVM.DetailGridPrix) ? string.Empty : $"<input type=\"hidden\" name=\"{Vm.Name}.DetailGridPrix\" value=\"{ListVM.DetailGridPrix}\"/>")}
 ");
@@ -833,6 +887,15 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     {
                         actionScript = $"{item.OnClickFunc}(ids,objs);";
                     }
+                    if (string.IsNullOrEmpty(item.PromptMessage) == false)
+                    {
+                        actionScript = $@"
+        layer.confirm('{item.PromptMessage}', function(index){{
+            {actionScript}
+        layer.close(index);
+      }});";
+                    }
+
                     gridBtnEventStrBuilder.Append($@"
 var isPost = false;
 {script}
