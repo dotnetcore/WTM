@@ -121,12 +121,14 @@ export default class Index extends Vue {
                     type: "wtmSlot",
                     label: "角色",
                     span: 24,
+                    defaultValue: [],
                     slotKey: "UserRoles"
                 },
                 "Entity.UserGroups": {
                     type: "wtmSlot",
                     label: "用户组",
                     span: 24,
+                    defaultValue: [],
                     slotKey: "UserGroups"
                 }
             }

@@ -18,7 +18,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
     // 表单传入数据
     @Prop({ type: Object, default: () => {} })
     dialogData;
-    // 表单类型
+    // 表单状态
     @Prop({ type: String, default: "" })
     status;
     // 弹框是否显示
@@ -30,19 +30,18 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      *    创建表单（CreateForm）时，需要用到自定义组件(type: wtmSlot),
      *    可以将自定义组件的数据 放到mergeFormData中操作，查询/编辑/新增 动作都会填充数据项
      */
-    mergeFormData = {};
+    mergeFormData: object = {};
     // 表单ref name
     refName: string = defaultRefName;
     // 异步验证, 失败组件集合(form-item类型是error需要)
     asynValidateEl: Array<any> = [];
-
     /**
      * wtm-dialog-box所需方法
      */
     get formEvent() {
       return {
         close: this.onClose,
-        open: this.onOpen,
+        opened: this.onOpen,
         onSubmit: this.onSubmit
       };
     }
@@ -68,18 +67,6 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
       }
     }
     /**
-     * 展示接口 验证错误提示
-     */
-    showResponseValidate(resForms: {}) {
-      _.mapKeys(resForms, (value, key) => {
-        const formItem = this.FormComp().getFormItem(key);
-        if (formItem) {
-          formItem.showError(value);
-          this.asynValidateEl.push(key);
-        }
-      });
-    }
-    /**
      * 打开详情
      */
     onOpen() {
@@ -89,14 +76,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
       if (this["status"] !== this["$actionType"].add) {
         const resData = { ...this.dialogData, id: this.dialogData.ID };
         this["detail"](resData).then(res => {
-          // 填充表单数据
-          const originData = this.FormComp().setFormData(res);
-          // 填充补充表单数据
-          _.mapKeys(originData, (value, key) => {
-            if (_.get(this.mergeFormData, key) !== undefined) {
-              _.set(this.mergeFormData, key, _.cloneDeep(value));
-            }
-          });
+          this.setFormData(res);
           this["afterOpen"](res);
         });
       } else {
@@ -129,8 +109,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      */
     onAdd(delID: string = "ID") {
       console.log("onAdd");
-      let formData = this.FormComp().getFormData();
-      formData = _.merge(formData, this.mergeFormData);
+      let formData = this.getFormData();
       delete formData.Entity[delID];
       this["add"](formData)
         .then(res => {
@@ -149,8 +128,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      * 编辑
      */
     onEdit() {
-      let formData = this.FormComp().getFormData();
-      formData = _.merge(formData, this.mergeFormData);
+      const formData = this.getFormData();
       this["edit"](formData)
         .then(res => {
           this["$notify"]({
@@ -163,6 +141,39 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
         .catch(error => {
           this.showResponseValidate(error.response.data.Form);
         });
+    }
+    /**
+     * get
+     */
+    private getFormData() {
+      let formData = this.FormComp().getFormData();
+      formData = _.merge(formData, this.mergeFormData);
+      return formData;
+    }
+    /**
+     * set
+     */
+    private setFormData(data: Object) {
+      // 填充表单数据
+      const originData = this.FormComp().setFormData(data);
+      // 填充补充表单数据
+      _.mapKeys(originData, (value, key) => {
+        if (_.get(this.mergeFormData, key) !== undefined) {
+          _.set(this.mergeFormData, key, _.cloneDeep(value));
+        }
+      });
+    }
+    /**
+     * 展示接口 验证错误提示
+     */
+    private showResponseValidate(resForms: {}) {
+      _.mapKeys(resForms, (value, key) => {
+        const formItem = this.FormComp().getFormItem(key);
+        if (formItem) {
+          formItem.showError(value);
+          this.asynValidateEl.push(key);
+        }
+      });
     }
   }
   return formMixins;

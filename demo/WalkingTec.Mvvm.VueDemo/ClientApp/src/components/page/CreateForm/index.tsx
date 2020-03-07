@@ -53,8 +53,7 @@ export default class CreateForm extends Vue {
   getFormData() {
     let newFormData = {};
     _.mapKeys(this.formData, (value, key) => {
-      const oldKey = key.replace(/_partition_/g, ".");
-      _.setWith(newFormData, oldKey, value);
+      _.setWith(newFormData, this.KeyByPoint(key), value);
     });
     return newFormData;
   }
@@ -63,7 +62,7 @@ export default class CreateForm extends Vue {
    */
   setFormData(data) {
     _.mapKeys(this.options.formItem, (value, key) => {
-      const newKey = key.replace(/(\.)/g, "_partition_");
+      const newKey = this.KeyByString(key);
       this.formData[newKey] = _.get(data, key);
       this.originData[key] = _.get(data, key);
     });
@@ -74,7 +73,7 @@ export default class CreateForm extends Vue {
    * @param key
    */
   getFormItem(key) {
-    const newKey = key.replace(/(\.)/g, "_partition_");
+    const newKey = this.KeyByString(key);
     return this.$refs[newKey];
   }
 
@@ -82,21 +81,32 @@ export default class CreateForm extends Vue {
     let formData = {};
     const formItem = this.options.formItem;
     _.mapKeys(formItem, (valule, key) => {
-      const newKey = key.replace(/(\.)/g, "_partition_");
+      const newKey = this.KeyByString(key);
       formData[newKey] = _.isNil(valule.defaultValue)
         ? ""
         : valule.defaultValue;
     });
     return formData;
   }
-
+  /**
+   * e.key => e_partition_key
+   */
+  private KeyByPoint(key) {
+    return key.replace(/_partition_/g, ".");
+  }
+  /**
+   * e_partition_key => e.key
+   */
+  private KeyByString(key) {
+    return key.replace(/(\.)/g, "_partition_");
+  }
   created() {
     this.formData = this.createFormData();
   }
   render(h) {
     const components = _.keys(this.formData).map(key => {
-      const oldKey = key.replace(/_partition_/g, ".");
-      const item = this.options.formItem[oldKey];
+      const newKey = this.KeyByPoint(key);
+      const item = this.options.formItem[newKey];
       if (_.isFunction(item.isHidden)) {
         if (item.isHidden(this.getFormData(), status)) {
           return;
@@ -105,16 +115,10 @@ export default class CreateForm extends Vue {
       if ((_.isBoolean(item.isHidden) && item.isHidden) || !item.type) {
         return;
       }
-      let compItem = this.componentObj[item.type];
-      let contentComp = compItem
-        ? compItem.call(this, h, { ...item, key })
-        : null;
-      return this.componentObj.wtmFormItem.call(
-        this,
-        h,
-        { ...item, key },
-        contentComp
-      );
+      const itemComp = this.componentObj[item.type];
+      const option = { ...item, key };
+      const contentComp = itemComp ? itemComp.call(this, h, option) : null;
+      return this.componentObj.wtmFormItem.call(this, h, option, contentComp);
     });
     const props = {
       ...this.options.formProps,

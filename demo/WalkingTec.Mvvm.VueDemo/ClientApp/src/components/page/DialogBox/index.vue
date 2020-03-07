@@ -1,14 +1,14 @@
 <template>
-  <div class="dialog-wrap">
-    <el-dialog v-el-draggable-dialog v-if="isDialog" :title="titlePvt" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
-      <slot />
-      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
-    </el-dialog>
-    <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :title="titlePvt" :visible="isShow" direction="rtl" size="50%" v-on="dialogEvent">
-      <slot />
-      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
-    </el-drawer>
-  </div>
+    <div class="dialog-wrap">
+        <el-dialog v-el-draggable-dialog v-if="isDialog" :title="titlePvt" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" top="8vh" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
+            <slot />
+            <dialog-footer slot="footer" :status="status" @onClose="onClose" @onSubmit="onSubmit" />
+        </el-dialog>
+        <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :title="titlePvt" :visible="isShow" direction="rtl" size="50%" v-on="dialogEvent">
+            <slot />
+            <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
+        </el-drawer>
+    </div>
 </template>
 
 <script lang="ts">
@@ -25,17 +25,21 @@ import DialogFooter from "./dialog-footer.vue";
 export default class DialogBox extends Vue {
     @Provide()
     componentName = "wtmDialog";
+    // show
     @Prop({ type: Boolean, default: false })
     isShow;
+    // 添加样式 el-dialog/el-drawer 样式控制
     @Prop({ type: String, default: "" })
-    componentClass; // 添加样式 el-dialog/el-drawer 样式控制
+    componentClass;
+    // 打开后的状态，新增/详情/编辑
     @Prop({ type: String, default: "" })
-    status; // 打开后的状态，新增/详情/编辑
+    status;
+    // title
     @Prop({ type: String, default: "" })
-    title; // title
-
+    title;
+    // 事件集合
     @Prop({ type: Object, default: () => {} })
-    events; // 事件集合
+    events;
 
     // 事件
     get dialogEvent() {
@@ -68,24 +72,20 @@ export default class DialogBox extends Vue {
             return () => {};
         }
     }
-
-    // /**
-    //  * 用法调用 携带sync
-    //  * :is-show.sync="XXX"
-    //  */
-    // onClose() {
-    //     // this.$emit("update:isShow", false);
-    //     this.$emit("close", false);
-    // }
 }
 </script>
 <style lang="less">
 .el-dialog-wrap {
     .el-dialog {
-        max-height: 80%;
-        overflow: auto;
-        // .el-dialog__body {
-        //     max-height: calc(100% - 60px);
+        display: flex;
+        flex-direction: column;
+        max-height: 85vh; // dialog top 8vh
+        overflow: hidden;
+        .el-dialog__body {
+            overflow: auto;
+        }
+        // .el-dialog__footer {
+        //     display: flex;
         // }
     }
 }
