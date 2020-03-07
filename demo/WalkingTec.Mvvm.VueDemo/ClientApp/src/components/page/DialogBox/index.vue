@@ -1,6 +1,11 @@
 <template>
     <div class="dialog-wrap">
-        <el-dialog v-el-draggable-dialog v-if="isDialog" :title="titlePvt" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" top="8vh" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
+        <!-- v-el-draggable-dialog 拖动  -->
+        <el-dialog v-if="isDialog" :title="titlePvt" :fullscreen="isFullscreen" :class="[componentClass, isFullscreen ? 'fullscreen' :'nid_fullscreen']" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" top="8vh" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
+            <template #title>
+                <span class="el-dialog__title">{{titlePvt}}</span>
+                <el-link @click="isFullscreen = !isFullscreen" :underline="false" class="el-dialog__headerbtn"><i class="el-icon-full-screen"></i></el-link>
+            </template>
             <slot />
             <dialog-footer slot="footer" :status="status" @onClose="onClose" @onSubmit="onSubmit" />
         </el-dialog>
@@ -40,7 +45,8 @@ export default class DialogBox extends Vue {
     // 事件集合
     @Prop({ type: Object, default: () => {} })
     events;
-
+    // 是否全屏
+    isFullscreen: Boolean = false;
     // 事件
     get dialogEvent() {
         const envObj = Object.assign({}, this.events, this.$listeners);
@@ -76,19 +82,31 @@ export default class DialogBox extends Vue {
 </script>
 <style lang="less">
 .el-dialog-wrap {
-    .el-dialog {
-        display: flex;
-        flex-direction: column;
-        max-height: 85vh; // dialog top 8vh
-        overflow: hidden;
-        .el-dialog__body {
-            overflow: auto;
+    &.fullscreen {
+        .el-dialog {
+            width: 100%;
         }
-        // .el-dialog__footer {
-        //     display: flex;
-        // }
+    }
+    &.nid_fullscreen {
+        .el-dialog {
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh; // dialog top 8vh
+            overflow: hidden;
+            .el-dialog__body {
+                overflow: auto;
+            }
+        }
+    }
+    .el-dialog {
+        .el-link {
+            position: absolute;
+            right: 40px;
+            font-size: 16px;
+        }
     }
 }
+
 .el-drawer-wrap {
     .el-drawer {
         overflow: auto;
