@@ -19,7 +19,6 @@ export default class DialogFooter extends Vue {
     get detail() {
         return this.$actionType.detail;
     }
-
     onClose() {
         this.$emit("onClose");
     }

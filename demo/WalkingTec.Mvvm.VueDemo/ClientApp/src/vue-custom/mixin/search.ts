@@ -22,21 +22,21 @@ declare module "vue/types/vue" {
     resetFields: any;
   }
 }
-function mixinFunc(TABLE_HEADER: any = {}) {
+function mixinFunc(TABLE_HEADER: Array<object> = []) {
   class mixin extends Vue {
     searchRefName: string = "searchName";
-    tableHeader = TABLE_HEADER;
+    tableHeader: Array<object> = TABLE_HEADER;
     searchForm: searchFormType = {
       orderByColumn: null, // 排序字段
       isAsc: null // asc desc
     };
-    pageDate = {
+    pageDate: object = {
       pageSizes: [10, 25, 50, 100],
       pageSize: 10,
       currentPage: 1,
       pageTotal: 0
     };
-    searchFormClone: Object = {}; // 克隆数据
+    searchFormClone: object = {}; // 克隆数据
     loading: boolean = false; // 加载中
     tableData: Array<any> = []; // 列表数据
     selectData: Array<any> = []; // 列表选中数据

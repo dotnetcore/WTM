@@ -18,6 +18,7 @@
  *    <el-input value={formData[key]} ...{on}/>
  */
 import { translateEvents, vEdit } from "./baseUtil";
+
 export default class Utils {
   constructor() {}
   public input = this.generateInputComponent;
@@ -35,11 +36,12 @@ export default class Utils {
   public label = this.generateLabelComponent;
   public datePicker = this.generateDatePickerComponent;
 
-  private generateInputComponent(h, option) {
+  private generateInputComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this)],
+      directives: [...(option.directives || []), vEdit(_t)],
       on,
       props,
       style,
@@ -49,13 +51,14 @@ export default class Utils {
     //   ? compData.props.placeholder
     //   : `请输入${label}`;
     return (
-      <el-input v-model={this.formData[key]} {...compData}>
+      <el-input v-model={_t.formData[key]} {...compData}>
         {slot}
       </el-input>
     );
   }
 
-  private generateSelectComponent(h, option) {
+  private generateSelectComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key } = option;
     let components = [];
     if (option.children && _.isArray(option.children)) {
@@ -69,16 +72,16 @@ export default class Utils {
         );
       });
     }
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this, option.children)],
+      directives: [...(option.directives || []), vEdit(_t, option.children)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-select v-model={this.formData[key]} {...compData}>
+      <el-select v-model={_t.formData[key]} {...compData}>
         {components}
       </el-select>
     );
@@ -89,24 +92,26 @@ export default class Utils {
     return <el-button {...{ style, props, slot, on }}>{text}</el-button>;
   }
 
-  private generateRadioComponent(h, option) {
+  private generateRadioComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key, text } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this)],
+      directives: [...(option.directives || []), vEdit(_t)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-radio v-model={this.formData[key]} {...compData}>
+      <el-radio v-model={_t.formData[key]} {...compData}>
         {text}
       </el-radio>
     );
   }
 
-  private generateRadioGroupComponent(h, option) {
+  private generateRadioGroupComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key } = option;
     let components = [];
     if (option.children) {
@@ -118,39 +123,41 @@ export default class Utils {
         );
       });
     }
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this, option.children)],
+      directives: [...(option.directives || []), vEdit(_t, option.children)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-radio-group v-model={this.formData[key]} {...compData}>
+      <el-radio-group v-model={_t.formData[key]} {...compData}>
         {components}
       </el-radio-group>
     );
   }
 
-  private generateCheckboxComponent(h, option) {
+  private generateCheckboxComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key, text } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this)],
+      directives: [...(option.directives || []), vEdit(_t)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-checkbox v-model={this.formData[key]} {...compData}>
+      <el-checkbox v-model={_t.formData[key]} {...compData}>
         {text}
       </el-checkbox>
     );
   }
 
-  private generateCheckboxGroupComponent(h, option) {
+  private generateCheckboxGroupComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key } = option;
     let components = [];
     if (option.children) {
@@ -164,41 +171,43 @@ export default class Utils {
         );
       });
     }
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this)],
+      directives: [...(option.directives || []), vEdit(_t)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-checkbox-group v-model={this.formData[key]} {...compData}>
+      <el-checkbox-group v-model={_t.formData[key]} {...compData}>
         {components}
       </el-checkbox-group>
     );
   }
 
-  private generateSwitchComponent(h, option) {
+  private generateSwitchComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, key, text } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
-      directives: [...(option.directives || []), vEdit(this)],
+      directives: [...(option.directives || []), vEdit(_t)],
       on,
       props,
       style,
       slot
     };
     return (
-      <el-switch v-model={this.formData[key]} {...compData}>
+      <el-switch v-model={_t.formData[key]} {...compData}>
         {text}
       </el-switch>
     );
   }
 
-  private generateUploadComponent(h, option) {
+  private generateUploadComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, directives } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     const compData = {
       directives,
       on,
@@ -209,11 +218,12 @@ export default class Utils {
     return <el-upload {...compData}>{option.children}</el-upload>;
   }
 
-  private generateWtmUploadImgComponent(h, option) {
+  private generateWtmUploadImgComponent(h, option, vm?) {
+    const _t = vm || this;
     const { style, props, slot, directives, key } = option;
-    const on = translateEvents(option.events, this);
+    const on = translateEvents(option.events, _t);
     on["onBackImgId"] = event => {
-      this.formData[key] = event;
+      _t.formData[key] = event;
     };
     const compData = {
       directives,
@@ -223,7 +233,7 @@ export default class Utils {
       slot
     };
     return (
-      <wtm-upload-img imgId={this.formData[key]} {...compData}>
+      <wtm-upload-img imgId={_t.formData[key]} {...compData}>
         {option.children}
       </wtm-upload-img>
     );
@@ -292,17 +302,18 @@ export default class Utils {
       value: option.value,
       isImg: option.isImg
     };
-    // 编辑状态 需要操作的组件
+    // 展示状态 需要操作的组件
     if (_t.status === _t.$actionType.detail) {
+      const value = _t.formData[option.key];
       delete attrs.rules;
       // 图片
       if (option.type === "wtmUploadImg") {
+        let img = !!value && (
+          <img src={`/api/_file/downloadFile/${value}`} class="avatar" />
+        );
         return (
           <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
-            <img
-              src={`/api/_file/downloadFile/${_t.formData[option.key]}`}
-              class="avatar"
-            />
+            {img}
           </wtm-form-item>
         );
       }

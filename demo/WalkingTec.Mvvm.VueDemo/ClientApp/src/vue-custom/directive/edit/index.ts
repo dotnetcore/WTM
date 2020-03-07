@@ -46,7 +46,8 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
         .map(item => item.Text)
         .join(",");
     } else if (sourceArr && (valStr || valNum || valBoo)) {
-      htmlVal = sourceVal.filter(res => res["Value"] === modelVal)[0]["Text"];
+      const item = _.find(sourceVal, { Value: modelVal });
+      htmlVal = item ? item["Text"] : modelVal;
     } else if (sourceObj && valStr) {
       htmlVal = sourceVal[modelVal];
     } else if (!sourceVal && valBoo) {
