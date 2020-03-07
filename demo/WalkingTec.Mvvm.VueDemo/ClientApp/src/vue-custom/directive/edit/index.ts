@@ -22,8 +22,17 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
   } else {
     console.error(`dirEdit指令接收参数：v-model或value错误`);
   }
-  let htmlVal: string = modelVal; // 内容value
-  let elPre = el.previousSibling || {}; // el前dom，insert添加的dom
+  // 内容value
+  let htmlVal: string = modelVal;
+  // el前dom，insert添加的dom
+  let elPre = el.previousSibling || {};
+  // 添加&修改 展示组件
+  if (arg === "add" || arg === "edit") {
+    el.style.display = "";
+    elPre.style.display = "none";
+    return;
+  }
+  // 判断
   const sourceArr = _.isArray(sourceVal);
   const sourceObj = _.isPlainObject(sourceVal);
   const valArr = _.isArray(modelVal);
@@ -47,35 +56,23 @@ const domStyleFn = (el, { value: sourceVal, arg }, vnode) => {
     console.warn(`dirEdit,指令接受的'${modelVal}'结构不符合要求`, error);
     htmlVal = modelVal;
   }
-
-  // 添加&修改 展示组件
-  if (arg === "add" || arg === "edit") {
-    el.style.display = "inline-block";
-    elPre.style.display = "none";
-  } else {
-    el.style.display = "none";
-    elPre.innerHTML = htmlVal;
-    elPre.style.display = "inline-block";
-  }
+  el.style.display = "none";
+  elPre.innerHTML = htmlVal;
+  elPre.style.display = "inline-block";
 };
 // 编辑
 const edit: DirectiveOptions = {
   inserted: (el, { value, arg, expression }, vnode) => {
-    // el前添加dom
-    const div = document.createElement("div");
-    div.innerHTML = `<span id="${expression ||
-      uuid()}" style="display: none;"></span>`;
-    el.parentNode && el.parentNode.insertBefore(div.childNodes[0], el);
+    // 组件前添加dom
+    let spanDom = el.previousSibling;
+    if (!spanDom) {
+      spanDom = document.createElement("span");
+      spanDom.style.display = "none";
+      el.parentNode && el.parentNode.insertBefore(spanDom, el);
+    }
     domStyleFn(el, { value, arg }, vnode);
   },
   update: (el, { value, arg }, vnode) => domStyleFn(el, { value, arg }, vnode)
 };
-// uuid
-const uuid = () => {
-  return "xxxxxxxx-xxxx-1xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-};
+
 export default edit;

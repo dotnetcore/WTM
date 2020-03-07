@@ -6,65 +6,52 @@ import { Action } from "vuex-class";
  * dialogData：被编辑数据
  * status：弹出框的状态
  * actionType: 弹出框的状态-枚举
- * formData：提交表单结构
- *
- * @param defaultFormData
- *
  * 注：
- *     个性化请求，可以在组件中重新定义
- *
+ *     目前与CreateForm组件高度依赖，做一需要配合CreateForm组件
  */
-interface formdata {
-  refName?: string; // 表单名称
-  formData: object; // 表单数据
-}
-function mixinFunc(defaultFormData: formdata = { formData: {} }) {
-  @Component({
-    components: {}
-  })
+function mixinFunc(defaultRefName: string = "el_form_name") {
+  @Component
   class formMixins extends Vue {
     @Action("add") add; // 添加 》store
     @Action("edit") edit; // 修改 》store
     @Action("detail") detail; // 详情 》store
-
+    // 表单传入数据
     @Prop({ type: Object, default: () => {} })
-    dialogData; // 表单传入数据
+    dialogData;
+    // 表单类型
     @Prop({ type: String, default: "" })
-    status; // 表单类型
+    status;
+    // 弹框是否显示
     @Prop({ type: Boolean, default: false })
-    isShow; // 弹框是否显示
-
-    // 表单数据
-    formData = {
-      ..._.cloneDeep(defaultFormData.formData)
-    };
-    // 表单ref name
-    refName: string = defaultFormData.refName || "refName";
-    // 异步验证, 失败组件集合
-    asynValidateEl: Array<any> = [];
-    // 校验
-    rules: object = {};
+    isShow;
     /**
-     * wtm-dialog-box所需属性
+     * 补充表单数据,onAdd|onEdit会把当前数据合并到提交表单（formData）中
+     * 例如：
+     *    创建表单（CreateForm）时，需要用到自定义组件(type: wtmSlot),
+     *    可以将自定义组件的数据 放到mergeFormData中操作，查询/编辑/新增 动作都会填充数据项
      */
-    get formAttrs() {
-      return {
-        rules: this.rules,
-        model: this.formData,
-        status: this.status
-      };
-    }
+    mergeFormData = {};
+    // 表单ref name
+    refName: string = defaultRefName;
+    // 异步验证, 失败组件集合(form-item类型是error需要)
+    asynValidateEl: Array<any> = [];
+
     /**
      * wtm-dialog-box所需方法
      */
     get formEvent() {
       return {
         close: this.onClose,
-        open: this.onBindFormData,
-        onSubmit: this.onSubmitForm
+        open: this.onOpen,
+        onSubmit: this.onSubmit
       };
     }
-
+    /**
+     * 返回表单组件, this.$refs，get监听不到，改为方法
+     */
+    FormComp() {
+      return _.get(this.$refs, this.refName);
+    }
     // 关闭
     onClose() {
       this.$emit("update:isShow", false);
@@ -72,82 +59,62 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
     }
     // 重置&清除验证
     onReset() {
-      this.formData = _.cloneDeep(defaultFormData.formData);
-      this.cleanValidate();
+      const comp = this.FormComp();
+      if (comp) {
+        this.asynValidateEl.forEach(key =>
+          comp.getFormItem(key).clearValidate()
+        );
+        comp.resetFields();
+      }
     }
     /**
-     * 表单数据 赋值
-     * @param params
-     */
-    setFormData(params) {
-      Object.keys(defaultFormData.formData).forEach(key => {
-        if (
-          _.isPlainObject(this.formData[key]) ||
-          _.isArray(this.formData[key])
-        ) {
-          // Entity
-          Object.keys(this.formData[key]).forEach(item => {
-            this.formData[key][item] = _.get(params, key + "." + item);
-          });
-        } else {
-          this.formData[key] = params[key];
-        }
-      });
-    }
-    /**
-     * 展示验证
+     * 展示接口 验证错误提示
      */
     showResponseValidate(resForms: {}) {
-      Object.keys(resForms).forEach(key => {
-        const formItem = this.$refs[key];
+      _.mapKeys(resForms, (value, key) => {
+        const formItem = this.FormComp().getFormItem(key);
         if (formItem) {
-          formItem.showError(resForms[key]);
+          formItem.showError(value);
           this.asynValidateEl.push(key);
         }
       });
     }
     /**
-     * 清理验证
-     */
-    cleanValidate(refName?: string) {
-      this.asynValidateEl.forEach(key => this.$refs[key].clearValidate());
-      const refForm = _.get(this, `$refs[${refName || this.refName}]`);
-      refForm && this.$nextTick(() => refForm.resetFields());
-    }
-    /**
      * 打开详情
      */
-    onBindFormData() {
-      if (!this["dialogData"]) {
-        console.log(this["dialogData"]);
-        console.error("dialogData 没有id数据");
+    onOpen() {
+      if (!this.dialogData) {
+        console.warn("dialogData 没有id数据", this.dialogData);
       }
       if (this["status"] !== this["$actionType"].add) {
-        const parameters = { ...this["dialogData"], id: this["dialogData"].ID };
-        this["detail"](parameters).then(res => {
-          // 判断是否 有Entity 属性，赋值全部
-          if (this.formData.hasOwnProperty("Entity")) {
-            this.setFormData(res);
-          } else {
-            this.setFormData(res.Entity);
-          }
-          this["afterBindFormData"](res);
+        const resData = { ...this.dialogData, id: this.dialogData.ID };
+        this["detail"](resData).then(res => {
+          // 填充表单数据
+          const originData = this.FormComp().setFormData(res);
+          // 填充补充表单数据
+          _.mapKeys(originData, (value, key) => {
+            if (_.get(this.mergeFormData, key) !== undefined) {
+              _.set(this.mergeFormData, key, _.cloneDeep(value));
+            }
+          });
+          this["afterOpen"](res);
         });
       } else {
         this.onReset();
+        this["afterOpen"]();
       }
     }
     /**
      * 查询详情-绑定数据 之后
      */
-    afterBindFormData(data?: object) {
+    afterOpen(data?: object) {
       console.log("data:", data);
     }
     /**
      * 提交
      */
-    onSubmitForm() {
-      this.$refs[this.refName].validate(valid => {
+    onSubmit() {
+      this.FormComp().validate(valid => {
         if (valid) {
           if (this["status"] === this["$actionType"].add) {
             this.onAdd();
@@ -161,14 +128,11 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
      * 添加
      */
     onAdd(delID: string = "ID") {
-      let parameters = _.cloneDeep(this["formData"]);
-      if (parameters.Entity) {
-        delete parameters.Entity[delID];
-      } else {
-        delete parameters[delID];
-        parameters = { Entity: parameters };
-      }
-      this["add"](parameters)
+      console.log("onAdd");
+      let formData = this.FormComp().getFormData();
+      formData = _.merge(formData, this.mergeFormData);
+      delete formData.Entity[delID];
+      this["add"](formData)
         .then(res => {
           this["$notify"]({
             title: "添加成功",
@@ -185,11 +149,9 @@ function mixinFunc(defaultFormData: formdata = { formData: {} }) {
      * 编辑
      */
     onEdit() {
-      let parameters = _.cloneDeep(this["formData"]);
-      if (!parameters.Entity) {
-        parameters = { Entity: parameters };
-      }
-      this["edit"](parameters)
+      let formData = this.FormComp().getFormData();
+      formData = _.merge(formData, this.mergeFormData);
+      this["edit"](formData)
         .then(res => {
           this["$notify"]({
             title: "修改成功",

@@ -65,8 +65,8 @@ class requestBase {
    */
   serviceFormData(url, option, configs) {
     const datas = new FormData();
-    Object.keys(option.data).forEach(key => {
-      datas.append(key, option.data[key]);
+    _.mapKeys(option.data, (value, key) => {
+      datas.append(key, value);
     });
     return axios
       .post(url, datas, { headers: configs, responseType: "arraybuffer" })

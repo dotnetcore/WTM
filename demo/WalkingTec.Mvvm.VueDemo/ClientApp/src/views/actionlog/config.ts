@@ -1,17 +1,6 @@
 // 页面中，需要展示的动作按钮；增，改，删，导入，导出
 export const ASSEMBLIES: Array<string> = ["delete", "export"];
 
-export const SEARCH_DATA = {
-  ITCode: "",
-  ActionUrl: "",
-  LogType: [],
-  ActionName: "",
-  ActionTime: [],
-  StartActionTime: "",
-  EndActionTime: "",
-  IP: ""
-};
-
 export const TABLE_HEADER: Array<object> = [
   { key: "LogType", label: "类型" },
   { key: "ModuleName", label: "模块" },

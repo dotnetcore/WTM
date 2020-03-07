@@ -6,11 +6,6 @@ export const ASSEMBLIES: Array<string> = [
   "export",
   "imported"
 ];
-// 查询参数
-export const SEARCH_DATA = {
-  ITCode: "",
-  Name: ""
-};
 // 列表
 export const TABLE_HEADER: Array<object> = [
   { key: "ITCode", sortable: true, label: "账号" },

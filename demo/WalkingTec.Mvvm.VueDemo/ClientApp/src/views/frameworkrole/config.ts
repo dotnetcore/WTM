@@ -7,11 +7,6 @@ export const ASSEMBLIES: Array<string> = [
   "imported"
 ];
 
-export const SEARCH_DATA = {
-  RoleCode: "",
-  RoleName: ""
-};
-
 export const TABLE_HEADER: Array<object> = [
   { key: "RoleCode", sortable: true, label: "角色编号" },
   { key: "RoleName", sortable: true, label: "角色姓名" },

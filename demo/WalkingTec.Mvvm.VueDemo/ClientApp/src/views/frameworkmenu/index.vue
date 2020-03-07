@@ -23,16 +23,14 @@ import actionMixin from "@/vue-custom/mixin/action-mixin";
 import store from "@/store/system/frameworkmenu";
 import DialogForm from "./dialog-form.vue";
 // 查询参数/列表 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
+import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
-    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: { DialogForm }
 })
 export default class Index extends Vue {
-    // 动作
-    assembly = ASSEMBLIES;
     // tabledata转tree格式
     get treeData() {
         const list = this["tableData"];

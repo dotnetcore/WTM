@@ -1,35 +1,15 @@
 <template>
-  <card class="dataprivilege">
-    <wtm-search-box :events="searchEvent">
-      <wtm-form-item label="ITCode">
-        <el-input v-model="searchForm.ITCode" />
-      </wtm-form-item>
-      <wtm-form-item label="Url">
-        <el-input v-model="searchForm.ActionUrl" />
-      </wtm-form-item>
-      <template slot="collapse-content">
-        <wtm-form-item label="操作时间" :span="12">
-          <el-date-picker v-model="searchForm.ActionTime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
-        </wtm-form-item>
-        <wtm-form-item label="IP">
-          <el-input v-model="searchForm.IP" />
-        </wtm-form-item>
-        <wtm-form-item label="类型">
-          <el-select v-model="searchForm.LogType" multiple :collapse-tags="false">
-            <el-option v-for="(item, index) of logTypes" :key="index" :label="item.Text" :value="item.Value" />
-          </el-select>
-        </wtm-form-item>
-      </template>
-    </wtm-search-box>
-    <!-- 操作按钮 -->
-    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
-    <!-- 列表 -->
-    <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" />
-    <!-- 弹出框 -->
-    <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
-    <!-- 导入 -->
-    <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
-  </card>
+    <card class="dataprivilege">
+        <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" :needCollapse="true" :isActive.sync="isActive" />
+        <!-- 操作按钮 -->
+        <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
+        <!-- 列表 -->
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" />
+        <!-- 弹出框 -->
+        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+        <!-- 导入 -->
+        <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
+    </card>
 </template>
 
 <script lang="ts">
@@ -40,26 +20,66 @@ import actionMixin from "@/vue-custom/mixin/action-mixin";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/actionlog";
 // 查询参数, table列 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER, logTypes } from "./config";
+import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
 
 @Component({
-    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm
     }
 })
 export default class Index extends Vue {
-    // 动作
-    assembly = ASSEMBLIES;
-
-    logTypes = logTypes;
+    isActive: boolean = false;
+    get SEARCH_DATA() {
+        return {
+            formProps: {
+                "label-width": "75px",
+                inline: true
+            },
+            formItem: {
+                ITCode: {
+                    type: "input",
+                    label: "ITCode"
+                },
+                ActionUrl: {
+                    type: "input",
+                    label: "Url"
+                },
+                ActionTime: {
+                    type: "datePicker",
+                    label: "操作时间",
+                    span: 12,
+                    props: {
+                        type: "datetimerange",
+                        "value-format": "yyyy-MM-dd HH:mm:ss",
+                        "range-separator": "至",
+                        "start-placeholder": "开始日期",
+                        "end-placeholder": "结束日期"
+                    },
+                    isHidden: !this.isActive
+                },
+                IP: {
+                    type: "input",
+                    label: "IP",
+                    isHidden: !this.isActive
+                },
+                LogType: {
+                    type: "select",
+                    label: "类型",
+                    children: logTypes,
+                    props: {
+                        multiple: true,
+                        "collapse-tags": true
+                    },
+                    isHidden: !this.isActive
+                }
+            }
+        };
+    }
 
     // 查询接口 ★★★★★
     privateRequest(params) {
-        if (params.LogType) {
-            params.LogType = params.LogType.split(",");
-        }
         if (params.ActionTime) {
             params.StartActionTime = params.ActionTime.split(",")[0];
             params.EndActionTime = params.ActionTime.split(",")[1];

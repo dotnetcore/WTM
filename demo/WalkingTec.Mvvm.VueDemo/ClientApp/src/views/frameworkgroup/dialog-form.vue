@@ -1,52 +1,46 @@
 <template>
-  <wtm-dialog-box :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
-    <wtm-form-item ref="Entity.GroupCode" label="用户组编码" prop="Entity.GroupCode">
-      <el-input v-model="formData.Entity.GroupCode" v-edit:[status] />
-    </wtm-form-item>
-    <wtm-form-item ref="Entity.GroupName" label="用户组名称" prop="Entity.GroupName">
-      <el-input v-model="formData.Entity.GroupName" v-edit:[status] />
-    </wtm-form-item>
-    <wtm-form-item ref="Entity.GroupRemark" label="备注" :span="24">
-      <el-input v-model="formData.Entity.GroupRemark" v-edit:[status] />
-    </wtm-form-item>
-  </wtm-dialog-box>
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions">
+        </wtm-create-form>
+    </wtm-dialog-box>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
-// 表单结构
-const defaultFormData = {
-    // 表单数据
-    formData: {
-        Entity: {
-            ID: "",
-            GroupCode: "",
-            GroupName: "",
-            GroupRemark: ""
-        }
-    }
-};
 
-@Component({ mixins: [mixinForm(defaultFormData)] })
+@Component({ mixins: [mixinForm()] })
 export default class Index extends Vue {
-    // 验证 ★★★★★
-    rules = {
-        "Entity.GroupCode": [
-            {
-                required: true,
-                message: "请输入用户组编号",
-                trigger: "blur"
+    formOptions = {
+        formProps: {
+            "label-width": "100px"
+        },
+        formItem: {
+            "Entity.ID": { isHidden: true },
+            "Entity.GroupCode": {
+                type: "input",
+                label: "用户组编码",
+                rules: {
+                    required: true,
+                    message: "请输入用户组编码",
+                    trigger: "blur"
+                }
+            },
+            "Entity.GroupName": {
+                type: "input",
+                label: "用户组名称",
+                rules: {
+                    required: true,
+                    message: "请输入用户组名称",
+                    trigger: "blur"
+                }
+            },
+            "Entity.GroupRemark": {
+                type: "input",
+                label: "备注"
             }
-        ],
-        "Entity.GroupName": [
-            {
-                required: true,
-                message: "请输入用户组名称",
-                trigger: "blur"
-            }
-        ]
+        }
     };
 }
 </script>

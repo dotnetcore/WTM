@@ -1,13 +1,6 @@
 <template>
   <card class="dataprivilege">
-    <wtm-search-box :events="searchEvent">
-      <wtm-form-item label="账号">
-        <el-input v-model="searchForm.ITCode" />
-      </wtm-form-item>
-      <wtm-form-item label="姓名">
-        <el-input v-model="searchForm.Name" />
-      </wtm-form-item>
-    </wtm-search-box>
+    <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" />
     <!-- 操作按钮 -->
     <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
     <!-- 列表 -->
@@ -31,19 +24,17 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
-import UploadBox from "@/components/page/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import store from "@/store/system/frameworkuser";
 
 // 查询参数/列表 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
+import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
-    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
-        DialogForm,
-        UploadBox
+        DialogForm
     }
 })
 export default class Index extends Vue {
@@ -52,7 +43,23 @@ export default class Index extends Vue {
     @Action
     getFrameworkGroups;
 
-    // 动作
-    assembly = ASSEMBLIES;
+    get SEARCH_DATA() {
+        return {
+            formProps: {
+                "label-width": "75px",
+                inline: true
+            },
+            formItem: {
+                ITCode: {
+                    type: "input",
+                    label: "账号"
+                },
+                Name: {
+                    type: "input",
+                    label: "姓名"
+                }
+            }
+        };
+    }
 }
 </script>

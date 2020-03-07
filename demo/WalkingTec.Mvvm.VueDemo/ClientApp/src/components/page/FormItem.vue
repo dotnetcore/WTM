@@ -75,7 +75,7 @@ export default class WtmFormItem extends Vue {
     }
 
     mounted() {
-        console.log("formitem $attrs", this.$attrs);
+        // console.log("formitem $attrs", this.$attrs);
     }
 
     /**

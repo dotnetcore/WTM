@@ -1,11 +1,11 @@
 /**
  * 查询复用 混入
- * SEARCH_DATA: 查询列表参数
- * TABLE_HEADER: 列表
- * callBack = () => {}
- * 需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口
+ *    需要在组件 methods 添加命名为“privateRequest”的查询方法 查询组件自己的调用接口
+ *    TABLE_HEADER: 列表
+ *    请求参数从CreateForm中获取
  * 注：
  *    当前方法（privateRequest）放到action-mixin中
+ *    目前与CreateForm组件高度依赖，做一需要配合CreateForm组件
  */
 import { Component, Vue, Prop } from "vue-property-decorator";
 type searchFormType = {
@@ -22,13 +22,13 @@ declare module "vue/types/vue" {
     resetFields: any;
   }
 }
-function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
+function mixinFunc(TABLE_HEADER: any = {}) {
   class mixin extends Vue {
+    searchRefName: string = "searchName";
     tableHeader = TABLE_HEADER;
     searchForm: searchFormType = {
       orderByColumn: null, // 排序字段
-      isAsc: null, // asc desc
-      ...SEARCH_DATA
+      isAsc: null // asc desc
     };
     pageDate = {
       pageSizes: [10, 25, 50, 100],
@@ -54,7 +54,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
     get searchEvent() {
       return {
         onSearch: this.onSearch,
-        onReset: this.onReset,
         "size-change": this.handleSizeChange,
         "current-change": this.handleCurrentChange,
         "selection-change": this.onSelectionChange,
@@ -90,7 +89,9 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       this.loading = true;
       // 翻页的时候，请求参数不变。
       if (!changePage) {
-        this.searchFormClone = { ...this.searchForm };
+        const comp = _.get(this.$refs, this.searchRefName);
+        const data = comp ? comp.getFormData() : {};
+        this.searchFormClone = { ...data, ...this.searchForm };
       }
       const params = {
         ...this.searchFormClone,
@@ -100,9 +101,6 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
       for (const key in params) {
         if (params[key] === "" || params[key] === undefined) {
           delete params[key];
-        } else if (Array.isArray(params[key])) {
-          //数组类型的参数，变为字符串join (',')
-          params[key] = params[key].toString();
         }
       }
       if (params["isAsc"]) {
@@ -131,22 +129,7 @@ function mixinFunc(SEARCH_DATA: any = {}, TABLE_HEADER: any = {}) {
      * 保持参数查询
      */
     onHoldSearch() {
-      this.fetch();
-    }
-    /**
-     * 重置
-     * @param formName 表单name
-     */
-    onReset(formName) {
-      this.pageDate.currentPage = 1;
-      Object.keys(SEARCH_DATA).forEach(key => {
-        this.searchForm[key] = SEARCH_DATA[key];
-      });
-      if (formName) {
-        //去除搜索中的error信息
-        _.get(this, `$refs[${formName}]`).resetFields();
-      }
-      this.onSearch();
+      this.fetch(true);
     }
     /**
      * 页码大小

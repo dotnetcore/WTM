@@ -7,11 +7,6 @@ export const ASSEMBLIES: Array<string> = [
   "imported"
 ];
 
-export const SEARCH_DATA = {
-  GroupCode: "",
-  GroupName: ""
-};
-
 export const TABLE_HEADER: Array<object> = [
   { key: "GroupCode", sortable: true, label: "用户组编码" },
   { key: "GroupName", sortable: true, label: "用户组名称" },
