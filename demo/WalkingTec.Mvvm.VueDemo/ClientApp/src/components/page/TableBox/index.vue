@@ -40,7 +40,7 @@
         </div>
       </div>
       <!-- Popover 弹出框 -->
-      <el-popover v-else placement="top" trigger="click" class="col-box">
+      <el-popover v-else placement="top" trigger="click" @hide="isColBox = false" class="col-box">
         <el-checkbox-group v-show="isColBox" v-model="selCols">
           <el-checkbox v-for="item in tableAttrs.tbHeader" :key="item.key" :label="item.key" :checked="true">
             {{ item.label }}
