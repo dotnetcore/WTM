@@ -7,11 +7,6 @@ export const ASSEMBLIES: Array<string> = [
   "imported"
 ];
 
-export const SEARCH_DATA = {
-  menuCode: "",
-  menuName: ""
-};
-
 export const TABLE_HEADER: Array<object> = [
   { key: "PageName", sortable: true, label: "页面名称", align: "left" },
   { key: "DisplayOrder", sortable: true, label: "顺序" },

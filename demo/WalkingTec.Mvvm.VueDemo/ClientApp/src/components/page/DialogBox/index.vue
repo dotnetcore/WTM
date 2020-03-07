@@ -1,35 +1,22 @@
 <template>
-    <div class="dialog-wrap">
-        <el-dialog v-el-draggable-dialog v-if="isDialog" :class="[componentClass]" class="el-dialog-wrap" v-bind="dialogAttrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
-            <el-form ref="ref_name" :model="modelPvt" :rules="dialogAttrs.rules" :label-width="dialogAttrs.labelWidth">
-                <el-row>
-                    <slot />
-                </el-row>
-            </el-form>
-            <dialog-footer :status="dialogAttrs.status" @onClose="onClose" @onSubmit="onSubmit" />
-        </el-dialog>
-        <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="dialogAttrs" :visible="isShow" direction="rtl" size="50%" v-on="dialogEvent">
-            <el-form ref="ref_name" :model="modelPvt" :rules="dialogAttrs.rules" :label-width="dialogAttrs.labelWidth">
-                <el-row>
-                    <slot />
-                </el-row>
-            </el-form>
-            <dialog-footer :status="dialogAttrs.status" @onClose="onClose" @onSubmit="onSubmit" />
-        </el-drawer>
-    </div>
+  <div class="dialog-wrap">
+    <el-dialog v-el-draggable-dialog v-if="isDialog" :title="titlePvt" :class="[componentClass]" class="el-dialog-wrap" v-bind="$attrs" :visible="isShow" :modal-append-to-body="true" :append-to-body="true" v-on="dialogEvent">
+      <slot />
+      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
+    </el-dialog>
+    <el-drawer v-else :class="[componentClass]" class="el-drawer-wrap" v-bind="$attrs" :title="titlePvt" :visible="isShow" direction="rtl" size="50%" v-on="dialogEvent">
+      <slot />
+      <dialog-footer :status="status" @onClose="onClose" @onSubmit="onSubmit" />
+    </el-drawer>
+  </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue, Prop, Provide } from "vue-property-decorator";
 import { SettingsModule } from "@/store/modules/settings";
 import DialogFooter from "./dialog-footer.vue";
 /**
  * 弹出框
- * 包含表单（el-form），并透传（el-form）组件的方法/对象  ：
- *    resetFields： 清空方法
- *    validate：验证方法
- *    elForm：el-form组件对象
- *
  */
 @Component({
     name: "wtm-dialog",
@@ -44,36 +31,16 @@ export default class DialogBox extends Vue {
     componentClass; // 添加样式 el-dialog/el-drawer 样式控制
     @Prop({ type: String, default: "" })
     status; // 打开后的状态，新增/详情/编辑
-    @Prop({ type: String, default: "100px" })
-    labelWidth;
-    @Prop({ type: Object, default: () => {} })
-    rules; // 验证
-    @Prop({ type: Object })
-    model; // formData
     @Prop({ type: String, default: "" })
     title; // title
 
     @Prop({ type: Object, default: () => {} })
     events; // 事件集合
-    @Prop({ type: Object, default: () => {} })
-    attrs; // 属性集合
 
     // 事件
     get dialogEvent() {
         const envObj = Object.assign({}, this.events, this.$listeners);
         return envObj;
-    }
-    // 属性
-    get dialogAttrs() {
-        const attrsObj = Object.assign(
-            { labelWidth: this.labelWidth },
-            this.attrs,
-            this.$attrs
-        );
-        return {
-            ...attrsObj,
-            title: this.titlePvt
-        };
     }
     /**
      * 弹出模式
@@ -84,13 +51,6 @@ export default class DialogBox extends Vue {
     // title
     get titlePvt() {
         return this.title || this.$t(`table.${this.status}`);
-    }
-    // 表单model
-    get modelPvt() {
-        if (!this.model || this.model === {}) {
-            return this.dialogAttrs.model || {};
-        }
-        return this.model;
     }
     /**
      * 关闭事件
@@ -107,27 +67,6 @@ export default class DialogBox extends Vue {
         } else {
             return () => {};
         }
-    }
-    /**
-     * 透传el-form，validate事件
-     */
-    get validate() {
-        const refForm = _.get(this, `$refs.ref_name`);
-        return refForm.validate;
-    }
-    /**
-     * 清空el-form验证
-     */
-    resetFields() {
-        const refForm = _.get(this, `$refs.ref_name`);
-        refForm.resetFields();
-    }
-    /**
-     * 透传el-form组件
-     */
-    get elForm() {
-        const refForm = _.get(this, `$refs.ref_name`);
-        return refForm;
     }
 
     // /**

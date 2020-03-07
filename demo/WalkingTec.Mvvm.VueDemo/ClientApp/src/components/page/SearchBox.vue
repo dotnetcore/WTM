@@ -1,26 +1,20 @@
 <template>
     <el-card class="fuzzy-search" shadow="never">
-        <el-form :inline="true" label-width="75px">
-            <el-row class="flex-container">
-                <slot v-if="isFuzzy" />
-                <template v-if="$slots['collapse-content'] && isActive">
-                    <slot name="collapse-content" />
-                </template>
-                <wtm-form-item class="search-but-box">
-                    <el-button-group v-if="isFuzzy" class="button-group">
-                        <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
-                            查询
-                        </el-button>
-                        <el-button v-if="needCollapse && $slots['collapse-content']" class="toggle-class" type="primary" @click="toggleCollapse">
-                            <i class="fa arrow-down el-icon-arrow-down" :class="{ 'is-active': isActive }" />
-                        </el-button>
-                    </el-button-group>
-                    <el-button v-if="isFuzzy && needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
-                        重置
+        <wtm-create-form :ref="refName" :options="formOptions" elRowClass="flex-container">
+            <wtm-form-item class="search-but-box">
+                <el-button-group class="button-group">
+                    <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
+                        查询
                     </el-button>
-                </wtm-form-item>
-            </el-row>
-        </el-form>
+                    <el-button v-if="needCollapse" class="toggle-class" type="primary" @click="toggleCollapse">
+                        <i class="fa arrow-down el-icon-arrow-down" :class="{ 'is-active': isActive }" />
+                    </el-button>
+                </el-button-group>
+                <el-button v-if="needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
+                    重置
+                </el-button>
+            </wtm-form-item>
+        </wtm-create-form>
     </el-card>
 </template>
 
@@ -32,26 +26,38 @@ import { Component, Vue, Prop, Watch, Provide } from "vue-property-decorator";
 export default class WtmSearch extends Vue {
     @Provide()
     componentName = "wtmSearch";
-
-    @Prop({ default: 200 })
-    inputWidth!: number;
-    @Prop({ default: true })
-    isFuzzy!: boolean;
-    @Prop({ default: "" })
-    fuzzyKeyWord!: string;
-    @Prop({ default: true }) // 是否需要折叠面板
+    // 请求表单
+    @Prop({ type: Object, default: () => {} })
+    formOptions;
+    // 是否需要折叠面板
+    @Prop({ type: Boolean, default: false })
     needCollapse!: boolean;
-    @Prop({ default: true }) // 是否需要重置按钮
+    // 是否展开折叠
+    @Prop({ type: Boolean, default: false })
+    isActive!: boolean;
+    // 是否需要重置按钮
+    @Prop({ default: true })
     needResetBtn!: boolean;
-    @Prop({ default: false }) // 禁用input，通常是在加载的时候禁用
+    // 禁用input，通常是在加载的时候禁用
+    @Prop({ default: false })
     disabledInput!: boolean;
-    @Prop({ default: 75 })
-    searchLabelWidth!: number;
-    @Prop({ type: Object, default: null }) // 执行事件集合
+    // 执行事件集合
+    @Prop({ type: Object, default: null })
     events!: object;
 
-    labelPadding: number = -30;
-    isActive: boolean = false;
+    refName: string = "searchRefName";
+    /**
+     * 返回表单组件, this.$refs，get监听不到，改为方法
+     */
+    FormComp() {
+        return _.get(this.$refs, this.refName);
+    }
+    /**
+     * 表单数据
+     */
+    getFormData() {
+        return this.FormComp().getFormData();
+    }
     onSearch() {
         if (this.events && this.events["onSearch"]) {
             this.events["onSearch"]();
@@ -60,14 +66,11 @@ export default class WtmSearch extends Vue {
         }
     }
     toggleCollapse() {
-        this.isActive = !this.isActive;
+        this.$emit("update:isActive", !this.isActive);
     }
     onReset() {
-        if (this.events && this.events["onReset"]) {
-            this.events["onReset"]();
-        } else {
-            this.$emit("onReset");
-        }
+        this.FormComp().resetFields();
+        this.onSearch();
     }
 }
 </script>

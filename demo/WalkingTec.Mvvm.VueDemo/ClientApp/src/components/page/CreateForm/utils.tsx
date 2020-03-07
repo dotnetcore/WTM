@@ -1,10 +1,12 @@
 /**
  * 需要继承vue的this
+ *    当前写法支持v-model，但需要将this指向vue
  *
- * ['WtmFormItem']
- * /vue-custom/component/index
+ * 自定义组件
+ *  ['WtmFormItem'] /vue-custom/component/index
+ *  ['UploadImg'] /components/page/UploadImg.vue
  *
- * 定义组件 注：
+ * 写法-注：
  * model使用
  *    <el-input v-model={formData[key]} />
  * value使用
@@ -15,186 +17,300 @@
  *    };
  *    <el-input value={formData[key]} ...{on}/>
  */
-const componentObj = {
-  input: generateInputComponent,
-  select: generateSelectComponent,
-  button: generateButtonComponent,
-  radio: generateRadioComponent,
-  radioGroup: generateRadioGroupComponent,
-  checkbox: generateCheckboxComponent,
-  checkboxGroup: generateCheckboxGroupComponent,
-  switch: generateSwitchComponent,
-  wtmformItem: generateWtmFormItemComponent
-};
-/**
- * 事件
- * @param events
- * @param vm
- */
-function translateEvents(events = {}, vm) {
-  const result = {};
-  for (let event in events) {
-    result[event] = events[event].bind(vm);
+import { translateEvents, vEdit } from "./baseUtil";
+export default class Utils {
+  constructor() {}
+  public input = this.generateInputComponent;
+  public select = this.generateSelectComponent;
+  public button = this.generateButtonComponent;
+  public radio = this.generateRadioComponent;
+  public radioGroup = this.generateRadioGroupComponent;
+  public checkbox = this.generateCheckboxComponent;
+  public checkboxGroup = this.generateCheckboxGroupComponent;
+  public switch = this.generateSwitchComponent;
+  public wtmFormItem = this.generateWtmFormItemComponent;
+  public upload = this.generateUploadComponent;
+  public wtmUploadImg = this.generateWtmUploadImgComponent;
+  public wtmSlot = this.generateWtmSlotComponent;
+  public label = this.generateLabelComponent;
+  public datePicker = this.generateDatePickerComponent;
+
+  private generateInputComponent(h, option) {
+    const { style, props, slot, key } = option;
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this)],
+      on,
+      props,
+      style,
+      slot
+    };
+    // compData.props.placeholder = compData.props.placeholder
+    //   ? compData.props.placeholder
+    //   : `请输入${label}`;
+    return (
+      <el-input v-model={this.formData[key]} {...compData}>
+        {slot}
+      </el-input>
+    );
   }
 
-  return result;
-}
-/**
- * 编辑状态指令
- * @param vm
- * @param value 下拉框组件需要传入list
- */
-const vEdit = (vm, value: Array<any> | null = null) => {
-  return { name: "edit", arg: vm.status, value: value };
-};
-
-function generateInputComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key } = option;
-  const directives = [...(option.directives || []), vEdit(vm)];
-  const on = translateEvents(option.events, vm);
-  return (
-    <el-input v-model={formData[key]} {...{ directives, on, attrs, style }}>
-      {slot}
-    </el-input>
-  );
-}
-
-function generateSelectComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key } = option;
-  let components = [];
-  if (option.children) {
-    components = option.children.map(child => {
-      return <el-option {...{ attrs: child.props }}></el-option>;
-    });
+  private generateSelectComponent(h, option) {
+    const { style, props, slot, key } = option;
+    let components = [];
+    if (option.children && _.isArray(option.children)) {
+      components = option.children.map(child => {
+        const value = child.Value;
+        const label = child.Text || child.text;
+        return (
+          <el-option
+            {...{ props: { value, label, ...child.props } }}
+          ></el-option>
+        );
+      });
+    }
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this, option.children)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-select v-model={this.formData[key]} {...compData}>
+        {components}
+      </el-select>
+    );
   }
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-select v-model={formData[key]} {...compData}>
-      {components}
-    </el-select>
-  );
-}
 
-function generateButtonComponent(h, formData = {}, option) {
-  const { style, props: attrs, slot, events: on, text } = option;
-  return <el-button {...{ style, attrs, slot, on }}>{text}</el-button>;
-}
-
-function generateRadioComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key, text } = option;
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-radio v-model={formData[key]} {...compData}>
-      {text}
-    </el-radio>
-  );
-}
-
-function generateRadioGroupComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key } = option;
-  let components = [];
-  if (option.children) {
-    components = option.children.map(child => {
-      return <el-radio {...{ attrs: child.props }}>{child.text}</el-radio>;
-    });
+  private generateButtonComponent(h, option) {
+    const { style, props, slot, events: on, text } = option;
+    return <el-button {...{ style, props, slot, on }}>{text}</el-button>;
   }
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-radio-group v-model={formData[key]} {...compData}>
-      {components}
-    </el-radio-group>
-  );
-}
 
-function generateCheckboxComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key, text } = option;
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-checkbox v-model={formData[key]} {...compData}>
-      {text}
-    </el-checkbox>
-  );
-}
-
-function generateCheckboxGroupComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key } = option;
-  let components = [];
-  if (option.children) {
-    components = option.children.map(child => {
-      return (
-        <el-checkbox {...{ attrs: child.props }}>{child.text}</el-checkbox>
-      );
-    });
+  private generateRadioComponent(h, option) {
+    const { style, props, slot, key, text } = option;
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-radio v-model={this.formData[key]} {...compData}>
+        {text}
+      </el-radio>
+    );
   }
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-checkbox-group v-model={formData[key]} {...compData}>
-      {components}
-    </el-checkbox-group>
-  );
-}
 
-function generateSwitchComponent(h, formData = {}, option, vm) {
-  const { style, props: attrs, slot, key, text } = option;
-  const on = translateEvents(option.events, vm);
-  const compData = {
-    directives: [...(option.directives || []), vEdit(vm)],
-    on,
-    attrs,
-    style,
-    slot
-  };
-  return (
-    <el-switch v-model={formData[key]} {...compData}>
-      {text}
-    </el-switch>
-  );
-}
+  private generateRadioGroupComponent(h, option) {
+    const { style, props, slot, key } = option;
+    let components = [];
+    if (option.children) {
+      components = option.children.map(child => {
+        const label = child.Value;
+        const text = child.Text || child.text;
+        return (
+          <el-radio {...{ props: { ...child.props, label } }}>{text}</el-radio>
+        );
+      });
+    }
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this, option.children)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-radio-group v-model={this.formData[key]} {...compData}>
+        {components}
+      </el-radio-group>
+    );
+  }
 
-function generateWtmFormItemComponent(h, option, component) {
-  const attrs = {
-    label: option.label,
-    rules: option.rules,
-    prop: option.key ? option.key : "",
-    error: option.error,
-    "label-width": option["label-width"] || option["labelWidth"]
-  };
-  return <wtm-form-item {...{ attrs }}>{component}</wtm-form-item>;
-}
+  private generateCheckboxComponent(h, option) {
+    const { style, props, slot, key, text } = option;
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-checkbox v-model={this.formData[key]} {...compData}>
+        {text}
+      </el-checkbox>
+    );
+  }
 
-export default componentObj;
+  private generateCheckboxGroupComponent(h, option) {
+    const { style, props, slot, key } = option;
+    let components = [];
+    if (option.children) {
+      components = option.children.map(child => {
+        const label = child.Value;
+        const text = child.Text || child.text;
+        return (
+          <el-checkbox {...{ props: { ...child.props, label } }}>
+            {text}
+          </el-checkbox>
+        );
+      });
+    }
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-checkbox-group v-model={this.formData[key]} {...compData}>
+        {components}
+      </el-checkbox-group>
+    );
+  }
+
+  private generateSwitchComponent(h, option) {
+    const { style, props, slot, key, text } = option;
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives: [...(option.directives || []), vEdit(this)],
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <el-switch v-model={this.formData[key]} {...compData}>
+        {text}
+      </el-switch>
+    );
+  }
+
+  private generateUploadComponent(h, option) {
+    const { style, props, slot, directives } = option;
+    const on = translateEvents(option.events, this);
+    const compData = {
+      directives,
+      on,
+      props,
+      style,
+      slot
+    };
+    return <el-upload {...compData}>{option.children}</el-upload>;
+  }
+
+  private generateWtmUploadImgComponent(h, option) {
+    const { style, props, slot, directives, key } = option;
+    const on = translateEvents(option.events, this);
+    on["onBackImgId"] = event => {
+      this.formData[key] = event;
+    };
+    const compData = {
+      directives,
+      on,
+      props,
+      style,
+      slot
+    };
+    return (
+      <wtm-upload-img imgId={this.formData[key]} {...compData}>
+        {option.children}
+      </wtm-upload-img>
+    );
+  }
+  /**
+   * 自定义位置
+   * @param h
+   * @param option
+   * @param vm
+   */
+  private generateWtmSlotComponent(h, option, vm?) {
+    const _t = vm || this;
+    const { key } = option;
+    if (option.components) {
+      return option.components;
+    } else {
+      const data = { data: _t.formData[key], status: _t.status };
+      return _t.$scopedSlots[option.slotKey](data);
+    }
+  }
+
+  private generateLabelComponent(h, option, vm?) {
+    const _t = vm || this;
+    const { directives, style, key } = option;
+    const on = translateEvents(option.events, _t);
+    const compData = {
+      directives,
+      on,
+      style
+    };
+    return <label {...compData}>{_t.formData[key]}</label>;
+  }
+
+  private generateDatePickerComponent(h, option, vm?) {
+    const _t = vm || this;
+    const { directives, props, style, key } = option;
+    const on = translateEvents(option.events, _t);
+    const compData = {
+      directives: [...(directives || []), vEdit(_t)],
+      on,
+      props,
+      style
+    };
+    return (
+      <el-date-picker v-model={_t.formData[key]} {...compData}></el-date-picker>
+    );
+  }
+
+  /**
+   * formItem 继承vue组件this
+   * @param h
+   * @param option
+   * @param component
+   * @param vm
+   */
+  private generateWtmFormItemComponent(h, option, component, vm?) {
+    const _t = vm || this;
+    const attrs = {
+      label: option.label,
+      rules: option.rules,
+      prop: option.key ? option.key : "",
+      error: option.error,
+      "label-width": option["label-width"] || option["labelWidth"],
+      span: option.span,
+      isShow: option.isShow,
+      value: option.value,
+      isImg: option.isImg
+    };
+    // 编辑状态 需要操作的组件
+    if (_t.status === _t.$actionType.detail) {
+      delete attrs.rules;
+      // 图片
+      if (option.type === "wtmUploadImg") {
+        return (
+          <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
+            <img
+              src={`/api/_file/downloadFile/${_t.formData[option.key]}`}
+              class="avatar"
+            />
+          </wtm-form-item>
+        );
+      }
+    }
+    return (
+      <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
+        {component}
+      </wtm-form-item>
+    );
+  }
+}

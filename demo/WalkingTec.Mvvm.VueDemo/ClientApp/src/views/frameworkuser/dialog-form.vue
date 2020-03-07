@@ -1,62 +1,19 @@
 <template>
-    <wtm-dialog-box componentClass="frameworkuser-form" :ref="refName" :is-show.sync="isShow" :events="formEvent" :attrs="formAttrs">
-        <wtm-form-item ref="Entity.ITCode" label="账号" prop="Entity.ITCode">
-            <el-input v-model="formData.Entity.ITCode" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item v-if="status === $actionType.add" ref="Entity.Password" label="密码" prop="Entity.Password">
-            <el-input v-model="formData.Entity.Password" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Email" label="邮箱">
-            <el-input v-model="formData.Entity.Email" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Name" label="姓名" prop="Entity.Name">
-            <el-input v-model="formData.Entity.Name" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Sex" label="性别">
-            <el-select v-model="formData.Entity.Sex" v-edit:[status]="sexList">
-                <el-option v-for="(item, index) of sexList" :key="index" :label="item.Text" :value="item.Value" />
-            </el-select>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.CellPhone" label="手机号">
-            <el-input v-model="formData.Entity.CellPhone" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.HomePhone" label="座机">
-            <el-input v-model="formData.Entity.HomePhone" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.Address" label="住址">
-            <el-input v-model="formData.Entity.Address" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.ZipCode" label="邮编">
-            <el-input v-model="formData.Entity.ZipCode" v-edit:[status] />
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.PhotoId" label="头像" :status="status">
-            <upload-img :photo-id.sync="formData.Entity.PhotoId" />
-            <template #editValue>
-                <img v-if="formData.Entity.PhotoId" :src="'/api/_file/downloadFile/' + formData.Entity.PhotoId" class="avatar" />
+    <wtm-dialog-box componentClass="frameworkuser-form" :is-show.sync="isShow" :status="status" :events="formEvent">
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent">
+            <template #UserRoles="data">
+                <span v-if="data.status === $actionType.detail">
+                    <el-tag v-for="item of data.data" :key="item.key">{{detailRole(item.RoleId).label}}</el-tag>
+                </span>
+                <el-transfer v-else v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
             </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.IsValid" label="是否有效" prop="IsValid" :status="status">
-            <el-switch v-model="formData.Entity.IsValid" />
-            <template #editValue>
-                {{ formData.Entity.IsValid === true ? "是" : "否" }}
+            <template #UserGroups="data">
+                <span v-if="data.status === $actionType.detail">
+                    <el-tag v-for="item of data.data" :key="item.key">{{detailGroup(item.GroupId).label}}</el-tag>
+                </span>
+                <el-transfer v-else v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
             </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.UserRoles" label="角色" :status="status" :span="24">
-            <el-transfer v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
-            <template #editValue>
-                <el-tag v-for="item of detailRoles" :key="item.key">{{
-                    item.label
-                    }}</el-tag>
-            </template>
-        </wtm-form-item>
-        <wtm-form-item ref="Entity.UserGroups" label="用户组" :status="status" :span="24">
-            <el-transfer v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
-            <template #editValue>
-                <el-tag v-for="item of detailGroups" :key="item.key">{{
-                    item.label
-                    }}</el-tag>
-            </template>
-        </wtm-form-item>
+        </wtm-create-form>
     </wtm-dialog-box>
 </template>
 
@@ -65,33 +22,10 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import formMixin from "@/vue-custom/mixin/form-mixin";
 import { sexList } from "@/config/entity";
-import uploadImg from "@/components/page/UploadImg.vue";
-// 表单结构
-const defaultFormData = {
-    // 表单数据
-    formData: {
-        Entity: {
-            ID: "",
-            ITCode: "",
-            Password: "",
-            Email: "",
-            Name: "",
-            Sex: 0,
-            CellPhone: "",
-            HomePhone: "",
-            Address: "",
-            ZipCode: "",
-            PhotoId: "",
-            IsValid: "true",
-            UserRoles: [],
-            UserGroups: []
-        }
-    }
-};
+import UploadImg from "@/components/page/UploadImg.vue";
 
 @Component({
-    mixins: [formMixin(defaultFormData)],
-    components: { "upload-img": uploadImg }
+    mixins: [formMixin()]
 })
 export default class Index extends Vue {
     @Action
@@ -103,33 +37,102 @@ export default class Index extends Vue {
     @State
     getFrameworkGroupsData;
 
-    sexList: Array<any> = sexList;
     UserRoles: Array<any> = [];
     UserGroups: Array<any> = [];
-
-    rules = {
-        "Entity.ITCode": [
-            {
-                required: true,
-                message: "请输入账号",
-                trigger: "blur"
-            }
-        ],
-        "Entity.Password": [
-            {
-                required: true,
-                message: "请输入密码",
-                trigger: "blur"
-            }
-        ],
-        "Entity.Name": [
-            {
-                required: true,
-                message: "请输入姓名",
-                trigger: "blur"
-            }
-        ]
+    mergeFormData = {
+        Entity: {
+            UserRoles: "",
+            UserGroups: ""
+        }
     };
+    // 表单结构
+    get formOptions() {
+        return {
+            formProps: {
+                "label-width": "100px"
+            },
+            formItem: {
+                "Entity.ID": {
+                    isHidden: true
+                },
+                "Entity.ITCode": {
+                    type: "input",
+                    label: "账号",
+                    rules: {
+                        required: true,
+                        message: "请输入账号",
+                        trigger: "blur"
+                    }
+                },
+                "Entity.Password": {
+                    type: "input",
+                    label: "密码",
+                    rules: {
+                        required: true,
+                        message: "请输入账号",
+                        trigger: "blur"
+                    },
+                    isHidden: (res, status) => status === "edit"
+                },
+                "Entity.Email": {
+                    type: "input",
+                    label: "邮箱"
+                },
+                "Entity.Name": {
+                    type: "input",
+                    label: "姓名",
+                    rules: {
+                        required: true,
+                        message: "请输入姓名",
+                        trigger: "blur"
+                    }
+                },
+                "Entity.Sex": {
+                    type: "select",
+                    label: "性别",
+                    children: sexList
+                },
+                "Entity.CellPhone": {
+                    type: "input",
+                    label: "手机号"
+                },
+                "Entity.HomePhone": {
+                    type: "input",
+                    label: "座机"
+                },
+                "Entity.Address": {
+                    type: "input",
+                    label: "住址"
+                },
+                "Entity.ZipCode": {
+                    type: "input",
+                    label: "邮编"
+                },
+                "Entity.PhotoId": {
+                    type: "wtmUploadImg",
+                    label: "头像"
+                },
+                "Entity.IsValid": {
+                    type: "switch",
+                    label: "是否有效",
+                    defaultValue: true
+                },
+                "Entity.UserRoles": {
+                    type: "wtmSlot",
+                    label: "角色",
+                    span: 24,
+                    slotKey: "UserRoles"
+                },
+                "Entity.UserGroups": {
+                    type: "wtmSlot",
+                    label: "用户组",
+                    span: 24,
+                    slotKey: "UserGroups"
+                }
+            }
+        };
+    }
+
     // 是否 自定义搜索方法
     filterMethod = (query, item) => {
         return item.label.indexOf(query) > -1;
@@ -162,31 +165,35 @@ export default class Index extends Vue {
         });
     }
     // 角色-详情展示
-    get detailRoles() {
-        return this.userRolesData.filter(item =>
-            this.UserRoles.includes(item.key)
-        );
+    detailRole(key) {
+        return _.find(this.userRolesData, { key: key }) || {};
     }
     // 用户组-详情展示
-    get detailGroups() {
-        return this.userGroupsData.filter(item =>
-            this.UserGroups.includes(item.key)
-        );
+    detailGroup(key) {
+        return _.find(this.userGroupsData, { key: key }) || {};
     }
 
     /**
      * 绑定数据之后
      */
-    afterBindFormData() {
+    afterOpen() {
         this.updDataToTransfer("UserRoles");
         this.updDataToTransfer("UserGroups");
     }
-    // 提交 ★★★★★
-    onSubmitForm() {
-        this.$refs[this.refName].validate(valid => {
+    // 提交
+    onSubmit() {
+        this.FormComp().validate(valid => {
             if (valid) {
-                this.updTransferToData("UserRoles");
-                this.updTransferToData("UserGroups");
+                _.set(
+                    this.mergeFormData,
+                    "Entity.UserRoles",
+                    this.updTransferToData("UserRoles")
+                );
+                _.set(
+                    this.mergeFormData,
+                    "Entity.UserGroups",
+                    this.updTransferToData("UserGroups")
+                );
                 if (this["status"] === this["$actionType"].add) {
                     this.onAdd();
                 } else if (this["status"] === this["$actionType"].edit) {
@@ -196,12 +203,12 @@ export default class Index extends Vue {
         });
     }
     /**
-     * 上传图片 ★★★
+     * 上传图片
      */
     handleAvatarSuccess(res, file) {
         this["formData"].PhotoId = res.Id; // URL.createObjectURL(file.raw);
     }
-    // ★★★
+    //
     beforeAvatarUpload(file) {
         const isJPG = file.type.search("image") !== -1;
         const isLt2M = file.size / 1024 / 1024 < 3;
@@ -217,7 +224,7 @@ export default class Index extends Vue {
      * Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式
      */
     updDataToTransfer(field) {
-        let data = _.get(this, `formData.Entity.${field}`);
+        let data = _.get(this.FormComp().getFormData(), `Entity.${field}`);
         data = data.map(item => {
             if (field === "UserGroups") {
                 return item.GroupId;
@@ -243,7 +250,7 @@ export default class Index extends Vue {
                 };
             }
         });
-        _.set(this, `formData.Entity.${field}`, data);
+        return data;
     }
 }
 </script>

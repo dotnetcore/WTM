@@ -1,13 +1,6 @@
 <template>
     <card class="dataprivilege">
-        <wtm-search-box :events="searchEvent">
-            <wtm-form-item label="角色编号">
-                <el-input v-model="searchForm.RoleCode" />
-            </wtm-form-item>
-            <wtm-form-item label="角色名称">
-                <el-input v-model="searchForm.RoleName" />
-            </wtm-form-item>
-        </wtm-search-box>
+        <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" />
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
@@ -45,10 +38,10 @@ import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
 import store from "@/store/system/frameworkrole";
 // 查询参数/列表 ★★★★★
-import { ASSEMBLIES, SEARCH_DATA, TABLE_HEADER } from "./config";
+import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
-    mixins: [searchMixin(SEARCH_DATA, TABLE_HEADER), actionMixin],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm,
@@ -62,21 +55,34 @@ export default class Index extends Vue {
     getFrameworkRoles;
     @Action("getFrameworkGroups")
     getFrameworkGroups;
-    // 动作(按钮)
-    assembly: Array<string> = ASSEMBLIES;
     // 权限窗口
     isShowPermission: boolean = false;
 
+    get SEARCH_DATA() {
+        return {
+            formProps: {
+                "label-width": "75px",
+                inline: true
+            },
+            formItem: {
+                RoleCode: {
+                    type: "input",
+                    label: "角色编号"
+                },
+                RoleName: {
+                    type: "input",
+                    label: "角色名称"
+                }
+            }
+        };
+    }
     /**
      * 打开-分配权限
      */
     openPermission(data = {}) {
         this.dialogData = data;
-        this.dialogStatus = this["$actionType"].edit;
+        this.dialogStatus = this.$actionType.edit;
         this.isShowPermission = true;
-    }
-    mounted() {
-        console.log("this", this);
     }
 }
 </script>
