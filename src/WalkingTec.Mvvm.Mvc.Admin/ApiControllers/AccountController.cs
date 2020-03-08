@@ -139,6 +139,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         }
 
         [HttpPost("[action]")]
+        [AllRights]
         [ProducesResponseType(typeof(Token), StatusCodes.Status200OK)]
         public async Task<Token> RefreshToken(string refreshToken)
         {
@@ -147,9 +148,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [AllRights]
         [HttpGet("[action]/{id}")]
-        public IActionResult CheckLogin(Guid id)
+        public IActionResult CheckLogin(Guid? id)
         {
-            if (LoginUserInfo?.Id != id)
+            if (LoginUserInfo == null || LoginUserInfo?.Id == Guid.Empty)
             {
                 return BadRequest();
             }
@@ -209,6 +210,72 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Ok(forapi);
             }
         }
+
+        [AllRights]
+        [HttpGet("[action]")]
+        public IActionResult CheckUserInfo()
+        {
+            if (LoginUserInfo == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var forapi = new LoginUserInfo();
+                forapi.Id = LoginUserInfo.Id;
+                forapi.ITCode = LoginUserInfo.ITCode;
+                forapi.Name = LoginUserInfo.Name;
+                forapi.Roles = LoginUserInfo.Roles;
+                forapi.Groups = LoginUserInfo.Groups;
+                forapi.PhotoId = LoginUserInfo.PhotoId;
+
+                var ms = new List<SimpleMenu>();
+                var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
+
+                var menus = DC.Set<FunctionPrivilege>()
+                                .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .Select(x => x.MenuItem).Distinct()
+                                .Where(x => x.MethodName == null)
+                                .OrderBy(x => x.DisplayOrder)
+                                .Select(x => new SimpleMenu
+                                {
+                                    Id = x.ID.ToString().ToLower(),
+                                    ParentId = x.ParentId.ToString().ToLower(),
+                                    Text = x.PageName,
+                                    Url = x.Url,
+                                    Icon = x.ICon
+                                });
+                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
+                {
+                    Id = x.ID.ToString().ToLower(),
+                    ParentId = x.ParentId.ToString().ToLower(),
+                    Text = x.PageName,
+                    Url = x.Url,
+                    Icon = x.ICon
+                });
+                ms.AddRange(folders);
+                foreach (var item in menus)
+                {
+                    if (folders.Any(x => x.Id == item.Id) == false)
+                    {
+                        ms.Add(item);
+                    }
+                }
+                List<string> urls = new List<string>();
+                urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Select(x => x.MenuItem).Distinct()
+                    .Where(x => x.MethodName != null)
+                    .Select(x => x.Url)
+                    );
+                urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
+                forapi.Attributes = new Dictionary<string, object>();
+                forapi.Attributes.Add("Menus", ms);
+                forapi.Attributes.Add("Actions", urls);
+                return Ok(forapi);
+            }
+        }
+
 
         [AllRights]
         [HttpPost("[action]")]
