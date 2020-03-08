@@ -1,12 +1,13 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs.MyUserListVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs.MyUserListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
 <wt:row items-per-row="ItemsPerRowEnum.Three">
-<wt:textbox field="Searcher.ITCode" />
-<wt:textbox field="Searcher.Name" />
-<wt:combobox field="Searcher.Sex" empty-text="全部" />
+<wt:textbox field="Searcher.Extra2" />
+<wt:textbox field="Searcher.Email" />
+<wt:textbox field="Searcher.CellPhone" />
 <wt:textbox field="Searcher.IsValid" /><wt:combobox field="Searcher.IsValid" empty-text="全部" />
-<wt:selector  field="Searcher.SelectedUserRolesIDs" list-vm="RoleList" text-bind="RoleList.EntityList[0].RoleName" />
+<wt:combobox field="Searcher.SelectedUserRolesIDs" items="Searcher.AllUserRoless" empty-text="全部" />
+<wt:combobox field="Searcher.SelectedUserGroupsIDs" items="Searcher.AllUserGroupss" empty-text="全部" />
 </wt:row>
 </wt:searchpanel>
 <wt:grid vm="@Model" url="/MyUser/Search"/>
