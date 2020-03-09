@@ -637,8 +637,8 @@ window.ff = {
       if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
       if (filter.hasOwnProperty(item.name)) {
         var temp = filter[item.name];
-        if (!(temp instanceof Array));
-        temp = [temp];
+        if (!(temp instanceof Array))
+          temp = [temp];
         temp.push(item.value);
         filter[item.name] = temp;
       }
@@ -708,16 +708,16 @@ window.ff = {
       tab = " .layadmin-tabsbody-item.layui-show";
     }
     var tables = $('#' + dialogid + tab + ' table[id]');
-    if (tables.length > index) {
-      layui.table.reload(tables[index].id);
-    }
-    else {
-      var searchBtns = $('#' + dialogid + tab + ' form a[class*=layui-btn]');
+    var searchBtns = $('#' + dialogid + tab + ' form a[class*=layui-btn]');
       if (searchBtns.length > index) {
-        searchBtns[index].click();
+          searchBtns[index].click();
       }
-    }
-  },
+      else {
+          if (tables.length > index) {
+              layui.table.reload(tables[index].id);
+          }
+      }
+    },
 
   AddGridRow: function (gridid, option, data) {
     var loaddata = layui.table.cache[gridid];

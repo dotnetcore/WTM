@@ -242,7 +242,7 @@ $.ajax({{
             }});
     " : $@"
         $('#{Id}label').append(""<label id='label{fileId}'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/></label>"");
-        $('#{Id}del').on('click',function(){{
+        $('#del{fileId}').on('click',function(){{
           {Id}DoDelete('{fileId}');
         }});
     ")}
