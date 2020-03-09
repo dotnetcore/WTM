@@ -1,6 +1,6 @@
 <template>
   <span v-if="childrenType==='span'" v-html="valueText"></span>
-  <w-avatar v-else-if="childrenType==='avatar'" :value="value" disabled />
+  <w-avatar v-else-if="childrenType==='avatar'" :value="value" :disabled="true" />
   <a-switch v-else-if="childrenType==='switch'" :checked="value" disabled>
     <a-icon type="check" slot="checkedChildren" />
     <a-icon type="close" slot="unCheckedChildren" />

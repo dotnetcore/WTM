@@ -20,26 +20,19 @@
           </router-link>
         </template>
       </a-tab-pane>
-      <a-tab-pane
-        v-for="page in TabPages"
-        :key="page.fullPath"
-        :closable="true"
-      >
+      <a-tab-pane v-for="page in TabPages" :key="page.fullPath" :closable="true">
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
-            <span>{{ page.path }}</span>
+            <span v-text="page.name"></span>
           </router-link>
         </template>
         <!-- <router-view v-else></router-view> -->
       </a-tab-pane>
     </a-tabs>
-    <div
-      class="layout-page-view"
-      :style="{
+    <div class="layout-page-view" :style="{
         height: height + 'px'
-      }"
-    >
+      }">
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -50,12 +43,21 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
+import rootStore from "../../rootStore";
 import lodash from "lodash";
 @Component({
   components: {}
 })
 export default class extends Vue {
+  UserStore = rootStore.UserStore;
   TabPages = [];
+  onGetName(path) {
+    return lodash.get(
+      lodash.find(this.UserStore.Menus, ["path", path]),
+      "name",
+      path
+    );
+  }
   mounted() {
     lodash.delay(() => {
       this.onPushTabPages();
@@ -75,8 +77,9 @@ export default class extends Vue {
     ) {
       return;
     }
-
-    this.TabPages.push(this.$route);
+    this.TabPages.push(
+      lodash.merge({}, this.$route, { name: this.onGetName(this.$route.path) })
+    );
     // console.log("extends -> onPushTabPages -> this.TabPages", this.TabPages)
   }
   onEdit(targetKey, action) {
@@ -140,6 +143,7 @@ export default class extends Vue {
 // .layout-page-view {}
 .layout-page-view > div.app-page {
   margin: 0 6px;
+  padding-top: 6px;
 }
 // iframe.layout-page-view {
 //   padding: 0;

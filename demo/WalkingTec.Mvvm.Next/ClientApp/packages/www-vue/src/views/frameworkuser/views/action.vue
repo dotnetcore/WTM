@@ -40,7 +40,7 @@
     </template>
     <template #Details>
       <Entity-ITCode display />
-      <Entity-Password display />
+      <!-- <Entity-Password display /> -->
       <Entity-Email display />
       <Entity-Name display />
       <Entity-Sex display />
