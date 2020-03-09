@@ -1,19 +1,6 @@
 <template>
     <wtm-dialog-box componentClass="frameworkuser-form" :is-show.sync="isShow" :status="status" :events="formEvent">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent">
-            <template #UserRoles="data">
-                <span v-if="data.status === $actionType.detail">
-                    <el-tag v-for="item of data.data" :key="item.key">{{detailRole(item.RoleId).label}}</el-tag>
-                </span>
-                <el-transfer v-else v-model="UserRoles" filterable :filter-method="filterMethod" filter-placeholder="请输入角色" :data="userRolesData" />
-            </template>
-            <template #UserGroups="data">
-                <span v-if="data.status === $actionType.detail">
-                    <el-tag v-for="item of data.data" :key="item.key">{{detailGroup(item.GroupId).label}}</el-tag>
-                </span>
-                <el-transfer v-else v-model="UserGroups" filterable :filter-method="filterMethod" filter-placeholder="请输入用户组" :data="userGroupsData" />
-            </template>
-        </wtm-create-form>
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent"></wtm-create-form>
     </wtm-dialog-box>
 </template>
 
@@ -36,17 +23,11 @@ export default class Index extends Vue {
     getFrameworkRolesData;
     @State
     getFrameworkGroupsData;
-
-    UserRoles: Array<any> = [];
-    UserGroups: Array<any> = [];
-    mergeFormData = {
-        Entity: {
-            UserRoles: "",
-            UserGroups: ""
-        }
-    };
     // 表单结构
     get formOptions() {
+        const filterMethod = (query, item) => {
+            return item.label.indexOf(query) > -1;
+        };
         return {
             formProps: {
                 "label-width": "100px"
@@ -118,141 +99,43 @@ export default class Index extends Vue {
                     defaultValue: true
                 },
                 "Entity.UserRoles": {
-                    type: "wtmSlot",
+                    type: "transfer",
                     label: "角色",
+                    mapKey: "RoleId",
+                    props: {
+                        data: this.getFrameworkRolesData.map(item => ({
+                            key: item.Value,
+                            label: item.Text
+                        })),
+                        filterable: true,
+                        filterMethod: filterMethod,
+                        "filter-placeholder": "请输入角色"
+                    },
                     span: 24,
-                    defaultValue: [],
-                    slotKey: "UserRoles"
+                    defaultValue: []
                 },
                 "Entity.UserGroups": {
-                    type: "wtmSlot",
+                    type: "transfer",
                     label: "用户组",
+                    mapKey: "GroupId",
+                    props: {
+                        data: this.getFrameworkGroupsData.map(item => ({
+                            key: item.Value,
+                            label: item.Text
+                        })),
+                        filterable: true,
+                        filterMethod: filterMethod,
+                        "filter-placeholder": "请输入用户组"
+                    },
                     span: 24,
-                    defaultValue: [],
-                    slotKey: "UserGroups"
+                    defaultValue: []
                 }
             }
         };
     }
-
-    // 是否 自定义搜索方法
-    filterMethod = (query, item) => {
-        return item.label.indexOf(query) > -1;
-    };
-
     created() {
         this.getFrameworkRoles();
         this.getFrameworkGroups();
-    }
-
-    // 角色列表数据
-    get userRolesData() {
-        return this.getFrameworkRolesData.map(item => {
-            return {
-                key: item.Value,
-                label: item.Text,
-                // 判断是否修改
-                disabled: this["status"] === this["$actionType"].detail
-            };
-        });
-    }
-    // 用户组列表数据
-    get userGroupsData() {
-        return this.getFrameworkGroupsData.map(item => {
-            return {
-                key: item.Value,
-                label: item.Text,
-                disabled: this["status"] === this["$actionType"].detail
-            };
-        });
-    }
-    // 角色-详情展示
-    detailRole(key) {
-        return _.find(this.userRolesData, { key: key }) || {};
-    }
-    // 用户组-详情展示
-    detailGroup(key) {
-        return _.find(this.userGroupsData, { key: key }) || {};
-    }
-
-    /**
-     * 绑定数据之后
-     */
-    afterOpen() {
-        this.updDataToTransfer("UserRoles");
-        this.updDataToTransfer("UserGroups");
-    }
-    // 提交
-    onSubmit() {
-        this.FormComp().validate(valid => {
-            if (valid) {
-                _.set(
-                    this.mergeFormData,
-                    "Entity.UserRoles",
-                    this.updTransferToData("UserRoles")
-                );
-                _.set(
-                    this.mergeFormData,
-                    "Entity.UserGroups",
-                    this.updTransferToData("UserGroups")
-                );
-                if (this["status"] === this["$actionType"].add) {
-                    this.onAdd();
-                } else if (this["status"] === this["$actionType"].edit) {
-                    this.onEdit();
-                }
-            }
-        });
-    }
-    /**
-     * 上传图片
-     */
-    handleAvatarSuccess(res, file) {
-        this["formData"].PhotoId = res.Id; // URL.createObjectURL(file.raw);
-    }
-    //
-    beforeAvatarUpload(file) {
-        const isJPG = file.type.search("image") !== -1;
-        const isLt2M = file.size / 1024 / 1024 < 3;
-        if (!isJPG) {
-            this["$message"].error("上传只能图片格式!");
-        }
-        if (!isLt2M) {
-            this["$message"].error("上传图片大小不能超过 3MB!");
-        }
-        return isJPG && isLt2M;
-    }
-    /**
-     * Roles&Groups数据格式与穿梭框格式不符，数据格式 >>> 穿梭框格式
-     */
-    updDataToTransfer(field) {
-        let data = _.get(this.FormComp().getFormData(), `Entity.${field}`);
-        data = data.map(item => {
-            if (field === "UserGroups") {
-                return item.GroupId;
-            } else {
-                return item.RoleId;
-            }
-        });
-        _.set(this, field, data);
-    }
-    /**
-     * Roles&Groups数据格式与穿梭框格式不符，穿梭框格式 >>> 数据格式
-     */
-    updTransferToData(field) {
-        let data = _.get(this, field);
-        data = data.map(item => {
-            if (field === "UserGroups") {
-                return {
-                    GroupId: item
-                };
-            } else {
-                return {
-                    RoleId: item
-                };
-            }
-        });
-        return data;
     }
 }
 </script>

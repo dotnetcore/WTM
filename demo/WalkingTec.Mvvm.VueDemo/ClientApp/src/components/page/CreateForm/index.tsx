@@ -24,8 +24,6 @@ export default class CreateForm extends Vue {
   componentObj: any = new Utils();
   // key替换'.'之后的数据
   formData: object = {};
-  // key包含'.'的数据
-  originData: object = {};
   /**
    * 透传el-form，validate事件
    */
@@ -61,12 +59,23 @@ export default class CreateForm extends Vue {
    *  Entity: { ID } => 'Entity.ID'
    */
   setFormData(data) {
+    // key包含'.'的数据
+    let pointData: object = {};
     _.mapKeys(this.options.formItem, (value, key) => {
       const newKey = this.KeyByString(key);
       this.formData[newKey] = _.get(data, key);
-      this.originData[key] = _.get(data, key);
+      pointData[key] = _.get(data, key);
     });
-    return this.originData;
+    return pointData;
+  }
+
+  /**
+   * 赋值formData
+   * @param path 字段对应路径 a: { b: { c: 1}} , path = a.b.c
+   * @param value
+   */
+  setFormDataItem(path: string, value: any) {
+    _.set(this.formData, this.KeyByPoint(path), value);
   }
   /**
    * 返回wtmformItem
@@ -82,9 +91,11 @@ export default class CreateForm extends Vue {
     const formItem = this.options.formItem;
     _.mapKeys(formItem, (valule, key) => {
       const newKey = this.KeyByString(key);
-      formData[newKey] = _.isNil(valule.defaultValue)
-        ? ""
-        : valule.defaultValue;
+      if (_.isNil(valule.defaultValue)) {
+        formData[newKey] = ["switch"].includes(valule.type) ? true : "";
+      } else {
+        formData[newKey] = valule.defaultValue;
+      }
     });
     return formData;
   }
