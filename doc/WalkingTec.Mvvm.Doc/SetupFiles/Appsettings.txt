@@ -24,7 +24,7 @@
   "Languages":"zh,en",
   "UIOptions": {
     "DataTable": {
-      "RPP": $rpp$ //默认列表每页行数
+      "RPP": $rpp$, //默认列表每页行数
       "ShowPrint": true,
       "ShowFilter": true
     },
