@@ -9,7 +9,7 @@
  * 写法-注：
  * model使用
  *    <el-input v-model={formData[key]} />
- * value使用
+ * value使用 (参考：transfer)
  *    const on = {
  *      input(val) {
  *        formData[key] = val;
@@ -17,10 +17,9 @@
  *    };
  *    <el-input value={formData[key]} ...{on}/>
  */
-import { translateEvents, vEdit } from "./baseUtil";
-
 export default class Utils {
   constructor() {}
+  public wtmFormItem = this.generateWtmFormItemComponent;
   public input = this.generateInputComponent;
   public select = this.generateSelectComponent;
   public button = this.generateButtonComponent;
@@ -29,12 +28,55 @@ export default class Utils {
   public checkbox = this.generateCheckboxComponent;
   public checkboxGroup = this.generateCheckboxGroupComponent;
   public switch = this.generateSwitchComponent;
-  public wtmFormItem = this.generateWtmFormItemComponent;
   public upload = this.generateUploadComponent;
   public wtmUploadImg = this.generateWtmUploadImgComponent;
   public wtmSlot = this.generateWtmSlotComponent;
   public label = this.generateLabelComponent;
   public datePicker = this.generateDatePickerComponent;
+  public transfer = this.generateTransferComponent;
+
+  /**
+   * formItem 继承vue组件this
+   * @param h
+   * @param option
+   * @param component
+   * @param vm
+   */
+  private generateWtmFormItemComponent(h, option, component, vm?) {
+    const _t = vm || this;
+    const attrs = {
+      label: option.label,
+      rules: option.rules,
+      prop: option.key ? option.key : "",
+      error: option.error,
+      "label-width": option["label-width"] || option["labelWidth"],
+      span: option.span,
+      isShow: option.isShow,
+      value: option.value,
+      isImg: option.isImg
+    };
+    // 展示状态 需要操作的组件
+    if (_t.status === _t.$actionType.detail) {
+      const value = _t.formData[option.key];
+      delete attrs.rules;
+      // 图片
+      if (option.type === "wtmUploadImg") {
+        let img = !!value && (
+          <img src={`/api/_file/downloadFile/${value}`} class="avatar" />
+        );
+        return (
+          <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
+            {img}
+          </wtm-form-item>
+        );
+      }
+    }
+    return (
+      <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
+        {component}
+      </wtm-form-item>
+    );
+  }
 
   private generateInputComponent(h, option, vm?) {
     const _t = vm || this;
@@ -47,6 +89,9 @@ export default class Utils {
       style,
       slot
     };
+    if (key === "Entity_partition_DisplayOrder") {
+      console.log("input: compData:", key, _t.formData[key]);
+    }
     // compData.props.placeholder = compData.props.placeholder
     //   ? compData.props.placeholder
     //   : `请输入${label}`;
@@ -282,46 +327,55 @@ export default class Utils {
     );
   }
 
-  /**
-   * formItem 继承vue组件this
-   * @param h
-   * @param option
-   * @param component
-   * @param vm
-   */
-  private generateWtmFormItemComponent(h, option, component, vm?) {
+  private generateTransferComponent(h, option, vm?) {
     const _t = vm || this;
-    const attrs = {
-      label: option.label,
-      rules: option.rules,
-      prop: option.key ? option.key : "",
-      error: option.error,
-      "label-width": option["label-width"] || option["labelWidth"],
-      span: option.span,
-      isShow: option.isShow,
-      value: option.value,
-      isImg: option.isImg
-    };
-    // 展示状态 需要操作的组件
-    if (_t.status === _t.$actionType.detail) {
-      const value = _t.formData[option.key];
-      delete attrs.rules;
-      // 图片
-      if (option.type === "wtmUploadImg") {
-        let img = !!value && (
-          <img src={`/api/_file/downloadFile/${value}`} class="avatar" />
-        );
-        return (
-          <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
-            {img}
-          </wtm-form-item>
+    const { directives, props, style, key, mapKey } = option;
+    const on = {
+      ...translateEvents(option.events, _t),
+      input: function(val) {
+        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
+        console.log(
+          "input",
+          val,
+          mapKey,
+          _t.formData[key],
+          val.map(item => ({ [mapKey]: item }))
         );
       }
-    }
-    return (
-      <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
-        {component}
-      </wtm-form-item>
-    );
+    };
+    const editData = props.data.map(item => ({
+      Text: item.label,
+      Value: item.key
+    }));
+    const compData = {
+      directives: [...(directives || []), vEdit(_t, editData)],
+      on,
+      props,
+      style
+    };
+    const value = _t.formData[key].map(item => item[mapKey]);
+    console.log(mapKey + ":", value);
+    return <el-transfer value={value} {...compData}></el-transfer>;
   }
 }
+
+/**
+ * 事件
+ * @param events
+ * @param vm
+ */
+export const translateEvents = (events = {}, vm) => {
+  const result = {};
+  for (let event in events) {
+    result[event] = events[event].bind(vm);
+  }
+  return result;
+};
+/**
+ * 编辑状态指令
+ * @param vm
+ * @param value 下拉框组件需要传入list
+ */
+export const vEdit = (vm, value: Array<any> | null = null) => {
+  return { name: "edit", arg: vm.status, value: value };
+};

@@ -81,8 +81,8 @@ export default class Index extends Vue {
     // 查询接口 ★★★★★
     privateRequest(params) {
         if (params.ActionTime) {
-            params.StartActionTime = params.ActionTime.split(",")[0];
-            params.EndActionTime = params.ActionTime.split(",")[1];
+            params.StartActionTime = params.ActionTime[0];
+            params.EndActionTime = params.ActionTime[1];
         }
         return this.search(params);
     }
