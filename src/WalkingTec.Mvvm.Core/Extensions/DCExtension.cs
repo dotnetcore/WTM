@@ -377,8 +377,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
                 Expression peid = Expression.PropertyOrField(pe, splits[0]);
+                Type middletype = null;
                 if (mtm)
                 {
+                    middletype = peid.Type.GetGenericArguments()[0];
 
                 }
                 else
@@ -387,6 +389,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         peid = Expression.PropertyOrField(peid, splits[i]);
                     }
+                    middletype = (peid as MemberExpression).Member.DeclaringType;
                 }
                 //如果dps为空，则拼接一个返回假的表达式，这样就查询不出任何数据
                 if (dps == null)
@@ -400,8 +403,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     if (fieldName.ToLower() != "id")
                     {
                         fieldName = fieldName.Remove(fieldName.Length - 2);
+                        var typeinfo = middletype.GetProperty(fieldName);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
-                        var IsTableName = tableName?.Where(x => x.ToLower().Contains(fieldName.ToLower())).FirstOrDefault();
+                        var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.Name.ToLower()).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
                         {
                             continue;
@@ -445,7 +449,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         {
                             if (mtm == true)
                             {
-                                Type middletype = peid.Type.GetGenericArguments()[0];
                                 ParameterExpression midpe = Expression.Parameter(middletype);
                                 Expression middleid = Expression.PropertyOrField(midpe, IdField.GetPropertyName(false));
 
