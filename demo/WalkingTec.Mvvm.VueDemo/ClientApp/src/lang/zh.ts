@@ -68,12 +68,15 @@ export default {
     logOut: "退出登录",
     dashboard: "首页",
     github: "开源地址",
-      doc: "项目文档",
+    doc: "项目文档",
     api: "Api文档",
     theme: "换肤",
     size: "布局大小",
     profile: "个人中心",
-    generation: "代码生成"
+    generation: "代码生成",
+    full: "全屏",
+    language: "语言",
+    set: "设置"
   },
   login: {
     title: "系统登录",

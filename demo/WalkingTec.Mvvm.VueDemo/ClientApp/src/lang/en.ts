@@ -67,13 +67,16 @@ export default {
   navbar: {
     logOut: "Log Out",
     dashboard: "Dashboard",
-      github: "Github",
-      doc: "Doc",
-      api: "Api Doc",
+    github: "Github",
+    doc: "Doc",
+    api: "Api Doc",
     theme: "Theme",
     size: "Global Size",
     profile: "Profile",
-    generation: "Code Gen"
+    generation: "Code Gen",
+    full: "full screen",
+    language: "language",
+    set: "Set up"
   },
   login: {
     title: "Login Form",

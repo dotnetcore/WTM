@@ -71,7 +71,10 @@ export default {
     profile: "プロフィール",
     theme: "テーマ変更",
     size: "画面サイズ",
-    generation: "Online generation"
+    generation: "Online generation",
+    full: "full screen",
+    language: "language",
+    set: "Set up"
   },
   login: {
     title: "ユーザログイン",
