@@ -97,7 +97,7 @@ export default class extends Vue {
             keys: [
                 {
                     name: "title",
-                    weight: 0.7
+                    weight: 0.3
                 },
                 {
                     name: "path",

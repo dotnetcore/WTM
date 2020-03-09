@@ -1,6 +1,8 @@
 <template>
   <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
-    <i class="el-icon-orange"></i>
+    <el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">
+      <i class="el-icon-orange"></i>
+    </el-tooltip>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item :disabled="language==='zh'" command="zh">
         中文

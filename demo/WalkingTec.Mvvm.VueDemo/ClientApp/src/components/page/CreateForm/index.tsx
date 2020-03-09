@@ -21,6 +21,7 @@ export default class CreateForm extends Vue {
 
   // 事件集合 @Prop({ type: Object, default: () => {} }) events;
   elFormRefKey: string = "ref_name";
+  // 组件集合
   componentObj: any = new Utils();
   // key替换'.'之后的数据
   formData: object = {};

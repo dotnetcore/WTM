@@ -1,11 +1,13 @@
 <template>
-  <div id="screenfull">
-    <!-- <svg-icon
+    <div id="screenfull">
+        <!-- <svg-icon
       :name="isFullscreen? 'exit-fullscreen': 'fullscreen'"
       @click="onClick"
     /> -->
-    <i class="el-icon-full-screen" @click.stop="onClick"></i>
-  </div>
+        <el-tooltip :content="$t('navbar.full')" effect="dark" placement="bottom">
+            <i class="el-icon-full-screen" @click.stop="onClick"></i>
+        </el-tooltip>
+    </div>
 </template>
 
 <script lang="ts">

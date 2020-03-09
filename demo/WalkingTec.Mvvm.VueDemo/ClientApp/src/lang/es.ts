@@ -71,7 +71,10 @@ export default {
     theme: "Tema",
     size: "Tamaño global",
     profile: "Profile",
-    generation: "Online generation"
+    generation: "Online generation",
+    full: "full screen",
+    language: "language",
+    set: "Set up"
   },
   login: {
     title: "Formulario de acceso",

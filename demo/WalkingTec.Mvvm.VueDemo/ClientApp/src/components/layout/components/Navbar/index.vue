@@ -9,13 +9,8 @@
                 <screenfull class="right-menu-item hover-effect" />
                 <size-select class="right-menu-item hover-effect" />
                 <lang-select class="right-menu-item hover-effect" />
+                <settings class="right-menu-item hover-effect" />
             </template>
-            <div class="right-menu-item">
-                <i class="el-icon-setting" @click="settingShow=true" />
-                <el-drawer :with-header="false" :visible.sync="settingShow" direction="rtl" size="260px">
-                    <settings />
-                </el-drawer>
-            </div>
             <el-dropdown class="avatar-container right-menu-item hover-effect">
                 <div class="avatar-wrapper">
                     <img :src="photoUrl" class="user-avatar">
@@ -40,7 +35,6 @@
                     <a target="_blank" href="/swagger">
                         <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
                     </a>
-
                     <el-dropdown-item divided>
                         <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
                     </el-dropdown-item>
@@ -77,8 +71,6 @@ import Settings from "../Settings/index.vue";
     }
 })
 export default class extends Vue {
-    private settingShow = false;
-
     get sidebar() {
         return AppModule.sidebar;
     }
