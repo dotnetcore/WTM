@@ -1,5 +1,10 @@
 <template>
-  <w-actions :PageStore="PageStore" :Entities="Entities" :params="params" width="500px">
+  <w-actions
+    :PageStore="PageStore"
+    :Entities="Entities"
+    :params="params"
+    width="500px"
+  >
     <template #Insert>
       <Entity-GroupCode />
       <Entity-GroupName />
@@ -17,7 +22,7 @@
       <Entity-GroupRemark display />
     </template>
   </w-actions>
-</template> 
+</template>
 <script lang="ts">
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -42,8 +47,11 @@ export default class ViewAction extends Vue {
   // }>();
   // aggird 组件 自带属性 不可删除
   params = {};
+  /** @fieldsChange="onFieldsChange" form onFieldsChange 事件 */
+  onFieldsChange(props, fields) {}
+  /** @submit="onSubmit" 替换 默认 提交函数 */
+  onSubmit(value, type, v) {}
   mounted() {}
 }
 </script>
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

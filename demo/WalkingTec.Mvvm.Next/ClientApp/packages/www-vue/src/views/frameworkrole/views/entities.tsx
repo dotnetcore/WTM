@@ -16,6 +16,37 @@ export default {
      */
     editEntities(props?): EntitiesItems {
         return {
+            /** 唯一标识 的隐藏域 */
+            "Entity.ID": {
+                label: "ID",
+                options: {},
+                children: `<a-input v-decorator />`
+            },
+            /** 角色编号 */
+            "Entity.RoleCode": {
+                label: "角色编号",
+                span: 24,
+                options: {
+                    rules: [{ required: true }],
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 角色名称 */
+            "Entity.RoleName": {
+                label: "角色名称",
+                span: 24,
+                options: {
+                    initialValue: 'admin',
+                    rules: [{ required: true }],
+                },
+                children: `<a-input v-decorator />`
+            },
+            /** 备注 */
+            "Entity.RoleRemark": {
+                label: "备注",
+                span: 24,
+                children: `<a-input v-decorator />`
+            }
         }
     },
     /**
@@ -24,7 +55,16 @@ export default {
      */
     filterEntities(props?, h?: CreateElement): EntitiesItems {
         return {
-           
+            /** 角色编号 */
+            "RoleCode": {
+                label: "角色编号",
+                children: `<a-input v-decorator />`
+            },
+            /** 角色名称 */
+            "RoleName": {
+                label: "角色名称",
+                children: `<a-input v-decorator />`
+            },
         }
     },
 }

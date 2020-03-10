@@ -58,11 +58,11 @@ export default class ViewAction extends Vue {
   /**
    * 标题
    */
-  @Prop() title = "";
+  @Prop() title;
   /**
    * slot key
    */
-  @Prop() slotName = "";
+  @Prop() slotName;
   /**
    *  更改 显示 弹框状态
    */

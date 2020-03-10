@@ -3,10 +3,12 @@ import Vue from 'vue';
 import directive from './directive';
 import grid from './grid/index.vue';
 import layout from './layout/index.vue';
-import filterForm from './pages/filterForm.vue';
 import actions from './pages/actions.vue';
+import filterForm from './pages/filterForm.vue';
+import modal from './pages/modal.vue';
 import avatar from './upload/avatar.vue';
-import { createFormItem, renderFormItem, createFilterFormItem } from './utils/entitiesHelp';
+import { createFilterFormItem, createFormItem, renderFormItem } from './utils/entitiesHelp';
+export * from './pages/actions';
 function install(vue: typeof Vue) {
     directive.install(vue);
     vue.component('w-grid', grid);
@@ -14,10 +16,11 @@ function install(vue: typeof Vue) {
     vue.component('w-filter', filterForm);
     vue.component('w-actions', actions);
     vue.component('w-avatar', avatar);
+    vue.component('w-modal', modal);
 }
 export default {
     install,
     createFilterFormItem,
     createFormItem,
-    renderFormItem
+    renderFormItem,
 }

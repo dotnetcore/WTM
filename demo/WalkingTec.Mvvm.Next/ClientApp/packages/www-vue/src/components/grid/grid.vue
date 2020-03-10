@@ -95,8 +95,8 @@ export default class AgGrid extends Vue {
         filter: false,
         field: "Action",
         cellRenderer: "Action",
-        pinned: "right"
-        // minWidth: 50,
+        pinned: "right",
+        minWidth: 130,
         // ...rowActionProps
       }
     ].filter(Boolean);
@@ -146,7 +146,7 @@ export default class AgGrid extends Vue {
       rowGroupPanelShow: "always",
       rowSelection: "multiple",
       defaultColDef: {
-        minWidth: 150,
+        // minWidth: 100,
         enableRowGroup: true,
         resizable: true,
         filter: true

@@ -1,6 +1,7 @@
 <template>
   <w-filter :PageStore="PageStore" :Entities="Entities">
-  
+    <RoleCode />
+    <RoleName />
   </w-filter>
 </template>
 <script lang="ts">
@@ -28,5 +29,4 @@ export default class ViewGrid extends Vue {
   mounted() {}
 }
 </script>
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

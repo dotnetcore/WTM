@@ -11,7 +11,7 @@
     <template #Update></template>
     <template #Details></template>
   </w-actions>
-</template> 
+</template>
 <script lang="ts">
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -36,6 +36,10 @@ export default class ViewAction extends Vue {
   // }>();
   // aggird 组件 自带属性 不可删除
   params = {};
+  /** @fieldsChange="onFieldsChange" form onFieldsChange 事件 */
+  onFieldsChange(props, fields) {}
+  /** @submit="onSubmit" 替换 默认 提交函数 */
+  onSubmit(value, type, v) {}
   mounted() {}
   async onRefreshMenu() {
     try {
@@ -61,5 +65,4 @@ export default class ViewAction extends Vue {
   }
 }
 </script>
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>
