@@ -1,6 +1,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Utils from "./utils";
 import WtmUploadImg from "@/components/page/UploadImg.vue";
+import { ICreateFormOptions } from "./interface";
 /**
  * 创建form
  *
@@ -15,23 +16,16 @@ export default class CreateForm extends Vue {
   // 表单状态
   @Prop({ type: String, default: "add" }) status;
   // 表单
-  @Prop({ type: Object, required: true }) options;
+  @Prop() options!: ICreateFormOptions;
   // row class
   @Prop({ type: String, default: "" }) elRowClass;
 
   // 事件集合 @Prop({ type: Object, default: () => {} }) events;
-  elFormRefKey: string = "ref_name";
+  private elFormRefKey: string = "ref_name";
   // 组件集合
-  componentObj: any = new Utils();
+  private componentObj: any = new Utils();
   // key替换'.'之后的数据
-  formData: object = {};
-  /**
-   * 透传el-form，validate事件
-   */
-  get validate() {
-    const refForm = _.get(this.$refs, this.elFormRefKey);
-    return refForm.validate;
-  }
+  private formData: object = {};
   /**
    * 透传el-form组件
    */
@@ -40,16 +34,30 @@ export default class CreateForm extends Vue {
     return refForm;
   }
   /**
+   * 透传el-form，validate事件
+   * 重定义callback，验证通过，data参数 改为表单数据
+   */
+  public validate(callback) {
+    const refForm = _.get(this.$refs, this.elFormRefKey);
+    refForm.validate((valid, data) => {
+      if (valid) {
+        callback(true, this.getFormData());
+      } else {
+        callback(valid, data);
+      }
+    });
+  }
+  /**
    * 清空el-form验证
    */
-  resetFields() {
+  public resetFields() {
     const refForm = _.get(this.$refs, this.elFormRefKey);
     return refForm.resetFields();
   }
   /**
    * 'Entity.ID' => Entity: { ID }
    */
-  getFormData() {
+  public getFormData(): object {
     let newFormData = {};
     _.mapKeys(this.formData, (value, key) => {
       _.setWith(newFormData, this.KeyByPoint(key), value);
@@ -59,7 +67,7 @@ export default class CreateForm extends Vue {
   /**
    *  Entity: { ID } => 'Entity.ID'
    */
-  setFormData(data) {
+  public setFormData(data): object {
     // key包含'.'的数据
     let pointData: object = {};
     _.mapKeys(this.options.formItem, (value, key) => {
@@ -75,19 +83,19 @@ export default class CreateForm extends Vue {
    * @param path 字段对应路径 a: { b: { c: 1}} , path = a.b.c
    * @param value
    */
-  setFormDataItem(path: string, value: any) {
+  public setFormDataItem(path: string, value: any) {
     _.set(this.formData, this.KeyByPoint(path), value);
   }
   /**
    * 返回wtmformItem
    * @param key
    */
-  getFormItem(key) {
+  public getFormItem(key): Vue | Element | Vue[] | Element[] {
     const newKey = this.KeyByString(key);
     return this.$refs[newKey];
   }
 
-  createFormData() {
+  private createFormData() {
     let formData = {};
     const formItem = this.options.formItem;
     _.mapKeys(formItem, (valule, key) => {
@@ -103,13 +111,13 @@ export default class CreateForm extends Vue {
   /**
    * e.key => e_partition_key
    */
-  private KeyByPoint(key) {
+  private KeyByPoint(key): string {
     return key.replace(/_partition_/g, ".");
   }
   /**
    * e_partition_key => e.key
    */
-  private KeyByString(key) {
+  private KeyByString(key): string {
     return key.replace(/(\.)/g, "_partition_");
   }
   created() {
