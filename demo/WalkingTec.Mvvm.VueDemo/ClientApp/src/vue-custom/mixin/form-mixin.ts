@@ -94,12 +94,12 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      * 提交
      */
     onSubmit() {
-      this.FormComp().validate(valid => {
+      this.FormComp().validate((valid, data) => {
         if (valid) {
-          if (this["status"] === this["$actionType"].add) {
-            this.onAdd();
-          } else if (this["status"] === this["$actionType"].edit) {
-            this.onEdit();
+          if (this.status === this["$actionType"].add) {
+            this.onAdd(data);
+          } else if (this.status === this["$actionType"].edit) {
+            this.onEdit(data);
           }
         }
       });
@@ -107,11 +107,11 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
     /**
      * 添加
      */
-    onAdd(delID: string = "ID") {
+    onAdd(data: object | null = null) {
       console.log("onAdd");
-      let formData = this.getFormData();
-      delete formData.Entity[delID];
-      this["add"](formData)
+      let formData = this.getFormData(data);
+      delete formData.Entity["ID"];
+      this.add(formData)
         .then(res => {
           this["$notify"]({
             title: "添加成功",
@@ -127,9 +127,9 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
     /**
      * 编辑
      */
-    onEdit() {
-      const formData = this.getFormData();
-      this["edit"](formData)
+    onEdit(data: object | null = null) {
+      const formData = this.getFormData(data);
+      this.edit(formData)
         .then(res => {
           this["$notify"]({
             title: "修改成功",
@@ -143,10 +143,10 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
         });
     }
     /**
-     * get
+     * get merge formdata
      */
-    private getFormData() {
-      let formData = this.FormComp().getFormData();
+    private getFormData(data: object | null = null) {
+      let formData = data || this.FormComp().getFormData();
       formData = _.merge(formData, this.mergeFormData);
       return formData;
     }

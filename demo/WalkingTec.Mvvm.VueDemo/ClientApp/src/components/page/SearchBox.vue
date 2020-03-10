@@ -1,5 +1,5 @@
 <template>
-    <el-card class="fuzzy-search" shadow="never">
+    <el-card class="search-box" shadow="never">
         <wtm-create-form :ref="refName" :options="formOptions" elRowClass="flex-container">
             <wtm-form-item class="search-but-box">
                 <el-button-group class="button-group">
@@ -79,7 +79,7 @@ export default class WtmSearch extends Vue {
 .fuzzy-card {
     padding: 6px;
 }
-.fuzzy-search {
+.search-box {
     background-color: #f5f5f5;
     .search-text {
         display: inline-block;
