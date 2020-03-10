@@ -7,6 +7,19 @@
 
 ## v2.4.x
 
+v2.4.7(2020-3-9)
+
+* **新增：**  现在Layui模式下列表可以列筛选和打印
+* **新增：**  现在ListVM中的Action按钮可以通过SetPromptMessage设置询问对话框
+* **新增：**  现在数据权限可以识别多对多和树形结构
+
+* **修改：**  修改了新生成的项目LoginVM和RegVM错位的问题
+* **修改：**  修复了设置不分页不起作用的bug
+* **修改：**  修改了view强制要求model继承BaseVM的bug
+* **修改：**  修复了Combobox在disable状态下的显示问题
+* **修改：**  修复了代码生成器在多个DataContext时候的生成问题
+* **修改：**  修复了SearchPanel中Combobox多选时提交数据错误的问题
+
 v2.4.6(2020-2-22)
 本次更新加入了在连接字符串上指定数据库类型和DataContext的功能，并修复了近一阶段的bug。
 * **新增：**  现在在appsettings中的ConnectionStrings里面可以指定每一个连接字符串的DbType和DbContext
