@@ -197,7 +197,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else
             {
                 DateTime? df = Field.Model as DateTime?;
-                if(df == null || df == DateTime.MinValue)
+                if(df == DateTime.MinValue)
                 {
                     df = DateTime.Now;
                 }
