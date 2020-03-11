@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -54,7 +54,8 @@ namespace WalkingTec.Mvvm.Demo.Models
         public bool IsValid { get; set; }
 
         [Display(Name = "日期")]
-        public DateTime? EnRollDate { get; set; }
+        [Required]
+        public DateTime EnRollDate { get; set; }
 
         [Display(Name = "专业")]
         public List<StudentMajor> StudentMajor { get; set; }
