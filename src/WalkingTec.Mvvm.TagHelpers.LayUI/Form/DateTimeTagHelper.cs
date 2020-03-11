@@ -197,14 +197,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else
             {
                 DateTime? df = Field.Model as DateTime?;
-                if(df == null || df == DateTime.MinValue)
+                if(df == DateTime.MinValue)
                 {
-                    df = DateTime.Now;
+                    df = null;
                 }
                 if (string.IsNullOrEmpty(Format))
-                    Value = df.Value.ToString(DateTimeFormatDic[Type]) ?? Value;
+                    Value = df?.ToString(DateTimeFormatDic[Type]) ?? Value;
                 else
-                    Value = df.Value.ToString(Format) ?? Value;
+                    Value = df?.ToString(Format) ?? Value;
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");

@@ -160,6 +160,12 @@
         {"date":"2020-02-28","name":"雪骥","amount":100.00,"from":"支付宝","comment":"-"},
         {"date":"2020-02-29","name":"张海","amount":8.88,"from":"支付宝","comment":"-"},
         {"date":"2020-03-02","name":"赵齐恒","amount":8.88,"from":"微信","comment":"-"},
-        {"date":"2020-03-02","name":"清平乐.cn","amount":8.88,"from":"微信","comment":"-"}
+        {"date":"2020-03-02","name":"清平乐.cn","amount":8.88,"from":"微信","comment":"-"},
+        {"date":"2020-03-02","name":"$XuFeng","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2020-03-02","name":"Adonis.Chen","amount":2.00,"from":"微信","comment":"-"},
+        {"date":"2020-03-03","name":"峰","amount":239.61,"from":"支付宝","comment":"-"},
+        {"date":"2020-03-06","name":"A*m","amount":5.00,"from":"微信","comment":"试用打款 支持一下"},
+        {"date":"2020-03-06","name":"毕姥爷","amount":66.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-03-06","name":"fawdlstty","amount":8.88,"from":"支付宝","comment":"-"}   
     ]
 }

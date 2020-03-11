@@ -229,6 +229,7 @@ namespace WalkingTec.Mvvm.Mvc
                                             .ToList();
                             ProcessTreeDp(dataPris);
 
+                            ProcessTreeDp(dataPris);
                             //查找登录用户的页面权限
                             var funcPrivileges = DC.Set<FunctionPrivilege>()
                                 .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
