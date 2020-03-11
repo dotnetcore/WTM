@@ -7,8 +7,8 @@ import {
 } from "vuex-module-decorators";
 import { getToken, setToken, removeToken } from "@/util/cookie";
 import { resetRouter } from "@/router";
-import store from "@/store/modules";
-import _request from "@/service/service";
+import store from "@/store/modules/index";
+import _request from "@/util/service";
 import serviceUrl from "@/service/modules/user";
 
 export interface IUserState {

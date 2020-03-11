@@ -18,7 +18,7 @@ import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import DialogForm from "./dialog-form.vue";
-import store from "@/store/system/actionlog";
+import store from "@/store/actionlog";
 // 查询参数, table列 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
 

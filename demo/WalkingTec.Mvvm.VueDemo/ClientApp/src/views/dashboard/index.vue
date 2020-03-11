@@ -145,7 +145,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { RoutesModule } from "@/store/modules/routes";
 import EChartsModule from "./echarts";
 import { Action, State } from "vuex-class";
-import store from "@/store/system/dashboard";
+import store from "@/store/dashboard";
 @Component({
   name: "Dashboard",
   store,

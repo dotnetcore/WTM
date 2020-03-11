@@ -13,7 +13,7 @@ import {
   setSize
 } from "@/util/cookie";
 import { getLocale } from "@/lang";
-import store from "@/store/modules";
+import store from "@/store/modules/index";
 
 export enum DeviceType {
   Mobile,

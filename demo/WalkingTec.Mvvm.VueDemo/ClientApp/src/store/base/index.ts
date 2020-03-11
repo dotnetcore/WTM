@@ -3,7 +3,7 @@
  * 注：store如果没有逻辑可以用
  * 目前只创建 state，actions，mutations 部分
  */
-import _request from "@/service/service";
+import _request from "@/util/service";
 import { firstUpperCase } from "@/util/string";
 import attributes from "./attributes";
 

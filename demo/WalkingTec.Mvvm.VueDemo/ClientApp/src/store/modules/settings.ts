@@ -5,7 +5,7 @@ import {
   Action,
   getModule
 } from "vuex-module-decorators";
-import store from "@/store/modules";
+import store from "@/store/modules/index";
 import { style as variables } from "@/config/index";
 import defaultSettings from "@/settings";
 

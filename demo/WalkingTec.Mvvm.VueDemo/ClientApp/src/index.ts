@@ -6,7 +6,7 @@ import "@/assets/css/index.less";
 import SvgIcon from "vue-svgicon";
 import App from "@/views/index.vue";
 import router from "@/router";
-import store from "@/store/modules";
+import store from "@/store/modules/index";
 import "@/assets/icon/components";
 import "@/router/permission";
 import { AppModule } from "@/store/modules/app";

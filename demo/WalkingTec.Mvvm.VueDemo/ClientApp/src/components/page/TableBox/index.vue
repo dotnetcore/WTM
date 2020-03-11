@@ -1,7 +1,7 @@
 <template>
   <div v-loading="tableAttrs.loading" class="table-card">
     <div class="table-box">
-      <el-table class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents">
+      <el-table ref="table" v-el-height-adaptive-table class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents" height='100px'>
         <el-table-column v-if="tableAttrs.isSelection" type="selection" align="center" width="55" />
         <!-- 判断是否需要插槽,自定义列内容 -->
         <template v-for="(item, index) of Cols">
@@ -58,6 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+
 /**
  * table列表&分页 组件组合
  *
@@ -77,6 +78,8 @@ export default class TableBox extends Vue {
     isSelection; // 是否多选
     @Prop({ type: Array, default: () => [] })
     tbHeader; // 列字段数据
+    // @Prop({ type: [Number, String] })
+    // height?; // table内容高度
     /* ---------page 属性--------- */
     @Prop({ type: Number, default: 0 })
     currentPage; //当前页
@@ -92,10 +95,13 @@ export default class TableBox extends Vue {
     events!: object; // 事件集合
     @Prop({ type: Object, default: {} })
     attrs!: object; // 属性集合
+
     // 选中列
     selCols: string[] = [];
     // 展行选择
     isColBox: boolean = false;
+    // table height
+    tableHeight: number | string = 0;
     /**
      * table 事件
      */
@@ -164,9 +170,33 @@ export default class TableBox extends Vue {
     /**
      * 打开行
      */
-    onOpenCol() {
+    onOpenCol(): void {
         this.isColBox = !this.isColBox;
     }
+    /**
+     * 高度
+     */
+    calcHeight(): void {
+        let h =
+            document.documentElement.clientHeight || document.body.clientHeight;
+        const navbarH = 50;
+        const tagsH = 34;
+        const titleH = 32;
+        const buttonH = 66;
+        const searchH = document.getElementsByClassName("search-box")[0];
+
+        h =
+            h -
+            navbarH -
+            tagsH -
+            titleH -
+            buttonH -
+            (searchH && searchH.offsetHeight);
+        this.tableHeight = h;
+        console.log("calcHeight", h, searchH && searchH.offsetHeight);
+    }
+
+    mounted() {}
 }
 </script>
 <style lang="less" rel="stylesheet/less">
