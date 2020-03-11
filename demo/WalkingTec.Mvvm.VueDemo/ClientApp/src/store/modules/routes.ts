@@ -8,7 +8,7 @@ import {
 import { RouteConfig } from "vue-router";
 import { constantRoutes } from "@/router";
 import Menu from "@/router/menu";
-import store from "@/store/modules";
+import store from "@/store/modules/index";
 
 export interface IRoutesModule {
   // 全部

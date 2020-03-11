@@ -25,7 +25,7 @@ import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import DialogForm from "./dialog-form.vue";
-import store from "@/store/system/frameworkuser";
+import store from "@/store/frameworkuser";
 
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";

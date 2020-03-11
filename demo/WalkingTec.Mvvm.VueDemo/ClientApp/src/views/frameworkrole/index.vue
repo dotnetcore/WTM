@@ -36,7 +36,7 @@ import actionMixin from "@/vue-custom/mixin/action-mixin";
 import UploadBox from "@/components/page/upload/index.vue";
 import DialogForm from "./dialog-form.vue";
 import Permission from "./permission.vue";
-import store from "@/store/system/frameworkrole";
+import store from "@/store/frameworkrole";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 

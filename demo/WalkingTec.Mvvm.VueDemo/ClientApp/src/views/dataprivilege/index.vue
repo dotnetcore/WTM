@@ -17,7 +17,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
-import store from "@/store/system/dataprivilege";
+import store from "@/store/dataprivilege";
 import DialogForm from "./dialog-form.vue";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
