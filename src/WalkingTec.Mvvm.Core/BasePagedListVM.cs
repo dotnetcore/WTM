@@ -9,12 +9,14 @@ using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -990,5 +992,138 @@ namespace WalkingTec.Mvvm.Core
         public string DetailGridPrix { get; set; }
 
         #endregion
+
+        public virtual void UpdateEntityList(bool updateAllFields=false)
+        {
+            if (EntityList != null)
+            {
+                var ftype = EntityList.GetType().GenericTypeArguments.First();
+                PropertyInfo[] itemPros = ftype.GetProperties();
+
+                foreach (var newitem in EntityList)
+                {
+                    var subtype = newitem.GetType();
+                    if (subtype.IsSubclassOf(typeof(BasePoco)))
+                    {
+                        BasePoco ent = newitem as BasePoco;
+                        if (ent.UpdateTime == null)
+                        {
+                            ent.UpdateTime = DateTime.Now;
+                        }
+                        if (string.IsNullOrEmpty(ent.UpdateBy))
+                        {
+                            ent.UpdateBy = LoginUserInfo?.ITCode;
+                        }
+                    }
+                    //循环页面传过来的子表数据,将关联到TopBasePoco的字段设为null,并且把外键字段的值设定为主表ID
+                    foreach (var itempro in itemPros)
+                    {
+                        if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            itempro.SetValue(newitem, null);
+                        }
+                    }
+                }
+
+                IEnumerable<TopBasePoco> data = null;
+                //打开新的数据库联接,获取数据库中的主表和子表数据
+                using (var ndc = DC.CreateNew())
+                {
+                    var ids = EntityList.Select(x => x.GetID().ToString()).ToList();
+                    data = ndc.Set<TModel>().AsNoTracking().Where(ids.GetContainIdExpression<TModel>()).ToList();
+                }
+                //比较子表原数据和新数据的区别
+                IEnumerable<TopBasePoco> toadd = null;
+                IEnumerable<TopBasePoco> toremove = null;
+                Utils.CheckDifference(data, EntityList, out toremove, out toadd);
+                //设定子表应该更新的字段
+                List<string> setnames = new List<string>();
+                foreach (var field in FC.Keys)
+                {
+                    if (field.StartsWith("EntityList[0]."))
+                    {
+                        string name = field.Replace("EntityList[0].", "");
+                        setnames.Add(name);
+                    }
+                }
+
+                //前台传过来的数据
+                foreach (var newitem in EntityList)
+                {
+                    //数据库中的数据
+                    foreach (var item in data)
+                    {
+                        //需要更新的数据
+                        if (newitem.GetID().ToString() == item.GetID().ToString())
+                        {
+                            dynamic i = newitem;
+                            var newitemType = item.GetType();
+                            foreach (var itempro in itemPros)
+                            {
+                                if (!itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) && (updateAllFields == true || setnames.Contains(itempro.Name)))
+                                {
+                                    var notmapped = itempro.GetCustomAttribute<NotMappedAttribute>();
+                                    if (itempro.Name != "ID" && notmapped == null && itempro.PropertyType.IsList() == false)
+                                    {
+                                        DC.UpdateProperty(i, itempro.Name);
+                                    }
+                                }
+                            }
+                            if (item.GetType().IsSubclassOf(typeof(BasePoco)))
+                            {
+                                DC.UpdateProperty(i, "UpdateTime");
+                                DC.UpdateProperty(i, "UpdateBy");
+                            }
+                        }
+                    }
+                }
+                //需要删除的数据
+                foreach (var item in toremove)
+                {
+                    //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
+                    if (ftype.IsSubclassOf(typeof(PersistPoco)))
+                    {
+                        (item as PersistPoco).IsValid = false;
+                        (item as PersistPoco).UpdateTime = DateTime.Now;
+                        (item as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
+                        dynamic i = item;
+                        DC.UpdateEntity(i);
+                    }
+                    else
+                    {
+                        foreach (var itempro in itemPros)
+                        {
+                            if (itempro.PropertyType.IsSubclassOf(typeof(TopBasePoco)))
+                            {
+                                itempro.SetValue(item, null);
+                            }
+                        }
+                        dynamic i = item;
+                        DC.DeleteEntity(i);
+                    }
+                }
+                //需要添加的数据
+                foreach (var item in toadd)
+                {
+                    if (item.GetType().IsSubclassOf(typeof(BasePoco)))
+                    {
+                        BasePoco ent = item as BasePoco;
+                        if (ent.CreateTime == null)
+                        {
+                            ent.CreateTime = DateTime.Now;
+                        }
+                        if (string.IsNullOrEmpty(ent.CreateBy))
+                        {
+                            ent.CreateBy = LoginUserInfo?.ITCode;
+                        }
+                    }
+                    DC.AddEntity(item);
+
+
+                }
+
+                DC.SaveChanges();
+            }
+        }
     }
 }

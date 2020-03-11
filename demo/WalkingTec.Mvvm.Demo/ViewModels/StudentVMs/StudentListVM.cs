@@ -58,10 +58,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         public override IOrderedQueryable<Student_View> GetSearchQuery()
         {
+            List<object> newids = new List<object>();
+
             var query = DC.Set<Student>()
-                .CheckContain(Searcher.LoginName, x=>x.LoginName)
-                .CheckContain(Searcher.Name, x=>x.Name)
-                .CheckEqual(Searcher.IsValid, x=>x.IsValid)
+                .CheckContain(Searcher.LoginName, x => x.LoginName)
+                .CheckContain(Searcher.Name, x => x.Name)
+                .CheckEqual(Searcher.IsValid, x => x.IsValid)
+                .DPWhere(LoginUserInfo.DataPrivileges, x => x.StudentMajor[0].MajorId)
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,
