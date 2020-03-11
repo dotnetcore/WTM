@@ -96,9 +96,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.Add("linkto", $"{Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name)}");
             }
             var contentBuilder = new StringBuilder();
-            if (string.IsNullOrEmpty(EmptyText) == false && Disabled == false)
+            if (string.IsNullOrEmpty(EmptyText) == false)
             {
-                contentBuilder.Append($"<option value=''>{EmptyText}</option>");
+                contentBuilder.Append($"<option value=''>{(Disabled == true ? "" : EmptyText)}</option>");
             }
 
             #region 添加下拉数据 并 设置默认选中

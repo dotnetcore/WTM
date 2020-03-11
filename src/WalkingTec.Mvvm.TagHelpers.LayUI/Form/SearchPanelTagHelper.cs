@@ -115,6 +115,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
+            if(ListVM?.Searcher?.IsExpanded != null)
+            {
+                Expanded = ListVM?.Searcher?.IsExpanded;
+            }
             if(Expanded != null)
             {
                 show = Expanded.Value;
@@ -125,7 +129,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"
-<div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}"">
+<div class=""layui-collapse"" style=""margin-bottom:5px;"" lay-filter=""{tempSearchTitleId}x"">
   <div class=""layui-colla-item"">
     <h2 class=""layui-colla-title"">{Program._localizer["SearchCondition"]}
       <div style=""text-align:right;margin-top:-43px;"" id=""{tempSearchTitleId}"">
@@ -143,13 +147,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 ");
             output.PostElement.AppendHtml($@"
 <script>
-  layui.use(['table'], function () {{
+  layui.use(['table','element'], function () {{
     const table = layui.table;
     layui.element.init();
     $('#{tempSearchTitleId} .layui-btn').on('click',function(e){{e.stopPropagation();}})
-    $('#{ResetBtnId}').on('click', function (btn) {{
-      ff.resetForm(this.form.id);
-    }});
+    $('#{ResetBtnId}').on('click', function (btn) {{ff.resetForm(this.form.id);}});
+    $('#{tempSearchTitleId}').parents('form').append(""<input type='hidden' name='Searcher.IsExpanded' value='{show.ToString().ToLower()}' />"");
+layui.element.on('collapse({tempSearchTitleId}x)', function(data){{
+    $('#{tempSearchTitleId}').parents('form').find(""input[name='Searcher.IsExpanded']"").val(data.show+'');
+}});
+
 {(OldPost == true ? $"" : $@"
 $('#{SearchBtnId}').on('click', function () {{
   var layer = layui.layer;

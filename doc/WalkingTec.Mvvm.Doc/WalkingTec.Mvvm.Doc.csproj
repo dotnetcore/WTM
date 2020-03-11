@@ -14,7 +14,7 @@
     <None Remove="SetupFiles\Mvc\home\Reg.txt" />
     <None Remove="SetupFiles\Mvc\LoginController3.txt" />
     <None Remove="SetupFiles\test\MockController3.txt" />
-    <None Remove="SetupFiles\vms\RegVM.txt" />
+    <None Remove="SetupFiles\vms\LoginVM.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,8 +60,8 @@
     <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
     <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
-    <EmbeddedResource Include="SetupFiles\vms\RegVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\RegVM.txt" />
   </ItemGroup>
 
   <ItemGroup>
