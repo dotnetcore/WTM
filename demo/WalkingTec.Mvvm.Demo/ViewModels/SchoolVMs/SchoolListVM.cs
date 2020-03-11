@@ -9,6 +9,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
+
+        public SchoolListVM()
+        {
+            NeedPage = false;
+        }
+
         public override string SetFullRowBgColor(object entity)
         {
             var t = entity as School_View;
@@ -27,8 +33,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除","", dialogWidth: 800),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false).SetPromptMessage("你确定要修改么？"),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除","", dialogWidth: 800).SetPromptMessage("你确定要删除么？"),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeAction("School","EditIndex","列表编辑","列表编辑", GridActionParameterTypesEnum.NoId,dialogWidth:800).SetShowDialog(false).SetIsRedirect
                 (true),

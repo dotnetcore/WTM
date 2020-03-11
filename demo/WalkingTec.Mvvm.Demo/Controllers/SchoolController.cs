@@ -51,14 +51,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索并修改某字段")]
         public ActionResult EditIndex(SchoolListVM2 vm)
         {
-            //由于只更新名称字段，其他必填字段并没有值也不影响
-            ModelState.Clear();
-            foreach (var item in vm.EntityList)
+            if (!ModelState.IsValid)
             {
-                //手动更新某个字段，由于没有使用BaseCRUDVM，如果有验证条件需要自己判断
-                DC.UpdateProperty<School>(new School { ID = item.ID, SchoolName = item.SchoolName }, x => x.SchoolName);
+                vm.ProcessListError(vm.EntityList);
+                return PartialView(vm);
             }
-            DC.SaveChanges();
+            else
+            {
+                vm.UpdateEntityList();
+            }
             return PartialView(vm);
         }
 

@@ -88,12 +88,20 @@ namespace WalkingTec.Mvvm.Core
         /// 是否有效，针对继承PersistPoco的Model
         /// </summary>
         [Display(Name = "IsValid")]
+        [JsonIgnore]
         public bool? IsValid { get; set; }
         /// <summary>
         /// 用于框架判断列表页是否全局刷新
         /// </summary>
         [JsonIgnore]
         public bool IsPostBack { get; set; }
+
+        /// <summary>
+        /// 前台搜索框是否展开
+        /// </summary>
+        [JsonIgnore]
+        public bool? IsExpanded { get; set; }
+
         #endregion
 
         #endregion

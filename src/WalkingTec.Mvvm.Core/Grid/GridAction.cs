@@ -164,6 +164,11 @@ namespace WalkingTec.Mvvm.Core
         public bool IsRedirect { get; set; }
 
         /// <summary>
+        /// 弹出问询框
+        /// </summary>
+        public string PromptMessage { get; set; }
+
+        /// <summary>
         /// 动作类型
         /// </summary>
         public GridActionParameterTypesEnum ParameterType { get; set; }

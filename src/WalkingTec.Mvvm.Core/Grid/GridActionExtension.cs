@@ -317,6 +317,18 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
+        /// <summary>
+        /// Set prompt message
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public static GridAction SetPromptMessage(this GridAction self, string msg)
+        {
+            self.PromptMessage = msg;
+            return self;
+        }
+
 
         /// <summary>
         /// 是否在每行都显示
