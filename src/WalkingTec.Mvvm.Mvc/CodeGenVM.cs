@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -329,6 +330,21 @@ namespace WalkingTec.Mvvm.Mvc
 
         protected override void InitVM()
         {
+            if(string.IsNullOrEmpty(SelectedModel) == false)
+            {
+                foreach (var item in ConfigInfo.ConnectionStrings)
+                {
+                    var dc = item.CreateDC();
+                    Type t = typeof(DbSet<>).MakeGenericType(Type.GetType(SelectedModel));
+                    var exist = dc.GetType().GetProperties().Where(x => x.PropertyType == t).FirstOrDefault();
+                    if(exist != null)
+                    {
+                        this.DC = dc;
+                    }
+                }
+
+            }
+
             FieldList = new CodeGenListVM();
             FieldList.CopyContext(this);
         }

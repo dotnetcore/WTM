@@ -11,7 +11,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
-    public class SchoolListVM2 : BasePagedListVM<School_View, SchoolSearcher>
+    public class SchoolListVM2 : BasePagedListVM<School, SchoolSearcher>
     {
         public SchoolListVM2()
         {
@@ -22,36 +22,32 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.ExportExcel, "导出",""),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.AddRow, "新建","", dialogWidth: 800),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.RemoveRow, "删除","", dialogWidth: 800),
             };
         }
 
-        protected override IEnumerable<IGridColumn<School_View>> InitGridHeader()
+        protected override IEnumerable<IGridColumn<School>> InitGridHeader()
         {
-            return new List<GridColumn<School_View>>{
-                this.MakeGridHeader(x => x.SchoolCode),
+            return new List<GridColumn<School>>{
+                this.MakeGridHeader(x => x.SchoolCode).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeader(x => x.SchoolName).SetEditType(EditTypeEnum.TextBox),
-                this.MakeGridHeader(x => x.SchoolType),
+                this.MakeGridHeader(x => x.SchoolType).SetEditType(EditTypeEnum.ComboBox,typeof(SchoolTypeEnum).ToListItems(null,true)),
                 this.MakeGridHeader(x => "test").SetFormat((a,b)=>{
                     return this.UIService.MakeScriptButton(ButtonTypesEnum.Button,"测试","alert('aaa');");
                 }).SetHeader("测试"),
-                this.MakeGridHeader(x => x.Remark),
+                this.MakeGridHeader(x => x.Remark).SetEditType(EditTypeEnum.TextBox),
                 this.MakeGridHeaderAction(width: 500)
             };
         }
 
-        public override IOrderedQueryable<School_View> GetSearchQuery()
+        public override IOrderedQueryable<School> GetSearchQuery()
         {
             var query = DC.Set<School>()
                 .CheckContain(Searcher.SchoolCode, x => x.SchoolCode)
                 .CheckContain(Searcher.SchoolName, x => x.SchoolName)
                 .CheckEqual(Searcher.SchoolType, x => x.SchoolType)
-                .Select(x => new School_View
+                .Select(x => new School
                 {
                     ID = x.ID,
                     SchoolCode = x.SchoolCode,
