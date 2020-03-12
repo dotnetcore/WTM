@@ -37,4 +37,10 @@
     <None Include="../../LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="$(ProjectName).xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
