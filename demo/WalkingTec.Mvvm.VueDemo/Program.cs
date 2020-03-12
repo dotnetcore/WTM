@@ -26,6 +26,8 @@ namespace WalkingTec.Mvvm.VueDemo
                     x.AddSwaggerGen(c =>
                     {
                         c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        var _xml_file = Path.Combine (AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                        c.IncludeXmlComments (_xml_file);
                     });
                 })
                 .Configure(x =>

@@ -76,6 +76,8 @@ namespace WalkingTec.Mvvm.Demo
                                 }
                             }, new string[] { });
                             c.AddSecurityRequirement(sr);
+                            var _xml_file = Path.Combine (AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                            c.IncludeXmlComments (_xml_file);
                         });
                     })
                     .Configure(x =>
