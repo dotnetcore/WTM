@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
@@ -28,7 +29,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataRow("test3", ActionLogTypesEnum.Exception)]
         public void DoLog(string msg, ActionLogTypesEnum logType)
         {
-            _vm.Log = new ActionLog();
+            _vm.Log = new SimpleLog();
             _vm.DC = new DataContext("dologdb"+logType, DBTypeEnum.Memory);
             _vm.DoLog(msg, logType);
 
