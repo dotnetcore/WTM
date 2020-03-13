@@ -12,6 +12,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -41,8 +42,14 @@ namespace WalkingTec.Mvvm.Demo
 
             return
                 WebHost.CreateDefaultBuilder(args)
-                    .ConfigureServices((hostingCtx, x) =>
-                    {
+                        .ConfigureLogging((hostingContext, logging) =>
+                        {
+                            logging.ClearProviders();
+                            logging.AddConsole();
+                            logging.AddWTMLogger();
+                        })
+                        .ConfigureServices((hostingCtx, x) =>
+                        {
                         var pris = new List<IDataPrivilege>
                         {
                             new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
