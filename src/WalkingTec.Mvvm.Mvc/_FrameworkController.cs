@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -237,8 +237,6 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            if (ConfigInfo.EnableLog == true)
-            {
                 ActionLog log = new ActionLog();
                 log.LogType = ActionLogTypesEnum.Exception;
                 log.ActionTime = DateTime.Now;
@@ -266,12 +264,10 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
                 }
-                using (var dc = CreateDC(true))
-                {
-                    dc.Set<ActionLog>().Add(log);
-                    dc.SaveChanges();
-                }
-            }
+                GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>( LogLevel.Error, new EventId(), log, null, (a, b) => {
+                    return a.GetLogString();
+                });
+            
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {

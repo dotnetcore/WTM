@@ -14,6 +14,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo
 {

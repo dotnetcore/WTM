@@ -6,6 +6,20 @@
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
 <wt:code title="appsettings.json">
   {
+    "Logging": {
+      "Console": {
+        "IncludeScopes": true,
+        "LogLevel": {
+          "Default": "Information",
+          "WalkingTec": "Debug"
+        }
+      },
+      "WTM": {
+        "LogLevel": {
+          "Default": "Debug"
+        }
+      }
+    },
     "ConnectionStrings": [
       {
         "Key": "default",
@@ -23,8 +37,6 @@
     "DBType": "SqlServer",
     "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
     "CookiePre": "WTM",//cookie前缀
-    "EnableLog": true,//是否启用日志
-    "LogExceptionOnly": false,//当启用日志的时候，是否只记录错误信息
     "IsQuickDebug": true,//是否启用debug模式
     "ErrorHandler": "/_Framework/Error",
     "PageMode": "Tab",//页面显示模式，Single或者Tab
@@ -106,9 +118,19 @@
         </thead>
         <tbody>
           <tr>
+            <td>Logging</td>
+            <td>
+              使用.netcore默认的日志逻辑，日志会同时输出到Console和WTM，WTM日志是要写入数据库的。<br />
+              WTM日志分为Debug,Information,Error三个级别，通过设置WTM中的LogLevel来控制什么级别的数据会写入数据库<br/>
+              将WTM中的LogLevel设置为一个很大的数值，比如10，可以阻止所有日志写入数据库
+            </td>
+          </tr>
+
+          <tr>
             <td>ConnectionStrings</td>
-            <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default<br/>
-                从2.4.6和3.1.3版本开始，连接字符串上可以单独指定 DbType和DbContext
+            <td>
+              连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default<br />
+              从2.4.6和3.1.3版本开始，连接字符串上可以单独指定 DbType和DbContext
             </td>
           </tr>
           <tr>

@@ -92,10 +92,10 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             }
             var config = configBuilder.Build();
-
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
             var con = config.Get<Configs>() ?? new Configs();
+            //services.Configure<Configs>(config);
             if (dataPrivilegeSettings != null)
             {
                 con.DataPrivilegeSettings = dataPrivilegeSettings;
