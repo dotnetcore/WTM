@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .Distinct()
                 .ToList();
-            //ProcessTreeDp(dpris);
+            ProcessTreeDp(dpris);
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo
             {
