@@ -599,52 +599,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-
-        private void ProcessTreeDp(List<DataPrivilege> dps)
-        {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
-            foreach (var ds in dpsSetting)
-            {
-                if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
-                {
-                    var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
-                    if (ids.Count > 0 && ids.Contains(null) == false)
-                    {
-                        List<Guid> tempids = new List<Guid>();
-                        foreach (var item in ids)
-                        {
-                            if (Guid.TryParse(item, out Guid g))
-                            {
-                                tempids.Add(g);
-                            }
-                        }
-                        List<Guid> subids = new List<Guid>();
-                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
-                        subids = subids.Distinct().ToList();
-                        subids.ForEach(x => dps.Add(new DataPrivilege
-                        {
-                            TableName = ds.ModelName,
-                            RelateId = x.ToString()
-                        }));
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType)
-        {
-            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
-            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
-            if (subids.Count > 0)
-            {
-                return subids.Concat(GetSubIds(subids, modelType));
-            }
-            else
-            {
-                return new List<Guid>();
-            }
-        }
-
     }
 
 }

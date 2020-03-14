@@ -44,7 +44,13 @@ namespace WalkingTec.Mvvm.Demo
 
             return
                 Host.CreateDefaultBuilder(args)
-                 .ConfigureWebHostDefaults(webBuilder =>
+                 .ConfigureLogging((hostingContext, logging) =>
+                 {
+                     logging.ClearProviders();
+                     logging.AddConsole();
+                     logging.AddWTMLogger();
+                 })
+                .ConfigureWebHostDefaults(webBuilder =>
                  {
                      webBuilder.ConfigureServices((hostingCtx, x) =>
                     {
