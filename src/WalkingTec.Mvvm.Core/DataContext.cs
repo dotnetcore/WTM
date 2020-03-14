@@ -3,7 +3,9 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Npgsql;
 //using Oracle.ManagedDataAccess.Client;
@@ -520,6 +522,8 @@ namespace WalkingTec.Mvvm.Core
                 var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
                 if (Configs.IsQuickDebug)
                 {
+                    optionsBuilder.EnableDetailedErrors();
+                    optionsBuilder.EnableSensitiveDataLogging();
                     optionsBuilder.UseLoggerFactory(LoggerFactory);
                 }
             }
@@ -527,9 +531,10 @@ namespace WalkingTec.Mvvm.Core
             base.OnConfiguring(optionsBuilder);
         }
 
-        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] {
-            new DebugLoggerProvider()
-        });
+        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new ILoggerProvider[] {
+            new DebugLoggerProvider(),
+            new ConsoleLoggerProvider(GlobalServices.GetRequiredService<IOptionsMonitor<ConsoleLoggerOptions>>())
+        }, GlobalServices.GetRequiredService<IOptionsMonitor<LoggerFilterOptions>>());
 
         /// <summary>
         /// 数据初始化
