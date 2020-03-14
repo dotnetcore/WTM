@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.ITCode = "admin";
                 vm.Password = "000000";
             }
-            DoLog("==============LogTest============================");
+            DoLog("LogTest");
             return View(vm);
         }
 
