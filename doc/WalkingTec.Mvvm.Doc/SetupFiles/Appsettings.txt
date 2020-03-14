@@ -7,6 +7,13 @@
         "WalkingTec": "Debug"
       }
     },
+    "Debug": {
+      "IncludeScopes": true,
+      "LogLevel": {
+        "Default": "Information",
+        "WalkingTec": "Debug"
+      }
+    },
     "WTM": {
       "LogLevel": {
         "Default": "Debug"

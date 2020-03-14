@@ -46,6 +46,7 @@ namespace WalkingTec.Mvvm.Demo
                         {
                             logging.ClearProviders();
                             logging.AddConsole();
+                            logging.AddDebug();
                             logging.AddWTMLogger();
                         })
                         .ConfigureServices((hostingCtx, x) =>
