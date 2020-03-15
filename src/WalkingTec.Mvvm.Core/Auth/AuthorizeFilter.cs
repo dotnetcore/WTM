@@ -220,8 +220,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 }
                 else
                 {
-                    var Schemes = context.HttpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
-                    context.Result = new ChallengeResult((await Schemes.GetDefaultChallengeSchemeAsync()).Name);
+                    context.Result = new ChallengeResult(effectivePolicy.AuthenticationSchemes.ToArray());
                 }
                 // edit end
             }
