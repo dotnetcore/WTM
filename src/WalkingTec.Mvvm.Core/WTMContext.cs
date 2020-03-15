@@ -294,7 +294,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Cache.Add(key, data, new DistributedCacheEntryOptions()
                     {
-                        SlidingExpiration = new TimeSpan(timeout.Value)
+                        SlidingExpiration = new TimeSpan(0,0,timeout.Value)
                     });
                 }
                 return data;
