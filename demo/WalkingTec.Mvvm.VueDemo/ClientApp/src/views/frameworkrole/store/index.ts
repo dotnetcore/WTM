@@ -1,7 +1,7 @@
 import Vuex from "vuex";
-import service from "@/service/frameworkrole";
-import createStore from "./base/index";
-const newStore = createStore(service);
+import api from "./api";
+import createStore from "@/store/base/index";
+const newStore = createStore(api);
 const mutations = {
   ...newStore.mutations,
   setGetPageActions_mutations: (state, data) => {

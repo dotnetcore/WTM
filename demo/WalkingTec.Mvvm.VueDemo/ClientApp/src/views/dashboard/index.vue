@@ -7,15 +7,9 @@
             <el-card shadow="hover">
               <div slot="header">快捷方式</div>
               <el-row class="lump-wrap" :gutter="10">
-                <el-col
-                  :span="6"
-                  v-for="item of shortcutList"
-                  :key="item.Value"
-                >
+                <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
                   <router-link class="link-a" :to="{ path: item.Url }">
-                    <i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i
-                    >{{ item.Text }}</router-link
-                  >
+                    <i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</router-link>
                 </el-col>
               </el-row>
             </el-card>
@@ -61,20 +55,13 @@
           <el-card shadow="hover">
             <div slot="header">框架特点</div>
             <i class="el-icon-check"></i>一键生成WTM项目<br />
-            <i class="el-icon-check"></i
-            >一键生成增删改查，导入导出，批量操作代码<br />
-            <i class="el-icon-check"></i
-            >支持一对多，多对多关联模型的识别和代码生成<br />
-            <i class="el-icon-check"></i
-            >支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
-            <i class="el-icon-check"></i
-            >支持sqlserver，mysql，pgsql三种数据库<br />
-            <i class="el-icon-check"></i
-            >封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
-            <i class="el-icon-check"></i
-            >提供了很多基类，封装了绝大部分后台常用操作<br />
-            <i class="el-icon-check"></i
-            >提供了用户，角色，用户组，菜单，日志等常用模块<br />
+            <i class="el-icon-check"></i>一键生成增删改查，导入导出，批量操作代码<br />
+            <i class="el-icon-check"></i>支持一对多，多对多关联模型的识别和代码生成<br />
+            <i class="el-icon-check"></i>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
+            <i class="el-icon-check"></i>支持sqlserver，mysql，pgsql三种数据库<br />
+            <i class="el-icon-check"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
+            <i class="el-icon-check"></i>提供了很多基类，封装了绝大部分后台常用操作<br />
+            <i class="el-icon-check"></i>提供了用户，角色，用户组，菜单，日志等常用模块<br />
             <i class="el-icon-check"></i>支持数据权限的开发和配置<br />
             <i class="el-icon-check"></i>支持读写分离和数据库分库
           </el-card>
@@ -95,20 +82,10 @@
               WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
             </p>
             <p>
-              —— 框架开源地址：<el-link
-                href="https://github.com/dotnetcore/WTM"
-                target="_blank"
-                type="primary"
-                >https://github.com/dotnetcore/WTM</el-link
-              >
+              —— 框架开源地址：<el-link href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</el-link>
             </p>
             <p>
-              —— 框架在线文档：<el-link
-                href="https://wtmdoc.walkingtec.cn"
-                target="_blank"
-                type="primary"
-                >https://wtmdoc.walkingtec.cn</el-link
-              >
+              —— 框架在线文档：<el-link href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</el-link>
             </p>
             <p>
               —— 框架QQ交流群：694148336
@@ -120,12 +97,7 @@
             <div slot="header">即刻体验WTM之美</div>
             <h2>
               现在就点
-              <a
-                href="https://wtmdoc.walkingtec.cn/setup"
-                target="_blank"
-                style="color:#009688"
-                >这里</a
-              >
+              <a href="https://wtmdoc.walkingtec.cn/setup" target="_blank" style="color:#009688">这里</a>
               立刻生成第一个WTM项目吧
             </h2>
           </el-card>
@@ -143,102 +115,102 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { RoutesModule } from "@/store/modules/routes";
-import EChartsModule from "./echarts";
+import EChartsModule from "./views/echarts";
 import { Action, State } from "vuex-class";
-import store from "@/store/dashboard";
+import store from "./store/index";
 @Component({
-  name: "Dashboard",
-  store,
-  components: {
-    EChartsModule
-  }
+    name: "Dashboard",
+    store,
+    components: {
+        EChartsModule
+    }
 })
 export default class extends Vue {
-  value: Date = new Date();
-  shortcuts: any[] = [
-    "日志管理",
-    "用户组管理",
-    "角色管理",
-    "用户管理",
-    "菜单管理",
-    "数据权限"
-  ];
-  get shortcutList() {
-    return RoutesModule.pageList.filter(item =>
-      this.shortcuts.includes(item.Text)
-    );
-  }
-  @Action
-  getGithubInfo;
-  @State
-  getGithubInfoData;
-  mounted() {
-    this.getGithubInfo();
-  }
+    value: Date = new Date();
+    shortcuts: any[] = [
+        "日志管理",
+        "用户组管理",
+        "角色管理",
+        "用户管理",
+        "菜单管理",
+        "数据权限"
+    ];
+    get shortcutList() {
+        return RoutesModule.pageList.filter(item =>
+            this.shortcuts.includes(item.Text)
+        );
+    }
+    @Action
+    getGithubInfo;
+    @State
+    getGithubInfoData;
+    mounted() {
+        this.getGithubInfo();
+    }
 }
 </script>
 <style lang="less" rel="stylesheet/less">
 @import "~@/assets/css/mixin.less";
 .dashboard-container {
-  padding: 10px;
-  p {
-    text-indent: 2em;
-  }
-  .el-row {
-    margin-bottom: 20px;
-  }
-  .el-card__header {
-    color: #333;
-    font-size: 14px;
-  }
-  .el-card {
-    font-size: 14px;
-    color: #666;
-  }
-  .lump-wrap {
-    margin-bottom: 0;
-    min-height: 160px;
-    &.cxt-left {
-      .el-col {
-        .flexalign(flex-start);
-        box-sizing: border-box;
-        padding-bottom: 10px;
-        div {
-          background-color: #f8f8f8;
-          width: 100%;
-          box-sizing: border-box;
-          padding: 0 10px;
-        }
-      }
+    padding: 10px;
+    p {
+        text-indent: 2em;
     }
-    .el-col {
-      .center(column);
-      i {
-        width: 100%;
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
-        border-radius: 2px;
-        font-size: 30px;
-        background-color: #f8f8f8;
-      }
-      h3 {
-        padding: 5px 0;
-        font-size: 12px;
-      }
-      p {
-        font-style: normal;
-        font-size: 30px;
-        font-weight: 300;
-        color: #009688;
-        text-indent: 0;
-      }
-      .link-a {
-        color: #666;
+    .el-row {
+        margin-bottom: 20px;
+    }
+    .el-card__header {
+        color: #333;
         font-size: 14px;
-        text-align: center;
-      }
     }
-  }
+    .el-card {
+        font-size: 14px;
+        color: #666;
+    }
+    .lump-wrap {
+        margin-bottom: 0;
+        min-height: 160px;
+        &.cxt-left {
+            .el-col {
+                .flexalign(flex-start);
+                box-sizing: border-box;
+                padding-bottom: 10px;
+                div {
+                    background-color: #f8f8f8;
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 0 10px;
+                }
+            }
+        }
+        .el-col {
+            .center(column);
+            i {
+                width: 100%;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                border-radius: 2px;
+                font-size: 30px;
+                background-color: #f8f8f8;
+            }
+            h3 {
+                padding: 5px 0;
+                font-size: 12px;
+            }
+            p {
+                font-style: normal;
+                font-size: 30px;
+                font-weight: 300;
+                color: #009688;
+                text-indent: 0;
+            }
+            .link-a {
+                color: #666;
+                font-size: 14px;
+                text-align: center;
+            }
+        }
+    }
 }
 </style>
