@@ -62,9 +62,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //处理后面要使用的expression
             if (valueField == null)
             {
-                valueField = x => x.ID.ToString();
+                valueField = x => x.GetID().ToString().ToLower();
             }
-            Expression<Func<T, string>> parentField = x => x.ParentId.ToString();
+            Expression<Func<T, string>> parentField = x => x.ParentId.ToString().ToLower();
 
             //定义PE
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -402,7 +402,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         fieldName = fieldName.Remove(fieldName.Length - 2);
                         var typeinfo = middletype.GetProperty(fieldName);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
-                        var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.Name.ToLower()).FirstOrDefault();
+                        var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.PropertyType.Name.ToLower()).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
                         {
                             continue;

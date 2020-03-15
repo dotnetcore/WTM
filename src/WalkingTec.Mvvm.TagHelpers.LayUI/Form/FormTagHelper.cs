@@ -80,7 +80,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.SetAttribute("lay-filter", Id);
             if (LabelWidth != null)
             {
-                context.Items.Add("formlabelwidth", LabelWidth.Value);
+                if (context.Items.ContainsKey("formlabelwidth") == false)
+                {
+                    context.Items.Add("formlabelwidth", LabelWidth.Value);
+                }
             }
             if (context.Items.ContainsKey("model") == false)
             {
