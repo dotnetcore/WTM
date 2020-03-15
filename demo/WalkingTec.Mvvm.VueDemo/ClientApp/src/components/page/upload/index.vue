@@ -18,13 +18,13 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { upload } from "@/service/common/index";
+import { upload } from "@/service/modules/upload";
 
 @Component
 export default class Upload extends Vue {
     @Prop({ type: Boolean, default: false })
     isShow;
-    uploadApi = upload.url;
+    uploadApi:string = upload.url;
     onClose() {
         this.$emit("update:isShow", false);
     }
