@@ -11,11 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
-
+using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -131,8 +132,8 @@ namespace WalkingTec.Mvvm.Mvc
                                 ITCode = userInfo.ITCode,
                                 Name = userInfo.Name,
                                 PhotoId = userInfo.PhotoId,
-                                Roles = DC.Set<FrameworkRole>().Where(x => userInfo.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
-                                Groups = DC.Set<FrameworkGroup>().Where(x => userInfo.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
+                                Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
+                                Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
                                 DataPrivileges = dataPris,
                                 FunctionPrivileges = funcPrivileges
                             };
@@ -187,7 +188,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public ActionLog Log { get; set; }
+        public SimpleLog Log { get; set; }
 
         //-------------------------------------------方法------------------------------------//
 
@@ -528,15 +529,34 @@ namespace WalkingTec.Mvvm.Mvc
         [NonAction]
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
         {
-            var log = Log.Clone() as ActionLog;
+            var log = this.Log.GetActionLog();
             log.LogType = logtype;
             log.ActionTime = DateTime.Now;
             log.Remark = msg;
-            using (var dc = CreateDC())
+            LogLevel ll = LogLevel.Information;
+            switch (logtype)
             {
-                dc.Set<ActionLog>().Add(log);
-                dc.SaveChanges();
+                case ActionLogTypesEnum.Normal:
+                    ll = LogLevel.Information;
+                    break;
+                case ActionLogTypesEnum.Exception:
+                    ll = LogLevel.Error;
+                    break;
+                case ActionLogTypesEnum.Debug:
+                    ll = LogLevel.Debug;
+                    break;
+                default:
+                    break;
             }
+            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+                return $@"
+===WTM Log===
+内容:{a.Remark}
+地址:{a.ActionUrl}
+时间:{a.ActionTime}
+===WTM Log===
+";
+            });
         }
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
