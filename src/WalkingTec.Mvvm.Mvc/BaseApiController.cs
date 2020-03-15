@@ -549,7 +549,13 @@ namespace WalkingTec.Mvvm.Mvc
                     break;
             }
             GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
-                return a.GetLogString();
+                return $@"
+===WTM Log===
+内容:{a.Remark}
+地址:{a.ActionUrl}
+时间:{a.ActionTime}
+===WTM Log===
+";
             });
         }
 
