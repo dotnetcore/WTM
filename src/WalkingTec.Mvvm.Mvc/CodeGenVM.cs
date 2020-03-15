@@ -966,7 +966,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             checktype = proType.GetGenericArguments()[0];
                         }
-                        if (checktype.IsPrimitive || checktype == typeof(string) || checktype == typeof(decimal))
+                        if ((checktype.IsPrimitive && checktype != typeof(bool)) || checktype == typeof(string) || checktype == typeof(decimal))
                         {
                             fieldstr.Append($@"<wt:textbox field=""Searcher.{item.FieldName}"" />");
                         }
