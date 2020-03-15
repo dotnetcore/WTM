@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace $ns$
 {
@@ -22,6 +23,13 @@ namespace $ns$
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddWTMLogger();
+                })
                 .ConfigureServices(x =>
                 {
                     x.AddFrameworkService();
