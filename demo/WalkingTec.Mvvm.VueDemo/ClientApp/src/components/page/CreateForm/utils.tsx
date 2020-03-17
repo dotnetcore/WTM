@@ -89,9 +89,7 @@ export default class Utils {
       style,
       slot
     };
-    if (key === "Entity_partition_DisplayOrder") {
-      console.log("input: compData:", key, _t.formData[key]);
-    }
+    // console.log("input: compData:", key, _t.formData[key]);
     // compData.props.placeholder = compData.props.placeholder
     //   ? compData.props.placeholder
     //   : `请输入${label}`;

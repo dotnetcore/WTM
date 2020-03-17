@@ -24,8 +24,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
-import DialogForm from "./dialog-form.vue";
-import store from "@/store/frameworkuser";
+import DialogForm from "./views/dialog-form.vue";
+import store from "./store/index";
 
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";

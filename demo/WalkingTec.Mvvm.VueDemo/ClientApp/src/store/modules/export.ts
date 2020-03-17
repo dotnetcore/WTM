@@ -4,7 +4,7 @@ import {
   getExportInfoService,
   getProgressService,
   getDownloadInfo
-} from "@/service/common/export";
+} from "@/service/modules/export";
 
 import service from "@/util/service";
 Vue.use(Vuex);
