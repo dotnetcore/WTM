@@ -1,24 +1,24 @@
 <template>
-  <div class="uploadimg">
-    <el-upload class="avatar-uploader" :action="uploadApi" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-      <i v-else class="el-icon-plus avatar-uploader-icon" />
-      <span v-if="imageUrl" class="upload-actions">
-        <span class="upload-actions-item" @click.stop="handlePictureCardPreview">
-          <i class="el-icon-zoom-in" />
-        </span>
-        <span class="upload-actions-item">
-          <i class="el-icon-refresh" />
-        </span>
-        <span class="upload-actions-item" @click.stop="handleRemove">
-          <i class="el-icon-delete" />
-        </span>
-      </span>
-    </el-upload>
-    <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="true" :append-to-body="true">
-      <img v-if="imageUrl" width="100%" :src="imageUrl" alt="" />
-    </el-dialog>
-  </div>
+    <div class="uploadimg">
+        <el-upload class="avatar-uploader" :class="[isHead ? 'head-wrap' : '']" :action="uploadApi" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" :style="imageStyle" />
+            <i v-else class="el-icon-plus avatar-uploader-icon" :style="imageStyle" />
+            <span v-if="imageUrl" class="upload-actions">
+                <span class="upload-actions-item" @click.stop="handlePictureCardPreview">
+                    <i class="el-icon-zoom-in" />
+                </span>
+                <span class="upload-actions-item">
+                    <i class="el-icon-refresh" />
+                </span>
+                <span class="upload-actions-item" @click.stop="handleRemove">
+                    <i class="el-icon-delete" />
+                </span>
+            </span>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="true" :append-to-body="true">
+            <img v-if="imageUrl" width="100%" :src="imageUrl" alt="" />
+        </el-dialog>
+    </div>
 </template>
 
 <script lang="ts">
@@ -30,6 +30,10 @@ export default class UploadImg extends Vue {
     imgId;
     @Prop({ type: String, default: "/api/_file/upload" })
     uploadApi;
+    @Prop({ type: Boolean, default: false })
+    isHead;
+    @Prop({ type: Object, default: () => {} })
+    imageStyle;
 
     dialogVisible: Boolean = false;
 
@@ -98,6 +102,31 @@ export default class UploadImg extends Vue {
             span + span {
                 margin-left: 15px;
             }
+        }
+    }
+
+    .head-wrap {
+        .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .el-upload:hover {
+            border-color: #409eff;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+        }
+        .avatar {
+            min-width: 100px;
+            display: block;
         }
     }
 }

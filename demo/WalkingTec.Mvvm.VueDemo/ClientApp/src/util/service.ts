@@ -152,10 +152,7 @@ const _request = (option, serverHost?) => {
   } else {
     axiosReq.params = data;
   }
-  // 返回图片
-  if (option.isBuffer) {
-    axiosReq["responseType"] = "arraybuffer";
-  }
+
   if (option.contentType === contentType.stream) {
     axiosReq["responseType"] = "blob";
     axiosReq.data = option.data;
@@ -164,13 +161,10 @@ const _request = (option, serverHost?) => {
   } else if (option.contentType === contentType.form) {
     axiosReq["transformRequest"] = rBase.transformReq();
   }
+
   return axios({ ...axiosReq })
     .then(res => {
-      const response = res.data;
-      if (option.isBuffer) {
-        return response;
-      }
-      return response;
+      return res.data;
     })
     .catch(res => {
       rBase.requestError(res);

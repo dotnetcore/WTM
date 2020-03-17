@@ -23,34 +23,10 @@
               </el-button>
             </template>
           </el-table-column>
-
           <el-table-column v-else :key="index" :sortable="item.sortable" :prop="item.key" :label="item.label" :width="item.width" :align="item.align || 'center'" />
         </template>
       </el-table>
-      <!-- table 右侧展示 -->
-      <div v-if="false" class="col-box">
-        <el-checkbox-group v-show="isColBox" v-model="selCols">
-          <el-checkbox v-for="item in tableAttrs.tbHeader" :key="item.key" :label="item.key" :checked="true">
-            {{ item.label }}
-          </el-checkbox>
-        </el-checkbox-group>
-        <div class="col-but" @click="onOpenCol">
-          <i :class="[isColBox ? 'el-icon-s-unfold' : 'el-icon-s-fold']" />
-          自定义列
-        </div>
-      </div>
-      <!-- Popover 弹出框 -->
-      <el-popover v-else placement="top" trigger="click" @hide="isColBox = false" class="col-box">
-        <el-checkbox-group v-show="isColBox" v-model="selCols">
-          <el-checkbox v-for="item in tableAttrs.tbHeader" :key="item.key" :label="item.key" :checked="true">
-            {{ item.label }}
-          </el-checkbox>
-        </el-checkbox-group>
-        <div slot="reference" class="col-but" @click="onOpenCol">
-          <i :class="[isColBox ? 'el-icon-s-unfold' : 'el-icon-s-fold']" />
-          自定义列
-        </div>
-      </el-popover>
+      <custom-column :tb-header="tableAttrs.tbHeader" :default-header-keys="tableAttrs.defaultHeaderKeys" @onSetHeader="onSetHeader"></custom-column>
     </div>
     <el-pagination v-if="isPagination" class="page-box" v-bind="pageAttrs" :current-page="pageAttrs.currentPage" :page-sizes="pageAttrs.pageSizes" :page-size="pageAttrs.pageSize" :layout="pageAttrs.layout" :total="pageAttrs.pageTotal" v-on="pageEvents" />
   </div>
@@ -58,7 +34,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-
+import CustomColumn from "./CustomColumn.vue";
 /**
  * table列表&分页 组件组合
  *
@@ -69,39 +45,72 @@ import { Component, Vue, Prop } from "vue-property-decorator";
  * $attrs：(attrs)
  * $attrs作用域赋给el-table，el-pagination需要通过prop自定义
  */
-@Component
+@Component({
+    components: { CustomColumn }
+})
 export default class TableBox extends Vue {
     /* ---------table 属性--------- */
+    /**
+     * loading
+     */
     @Prop(Boolean)
     loading;
+    /**
+     * 是否多选
+     */
     @Prop({ type: Boolean, default: false })
-    isSelection; // 是否多选
+    isSelection;
+    /**
+     * 列字段数据
+     */
     @Prop({ type: Array, default: () => [] })
-    tbHeader; // 列字段数据
-    // @Prop({ type: [Number, String] })
-    // height?; // table内容高度
+    tbHeader;
+    /**
+     * 默认列字段
+     */
+    @Prop({ type: Array })
+    defaultHeaderKeys?;
+
     /* ---------page 属性--------- */
+    /**
+     * 当前页
+     */
     @Prop({ type: Number, default: 0 })
-    currentPage; //当前页
+    currentPage;
+    /**
+     * 页码集合
+     */
     @Prop({ type: Array, default: () => [10, 25, 50, 100] })
-    pageSizes; // 页码集合
+    pageSizes;
+    /**
+     * 页码大小
+     */
     @Prop({ type: Number, default: 0 })
-    pageSize; // 页码大小
+    pageSize;
+    /**
+     * 总量
+     */
     @Prop({ type: Number, default: 0 })
-    pageTotal; // 总量
+    pageTotal;
+    /**
+     * 分页参数
+     */
     @Prop({ type: String, default: "total, sizes, prev, pager, next, jumper" })
-    layout; // 分页参数
+    layout;
+    /**
+     * 事件集合
+     */
     @Prop({ type: Object, default: {} })
-    events!: object; // 事件集合
+    events!: object;
+    /**
+     * 属性集合
+     */
     @Prop({ type: Object, default: {} })
-    attrs!: object; // 属性集合
+    attrs!: object;
 
     // 选中列
     selCols: string[] = [];
-    // 展行选择
-    isColBox: boolean = false;
-    // table height
-    tableHeight: number | string = 0;
+
     /**
      * table 事件
      */
@@ -135,6 +144,8 @@ export default class TableBox extends Vue {
         return {
             ...attrsObj,
             isSelection: this.isSelection || attrsObj.isSelection,
+            defaultHeaderKeys:
+                this.defaultHeaderKeys || attrsObj.defaultHeaderKeys,
             tbHeader:
                 this.tbHeader.length > 0 ? this.tbHeader : attrsObj.tbHeader
         };
@@ -168,67 +179,17 @@ export default class TableBox extends Vue {
         });
     }
     /**
-     * 打开行
+     *  选中列
      */
-    onOpenCol(): void {
-        this.isColBox = !this.isColBox;
+    onSetHeader(data) {
+        this.selCols = data;
     }
-    /**
-     * 高度
-     */
-    calcHeight(): void {
-        let h =
-            document.documentElement.clientHeight || document.body.clientHeight;
-        const navbarH = 50;
-        const tagsH = 34;
-        const titleH = 32;
-        const buttonH = 66;
-        const searchH = document.getElementsByClassName("search-box")[0];
-
-        h =
-            h -
-            navbarH -
-            tagsH -
-            titleH -
-            buttonH -
-            (searchH && searchH.offsetHeight);
-        this.tableHeight = h;
-        console.log("calcHeight", h, searchH && searchH.offsetHeight);
-    }
-
-    mounted() {}
 }
 </script>
-<style lang="less" rel="stylesheet/less">
+<style lang="less" scoped>
 @import "~@/assets/css/mixin.less";
 .table-box {
     .flexbox(row);
-    .col-box {
-        border: 1px solid #ebeef5;
-        border-left: 0px solid #ebeef5;
-        .flexbox(row);
-        .col-but {
-            padding-top: 10px;
-            width: 2em;
-            writing-mode: tb-rl;
-            -webkit-writing-mode: vertical-rl;
-            writing-mode: vertical-rl;
-            *writing-mode: tb-rl;
-            background: #f3f8ff;
-            font-size: 14px;
-            color: #606266;
-            cursor: pointer;
-            .flexbox();
-            .flexalign(center);
-        }
-        .el-checkbox-group {
-            .flexbox(column);
-            padding: 10px 5px 0;
-            .el-checkbox {
-                margin-right: 0;
-            }
-        }
-    }
 }
 .page-box {
     margin-top: 15px;

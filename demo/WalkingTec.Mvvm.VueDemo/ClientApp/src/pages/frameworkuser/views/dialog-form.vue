@@ -91,7 +91,11 @@ export default class Index extends Vue {
                 },
                 "Entity.PhotoId": {
                     type: "wtmUploadImg",
-                    label: "头像"
+                    label: "头像",
+                    props: {
+                        isHead: true,
+                        imageStyle: { width: "100px", height: "100px" }
+                    }
                 },
                 "Entity.IsValid": {
                     type: "switch",
@@ -139,46 +143,3 @@ export default class Index extends Vue {
     }
 }
 </script>
-<style lang="less">
-.frameworkuser-form {
-    .el-tag {
-        margin-right: 10px;
-    }
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #409eff;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 100px;
-        height: 100px;
-        line-height: 100px;
-        text-align: center;
-    }
-    .avatar {
-        // width: 178px;
-        min-width: 100px;
-        height: 178px;
-        display: block;
-    }
-    .el-transfer {
-        display: flex;
-        .el-transfer__buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            .el-button + .el-button {
-                margin-left: 0;
-            }
-        }
-    }
-}
-</style>

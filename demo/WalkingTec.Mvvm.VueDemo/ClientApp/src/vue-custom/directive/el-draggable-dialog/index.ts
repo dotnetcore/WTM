@@ -1,5 +1,7 @@
 import { DirectiveOptions } from "vue";
-
+/**
+ * dialog 拖拽
+ */
 const elDraggableDialog: DirectiveOptions = {
   bind(el, _, vnode) {
     const dragDom = el.querySelector(".el-dialog") as HTMLElement;

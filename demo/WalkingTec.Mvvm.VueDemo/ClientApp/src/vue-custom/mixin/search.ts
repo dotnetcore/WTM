@@ -8,6 +8,7 @@
  *    目前与CreateForm组件高度依赖，做一需要配合CreateForm组件
  */
 import { Component, Vue, Prop } from "vue-property-decorator";
+
 type searchFormType = {
   orderByColumn: string | null; // 排序字段
   isAsc: string | null; // 排序
@@ -22,6 +23,7 @@ declare module "vue/types/vue" {
     resetFields: any;
   }
 }
+
 function mixinFunc(TABLE_HEADER: Array<object> = []) {
   class mixin extends Vue {
     searchRefName: string = "searchName";
@@ -30,7 +32,7 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
       orderByColumn: null, // 排序字段
       isAsc: null // asc desc
     };
-    pageDate: object = {
+    pageDate = {
       pageSizes: [10, 25, 50, 100],
       pageSize: 10,
       currentPage: 1,
@@ -78,14 +80,11 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
         ...this.pageDate
       };
     }
-    created() {
-      this.onSearch();
-    }
     /**
      * 查询
      * @param changePage
      */
-    fetch(changePage?: boolean) {
+    private fetch(changePage?: boolean) {
       this.loading = true;
       // 翻页的时候，请求参数不变。
       if (!changePage) {
@@ -121,21 +120,24 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
           this.loading = false;
         });
     }
-    onSearch() {
+    /**
+     * 查询
+     */
+    public onSearch() {
       this.pageDate.currentPage = 1;
       this.fetch();
     }
     /**
      * 保持参数查询
      */
-    onHoldSearch() {
+    public onHoldSearch() {
       this.fetch(true);
     }
     /**
      * 页码大小
      * @param size
      */
-    handleSizeChange(size) {
+    public handleSizeChange(size) {
       this.pageDate.currentPage = 1;
       this.pageDate.pageSize = size;
       this.fetch(true);
@@ -144,7 +146,7 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
      * 翻页
      * @param currentpage
      */
-    handleCurrentChange(currentpage) {
+    public handleCurrentChange(currentpage) {
       this.pageDate.currentPage = currentpage;
       this.fetch(true);
     }
@@ -153,7 +155,7 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
      * @param prop 字段
      * @param order 顺序
      */
-    onSortChange({ prop, order }) {
+    public onSortChange({ prop, order }) {
       this.searchForm.orderByColumn = prop;
       this.pageDate.currentPage = 1;
       if (order === "ascending") {
@@ -170,8 +172,11 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
      * 选中数据
      * @param selectData
      */
-    onSelectionChange(selectData: Array<any>) {
+    public onSelectionChange(selectData: Array<any>) {
       this.selectData = selectData;
+    }
+    created() {
+      this.onSearch();
     }
   }
   return Component(mixin);
