@@ -1,5 +1,5 @@
 <template>
-    <card class="dataprivilege">
+    <card>
         <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" :needCollapse="true" :isActive.sync="isActive" />
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />

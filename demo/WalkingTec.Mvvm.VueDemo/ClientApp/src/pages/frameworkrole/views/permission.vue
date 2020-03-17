@@ -1,5 +1,5 @@
 <template>
-    <wtm-dialog-box componentClass="frameworkrole-permission-form" :is-show.sync="isShow" :status="status" @close="onClose" @open="onOpen" @onSubmit="onSubmit">
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onOpen" @onSubmit="onSubmit">
         <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent">
             <template #Pages>
                 <el-table :data="mergeFormData.Pages" stripe border element-loading-text="拼命加载中">
