@@ -122,13 +122,6 @@ export default class Index extends Vue {
         };
     }
 
-    /**
-     * 模版集合
-     */
-    get moduleList() {
-        return RoutesModule.pageList;
-    }
-
     iconList: Array<any> = iconList;
 
     created() {

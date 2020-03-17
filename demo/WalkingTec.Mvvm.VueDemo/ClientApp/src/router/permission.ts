@@ -7,7 +7,7 @@ import { RoutesModule } from "@/store/modules/routes";
 import i18n from "@/lang"; // Internationalization
 import settings from "../settings";
 import router from "./index";
-import pageList from "@/views/index";
+import pageList from "@/pages/index";
 
 NProgress.configure({ showSpinner: false });
 

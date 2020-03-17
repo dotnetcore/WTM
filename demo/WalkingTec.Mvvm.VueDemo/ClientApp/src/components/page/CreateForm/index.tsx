@@ -128,7 +128,7 @@ export default class CreateForm extends Vue {
       const newKey = this.KeyByPoint(key);
       const item = this.options.formItem[newKey];
       if (_.isFunction(item.isHidden)) {
-        if (item.isHidden(this.getFormData(), status)) {
+        if (item.isHidden(this.getFormData(), this.status)) {
           return;
         }
       }

@@ -62,7 +62,11 @@ export default class Utils {
       // 图片
       if (option.type === "wtmUploadImg") {
         let img = !!value && (
-          <img src={`/api/_file/downloadFile/${value}`} class="avatar" />
+          <el-image
+            style={option.props.imageStyle}
+            src={`/api/_file/downloadFile/${value}`}
+            fit={option.props.fit || "contain"}
+          />
         );
         return (
           <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
@@ -102,16 +106,17 @@ export default class Utils {
 
   private generateSelectComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, key } = option;
+    const { style, props, key } = option;
     let components = [];
     if (option.children && _.isArray(option.children)) {
       components = option.children.map(child => {
         const value = child.Value;
         const label = child.Text || child.text;
+        const slot = child.slot;
         return (
-          <el-option
-            {...{ props: { value, label, ...child.props } }}
-          ></el-option>
+          <el-option {...{ props: { value, label, ...child.props } }}>
+            {slot}
+          </el-option>
         );
       });
     }
@@ -120,8 +125,7 @@ export default class Utils {
       directives: [...(option.directives || []), vEdit(_t, option.children)],
       on,
       props,
-      style,
-      slot
+      style
     };
     return (
       <el-select v-model={_t.formData[key]} {...compData}>

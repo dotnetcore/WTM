@@ -28,8 +28,6 @@ export default class Index extends Vue {
     getPrivilegesData;
     @State
     getPrivilegeByTableNameData;
-    // 是否列表
-    whether: Array<any> = whether;
 
     // 表单结构
     get formOptions() {
@@ -94,7 +92,7 @@ export default class Index extends Vue {
                 IsAll: {
                     type: "select",
                     label: "全部权限",
-                    children: this.whether,
+                    children: whether,
                     rules: {
                         type: "boolean",
                         required: true,

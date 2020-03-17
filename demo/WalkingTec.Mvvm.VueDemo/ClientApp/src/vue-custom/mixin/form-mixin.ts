@@ -30,10 +30,14 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      *    创建表单（CreateForm）时，需要用到自定义组件(type: wtmSlot),
      *    可以将自定义组件的数据 放到mergeFormData中操作，查询/编辑/新增 动作都会填充数据项
      */
-    mergeFormData: object = {};
-    // 表单ref name
+    mergeFormData: any = {};
+    /**
+     * 表单ref name
+     */
     refName: string = defaultRefName;
-    // 异步验证, 失败组件集合(form-item类型是error需要)
+    /**
+     * 异步验证, 失败组件集合(form-item类型是error需要)
+     */
     asynValidateEl: Array<any> = [];
     /**
      * wtm-dialog-box所需方法
@@ -51,12 +55,16 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
     FormComp() {
       return _.get(this.$refs, this.refName);
     }
-    // 关闭
+    /**
+     * 关闭
+     */
     onClose() {
       this.$emit("update:isShow", false);
       this.onReset();
     }
-    // 重置&清除验证
+    /**
+     * 重置&清除验证
+     */
     onReset() {
       const comp = this.FormComp();
       if (comp) {

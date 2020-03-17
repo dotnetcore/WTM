@@ -13,7 +13,7 @@ export const constantRoutes: RouteConfig[] = [
         path: "dashboard",
         component: () =>
           import(
-            /* webpackChunkName: "dashboard" */ "@/views/dashboard/index.vue"
+            /* webpackChunkName: "dashboard" */ "@/pages/dashboard/index.vue"
           ),
         name: "Dashboard",
         meta: {
@@ -30,7 +30,7 @@ export const constantRoutes: RouteConfig[] = [
     children: [
       {
         path: "index",
-        component: () => import("@/views/i18n-demo/index.vue"),
+        component: () => import("@/pages/i18n-demo/index.vue"),
         name: "I18n",
         meta: {
           title: "i18n",
@@ -45,7 +45,7 @@ export const constantRoutes: RouteConfig[] = [
     children: [
       {
         path: "index",
-        component: () => import("@/views/demo/index.vue"),
+        component: () => import("@/pages/demo/index.vue"),
         name: "demo",
         meta: {
           title: "demo",
@@ -60,7 +60,7 @@ export const constantRoutes: RouteConfig[] = [
     children: [
       {
         path: "",
-        component: () => import("@/views/external/index.vue"),
+        component: () => import("@/pages/external/index.vue"),
         name: "外链",
         meta: {
           title: "externalLink",
