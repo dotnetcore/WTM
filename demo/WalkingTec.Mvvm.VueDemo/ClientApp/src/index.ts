@@ -4,7 +4,7 @@ import i18n from "@/lang";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/css/index.less";
 import SvgIcon from "vue-svgicon";
-import App from "@/views/index.vue";
+import App from "@/pages/index.vue";
 import router from "@/router";
 import store from "@/store/modules/index";
 import "@/assets/icon/components";

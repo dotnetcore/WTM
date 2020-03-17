@@ -34,7 +34,7 @@ class Menu {
         isExternal(menuItem.Url) ||
         _.startsWith(menuItem.Url, config.staticPage)
       ) {
-        routerItem.component = () => import("@/views/external/index.vue");
+        routerItem.component = () => import("@/pages/external/index.vue");
         routerItem.path = `/external_${++url_index}`;
         const url = isExternal(menuItem.Url)
           ? menuItem.Url
@@ -46,7 +46,7 @@ class Menu {
         routerItem.props = { default: true, url: url };
       } else {
         routerItem.component = () =>
-          import("@/views" + menuItem.Url + "/index.vue");
+          import("@/pages" + menuItem.Url + "/index.vue");
       }
     }
     return routerItem;

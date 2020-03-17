@@ -28,7 +28,7 @@ export default class EditBox extends Vue {
     isImg;
 }
 </script>
-<style lang='less'>
+<style lang='less' scoped>
 .edit {
     display: inline-block;
 }

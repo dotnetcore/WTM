@@ -34,7 +34,6 @@ import ExportExcel from "@/components/page/export/export-excel.vue";
 import { butType } from "@/config/enum";
 import { IEventFn } from "@/vue-custom/mixin/action-mixin";
 
-function noop() {}
 
 @Component({
     components: {
@@ -95,13 +94,13 @@ export default class ButBox extends Vue {
         type: Object,
         default: (): IEventFn => {
             return {
-                onAdd: noop,
-                onEdit: noop,
-                onDelete: noop,
-                onBatchDelete: noop,
-                onImported: noop,
-                onExportAll: noop,
-                onExport: noop
+                onAdd: () => {},
+                onEdit: () => {},
+                onDelete: () => {},
+                onBatchDelete: () => {},
+                onImported: () => {},
+                onExportAll: () => {},
+                onExport: () => {}
             };
         }
     })

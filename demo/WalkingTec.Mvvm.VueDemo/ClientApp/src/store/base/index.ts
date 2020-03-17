@@ -22,7 +22,7 @@ const stoBase = {
   getKeyName: key => {
     const upperKey = firstUpperCase(key);
     const mutationsKey = `set${upperKey}_mutations`;
-    const stateKey = key + "Data";
+    const stateKey = `${key}Data`;
     return { mutationsKey, stateKey };
   },
   // service接口列表的名称作为state的key，并判断是否包含List，如果包含List定位数据
@@ -44,7 +44,7 @@ const stoBase = {
     };
   },
   // store > action
-  actionsDef: (serviceItem, mutationsKey, cb?: Function) => {
+  actionsDef: (serviceItem, mutationsKey: string, cb?: Function) => {
     return ({ commit }, params) => {
       const option = Object.assign({ data: params }, serviceItem);
       return _request(option, null).then(result => {

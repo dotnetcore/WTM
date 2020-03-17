@@ -6,7 +6,12 @@ interface Index {
   clear: () => void;
   flush: () => void;
 }
-
+/**
+ * 防抖
+ * @param func
+ * @param wait
+ * @param immediate
+ */
 export const debounce = (
   func: Procedure,
   wait: number = DEFAULT_DEBOUNCE_DURATION,
