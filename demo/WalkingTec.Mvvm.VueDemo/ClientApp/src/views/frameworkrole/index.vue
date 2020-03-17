@@ -34,9 +34,9 @@ import { Action } from "vuex-class";
 import searchMixin from "@/vue-custom/mixin/search";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import UploadBox from "@/components/page/upload/index.vue";
-import DialogForm from "./dialog-form.vue";
-import Permission from "./permission.vue";
-import store from "@/store/frameworkrole";
+import DialogForm from "./views/dialog-form.vue";
+import Permission from "./views/permission.vue";
+import store from "./store/index";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
