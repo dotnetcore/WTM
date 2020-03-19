@@ -277,7 +277,7 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives } = option;
+    const { style, props, slot, directives, key } = option;
     const on = translateEvents(option.events, _t);
     const compData = {
       directives,
@@ -286,6 +286,7 @@ export default class Utils {
       style,
       slot
     };
+    compData.props["file-list"] = _t.formData[key];
     return <el-upload {...compData}>{option.children}</el-upload>;
   }
 
