@@ -1,7 +1,6 @@
 <template>
     <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent">
-        </wtm-create-form>
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions"></wtm-create-form>
     </wtm-dialog-box>
 </template>
 

@@ -106,7 +106,7 @@ export default class Utils {
 
   private generateSelectComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, key } = option;
+    const { style, props, key, mapKey } = option;
     let components = [];
     if (option.children && _.isArray(option.children)) {
       components = option.children.map(child => {
@@ -120,18 +120,30 @@ export default class Utils {
         );
       });
     }
-    const on = translateEvents(option.events, _t);
     const compData = {
       directives: [...(option.directives || []), vEdit(_t, option.children)],
-      on,
+      on: translateEvents(option.events, _t),
       props,
       style
     };
-    return (
-      <el-select v-model={_t.formData[key]} {...compData}>
-        {components}
-      </el-select>
-    );
+    // mapkey && 多选
+    if (mapKey && props.multiple) {
+      compData.on["input"] = function(val) {
+        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
+      };
+      const value = _t.formData[key].map(item => item[mapKey]);
+      return (
+        <el-select value={value} {...compData}>
+          {components}
+        </el-select>
+      );
+    } else {
+      return (
+        <el-select v-model={_t.formData[key]} {...compData}>
+          {components}
+        </el-select>
+      );
+    }
   }
 
   private generateButtonComponent(h, option) {
@@ -205,7 +217,7 @@ export default class Utils {
 
   private generateCheckboxGroupComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, key } = option;
+    const { style, props, slot, key, mapKey } = option;
     let components = [];
     if (option.children) {
       components = option.children.map(child => {
@@ -226,11 +238,23 @@ export default class Utils {
       style,
       slot
     };
-    return (
-      <el-checkbox-group v-model={_t.formData[key]} {...compData}>
-        {components}
-      </el-checkbox-group>
-    );
+    if (mapKey) {
+      compData.on["input"] = function(val) {
+        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
+      };
+      const value = _t.formData[key].map(item => item[mapKey]);
+      return (
+        <el-checkbox-group value={value} {...compData}>
+          {components}
+        </el-checkbox-group>
+      );
+    } else {
+      return (
+        <el-checkbox-group v-model={_t.formData[key]} {...compData}>
+          {components}
+        </el-checkbox-group>
+      );
+    }
   }
 
   private generateSwitchComponent(h, option, vm?) {
@@ -253,7 +277,7 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives } = option;
+    const { style, props, slot, directives, key } = option;
     const on = translateEvents(option.events, _t);
     const compData = {
       directives,
@@ -262,6 +286,7 @@ export default class Utils {
       style,
       slot
     };
+    compData.props["file-list"] = _t.formData[key];
     return <el-upload {...compData}>{option.children}</el-upload>;
   }
 
@@ -335,16 +360,12 @@ export default class Utils {
     const on = {
       ...translateEvents(option.events, _t),
       input: function(val) {
-        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
-        console.log(
-          "input",
-          val,
-          mapKey,
-          _t.formData[key],
-          val.map(item => ({ [mapKey]: item }))
+        _t.formData[key] = val.map(item =>
+          mapKey ? { [mapKey]: item } : item
         );
       }
     };
+    // 结构 Text，Value
     const editData = props.data.map(item => ({
       Text: item.label,
       Value: item.key
@@ -355,8 +376,7 @@ export default class Utils {
       props,
       style
     };
-    const value = _t.formData[key].map(item => item[mapKey]);
-    console.log(mapKey + ":", value);
+    const value = _t.formData[key].map(item => (mapKey ? item[mapKey] : item));
     return <el-transfer value={value} {...compData}></el-transfer>;
   }
 }
