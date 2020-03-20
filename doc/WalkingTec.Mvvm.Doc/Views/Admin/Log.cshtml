@@ -15,8 +15,70 @@
     </ol>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="日志管理-配置文件">
-    <wt:quote>
-        日志的记录可以通过appsetting.json配置文件中的EnableLog的配置，设置是否记录日志，还可以通过LogExceptionOnly的配置，设置是否只记录异常日志，为各位使用者提供了灵活的日志记录配置。
-    </wt:quote>
-    <img src="~/imgs/admin-appsettings.png" />
+  <wt:quote>
+    日志的记录可以通过appsetting.json配置文件中的EnableLog的配置，设置是否记录日志，还可以通过LogExceptionOnly的配置，设置是否只记录异常日志，为各位使用者提供了灵活的日志记录配置。
+  </wt:quote>
+  <img src="~/imgs/admin-appsettings.png" />
+  <wt:quote>
+    <p>从3.1.7和2.4.9版本开始，EnableLog和LogExceptionOnly属性已经过时，框架使用.netcore默认的日志流程来记录日志，以达到更灵活通用的目的 </p>
+    <p>在program.cs文件中 .ConfigureServices之前加入以下代码来控制使用的日志</p>
+  </wt:quote>
+    <wt:code>
+      .ConfigureLogging((hostingContext, logging) =&gt;
+      {
+        logging.ClearProviders();
+        logging.AddConsole();
+        logging.AddDebug();
+        logging.AddWTMLogger();//添加WTM日志，WTM日志会向数据库的日志管理表中写数据
+      })
+    </wt:code>
+
+    <p>同时在appsettings文件中，使用.netcore通用的设置方式来设置日志的级别</p>
+  <p>下面的写法配置了Console和Debug中默认显示Information级别的日志，但对于来源是WalkingTec的，也就是框架输出的日志显示Debug级别。</p>
+  <p>对于WTM中记录的日志，则是Information级别的，也就是说Information级别以上的才会被写到数据库中</p>
+  <wt:code>
+  "Logging": {
+    "Console": {
+      "IncludeScopes": true,
+      "LogLevel": {
+        "Default": "Information",
+        "WalkingTec": "Debug"
+      }
+    },
+    "Debug": {
+      "IncludeScopes": true,
+      "LogLevel": {
+        "Default": "Information",
+        "WalkingTec": "Debug"
+      }
+    },
+    "WTM": {
+      "LogLevel": {
+        "Default": "Information"
+      }
+    }
+  },
+  </wt:code>
+
+  <p>如果希望WTM只记录异常，则可以这样配置</p>
+    <wt:code>
+  "Logging": {
+    "WTM": {
+      "LogLevel": {
+        "Default": "Error"
+      }
+    }
+  },
+  </wt:code>
+    <p>如果希望WTM完全不记录日志，则可以把WTM的日志级别设定为None</p>
+    <wt:code>
+  "Logging": {
+    "WTM": {
+      "LogLevel": {
+        "Default": "None"
+      }
+    }
+  },
+  </wt:code>
+
 </wt:fieldset>

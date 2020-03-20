@@ -58,9 +58,19 @@ namespace WalkingTec.Mvvm.Core
             return this.MemberwiseClone();
         }
 
-        [NotMapped]
-        [Display(Name = "Logs")]
-        public List<Guid> Logs { get; set; }
+        public string GetLogString()
+        {
+            return $@"
+|-访问时间：{this.ActionName}
+|-访问用户：{this.ITCode??"无"}
+|-来源地址：{this.IP??"未知"}
+|-访问模块：{this.ModuleName??"未知"}
+|-访问方法：{this.ActionName ?? "未知"}
+|-动作地址：{this.ActionUrl ?? "未知"}
+|-访问时长：{this.Duration.ToString("F2")+"秒"}
+|-具体信息：{this.Remark}
+";
+        }
     }
 
 
