@@ -9,6 +9,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -25,6 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.ITCode = "admin";
                 vm.Password = "000000";
             }
+            DoLog("LogTest");
             return View(vm);
         }
 

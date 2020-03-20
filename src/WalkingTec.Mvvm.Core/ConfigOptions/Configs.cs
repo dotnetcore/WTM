@@ -121,48 +121,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region Enable log
-
-        private bool? _enableLog;
-
-        /// <summary>
-        /// Enable log
-        /// </summary>
-        public bool EnableLog
-        {
-            get
-            {
-                return _enableLog ?? false;
-            }
-            set
-            {
-                _enableLog = value;
-            }
-        }
-
-        #endregion
-
-        #region Log exceptions only
-
-        private bool? _logExceptionOnly;
-
-        /// <summary>
-        /// Log exceptions only
-        /// </summary>
-        public bool LogExceptionOnly
-        {
-            get
-            {
-                return _logExceptionOnly ?? false;
-            }
-            set
-            {
-                _logExceptionOnly = value;
-            }
-        }
-
-        #endregion
-
         #region Auto sync db
 
         private bool? _syncdb;

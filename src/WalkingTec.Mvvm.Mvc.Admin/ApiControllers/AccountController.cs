@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
@@ -60,6 +61,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var dpris = DC.Set<DataPrivilege>()
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .ToList();
+            ProcessTreeDp(dpris);
             //生成并返回登录用户信息
             var rv = new LoginUserInfo();
             rv.Id = user.ID;
@@ -168,6 +170,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
 
                 var menus = DC.Set<FunctionPrivilege>()
+                                .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => x.MenuItem).Distinct()
                                 .Where(x => x.MethodName == null)
@@ -179,15 +182,15 @@ namespace WalkingTec.Mvvm.Admin.Api
                                     Text = x.PageName,
                                     Url = x.Url,
                                     Icon = x.ICon
-                                });
-                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x=>x.DisplayOrder).Select(x => new SimpleMenu
+                                }).ToList();
+                var folders = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
                     Icon = x.ICon
-                });
+                }).ToList();
                 ms.AddRange(folders);
                 foreach (var item in menus)
                 {
@@ -198,10 +201,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .AsNoTracking()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName != null)
-                    .Select(x => x.Url)
+                    .Select(x => x.Url).ToList()
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();
@@ -233,6 +237,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
 
                 var menus = DC.Set<FunctionPrivilege>()
+                                .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => x.MenuItem).Distinct()
                                 .Where(x => x.MethodName == null)
@@ -244,15 +249,15 @@ namespace WalkingTec.Mvvm.Admin.Api
                                     Text = x.PageName,
                                     Url = x.Url,
                                     Icon = x.ICon
-                                });
-                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
+                                }).ToList();
+                var folders = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
                     Icon = x.ICon
-                });
+                }).ToList();
                 ms.AddRange(folders);
                 foreach (var item in menus)
                 {
@@ -263,10 +268,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .AsNoTracking()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName != null)
-                    .Select(x => x.Url)
+                    .Select(x => x.Url).ToList()
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();
@@ -308,6 +314,53 @@ namespace WalkingTec.Mvvm.Admin.Api
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Response.Redirect("/");
         }
+
+
+        private void ProcessTreeDp(List<DataPrivilege> dps)
+        {
+            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            foreach (var ds in dpsSetting)
+            {
+                if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
+                {
+                    var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
+                    if (ids.Count > 0 && ids.Contains(null) == false)
+                    {
+                        List<Guid> tempids = new List<Guid>();
+                        foreach (var item in ids)
+                        {
+                            if (Guid.TryParse(item, out Guid g))
+                            {
+                                tempids.Add(g);
+                            }
+                        }
+                        List<Guid> subids = new List<Guid>();
+                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
+                        subids = subids.Distinct().ToList();
+                        subids.ForEach(x => dps.Add(new DataPrivilege
+                        {
+                            TableName = ds.ModelName,
+                            RelateId = x.ToString()
+                        }));
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType)
+        {
+            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
+            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
+            if (subids.Count > 0)
+            {
+                return subids.Concat(GetSubIds(subids, modelType));
+            }
+            else
+            {
+                return new List<Guid>();
+            }
+        }
+
     }
 
     public class SimpleMenu
