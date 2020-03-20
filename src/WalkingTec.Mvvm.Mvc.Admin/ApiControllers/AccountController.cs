@@ -170,6 +170,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
 
                 var menus = DC.Set<FunctionPrivilege>()
+                                .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => x.MenuItem).Distinct()
                                 .Where(x => x.MethodName == null)
@@ -181,15 +182,15 @@ namespace WalkingTec.Mvvm.Admin.Api
                                     Text = x.PageName,
                                     Url = x.Url,
                                     Icon = x.ICon
-                                });
-                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x=>x.DisplayOrder).Select(x => new SimpleMenu
+                                }).ToList();
+                var folders = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
                     Icon = x.ICon
-                });
+                }).ToList();
                 ms.AddRange(folders);
                 foreach (var item in menus)
                 {
@@ -200,10 +201,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .AsNoTracking()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName != null)
-                    .Select(x => x.Url)
+                    .Select(x => x.Url).ToList()
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();
@@ -235,6 +237,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
 
                 var menus = DC.Set<FunctionPrivilege>()
+                                .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => x.MenuItem).Distinct()
                                 .Where(x => x.MethodName == null)
@@ -246,15 +249,15 @@ namespace WalkingTec.Mvvm.Admin.Api
                                     Text = x.PageName,
                                     Url = x.Url,
                                     Icon = x.ICon
-                                });
-                var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
+                                }).ToList();
+                var folders = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).Select(x => new SimpleMenu
                 {
                     Id = x.ID.ToString().ToLower(),
                     ParentId = x.ParentId.ToString().ToLower(),
                     Text = x.PageName,
                     Url = x.Url,
                     Icon = x.ICon
-                });
+                }).ToList();
                 ms.AddRange(folders);
                 foreach (var item in menus)
                 {
@@ -265,10 +268,11 @@ namespace WalkingTec.Mvvm.Admin.Api
                 }
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
+                    .AsNoTracking()
                     .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Select(x => x.MenuItem).Distinct()
                     .Where(x => x.MethodName != null)
-                    .Select(x => x.Url)
+                    .Select(x => x.Url).ToList()
                     );
                 urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
                 forapi.Attributes = new Dictionary<string, object>();

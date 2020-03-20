@@ -1,10 +1,10 @@
 <template>
-    <wtm-dialog-box :is-show.sync="isShow" :status="status" @close="onClose" @open="onOpen" @onSubmit="onSubmit">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :events="formEvent">
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions">
             <template #Pages>
                 <el-table :data="mergeFormData.Pages" stripe border element-loading-text="拼命加载中">
                     <el-table-column label="页面" prop="Name" width="150"></el-table-column>
-                    <el-table-column label="动作" width="400">
+                    <el-table-column label="动作">
                         <template slot-scope="scope">
                             <el-checkbox-group v-model="mergeFormData.Pages[scope.$index].Actions">
                                 <el-checkbox v-for="item in mergeFormData.Pages[scope.$index].AllActions" :key="item.Value" :label="item.Value">{{ item.Text }}</el-checkbox>
