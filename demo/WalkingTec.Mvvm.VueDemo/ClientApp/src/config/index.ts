@@ -32,8 +32,8 @@ export default config;
  * 默认样式配置
  */
 export const style = {
-  menuBg: "#304156",
-  menuText: "#bfcbd9",
+  menuBg: "rgba(255, 255, 255, 0)", // "#304156",
+  menuText: "#efefef", // "#bfcbd9",
   menuActiveText: "#409eff",
   theme: "#1890ff"
 };

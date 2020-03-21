@@ -10,6 +10,7 @@ import { style as variables } from "@/config/index";
 import defaultSettings from "@/settings";
 
 export interface ISettingsState {
+  title: string;
   theme: string;
   fixedHeader: boolean;
   showSettings: boolean;
@@ -17,10 +18,12 @@ export interface ISettingsState {
   showSidebarLogo: boolean;
   sidebarTextTheme: boolean;
   isDialog: boolean;
+  menuBackgroundImg: any;
 }
 
 @Module({ dynamic: true, store, name: "settings" })
 class Settings extends VuexModule implements ISettingsState {
+  public title = defaultSettings.title;
   public theme = variables.theme;
   public fixedHeader = defaultSettings.fixedHeader;
   public showSettings = defaultSettings.showSettings;
@@ -28,6 +31,7 @@ class Settings extends VuexModule implements ISettingsState {
   public showSidebarLogo = defaultSettings.showSidebarLogo;
   public sidebarTextTheme = defaultSettings.sidebarTextTheme;
   public isDialog = defaultSettings.isDialog;
+  public menuBackgroundImg = defaultSettings.menuBackgroundImg;
 
   @Mutation
   private CHANGE_SETTING(payload: { key: string; value: any }) {
