@@ -18,48 +18,48 @@ import jaLocale from "./ja";
 Vue.use(VueI18n);
 
 const messages = {
-    en: {
-        ...enLocale,
-        ...elementEnLocale
-    },
-    zh: {
-        ...zhLocale,
-        ...elementZhLocale
-    },
-    es: {
-        ...esLocale,
-        ...elementEsLocale
-    },
-    ja: {
-        ...jaLocale,
-        ...elementJaLocale
-    }
+  en: {
+    ...enLocale,
+    ...elementEnLocale
+  },
+  zh: {
+    ...zhLocale,
+    ...elementZhLocale
+  },
+  es: {
+    ...esLocale,
+    ...elementEsLocale
+  },
+  ja: {
+    ...jaLocale,
+    ...elementJaLocale
+  }
 };
 const missing = (locale, key, vm) => {
-    return key.substr(key.lastIndexOf(".") + 1);
+  return key.substr(key.lastIndexOf(".") + 1);
 };
 export const getLocale = () => {
-    const cookieLanguage = getLanguage();
-    if (cookieLanguage) {
-        return cookieLanguage;
-    }
+  const cookieLanguage = getLanguage();
+  if (cookieLanguage) {
+    return cookieLanguage;
+  }
 
-    const language = navigator.language.toLowerCase();
-    const locales = Object.keys(messages);
-    for (const locale of locales) {
-        if (language.indexOf(locale) > -1) {
-            return locale;
-        }
+  const language = navigator.language.toLowerCase();
+  const locales = Object.keys(messages);
+  for (const locale of locales) {
+    if (language.indexOf(locale) > -1) {
+      return locale;
     }
+  }
 
-    // Default language is english
-    return "en";
+  // Default language is english
+  return "en";
 };
 
 const i18n = new VueI18n({
-    locale: getLocale(),
-    messages,
-    missing
+  locale: getLocale(),
+  messages,
+  missing
 });
 
 export default i18n;

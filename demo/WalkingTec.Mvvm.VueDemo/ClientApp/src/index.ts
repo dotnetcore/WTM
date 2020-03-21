@@ -15,6 +15,7 @@ import directives from "@/vue-custom/directive/index";
 import filters from "@/vue-custom/filters/index";
 import component from "@/vue-custom/component/index";
 import prototypes from "@/vue-custom/prototype/index";
+import "chartist/dist/chartist.min.css";
 
 Vue.use(ElementUI, {
   size: AppModule.size, // config.elSize, // Set element-ui default size
