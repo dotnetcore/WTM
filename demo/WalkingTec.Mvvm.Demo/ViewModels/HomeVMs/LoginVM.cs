@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
             //查找登录用户的数据权限
-            var dpris = DC.Set<DataPrivilege>()
+            var dpris = DC.Set<DataPrivilege>().AsNoTracking()
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .Distinct()
                 .ToList();
@@ -63,14 +63,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 ITCode = user.ITCode,
                 Name = user.Name,
                 PhotoId = user.PhotoId,
-                Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
-                Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
+                Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
+                Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
                 DataPrivileges = dpris
             };
             if (ignorePris == false)
             {
                 //查找登录用户的页面权限
-                var pris = DC.Set<FunctionPrivilege>()
+                var pris = DC.Set<FunctionPrivilege>().AsNoTracking()
                     .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Distinct()
                     .ToList();
