@@ -1453,7 +1453,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmDatePicker placeholder="""" />");
+                            fieldstr2.AppendLine($@"                formItem: <WtmRangePicker placeholder="""" />");
                         }
                     }
                     fieldstr2.Append("            }");
