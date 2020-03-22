@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Json
 {
@@ -16,12 +17,19 @@ namespace WalkingTec.Mvvm.Mvc.Json
         /// <returns></returns>
         protected override JsonConverter ResolveContractConverter(Type objectType)
         {
-            if (objectType != typeof(string))
+            if (objectType == typeof(DateRange))
             {
-                return base.ResolveContractConverter(objectType);
+                return new DateRangeConvert();
             }
+            else
+            {
+                if (objectType != typeof(string))
+                {
+                    return base.ResolveContractConverter(objectType);
+                }
 
-            return new StringIgnoreLTGTConvert();
+                return new StringIgnoreLTGTConvert();
+            }
         }
     }
 
