@@ -93,16 +93,16 @@ export default class Utils {
       style,
       slot
     };
-    // console.log("props.placeholder", props.placeholder);
-    // if (!props.placeholder) {
-    //   compData.props.placeholder = `请输入${option.label}`;
-    // }
-    // console.log("input: compData:", key, _t.formData[key]);
-    // compData.props.placeholder = compData.props.placeholder
-    //   ? compData.props.placeholder
-    //   : `请输入${label}`;
+    let placeholder = `请输入${option.label}`;
+    if (props && props.placeholder) {
+      placeholder = props.placeholder;
+    }
     return (
-      <el-input v-model={_t.formData[key]} {...compData}>
+      <el-input
+        v-model={_t.formData[key]}
+        {...compData}
+        placeholder={placeholder}
+      >
         {slot}
       </el-input>
     );
