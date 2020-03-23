@@ -321,7 +321,7 @@ namespace WalkingTec.Mvvm.Mvc
                             ValidateAudience = true,
                             ValidAudience = jwtOptions.Audience,
 
-                            ValidateIssuerSigningKey = false,
+                            ValidateIssuerSigningKey = true,
                             IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
 
                             ValidateLifetime = true
