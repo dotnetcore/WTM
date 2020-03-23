@@ -158,6 +158,10 @@ export default class extends Vue {
         type: "wtmSlot",
         label: "自定义",
         slotKey: "skey"
+      },
+      uploadId: {
+        type: "upload",
+        label: "上传文件"
       }
     }
   };

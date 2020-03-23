@@ -281,17 +281,32 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key } = option;
-    const on = translateEvents(option.events, _t);
+    const { style, props, slot, directives, key, events } = option;
+    const actionApi = "/api/_file/upload";
+    const fileApi = "/api/_file/downloadFile/";
     const compData = {
       directives,
-      on,
-      props,
-      style,
-      slot
+      on: events || {},
+      props: props || {},
+      style
     };
-    compData.props["file-list"] = _t.formData[key];
-    return <el-upload {...compData}>{option.children}</el-upload>;
+    compData.props["file-list"] = [];
+    compData.props.limit = 1;
+    if (!compData.props.action) {
+      compData.props.action = actionApi;
+    }
+    if (!compData.props.onSuccess) {
+      compData.props.onSuccess = (res, file) => {
+        _t.formData[key] = res.Id;
+      };
+    }
+    if (_t.formData[key]) {
+      compData.props["file-list"] = [
+        { name: "defalut", url: fileApi + _t.formData[key] }
+      ];
+    }
+    const defaultSlot = <el-button type="primary">点击上传</el-button>;
+    return <el-upload {...compData}>{slot || defaultSlot}</el-upload>;
   }
 
   private generateWtmUploadImgComponent(h, option, vm?) {
