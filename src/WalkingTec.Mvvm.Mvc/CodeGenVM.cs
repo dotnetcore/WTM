@@ -1676,10 +1676,11 @@ namespace WalkingTec.Mvvm.Mvc
                                 fieldstr.AppendLine($@"                    type: ""transfer"",
                     mapKey: ""{item.SubIdField}"",
                     props: {{
-                                data: this.get{subtype.Name}Data.map(item => ({{
-                                    key: item.Value,
+                        data: this.get{subtype.Name}Data.map(item => ({{
+                            key: item.Value,
                             label: item.Text
-                                }})),
+                        }})),
+                        titles: [""所有"", ""已选""],
                         filterable: true,
                         filterMethod: filterMethod
                     }},
@@ -1786,7 +1787,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 else
                                 {
                                     actions.AppendLine($@"      <template #PhotoId=""rowData"">
-        <el-image v-if=""!!rowData.row.{fk}""  :src=""'/api/_file/downloadFile/'+rowData.row.{fk}"" fit=""cover"" />
+        <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/_file/downloadFile/'+rowData.row.{fk}"">下载</el-link>
       </template>
 ");
                                 }
