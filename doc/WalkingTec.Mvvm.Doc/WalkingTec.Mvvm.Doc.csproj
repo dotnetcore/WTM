@@ -13,6 +13,11 @@
   <ItemGroup>
     <None Remove="SetupFiles\Mvc\home\Reg.txt" />
     <None Remove="SetupFiles\Mvc\LoginController3.txt" />
+    <None Remove="SetupFiles\Spa\React\Program.txt" />
+    <None Remove="SetupFiles\Spa\React\Program3.txt" />
+    <None Remove="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <None Remove="SetupFiles\Spa\Vue\Program.txt" />
+    <None Remove="SetupFiles\Spa\Vue\Program3.txt" />
     <None Remove="SetupFiles\test\MockController3.txt" />
     <None Remove="SetupFiles\vms\LoginVM.txt" />
   </ItemGroup>
@@ -48,10 +53,12 @@
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program3.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program3.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj3.txt" />
     <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />

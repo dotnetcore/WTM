@@ -10,6 +10,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using WalkingTec.Mvvm.Core;
 
 namespace $ns$
 {
