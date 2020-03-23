@@ -281,7 +281,7 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key, events } = option;
+    const { style, props, slot, directives, key, events, label } = option;
     const actionApi = "/api/_file/upload";
     const fileApi = "/api/_file/downloadFile/";
     const compData = {
@@ -302,7 +302,7 @@ export default class Utils {
     }
     if (_t.formData[key]) {
       compData.props["file-list"] = [
-        { name: "defalut", url: fileApi + _t.formData[key] }
+        { name: label, url: fileApi + _t.formData[key] }
       ];
     }
     const defaultSlot = <el-button type="primary">点击上传</el-button>;
