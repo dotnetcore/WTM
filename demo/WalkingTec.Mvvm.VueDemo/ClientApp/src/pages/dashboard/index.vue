@@ -2,12 +2,7 @@
   <div class="dashboard-container">
     <el-row :gutter="12">
       <el-col :span="8" :xs="24">
-        <chart-card
-          :chart-data="dailySalesChart.data"
-          :chart-options="dailySalesChart.options"
-          :chart-type="dailySalesChart.type"
-          backgroundColor="blue"
-        >
+        <chart-card :chart-data="dailySalesChart.data" :chart-options="dailySalesChart.options" :chart-type="dailySalesChart.type" backgroundColor="blue">
           <template slot="content">
             <h4 class="title">Daily Sales</h4>
             <p class="category">
@@ -24,12 +19,7 @@
         </chart-card>
       </el-col>
       <el-col :span="8" :xs="24">
-        <chart-card
-          :chart-data="dataCompletedTasksChart.data"
-          :chart-options="dataCompletedTasksChart.options"
-          :chart-type="dataCompletedTasksChart.type"
-          backgroundColor="red"
-        >
+        <chart-card :chart-data="dataCompletedTasksChart.data" :chart-options="dataCompletedTasksChart.options" :chart-type="dataCompletedTasksChart.type" backgroundColor="red">
           <template slot="content">
             <h4 class="title">Email Subscription</h4>
             <p class="category">
@@ -45,11 +35,7 @@
         </chart-card>
       </el-col>
       <el-col :span="8" :xs="24">
-        <chart-card
-          :chart-data="emailsSubscriptionChart.data"
-          :chart-options="emailsSubscriptionChart.options"
-          backgroundColor="green"
-        >
+        <chart-card :chart-data="emailsSubscriptionChart.data" :chart-options="emailsSubscriptionChart.options" backgroundColor="green">
           <template slot="content">
             <h4 class="title">Completed Tasks</h4>
             <p class="category">
@@ -136,15 +122,14 @@
             <el-card shadow="hover">
               <div slot="header">快捷方式</div>
               <el-row class="lump-wrap" :gutter="10">
-                <el-col
-                  :span="6"
-                  v-for="item of shortcutList"
-                  :key="item.Value"
-                >
-                  <router-link class="link-a" :to="{ path: item.Url }">
-                    <i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i
-                    >{{ item.Text }}</router-link
-                  >
+                <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
+                  <el-link @click="onPush(item.Url)" :underline="false"><i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</el-link>
+                </el-col>
+                <el-col :span="6">
+                  <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>项目文档</el-link>
+                </el-col>
+                <el-col :span="6">
+                  <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>代码生成</el-link>
                 </el-col>
               </el-row>
             </el-card>
@@ -190,20 +175,13 @@
           <el-card shadow="hover">
             <div slot="header">框架特点</div>
             <i class="el-icon-check"></i>一键生成WTM项目<br />
-            <i class="el-icon-check"></i
-            >一键生成增删改查，导入导出，批量操作代码<br />
-            <i class="el-icon-check"></i
-            >支持一对多，多对多关联模型的识别和代码生成<br />
-            <i class="el-icon-check"></i
-            >支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
-            <i class="el-icon-check"></i
-            >支持sqlserver，mysql，pgsql三种数据库<br />
-            <i class="el-icon-check"></i
-            >封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
-            <i class="el-icon-check"></i
-            >提供了很多基类，封装了绝大部分后台常用操作<br />
-            <i class="el-icon-check"></i
-            >提供了用户，角色，用户组，菜单，日志等常用模块<br />
+            <i class="el-icon-check"></i>一键生成增删改查，导入导出，批量操作代码<br />
+            <i class="el-icon-check"></i>支持一对多，多对多关联模型的识别和代码生成<br />
+            <i class="el-icon-check"></i>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
+            <i class="el-icon-check"></i>支持sqlserver，mysql，pgsql三种数据库<br />
+            <i class="el-icon-check"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
+            <i class="el-icon-check"></i>提供了很多基类，封装了绝大部分后台常用操作<br />
+            <i class="el-icon-check"></i>提供了用户，角色，用户组，菜单，日志等常用模块<br />
             <i class="el-icon-check"></i>支持数据权限的开发和配置<br />
             <i class="el-icon-check"></i>支持读写分离和数据库分库
           </el-card>
@@ -224,20 +202,10 @@
               WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
             </p>
             <p>
-              —— 框架开源地址：<el-link
-                href="https://github.com/dotnetcore/WTM"
-                target="_blank"
-                type="primary"
-                >https://github.com/dotnetcore/WTM</el-link
-              >
+              —— 框架开源地址：<el-link href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</el-link>
             </p>
             <p>
-              —— 框架在线文档：<el-link
-                href="https://wtmdoc.walkingtec.cn"
-                target="_blank"
-                type="primary"
-                >https://wtmdoc.walkingtec.cn</el-link
-              >
+              —— 框架在线文档：<el-link href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</el-link>
             </p>
             <p>
               —— 框架QQ交流群：694148336
@@ -263,206 +231,213 @@ import StatsCard from "./views/stats-card";
 import { Action, State } from "vuex-class";
 import store from "./store/index";
 @Component({
-  name: "Dashboard",
-  store,
-  components: {
-    EChartsModule,
-    ChartCard,
-    StatsCard
-  }
+    name: "Dashboard",
+    store,
+    components: {
+        EChartsModule,
+        ChartCard,
+        StatsCard
+    }
 })
 export default class extends Vue {
-  value: Date = new Date();
-  shortcuts: any[] = [
-    "日志管理",
-    "用户组管理",
-    "角色管理",
-    "用户管理",
-    "菜单管理",
-    "数据权限"
-  ];
-  get shortcutList() {
-    return RoutesModule.pageList.filter(item =>
-      this.shortcuts.includes(item.Text)
-    );
-  }
-  @Action
-  getGithubInfo;
-  @State
-  getGithubInfoData;
-
-  dailySalesChart: Object = {
-    data: {
-      labels: ["M", "T", "W", "T", "F", "S", "S"],
-      series: [[12, 17, 7, 17, 23, 18, 38]]
-    },
-    options: {
-      lineSmooth: this.$Chartist.Interpolation.cardinal({
-        tension: 0
-      }),
-      low: 0,
-      high: 50,
-      chartPadding: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-      }
-    },
-    type: "Line"
-  };
-
-  dataCompletedTasksChart: Object = {
-    type: "Bar",
-    data: {
-      labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-      series: [[230, 750, 450, 300, 280, 240, 200, 190]]
-    },
-
-    options: {
-      lineSmooth: this.$Chartist.Interpolation.cardinal({
-        tension: 0
-      }),
-      low: 0,
-      high: 1000,
-      chartPadding: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-      }
+    value: Date = new Date();
+    shortcuts: any[] = [
+        "日志管理",
+        "用户组管理",
+        "角色管理",
+        "用户管理",
+        "菜单管理",
+        "数据权限"
+    ];
+    get shortcutList() {
+        return RoutesModule.pageList.filter(item =>
+            this.shortcuts.includes(item.Text)
+        );
     }
-  };
+    @Action
+    getGithubInfo;
+    @State
+    getGithubInfoData;
 
-  emailsSubscriptionChart: Object = {
-    data: {
-      labels: [
-        "Ja",
-        "Fe",
-        "Ma",
-        "Ap",
-        "Mai",
-        "Ju",
-        "Jul",
-        "Au",
-        "Se",
-        "Oc",
-        "No",
-        "De"
-      ],
-      series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
-    },
-    options: {
-      axisX: {
-        showGrid: false
-      },
-      low: 0,
-      high: 1000,
-      chartPadding: {
-        top: 0,
-        right: 5,
-        bottom: 0,
-        left: 0
-      }
-    },
-    responsiveOptions: [
-      [
-        "screen and (max-width: 640px)",
-        {
-          seriesBarDistance: 5,
-          axisX: {
-            labelInterpolationFnc: function(value) {
-              return value[0];
+    dailySalesChart: Object = {
+        data: {
+            labels: ["M", "T", "W", "T", "F", "S", "S"],
+            series: [[12, 17, 7, 17, 23, 18, 38]]
+        },
+        options: {
+            lineSmooth: this.$Chartist.Interpolation.cardinal({
+                tension: 0
+            }),
+            low: 0,
+            high: 50,
+            chartPadding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
             }
-          }
-        }
-      ]
-    ]
-  };
+        },
+        type: "Line"
+    };
 
-  mounted() {
-    this.getGithubInfo();
-  }
+    dataCompletedTasksChart: Object = {
+        type: "Bar",
+        data: {
+            labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
+            series: [[230, 750, 450, 300, 280, 240, 200, 190]]
+        },
+
+        options: {
+            lineSmooth: this.$Chartist.Interpolation.cardinal({
+                tension: 0
+            }),
+            low: 0,
+            high: 1000,
+            chartPadding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
+            }
+        }
+    };
+
+    emailsSubscriptionChart: Object = {
+        data: {
+            labels: [
+                "Ja",
+                "Fe",
+                "Ma",
+                "Ap",
+                "Mai",
+                "Ju",
+                "Jul",
+                "Au",
+                "Se",
+                "Oc",
+                "No",
+                "De"
+            ],
+            series: [
+                [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+            ]
+        },
+        options: {
+            axisX: {
+                showGrid: false
+            },
+            low: 0,
+            high: 1000,
+            chartPadding: {
+                top: 0,
+                right: 5,
+                bottom: 0,
+                left: 0
+            }
+        },
+        responsiveOptions: [
+            [
+                "screen and (max-width: 640px)",
+                {
+                    seriesBarDistance: 5,
+                    axisX: {
+                        labelInterpolationFnc: function(value) {
+                            return value[0];
+                        }
+                    }
+                }
+            ]
+        ]
+    };
+
+    mounted() {
+        this.getGithubInfo();
+    }
+
+    onPush(path) {
+        this.$router.push(path);
+    }
 }
 </script>
 <style lang="less" rel="stylesheet/less" scoped>
 @import "~@/assets/css/mixin.less";
 .dashboard-container {
-  padding: 10px;
-  p {
-    text-indent: 2em;
-  }
-  .title {
-    margin-bottom: 5px;
-    font-weight: 300;
-    font-size: 16px;
-  }
-  .category {
-    text-indent: 0;
-    color: #999999;
-    .text-success {
-      color: red;
+    padding: 10px;
+    p {
+        text-indent: 2em;
     }
-  }
-  .stats {
-    color: #999999;
-  }
-
-  .el-row {
-    margin-bottom: 20px;
-  }
-  .el-card__header {
-    color: #333;
-    font-size: 14px;
-  }
-  .el-card {
-    font-size: 14px;
-    color: #666;
-  }
-  .lump-wrap {
-    margin-bottom: 0;
-    min-height: 160px;
-    &.cxt-left {
-      .el-col {
-        .flexalign(flex-start);
-        box-sizing: border-box;
-        padding-bottom: 10px;
-        div {
-          background-color: #f8f8f8;
-          width: 100%;
-          box-sizing: border-box;
-          padding: 0 10px;
-        }
-      }
-    }
-    .el-col {
-      .center(column);
-      i {
-        width: 100%;
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
-        border-radius: 2px;
-        font-size: 30px;
-        background-color: #f8f8f8;
-      }
-      h3 {
-        padding: 5px 0;
-        font-size: 12px;
-      }
-      p {
-        font-style: normal;
-        font-size: 30px;
+    .title {
+        margin-bottom: 5px;
         font-weight: 300;
-        color: #009688;
-        text-indent: 0;
-      }
-      .link-a {
-        color: #666;
-        font-size: 14px;
-        text-align: center;
-      }
+        font-size: 16px;
     }
-  }
+    .category {
+        text-indent: 0;
+        color: #999999;
+        .text-success {
+            color: red;
+        }
+    }
+    .stats {
+        color: #999999;
+    }
+
+    .el-row {
+        margin-bottom: 20px;
+    }
+    .el-card__header {
+        color: #333;
+        font-size: 14px;
+    }
+    .el-card {
+        font-size: 14px;
+        color: #666;
+    }
+    .lump-wrap {
+        margin-bottom: 0;
+        min-height: 160px;
+        text-align: center;
+        &.cxt-left {
+            .el-col {
+                .flexalign(flex-start);
+                box-sizing: border-box;
+                padding-bottom: 10px;
+                div {
+                    background-color: #f8f8f8;
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 0 10px;
+                }
+            }
+        }
+        .el-col {
+            .center(column);
+            i {
+                width: 100%;
+                height: 60px;
+                line-height: 60px;
+                text-align: center;
+                border-radius: 2px;
+                font-size: 30px;
+                background-color: #f8f8f8;
+            }
+            h3 {
+                padding: 5px 0;
+                font-size: 12px;
+            }
+            p {
+                font-style: normal;
+                font-size: 30px;
+                font-weight: 300;
+                color: #009688;
+                text-indent: 0;
+            }
+            .link-a {
+                color: #666;
+                font-size: 14px;
+                text-align: center;
+            }
+        }
+    }
 }
 </style>
