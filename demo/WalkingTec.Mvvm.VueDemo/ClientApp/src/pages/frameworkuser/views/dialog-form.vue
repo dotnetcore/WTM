@@ -115,6 +115,7 @@ export default class Index extends Vue {
               key: item.Value,
               label: item.Text
             })),
+            titles: ["所有", "已选"],
             filterable: true,
             filterMethod: filterMethod,
             "filter-placeholder": "请输入角色"
@@ -131,7 +132,7 @@ export default class Index extends Vue {
               key: item.Value,
               label: item.Text
             })),
-            titles: ["", ""],
+            titles: ["所有", "已选"],
             filterable: true,
             filterMethod: filterMethod,
             "filter-placeholder": "请输入用户组"
