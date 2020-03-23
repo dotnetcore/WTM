@@ -96,6 +96,11 @@
     "RefreshTokenExpires": 86400,
     "LoginPath": "/Login/Login"
   },
+  "Domains": {
+    "github": {
+      "Address": "https://api.github.com"
+    }
+  },
   "AppSettings": {
     "key1":"value1",
     "key2":"value2"

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -91,6 +92,11 @@ namespace WalkingTec.Mvvm.Mvc
                     ViewData["code"] = vm.GenerateReactView(vm.PreviewFile);
                 }
 
+            }
+            else if(vm.UI == UIEnum.VUE)
+            {
+                List<string> apineeded = new List<string>();
+                ViewData["code"] = vm.GenerateVUEView(vm.PreviewFile,apineeded);
             }
             else if (vm.PreviewFile.EndsWith("View"))
             {
