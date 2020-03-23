@@ -17,8 +17,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="ClientApp\dist\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\dist\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**;$(SpaRoot)dist\**;$(SpaRoot)dist\**;$(SpaRoot).awcache\**;$(SpaRoot).cache-loader\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="ClientApp\dist\**" />
+    <None Remove="ClientApp\dist\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />

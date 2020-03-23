@@ -12,6 +12,14 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="GeneratorFiles\Spa\Vue\config.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\index.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\store\api.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\store\index.txt" />
+    <None Remove="GeneratorFiles\Spa\Vue\views\dialog-form.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ControllerTestTopPoco.txt" />
@@ -46,6 +54,11 @@
 
   <ItemGroup>
     <EmbeddedResource Include="framework_layui.js" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\config.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\index.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\store\api.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\store\index.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\views\dialog-form.txt" />
     <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
     <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />

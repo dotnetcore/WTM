@@ -41,10 +41,12 @@
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program3.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program3.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj3.txt" />
     <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />

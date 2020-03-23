@@ -34,6 +34,39 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        #region Domains
+
+        private Dictionary<string,FrameworkDomain> _domains;
+
+        /// <summary>
+        /// ConnectionStrings
+        /// </summary>
+        public Dictionary<string, FrameworkDomain> Domains
+        {
+            get
+            {
+                if (_domains == null)
+                {
+                    _domains = new Dictionary<string, FrameworkDomain>();
+                }
+                return _domains;
+            }
+            set
+            {
+                _domains = value;
+                foreach (var item in _domains)
+                {
+                    if(item.Value != null)
+                    {
+                        item.Value.Name = item.Key;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
         #region QuickDebug
 
         private bool? _isQuickDebug;
