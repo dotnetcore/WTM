@@ -1,0 +1,24 @@
+{
+  "defaultSeverity": "error",
+  // "rulesDirectory": ["tslint-plugin-prettier"],
+  // "extends": ["tslint-config-standard", "tslint-config-prettier"],
+  "extends": "tslint-config-standard",
+  "globals": {
+    "require": true
+  },
+  "rules": {
+    // // "prettier": [
+    // //   true,
+    // //   {
+    // //     "singleQuote": true,
+    // //     "semi": false,
+    // //     "trailingComma": "es5"
+    // //   }
+    // // ],
+    // "space-before-function-paren": false,
+    // "whitespace": [false],
+    // "no-consecutive-blank-lines": false,
+    // "no-angle-bracket-type-assertion": false,
+    // "no-empty-character-class": false
+  }
+}
