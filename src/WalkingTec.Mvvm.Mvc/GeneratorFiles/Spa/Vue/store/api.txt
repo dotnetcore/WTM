@@ -1,6 +1,6 @@
 import config from "@/config/index";
 import { contentType } from "@/config/enum";
-const reqPath = config.headerApi + "/_FrameworkUserBase/";
+const reqPath = config.headerApi + "/$modelname$/";
 
 // 列表
 const search = {
