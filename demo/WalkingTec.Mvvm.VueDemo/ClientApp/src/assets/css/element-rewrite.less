@@ -1,34 +1,64 @@
 /*
  * element样式重载
  **/
-
-.el-table 
-{
-    .cell {
-        line-height: 40px;
+.el-table {
+  .cell {
+    line-height: 40px;
+  }
+  td,
+  th {
+    padding: 0;
+  }
+  thead {
+    color: #333333;
+    th {
+      //  border-bottom-width: 2px !important;
+      background: rgba(243, 248, 255, 1);
+      font-size: 14px;
+      font-weight: inherit;
     }
-    td, th {
-        padding: 0;
-    }
-    thead {
-        color: #333333;
-        th {
-           //  border-bottom-width: 2px !important;
-            background: rgba(243,248,255,1);
-            font-size: 14px;
-            font-weight: inherit;
-        }
-    }
-    tr {
-        background-color: inherit;
-    }
+  }
+  tr {
+    background-color: inherit;
+  }
 }
 .el-table__body-wrapper {
-    overflow: initial;
+  overflow: initial;
 }
 .el-table--enable-row-transition .el-table__body td {
-    transition: background-color 0s ease;
+  transition: background-color 0s ease;
 }
 .home-talbe {
-    margin-top: 10px;
+  margin-top: 10px;
+}
+.el-menu--collapse .el-submenu .el-submenu__title .el-submenu__icon-arrow {
+  display: none;
+}
+.el-menu--collapse .el-menu-item span,
+.el-menu--collapse .el-submenu > .el-submenu__title span {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: inline-block;
+}
+.el-pagination {
+  text-align: right;
+}
+
+.el-select {
+  width: 100%;
+}
+
+.el-transfer {
+  display: flex;
+  .el-transfer__buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .el-button + .el-button {
+      margin-left: 0;
+    }
+  }
 }
