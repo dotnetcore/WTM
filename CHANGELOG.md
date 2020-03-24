@@ -1,5 +1,13 @@
 # 更新日志
 
+##3.5.0 以及 2.5.0 发布，你心心念的Vue来了！！！vue目前还属于预览版，欢迎大家多提宝贵意见
+* **新增：**  现在官网可以生成Vue的项目了
+* **新增：**  VUE项目可以使用和Layui，React相同的代码生成
+* **新增：**  appsettings文件中增加了Domains的配置，用来注册httpclient。在Controller和VM中通过ConfigInfo.Domains["key"].CallAPI来方便高效的调用其他网站的api
+* **修改：**  修复代码生成器会将bool的搜索条件啊生成两次的bug
+* **修改：**  修复继承自TopBasePoco的Model在DoAdd中没有正确的添加子表数据的bug
+* **修改：**  修复用户没有权限时没有正确返回401错误的bug
+
 ## v3.1.x
 
 3.1版本正式发布，支持.netcore 3.1，与2.4.x最新版本在功能上同步更新
