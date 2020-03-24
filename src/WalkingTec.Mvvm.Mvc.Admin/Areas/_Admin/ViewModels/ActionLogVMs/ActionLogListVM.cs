@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 //.CheckEqual(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.IP, x=>x.IP)
-                .CheckBetween(Searcher.StartActionTime, Searcher.EndActionTime?.Date.AddDays(1), x=>x.ActionTime, includeMax:false)
+                .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x=>x.ActionTime, includeMax:false)
                 .Select(x=>new ActionLog()
                 {
                     ID          = x.ID,

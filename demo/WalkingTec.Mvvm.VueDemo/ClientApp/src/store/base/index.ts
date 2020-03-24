@@ -1,75 +1,97 @@
 /**
- * 根据service 创建store 注：store如果没有逻辑可以用
- *
- * 目前创建 state，actions，mutations 部分
+ * 根据service中 创建store 初始结构
+ * 注：store如果没有逻辑可以用
+ * 目前只创建 state，actions，mutations 部分
  */
-import service from "@/service/service";
+import _request from "@/util/service";
 import { firstUpperCase } from "@/util/string";
+import attributes from "./attributes";
+
+interface StoreType {
+  state: {};
+  actions: {};
+  mutations: {};
+  modules?: {};
+  getters?: {};
+}
+
+const stoBase = {
+  // 接口列表key（service中）
+  apiKeys: "actionList",
+  // 返回命名
+  getKeyName: key => {
+    const upperKey = firstUpperCase(key);
+    const mutationsKey = `set${upperKey}_mutations`;
+    const stateKey = `${key}Data`;
+    return { mutationsKey, stateKey };
+  },
+  // service接口列表的名称作为state的key，并判断是否包含List，如果包含List定位数据
+  stateDef: (keyName, dataType) => {
+    if (keyName.indexOf("List") > -1 || dataType === "array") {
+      return [];
+    } else {
+      return { obj: {} };
+    }
+  },
+  /**
+   *  store > mutations
+   *  返回数据，优先使用Entity，如果类型不一样，自定义mutations
+   */
+  mutationsDef: stateKey => {
+    return (state, data) => {
+      // 接口返回数据结构 如果:{data: {}}
+      state[stateKey] = data.Entity || data;
+    };
+  },
+  // store > action
+  actionsDef: (serviceItem, mutationsKey: string, cb?: Function) => {
+    return ({ commit }, params) => {
+      const option = Object.assign({ data: params }, serviceItem);
+      return _request(option, null).then(result => {
+        if (serviceItem.method === "get") {
+          commit(mutationsKey, result || {});
+          // 判断是否回调方法
+          cb && cb(result, commit);
+        }
+        return result || {};
+      });
+    };
+  }
+};
 
 /**
  * 根据service 创建store
- * @param {*} serviceUnit
+ * @param {*} serviceUnit: service接口列表
+ * stoBase.apiKeys [propName: string]: string;
  */
-export function createStore(serviceUnit, callback?: Function) {
-    const store = {
-        state: {},
-        actions: {},
-        mutations: {}
-    };
-    for (const key in serviceUnit) {
-        // 参数
-        const request = serviceUnit[key];
-        let serviceItem = {
-            action: "",
-            method: ""
-        };
-        if (typeof request === "function") {
-            serviceItem = request({});
-        } else {
-            serviceItem = request;
-        }
-        const upperKey = firstUpperCase(key);
-        const mutationsKey = `set${upperKey}_mutations`;
-        const actionsKey =
-            (serviceItem.action ? serviceItem.action : serviceItem.method) +
-            upperKey;
-        // （state，mutations）get定义，post不定义
-        if (serviceItem.method === "get" || serviceItem.action === "get") {
-            // state
-            store.state[key] = { obj: "" };
-            if (key.indexOf("List") > -1) {
-                store.state[key] = [];
-            } else {
-                store.state[key] = { obj: {} };
-            }
-            // mutations
-            store.mutations[mutationsKey] = (state, data) => {
-                // console.log('data', key, data);
-                state[key] = data;
-            };
-        }
-
-        // actions instanceof
-        store.actions[actionsKey] = ({ commit }, params) => {
-            const option = { data: params };
-            if (typeof request === "function") {
-                Object.assign(option, request(params));
-            } else {
-                Object.assign(option, request);
-            }
-            return service(option, null).then(result => {
-                if (
-                    serviceItem.method === "get" ||
-                    serviceItem.action === "get"
-                ) {
-                    commit(mutationsKey, result || {});
-                    // 判断是否回调方法
-                    callback && callback(result, commit);
-                    return result || {};
-                }
-                return result;
-            });
-        };
+export default (serviceUnit, callback?: Function) => {
+  const store: StoreType = {
+    state: { [stoBase.apiKeys]: {} }, // actionList 接口列表
+    actions: {},
+    mutations: {},
+    modules: {}
+  };
+  for (const key in serviceUnit) {
+    const serviceItem = serviceUnit[key];
+    const { mutationsKey, stateKey } = stoBase.getKeyName(key);
+    // 接口列表
+    store.state[stoBase.apiKeys][key] = serviceItem.url;
+    //  get定义（state，mutations），post/put 不定义
+    if (serviceItem.method === "get") {
+      store.state[stateKey] = stoBase.stateDef(key, serviceItem.dataType);
+      // mutations
+      store.mutations[mutationsKey] = stoBase.mutationsDef(stateKey);
     }
-    return store;
-}
+    // actions instanceof
+    store.actions[key] = stoBase.actionsDef(
+      serviceItem,
+      mutationsKey,
+      callback
+    );
+  }
+  // 公共模块添加
+  store.modules = {
+    attributes
+  };
+  return store;
+};

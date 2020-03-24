@@ -1,23 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import reqLogin from "@/service/login";
-import { createStore } from "../base/index";
+import createStore from "@/store/base/index";
 Vue.use(Vuex);
+const newStore = createStore(reqLogin);
 
-const { state, actions, mutations } = createStore(reqLogin);
-const modules = {};
-const getters = {};
-
-Object.assign(state, {});
-Object.assign(mutations, {});
-Object.assign(actions, {});
-const store = new Vuex.Store({
+export default new Vuex.Store({
     strict: true,
-    actions,
-    getters,
-    state,
-    mutations,
-    modules
+    getters: {},
+    ...newStore
 });
-
-export default store;

@@ -1,0 +1,83 @@
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Swashbuckle.AspNetCore.Swagger;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.TagHelpers.LayUI;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using WalkingTec.Mvvm.Core;
+
+namespace $ns$
+{
+    public class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            BuildWebHost(args).Run();
+        }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddWTMLogger();
+                })
+                .ConfigureServices(x =>
+                {
+                    x.AddFrameworkService();
+                    x.AddLayui();
+                    x.AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                        c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                        {
+                            Description = "JWT Bearer",
+                            Name = "Authorization",
+                            In = "header",
+                            Type = "apiKey"
+                        });
+                        c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                        {
+                            { "Bearer", new string[] { } }
+                        });
+                    });
+                    x.AddSpaStaticFiles(configuration =>
+                    {
+                        configuration.RootPath = "ClientApp/build";
+                    });
+                })
+                .Configure(x =>
+                {
+                    var env = x.ApplicationServices.GetService<IHostingEnvironment>();
+                    x.UseSwagger();
+                    x.UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    });
+                    if (env.IsDevelopment())
+                    {
+                        x.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                        {
+                            HotModuleReplacement = false,
+                            ConfigFile = "config/webpack.dev.js",
+                            ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
+
+                        });
+                    }
+                    x.UseSpaStaticFiles();
+                    x.UseFrameworkService();
+
+                })
+                .Build();
+
+    }
+}

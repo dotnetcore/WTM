@@ -376,6 +376,13 @@ namespace WalkingTec.Mvvm.Core
             return values.Length == 2 && TryParse(values[0], values[1], DefaultEpoch, out result);
         }
 
+        public static bool TryParse(string[] input, out DateRange result)
+        {
+            result = null;
+            return input.Length == 2 && TryParse(input[0], input[1], DefaultEpoch, out result);
+        }
+
+
         public static bool TryParse(string startTime, string endTime, DateTime epoch, out DateRange result)
         {
             result = null;
