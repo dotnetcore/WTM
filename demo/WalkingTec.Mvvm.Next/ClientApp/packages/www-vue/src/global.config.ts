@@ -60,8 +60,8 @@ class ConfigStore {
         title: 'WalkingTec MVVM',
         // 使用 IconFont 的图标配置
         iconfontUrl: '',
-        // 弹框类型
-        infoType: "Modal",
+        // 弹框类型 drawer modal
+        infoType: "modal",
         /**
         * AgGrid 主题
         * ag-theme-balham

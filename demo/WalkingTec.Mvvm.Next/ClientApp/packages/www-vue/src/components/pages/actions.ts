@@ -41,7 +41,7 @@ export class ViewAction extends Vue {
    * 详情 数据 唯一标识 属性
    */
   @Prop({ default: () => "ID" }) GUID: string;
-  @Prop({ default: () => "70vw" }) width: string | number;
+  @Prop({  }) width: string | number;
   /**
    * 表单域
    */

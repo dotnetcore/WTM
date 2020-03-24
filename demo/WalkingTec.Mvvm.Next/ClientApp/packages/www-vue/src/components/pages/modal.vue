@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    v-if="$GlobalConfig.settings.infoType==='Modal'"
+    v-if="$GlobalConfig.settings.infoType==='modal'"
     wrapClassName="page-action-modal"
     :class="slotName"
     key="page-action-modal"
@@ -42,7 +42,7 @@ import { messages } from "./messages";
 // import { i18n } from "../../locale";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
-  @Prop({ default: () => "70vw" }) width: string | number;
+  @Prop({ default: () => "900px" }) width: string | number;
   /**
    * 表单域
    */
