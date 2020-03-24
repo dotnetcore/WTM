@@ -151,9 +151,9 @@ window.ff = {
             child.document.close();
             $(child.document).ready(function () {
               setTimeout(function () {
-                $('#Lay_app_body_main', child.document).html(data);
+                  $('#LAY_app_body', child.document).html(data);
                 $(child.document).attr("title", title);
-              }, 500);
+              }, 100);
             });
           }
           layer.close(index);
