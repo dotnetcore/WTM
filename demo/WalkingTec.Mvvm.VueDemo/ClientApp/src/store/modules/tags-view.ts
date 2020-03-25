@@ -34,9 +34,13 @@ class TagsView extends VuexModule implements ITagsViewState {
 
   @Mutation
   private ADD_CACHED_VIEW(view: ITagView) {
-    if (this.cachedViews.includes(view.name)) return;
+    let cachedPath = "";
+    if (view.path && _.startsWith(view.path, "/")) {
+      cachedPath = view.path.substr(1);
+    }
+    if (this.cachedViews.includes(cachedPath)) return;
     if (!view.meta.noCache) {
-      this.cachedViews.push(view.name);
+      this.cachedViews.push(cachedPath);
     }
   }
 
@@ -53,7 +57,8 @@ class TagsView extends VuexModule implements ITagsViewState {
   @Mutation
   private DEL_CACHED_VIEW(view: ITagView) {
     for (const [i, v] of Object.entries(this.cachedViews)) {
-      if (v === view.name) {
+      const cachedPath = view.path ? view.path.substr(1) : view.name;
+      if (v === cachedPath) {
         this.cachedViews.splice(_.parseInt(i), 1);
         break;
       }

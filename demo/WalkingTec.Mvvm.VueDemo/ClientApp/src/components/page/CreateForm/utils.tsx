@@ -118,7 +118,10 @@ export default class Utils {
         const label = child.Text || child.text;
         const slot = child.slot;
         return (
-          <el-option {...{ props: { value, label, ...child.props } }}>
+          <el-option
+            key={child.Value}
+            {...{ props: { value, label, ...child.props } }}
+          >
             {slot}
           </el-option>
         );

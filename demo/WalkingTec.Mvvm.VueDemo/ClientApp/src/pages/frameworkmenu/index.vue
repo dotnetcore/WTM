@@ -26,6 +26,7 @@ import DialogForm from "./views/dialog-form.vue";
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
+    name: "frameworkmenu",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: { DialogForm }
@@ -34,17 +35,14 @@ export default class Index extends Vue {
     // tabledata转tree格式
     get treeData() {
         const list = this["tableData"];
-        const tree = list.filter(parent => {
-            if (!parent.ParentID) {
-                const branchArr = list.filter(child => {
-                    return parent.ID === child.ParentID;
-                });
-                if (branchArr.length > 0) {
-                    parent.children = branchArr;
-                }
-            }
-            return !parent.ParentID;
-        });
+        const getChilders = (pid, children = []) => {
+            _.filter(list, ["ParentID", pid]).map(item => {
+                const itemChild = getChilders(item.ID, item.children);
+                children.push({ ...item, children: itemChild });
+            });
+            return children;
+        };
+        const tree = getChilders("", []);
         return tree;
     }
 }

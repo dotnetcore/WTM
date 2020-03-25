@@ -81,16 +81,24 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
       if (!this.dialogData) {
         console.warn("dialogData 没有id数据", this.dialogData);
       }
+      const params = this.beforeOpen(this.dialogData) || this.dialogData;
       if (this["status"] !== this["$actionType"].add) {
-        const resData = { ...this.dialogData, id: this.dialogData.ID };
+        const resData = { ...params, id: params.ID };
         this["detail"](resData).then(res => {
           this.setFormData(res);
-          this["afterOpen"](res);
+          this.afterOpen(res);
         });
       } else {
         this.onReset();
-        this["afterOpen"]();
+        this.afterOpen();
       }
+    }
+    /**
+     * 查询详情-绑定数据 之前
+     */
+    beforeOpen(data?: object): object | void {
+      console.log("data:", data);
+      return data;
     }
     /**
      * 查询详情-绑定数据 之后
@@ -116,10 +124,10 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      * 添加
      */
     onAdd(data: object | null = null) {
-      console.log("onAdd");
       let formData = this.getFormData(data);
       delete formData.Entity["ID"];
-      this.add(formData)
+      formData = this.beforeRequest(formData) || formData;
+      return this.add(formData)
         .then(res => {
           this["$notify"]({
             title: "添加成功",
@@ -136,8 +144,9 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      * 编辑
      */
     onEdit(data: object | null = null) {
-      const formData = this.getFormData(data);
-      this.edit(formData)
+      let formData = this.getFormData(data);
+      formData = this.beforeRequest(formData) || formData;
+      return this.edit(formData)
         .then(res => {
           this["$notify"]({
             title: "修改成功",
@@ -149,6 +158,13 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
         .catch(error => {
           this.showResponseValidate(error.response.data.Form);
         });
+    }
+    /**
+     * submit请求 之前
+     */
+    beforeRequest(formData?: object): object | void {
+      console.log("beforeRequest:", formData);
+      return formData;
     }
     /**
      * get merge formdata
