@@ -22,6 +22,7 @@ import store from "./store/index";
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
+    name: "frameworkgroup",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {

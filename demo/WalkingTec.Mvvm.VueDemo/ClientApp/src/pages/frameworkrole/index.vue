@@ -41,6 +41,7 @@ import store from "./store/index";
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
+    name: "frameworkrole",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {

@@ -24,15 +24,19 @@ const config = {
   /**
    * debugger调试
    */
-  development: true
+  development: false
 };
+// prod环境非调试
+if (process.env.NODE_ENV === "production") {
+  config.development = false;
+}
 export default config;
 
 /**
  * 默认样式配置
  */
 export const style = {
-  menuBg: "rgba(255, 255, 255, 0)", // "#304156",
+  menuBg: "transparent", // "#304156",
   menuText: "#efefef", // "#bfcbd9",
   menuActiveText: "#409eff",
   theme: "#1890ff"

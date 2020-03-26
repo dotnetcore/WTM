@@ -231,7 +231,7 @@ import StatsCard from "./views/stats-card";
 import { Action, State } from "vuex-class";
 import store from "./store/index";
 @Component({
-    name: "Dashboard",
+    name: "dashboard",
     store,
     components: {
         EChartsModule,
