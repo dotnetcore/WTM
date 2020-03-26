@@ -1,11 +1,11 @@
 <template>
-  <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key" />
-      </keep-alive>
-    </transition>
-  </section>
+    <section class="app-main">
+        <transition name="fade-transform" mode="out-in">
+            <keep-alive :include="cachedViews">
+                <router-view :key="key" />
+            </keep-alive>
+        </transition>
+    </section>
 </template>
 
 <script lang="ts">
@@ -50,5 +50,30 @@ export default class extends Vue {
     .fixed-header + .app-main {
         padding-top: 84px;
     }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.28s;
+}
+
+.fade-enter,
+.fade-leave-active {
+    opacity: 0;
+}
+
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+    transition: all 0.25s;
+}
+
+.fade-transform-enter {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.fade-transform-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
 }
 </style>

@@ -23,6 +23,7 @@ import DialogForm from "./views/dialog-form.vue";
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
+    name: "dataprivilege",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: { DialogForm }

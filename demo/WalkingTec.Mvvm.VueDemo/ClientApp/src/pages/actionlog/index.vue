@@ -23,6 +23,7 @@ import store from "./store/index";
 import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
 
 @Component({
+    name: "actionlog",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
