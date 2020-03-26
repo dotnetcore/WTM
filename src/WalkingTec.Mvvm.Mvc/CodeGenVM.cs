@@ -1669,7 +1669,10 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data");
+                    children: this.get{subtype.Name}Data
+                    props: {{
+                        clearable: true
+                    }}");
                             }
                             else
                             {
@@ -1828,13 +1831,19 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data");
+                    children: this.get{subtype.Name}Data
+                    props: {{
+                        clearable: true,
+                        placeholder: '全部'
+                    }}");
+
                             }
                             else
                             {
                                 fieldstr2.AppendLine($@"                    type: ""select"",
                     children: this.get{subtype.Name}Data,
                     props: {{
+                        clearable: true ,
                         multiple: true,
                         ""collapse-tags"": true
                     }}");
