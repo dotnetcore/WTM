@@ -1766,7 +1766,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var mpro = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
                         if (mpro.PropertyType.IsBoolOrNullableBool())
                         {
-                            actions.AppendLine($@"      <template #IsValid=""rowData"">
+                            actions.AppendLine($@"      <template #{item.FieldName}=""rowData"">
         <el-switch :value=""rowData.row.{item.FieldName} === 'true' || rowData.row.{item.FieldName} === true"" disabled />
       </template>
 ");
