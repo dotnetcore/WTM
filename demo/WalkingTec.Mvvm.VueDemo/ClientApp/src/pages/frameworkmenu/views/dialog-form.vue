@@ -20,6 +20,8 @@ import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
 import { RoutesModule } from "@/store/modules/routes";
 import { iconList } from "../config";
+import { isExternal } from "@/util/validate";
+import config from "@/config/index";
 
 @Component({ mixins: [mixinForm()] })
 export default class Index extends Vue {
@@ -59,6 +61,7 @@ export default class Index extends Vue {
                 SelectedModule: {
                     type: "select",
                     label: "模块名称",
+                    props: { clearable: true },
                     children: RoutesModule.pageList,
                     events: {
                         change: this.onSelectedAction
@@ -68,7 +71,7 @@ export default class Index extends Vue {
                 SelectedActionIDs: {
                     type: "select",
                     label: "动作名称",
-                    props: { multiple: true },
+                    props: { multiple: true, clearable: true },
                     children: this.getActionsByModelData,
                     isHidden: data => !_.get(data, "Entity.IsInside"),
                     defaultValue: []
@@ -124,13 +127,11 @@ export default class Index extends Vue {
 
     iconList: Array<any> = iconList;
 
-    created() {
-        this.getFolders();
-    }
     /**
      * 查询详情-after-调用
      */
     afterOpen(data) {
+        this.getFolders();
         this.onSelectedAction(data && data.SelectedModule);
     }
     /**
@@ -140,6 +141,24 @@ export default class Index extends Vue {
         this.getActionsByModel({
             ModelName: SelectedModule || ""
         });
+    }
+
+    beforeRequest(formData) {
+        if (formData.Entity.IsInside) {
+            const moduleObj = _.find(RoutesModule.pageList, {
+                Value: formData.SelectedModule
+            });
+            formData.Entity.Url = moduleObj ? moduleObj.Url : "";
+        } else {
+            if (
+                !isExternal(formData.Entity.Url) &&
+                formData.Entity.Url.indexOf(config.staticPage) !== 0
+            ) {
+                formData.Entity.Url = config.staticPage + formData.Entity.Url;
+            }
+        }
+        console.log('formData::', formData);
+        return formData;
     }
 }
 </script>
