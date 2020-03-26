@@ -1710,7 +1710,11 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             fieldstr.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types");
+                    children: {item.FieldName}Types
+                    props: {{
+                        clearable: true
+                    }}");
+
                             enums.Add(item.FieldName + "Types");
                         }
                         else if (checktype.IsNumber())
@@ -1867,7 +1871,12 @@ namespace WalkingTec.Mvvm.Mvc
                             else if (checktype.IsEnum())
                             {
                                 fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types");
+                    children: {item.FieldName}Types
+                    props: {{
+                        clearable: true,
+                        placeholder: '全部'
+                    }}");
+
                                 enums.Add(item.FieldName + "Types");
                             }
                             else if (checktype.IsNumber())
