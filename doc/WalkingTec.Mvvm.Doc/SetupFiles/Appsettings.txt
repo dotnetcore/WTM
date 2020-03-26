@@ -18,7 +18,10 @@
       "LogLevel": {
         "Default": "Debug"
       }
-    }
+    },
+      "LogLevel": {
+        "Default": "Debug"
+      }
   },
   "ConnectionStrings": [
     {

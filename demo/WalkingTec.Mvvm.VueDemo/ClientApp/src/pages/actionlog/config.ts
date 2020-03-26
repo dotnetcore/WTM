@@ -6,7 +6,7 @@ export const TABLE_HEADER: Array<object> = [
   { key: "ModuleName", label: "模块" },
   { key: "ActionName", label: "动作" },
   { key: "ITCode", label: "ITCode" },
-  { key: "ActionUrl", label: "ActionUrl" },
+  { key: "ActionUrl", label: "地址" },
   { key: "ActionTime", label: "操作时间" },
   { key: "Duration", label: "时长" },
   { key: "IP", label: "IP" },

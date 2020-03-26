@@ -53,4 +53,11 @@
     "Text": "菜单管理",
     "Url": "/frameworkmenu"
   }
+,{
+    "Id": "42534822-c147-431f-8a8b-cd5931d620ba",
+    "ParentId": null,
+    "Text": "学校管理",
+    "Url": "/school"
+    }
+
 ]

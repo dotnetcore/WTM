@@ -746,7 +746,6 @@ namespace WalkingTec.Mvvm.Mvc
                 default:
                     break;
             }
-            var test = GlobalServices.GetRequiredService<ILogger<ActionLog>>();
             GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
                 return $@"
 ===WTM Log===
