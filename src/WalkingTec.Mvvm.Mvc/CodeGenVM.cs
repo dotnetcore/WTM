@@ -1669,7 +1669,7 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data
+                    children: this.get{subtype.Name}Data,
                     props: {{
                         clearable: true
                     }}");
@@ -1710,7 +1710,7 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             fieldstr.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types
+                    children: {item.FieldName}Types,
                     props: {{
                         clearable: true
                     }}");
@@ -1835,7 +1835,7 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data
+                    children: this.get{subtype.Name}Data,
                     props: {{
                         clearable: true,
                         placeholder: '全部'
@@ -1871,7 +1871,7 @@ namespace WalkingTec.Mvvm.Mvc
                             else if (checktype.IsEnum())
                             {
                                 fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types
+                    children: {item.FieldName}Types,
                     props: {{
                         clearable: true,
                         placeholder: '全部'
