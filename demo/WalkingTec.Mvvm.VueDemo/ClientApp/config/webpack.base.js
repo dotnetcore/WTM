@@ -12,9 +12,9 @@ let options = {
     "element-ui": "ELEMENT"
   }
 };
-if (process.env.NODE_ENV === "development") {
-  options.externals = {};
-}
+// if (process.env.NODE_ENV === "development") {
+options.externals = {};
+// }
 module.exports = {
   entry: {
     index: utils.resolve("src/index.ts"),

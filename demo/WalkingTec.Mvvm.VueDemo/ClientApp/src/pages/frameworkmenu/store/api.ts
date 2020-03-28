@@ -28,7 +28,7 @@ const batchDelete = {
 };
 // 删除 -------
 const deleted = {
-  url: reqPath + "Delete/{id}",
+  url: reqPath + "BatchDelete",
   method: "get"
 };
 // 导出
