@@ -26,11 +26,6 @@ const batchDelete = {
   url: reqPath + "BatchDelete",
   method: "post"
 };
-// 删除 -------
-const deleted = {
-  url: reqPath + "Delete/{ID}",
-  method: "get"
-};
 // 导出
 const exportExcel = {
   url: reqPath + "ExportExcel",
@@ -58,7 +53,6 @@ const imported = {
 export default {
   search,
   add,
-  deleted,
   batchDelete,
   edit,
   detail,
