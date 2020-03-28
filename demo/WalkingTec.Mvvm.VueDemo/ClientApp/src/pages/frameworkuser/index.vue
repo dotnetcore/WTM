@@ -31,6 +31,7 @@ import store from "./store/index";
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
 
 @Component({
+    name: "frameworkuser",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {

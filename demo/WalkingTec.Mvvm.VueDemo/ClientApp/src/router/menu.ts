@@ -1,6 +1,7 @@
 import { RouteConfig } from "vue-router";
 import config from "@/config/index";
 import Layout from "@/components/layout/index.vue";
+import { VueRouter } from "@/components/layout/components/index";
 import { isExternal } from "@/util/validate";
 const development = config.development;
 interface routerItem {
@@ -16,8 +17,9 @@ class Menu {
    * @param menuItem
    */
   private getRouterItem(menuItem) {
+    url_index++;
     const routerItem: RouteConfig = {
-      path: menuItem.Url || "",
+      path: menuItem.Url || "" + url_index,
       name: menuItem.Text,
       component: Layout,
       children: [] as RouteConfig[],
@@ -35,7 +37,7 @@ class Menu {
         _.startsWith(menuItem.Url, config.staticPage)
       ) {
         routerItem.component = () => import("@/pages/external/index.vue");
-        routerItem.path = `/external_${++url_index}`;
+        routerItem.path = `/external_${url_index}`;
         const url = isExternal(menuItem.Url)
           ? menuItem.Url
           : _.replace(
@@ -47,6 +49,10 @@ class Menu {
       } else {
         routerItem.component = () =>
           import("@/pages" + menuItem.Url + "/index.vue");
+      }
+    } else {
+      if (menuItem.ParentId) {
+        routerItem.component = VueRouter;
       }
     }
     return routerItem;
