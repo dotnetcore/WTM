@@ -379,6 +379,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 Filter.Add("_DONOT_USE_VMNAME", vmQualifiedName);
                 Filter.Add("_DONOT_USE_CS", ListVM.CurrentCS);
                 Filter.Add("SearcherMode", ListVM.SearcherMode);
+                Filter.Add("ViewDivId", ListVM.ViewDivId);
                 if (ListVM.Ids != null && ListVM.Ids.Count > 0)
                 {
                     Filter.Add("Ids", ListVM.Ids);
@@ -677,7 +678,7 @@ layui.use(['table'], function(){{
                         {
                             rowBtnStrBuilder.Append("{{#  if(d." + item.BindVisiableColName + " == true || d." + item.BindVisiableColName + " == 'true' ){ }}");
                         }
-                        rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
+                        rowBtnStrBuilder.Append($@"<a class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "layui-btn-primary" : $"{item.ButtonClass}")} layui-btn-xs"" lay-event=""{item.Area + item.ControllerName + item.ActionName + item.QueryString}"">{item.Name}</a>");
                         if (condition == true)
                         {
                             rowBtnStrBuilder.Append("{{#  } else{ }}");
@@ -686,7 +687,7 @@ layui.use(['table'], function(){{
                     }
                     else
                     {
-                        rowBtnStrBuilder.Append($@"<a class=""layui-btn layui-btn-primary layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
+                        rowBtnStrBuilder.Append($@"<a class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "layui-btn-primary" : $"{item.ButtonClass}")} layui-btn-xs"" onclick=""ff.RemoveGridRow('{Id}',{Id}option,{{{{d.LAY_INDEX}}}});"">{item.Name}</a>");
                     }
                 }
 
@@ -713,7 +714,7 @@ layui.use(['table'], function(){{
                             }
                         }
 
-                        toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn layui-btn-sm layui-unselect layui-form-select downpanel"" style=""z-index:10;"" id=""btn_{item.ButtonId}"">
+                        toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "" : $"{item.ButtonClass}")} layui-btn-sm layui-unselect layui-form-select downpanel"" style=""z-index:10;"" id=""btn_{item.ButtonId}"">
                                  <div class=""layui-select-title"" style=""padding-right:20px;"">
                                         {item.Name}
                                  <i class=""layui-edge""></i>
@@ -745,8 +746,10 @@ layui.use(['table'], function(){{
                     }
                     else
                     {
-                        string substyle = isSub ? "style=\"width: 100%;\"" : "";
-                        toolBarBtnStrBuilder.Append($@"<a href=""javascript:void(0)"" onclick=""wtToolBarFunc_{Id}({{event:'{item.Area + item.ControllerName + item.ActionName + item.QueryString}'}});"" class=""layui-btn layui-btn-sm"" {substyle}>{icon}{item.Name}</a>");
+                        string substyle = "style=\"";
+                        substyle += isSub ? "width: 100%;" : "";
+                        substyle += "\"";
+                        toolBarBtnStrBuilder.Append($@"<a href=""javascript:void(0)"" onclick=""wtToolBarFunc_{Id}({{event:'{item.Area + item.ControllerName + item.ActionName + item.QueryString}'}});"" class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "" : $"{item.ButtonClass}")} layui-btn-sm"" {substyle}>{icon}{item.Name}</a>");
                     }
                 }
                 var url = item.Url;

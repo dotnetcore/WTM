@@ -47,7 +47,7 @@ $fields$
         };
     }
 
-     created() {
+     mounted() {
 $runactions$
     }
 }

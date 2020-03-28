@@ -33,7 +33,7 @@ $fields$
             }
         };
     }
-    created() {
+    mounted() {
 $runactions$
     }
 }

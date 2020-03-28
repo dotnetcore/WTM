@@ -280,7 +280,7 @@ window.ff = {
     });
   },
 
-  BgRequest: function (url, para) {
+  BgRequest: function (url, para,divid) {
     var layer = layui.layer;
     var index = layer.load(2);
     var getpost = "GET";
@@ -308,8 +308,9 @@ window.ff = {
           eval(str);
         }
         else {
-          var did = $.cookie("divid");
-          $("#" + did).html(str);
+            data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + str + "</div>";
+            var p = $("#" + divid).parent();
+            p.html(data);
         }
       }
     });

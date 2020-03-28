@@ -109,6 +109,10 @@ namespace WalkingTec.Mvvm.Core
         public string BindVisiableColName { get; set; }
 
         /// <summary>
+        /// additional css class of button
+        /// </summary>
+        public string ButtonClass { get; set;}
+        /// <summary>
         /// if the dialog need to be maximax
         /// </summary>
         public bool Max { get; set; }
