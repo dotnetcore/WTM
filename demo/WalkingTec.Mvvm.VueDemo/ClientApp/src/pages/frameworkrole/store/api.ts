@@ -12,11 +12,6 @@ const add = {
   url: reqPath + "Add",
   method: "post"
 };
-// 删除
-const deleted = {
-  url: reqPath + "Delete/{ID}",
-  method: "get"
-};
 // 批量删除
 const batchDelete = {
   url: reqPath + "BatchDelete",
@@ -78,7 +73,6 @@ const imported = {
 export default {
   search,
   add,
-  deleted,
   batchDelete,
   edit,
   detail,
