@@ -25,6 +25,12 @@ const doResize = (el, binding, vnode) => {
 };
 const debounceFn = debounce(doResize, PAUSE);
 const elHeightAdaptiveTable: DirectiveOptions = {
+  inserted: (el, {}, vnode) => {
+    const { componentInstance: $table } = vnode;
+    if ($table) {
+      $table.layout.setHeight("123", "min-height");
+    }
+  },
   bind(el, binding, vnode) {
     el.resizeListener = () => {
       debounceFn(el, binding, vnode);
