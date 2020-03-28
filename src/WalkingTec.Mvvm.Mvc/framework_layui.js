@@ -151,9 +151,9 @@ window.ff = {
             child.document.close();
             $(child.document).ready(function () {
               setTimeout(function () {
-                $('#Lay_app_body_main', child.document).html(data);
+                  $('#LAY_app_body', child.document).html(data);
                 $(child.document).attr("title", title);
-              }, 500);
+              }, 100);
             });
           }
           layer.close(index);
@@ -280,7 +280,7 @@ window.ff = {
     });
   },
 
-  BgRequest: function (url, para) {
+  BgRequest: function (url, para,divid) {
     var layer = layui.layer;
     var index = layer.load(2);
     var getpost = "GET";
@@ -308,8 +308,9 @@ window.ff = {
           eval(str);
         }
         else {
-          var did = $.cookie("divid");
-          $("#" + did).html(str);
+            data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + str + "</div>";
+            var p = $("#" + divid).parent();
+            p.html(data);
         }
       }
     });

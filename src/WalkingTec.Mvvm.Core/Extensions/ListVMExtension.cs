@@ -46,10 +46,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             switch (info.FormatType)
             {
                 case ColumnFormatTypeEnum.Dialog:
-                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed).ToString();
+                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed,info.ButtonClass).ToString();
                     break;
-                case ColumnFormatTypeEnum.Redirect:
-                    rv = vm.UIService.MakeRedirectButton(info.ButtonType, info.Url, info.Text).ToString();
+                case ColumnFormatTypeEnum.Button:
+                    rv = vm.UIService.MakeButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.Resizable, info.Maxed, info.ButtonClass,vm.ViewDivId, info.RType).ToString();
                     break;
                 case ColumnFormatTypeEnum.Download:
                     if (info.FileID == null)
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text).ToString();
+                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text, info.ButtonClass).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.ViewPic:
@@ -68,11 +68,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable).ToString();
+                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable, info.ButtonClass).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.Script:
-                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Text, info.Script, info.ButtonID, info.Url).ToString();
+                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Text, info.Script, info.ButtonID, info.Url, info.ButtonClass).ToString();
                     break;
                 case ColumnFormatTypeEnum.Html:
                     rv = info.Html;

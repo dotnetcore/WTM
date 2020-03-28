@@ -704,7 +704,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
-            if (Cache.TryGetValue(key, out T rv) == false)
+            if (Cache.TryGetValue(key, out T rv) == false || rv == null)
             {
                 T data = setFunc();
                 if (timeout == null)
