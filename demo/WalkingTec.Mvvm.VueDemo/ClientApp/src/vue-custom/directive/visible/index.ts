@@ -19,7 +19,6 @@ const visible: DirectiveOptions = {
         el.parentNode && el.parentNode.removeChild(el);
       }
     } else {
-      console.log("value", value && value.toUpperCase());
       if (value && !actions.includes(value.toUpperCase())) {
         el.parentNode && el.parentNode.removeChild(el);
       }

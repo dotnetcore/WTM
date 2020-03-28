@@ -18,7 +18,7 @@
               <el-button v-if="item.actions.includes('edit')" v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="colEvents.onEdit(scope.row)">
                 修改
               </el-button>
-              <el-button v-if="item.actions.includes('deleted')" v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="colEvents.onDelete(scope.row)">
+              <el-button v-if="item.actions.includes('deleted')" v-visible="actionList.batchDelete" type="text" size="small" class="view-btn" @click="colEvents.onDelete(scope.row)">
                 删除
               </el-button>
             </template>

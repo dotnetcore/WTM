@@ -351,8 +351,8 @@ window.ff = {
           return false;
         }
         ff.SetCookie("windowids", owid);
-        if (request.responseText !== undefined && request.responseText !== "") {
-          layer.alert(request.responseText);
+          if (xhr.responseText !== undefined && xhr.responseText !== "") {
+              layer.alert(xhr.responseText);
         }
         else {
           layer.alert(ff.DONOTUSE_Text_LoadFailed);
