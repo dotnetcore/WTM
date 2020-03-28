@@ -309,6 +309,26 @@ namespace WalkingTec.Mvvm.Core
         /// Set the dialog to be maximized
         /// </summary>
         /// <param name="self"></param>
+        /// <param name="buttonclass">button class.
+        /// Some of the layui defined class to control color:
+        /// layui-btn-primary
+        /// layui-btn-normal
+        /// layui-btn-warm
+        /// layui-btn-danger
+        /// </param>
+        /// <returns></returns>
+        public static GridAction SetButtonClass(this GridAction self, string buttonclass)
+        {
+            self.ButtonClass = buttonclass;
+            return self;
+        }
+
+
+
+        /// <summary>
+        /// Set the dialog to be maximized
+        /// </summary>
+        /// <param name="self"></param>
         /// <param name="isDownload"></param>
         /// <returns></returns>
         public static GridAction SetIsDownload(this GridAction self, bool isDownload = true)
