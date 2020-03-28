@@ -1,5 +1,6 @@
 <template>
     <div class="but-box">
+        <slot />
         <el-button v-assembly:[assembly]="butTypes.add" v-visible="actionList[actionKeys.add]" type="primary" icon="el-icon-plus" @click="onAdd">
             添加
         </el-button>
@@ -33,7 +34,6 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import ExportExcel from "@/components/page/export/export-excel.vue";
 import { butType } from "@/config/enum";
 import { IEventFn } from "@/vue-custom/mixin/action-mixin";
-
 
 @Component({
     components: {
