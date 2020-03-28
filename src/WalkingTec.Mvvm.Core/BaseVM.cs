@@ -70,7 +70,6 @@ namespace WalkingTec.Mvvm.Core
         /// PartialView中主Div的Id
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string ViewDivId
         {
             set { _viewdivid = value; }

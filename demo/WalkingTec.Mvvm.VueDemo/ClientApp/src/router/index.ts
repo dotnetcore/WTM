@@ -23,55 +23,6 @@ export const constantRoutes: RouteConfig[] = [
         }
       }
     ]
-  },
-  {
-    path: "/i18n",
-    component: Layout,
-    children: [
-      {
-        path: "index",
-        component: () => import("@/pages/i18n-demo/index.vue"),
-        name: "I18n",
-        meta: {
-          title: "i18n",
-          icon: "el-icon-orange"
-        }
-      }
-    ]
-  },
-  {
-    path: "/demo",
-    component: Layout,
-    children: [
-      {
-        path: "index",
-        component: () => import("@/pages/demo/index.vue"),
-        name: "demo",
-        meta: {
-          title: "demo",
-          icon: "el-icon-orange"
-        }
-      }
-    ]
-  },
-  {
-    path: "/external",
-    component: Layout,
-    children: [
-      {
-        path: "",
-        component: () => import("@/pages/external/index.vue"),
-        name: "外链",
-        meta: {
-          title: "externalLink",
-          icon: "el-icon-link"
-        },
-        // props: { default: true, url: "" }
-        props: router => {
-          return { ...router.query };
-        }
-      }
-    ]
   }
 ];
 

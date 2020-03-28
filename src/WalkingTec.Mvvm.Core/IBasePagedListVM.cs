@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 页面动作
         /// </summary>
-        List<GridAction> GridActions { get; }
+        List<GridAction> GetGridActions();
 
         /// <summary>
         /// 查询并生成Excel
