@@ -24,11 +24,12 @@ const search = {
   method: "post",
   dataType: "array"
 };
-// 批量删除
-const batchDelete = {
-  url: reqPath + "BatchDelete",
+// 删除
+const deleted = {
+  url: reqPath + "Delete",
   method: "post"
 };
+
 // 修改
 const edit = {
   url: reqPath + "Edit",
@@ -64,7 +65,7 @@ const getPrivilegeByTableName = {
 export default {
   search,
   add,
-  batchDelete,
+  deleted,
   edit,
   privilegesList,
   imported,
