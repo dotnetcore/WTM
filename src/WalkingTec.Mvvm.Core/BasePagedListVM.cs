@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Core
         /// GridHeaders
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<IGridColumn<TModel>> GridHeaders { get; set; }
+        private IEnumerable<IGridColumn<TModel>> GridHeaders { get; set; }
 
         /// <summary>
         /// GetHeaders
@@ -104,18 +104,16 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 页面动作
         /// </summary>
-        [JsonIgnore]
-        public List<GridAction> GridActions
+        public List<GridAction> GetGridActions()
         {
-            get
-            {
                 if (_gridActions == null)
                 {
                     _gridActions = InitGridAction();
                 }
                 return _gridActions;
-            }
         }
+
+
 
         /// <summary>
         /// 初始化 InitGridHeader，继承的类应该重载这个函数来设定数据的列和动作
