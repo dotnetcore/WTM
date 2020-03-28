@@ -24,17 +24,12 @@ const search = {
   method: "post",
   dataType: "array"
 };
-
 // 删除
 const deleted = {
-  url: reqPath + "Delete/{ID}",
-  method: "get"
-};
-// 批量删除
-const batchDelete = {
-  url: reqPath + "BatchDelete",
+  url: reqPath + "Delete",
   method: "post"
 };
+
 // 修改
 const edit = {
   url: reqPath + "Edit",
@@ -71,7 +66,6 @@ export default {
   search,
   add,
   deleted,
-  batchDelete,
   edit,
   privilegesList,
   imported,

@@ -30,6 +30,8 @@ import { ASSEMBLIES, TABLE_HEADER } from "./config";
 })
 export default class Index extends Vue {
     @Action
+    deleted;
+    @Action
     getPrivileges;
     @State
     getPrivilegesData;
@@ -45,8 +47,7 @@ export default class Index extends Vue {
                     type: "select",
                     label: "权限名称",
                     props: {
-                        clearable: true,
-                        multiple: true
+                        clearable: true
                     },
                     children: this.getPrivilegesData
                 },
@@ -71,6 +72,28 @@ export default class Index extends Vue {
 
     created() {
         this.getPrivileges();
+    }
+
+    /**
+     * 单个删除
+     * @param params
+     */
+    onDelete(params) {
+        this.onConfirm().then(() => {
+            console.log("params", params);
+            const parameters = {
+                ModelName: params.TableName,
+                Id: params.TargetId,
+                Type: params.DpType
+            };
+            this.deleted(parameters).then(res => {
+                this["$notify"]({
+                    title: "删除成功",
+                    type: "success"
+                });
+                this["onHoldSearch"]();
+            });
+        });
     }
 }
 </script>
