@@ -53,4 +53,25 @@
     "Text": "菜单管理",
     "Url": "/frameworkmenu"
   }
+,{
+    "Id": "3dd67d2e-be85-461a-8362-28aa1da6db82",
+    "ParentId": null,
+    "Text": "1111",
+    "Url": "/school"
+    }
+,{
+    "Id": "852177a3-47be-41aa-be0e-6c6595ca71bf",
+    "ParentId": null,
+    "Text": "多集目录测试",
+    "Url": "/major"
+    }
+,{
+    "Id": "1920cd6b-cd39-40c2-8f30-9359078a7ea3",
+    "ParentId": null,
+    "Text": "123",
+    "Url": "/student"
+    }
+
+
+
 ]

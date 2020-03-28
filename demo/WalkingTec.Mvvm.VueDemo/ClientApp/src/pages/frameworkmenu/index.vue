@@ -1,7 +1,11 @@
 <template>
   <card>
     <!-- 操作按钮 -->
-    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
+    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent">
+      <el-button v-visible="actionList['refreshMenu']" type="primary" icon="el-icon-refresh-right" @click="onRefreshMenu">
+        刷新
+      </el-button>
+    </wtm-but-box>
     <!-- 列表 -->
     <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
       <template #ICon="rowData">
@@ -32,6 +36,9 @@ import { ASSEMBLIES, TABLE_HEADER } from "./config";
     components: { DialogForm }
 })
 export default class Index extends Vue {
+    @Action
+    refreshMenu;
+
     // tabledata转tree格式
     get treeData() {
         const list = this["tableData"];
@@ -44,6 +51,12 @@ export default class Index extends Vue {
         };
         const tree = getChilders("", []);
         return tree;
+    }
+
+    onRefreshMenu() {
+        this.refreshMenu().then(() => {
+            this.onSearch();
+        });
     }
 }
 </script>
