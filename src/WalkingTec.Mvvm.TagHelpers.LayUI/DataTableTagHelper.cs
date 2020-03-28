@@ -454,7 +454,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             #region 处理 DataTable 操作按钮
 
-            var actionCol = ListVM?.GridActions;
+            var actionCol = ListVM?.GetGridActions();
 
             var rowBtnStrBuilder = new StringBuilder();// Grid 行内按钮
             var toolBarBtnStrBuilder = new StringBuilder();// Grid 工具条按钮
