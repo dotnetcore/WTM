@@ -4,6 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
     <Title>$(AssemblyName)</Title>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
@@ -12,65 +13,15 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
-    <None Remove="GeneratorFiles\Spa\Vue\config.txt" />
-    <None Remove="GeneratorFiles\Spa\Vue\index.txt" />
-    <None Remove="GeneratorFiles\Spa\Vue\store\api.txt" />
-    <None Remove="GeneratorFiles\Spa\Vue\store\index.txt" />
-    <None Remove="GeneratorFiles\Spa\Vue\views\dialog-form.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ControllerTestTopPoco.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ControllerTest.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Controller.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\index.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\store\index.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\style.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\action.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\forms.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\models.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
-    <EmbeddedResource Include="GeneratorFiles\HeaderFormat.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\BatchDeleteView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\BatchEditView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\BatchVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\Controller.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\CreateView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\CrudVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\DeleteView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\DetailsView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\EditView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\ImportView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ImportVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Mvc\ListView.txt" />
-    <EmbeddedResource Include="GeneratorFiles\ListVM.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Searcher.txt" />
-  </ItemGroup>
-
-
-  <ItemGroup>
+    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\**\*.txt" />
+    <EmbeddedResource Include="Views\**\*.cshtml" />
     <EmbeddedResource Include="framework_layui.js" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\config.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\index.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\store\api.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\store\index.txt" />
-    <EmbeddedResource Include="GeneratorFiles\Spa\Vue\views\dialog-form.txt" />
-    <EmbeddedResource Include="Views\_CodeGen\SetField.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Gen.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Preview.cshtml" />
-    <EmbeddedResource Include="Views\_CodeGen\Index.cshtml" />
-    <EmbeddedResource Include="Views\_Framework\Selector.cshtml" />
-    <EmbeddedResource Include="Views\_ViewImports.cshtml" />
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.0" />
+    <PackageReference Include="DotNetCore.Natasha" Version="2.14.0" />
   </ItemGroup>
 
 
