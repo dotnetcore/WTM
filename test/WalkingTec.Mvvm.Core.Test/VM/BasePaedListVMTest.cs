@@ -72,21 +72,6 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             Assert.AreEqual(_studentListVM.Searcher.Page, 1);
         }
 
-        [TestMethod]
-        [DataTestMethod()]
-        [DataRow(100)]
-        [DataRow(20)]
-        [DataRow(7)]
-        public void SearchTest4(int page)
-        {
-            _studentListVM.Searcher.Limit = 3;
-            _studentListVM.Searcher.Page = page;
-            _studentListVM.DoSearch();
-            Assert.AreEqual(_studentListVM.Searcher.Count, 20);
-            Assert.AreEqual(_studentListVM.Searcher.PageCount, 7);
-            Assert.AreEqual(_studentListVM.EntityList.Count, 2);
-            Assert.AreEqual(_studentListVM.Searcher.Page, 7);
-        }
 
         [TestMethod]
         public void SearchWithoutPagingTest()
