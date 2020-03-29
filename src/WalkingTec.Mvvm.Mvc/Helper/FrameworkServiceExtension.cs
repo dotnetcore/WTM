@@ -38,6 +38,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Natasha;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -53,6 +54,7 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class FrameworkServiceExtension
     {
+        private static List<Assembly> _dynamicAssembly = new List<Assembly>();
         public static IServiceCollection AddFrameworkService(this IServiceCollection services,
             Func<ActionExecutingContext, string> CsSector = null,
             List<IDataPrivilege> dataPrivilegeSettings = null,
@@ -92,10 +94,25 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             }
             var config = configBuilder.Build();
+            var con = config.Get<Configs>() ?? new Configs();
+
+            var _frameworkCtrl = _FrameworTemp.FrameworkCtrlTemp;
+            if (con.IsFilePublic)
+            {
+                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", "[AllowAnonymous]").Replace("$ViewFile$", "[AllowAnonymous]");
+            }
+            else
+            {
+                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", string.Empty).Replace("$ViewFile$", string.Empty);
+            }
+            AssemblyComplier oop = new AssemblyComplier();
+            oop.Add(_frameworkCtrl);
+            var tempAssembly = oop.GetAssembly();
+            _dynamicAssembly.Add(tempAssembly);
+
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
-            var con = config.Get<Configs>() ?? new Configs();
-            //services.Configure<Configs>(config);
+
             if (dataPrivilegeSettings != null)
             {
                 con.DataPrivilegeSettings = dataPrivilegeSettings;
@@ -187,18 +204,19 @@ namespace WalkingTec.Mvvm.Mvc
                 options.Filters.Add(new FrameworkFilter());
                 options.EnableEndpointRouting = true;
             })
-            .ConfigureApplicationPartManager(m =>
+            .ConfigureApplicationPartManager(appPartsManager =>
             {
                 var feature = new ControllerFeature();
+                appPartsManager.ApplicationParts.Add(new AssemblyPart(tempAssembly));
                 if (mvc != null)
                 {
-                    m.ApplicationParts.Add(new AssemblyPart(mvc));
+                    appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
                 }
                 if (admin != null)
                 {
-                    m.ApplicationParts.Add(new AssemblyPart(admin));
+                    appPartsManager.ApplicationParts.Add(new AssemblyPart(admin));
                 }
-                m.PopulateFeature(feature);
+                appPartsManager.PopulateFeature(feature);
                 services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
             })
             .AddNewtonsoftJson(options =>
@@ -303,11 +321,12 @@ namespace WalkingTec.Mvvm.Mvc
             #endregion
 
             services.AddHttpClient();
-            if(con.Domains != null)
+            if (con.Domains != null)
             {
                 foreach (var item in con.Domains)
                 {
-                    services.AddHttpClient(item.Key, x => {
+                    services.AddHttpClient(item.Key, x =>
+                    {
                         x.BaseAddress = new Uri(item.Value.Url);
                         x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
                         x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
@@ -479,6 +498,7 @@ namespace WalkingTec.Mvvm.Mvc
 
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
+            gd.AllAssembly.AddRange(_dynamicAssembly);
             var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
             if (admin != null && gd.AllAssembly.Contains(admin) == false)
             {
