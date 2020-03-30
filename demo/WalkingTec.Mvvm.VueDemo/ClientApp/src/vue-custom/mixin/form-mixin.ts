@@ -171,7 +171,8 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      */
     private getFormData(data: object | null = null) {
       let formData = data || this.FormComp().getFormData();
-      formData = _.merge(formData, this.mergeFormData);
+      // formData = _.merge(formData, this.mergeFormData);
+      formData = { ...formData, ...this.mergeFormData };
       return formData;
     }
     /**
