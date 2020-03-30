@@ -24,7 +24,7 @@ const config = {
   /**
    * debugger调试
    */
-  development: true
+  development: false
 };
 // prod环境非调试
 if (process.env.NODE_ENV === "production") {
