@@ -171,8 +171,13 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      */
     private getFormData(data: object | null = null) {
       let formData = data || this.FormComp().getFormData();
-      // formData = _.merge(formData, this.mergeFormData);
-      formData = { ...formData, ...this.mergeFormData };
+      // 处理 array
+      const customizer = (objValue, srcValue) => {
+        if (_.isArray(objValue)) {
+          return srcValue;
+        }
+      };
+      formData = _.mergeWith(formData, this.mergeFormData, customizer);
       return formData;
     }
     /**
