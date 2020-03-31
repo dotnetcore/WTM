@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed,info.ButtonClass).ToString();
                     break;
                 case ColumnFormatTypeEnum.Button:
-                    rv = vm.UIService.MakeButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.Resizable, info.Maxed, info.ButtonClass,vm.ViewDivId, info.RType).ToString();
+                    rv = vm.UIService.MakeButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.Resizable, info.Maxed, vm.ViewDivId, info.ButtonClass,info.RType).ToString();
                     break;
                 case ColumnFormatTypeEnum.Download:
                     if (info.FileID == null)
@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text, info.ButtonClass).ToString();
+                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text, vm.CurrentCS, info.ButtonClass).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.ViewPic:
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable, info.ButtonClass).ToString();
+                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable,vm.CurrentCS,info.Maxed, info.ButtonClass).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.Script:
