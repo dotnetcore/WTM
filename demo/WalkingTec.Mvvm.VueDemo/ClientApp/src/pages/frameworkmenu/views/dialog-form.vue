@@ -3,7 +3,7 @@
         <wtm-create-form :ref="refName" :status="status" :options="formOptions">
             <template #ICon="data">
                 <i v-if="data.status === $actionType.detail" :class="[data.data]"></i>
-                <el-select v-else v-model="mergeFormData.Entity.ICon" filterable placeholder="请选择">
+                <el-select v-else v-model="mergeFormData.Entity.ICon" filterable clearable placeholder="请选择">
                     <el-option v-for="(item, index) in iconList" :key="index" :label="item" :value="item">
                         <span style="float: left">{{ item }}</span>
                         <span style="float: right; font-size: 14px"><i :class="[item]"></i></span>
@@ -152,12 +152,12 @@ export default class Index extends Vue {
         } else {
             if (
                 !isExternal(formData.Entity.Url) &&
+                formData.Entity.Url &&
                 formData.Entity.Url.indexOf(config.staticPage) !== 0
             ) {
                 formData.Entity.Url = config.staticPage + formData.Entity.Url;
             }
         }
-        console.log('formData::', formData);
         return formData;
     }
 }

@@ -90,7 +90,13 @@ class Menu {
     ParentId = null,
     children: RouteConfig[] = []
   ): RouteConfig[] {
-    _.filter(datalist, ["ParentId", ParentId]).map(menuItem => {
+    _.filter(datalist, item => {
+      if (ParentId === null) {
+        return !item.ParentId;
+      } else {
+        return item.ParentId === ParentId;
+      }
+    }).map(menuItem => {
       const routerItem: RouteConfig = this.getRouterItem(menuItem);
       routerItem.children = this.recursionTree(
         datalist,

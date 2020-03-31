@@ -36,7 +36,6 @@ export default class extends Vue {
   private collapse!: boolean;
 
   get title() {
-    console.log("SettingsModule", SettingsModule);
     return SettingsModule.title;
   }
 

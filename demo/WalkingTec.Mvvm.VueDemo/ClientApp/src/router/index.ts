@@ -72,13 +72,10 @@ export const constantRoutes: RouteConfig[] = [
         }
       }
     ]
-  }
-];
-
-export const asyncRoutes: RouteConfig[] = [
+  },
   {
-    path: "*",
-    redirect: "/404",
+    path: "/404",
+    component: () => import("@/pages/error-page/404.vue"),
     meta: { hidden: true }
   }
 ];
