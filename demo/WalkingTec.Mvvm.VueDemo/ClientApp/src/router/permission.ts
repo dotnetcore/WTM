@@ -40,14 +40,17 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
         NProgress.done();
       }
     } else {
-      next();
+      if (to.matched.length !== 0) {
+        next();
+      } else {
+        next("/404");
+      }
     }
   } else {
     // Has no token
     if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      // Other pages that do not have permission to access are redirected to the login page.
       // next(`/login?redirect=${to.path}`);
       location.href = `/login.html?redirect=${to.path}`;
       NProgress.done();

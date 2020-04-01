@@ -508,7 +508,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 StringBuilder other = new StringBuilder();
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsSearcherField == true || x.IsFormField == true).ToList();
-                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
+                List<string> existSubPro = new List<string>();
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
@@ -516,8 +516,9 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
-                        existSubPro.Add(subpro);
-                        int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                        var key = subtype.FullName + ":" + subpro.Name;
+                        existSubPro.Add(key);
+                        int count = existSubPro.Where(x => x== key).Count();
                         if (count == 1)
                         {
 

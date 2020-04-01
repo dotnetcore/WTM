@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Common
 
         public string MakeViewButton(ButtonTypesEnum buttonType, Guid fileID, string buttonText = null, int? width = null, int? height = null, string title = null, bool resizable = true, string _DONOT_USE_CS = "default", bool maxed = false, string buttonClass = null)
         {
-            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}", buttonText, width, height, title, null, true, resizable, maxed,buttonClass);
+            return MakeDialogButton(buttonType, $"/_Framework/ViewFile/{fileID}?_DONOT_USE_CS={_DONOT_USE_CS}&width={width}", buttonText, width, height, title, null, true, resizable, maxed,buttonClass);
         }
 
         public string MakeScriptButton(ButtonTypesEnum buttonType, string buttonText, string script = "", string buttonID = null, string url = null, string buttonClass = null)

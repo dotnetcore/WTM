@@ -2,6 +2,17 @@
 
 ## v3.5.x （2.5.x同步更新）
 
+##3.5.2 以及 2.5.2 (2020-3-29)
+* **修改：**  修复vue代码生成下拉菜单少了一个逗号的bug
+* **修改：**  修复vue发布时的问题
+* **修改：**  修复vue列表高度计算的问题
+* **修改：**  修复vue数据权限列表的删除bug
+
+* **新增：**  Layui. 现在ListVM中的GridAction可以通过SetButtonClass方法设置按钮颜色
+* **新增：**  Layui. UIService中新增MakeButton方法替换之前有问题的MakeRedirectButton方法
+* **修改：**  修复GetGridActions会被调用两次的问题（这其实是.netcore的bug...)
+
+
 ##3.5.1 以及 2.5.1 (2020-3-26)
 * **修改：**  修复vue菜单相关的一些bug
 * **修改：**  修复vue代码生成器对于布尔值的控件生成的bug
