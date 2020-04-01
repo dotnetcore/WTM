@@ -116,7 +116,15 @@ export default class Utils {
       components = option.children.map(child => {
         const value = child.Value;
         const label = child.Text || child.text;
-        const slot = child.slot;
+        let slot: any = undefined;
+        if (_.isString(child.slot)) {
+          slot = (
+            <wtm-render-view
+              hml={child.slot}
+              params={{ Value: value, Text: label }}
+            ></wtm-render-view>
+          );
+        }
         return (
           <el-option
             key={child.Value}
