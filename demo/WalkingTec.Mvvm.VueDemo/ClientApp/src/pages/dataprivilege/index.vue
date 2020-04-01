@@ -80,7 +80,6 @@ export default class Index extends Vue {
      */
     onDelete(params) {
         this.onConfirm().then(() => {
-            console.log("params", params);
             const parameters = {
                 ModelName: params.TableName,
                 Id: params.TargetId,
