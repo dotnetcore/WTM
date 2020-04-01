@@ -637,7 +637,9 @@ namespace WalkingTec.Mvvm.Core
                 (Entity as PersistPoco).IsValid = false;
                 (Entity as PersistPoco).UpdateTime = DateTime.Now;
                 (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateEntity(Entity);
+                DC.UpdateProperty(Entity, "IsValid");
+                DC.UpdateProperty(Entity, "UpdateTime");
+                DC.UpdateProperty(Entity, "UpdateBy");
                 try
                 {
                     DC.SaveChanges();
@@ -662,7 +664,9 @@ namespace WalkingTec.Mvvm.Core
                 (Entity as PersistPoco).IsValid = false;
                 (Entity as PersistPoco).UpdateTime = DateTime.Now;
                 (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateEntity(Entity);
+                DC.UpdateProperty(Entity, "IsValid");
+                DC.UpdateProperty(Entity, "UpdateTime");
+                DC.UpdateProperty(Entity, "UpdateBy");
                 try
                 {
                     await DC.SaveChangesAsync();
