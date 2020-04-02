@@ -14,6 +14,8 @@ import FormItem from "@/components/page/FormItem.vue";
 import FlexBox from "@/components/page/FlexBox.vue";
 // Create Form
 import CreateForm from "@/components/page/CreateForm";
+// string 转 函数式组件
+import RenderView from "@/components/page/RenderView";
 
 export default [
   { key: "Card", value: Card },
@@ -23,5 +25,6 @@ export default [
   { key: "WtmButBox", value: ButBox },
   { key: "WtmFormItem", value: FormItem },
   { key: "WtmFlexBox", value: FlexBox },
-  { key: "WtmCreateForm", value: CreateForm }
+  { key: "WtmCreateForm", value: CreateForm },
+  { key: "WtmRenderView", value: RenderView }
 ];

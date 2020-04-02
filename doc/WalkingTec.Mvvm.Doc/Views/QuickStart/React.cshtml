@@ -4,10 +4,9 @@
         color: #01aaed
     }
 </style>
-<wt:fieldset field-set-style="Simple" title="使用React编写前后端分离的项目">
+<wt:fieldset field-set-style="Simple" title="使用React,VUE编写前后端分离的项目">
     <wt:quote>
         <p>使用WTM框架同样可以编写微服务模式的项目，并且比传统方式简便的多</p>
-        <p>**目前前后端分离的模式只能算是预览版，很多功能还没有，感兴趣的朋友可以先体验并提出宝贵意见</p>
     </wt:quote>
     <wt:quote>
         <p>你同样可以直接线上生成项目，点<a href="/setup" target="_blank">这里</a> 可以直接为你生成包含解决方案的zip包，下载，解压，vs打开即可</p>
@@ -19,7 +18,7 @@
             关于如何创建WTM项目，请参考<a href="/#/QuickStart/FirstProject">第一个项目</a><br /><br />
         </li>
         <li>
-            只是在生成项目的时候，选择react模式，如图<br /><br />
+            只是在生成项目的时候，选择react,或者VUE模式，如图<br /><br />
             <img src="~/imgs/react1.png" /><br /><br />
         </li>
         <li>
@@ -33,11 +32,18 @@
         </li>
         <li>
             前台代码会在ClientApp目录中，当我们在VisualStudio中调试的时候，它会自动启动后台和前台，非常方便<br />
-            ClientApp目录是一个完整的React项目，纯前端人员可以使用Code之类的编译器直接打开ClientApp目录，和其他React项目没有区别<br />
+            ClientApp目录是一个完整的React或者VUE的项目，纯前端人员可以使用Code之类的编译器直接打开ClientApp目录，和其他React或VUE项目没有区别<br />
         </li>
         <li>
             框架生成的前端代码会在ClientApp/pages下面，生成之后可以自由修改<br />
-            在ClientApp/global.config.tsx中有一些全局设置可以修改，比如列表默认行数，使用居中弹出窗口还是右侧抽屉式窗口，是否使用Tab页，表单每行控件个数等等<br /><br />
+            在React模式中，ClientApp/global.config.tsx中有一些全局设置可以修改，比如是否是开发模式，列表默认行数，使用居中弹出窗口还是右侧抽屉式窗口，是否使用Tab页，表单每行控件个数等等<br /><br />
+            在VUE模式中，ClientApp/src/config/index.ts文件中也可以配置一些全局变量，比如是否为开发模式等。
+        </li>
+        <li>
+            前后端分离的情况下，前端和后端都有单独的选项控制是否为开发模式。<br />
+            前端在开发模式下会读取本地定义的菜单，也不会验证页面和按钮权限。<br />
+            前端在非开发模式下才会读取系统数据库中配置的菜单和权限。<br />
+            前端和后端应该同时设置成开发模式或者非开发模式，如果比如前端为开发模式，后端为非开发模式，则会造成页面上按钮都有，但是实际调用api时会报没有权限的错误。
         </li>
     </ul>
 </wt:fieldset>

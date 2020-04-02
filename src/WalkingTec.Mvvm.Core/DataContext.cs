@@ -72,6 +72,7 @@ namespace WalkingTec.Mvvm.Core
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
             base.OnModelCreating(modelBuilder);
         }
 

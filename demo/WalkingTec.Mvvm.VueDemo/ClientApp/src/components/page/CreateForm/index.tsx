@@ -10,7 +10,9 @@ import { ICreateFormOptions } from "./interface";
  *
  */
 @Component({
-  components: { "wtm-upload-img": WtmUploadImg }
+  components: {
+    "wtm-upload-img": WtmUploadImg
+  }
 })
 export default class CreateForm extends Vue {
   // 表单状态
@@ -84,7 +86,7 @@ export default class CreateForm extends Vue {
    * @param value
    */
   public setFormDataItem(path: string, value: any) {
-    _.set(this.formData, this.KeyByPoint(path), value);
+    _.set(this.formData, this.KeyByString(path), value);
   }
   /**
    * 返回wtmformItem

@@ -440,7 +440,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("ViewFile")]
-        public IActionResult ViewFile(Guid id, string _DONOT_USE_CS = "default")
+        public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             string html = string.Empty;
@@ -461,7 +461,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                html = $@"<img id='FileObject'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
+                html = $@"<img id='FileObject' style='{(string.IsNullOrEmpty(width)?"":$"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
             }
             return Content(html);
 
