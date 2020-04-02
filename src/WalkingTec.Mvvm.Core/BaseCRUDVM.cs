@@ -96,6 +96,8 @@ namespace WalkingTec.Mvvm.Core
             foreach (var li in lists)
             {
                 var gs = li.PropertyType.GetGenericArguments();
+                if (gs[0] == typeof(TModel))
+                    continue;
                 var newObj = Activator.CreateInstance(typeof(List<>).MakeGenericType(gs[0]));
                 li.SetValue(Entity, newObj, null);
             }
@@ -245,7 +247,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var pro in pros)
                 {
-                    if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                    if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)) && pro.PropertyType != Entity.GetType())
                     {
                         pro.SetValue(Entity, null);
                     }

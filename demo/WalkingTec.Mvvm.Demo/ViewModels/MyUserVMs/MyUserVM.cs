@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +19,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         [Display(Name = "用户组")]
         public List<Guid> SelectedUserGroupsIDs { get; set; }
 
+        public List<ComboSelectListItem> AllUsers { get; set; }
+
         public MyUserVM()
         {
             SetInclude(x => x.UserRoles);
@@ -31,6 +33,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
             SelectedUserRolesIDs = Entity.UserRoles?.Select(x => x.RoleId).ToList();
             AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.GroupName);
             SelectedUserGroupsIDs = Entity.UserGroups?.Select(x => x.GroupId).ToList();
+            AllUsers = DC.Set<MyUser>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.Name);
         }
 
         public override void DoAdd()
