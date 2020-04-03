@@ -3,7 +3,7 @@
 ## v3.5.x （2.5.x同步更新）
 
 ##3.5.4 以及 2.5.4 (2020-4-3)
-* **新增：**  新增了动态控制器，老项目需要手动在Project文件的<PropertyGroup>中加入<PreserveCompilationReferences>true</PreserveCompilationReferences>节点
+* **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
 
 * **修改：**  修复vue代码生成没有正确生成某些api的bug
 * **修改：**  修复vue自带系统管理中的一些bug，整体更稳定
