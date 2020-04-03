@@ -1,0 +1,13 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.RelatedUserVMs.RelatedUserListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.Extra2" />
+<wt:textbox field="Searcher.Email" />
+<wt:textbox field="Searcher.CellPhone" />
+<wt:textbox field="Searcher.IsValid" /><wt:combobox field="Searcher.IsValid" empty-text="全部" />
+<wt:combobox field="Searcher.SelectedUserRolesIDs" items="Searcher.AllUserRoless" empty-text="全部" />
+<wt:combobox field="Searcher.SelectedUserGroupsIDs" items="Searcher.AllUserGroupss" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/RelatedUser/Search"/>

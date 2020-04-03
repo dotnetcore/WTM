@@ -1,0 +1,27 @@
+@model WalkingTec.Mvvm.Demo.ViewModels.RelatedUserVMs.RelatedUserVM
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.Extra1" />
+<wt:textbox field="Entity.Extra2" />
+<wt:textbox field="Entity.ITCode" />
+<wt:textbox field="Entity.Password" />
+<wt:textbox field="Entity.Email" />
+<wt:textbox field="Entity.Name" />
+<wt:combobox field="Entity.Sex" />
+<wt:textbox field="Entity.CellPhone" />
+<wt:textbox field="Entity.HomePhone" />
+<wt:textbox field="Entity.Address" />
+<wt:textbox field="Entity.ZipCode" />
+<wt:upload field="Entity.PhotoId" />
+<wt:combobox field="Entity.ParentId" items="AllUsers" />
+<wt:combobox field="Entity.IsValid" />
+<wt:checkbox field="SelectedUserRolesIDs" items="AllUserRoless"/>
+<wt:checkbox field="SelectedUserGroupsIDs" items="AllUserGroupss"/>
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
