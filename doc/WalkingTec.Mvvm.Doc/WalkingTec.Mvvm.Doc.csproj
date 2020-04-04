@@ -6,6 +6,7 @@
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
     <AssemblyName>WalkingTec.Mvvm.Doc</AssemblyName>
     <Title>$(AssemblyName)</Title>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
