@@ -11,8 +11,8 @@ import { ICreateFormOptions } from "./interface";
  */
 @Component({
   components: {
-    "wtm-upload-img": WtmUploadImg
-  }
+    "wtm-upload-img": WtmUploadImg,
+  },
 })
 export default class CreateForm extends Vue {
   // 表单状态
@@ -21,13 +21,14 @@ export default class CreateForm extends Vue {
   @Prop() options!: ICreateFormOptions;
   // row class
   @Prop({ type: String, default: "" }) elRowClass;
-
+  // source 数据
+  @Prop() sourceFormData?: object;
+  // key替换'.'之后的数据
+  private formData: object = {};
   // 事件集合 @Prop({ type: Object, default: () => {} }) events;
   private elFormRefKey: string = "ref_name";
   // 组件集合
   private componentObj: any = new Utils();
-  // key替换'.'之后的数据
-  private formData: object = {};
   /**
    * 透传el-form组件
    */
@@ -126,7 +127,7 @@ export default class CreateForm extends Vue {
     this.formData = this.createFormData();
   }
   render(h) {
-    const components = _.keys(this.formData).map(key => {
+    const components = _.keys(this.formData).map((key) => {
       const newKey = this.KeyByPoint(key);
       const item = this.options.formItem[newKey];
       if (_.isFunction(item.isHidden)) {
@@ -138,13 +139,13 @@ export default class CreateForm extends Vue {
         return;
       }
       const itemComp = this.componentObj[item.type];
-      const option = { ...item, key };
+      const option = { ...item, key, sourceKey: newKey };
       const contentComp = itemComp ? itemComp.call(this, h, option) : null;
       return this.componentObj.wtmFormItem.call(this, h, option, contentComp);
     });
     const props = {
       ...this.options.formProps,
-      model: this.formData
+      model: this.formData,
     };
     const slots = this.$scopedSlots["default"];
     return (
