@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-plus" @click="onAdd">
             添加
         </el-button>
+        <table-form />
         <!-- 弹出框 -->
         <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" :testValue="testValue" @onSearch="onHoldSearch" />
     </div>
@@ -29,6 +30,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { AppModule } from "@/store/modules/app";
 import DialogForm from "./dialog-form.vue";
+import TableForm from "./table-form.vue";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import searchMixin from "@/vue-custom/mixin/search";
 import store from "../actionlog/store/index";
@@ -37,12 +39,71 @@ import store from "../actionlog/store/index";
     name: "demo",
     mixins: [searchMixin(), actionMixin()],
     store,
-    components: { DialogForm }
+    components: { DialogForm, TableForm },
 })
 export default class extends Vue {
     form = {};
     status = "add";
     num = 2;
+
+    // 表单结构
+    get formOptions() {
+        return {
+            formProps: {
+                "label-width": "100px",
+            },
+            formItem: {
+                "Entity.ID": {
+                    isHidden: true,
+                },
+                "Entity.Code": {
+                    label: "层位编码",
+                    rules: [
+                        {
+                            required: true,
+                            message: "层位编码不能为空",
+                            trigger: "blur",
+                        },
+                    ],
+                    type: "input",
+                },
+                "Entity.LayerTrans": {
+                    label: "层位翻译",
+                    rules: [],
+                    type: "input",
+                },
+                "Entity.LibraryStructId": {
+                    label: "所属单位",
+                    rules: [
+                        {
+                            required: true,
+                            message: "所属单位不能为空",
+                            trigger: "blur",
+                        },
+                    ],
+                    type: "select",
+                    children: [
+                        {
+                            Text: "天津2",
+                            Value: "tianjin2",
+                        },
+                        {
+                            Text: "深圳2",
+                            Value: "shenzhen2",
+                            disabled: true,
+                        },
+                        {
+                            Text: "韶关2",
+                            Value: "shaoguan2",
+                        },
+                    ],
+                    props: {
+                        clearable: true,
+                    },
+                },
+            },
+        };
+    }
 
     treeData = [
         {
@@ -55,23 +116,23 @@ export default class extends Vue {
                     children: [
                         {
                             label: "韶关2",
-                            value: "shaoguan2"
-                        }
-                    ]
-                }
-            ]
-        }
+                            value: "shaoguan2",
+                        },
+                    ],
+                },
+            ],
+        },
     ];
     testValue = "";
     private defaultProps = {
         children: "children",
-        label: "label"
+        label: "label",
     };
 
     options = {
         // 表单属性 非必需
         formProps: {
-            "label-width": "80px"
+            "label-width": "80px",
         },
         // 表单项组件数据 必需
         formItem: {
@@ -81,26 +142,26 @@ export default class extends Vue {
                 span: 24,
                 props: {
                     placeholder: "请输入账号...",
-                    "suffix-icon": "el-icon-date"
+                    "suffix-icon": "el-icon-date",
                 },
                 rules: {
                     required: true,
                     message: "请输入账号",
-                    trigger: "blur"
-                }
+                    trigger: "blur",
+                },
             },
             pwd: {
                 type: "input",
                 label: "密码",
                 props: {
                     placeholder: "请输入密码...",
-                    "show-password": true
+                    "show-password": true,
                 },
                 rules: {
                     required: true,
                     message: "请输入密码",
-                    trigger: "blur"
-                }
+                    trigger: "blur",
+                },
             },
             city: {
                 type: "select",
@@ -108,31 +169,31 @@ export default class extends Vue {
                 children: [
                     {
                         Text: "天津",
-                        Value: "tianjin"
+                        Value: "tianjin",
                     },
                     {
                         Text: "深圳",
                         Value: "shenzhen",
-                        disabled: true
+                        disabled: true,
                     },
                     {
                         Text: "韶关",
-                        Value: "shaoguan"
+                        Value: "shaoguan",
                     },
                     {
                         Text: "清空",
-                        Value: "shaoguan2"
-                    }
+                        Value: "shaoguan2",
+                    },
                 ],
                 events: {
-                    change: this.onChange
+                    change: this.onChange,
                 },
-                defaultValue: "shenzhen"
+                defaultValue: "shenzhen",
             },
             citys: {
                 type: "select",
                 label: "城市二级",
-                children: []
+                children: [],
             },
             gender: {
                 type: "radioGroup",
@@ -140,24 +201,24 @@ export default class extends Vue {
                 children: [
                     {
                         Value: 0,
-                        Text: "男"
+                        Text: "男",
                     },
                     {
                         Value: 1,
-                        Text: "女"
-                    }
+                        Text: "女",
+                    },
                 ],
                 rules: {
                     required: true,
                     message: "请选择性别",
-                    trigger: "change"
-                }
+                    trigger: "change",
+                },
             },
             phone: {
                 type: "input",
                 label: "手机",
                 props: {
-                    placeholder: "请输入手机号..."
+                    placeholder: "请输入手机号...",
                 },
                 rules: {
                     required: true,
@@ -170,34 +231,34 @@ export default class extends Vue {
                         } else {
                             callback();
                         }
-                    }
-                }
+                    },
+                },
             },
             msg: {
                 type: "input",
                 label: "留言",
                 props: {
                     placeholder: "留言...",
-                    type: "textarea"
+                    type: "textarea",
                 },
                 rules: {
                     required: true,
                     trigger: "blur",
-                    message: "请留下您宝贵的意见"
-                }
+                    message: "请留下您宝贵的意见",
+                },
             },
             imgid: {
                 type: "wtmUploadImg",
-                label: "上传图片"
+                label: "上传图片",
             },
             testsole: {
                 type: "wtmSlot",
                 label: "自定义",
-                slotKey: "skey"
+                slotKey: "skey",
             },
             uploadId: {
                 type: "upload",
-                label: "上传文件"
+                label: "上传文件",
             },
             selectone: {
                 type: "select",
@@ -207,16 +268,16 @@ export default class extends Vue {
                         Text: "天津",
                         Value: "tianjin",
                         slot: `<span style="float: left">{Text}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{Value}</span>`
+                        <span style="float: right; color: #8492a6; font-size: 13px">{Value}</span>`,
                     },
                     {
                         Text: "上海",
                         Value: "shaoguan2",
-                        slot: "<span>上海44</span>"
-                    }
-                ]
-            }
-        }
+                        slot: "<span>上海44</span>",
+                    },
+                ],
+            },
+        },
     };
     created() {}
     onTest() {
@@ -227,6 +288,7 @@ export default class extends Vue {
     }
     testSubmit() {
         console.log("formData", JSON.stringify(this.$refs.wForm.formData));
+        console.log("sourceFormData", JSON.stringify(this.sourceFormData));
     }
     testFormItem() {
         const item = this.$refs.wForm.getFormItem("accout");
@@ -239,21 +301,20 @@ export default class extends Vue {
             this.options.formItem["citys"].children = [
                 {
                     Text: "天津2",
-                    Value: "tianjin2"
+                    Value: "tianjin2",
                 },
                 {
                     Text: "深圳2",
                     Value: "shenzhen2",
-                    disabled: true
+                    disabled: true,
                 },
                 {
                     Text: "韶关2",
-                    Value: "shaoguan2"
-                }
+                    Value: "shaoguan2",
+                },
             ];
         }
     }
-
     //树型点选触发
     private handleNodeClick(data) {
         this.testValue = data.value;
