@@ -53,7 +53,7 @@ export default class Utils {
       span: option.span,
       isShow: option.isShow,
       value: option.value,
-      isImg: option.isImg
+      isImg: option.isImg,
     };
     // 展示状态 需要操作的组件
     if (_t.status === _t.$actionType.detail) {
@@ -91,12 +91,17 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     let placeholder = `请输入${option.label}`;
     if (props && props.placeholder) {
       placeholder = props.placeholder;
     }
+
+    const sourceKey = option.sourceKey;
+    let vmodelData = sourceItem(_t.sourceFormData, sourceKey);
+    // v-model={_t.formData[key]}
+    // v-model={vmodelData[sourceKey]}
     return (
       <el-input
         v-model={_t.formData[key]}
@@ -113,7 +118,7 @@ export default class Utils {
     const { style, props, key, mapKey } = option;
     let components = [];
     if (option.children && _.isArray(option.children)) {
-      components = option.children.map(child => {
+      components = option.children.map((child) => {
         const value = child.Value;
         const label = child.Text || child.text;
         let slot: any = undefined;
@@ -139,14 +144,14 @@ export default class Utils {
       directives: [...(option.directives || []), vEdit(_t, option.children)],
       on: translateEvents(option.events, _t),
       props,
-      style
+      style,
     };
     // mapkey && 多选
     if (mapKey && props.multiple) {
-      compData.on["input"] = function(val) {
-        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
+      compData.on["input"] = function (val) {
+        _t.formData[key] = val.map((item) => ({ [mapKey]: item }));
       };
-      const value = _t.formData[key].map(item => item[mapKey]);
+      const value = _t.formData[key].map((item) => item[mapKey]);
       return (
         <el-select value={value} {...compData}>
           {components}
@@ -175,7 +180,7 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     return (
       <el-radio v-model={_t.formData[key]} {...compData}>
@@ -189,7 +194,7 @@ export default class Utils {
     const { style, props, slot, key } = option;
     let components = [];
     if (option.children) {
-      components = option.children.map(child => {
+      components = option.children.map((child) => {
         const label = child.Value;
         const text = child.Text || child.text;
         return (
@@ -203,7 +208,7 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     return (
       <el-radio-group v-model={_t.formData[key]} {...compData}>
@@ -221,7 +226,7 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     return (
       <el-checkbox v-model={_t.formData[key]} {...compData}>
@@ -235,7 +240,7 @@ export default class Utils {
     const { style, props, slot, key, mapKey } = option;
     let components = [];
     if (option.children) {
-      components = option.children.map(child => {
+      components = option.children.map((child) => {
         const label = child.Value;
         const text = child.Text || child.text;
         return (
@@ -251,13 +256,13 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     if (mapKey) {
-      compData.on["input"] = function(val) {
-        _t.formData[key] = val.map(item => ({ [mapKey]: item }));
+      compData.on["input"] = function (val) {
+        _t.formData[key] = val.map((item) => ({ [mapKey]: item }));
       };
-      const value = _t.formData[key].map(item => item[mapKey]);
+      const value = _t.formData[key].map((item) => item[mapKey]);
       return (
         <el-checkbox-group value={value} {...compData}>
           {components}
@@ -281,7 +286,7 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     return (
       <el-switch v-model={_t.formData[key]} {...compData}>
@@ -299,7 +304,7 @@ export default class Utils {
       directives,
       on: events || {},
       props: props || {},
-      style
+      style,
     };
     compData.props["file-list"] = [];
     compData.props.limit = 1;
@@ -313,7 +318,7 @@ export default class Utils {
     }
     if (_t.formData[key]) {
       compData.props["file-list"] = [
-        { name: label, url: fileApi + _t.formData[key] }
+        { name: label, url: fileApi + _t.formData[key] },
       ];
     }
     const defaultSlot = <el-button type="primary">点击上传</el-button>;
@@ -324,7 +329,7 @@ export default class Utils {
     const _t = vm || this;
     const { style, props, slot, directives, key } = option;
     const on = translateEvents(option.events, _t);
-    on["onBackImgId"] = event => {
+    on["onBackImgId"] = (event) => {
       _t.formData[key] = event;
     };
     const compData = {
@@ -332,7 +337,7 @@ export default class Utils {
       on,
       props,
       style,
-      slot
+      slot,
     };
     return (
       <wtm-upload-img imgId={_t.formData[key]} {...compData}>
@@ -364,7 +369,7 @@ export default class Utils {
     const compData = {
       directives,
       on,
-      style
+      style,
     };
     return <label {...compData}>{_t.formData[key]}</label>;
   }
@@ -377,7 +382,7 @@ export default class Utils {
       directives: [...(directives || []), vEdit(_t)],
       on,
       props,
-      style
+      style,
     };
     return (
       <el-date-picker v-model={_t.formData[key]} {...compData}></el-date-picker>
@@ -389,24 +394,26 @@ export default class Utils {
     const { directives, props, style, key, mapKey } = option;
     const on = {
       ...translateEvents(option.events, _t),
-      input: function(val) {
-        _t.formData[key] = val.map(item =>
+      input: function (val) {
+        _t.formData[key] = val.map((item) =>
           mapKey ? { [mapKey]: item } : item
         );
-      }
+      },
     };
     // 结构 Text，Value
-    const editData = props.data.map(item => ({
+    const editData = props.data.map((item) => ({
       Text: item.label,
-      Value: item.key
+      Value: item.key,
     }));
     const compData = {
       directives: [...(directives || []), vEdit(_t, editData)],
       on,
       props,
-      style
+      style,
     };
-    const value = _t.formData[key].map(item => (mapKey ? item[mapKey] : item));
+    const value = _t.formData[key].map((item) =>
+      mapKey ? item[mapKey] : item
+    );
     return <el-transfer value={value} {...compData}></el-transfer>;
   }
 }
@@ -431,3 +438,28 @@ export const translateEvents = (events = {}, vm) => {
 export const vEdit = (vm, value: Array<any> | null = null) => {
   return { name: "edit", arg: vm.status, value: value };
 };
+
+/**
+ * 源数据 get,set
+ * 支持：'Entity.ID' => Entity: { ID }
+ * @param formData
+ * @param keyPath
+ */
+export const sourceItem = (formData, keyPath) => {
+  return {
+    set [keyPath](value) {
+      _.set(formData, keyPath, value);
+    },
+    get [keyPath]() {
+      return _.get(formData, keyPath);
+    },
+  };
+};
+// function fn(obj: object, path: string[]) {
+//   if (path.length > 1) {
+//     const key = path.shift();
+//     return key !== undefined ? fn(obj[key], path) : obj;
+//   } else {
+//     return obj;
+//   }
+// }
