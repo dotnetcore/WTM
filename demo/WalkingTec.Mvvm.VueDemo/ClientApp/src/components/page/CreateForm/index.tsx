@@ -2,6 +2,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import Utils from "./utils";
 import WtmUploadImg from "@/components/page/UploadImg.vue";
 import { ICreateFormOptions } from "./interface";
+// 组件集合
+const componentObj: any = new Utils();
 /**
  * 创建form
  *
@@ -23,12 +25,12 @@ export default class CreateForm extends Vue {
   @Prop({ type: String, default: "" }) elRowClass;
   // source 数据
   @Prop() sourceFormData?: object;
+  // 组件display
+  @Prop({ type: Boolean, default: false }) elDisabled;
   // key替换'.'之后的数据
   private formData: object = {};
   // 事件集合 @Prop({ type: Object, default: () => {} }) events;
   private elFormRefKey: string = "ref_name";
-  // 组件集合
-  private componentObj: any = new Utils();
   /**
    * 透传el-form组件
    */
@@ -61,21 +63,15 @@ export default class CreateForm extends Vue {
    * 'Entity.ID' => Entity: { ID }
    */
   public getFormData(): object {
-    let newFormData = {};
-    _.mapKeys(this.formData, (value, key) => {
-      _.setWith(newFormData, this.KeyByPoint(key), value);
-    });
-    return newFormData;
+    return this.sourceFormData || this.formData;
   }
   /**
    *  Entity: { ID } => 'Entity.ID'
    */
   public setFormData(data): object {
-    // key包含'.'的数据
     let pointData: object = {};
     _.mapKeys(this.options.formItem, (value, key) => {
-      const newKey = this.KeyByString(key);
-      this.formData[newKey] = _.get(data, key);
+      this.setFormDataItem(key, _.get(data, key));
       pointData[key] = _.get(data, key);
     });
     return pointData;
@@ -87,49 +83,37 @@ export default class CreateForm extends Vue {
    * @param value
    */
   public setFormDataItem(path: string, value: any) {
-    _.set(this.formData, this.KeyByString(path), value);
+    _.set(this.sourceFormData || this.formData, path, value);
   }
   /**
    * 返回wtmformItem
    * @param key
    */
   public getFormItem(key): Vue | Element | Vue[] | Element[] {
-    const newKey = this.KeyByString(key);
-    return this.$refs[newKey];
+    return this.$refs[key];
   }
 
   private createFormData() {
-    let formData = {};
+    let newFormData = {};
     const formItem = this.options.formItem;
-    _.mapKeys(formItem, (valule, key) => {
-      const newKey = this.KeyByString(key);
-      if (_.isNil(valule.defaultValue)) {
-        formData[newKey] = ["switch"].includes(valule.type) ? true : "";
+    _.mapKeys(formItem, (item, key) => {
+      let value: any = "";
+      if (_.isNil(item.defaultValue)) {
+        value = ["switch"].includes(item.type) ? true : "";
       } else {
-        formData[newKey] = valule.defaultValue;
+        value = item.defaultValue;
       }
+      _.setWith(newFormData, key, value);
     });
-    return formData;
+    return newFormData;
   }
-  /**
-   * e.key => e_partition_key
-   */
-  private KeyByPoint(key): string {
-    return key.replace(/_partition_/g, ".");
-  }
-  /**
-   * e_partition_key => e.key
-   */
-  private KeyByString(key): string {
-    return key.replace(/(\.)/g, "_partition_");
-  }
+
   created() {
     this.formData = this.createFormData();
   }
   render(h) {
-    const components = _.keys(this.formData).map((key) => {
-      const newKey = this.KeyByPoint(key);
-      const item = this.options.formItem[newKey];
+    const components = _.keys(this.options.formItem).map((key) => {
+      const item = this.options.formItem[key];
       if (_.isFunction(item.isHidden)) {
         if (item.isHidden(this.getFormData(), this.status)) {
           return;
@@ -138,14 +122,15 @@ export default class CreateForm extends Vue {
       if ((_.isBoolean(item.isHidden) && item.isHidden) || !item.type) {
         return;
       }
-      const itemComp = this.componentObj[item.type];
-      const option = { ...item, key, sourceKey: newKey };
+
+      const itemComp = componentObj[item.type];
+      const option = { ...item, key };
       const contentComp = itemComp ? itemComp.call(this, h, option) : null;
-      return this.componentObj.wtmFormItem.call(this, h, option, contentComp);
+      return componentObj.wtmFormItem.call(this, h, option, contentComp);
     });
     const props = {
       ...this.options.formProps,
-      model: this.formData,
+      model: this.sourceFormData || this.formData,
     };
     const slots = this.$scopedSlots["default"];
     return (
@@ -158,3 +143,29 @@ export default class CreateForm extends Vue {
     );
   }
 }
+
+// private createFormData() {
+// let formData = {};
+// const formItem = this.options.formItem;
+// _.mapKeys(formItem, (valule, key) => {
+//   const newKey = this.KeyByString(key);
+//   if (_.isNil(valule.defaultValue)) {
+//     formData[newKey] = ["switch"].includes(valule.type) ? true : "";
+//   } else {
+//     formData[newKey] = valule.defaultValue;
+//   }
+// });
+// return formData;
+// }
+// /**
+//  * e.key => e_partition_key
+//  */
+// private KeyByPoint(key): string {
+//   return key.replace(/_partition_/g, ".");
+// }
+// /**
+//  * e_partition_key => e.key
+//  */
+// private KeyByString(key): string {
+//   return key.replace(/(\.)/g, "_partition_");
+// }
