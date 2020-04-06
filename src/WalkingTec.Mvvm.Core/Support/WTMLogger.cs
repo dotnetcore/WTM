@@ -28,24 +28,22 @@ namespace WalkingTec.Mvvm.Core
 
         public WTMLoggerProvider(IOptions<Configs> _configs)
         {
-            int a = 0;
+            if (_configs.Value != null)
+            {
+                cs = _configs.Value.ConnectionStrings.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
+                if (cs == null)
+                {
+                    cs = _configs.Value.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
+                }
+                if (cs == null)
+                {
+                    cs = _configs.Value.ConnectionStrings.FirstOrDefault();
+                }
+            }
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            if (cs == null)
-            {
-                var config = GlobalServices.GetRequiredService<Configs>();
-                cs = config.ConnectionStrings.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
-                if (cs == null)
-                {
-                    cs = config.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
-                }
-                if (cs == null)
-                {
-                    cs = config.ConnectionStrings.FirstOrDefault();
-                }
-            }
             return new WTMLogger(categoryName, cs);
         }
         public void Dispose() { }

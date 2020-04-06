@@ -15,6 +15,7 @@ using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo
                     })
                     .Configure(x =>
                     {
-                        var configs = x.ApplicationServices.GetRequiredService<Configs>();
+                        var configs = x.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
                         if (configs.IsQuickDebug == true)
                         {
                             x.UseSwagger();

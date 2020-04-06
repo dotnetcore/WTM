@@ -321,7 +321,7 @@ namespace WalkingTec.Mvvm.Mvc
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
         {
             IconFontsHelper.GenerateIconFont();
-            var configs = app.ApplicationServices.GetRequiredService<Configs>();
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
 
             if (configs == null)
