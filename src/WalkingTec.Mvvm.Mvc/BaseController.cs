@@ -6,12 +6,14 @@ using System.Reflection;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -23,9 +25,8 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public abstract class BaseController : Controller, IBaseController
     {
-        public BaseController()
-        {
-        }
+        public WTMContext WtmContext { get; set; }
+
 
         private Configs _configInfo;
         public Configs ConfigInfo
@@ -324,6 +325,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public SimpleLog Log { get; set; }
 
+
         //-------------------------------------------方法------------------------------------//
 
         #region CreateVM
@@ -362,6 +364,7 @@ namespace WalkingTec.Mvvm.Mvc
             rv.Controller = this;
             rv.ControllerName = this.GetType().FullName;
             rv.Localizer = this.Localizer;
+            rv.WtmContext = this.WtmContext;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try
@@ -838,7 +841,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
                 if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))

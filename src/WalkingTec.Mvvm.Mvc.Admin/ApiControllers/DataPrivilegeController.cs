@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
-            var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
+            var dps =GlobaInfo.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
                 AllItems = dps.GetItemList(DC, LoginUserInfo);
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetPrivileges()
         {
-            var rv = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            var rv = GlobaInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return Ok(rv);
         }
 

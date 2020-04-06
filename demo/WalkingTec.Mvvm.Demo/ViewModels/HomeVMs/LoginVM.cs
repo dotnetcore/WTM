@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            var dpsSetting = WtmContext.GlobaInfo.DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
                 if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))

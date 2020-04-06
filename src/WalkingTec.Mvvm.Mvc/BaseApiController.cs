@@ -6,6 +6,7 @@ using System.Reflection;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -22,6 +23,9 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public abstract class BaseApiController : ControllerBase, IBaseController
     {
+
+        public WTMContext WtmContext { get; set; }
+
         private Configs _configInfo;
         public Configs ConfigInfo
         {
@@ -562,7 +566,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
                 if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))

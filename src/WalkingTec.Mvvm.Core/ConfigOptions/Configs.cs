@@ -300,30 +300,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region Data Privilege
-
-        private List<IDataPrivilege> _dataPrivilegeSettings;
-
-        /// <summary>
-        /// Data Privilege
-        /// </summary>
-        public List<IDataPrivilege> DataPrivilegeSettings
-        {
-            get
-            {
-                if (_dataPrivilegeSettings == null)
-                {
-                    _dataPrivilegeSettings = new List<IDataPrivilege>();
-                }
-                return _dataPrivilegeSettings;
-            }
-            set
-            {
-                _dataPrivilegeSettings = value;
-            }
-        }
-
-        #endregion
 
         #region DFS Config
 

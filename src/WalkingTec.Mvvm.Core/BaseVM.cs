@@ -40,6 +40,8 @@ namespace WalkingTec.Mvvm.Core
 
         #region Property
 
+        public WTMContext WtmContext { get; set; }
+
         private Guid _uniqueId;
         /// <summary>
         /// VM实例的Id

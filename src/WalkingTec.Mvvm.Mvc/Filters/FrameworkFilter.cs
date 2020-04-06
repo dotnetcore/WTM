@@ -30,6 +30,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
 
+            ctrl.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
 
             if (context.HttpContext.Items.ContainsKey("actionstarttime") == false)
             {
@@ -71,6 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
                     model.Localizer = ctrl.Localizer;
+                    model.WtmContext = ctrl.WtmContext;
                     var programtype = ctrl.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
                     {

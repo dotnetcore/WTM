@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -22,15 +23,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if (_configInfo == null)
-                {
-                    _configInfo = (Configs)HttpContext.RequestServices.GetService(typeof(Configs));
-                }
                 return _configInfo;
-            }
-            set
-            {
-                _configInfo = value;
             }
         }
 
@@ -280,6 +273,12 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         public ActionLog Log { get; set; }
+
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd)
+        {
+            _configInfo = _config.Value;
+            _globaInfo = _gd;
+        }
 
         protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {

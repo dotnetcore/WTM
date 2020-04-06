@@ -1,4 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 using System;
@@ -13,13 +16,21 @@ namespace WalkingTec.Mvvm.Core
     {
         public static ILoggingBuilder AddWTMLogger(this ILoggingBuilder builder)
         {
-            return builder.AddProvider(new WTMLoggerProvider());
+            builder.AddConfiguration();
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider,WTMLoggerProvider>());
+            return builder;
         }
     }
 
     public class WTMLoggerProvider : ILoggerProvider
     {
         private CS cs = null;
+
+        public WTMLoggerProvider(IOptions<Configs> _configs)
+        {
+            int a = 0;
+        }
+
         public ILogger CreateLogger(string categoryName)
         {
             if (cs == null)

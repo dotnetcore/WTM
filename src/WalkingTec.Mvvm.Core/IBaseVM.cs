@@ -10,6 +10,9 @@ namespace WalkingTec.Mvvm.Core
     public interface IBaseVM
     {
         #region Property
+
+        WTMContext WtmContext { get; set; }
+
         /// <summary>
         /// UniqueId
         /// </summary>

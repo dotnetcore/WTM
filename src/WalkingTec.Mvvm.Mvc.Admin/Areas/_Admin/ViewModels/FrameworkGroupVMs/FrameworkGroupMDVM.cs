@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
         protected override void InitVM()
         {
             DpLists = new List<GroupDp>();
-            foreach (var item in ConfigInfo.DataPrivilegeSettings)
+            foreach (var item in WtmContext.GlobaInfo.DataPrivilegeSettings)
             {
                 DpListVM list = new DpListVM();
                 list.Searcher = new DpSearcher();

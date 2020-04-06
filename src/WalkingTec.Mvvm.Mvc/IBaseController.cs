@@ -9,6 +9,8 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public interface IBaseController
     {
+        WTMContext WtmContext { get; set; }
+
         Configs ConfigInfo { get; }
         GlobalData GlobaInfo { get; }
         string CurrentCS { get; set; }

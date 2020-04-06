@@ -274,7 +274,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>拼接好where条件的query</returns>
         private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, List<DataPrivilege> dps) where T : TopBasePoco
         {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
             Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
             //循环数据权限，加入到where条件中，达到自动过滤的效果
@@ -418,7 +418,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         fieldName = tableName[0];
                     }
-                    var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+                    var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
 
                     //循环系统设定的数据权限，如果没有和关联类一样的表，则跳过
                     if (dpsSetting.Where(x => x.ModelName == fieldName).SingleOrDefault() == null)

@@ -54,16 +54,10 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class FrameworkServiceExtension
     {
-        private static List<Assembly> _dynamicAssembly = new List<Assembly>();
-        public static IServiceCollection AddFrameworkService(this IServiceCollection services,
-            Func<ActionExecutingContext, string> CsSector = null,
-            List<IDataPrivilege> dataPrivilegeSettings = null,
-            WebHostBuilderContext webHostBuilderContext = null
-        )
+
+        public static IConfigurationBuilder WTM_SetCurrentDictionary(this IConfigurationBuilder cb)
         {
             CurrentDirectoryHelpers.SetCurrentDirectory();
-
-            var configBuilder = new ConfigurationBuilder();
 
             if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json")))
             {
@@ -74,57 +68,44 @@ namespace WalkingTec.Mvvm.Mvc
                     if (File.Exists(Path.Combine(binPath, "appsettings.json")))
                     {
                         Directory.SetCurrentDirectory(binPath);
-                        configBuilder.SetBasePath(binPath)
-                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                            .AddEnvironmentVariables();
+                        cb.SetBasePath(binPath);
+                            //.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            //.AddEnvironmentVariables();
                     }
                 }
             }
             else
             {
-                configBuilder.SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables();
+                cb.SetBasePath(Directory.GetCurrentDirectory());
             }
+            return cb;
+        }
 
-            if (webHostBuilderContext != null)
-            {
-                var env = webHostBuilderContext.HostingEnvironment;
-                configBuilder
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-            }
+        private static List<Assembly> _dynamicAssembly = new List<Assembly>();
+        public static IServiceCollection AddFrameworkService(this IServiceCollection services,
+            Func<ActionExecutingContext, string> CsSector = null,
+            List<IDataPrivilege> dataPrivilegeSettings = null,
+            WebHostBuilderContext webHostBuilderContext = null
+        )
+        {
+
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.WTM_SetCurrentDictionary()
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddEnvironmentVariables();
+
             var config = configBuilder.Build();
+            services.Configure<Configs>(config);            
             var con = config.Get<Configs>() ?? new Configs();
-
-            var _frameworkCtrl = _FrameworTemp.FrameworkCtrlTemp;
-            if (con.IsFilePublic)
-            {
-                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", "[AllowAnonymous]").Replace("$ViewFile$", "[AllowAnonymous]");
-            }
-            else
-            {
-                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", string.Empty).Replace("$ViewFile$", string.Empty);
-            }
-            AssemblyComplier oop = new AssemblyComplier();
-            oop.Add(_frameworkCtrl);
-            var tempAssembly = oop.GetAssembly();
-            _dynamicAssembly.Add(tempAssembly);
+            services.AddScoped<WTMContext>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
+            //add dataprivileges
 
-            if (dataPrivilegeSettings != null)
-            {
-                con.DataPrivilegeSettings = dataPrivilegeSettings;
-            }
-            else
-            {
-                con.DataPrivilegeSettings = new List<IDataPrivilege>();
-            }
-            SetDbContextCI(gd.AllAssembly, con);
             gd.AllModels = GetAllModels(con);
             services.AddSingleton(gd);
-            services.AddSingleton(con);
+            //services.AddSingleton(con);
             services.AddResponseCaching();
             services.AddMemoryCache();
             services.AddDistributedMemoryCache();
@@ -207,7 +188,6 @@ namespace WalkingTec.Mvvm.Mvc
             .ConfigureApplicationPartManager(appPartsManager =>
             {
                 var feature = new ControllerFeature();
-                appPartsManager.ApplicationParts.Add(new AssemblyPart(tempAssembly));
                 if (mvc != null)
                 {
                     appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
@@ -620,47 +600,6 @@ namespace WalkingTec.Mvvm.Mvc
             return controllers;
         }
 
-        /// <summary>
-        /// 获取DbContextCI
-        /// </summary>
-        /// <returns></returns>
-        private static void SetDbContextCI(List<Assembly> AllAssembly, Configs con)
-        {
-            List<ConstructorInfo> cis = new List<ConstructorInfo>();
-            foreach (var ass in AllAssembly)
-            {
-                try
-                {
-                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext" && x.Name != "FrameworkContext" && x.Name != "EmptyContext").ToList();
-                    foreach (var st in t)
-                    {
-                        var ci = st.GetConstructor(new Type[] { typeof(CS) });
-                        if (ci != null)
-                        {
-                            cis.Add(ci);
-                        }
-                    }
-                }
-                catch { }
-            }
-            foreach (var item in con.ConnectionStrings)
-            {
-                string dcname = item.DbContext;
-                if (string.IsNullOrEmpty(dcname))
-                {
-                    dcname = "DataContext";
-                }
-                item.DcConstructor = cis.Where(x => x.DeclaringType.Name.ToLower() == dcname.ToLower()).FirstOrDefault();
-                if (item.DcConstructor == null)
-                {
-                    item.DcConstructor = cis.FirstOrDefault();
-                }
-                if (item.DbType == null)
-                {
-                    item.DbType = con.DbType;
-                }
-            }
-        }
 
         /// <summary>
         /// 获取所有 Model

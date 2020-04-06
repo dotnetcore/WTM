@@ -10,6 +10,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {

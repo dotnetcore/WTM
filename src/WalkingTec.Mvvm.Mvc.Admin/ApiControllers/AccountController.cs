@@ -318,7 +318,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
-            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
                 if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
