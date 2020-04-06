@@ -25,7 +25,7 @@ import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
 import localeText from "./localeText";
 import frameworkComponents from "./frameworkComponents";
-import { filter } from "rxjs/operators";
+import { filter, debounceTime } from "rxjs/operators";
 LicenseManager.setLicenseKey(
   "ag-Grid_Evaluation_License_Not_for_Production_100Devs30_August_2037__MjU4ODczMzg3NzkyMg==9e93ed5f03b0620b142770f2594a23a2"
 );
@@ -96,7 +96,7 @@ export default class AgGrid extends Vue {
         field: "Action",
         cellRenderer: "Action",
         pinned: "right",
-        minWidth: 130,
+        minWidth: 130
         // ...rowActionProps
       }
     ].filter(Boolean);
@@ -167,11 +167,22 @@ export default class AgGrid extends Vue {
     }
   };
   height = 500;
-  @Debounce(200)
+  /**
+   * 当前节点是否在 Dom 树中
+   */
+  isConnected() {
+    // console.log(
+    //   "AgGrid -> getisConnected ->",
+    //   this.GridOptionsProps.context.PageStore.options.Search.url,
+    //   lodash.get(this, "$el.isConnected", false)
+    // );
+    return lodash.get(this, "$el.isConnected", false);
+  }
+  @Debounce(50)
   onCalculation() {
     this.GridEvents.sizeColumnsToFit();
   }
-  @Debounce(200)
+  @Debounce(50)
   onSetHeight() {
     try {
       const offsetTop = lodash.get(this, "$parent.$el.offsetTop", 0),
@@ -184,14 +195,18 @@ export default class AgGrid extends Vue {
     }
   }
   mounted() {
-    this.onSetHeight();
-    this.onCalculation();
+    if (this.isConnected()) {
+      this.onSetHeight();
+      this.onCalculation();
+    }
     this.ResizeEvent = fromEvent(window, "resize")
       .pipe(
+        debounceTime(200),
         // 当前 节点 在 dom 树中
-        filter(() => lodash.get(this, "$el.isConnected", false))
+        filter(() => this.isConnected())
       )
       .subscribe(e => {
+        // console.log("AgGrid -> mounted -> e", this.GridOptionsProps.context.PageStore.options.Search.url);
         this.onCalculation();
         this.onSetHeight();
       });

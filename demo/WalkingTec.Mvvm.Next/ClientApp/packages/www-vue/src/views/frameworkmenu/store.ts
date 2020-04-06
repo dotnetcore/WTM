@@ -1,5 +1,20 @@
 import { EntitiesPageStore } from '@leng/public/src';
 import lodash from 'lodash';
+import { Observable } from 'rxjs';
+export function onGetController() {
+    return new Observable<any[]>((sub) => {
+        import("../index").then(pages => {
+            const PagesList = [];
+            lodash.map(pages.default, (item) => {
+                if (item.controller) {
+                    PagesList.push({ Text: item.name, Value: item.controller, Url: item.path })
+                }
+            })
+            sub.next(PagesList);
+            sub.complete();
+        })
+    })
+}
 export class PageStore extends EntitiesPageStore {
     constructor() {
         super({

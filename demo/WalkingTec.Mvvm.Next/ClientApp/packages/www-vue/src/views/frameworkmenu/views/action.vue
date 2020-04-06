@@ -1,5 +1,9 @@
 <template>
-  <w-actions :PageStore="PageStore" :Entities="Entities" :params="params">
+  <w-actions
+    :PageStore="PageStore"
+    :Entities="Entities"
+    :params="params"
+  >
     <template #pageActionLeft>
       <a-button @click="onRefreshMenu">
         <a-icon type="reload" />
@@ -7,9 +11,12 @@
       </a-button>
       <a-divider type="vertical" />
     </template>
-    <template #Insert></template>
-    <template #Update></template>
-    <template #Details></template>
+    <template #Insert>
+      <Entity-IsInside />
+      <SelectedModule />
+    </template>
+    <!-- <template #Update></template>
+    <template #Details></template> -->
   </w-actions>
 </template>
 <script lang="ts">
@@ -41,6 +48,9 @@ export default class ViewAction extends Vue {
   /** @submit="onSubmit" 替换 默认 提交函数 */
   onSubmit(value, type, v) {}
   mounted() {}
+  /**
+   * 刷新菜单事件
+   */
   async onRefreshMenu() {
     try {
       await this.PageStore.onRefreshMenu();

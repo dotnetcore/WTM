@@ -53,14 +53,20 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach((to, from, next) => {
-//   // console.log("TCL: from " + RootStore.UserStore.Loading, from);
-//   // console.log("TCL: to", to);
-//   // if (RootStore.UserStore.Loading) {
-//   //   next(false)
-//   // } else {
-//   next()
-//   // }
+router.beforeEach((to, from, next) => {
+  console.log("TCL: from " + from);
+  // console.log("TCL: to", to);
+  // if (RootStore.UserStore.Loading) {
+  //   next(false)
+  // } else {
+  next()
+
+  // }
+})
+// router.afterEach((to, from) => {
+//   setTimeout(() => {
+//     dispatchEvent(new CustomEvent('resize'))
+//   }, 50);
 // })
 // router.beforeResolve((to, from, next) => {
 //   next((vm) => {

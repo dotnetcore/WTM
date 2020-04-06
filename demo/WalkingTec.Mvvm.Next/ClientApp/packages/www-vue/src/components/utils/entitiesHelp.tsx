@@ -216,7 +216,7 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
             if (lodash.isArray(options)) {
                 dataSource = options;
             } else if (lodash.isArray(itemDataSource)) {
-                dataSource = itemDataSource;
+                dataSource = this.map(itemDataSource);
             } else if (itemDataSource instanceof Promise || itemDataSource instanceof Observable || lodash.isFunction(itemDataSource)) {
                 loadData = true
             }
@@ -287,18 +287,21 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
                 return this.onLoadData(itemDataSource.toPromise())
             }
             const dataSource = await itemDataSource;
-            this.dataSource = lodash.map(dataSource, (data: any) => {
+            this.dataSource = this.map(dataSource);
+            this.spinning = false;
+        }
+        map(dataSource) {
+            return lodash.map(dataSource, (data: any) => {
                 return {
-                    ...data,
                     // select
                     label: data.Text,
                     value: data.Value,
                     // transfer
                     key: data.Value,
                     title: data.Text,
+                    ...data,
                 }
-            });
-            this.spinning = false;
+            })
         }
     }
     return FieldItem;
