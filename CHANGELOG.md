@@ -2,6 +2,14 @@
 
 ## v3.5.x （2.5.x同步更新）
 
+##3.5.4 以及 2.5.4 (2020-4-3)
+* **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
+
+* **修改：**  修复vue代码生成没有正确生成某些api的bug
+* **修改：**  修复vue自带系统管理中的一些bug，整体更稳定
+* **修改：**  IsFilePublic配置在3.x下可以正常工作
+* **修改：**  修复框架自带GetFile和ViewFile方法无法正常调用的bug
+
 ##3.5.2 以及 2.5.2 (2020-3-29)
 * **修改：**  修复vue代码生成下拉菜单少了一个逗号的bug
 * **修改：**  修复vue发布时的问题
