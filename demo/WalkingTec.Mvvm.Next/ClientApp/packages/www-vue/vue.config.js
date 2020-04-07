@@ -1,4 +1,6 @@
 const path = require('path');
+const moment = require('moment');
+process.env.VUE_APP_VERSION = moment().format('YYYY-MM-DD HH:mm:ss');
 module.exports = {
     outputDir: "build",
     runtimeCompiler: true,
