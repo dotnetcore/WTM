@@ -1,6 +1,6 @@
 <template>
   <a-layout class="app-layout-login">
-    <a-layout class="app-login-back-1">
+    <a-layout :class="sampleClass">
       <a-layout-header>
         <img class="app-login-logo" :src="imgs.logo" alt="" height="48" />
       </a-layout-header>
@@ -95,7 +95,7 @@
   </a-layout>
 </template>
 <script lang="ts">
-// import { observer } from "mobx-vue";
+import lodash from "lodash";
 import rootStore from "../../../rootStore";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import code from "./code.png";
@@ -120,6 +120,9 @@ export default class Login extends Vue {
     { name: "Mobx", url: "https://mobx.js.org/" },
     { name: "Lodash", url: " https://lodash.com/" }
   ];
+  get sampleClass() {
+    return `app-login-back-${lodash.sample([1, 2, 3, 4, 5])}`;
+  }
   beforeCreate() {
     this.form = this.$form.createForm(this, {});
   }
