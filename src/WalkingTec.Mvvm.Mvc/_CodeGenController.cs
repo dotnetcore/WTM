@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -15,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc
             var vm = CreateVM<CodeGenVM>();
             vm.UI = ui;
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
-            vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
+            vm.AllModels = GetAllModels().ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
             return View(vm);
         }
 
@@ -33,7 +36,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             if (!ModelState.IsValid)
             {
-                vm.AllModels = GlobaInfo.AllModels.ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
+                vm.AllModels = GetAllModels().ToListItems(x => x.Name, x => x.AssemblyQualifiedName);
                 return View("Index", vm);
 
             }
@@ -105,5 +108,30 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return PartialView(vm);
         }
+
+        private  List<Type> GetAllModels()
+        {
+            var models = new List<Type>();
+            
+            //获取所有模型
+            var pros = WtmContext.ConfigInfo.ConnectionStrings.SelectMany(x => x.DcConstructor.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
+            if (pros != null)
+            {
+                foreach (var pro in pros)
+                {
+                    if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
+                    {
+                        models.Add(pro.PropertyType.GetGenericArguments()[0]);
+                    }
+                }
+            }
+            //models.Add(typeof(FrameworkMenu));
+            //models.Add(typeof(FrameworkUserBase));
+            //models.Add(typeof(FrameworkGroup));
+            //models.Add(typeof(FrameworkRole));
+            //models.Add(typeof(ActionLog));
+            return models;
+        }
+
     }
 }

@@ -18,6 +18,12 @@ namespace WalkingTec.Mvvm.Core
         public ConstructorInfo DcConstructor;
 
         private GlobalData _gd;
+
+        public CS()
+        {
+
+        }
+
         public CS(GlobalData gd)
         {
             _gd = gd;

@@ -24,7 +24,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
-            if (controller.ConfigInfo.IsQuickDebug && controller is BaseApiController)
+            if (controller.WtmContext == null)
+            {
+                controller.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
+            }
+
+            if (controller.WtmContext.ConfigInfo.IsQuickDebug && controller is BaseApiController)
             {
                 base.OnActionExecuting(context);
                 return;
@@ -63,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             var isAllRights = ad.MethodInfo.IsDefined(typeof(AllRightsAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllRightsAttribute), false);
             var isDebug = ad.MethodInfo.IsDefined(typeof(DebugOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(DebugOnlyAttribute), false);
-            if (controller.ConfigInfo.IsFilePublic == true)
+            if (controller.WtmContext.ConfigInfo.IsFilePublic == true)
             {
                 if (ad.ControllerName == "_Framework" && (ad.MethodInfo.Name == "GetFile" || ad.MethodInfo.Name == "ViewFile"))
                 {

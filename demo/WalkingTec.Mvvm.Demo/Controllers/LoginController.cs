@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             LoginVM vm = CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
-            if (ConfigInfo.IsQuickDebug == true)
+            if (WtmContext.ConfigInfo.IsQuickDebug == true)
             {
                 vm.ITCode = "admin";
                 vm.Password = "000000";
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVM vm)
         {
-            if (ConfigInfo.IsQuickDebug == false)
+            if (WtmContext.ConfigInfo.IsQuickDebug == false)
             {
                 var verifyCode = HttpContext.Session.Get<string>("verify_code");
                 if (string.IsNullOrEmpty(verifyCode) || verifyCode.ToLower() != vm.VerifyCode.ToLower())

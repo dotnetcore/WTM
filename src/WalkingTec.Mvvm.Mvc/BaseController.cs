@@ -348,10 +348,10 @@ namespace WalkingTec.Mvvm.Mvc
                 rv.Session = new SessionServiceProvider(HttpContext.Session);
             }
             catch { }
-            rv.ConfigInfo = ConfigInfo;
+            rv.ConfigInfo = WtmContext.ConfigInfo;
             rv.Cache = Cache;
             rv.LoginUserInfo = LoginUserInfo;
-            rv.DataContextCI = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
+            rv.DataContextCI = WtmContext.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
             rv.DC = this.DC;
             rv.MSD = new ModelStateServiceProvider(ModelState);
             rv.FC = new Dictionary<string, object>();
@@ -612,7 +612,7 @@ namespace WalkingTec.Mvvm.Mvc
             string cs = CurrentCS??"default";
             if (isLog == true)
             {
-                if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
+                if (WtmContext.ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
                 {
                     cs = "defaultlog";
                 }
@@ -621,7 +621,7 @@ namespace WalkingTec.Mvvm.Mvc
                     cs = "default";
                 }
             }
-            return ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
+            return WtmContext.ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
         }
 
         /// <summary>

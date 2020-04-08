@@ -47,11 +47,6 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        /// <summary>
-        /// 数据库模型
-        /// </summary>
-        public List<Type> AllModels { get; set; }
-
         private Func<List<FrameworkMenu>> MenuGetFunc;
 
         public List<FrameworkMenu> AllMenus => MenuGetFunc?.Invoke();

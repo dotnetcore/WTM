@@ -81,7 +81,6 @@ namespace WalkingTec.Mvvm.Mvc
             return cb;
         }
 
-        private static List<Assembly> _dynamicAssembly = new List<Assembly>();
         public static IServiceCollection AddFrameworkService(this IServiceCollection services,
             Func<ActionExecutingContext, string> CsSector = null,
             List<IDataPrivilege> dataPrivilegeSettings = null,
@@ -95,6 +94,7 @@ namespace WalkingTec.Mvvm.Mvc
                         .AddEnvironmentVariables();
 
             var config = configBuilder.Build();
+            services.AddSingleton<CS>();
             services.Configure<Configs>(config);            
             var con = config.Get<Configs>() ?? new Configs();
             services.AddScoped<WTMContext>();
@@ -103,7 +103,6 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = GetGlobalData();
             //add dataprivileges
 
-            gd.AllModels = GetAllModels(con);
             services.AddSingleton(gd);
             //services.AddSingleton(con);
             services.AddResponseCaching();
@@ -478,7 +477,6 @@ namespace WalkingTec.Mvvm.Mvc
 
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
-            gd.AllAssembly.AddRange(_dynamicAssembly);
             var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
             if (admin != null && gd.AllAssembly.Contains(admin) == false)
             {
@@ -598,35 +596,6 @@ namespace WalkingTec.Mvvm.Mvc
                 controllers.AddRange(types.Where(x => typeof(IBaseController).IsAssignableFrom(x)).ToList());
             }
             return controllers;
-        }
-
-
-        /// <summary>
-        /// 获取所有 Model
-        /// </summary>
-        /// <returns></returns>
-        private static List<Type> GetAllModels(Configs con)
-        {
-            var models = new List<Type>();
-
-            //获取所有模型
-            var pros = con.ConnectionStrings.SelectMany(x => x.DcConstructor.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
-            if (pros != null)
-            {
-                foreach (var pro in pros)
-                {
-                    if (pro.PropertyType.IsGeneric(typeof(DbSet<>)))
-                    {
-                        models.Add(pro.PropertyType.GetGenericArguments()[0]);
-                    }
-                }
-            }
-            //models.Add(typeof(FrameworkMenu));
-            //models.Add(typeof(FrameworkUserBase));
-            //models.Add(typeof(FrameworkGroup));
-            //models.Add(typeof(FrameworkRole));
-            //models.Add(typeof(ActionLog));
-            return models;
         }
 
         /// <summary>

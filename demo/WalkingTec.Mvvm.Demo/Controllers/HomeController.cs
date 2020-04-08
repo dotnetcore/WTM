@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     name = "相关信息",
                     type = "bar",
                     data = new int[] {
-                        WtmContext.GlobaInfo.AllModels.Count(),
+                        10,
                         WtmContext.GlobaInfo.AllAssembly.Count(),
                         WtmContext.GlobaInfo.DataPrivilegeSettings.Count(),
                         WtmContext.ConfigInfo.ConnectionStrings.Count(),
