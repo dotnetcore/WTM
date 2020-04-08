@@ -16,7 +16,7 @@
         </a-card>
       </a-col>
       <a-col :span="12">
-        <a-card title="WTM开源">
+        <a-card title="WTM开源" style="height:100%">
           <a-row>
             <a-col span="12">
               <a-statistic

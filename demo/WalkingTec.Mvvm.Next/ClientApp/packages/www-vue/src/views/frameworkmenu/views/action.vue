@@ -3,6 +3,7 @@
     :PageStore="PageStore"
     :Entities="Entities"
     :params="params"
+    @fieldsChange="onFieldsChange"
   >
     <template #pageActionLeft>
       <a-button @click="onRefreshMenu">
@@ -14,9 +15,11 @@
     <template #Insert>
       <Entity-IsInside />
       <SelectedModule />
+      <SelectedActionIDs />
+      <Entity-Url />
     </template>
     <!-- <template #Update></template>
-    <template #Details></template> -->
+    <template #Details></template>-->
   </w-actions>
 </template>
 <script lang="ts">
@@ -28,6 +31,7 @@ import lodash from "lodash";
 import { Subject } from "rxjs";
 import wtm from "../../../components";
 import PageStore from "../store";
+import { onGetController } from "../store";
 import Entities from "./entities";
 const entities = Entities.editEntities();
 @Component({
@@ -44,7 +48,19 @@ export default class ViewAction extends Vue {
   // aggird 组件 自带属性 不可删除
   params = {};
   /** @fieldsChange="onFieldsChange" form onFieldsChange 事件 */
-  onFieldsChange(props, fields) {}
+  onFieldsChange(props, fields, form) {
+    if (lodash.hasIn(fields, "SelectedModule")) {
+      const SelectedModule = lodash.get(fields, "SelectedModule.value");
+      onGetController().subscribe(data => {
+        form.setFieldsValue({
+          "Entity.Url": lodash.get(
+            lodash.find(data, ["Value", SelectedModule]),
+            "Url"
+          )
+        });
+      });
+    }
+  }
   /** @submit="onSubmit" 替换 默认 提交函数 */
   onSubmit(value, type, v) {}
   mounted() {}

@@ -1,15 +1,16 @@
 <template>
   <a-layout-header class="app-layout-header">
     <a-row>
-      <a-col :span="12"> </a-col>
+      <a-col :span="12"></a-col>
       <a-col :span="12" class="app-layout-user">
         <a-dropdown>
           <a href="javascript:;" class="user-item">
             <a-avatar :src="UserStore.Avatar" />
-            <a-divider type="vertical" />
-            <span v-html="UserStore.Name"></span>
           </a>
           <a-menu slot="overlay">
+            <a-menu-item style="text-align: center;">
+              <span v-html="UserStore.Name"></span>
+            </a-menu-item>
             <a-menu-item>
               <a href="/_codegen?ui=react" target="_blank">
                 <a-icon type="code" />
@@ -36,17 +37,15 @@
         <!-- <a-divider type="vertical" />
                   <a href="javascript:;" class="user-item" @click="onVisible(true)">
                     <a-icon type="setting" />
-            </a>-->
+        </a>-->
+        <a-divider type="vertical" />
+        <LayoutSetting />
         <a-divider type="vertical" />
         <a-dropdown>
           <a href="javascript:;" class="user-item">
             <a-icon type="global" />
           </a>
-          <a-menu
-            @click="onLanguage"
-            :selectedKeys="[$i18n.locale]"
-            slot="overlay"
-          >
+          <a-menu @click="onLanguage" :selectedKeys="[$i18n.locale]" slot="overlay">
             <a-menu-item key="zh-CN">
               <a href="javascript:;">
                 <span v-html="languageIcons['zh-CN']"></span>
@@ -67,12 +66,14 @@
 </template>
 <script lang="ts">
 import LayoutMenu from "./menu.vue";
+import LayoutSetting from "./setting.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import rootStore from "../../rootStore";
 import lodash from "lodash";
 @Component({
   components: {
-    LayoutMenu
+    LayoutMenu,
+    LayoutSetting
   }
 })
 export default class extends Vue {

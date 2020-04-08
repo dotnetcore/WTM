@@ -26,7 +26,7 @@ export default {
             "Entity.IsInside": {
                 label: "地址类型",
                 span: 24,
-                options: { rules: [{ required: true }] },
+                options: { rules: [{ required: true }], initialValue: true },
                 dataSource: [
                     { Text: "内部地址", Value: true },
                     { Text: "外部地址", Value: false },
@@ -52,7 +52,20 @@ export default {
             "SelectedActionIDs": {
                 label: "动作名称",
                 span: 24,
-                children: `<a-input v-decorator />`
+                linkage: ['SelectedModule'],
+                dataSource: ({ linkageValue, form }) => {
+                    const ModelName = lodash.get(linkageValue, 'SelectedModule');
+                    console.log("editEntities -> ModelName", ModelName)
+                    // form && onGetController().subscribe(data => {
+                    //     form.setFieldsValue({
+                    //         'Entity.Url': lodash.get(lodash.find(data, ['Value', ModelName]), "Url"),
+                    //     })
+                    // })
+                    if (ModelName) {
+                        return Request.cache({ url: "/api/_FrameworkMenu/GetActionsByModel", body: { ModelName } })
+                    }
+                },
+                children: `<a-select mode="multiple" v-decorator />`
             },
             /** 目录 */
             "Entity.FolderOnly": {

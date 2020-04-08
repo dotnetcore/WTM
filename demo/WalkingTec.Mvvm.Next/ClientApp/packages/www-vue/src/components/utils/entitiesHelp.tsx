@@ -241,7 +241,7 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
             const { linkage } = item;
             if (this.FieldsChange && linkage) {
                 this.FieldsChangeSubscription = this.FieldsChange.pipe(
-                    debounceTime(300),
+                    // debounceTime(300),
                     filter(({ props, fields }) => {
                         return linkage.some(link => lodash.hasIn(fields, link))
                     }),
@@ -259,10 +259,13 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
                 ).subscribe(({ props, fields, form }) => {
                     const itemDataSource = lodash.get(item, 'dataSource');
                     if (lodash.isFunction(itemDataSource)) {
-                        console.log("TCL: FieldItem -> lodash.merge({}, form.getFieldsValue(linkage))", lodash.merge({}, form.getFieldsValue(linkage)))
+                        // console.log("TCL: FieldItem -> lodash.merge({}, form.getFieldsValue(linkage))", lodash.merge({}, form.getFieldsValue(linkage)))
+                        const linkageValue = lodash.merge({}, form.getFieldsValue(linkage));
+                        console.warn("FieldItem -> createFieldItem -> linkageValue", linkageValue)
+                        form.resetFields([key])
                         return this.onLoadData(
                             itemDataSource({
-                                linkageValue: lodash.merge({}, form.getFieldsValue(linkage)),
+                                linkageValue,
                                 props,
                                 fields,
                                 form

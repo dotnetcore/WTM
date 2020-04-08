@@ -23,7 +23,7 @@ export class ViewAction extends Vue {
   @Prop({
     default: () => new Subject()
   })
-  private FieldsChange: Subject<{
+  private FieldsChangeSubject: Subject<{
     props: any;
     fields: any;
     form: WrappedFormUtils;
@@ -41,7 +41,7 @@ export class ViewAction extends Vue {
    * 详情 数据 唯一标识 属性
    */
   @Prop({ default: () => "ID" }) GUID: string;
-  @Prop({  }) width: string | number;
+  @Prop({}) width: string | number;
   /**
    * 表单域
    */
@@ -127,8 +127,8 @@ export class ViewAction extends Vue {
   beforeCreate() {
     const options = {
       onFieldsChange: (props, fields) => {
-        this.FieldsChange.next({ props, fields, form: this.form });
-        this.$emit("fieldsChange", props, fields);
+        this.FieldsChangeSubject.next({ props, fields, form: this.form });
+        this.$emit("fieldsChange", props, fields, this.form);
       },
       validateMessages: messages
       // onValuesChange: (props, values) => {
@@ -145,7 +145,7 @@ export class ViewAction extends Vue {
     // 初始化  异步 组件
     lodash.map(this.Entities, ent => {
       if (lodash.isFunction(ent.onComplete)) {
-        ent.onComplete({ FieldsChange: this.FieldsChange, form: this.form });
+        ent.onComplete({ FieldsChange: this.FieldsChangeSubject, form: this.form });
       }
     });
   }
