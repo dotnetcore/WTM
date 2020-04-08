@@ -725,7 +725,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
             //写入Session用于验证码校验，可以对校验码进行加密，提高安全性
             HttpContext.Session.Set<string>(""verify_code"", chkCode);
-            Console.WriteLine($""验证码：{chkCode}"");
 
             //创建画布
             Bitmap bmp = new Bitmap(codeW, codeH);
