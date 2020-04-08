@@ -94,16 +94,16 @@ namespace WalkingTec.Mvvm.Mvc
                         .AddEnvironmentVariables();
 
             var config = configBuilder.Build();
+            var gd = GetGlobalData();
+            services.AddSingleton(gd);
             services.AddSingleton<CS>();
-            services.Configure<Configs>(config);            
+            services.Configure<Configs>(config);
             var con = config.Get<Configs>() ?? new Configs();
             services.AddScoped<WTMContext>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            var gd = GetGlobalData();
             //add dataprivileges
 
-            services.AddSingleton(gd);
             //services.AddSingleton(con);
             services.AddResponseCaching();
             services.AddMemoryCache();
@@ -500,11 +500,8 @@ namespace WalkingTec.Mvvm.Mvc
             var controllers = GetAllControllers(gd.AllAssembly);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
-            gd.SetModuleGetFunc(() =>
-            {
-
-                return GetAllModules(controllers);
-            });
+            gd.AllModule = GetAllModules(controllers);
+            
 
             gd.SetMenuGetFunc(() =>
             {

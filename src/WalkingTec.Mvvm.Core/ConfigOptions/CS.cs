@@ -19,10 +19,6 @@ namespace WalkingTec.Mvvm.Core
 
         private GlobalData _gd;
 
-        public CS()
-        {
-
-        }
 
         public CS(GlobalData gd)
         {

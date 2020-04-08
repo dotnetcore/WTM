@@ -30,22 +30,10 @@ namespace WalkingTec.Mvvm.Core
         public List<string> AllAccessUrls { get; set; }
 
 
-        private Func<List<FrameworkModule>> ModuleGetFunc;
-        private List<FrameworkModule> _allModules;
         /// <summary>
         /// 模块
         /// </summary>
-        public List<FrameworkModule> AllModule
-        {
-            get
-            {
-                if(_allModules == null)
-                {
-                    _allModules = ModuleGetFunc?.Invoke();
-                }
-                return _allModules;
-            }
-        }
+        public List<FrameworkModule> AllModule { get; set; }
 
         private Func<List<FrameworkMenu>> MenuGetFunc;
 
@@ -56,7 +44,6 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="func"></param>
         public void SetMenuGetFunc(Func<List<FrameworkMenu>> func) => MenuGetFunc = func;
-        public void SetModuleGetFunc(Func<List<FrameworkModule>> func) => ModuleGetFunc = func;
 
     }
 }
