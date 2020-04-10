@@ -39,30 +39,33 @@ export default class AgGrid extends Vue {
   @Prop({ default: [] }) rowData!: any;
   @Prop({ default: [] }) columnDefs!: any;
   get columnDefsProp(): (ColDef | ColGroupDef)[] {
+    const colDef = {
+      rowDrag: false,
+      dndSource: false,
+      lockPosition: true,
+      // dndSourceOnRowDrag: false,
+      suppressMenu: true,
+      suppressSizeToFit: true,
+      suppressMovable: true,
+      suppressNavigable: true,
+      suppressCellFlash: true,
+      // rowGroup: false,
+      enableRowGroup: false,
+      enablePivot: false,
+      enableValue: false,
+      suppressResize: false,
+      editable: false,
+      suppressColumnsToolPanel: true,
+      // suppressToolPanel: true,
+      filter: false,
+      resizable: false,
+      checkboxSelection: true,
+      headerCheckboxSelection: true
+    };
     return [
       {
         // pivotIndex: 0,
-        rowDrag: false,
-        dndSource: false,
-        lockPosition: true,
-        // dndSourceOnRowDrag: false,
-        suppressMenu: true,
-        suppressSizeToFit: true,
-        suppressMovable: true,
-        suppressNavigable: true,
-        suppressCellFlash: true,
-        // rowGroup: false,
-        enableRowGroup: false,
-        enablePivot: false,
-        enableValue: false,
-        suppressResize: false,
-        editable: false,
-        // suppressColumnsToolPanel: true,
-        suppressToolPanel: true,
-        filter: false,
-        resizable: false,
-        checkboxSelection: true,
-        headerCheckboxSelection: true,
+        ...colDef,
         width: 70,
         maxWidth: 70,
         minWidth: 70,
@@ -75,23 +78,8 @@ export default class AgGrid extends Vue {
         headerName: lodash.eq(this.$root.$i18n.locale, "zh-CN")
           ? "操作"
           : "Action",
-        rowDrag: false,
-        dndSource: false,
-        lockPosition: true,
-        // dndSourceOnRowDrag: false,
-        suppressMenu: true,
-        suppressSizeToFit: true,
-        suppressMovable: true,
-        suppressNavigable: true,
-        suppressCellFlash: true,
-        // rowGroup: false,
-        enableRowGroup: false,
-        enablePivot: false,
-        enableValue: false,
-        suppressResize: false,
-        editable: false,
-        // suppressColumnsToolPanel: true,
-        suppressToolPanel: true,
+        ...colDef,
+        // suppressToolPanel: true,
         filter: false,
         field: "Action",
         cellRenderer: "Action",
@@ -143,6 +131,7 @@ export default class AgGrid extends Vue {
       },
       masterDetail: true,
       suppressNoRowsOverlay: true,
+      suppressCellSelection: true,
       rowGroupPanelShow: "always",
       rowSelection: "multiple",
       defaultColDef: {
@@ -222,5 +211,10 @@ export default class AgGrid extends Vue {
 <style lang="less">
 .ag-grid-card {
   transition: all 0.2s;
+}
+.ag-theme-material {
+  .ag-checkbox-input-wrapper.ag-checked::after {
+    color: #1890ff !important;
+  }
 }
 </style>
