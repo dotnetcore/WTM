@@ -59,13 +59,15 @@ export default class AgGrid extends Vue {
       // suppressToolPanel: true,
       filter: false,
       resizable: false,
-      checkboxSelection: true,
-      headerCheckboxSelection: true
+      
+      
     };
     return [
       {
         // pivotIndex: 0,
         ...colDef,
+        checkboxSelection: true,
+        headerCheckboxSelection: true,
         width: 70,
         maxWidth: 70,
         minWidth: 70,
