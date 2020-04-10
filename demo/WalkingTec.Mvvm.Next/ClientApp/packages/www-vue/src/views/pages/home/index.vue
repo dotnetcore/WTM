@@ -1,7 +1,7 @@
 <template>
   <div class="app-page">
     <a-row :gutter="8" type="flex">
-      <a-col :span="12">
+      <a-col :lg="12" :xs="24">
         <a-card title="WalkingTec.Mvvm框架" style="height:100%">
           <p>
             WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和
@@ -15,7 +15,7 @@
           </p>
         </a-card>
       </a-col>
-      <a-col :span="12">
+      <a-col :lg="12" :xs="24">
         <a-card title="WTM开源" style="height:100%">
           <a-row>
             <a-col span="12">
@@ -53,7 +53,7 @@
           </a-row>
         </a-card>
       </a-col>
-      <a-col :span="12" style="margin-top:6px">
+      <a-col :lg="12" :xs="24" style="margin-top:6px">
         <a-card title="WTM解决的问题" style="height:100%">
           <p>WTM框架把常规编码结构化，重复编码自动化，极大地提高了开发效率</p>
           <p>
@@ -64,7 +64,7 @@
           </p>
         </a-card>
       </a-col>
-      <a-col :span="12" style="margin-top:6px">
+      <a-col :lg="12" :xs="24" style="margin-top:6px">
         <a-card title="即刻体验WTM之美" style="height:100%">
           <p>
             现在就点
@@ -80,7 +80,7 @@
           </p>
         </a-card>
       </a-col>
-      <a-col :span="12" style="margin-top:6px">
+      <a-col :lg="12" :xs="24" style="margin-top:6px">
         <a-card title="框架特点" style="height:100%">
           <p>一键生成WTM项目 一键生成增删改查，导入导出，批量操作代码</p>
           <p>支持一对多，多对多关联模型的识别和代码生成</p>
@@ -92,7 +92,7 @@
           <p>支持数据权限的开发和配置 支持读写分离和数据库分库</p>
         </a-card>
       </a-col>
-      <a-col :span="12" style="margin-top:6px">
+      <a-col :lg="12" :xs="24" style="margin-top:6px">
         <a-card title="作者的话">
           <p>
             WTM框架，全称WalkingTec
@@ -141,7 +141,7 @@
             src="https://wtmdoc.walkingtec.cn/imgs/WTM-Ali.png"
             alt=""
             srcset=""
-            style=" margin: auto; display: block;"
+            style=" margin: auto; display: block;max-width: 100%;"
           />
         </a-card>
       </a-col>

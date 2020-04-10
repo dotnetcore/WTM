@@ -99,27 +99,13 @@ import lodash from "lodash";
 import rootStore from "../../../rootStore";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import code from "./code.png";
-import logo from "../../../assets/img/logo.png";
 // @observer
 @Component
 export default class Login extends Vue {
   UserStore = rootStore.UserStore;
   form;
-  imgs = {
-    code,
-    logo
-  };
-  links = [
-    { name: "GitHub", url: "https://github.com/dotnetcore/WTM" },
-    { name: "Vue", url: "https://cn.vuejs.org/" },
-    {
-      name: "Ant Design of Vue",
-      url: "https://www.antdv.com/docs/vue/introduce-cn/"
-    },
-    { name: "Rxjs", url: "https://rxjs.dev/" },
-    { name: "Mobx", url: "https://mobx.js.org/" },
-    { name: "Lodash", url: " https://lodash.com/" }
-  ];
+  imgs = this.$BasicData.imgs;
+  links = this.$BasicData.links;
   get sampleClass() {
     return `app-login-back-${lodash.sample([1, 2, 3, 4, 5])}`;
   }

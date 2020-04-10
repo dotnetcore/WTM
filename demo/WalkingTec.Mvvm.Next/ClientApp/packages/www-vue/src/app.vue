@@ -1,11 +1,14 @@
 <template>
   <a-locale-provider :locale="locale">
+    <!-- 本地拥有用户信息 待验证 是否 合规 -->
     <div v-if="UserStore.Id && UserStore.Loading" class="user-loading">
       <a-spin>
         <a-icon slot="indicator" type="loading" style="font-size: 50px" spin />
       </a-spin>
     </div>
+    <!-- 已经登录 -->
     <w-layout v-else-if="UserStore.OnlineState" />
+    <!-- 未登录 -->
     <Login v-else />
   </a-locale-provider>
 </template>

@@ -20,7 +20,11 @@
           </router-link>
         </template>
       </a-tab-pane>
-      <a-tab-pane v-for="page in TabPages" :key="page.fullPath" :closable="true">
+      <a-tab-pane
+        v-for="page in TabPages"
+        :key="page.fullPath"
+        :closable="true"
+      >
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
@@ -30,9 +34,12 @@
         <!-- <router-view v-else></router-view> -->
       </a-tab-pane>
     </a-tabs>
-    <div class="layout-page-view" :style="{
+    <div
+      class="layout-page-view"
+      :style="{
         height: height + 'px'
-      }">
+      }"
+    >
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -43,6 +50,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Subscription, fromEvent } from "rxjs";
 import { Debounce } from "lodash-decorators";
+import { computed, observable, toJS, action } from "mobx";
+import { create, persist } from "mobx-persist";
 import rootStore from "../../rootStore";
 import lodash from "lodash";
 @Component({
@@ -50,6 +59,13 @@ import lodash from "lodash";
 })
 export default class extends Vue {
   UserStore = rootStore.UserStore;
+  hydrate = create({
+    storage: window.localStorage, // 存储的对象
+    jsonify: true, // 格式化 json
+    debounce: 1000
+  });
+  // @persist("list")
+  // @observable
   TabPages = [];
   onGetName(path) {
     return lodash.get(
@@ -57,6 +73,9 @@ export default class extends Vue {
       "name",
       path
     );
+  }
+  beforeMount() {
+    // this.hydrate("layout", this);
   }
   mounted() {
     lodash.delay(() => {
@@ -70,6 +89,7 @@ export default class extends Vue {
   updated() {
     this.onPushTabPages();
   }
+  @action
   onPushTabPages() {
     if (
       this.$route.fullPath === "/" ||
@@ -82,6 +102,7 @@ export default class extends Vue {
     );
     // console.log("extends -> onPushTabPages -> this.TabPages", this.TabPages)
   }
+  @action
   onEdit(targetKey, action) {
     // this.$router.back();
     if (this.$route.fullPath === targetKey) {

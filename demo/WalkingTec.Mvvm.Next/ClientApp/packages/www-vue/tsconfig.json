@@ -1,38 +1,3 @@
-// {
-//   "compilerOptions": {
-//     "target": "esnext",
-//     "module": "esnext",
-//     "strict": true,
-//     "jsx": "preserve",
-//     "importHelpers": true,
-//     "moduleResolution": "node",
-//     "experimentalDecorators": true,
-//     "esModuleInterop": true,
-//     "allowSyntheticDefaultImports": true,
-//     "sourceMap": true,
-//     "baseUrl": "src",
-//     // "types": [
-//     //   "webpack-env"
-//     // ],
-//     // "paths": {
-//     //   "@/*": [
-//     //     "src/*"
-//     //   ]
-//     // },
-//     "lib": [
-//       "esnext",
-//       "dom",
-//       "dom.iterable",
-//       "scripthost"
-//     ]
-//   },
-//   "include": [
-//     "src",
-//   ],
-//   "exclude": [
-//     "node_modules"
-//   ]
-// }
 {
   "compilerOptions": {
     "baseUrl": "src",

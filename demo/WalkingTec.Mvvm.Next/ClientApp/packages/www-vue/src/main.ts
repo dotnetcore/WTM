@@ -9,12 +9,14 @@ import VueI18n from 'vue-i18n';
 import locale, { createVueI18n } from './locale';
 import App from './app.vue';
 import Globalconfig from './global.config';
+import BasicData from './basicData';
 import wtm from './components';
 wtm.install(Vue);
 Vue.use(VueI18n)
 Antd.install(Vue);
 Vue.config.productionTip = false;
 Vue.prototype.$GlobalConfig = Globalconfig;
+Vue.prototype.$BasicData = BasicData;
 Globalconfig.hydrate(Globalconfig.settings.title, Globalconfig)
   // post hydration
   .then(() => {

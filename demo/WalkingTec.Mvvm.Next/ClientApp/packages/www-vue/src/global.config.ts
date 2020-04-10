@@ -9,7 +9,9 @@ import moment from 'moment';
 const development = process.env.NODE_ENV === "development";
 const language = lodash.get(window, 'navigator.language', 'zh-CN');
 moment.locale(language);
-// 设置 请求出错 通知
+/**
+ * 设置 请求出错 处理
+ */
 Request.Error = (error) => {
     if (error.status === 400 || lodash.get(error, 'request.url', '').indexOf('CheckLogin')) {
         return
@@ -20,6 +22,9 @@ Request.Error = (error) => {
         message: error.message
     })
 }
+/**
+ * 设置 Page Store 错误处理
+ */
 EntitiesPageStore.onError = (error, type) => {
     if (error.status === 400) {
         return
