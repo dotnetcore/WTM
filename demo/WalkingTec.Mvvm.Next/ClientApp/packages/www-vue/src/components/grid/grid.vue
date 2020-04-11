@@ -3,7 +3,7 @@
     :style="{
       height: height + 'px'
     }"
-    class="ag-theme-material ag-grid-card"
+    class="ag-theme-alpine ag-grid-card"
     :gridOptions="GridOptionsProps"
     :rowData="rowData"
     :columnDefs="columnDefsProp"
@@ -58,19 +58,21 @@ export default class AgGrid extends Vue {
       suppressColumnsToolPanel: true,
       // suppressToolPanel: true,
       filter: false,
-      resizable: false,
+      
       
       
     };
+    const width=55;
     return [
       {
         // pivotIndex: 0,
         ...colDef,
+        resizable: false,
         checkboxSelection: true,
         headerCheckboxSelection: true,
-        width: 70,
-        maxWidth: 70,
-        minWidth: 70,
+        width: width,
+        maxWidth: width,
+        minWidth: width,
         pinned: "left"
         // ...checkboxSelectionProps
       },
@@ -86,7 +88,7 @@ export default class AgGrid extends Vue {
         field: "Action",
         cellRenderer: "Action",
         pinned: "right",
-        minWidth: 130
+        minWidth: 135
         // ...rowActionProps
       }
     ].filter(Boolean);
@@ -211,12 +213,9 @@ export default class AgGrid extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+
 .ag-grid-card {
-  transition: all 0.2s;
+    transition: all 0.2s;
 }
-.ag-theme-material {
-  .ag-checkbox-input-wrapper.ag-checked::after {
-    color: #1890ff !important;
-  }
-}
+
 </style>
