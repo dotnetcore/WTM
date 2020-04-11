@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -315,7 +315,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("lay-filter", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
 
-            var config = GlobalServices.GetRequiredService<Configs>();
+            var config = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
 
 
             if (UseLocalData == false)

@@ -17,18 +17,11 @@ namespace WalkingTec.Mvvm.Core
 
         public ConstructorInfo DcConstructor;
 
-        private GlobalData _gd;
-
-
-        public CS(GlobalData gd)
-        {
-            _gd = gd;
-        }
-
         public IDataContext CreateDC()
         {
             if(DcConstructor == null)
             {
+                GlobalData _gd = GlobalServices.GetRequiredService<GlobalData>();
                 List<ConstructorInfo> cis = new List<ConstructorInfo>();
                 foreach (var ass in _gd.AllAssembly)
                 {

@@ -18,7 +18,6 @@ namespace WalkingTec.Mvvm.Mvc
         DBTypeEnum? CurrentDbType { get; set; }
 
         IDataContext DC { get; set; }
-        LoginUserInfo LoginUserInfo { get; set; }
 
         IDistributedCache Cache { get; }
 

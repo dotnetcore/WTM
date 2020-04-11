@@ -193,7 +193,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                     tempids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer?["OprationSuccess"]);
             }
         }
@@ -235,7 +235,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public ActionResult GetUserById(string keywords)
         {
-            var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(LoginUserInfo.DataPrivileges,null, x=>x.CodeAndName, x => x.ITCode);
+            var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(WtmContext.LoginUserInfo.DataPrivileges,null, x=>x.CodeAndName, x => x.ITCode);
             return Json(users);
 
         }

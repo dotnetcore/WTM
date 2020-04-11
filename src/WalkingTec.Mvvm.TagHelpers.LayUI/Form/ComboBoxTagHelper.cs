@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Options;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 EmptyText = Program._localizer["PleaseSelect"];
             }
-            EnableSearch = GlobalServices.GetRequiredService<Configs>().UiOptions.ComboBox.DefaultEnableSearch;
+            EnableSearch = GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.ComboBox.DefaultEnableSearch;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)

@@ -240,7 +240,7 @@ namespace WalkingTec.Mvvm.Mvc
             ActionLog log = new ActionLog();
             log.LogType = ActionLogTypesEnum.Exception;
             log.ActionTime = DateTime.Now;
-            log.ITCode = LoginUserInfo?.ITCode ?? string.Empty;
+            log.ITCode = WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
 
             var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
@@ -487,7 +487,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 pagetitle += menu.PageName;
             }
-            if (LoginUserInfo.IsAccessable(url))
+            if (WtmContext.LoginUserInfo.IsAccessable(url))
             {
                 return Content($@"<title>{pagetitle}</title>
 <iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
@@ -514,7 +514,7 @@ namespace WalkingTec.Mvvm.Mvc
             //如果没有指定用户信息，则用当前用户的登录信息
             if (info == null)
             {
-                info = LoginUserInfo;
+                info = WtmContext.LoginUserInfo;
             }
             //循环所有菜单项
             foreach (var menu in menus)
@@ -624,7 +624,7 @@ namespace WalkingTec.Mvvm.Mvc
         [HttpGet]
         public IActionResult Menu()
         {
-            if (ConfigInfo.IsQuickDebug == true)
+            if (WtmContext.ConfigInfo.IsQuickDebug == true)
             {
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus, resultMenus, true);
@@ -638,7 +638,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
-                RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
+                RemoveUnAccessableMenu(resultMenus, WtmContext.LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
@@ -651,13 +651,13 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            if (LoginUserInfo == null)
+            if (WtmContext.LoginUserInfo == null)
             {
                 return Unauthorized();
             }
             else
             {
-                bool canAccess = LoginUserInfo.IsAccessable(url);
+                bool canAccess = WtmContext.LoginUserInfo.IsAccessable(url);
                 return Ok(canAccess);
             }
         }

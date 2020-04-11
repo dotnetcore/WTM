@@ -197,82 +197,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-        #region Current User
-
-        private LoginUserInfo _loginUserInfo;
-        public LoginUserInfo LoginUserInfo
-        {
-            get
-            {
-                if (User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
-                {
-                    var userIdStr = User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
-                    Guid userId = Guid.Parse(userIdStr);
-                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
-                    _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
-                    {
-                        FrameworkUserBase userInfo = null;
-                        if (DC != null)
-                        {
-                            userInfo = DC.Set<FrameworkUserBase>()
-                                                .Include(x => x.UserRoles)
-                                                .Include(x => x.UserGroups)
-                                                .Where(x => x.ID == userId && x.IsValid == true)
-                                                .SingleOrDefault();
-                        }
-                        if (userInfo != null)
-                        {
-                            // 初始化用户信息
-                            var roleIDs = userInfo.UserRoles.Select(x => x.RoleId).ToList();
-                            var groupIDs = userInfo.UserGroups.Select(x => x.GroupId).ToList();
-                            var dataPris = DC.Set<DataPrivilege>()
-                                            .Where(x => x.UserId == userInfo.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
-                                            .ToList();
-                            ProcessTreeDp(dataPris);
-
-                            ProcessTreeDp(dataPris);
-                            //查找登录用户的页面权限
-                            var funcPrivileges = DC.Set<FunctionPrivilege>()
-                                .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                                .ToList();
-
-                            _loginUserInfo = new LoginUserInfo
-                            {
-                                Id = userInfo.ID,
-                                ITCode = userInfo.ITCode,
-                                Name = userInfo.Name,
-                                PhotoId = userInfo.PhotoId,
-                                Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
-                                Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
-                                DataPrivileges = dataPris,
-                                FunctionPrivileges = funcPrivileges
-                            };
-                            Cache.Add(cacheKey, _loginUserInfo);
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-                }
-                return _loginUserInfo;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}");
-                }
-                else
-                {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{value.Id}", value);
-                }
-                _loginUserInfo = value;
-            }
-        }
-
-        #endregion
 
         #region GUID
         public List<EncHash> EncHashs
@@ -350,7 +274,7 @@ namespace WalkingTec.Mvvm.Mvc
             catch { }
             rv.ConfigInfo = WtmContext.ConfigInfo;
             rv.Cache = Cache;
-            rv.LoginUserInfo = LoginUserInfo;
+            rv.LoginUserInfo = WtmContext.LoginUserInfo;
             rv.DataContextCI = WtmContext.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
             rv.DC = this.DC;
             rv.MSD = new ModelStateServiceProvider(ModelState);

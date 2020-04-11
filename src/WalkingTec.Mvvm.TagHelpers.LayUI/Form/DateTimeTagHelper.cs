@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using WalkingTec.Mvvm.Core;
 
@@ -208,7 +209,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
-            if (GlobalServices.GetRequiredService<Configs>().UiOptions.DateTime.DefaultReadonly)
+            if (GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.DateTime.DefaultReadonly)
                 output.Attributes.Add("readonly", "readonly");
 
             if (!string.IsNullOrEmpty(Min))

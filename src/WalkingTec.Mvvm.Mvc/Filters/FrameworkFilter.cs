@@ -32,6 +32,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (ctrl.WtmContext == null)
             {
                 ctrl.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
+                ctrl.WtmContext.HttpContext = context.HttpContext;
             }
             if (context.HttpContext.Items.ContainsKey("actionstarttime") == false)
             {
@@ -44,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
             var validpostonly = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ValidateFormItemOnlyAttribute), false).Cast<ValidateFormItemOnlyAttribute>().FirstOrDefault();
 
-            log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
+            log.ITCode = ctrl.WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
             log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
             log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
@@ -59,7 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     var model = item.Value as BaseVM;
                     model.Session = new SessionServiceProvider(context.HttpContext.Session);
                     model.Cache = ctrl.Cache;
-                    model.LoginUserInfo = ctrl.LoginUserInfo;
+                    model.LoginUserInfo = ctrl.WtmContext.LoginUserInfo;
                     model.DC = ctrl.DC;
                     model.MSD = new ModelStateServiceProvider(ctrl.ModelState);
                     model.FC = new Dictionary<string, object>();
@@ -329,7 +330,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
                     log.ActionTime = DateTime.Now;
-                    log.ITCode = ctrl.LoginUserInfo?.ITCode ?? string.Empty;
+                    log.ITCode = ctrl.WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
                     log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
                     log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
@@ -356,7 +357,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Exception != null)
             {
                 context.ExceptionHandled = true;
-                if (ctrl.ConfigInfo.IsQuickDebug == true)
+                if (ctrl.WtmContext.ConfigInfo.IsQuickDebug == true)
                 {
                     context.HttpContext.Response.WriteAsync(context.Exception.ToString());
                 }

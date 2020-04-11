@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Core.Auth
             IOptions<JwtOptions> jwtOptions
         )
         {
-            _configs = GlobalServices.GetRequiredService<Configs>();
+            _configs = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
             _jwtOptions = jwtOptions.Value;
             _logger = logger;
             _dc = CreateDC();

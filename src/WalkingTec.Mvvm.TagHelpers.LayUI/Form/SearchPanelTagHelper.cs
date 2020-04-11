@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -125,7 +126,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                show = GlobalServices.GetRequiredService<Configs>().UiOptions.SearchPanel.DefaultExpand;
+                show = GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.SearchPanel.DefaultExpand;
             }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"

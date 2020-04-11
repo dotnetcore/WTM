@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Demo
 
         public static string CSSelector(ActionExecutingContext context)
         {
-            var userinfo = (context.Controller as IBaseController)?.LoginUserInfo;
+            var userinfo = (context.Controller as IBaseController)?.WtmContext?.LoginUserInfo;
             if (userinfo == null)
             {
                 return "default";

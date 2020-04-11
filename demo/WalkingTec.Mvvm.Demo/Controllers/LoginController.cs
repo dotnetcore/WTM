@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                LoginUserInfo = user;
+                WtmContext.LoginUserInfo = user;
                 string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult ChangePassword()
         {
             var vm = CreateVM<ChangePasswordVM>();
-            vm.ITCode = LoginUserInfo.ITCode;
+            vm.ITCode = WtmContext.LoginUserInfo.ITCode;
             return PartialView(vm);
         }
 

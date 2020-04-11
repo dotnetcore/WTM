@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -57,7 +58,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_configs == null)
                 {
-                    _configs = GlobalServices.GetRequiredService<Configs>();
+                    _configs = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
                 }
                 return _configs;
             }

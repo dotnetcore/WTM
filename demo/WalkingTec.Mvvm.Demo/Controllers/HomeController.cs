@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Layout")]
         public IActionResult Layout()
         {
-            ViewData["debug"] = ConfigInfo.IsQuickDebug;
+            ViewData["debug"] = WtmContext.ConfigInfo.IsQuickDebug;
             return PartialView();
         }
 
@@ -110,7 +110,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             var rv = ReadFromCache<github>("githubinfo", () =>
             {
-                var s = ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
+                var s = WtmContext.ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
                 return s;
             }, 1800);
 

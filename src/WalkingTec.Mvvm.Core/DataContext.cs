@@ -520,7 +520,7 @@ namespace WalkingTec.Mvvm.Core
             }
             try
             {
-                var Configs = GlobalServices.GetRequiredService<Configs>();//如果是debug模式,将EF生成的sql语句输出到debug输出
+                var Configs = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;//如果是debug模式,将EF生成的sql语句输出到debug输出
                 if (Configs.IsQuickDebug)
                 {
                     optionsBuilder.EnableDetailedErrors();

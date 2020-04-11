@@ -94,12 +94,11 @@ namespace WalkingTec.Mvvm.Mvc
                         .AddEnvironmentVariables();
 
             var config = configBuilder.Build();
-            var gd = GetGlobalData();
-            services.AddSingleton(gd);
-            services.AddSingleton<CS>();
             services.Configure<Configs>(config);
             var con = config.Get<Configs>() ?? new Configs();
-            services.AddScoped<WTMContext>();
+            var gd = GetGlobalData();
+            services.AddSingleton(gd);
+            services.AddWtmContext();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             //add dataprivileges
@@ -501,7 +500,7 @@ namespace WalkingTec.Mvvm.Mvc
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
             gd.AllModule = GetAllModules(controllers);
-            
+            gd.DataPrivilegeSettings = new List<IDataPrivilege>();
 
             gd.SetMenuGetFunc(() =>
             {
@@ -526,7 +525,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule)
         {
-            var ConfigInfo = GlobalServices.GetService<Configs>();
+            var ConfigInfo = GlobalServices.GetService<IOptions<Configs>>().Value;
             var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
             var menus = new List<FrameworkMenu>();
 
@@ -931,6 +930,12 @@ namespace WalkingTec.Mvvm.Mvc
             }
             FDFSConfig.Trackers = TrackerServers;
         }
+
+        public static IServiceCollection AddWtmContext(this IServiceCollection services)
+        {
+            return services.AddScoped<WTMContext>();
+        }
+
     }
 
 
