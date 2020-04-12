@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 {
                     controllerModel.Filters.Add(GetFilter(_policyProvider, controllerModelAuthData));
                 }
-                foreach (var attribute in controllerModel.Attributes.OfType<IAllowAnonymous>())
+                foreach (var attribute in controllerModel.Attributes)
                 {
                     controllerModel.Filters.Add(new AllowAnonymousFilter());
                 }
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                         actionModel.Filters.Add(GetFilter(_policyProvider, actionModelAuthData));
                     }
 
-                    foreach (var attribute in actionModel.Attributes.OfType<IAllowAnonymous>())
+                    foreach (var attribute in actionModel.Attributes)
                     {
                         actionModel.Filters.Add(new AllowAnonymousFilter());
                     }
