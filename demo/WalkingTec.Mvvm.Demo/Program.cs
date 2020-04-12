@@ -78,14 +78,14 @@ namespace WalkingTec.Mvvm.Demo
                     .Configure(x =>
                     {
                         var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                        if (configs.IsQuickDebug == true)
-                        {
+                        //if (configs.IsQuickDebug == true)
+                        //{
                             x.UseSwagger();
                             x.UseSwaggerUI(c =>
                             {
                                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                             });
-                        }
+                        //}
                         x.UseFrameworkService();
                     })
                     .UseUrls(globalConfig.ApplicationUrl);
