@@ -1,7 +1,7 @@
 <template>
-  <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
-    <wtm-create-form :ref="refName" :status="status" :options="formOptions"></wtm-create-form>
-  </wtm-dialog-box>
+    <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions"></wtm-create-form>
+    </wtm-dialog-box>
 </template>
 
 <script lang="ts">
@@ -139,7 +139,6 @@ export default class Index extends Vue {
             }
         };
     }
-    created() {}
     mounted() {
         this.getFrameworkRoles();
         this.getFrameworkGroups();
