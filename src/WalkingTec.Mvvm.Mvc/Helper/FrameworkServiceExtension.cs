@@ -38,9 +38,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Natasha;
 using Newtonsoft.Json;
-
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -95,20 +93,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var config = configBuilder.Build();
             var con = config.Get<Configs>() ?? new Configs();
-
-            var _frameworkCtrl = _FrameworTemp.FrameworkCtrlTemp;
-            if (con.IsFilePublic)
-            {
-                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", "[AllowAnonymous]").Replace("$ViewFile$", "[AllowAnonymous]");
-            }
-            else
-            {
-                _frameworkCtrl = _frameworkCtrl.Replace("$GetFile$", string.Empty).Replace("$ViewFile$", string.Empty);
-            }
-            AssemblyComplier oop = new AssemblyComplier();
-            oop.Add(_frameworkCtrl);
-            var tempAssembly = oop.GetAssembly();
-            _dynamicAssembly.Add(tempAssembly);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
@@ -207,7 +191,6 @@ namespace WalkingTec.Mvvm.Mvc
             .ConfigureApplicationPartManager(appPartsManager =>
             {
                 var feature = new ControllerFeature();
-                appPartsManager.ApplicationParts.Add(new AssemblyPart(tempAssembly));
                 if (mvc != null)
                 {
                     appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
