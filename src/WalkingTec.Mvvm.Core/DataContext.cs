@@ -8,8 +8,6 @@ using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Npgsql;
-using Oracle.ManagedDataAccess.Client;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data;
