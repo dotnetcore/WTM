@@ -141,6 +141,9 @@
   <data name="CodeGen" xml:space="preserve">
     <value>代码生成器</value>
   </data>
+  <data name="DataRange" xml:space="preserve">
+    <value>在{0}到{1}之间</value>
+  </data>
   <data name="HideShow" xml:space="preserve">
     <value>侧边伸缩</value>
   </data>
@@ -174,10 +177,25 @@
   <data name="{0}number" xml:space="preserve">
     <value>{0}必须是数字</value>
   </data>
+  <data name="{0}range{1}" xml:space="preserve">
+    <value>{0}至少是{1}</value>
+  </data>
+  <data name="{0}range{1}{2}" xml:space="preserve">
+    <value>{0}必须是{1}到{2}之间的数</value>
+  </data>
+  <data name="{0}range{2}" xml:space="preserve">
+    <value>{0}最多是{1}</value>
+  </data>
   <data name="{0}required" xml:space="preserve">
     <value>{0}是必填项</value>
   </data>
   <data name="{0}stringmax{1}" xml:space="preserve">
     <value>{0}最多输入{1}个字符</value>
+  </data>
+  <data name="{0}ValueNotExist" xml:space="preserve">
+    <value>{0}输入的值在数据库中不存在</value>
+  </data>
+  <data name="{0}ValueTypeNotAllowed" xml:space="preserve">
+    <value>{0}输入的值不在允许的数据类型范围内</value>
   </data>
 </root>

@@ -28,21 +28,6 @@ namespace WalkingTec.Mvvm.Demo
 
         public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddCommandLine(args);
-
-            if (args != null) configurationBuilder.AddCommandLine(args);
-
-            var hostingConfig = configurationBuilder.Build();
-            var globalConfig = hostingConfig.Get<GlobalConfig>();
-
-            var ASPNETCORE_URLS = hostingConfig.GetValue<string>("ASPNETCORE_URLS");
-            if (!string.IsNullOrEmpty(ASPNETCORE_URLS))
-                globalConfig.ApplicationUrl = ASPNETCORE_URLS;
-
             return
                 Host.CreateDefaultBuilder(args)
                  .ConfigureLogging((hostingContext, logging) =>
@@ -53,55 +38,7 @@ namespace WalkingTec.Mvvm.Demo
                  })
                 .ConfigureWebHostDefaults(webBuilder =>
                  {
-                     webBuilder.ConfigureServices((hostingCtx, x) =>
-                    {
-                        var pris = new List<IDataPrivilege>
-                        {
-                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
-                            new DataPrivilegeInfo<Major>("专业", y => y.MajorName),
-                            new DataPrivilegeInfo<FrameworkMenu>("菜单", y=>y.PageName)
-                        };
-                        x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx,CsSector:CSSelector);
-                        x.AddLayui();
-                        x.AddSwaggerGen(c =>
-                        {
-                            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-                            var bearer = new OpenApiSecurityScheme()
-                            {
-                                Description = "JWT Bearer",
-                                Name = "Authorization",
-                                In = ParameterLocation.Header,
-                                Type = SecuritySchemeType.ApiKey
-
-                            };
-                            c.AddSecurityDefinition("Bearer", bearer);
-                            var sr = new OpenApiSecurityRequirement();
-                            sr.Add(new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                            }, new string[] { });
-                            c.AddSecurityRequirement(sr);
-                        });
-                    })
-                    .Configure(x =>
-                    {
-                        var configs = x.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
-                        if (configs.IsQuickDebug == true)
-                        {
-                            x.UseSwagger();
-                            x.UseSwaggerUI(c =>
-                            {
-                                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                            });
-                        }
-                        x.UseFrameworkService();
-                    })
-                    .UseUrls(globalConfig.ApplicationUrl);
-
+                     webBuilder.UseStartup<Startup>();
                  });
 
         }

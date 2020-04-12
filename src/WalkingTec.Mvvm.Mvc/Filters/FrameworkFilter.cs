@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     var programtype = ctrl.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
                     {
-                        model.Localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
+                        model.Localizer = context.HttpContext.RequestServices.GetService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
                     }
                     if (ctrl is BaseController c)
                     {

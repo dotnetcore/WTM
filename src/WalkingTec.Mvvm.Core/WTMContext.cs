@@ -230,6 +230,10 @@ namespace WalkingTec.Mvvm.Core
         public virtual async Task<LoginUserInfo> LoadUserFromDB(Guid? userId, string itcode=null, string password=null)
         {
             FrameworkUserBase userInfo = null;
+            if(DC == null)
+            {
+                return null;
+            }
             if (userId.HasValue)
             {
                 userInfo = await DC.Set<FrameworkUserBase>()
@@ -353,6 +357,10 @@ namespace WalkingTec.Mvvm.Core
                 {
                     cs = "default";
                 }
+            }
+            if(cs == null)
+            {
+                cs = "default";
             }
             return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }

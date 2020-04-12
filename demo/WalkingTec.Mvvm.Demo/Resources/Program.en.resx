@@ -141,6 +141,9 @@
   <data name="CodeGen" xml:space="preserve">
     <value>CodeGen</value>
   </data>
+  <data name="DataRange" xml:space="preserve">
+    <value>between {0} and {1}</value>
+  </data>
   <data name="HideShow" xml:space="preserve">
     <value>Hide/Show</value>
   </data>
@@ -174,10 +177,25 @@
   <data name="{0}number" xml:space="preserve">
     <value>The {0} field must be digit</value>
   </data>
+  <data name="{0}range{1}" xml:space="preserve">
+    <value>{0} must be at least {1}</value>
+  </data>
+  <data name="{0}range{1}{2}" xml:space="preserve">
+    <value>{0} must between {1} and {2}</value>
+  </data>
+  <data name="{0}range{2}" xml:space="preserve">
+    <value>{0} must be less than {1}</value>
+  </data>
   <data name="{0}required" xml:space="preserve">
     <value>The {0} field is required</value>
   </data>
   <data name="{0}stringmax{1}" xml:space="preserve">
     <value>The {0} field is limited {1} characters</value>
+  </data>
+  <data name="{0}ValueNotExist" xml:space="preserve">
+    <value>The {0} field's value does not exist</value>
+  </data>
+  <data name="{0}ValueTypeNotAllowed" xml:space="preserve">
+    <value>The {0} field's type is not supported</value>
   </data>
 </root>

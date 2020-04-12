@@ -38,9 +38,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Natasha;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-
+using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -88,384 +88,362 @@ namespace WalkingTec.Mvvm.Mvc
         )
         {
 
-            var configBuilder = new ConfigurationBuilder();
-            configBuilder.WTM_SetCurrentDictionary()
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddEnvironmentVariables();
+            //var configBuilder = new ConfigurationBuilder();
+            //configBuilder.WTM_SetCurrentDictionary()
+            //            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            //            .AddEnvironmentVariables();
 
-            var config = configBuilder.Build();
-            services.Configure<Configs>(config);
-            var con = config.Get<Configs>() ?? new Configs();
-            var gd = GetGlobalData();
-            services.AddSingleton(gd);
-            services.AddWtmContext();
+            //var config = configBuilder.Build();
+            //services.Configure<Configs>(config);
+            //var con = config.Get<Configs>() ?? new Configs();
+            //services.AddWtmContext();
 
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-            //add dataprivileges
+            //services.AddLocalization(options => options.ResourcesPath = "Resources");
+            ////add dataprivileges
 
-            //services.AddSingleton(con);
-            services.AddResponseCaching();
-            services.AddMemoryCache();
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = con.CookiePre + ".Session";
-                options.IdleTimeout = TimeSpan.FromSeconds(3600);
-            });
-            SetupDFS(con);
+            ////services.AddSingleton(con);
+            //services.AddDistributedMemoryCache();
+            //services.AddSession(options =>
+            //{
+            //    options.Cookie.Name = con.CookiePre + ".Session";
+            //    options.IdleTimeout = TimeSpan.FromSeconds(3600);
+            //});
+            //SetupDFS(con);
 
-            services.AddCors(options =>
-            {
-                if (con.CorsOptions?.Policy?.Count > 0)
-                {
-                    foreach (var item in con.CorsOptions.Policy)
-                    {
-                        string[] domains = item.Domain?.Split(',');
-                        options.AddPolicy(item.Name,
-                           builder =>
-                           {
-                               builder.WithOrigins(domains)
-                                                   .AllowAnyHeader()
-                                                   .AllowAnyMethod()
-                                                   .AllowCredentials();
-                           });
-                    }
-                }
-                else
-                {
-                    options.AddPolicy("_donotusedefault",
-                        builder =>
-                        {
-                            builder.WithOrigins("http://localhost",
-                                                "https://localhost")
-                                                .AllowAnyHeader()
-                                                .AllowAnyMethod()
-                                                .AllowCredentials();
-                        });
-                }
-            });
+            //services.AddCors(options =>
+            //{
+            //    if (con.CorsOptions?.Policy?.Count > 0)
+            //    {
+            //        foreach (var item in con.CorsOptions.Policy)
+            //        {
+            //            string[] domains = item.Domain?.Split(',');
+            //            options.AddPolicy(item.Name,
+            //               builder =>
+            //               {
+            //                   builder.WithOrigins(domains)
+            //                                       .AllowAnyHeader()
+            //                                       .AllowAnyMethod()
+            //                                       .AllowCredentials();
+            //               });
+            //        }
+            //    }
+            //    else
+            //    {
+            //        options.AddPolicy("_donotusedefault",
+            //            builder =>
+            //            {
+            //                builder.WithOrigins("http://localhost",
+            //                                    "https://localhost")
+            //                                    .AllowAnyHeader()
+            //                                    .AllowAnyMethod()
+            //                                    .AllowCredentials();
+            //            });
+            //    }
+            //});
 
 
-            // edit start by @vito
-            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
-            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
-            services.TryAddEnumerable(
-                ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
-            // edit end
-
-            var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
-            var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
-
-            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
-            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
-            var programLocalizer = new ResourceManagerStringLocalizerFactory(
-                                        Options.Create(
-                                            new LocalizationOptions
-                                            {
-                                                ResourcesPath = "Resources"
-                                            })
-                                            , new Microsoft.Extensions.Logging.LoggerFactory()
-                                        )
-                                        .Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+            //// edit start by @vito
+            //services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
+            //services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
+            //services.TryAddEnumerable(
+            //    ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
+            //// edit end
 
 
-            services.AddMvc(options =>
-            {
-                // ModelBinderProviders
-                options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
-                // Filters
-                options.Filters.Add(new AuthorizeFilter());
-                options.Filters.Add(new DataContextFilter(CsSector));
-                options.Filters.Add(new PrivilegeFilter());
-                options.Filters.Add(new FrameworkFilter());
-                options.EnableEndpointRouting = true;
-            })
-            .ConfigureApplicationPartManager(appPartsManager =>
-            {
-                var feature = new ControllerFeature();
-                if (mvc != null)
-                {
-                    appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
-                }
-                if (admin != null)
-                {
-                    appPartsManager.ApplicationParts.Add(new AssemblyPart(admin));
-                }
-                appPartsManager.PopulateFeature(feature);
-                services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
-            })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.ContractResolver = new WTMContractResolver()
-                {
-                };
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-            .ConfigureApiBehaviorOptions(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-                options.InvalidModelStateResponseFactory = (a) =>
-                {
-                    return new BadRequestObjectResult(a.ModelState.GetErrorJson());
-                };
-            })
-            .AddDataAnnotationsLocalization(options =>
-            {
-                var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                options.DataAnnotationLocalizerProvider = (type, factory) =>
-                {
-                    if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
-                    {
-                        var rv = factory.Create(coreType);
-                        return rv;
-                    }
-                    else
-                    {
-                        return factory.Create(programType);
-                    }
-                };
-            })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+            //services.AddMvc(options =>
+            //{
+            //    // ModelBinderProviders
+            //    options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
-            services.Configure<FormOptions>(y =>
-            {
-                y.ValueLengthLimit = int.MaxValue - 20480;
-                y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
-            });
+            //    // Filters
+            //    options.Filters.Add(new AuthorizeFilter());
+            //    options.Filters.Add(new DataContextFilter(CsSector));
+            //    options.Filters.Add(new PrivilegeFilter());
+            //    options.Filters.Add(new FrameworkFilter());
+            //    options.EnableEndpointRouting = true;
+            //})
+            ////.ConfigureApplicationPartManager(appPartsManager =>
+            ////{
+            ////    var feature = new ControllerFeature();
+            ////    if (mvc != null)
+            ////    {
+            ////        appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
+            ////    }
+            ////    if (admin != null)
+            ////    {
+            ////        appPartsManager.ApplicationParts.Add(new AssemblyPart(admin));
+            ////    }
+            ////    //appPartsManager.PopulateFeature(feature);
+            ////    //services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
+            ////})
+            //.AddNewtonsoftJson(options =>
+            //{
+            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //    options.SerializerSettings.ContractResolver = new WTMContractResolver()
+            //    {
+            //    };
+            //})
+            //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            //.ConfigureApiBehaviorOptions(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //    options.InvalidModelStateResponseFactory = (a) =>
+            //    {
+            //        return new BadRequestObjectResult(a.ModelState.GetErrorJson());
+            //    };
+            //})
+            //.AddDataAnnotationsLocalization(options =>
+            //{
+            //    var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            //    options.DataAnnotationLocalizerProvider = (type, factory) =>
+            //    {
+            //        if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
+            //        {
+            //            var rv = factory.Create(coreType);
+            //            return rv;
+            //        }
+            //        else
+            //        {
+            //            return factory.Create(programType);
+            //        }
+            //    };
+            //});
 
-            services.AddSingleton<IUIService, DefaultUIService>();
+            //services.Configure<FormOptions>(y =>
+            //{
+            //    y.ValueLengthLimit = int.MaxValue - 20480;
+            //    y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
+            //});
 
-            #region CookieWithJwtAuth
+            //services.AddSingleton<IUIService, DefaultUIService>();
 
-            // services.AddSingleton<UserStore>();
-            services.AddSingleton<ITokenService, TokenService>();
+            //#region CookieWithJwtAuth
 
-            var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
-            if (jwtOptions == null)
-            {
-                jwtOptions = new JwtOptions();
-            }
-            services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
+            //// services.AddSingleton<UserStore>();
+            //services.AddSingleton<ITokenService, TokenService>();
 
-            var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
-            if (cookieOptions == null)
-            {
-                cookieOptions = new Core.Auth.CookieOptions();
-            }
+            //var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
+            //if (jwtOptions == null)
+            //{
+            //    jwtOptions = new JwtOptions();
+            //}
+            //services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
 
-            services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
+            //var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            //if (cookieOptions == null)
+            //{
+            //    cookieOptions = new Core.Auth.CookieOptions();
+            //}
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                    {
-                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
-                        options.Cookie.HttpOnly = true;
-                        options.Cookie.SameSite = SameSiteMode.Strict;
+            //services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
-                        options.ClaimsIssuer = cookieOptions.Issuer;
-                        options.SlidingExpiration = cookieOptions.SlidingExpiration;
-                        options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
-                        // options.SessionStore = new MemoryTicketStore();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            //        {
+            //            options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+            //            options.Cookie.HttpOnly = true;
+            //            options.Cookie.SameSite = SameSiteMode.Strict;
 
-                        options.LoginPath = cookieOptions.LoginPath;
-                        options.LogoutPath = cookieOptions.LogoutPath;
-                        options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
-                        options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
-                    })
-                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            NameClaimType = AuthConstants.JwtClaimTypes.Name,
-                            RoleClaimType = AuthConstants.JwtClaimTypes.Role,
+            //            options.ClaimsIssuer = cookieOptions.Issuer;
+            //            options.SlidingExpiration = cookieOptions.SlidingExpiration;
+            //            options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
+            //            // options.SessionStore = new MemoryTicketStore();
 
-                            ValidateIssuer = true,
-                            ValidIssuer = jwtOptions.Issuer,
+            //            options.LoginPath = cookieOptions.LoginPath;
+            //            options.LogoutPath = cookieOptions.LogoutPath;
+            //            options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
+            //            options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
+            //        })
+            //        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            //        {
+            //            options.TokenValidationParameters = new TokenValidationParameters
+            //            {
+            //                NameClaimType = AuthConstants.JwtClaimTypes.Name,
+            //                RoleClaimType = AuthConstants.JwtClaimTypes.Role,
 
-                            ValidateAudience = true,
-                            ValidAudience = jwtOptions.Audience,
+            //                ValidateIssuer = true,
+            //                ValidIssuer = jwtOptions.Issuer,
 
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
+            //                ValidateAudience = true,
+            //                ValidAudience = jwtOptions.Audience,
 
-                            ValidateLifetime = true
-                        };
-                    });
-            #endregion
+            //                ValidateIssuerSigningKey = true,
+            //                IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
 
-            services.AddHttpClient();
-            if (con.Domains != null)
-            {
-                foreach (var item in con.Domains)
-                {
-                    services.AddHttpClient(item.Key, x =>
-                    {
-                        x.BaseAddress = new Uri(item.Value.Url);
-                        x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-                        x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
-                    });
-                }
-            }
+            //                ValidateLifetime = true
+            //            };
+            //        });
+            //#endregion
 
-            GlobalServices.SetServiceProvider(services.BuildServiceProvider());
+            //services.AddHttpClient();
+            //if (con.Domains != null)
+            //{
+            //    foreach (var item in con.Domains)
+            //    {
+            //        services.AddHttpClient(item.Key, x =>
+            //        {
+            //            x.BaseAddress = new Uri(item.Value.Url);
+            //            x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+            //            x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
+            //        });
+            //    }
+            //}
+
+            //GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
 
         public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
         {
-            IconFontsHelper.GenerateIconFont();
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
-            var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            //IconFontsHelper.GenerateIconFont();
+            //var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            //var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
 
-            if (configs == null)
-            {
-                throw new InvalidOperationException("Can not find Configs service, make sure you call AddFrameworkService at ConfigService");
-            }
-            if (gd == null)
-            {
-                throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
-            }
-            if (string.IsNullOrEmpty(configs.Languages) == false)
-            {
-                List<CultureInfo> supportedCultures = new List<CultureInfo>();
-                var lans = configs.Languages.Split(",");
-                foreach (var lan in lans)
-                {
-                    supportedCultures.Add(new CultureInfo(lan));
-                }
+            //if (configs == null)
+            //{
+            //    throw new InvalidOperationException("Can not find Configs service, make sure you call AddFrameworkService at ConfigService");
+            //}
+            //if (gd == null)
+            //{
+            //    throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
+            //}
+            //if (string.IsNullOrEmpty(configs.Languages) == false)
+            //{
+            //    List<CultureInfo> supportedCultures = new List<CultureInfo>();
+            //    var lans = configs.Languages.Split(",");
+            //    foreach (var lan in lans)
+            //    {
+            //        supportedCultures.Add(new CultureInfo(lan));
+            //    }
 
-                app.UseRequestLocalization(new RequestLocalizationOptions
-                {
-                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
-                });
-            }
+            //    app.UseRequestLocalization(new RequestLocalizationOptions
+            //    {
+            //        DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+            //        SupportedCultures = supportedCultures,
+            //        SupportedUICultures = supportedCultures
+            //    });
+            //}
 
-            app.UseExceptionHandler(configs.ErrorHandler);
+            //app.UseExceptionHandler(configs.ErrorHandler);
 
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/_js"),
-                FileProvider = new EmbeddedFileProvider(
-                    typeof(_CodeGenController).GetTypeInfo().Assembly,
-                    "WalkingTec.Mvvm.Mvc")
-            });
+            //app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    RequestPath = new PathString("/_js"),
+            //    FileProvider = new EmbeddedFileProvider(
+            //        typeof(_CodeGenController).GetTypeInfo().Assembly,
+            //        "WalkingTec.Mvvm.Mvc")
+            //});
 
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseResponseCaching();
+            //app.UseRouting();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
-            if (configs.CorsOptions.EnableAll == true)
-            {
-                if (configs.CorsOptions?.Policy?.Count > 0)
-                {
-                    app.UseCors(configs.CorsOptions.Policy[0].Name);
-                }
-                else
-                {
-                    app.UseCors("_donotusedefault");
-                }
-            }
+            //if (configs.CorsOptions.EnableAll == true)
+            //{
+            //    if (configs.CorsOptions?.Policy?.Count > 0)
+            //    {
+            //        app.UseCors(configs.CorsOptions.Policy[0].Name);
+            //    }
+            //    else
+            //    {
+            //        app.UseCors("_donotusedefault");
+            //    }
+            //}
 
-            bool InitDataBase = false;
-            app.Use(async (context, next) =>
-            {
-                if (InitDataBase == false)
-                {
-                    InitDataBase = true;
-                    var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
-                    foreach (var m in gd.AllModule)
-                    {
-                        //if (m.IsApi == true)
-                        //{
-                        foreach (var a in m.Actions)
-                        {
-                            string u = null;
-                            if (a.ParasToRunTest != null && a.ParasToRunTest.Any(x => x.ToLower() == "id"))
-                            {
-                                u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
-                            }
-                            else
-                            {
-                                u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-                            }
-                            if (u != null && u.EndsWith("/0"))
-                            {
-                                u = u.Substring(0, u.Length - 2);
-                                if (m.IsApi == true)
-                                {
-                                    u = u + "/{id}";
-                                }
-                            }
-                            a.Url = u;
-                        }
-                        //}
-                    }
+            //bool InitDataBase = false;
+            //app.Use(async (context, next) =>
+            //{
+            //    if (InitDataBase == false)
+            //    {
+            //        InitDataBase = true;
+            //        var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+            //        foreach (var m in gd.AllModule)
+            //        {
+            //            //if (m.IsApi == true)
+            //            //{
+            //            foreach (var a in m.Actions)
+            //            {
+            //                string u = null;
+            //                if (a.ParasToRunTest != null && a.ParasToRunTest.Any(x => x.ToLower() == "id"))
+            //                {
+            //                    u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+            //                }
+            //                else
+            //                {
+            //                    u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
+            //                }
+            //                if (u != null && u.EndsWith("/0"))
+            //                {
+            //                    u = u.Substring(0, u.Length - 2);
+            //                    if (m.IsApi == true)
+            //                    {
+            //                        u = u + "/{id}";
+            //                    }
+            //                }
+            //                a.Url = u;
+            //            }
+            //            //}
+            //        }
 
-                    var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-                    var cs = configs.ConnectionStrings;
-                    foreach (var item in cs)
-                    {
-                        var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, test != null).Wait();
-                    }
-                    GlobalServices.SetServiceProvider(app.ApplicationServices);
-                }
-                if (context.Request.Path == "/")
-                {
-                    context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
-                    context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
-                }
-                context.Request.EnableBuffering();
-                context.Request.Body.Position = 0;
-                StreamReader tr = new StreamReader(context.Request.Body);
-                string body = tr.ReadToEndAsync().Result;
-                context.Request.Body.Position = 0;
-                if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
-                {
-                    context.Items.Add("DONOTUSE_REQUESTBODY", body);
-                }
-                else
-                {
-                    context.Items["DONOTUSE_REQUESTBODY"] = body;
-                }
-                await next.Invoke();
-                if (context.Response.StatusCode == 404)
-                {
-                    await context.Response.WriteAsync(string.Empty);
-                }
-            });
+            //        var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            //        var cs = configs.ConnectionStrings;
+            //        foreach (var item in cs)
+            //        {
+            //            var dc = item.CreateDC();
+            //            dc.DataInit(gd.AllModule, test != null).Wait();
+            //        }
+            //        GlobalServices.SetServiceProvider(app.ApplicationServices);
+            //    }
+            //    if (context.Request.Path == "/")
+            //    {
+            //        context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
+            //        context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
+            //    }
+            //    context.Request.EnableBuffering();
+            //    context.Request.Body.Position = 0;
+            //    StreamReader tr = new StreamReader(context.Request.Body);
+            //    string body = tr.ReadToEndAsync().Result;
+            //    context.Request.Body.Position = 0;
+            //    if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+            //    {
+            //        context.Items.Add("DONOTUSE_REQUESTBODY", body);
+            //    }
+            //    else
+            //    {
+            //        context.Items["DONOTUSE_REQUESTBODY"] = body;
+            //    }
+            //    await next.Invoke();
+            //    if (context.Response.StatusCode == 404)
+            //    {
+            //        await context.Response.WriteAsync(string.Empty);
+            //    }
+            //});
 
-            app.UseSession();
-            if (configs.CorsOptions.EnableAll == true)
-            {
-                if (configs.CorsOptions?.Policy?.Count > 0)
-                {
-                    app.UseCors(configs.CorsOptions.Policy[0].Name);
-                }
-                else
-                {
-                    app.UseCors("_donotusedefault");
-                }
-            }
+            //app.UseSession();
+            //if (configs.CorsOptions.EnableAll == true)
+            //{
+            //    if (configs.CorsOptions?.Policy?.Count > 0)
+            //    {
+            //        app.UseCors(configs.CorsOptions.Policy[0].Name);
+            //    }
+            //    else
+            //    {
+            //        app.UseCors("_donotusedefault");
+            //    }
+            //}
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                   name: "areaRoute",
-                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute(
+            //       name: "areaRoute",
+            //       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            //    endpoints.MapControllerRoute(
+            //        name: "default",
+            //        pattern: "{controller=Home}/{action=Index}/{id?}");
+            //});
 
             return app;
         }
@@ -526,7 +504,7 @@ namespace WalkingTec.Mvvm.Mvc
         private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule)
         {
             var ConfigInfo = GlobalServices.GetService<IOptions<Configs>>().Value;
-            var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
+            var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.Program));
             var menus = new List<FrameworkMenu>();
 
             if (ConfigInfo.IsQuickDebug)
@@ -933,9 +911,277 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IServiceCollection AddWtmContext(this IServiceCollection services)
         {
-            return services.AddScoped<WTMContext>();
+            var gd = GetGlobalData();
+            services.AddSingleton(gd);
+            services.AddScoped<WTMContext>();
+            var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
+            var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
+
+            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
+            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(
+                                        Options.Create(
+                                            new LocalizationOptions
+                                            {
+                                                ResourcesPath = "Resources"
+                                            })
+                                            , new Microsoft.Extensions.Logging.LoggerFactory()
+                                        )
+                                        .Create(programType);
+            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+            services.AddSingleton<IUIService, DefaultUIService>();
+            return services;
+        }
+        public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfigurationRoot config)
+        {
+            var con = config.Get<Configs>();
+            services.AddCors(options =>
+            {
+                if (con.CorsOptions?.Policy?.Count > 0)
+                {
+                    foreach (var item in con.CorsOptions.Policy)
+                    {
+                        string[] domains = item.Domain?.Split(',');
+                        options.AddPolicy(item.Name,
+                           builder =>
+                           {
+                               builder.WithOrigins(domains)
+                                                   .AllowAnyHeader()
+                                                   .AllowAnyMethod()
+                                                   .AllowCredentials();
+                           });
+                    }
+                }
+                else
+                {
+                    options.AddPolicy("_donotusedefault",
+                        builder =>
+                        {
+                            builder.WithOrigins("http://localhost",
+                                                "https://localhost")
+                                                .AllowAnyHeader()
+                                                .AllowAnyMethod()
+                                                .AllowCredentials();
+                        });
+                }
+            });
+            return services;
+        }
+        public static IServiceCollection AddWtmSession(this IServiceCollection services, IConfigurationRoot config,int timeout)
+        {
+            var con = config.Get<Configs>();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = con.CookiePre + ".Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(timeout);
+            });
+            services.Configure<FormOptions>(y =>
+            {
+                y.ValueLengthLimit = int.MaxValue - 20480;
+                y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
+            });
+
+            return services;
+        }
+        public static IServiceCollection AddWtmAuthorization(this IServiceCollection services, IConfigurationRoot config)
+        {
+            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
+            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
+            services.TryAddEnumerable(
+                ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
+            services.AddSingleton<ITokenService, TokenService>();
+
+            var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
+            if (jwtOptions == null)
+            {
+                jwtOptions = new JwtOptions();
+            }
+            services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
+
+            var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            if (cookieOptions == null)
+            {
+                cookieOptions = new Core.Auth.CookieOptions();
+            }
+
+            services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                    {
+                        options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.SameSite = SameSiteMode.Strict;
+
+                        options.ClaimsIssuer = cookieOptions.Issuer;
+                        options.SlidingExpiration = cookieOptions.SlidingExpiration;
+                        options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
+                        // options.SessionStore = new MemoryTicketStore();
+
+                        options.LoginPath = cookieOptions.LoginPath;
+                        options.LogoutPath = cookieOptions.LogoutPath;
+                        options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
+                        options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
+                    })
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            NameClaimType = AuthConstants.JwtClaimTypes.Name,
+                            RoleClaimType = AuthConstants.JwtClaimTypes.Role,
+
+                            ValidateIssuer = true,
+                            ValidIssuer = jwtOptions.Issuer,
+
+                            ValidateAudience = true,
+                            ValidAudience = jwtOptions.Audience,
+
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
+
+                            ValidateLifetime = true
+                        };
+                    });
+            return services;
         }
 
+        public static IServiceCollection AddWtmHttpClient(this IServiceCollection services, IConfigurationRoot config)
+        {
+            var con = config.Get<Configs>();
+            services.AddHttpClient();
+            if (con.Domains != null)
+            {
+                foreach (var item in con.Domains)
+                {
+                    services.AddHttpClient(item.Key, x =>
+                    {
+                        x.BaseAddress = new Uri(item.Value.Url);
+                        x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                        x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
+                    });
+                }
+            }
+            return services;
+        }
+
+        public static IServiceCollection AddWtmSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                var bearer = new OpenApiSecurityScheme()
+                {
+                    Description = "JWT Bearer",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+
+                };
+                c.AddSecurityDefinition("Bearer", bearer);
+                var sr = new OpenApiSecurityRequirement();
+                sr.Add(new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                }, new string[] { });
+                c.AddSecurityRequirement(sr);
+            });
+            return services;
+        }
+        public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
+        {
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
+            var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            foreach (var m in gd.AllModule)
+            {
+                foreach (var a in m.Actions)
+                {
+                    string u = null;
+                    if (a.ParasToRunTest != null && a.ParasToRunTest.Any(x => x.ToLower() == "id"))
+                    {
+                        u = lg.GetPathByAction(a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
+                    }
+                    else
+                    {
+                        u = lg.GetPathByAction(a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
+                    }
+                    if (u != null && u.EndsWith("/0"))
+                    {
+                        u = u.Substring(0, u.Length - 2);
+                        if (m.IsApi == true)
+                        {
+                            u = u + "/{id}";
+                        }
+                    }
+                    a.Url = u;
+                }
+            }
+            var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            var cs = configs.ConnectionStrings;
+            foreach (var item in cs)
+            {
+                var dc = item.CreateDC();
+                dc.DataInit(gd.AllModule, test != null).Wait();
+            }
+
+            return app;
+        }
+        public static IApplicationBuilder UseWtmLanguages(this IApplicationBuilder app)
+        {
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            if (string.IsNullOrEmpty(configs.Languages) == false)
+            {
+                List<CultureInfo> supportedCultures = new List<CultureInfo>();
+                var lans = configs.Languages.Split(",");
+                foreach (var lan in lans)
+                {
+                    supportedCultures.Add(new CultureInfo(lan));
+                }
+
+                app.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
+            }
+            return app;
+        }
+        public static IApplicationBuilder UseWtmCrossDomain(this IApplicationBuilder app)
+        {
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            if (configs.CorsOptions.EnableAll == true)
+            {
+                if (configs.CorsOptions?.Policy?.Count > 0)
+                {
+                    app.UseCors(configs.CorsOptions.Policy[0].Name);
+                }
+                else
+                {
+                    app.UseCors("_donotusedefault");
+                }
+            }
+            return app;
+        }
+        public static IApplicationBuilder UseWtmSwagger(this IApplicationBuilder app)
+        {
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            if (configs.IsQuickDebug == true)
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
+            }
+            return app;
+        }
     }
 
 
