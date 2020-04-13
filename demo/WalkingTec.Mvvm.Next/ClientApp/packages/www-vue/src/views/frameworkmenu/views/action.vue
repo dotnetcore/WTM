@@ -18,13 +18,18 @@
       <SelectedActionIDs />
       <Entity-Url />
     </template>
-    <!-- <template #Update></template>
-    <template #Details></template>-->
+    <template #Update>
+      <Entity-IsInside />
+      <SelectedModule />
+      <SelectedActionIDs />
+      <Entity-Url />
+    </template>
+    <!--<template #Details></template>-->
   </w-actions>
 </template>
 <script lang="ts">
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Inject } from "vue-property-decorator";
 import { ICellRendererParams } from "ag-grid-community";
 import { Modal } from "ant-design-vue";
 import lodash from "lodash";
@@ -38,7 +43,8 @@ const entities = Entities.editEntities();
   components: wtm.createFormItem({ entities })
 })
 export default class ViewAction extends Vue {
-  @Prop() private PageStore: PageStore;
+  @Inject("PageStore")
+  PageStore: PageStore;
   Entities = entities;
   // FieldsChange = new Subject<{
   //   props: any;

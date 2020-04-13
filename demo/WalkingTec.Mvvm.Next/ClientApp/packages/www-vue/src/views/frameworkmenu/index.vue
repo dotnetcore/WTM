@@ -1,17 +1,17 @@
 <template>
   <div class="app-page">
     <a-card class="page-card" :bordered="false" v-show="false">
-      <ViewFilter :PageStore="PageStore" />
+      <ViewFilter />
     </a-card>
     <a-card class="page-card" :bordered="false">
-      <ViewAction :PageStore="PageStore" />
+      <ViewAction />
       <a-divider style="margin:10px" />
-      <ViewGrid :PageStore="PageStore" />
+      <ViewGrid />
     </a-card>
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Provide } from "vue-property-decorator";
 import ViewGrid from "./views/grid.vue";
 import ViewAction from "./views/action.vue";
 import ViewFilter from "./views/filter.vue";
@@ -21,6 +21,7 @@ import { Subscription } from "rxjs";
   components: { ViewGrid, ViewAction, ViewFilter }
 })
 export default class PageView extends Vue {
+  @Provide("PageStore")
   PageStore = new PageStore();
   mounted() {
     console.warn("TCL: PageView ", this.PageStore);

@@ -4,7 +4,7 @@ import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import lodash from "lodash";
 import { toJS } from "mobx";
 import { Observable, Subject } from "rxjs";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue,Provide } from "vue-property-decorator";
 import ImportUpload from "../upload/import.vue";
 import { messages } from "./messages";
 @Component({ components: {} })
@@ -20,14 +20,15 @@ export class ViewAction extends Vue {
   /**
    * Field Change 变更 Subject
    */
-  @Prop({
-    default: () => new Subject()
-  })
+  // @Prop({
+  //   default: () => new Subject()
+  // })
+  @Provide('FieldsChangeSubject')
   private FieldsChangeSubject: Subject<{
     props: any;
     fields: any;
     form: WrappedFormUtils;
-  }>;
+  }> = new Subject();
   /**
    * ag grid 行 参数
    */
@@ -127,6 +128,7 @@ export class ViewAction extends Vue {
   beforeCreate() {
     const options = {
       onFieldsChange: (props, fields) => {
+        console.warn("ViewAction -> beforeCreate -> fields", fields)
         this.FieldsChangeSubject.next({ props, fields, form: this.form });
         this.$emit("fieldsChange", props, fields, this.form);
       },
@@ -139,15 +141,21 @@ export class ViewAction extends Vue {
       delete options.validateMessages;
     }
     this.form = this.$form.createForm(this, options);
+    // console.log("ViewAction -> beforeCreate -> this.form", this.form)
     // console.log("TCL: ViewAction -> beforeCreate -> this", this);
   }
   beforeMount() {
+    // this.FieldsChangeSubject.subscribe(obs => {
+    //   console.log("ViewAction -> beforeMount -> beforeMount 1",obs, this.FieldsChangeSubject)
+    // })
+    // lodash.set(this.FieldsChangeSubject, 'guid', lodash.uniqueId())
+    // console.log("ViewAction -> beforeMount -> beforeMount 1", this.FieldsChangeSubject)
     // 初始化  异步 组件
-    lodash.map(this.Entities, ent => {
-      if (lodash.isFunction(ent.onComplete)) {
-        ent.onComplete({ FieldsChange: this.FieldsChangeSubject, form: this.form });
-      }
-    });
+    // lodash.map(this.Entities, ent => {
+    //   if (lodash.isFunction(ent.onComplete)) {
+    //     ent.onComplete({ FieldsChange: this.FieldsChangeSubject, form: this.form });
+    //   }
+    // });
   }
   /**
    * 组件挂载

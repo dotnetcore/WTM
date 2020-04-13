@@ -5,7 +5,7 @@ import lodash from 'lodash';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter } from "rxjs/operators";
 import Vue, { CreateElement } from 'vue';
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Inject } from "vue-property-decorator";
 import globalConfig from '../../global.config';
 import displayComponents from './display.vue';
 import { FormItem, FormItemComponents, RenderFormItemParams, SpanType } from './type';
@@ -103,16 +103,16 @@ export function createFormItem({
         /**
          * 创建 异步 组件
          */
-        if (async) {
-            const asyncComponent = new Observable(sub => {
-                // 设置 组件 的 onComplete 初始化 完成函数
-                lodash.set(item, 'onComplete', (params) => {
-                    sub.next(createFieldItem(lodash.merge({ item, span, label, labelCol, key }, params)))
-                    sub.complete()
-                });
-            }).toPromise();
-            return () => asyncComponent
-        }
+        // if (async) {
+        //     const asyncComponent = new Observable(sub => {
+        //         // 设置 组件 的 onComplete 初始化 完成函数
+        //         lodash.set(item, 'onComplete', (params) => {
+        //             sub.next(createFieldItem(lodash.merge({ item, span, label, labelCol, key }, params)))
+        //             sub.complete()
+        //         });
+        //     }).toPromise();
+        //     return () => asyncComponent
+        // }
         return createFieldItem({ item, span, label, labelCol, key })
     })
     // 转换 Entity.ITCode ---->  Entity-ITCode //entityItCode
@@ -132,11 +132,11 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
         }, item.components),
         template: `
         <a-col
-           :span="${span.span}"
-           :xs="${span.xs}"
-           :sm="${span.sm}"
-           :md="${span.md}"
-           :lg="${span.lg}"
+        :span="${span.span}"
+        :xs="${span.xs}"
+        :sm="${span.sm}"
+        :md="${span.md}"
+        :lg="${span.lg}"
         >
             <a-form-item label="${label}" :label-col="labelCol" >
                 <a-spin :spinning="spinning" >
@@ -159,7 +159,8 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
     })
     class FieldItem extends Vue {
         @Prop() private PageStore: EntitiesPageStore;
-        @Prop({ default: () => FieldsChange })
+        // @Prop({ default: () => FieldsChange })
+        @Inject('FieldsChangeSubject')
         private FieldsChange: Subject<{
             props: any;
             fields: any;
@@ -169,6 +170,9 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
         @Prop() private disabled: any;
         @Prop() private decoratorOptions: any;
         FieldsChangeSubscription: Subscription;
+        // get span() {
+        //     return span
+        // };
         Entitie = item;
         loadData = false;
         spinning = false;
@@ -222,12 +226,13 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
             }
             this.loadData = loadData;
             this.dataSource = dataSource;
+            this.onCreateSubscribe();
         }
         mounted() {
             if (this.loadData) {
                 this.onLoadData(lodash.get(item, 'dataSource'))
             }
-            this.onCreateSubscribe();
+
             // console.log(this)
         }
         beforeDestroy() {
@@ -262,7 +267,7 @@ function createFieldItem({ item, label, labelCol, span, key, FieldsChange, form 
                         // console.log("TCL: FieldItem -> lodash.merge({}, form.getFieldsValue(linkage))", lodash.merge({}, form.getFieldsValue(linkage)))
                         const linkageValue = lodash.merge({}, form.getFieldsValue(linkage));
                         console.warn("FieldItem -> createFieldItem -> linkageValue", linkageValue)
-                        form.resetFields([key])
+                        // form.resetFields([key])
                         return this.onLoadData(
                             itemDataSource({
                                 linkageValue,

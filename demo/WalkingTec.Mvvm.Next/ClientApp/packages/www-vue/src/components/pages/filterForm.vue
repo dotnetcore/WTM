@@ -16,7 +16,7 @@
 </template> 
 <script lang="ts">
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Provide } from "vue-property-decorator";
 import { EntitiesPageStore } from "@leng/public/src";
 import { ICellRendererParams } from "ag-grid-community";
 import { Modal } from "ant-design-vue";
@@ -25,14 +25,15 @@ import { Subscriber, Subject } from "rxjs";
 @Component({ components: {} })
 export default class ViewAction extends Vue {
   @Prop() private PageStore: EntitiesPageStore;
-  @Prop({
-    default: () => new Subject()
-  })
+  // @Prop({
+  //   default: () => new Subject()
+  // })
+  @Provide("FieldsChangeSubject")
   private FieldsChange: Subject<{
     props: any;
     fields: any;
     form: WrappedFormUtils;
-  }>;
+  }> = new Subject();
   /**
    * 实体
    */
@@ -47,16 +48,15 @@ export default class ViewAction extends Vue {
     });
   }
   beforeMount() {
-    lodash.map(this.Entities, ent =>  {
-      if (lodash.isFunction(ent.onComplete)) {
-        ent.onComplete({ FieldsChange: this.FieldsChange });
-      }
-    });
-    lodash.delay(()=>this.onSubmit(),200)
-     
+    // lodash.map(this.Entities, ent => {
+    //   if (lodash.isFunction(ent.onComplete)) {
+    //     ent.onComplete({ FieldsChange: this.FieldsChange });
+    //   }
+    // });
   }
   mounted() {
     // this.onSubmit();
+    lodash.delay(() => this.onSubmit(), 200);
   }
   onSearch(body?) {
     this.PageStore.EventSubject.next({

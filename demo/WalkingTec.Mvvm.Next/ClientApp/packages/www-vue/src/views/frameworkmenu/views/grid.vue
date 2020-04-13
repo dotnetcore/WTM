@@ -9,16 +9,15 @@
 </template>
 <script lang="ts">
 import lodash from "lodash";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Inject } from "vue-property-decorator";
 import PageStore from "../store";
 import { GridOptions } from "ag-grid-community";
 import { toJS } from "mobx";
 import Action from "./action.vue";
-@Component({
-  components: {}
-})
+@Component
 export default class ViewGrid extends Vue {
-  @Prop() PageStore: PageStore;
+  @Inject("PageStore")
+  PageStore: PageStore;
   GridOptions: GridOptions = {
     frameworkComponents: {
       // 传递 行 操作组件 自动注册 Action 列

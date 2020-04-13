@@ -8,7 +8,7 @@
 <script lang="ts">
 import lodash from "lodash";
 import { Subject } from "rxjs";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Inject } from "vue-property-decorator";
 import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import wtm from "../../../components";
 import PageStore from "../store";
@@ -20,7 +20,8 @@ const entities = Entities.filterEntities();
   })
 })
 export default class ViewGrid extends Vue {
-  @Prop() PageStore: PageStore;
+  @Inject("PageStore")
+  PageStore: PageStore;
   Entities = entities;
   // FieldsChange = new Subject<{
   //   props: any;
