@@ -349,7 +349,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType, Version });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
 
@@ -361,7 +361,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType, Version });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
         /// <summary>
