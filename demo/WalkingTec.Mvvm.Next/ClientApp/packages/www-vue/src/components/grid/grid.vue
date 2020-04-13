@@ -57,12 +57,9 @@ export default class AgGrid extends Vue {
       editable: false,
       suppressColumnsToolPanel: true,
       // suppressToolPanel: true,
-      filter: false,
-      
-      
-      
+      filter: false
     };
-    const width=55;
+    const width = 50;
     return [
       {
         // pivotIndex: 0,
@@ -88,7 +85,8 @@ export default class AgGrid extends Vue {
         field: "Action",
         cellRenderer: "Action",
         pinned: "right",
-        minWidth: 135
+        minWidth: 140,
+        width: 140
         // ...rowActionProps
       }
     ].filter(Boolean);
@@ -142,6 +140,7 @@ export default class AgGrid extends Vue {
         // minWidth: 100,
         enableRowGroup: true,
         resizable: true,
+        // suppressColumnsToolPanel:true,
         filter: true
       },
       onGridReady: event => {
@@ -213,9 +212,10 @@ export default class AgGrid extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-
 .ag-grid-card {
-    transition: all 0.2s;
+  transition: all 0.2s;
 }
-
+.row-action {
+  text-align: center;
+}
 </style>

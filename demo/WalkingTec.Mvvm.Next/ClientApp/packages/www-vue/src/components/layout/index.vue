@@ -5,12 +5,7 @@
       <LayoutHeader />
       <LayoutContent />
     </a-layout>
-    <a-drawer
-      placement="right"
-      :closable="false"
-      @close="onVisible(false)"
-      :visible="visible"
-    ></a-drawer>
+    <a-drawer placement="right" :closable="false" @close="onVisible(false)" :visible="visible"></a-drawer>
   </a-layout>
 </template>
 <script lang="ts">
@@ -67,7 +62,10 @@ export default class extends Vue {
     }
   }
   .app-layout-content {
-    padding-top: 104px;
+    padding-top: 64px;
+    &.layout-content-tabs {
+      padding-top: 104px;
+    }
   }
   .layout-tabs > .ant-tabs-bar {
     position: fixed;

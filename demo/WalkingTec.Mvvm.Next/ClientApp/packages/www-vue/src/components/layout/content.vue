@@ -20,11 +20,7 @@
           </router-link>
         </template>
       </a-tab-pane>
-      <a-tab-pane
-        v-for="page in TabPages"
-        :key="page.fullPath"
-        :closable="true"
-      >
+      <a-tab-pane v-for="page in TabPages" :key="page.fullPath" :closable="true">
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
@@ -35,14 +31,16 @@
       </a-tab-pane>
     </a-tabs>
     <div
+      ref="pageView"
       class="layout-page-view"
-      :style="{
+      :style="$GlobalConfig.settings.tabsPage&&{
         height: height + 'px'
       }"
     >
       <keep-alive>
         <router-view />
       </keep-alive>
+      <a-back-top :target="target" />
     </div>
   </a-layout-content>
 </template>
@@ -59,6 +57,9 @@ import lodash from "lodash";
 })
 export default class extends Vue {
   UserStore = rootStore.UserStore;
+  target() {
+    return this.$GlobalConfig.settings.tabsPage ? this.$refs.pageView : window;
+  }
   hydrate = create({
     storage: window.localStorage, // 存储的对象
     jsonify: true, // 格式化 json
@@ -78,6 +79,7 @@ export default class extends Vue {
     // this.hydrate("layout", this);
   }
   mounted() {
+    console.log(this.$refs);
     lodash.delay(() => {
       this.onPushTabPages();
     }, 300);
@@ -161,7 +163,13 @@ export default class extends Vue {
     text-decoration: none;
   }
 }
-// .layout-page-view {}
+.layout-page-view {
+  overflow: auto;
+  .ant-back-top {
+    right: 50px;
+    bottom: 30px;
+  }
+}
 .layout-page-view > div.app-page {
   margin: 0 6px;
   padding-top: 6px;

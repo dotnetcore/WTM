@@ -2,6 +2,7 @@ import { FieldDecoratorOptions, WrappedFormUtils } from 'ant-design-vue/types/fo
 import { Observable } from 'rxjs';
 import { AsyncComponent, Component as VueComponent } from 'vue';
 type ColSpanType = number | string;
+
 export type SpanType = {
     /**
    * raster number of cells to occupy, 0 corresponds to display: none
@@ -110,6 +111,20 @@ export interface FormItem {
 export interface EntitiesItems {
     [key: string]: FormItem
 }
+export type FormItemsOptions = {
+    /**
+     * 实体
+     */
+    entities: EntitiesItems;
+    /**
+     * col span
+     */
+    colProps?: SpanType
+    /**
+     * labelCol span
+     */
+    labelCol?: SpanType
+};
 export interface RenderFormItemParams {
     /**
      * 实体模型

@@ -7,7 +7,7 @@ import actions from './pages/actions.vue';
 import filterForm from './pages/filterForm.vue';
 import modal from './pages/modal.vue';
 import avatar from './upload/avatar.vue';
-import { createFilterFormItem, createFormItem, renderFormItem } from './utils/entitiesHelp';
+import { createFilterFormItem, createFormItem } from './pages/formItem';
 export * from './pages/actions';
 function install(vue: typeof Vue) {
     directive.install(vue);
@@ -22,5 +22,5 @@ export default {
     install,
     createFilterFormItem,
     createFormItem,
-    renderFormItem,
+    // renderFormItem,
 }
