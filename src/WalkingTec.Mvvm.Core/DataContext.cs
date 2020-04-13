@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.Core
         {
         }
 
-        public FrameworkContext(string cs, DBTypeEnum dbtype):base(cs,dbtype)
+        public FrameworkContext(string cs, DBTypeEnum dbtype, string version=null):base(cs,dbtype,version)
         {
         }
 
@@ -303,6 +304,7 @@ namespace WalkingTec.Mvvm.Core
 
         public DBTypeEnum DBType { get; set; }
 
+        public string Version { get; set; }
         public CS ConnectionString { get; set; }
         /// <summary>
         /// FrameworkContext
@@ -322,16 +324,18 @@ namespace WalkingTec.Mvvm.Core
             CSName = cs;
         }
 
-        public EmptyContext(string cs, DBTypeEnum dbtype)
+        public EmptyContext(string cs, DBTypeEnum dbtype,string version=null)
         {
             CSName = cs;
             DBType = dbtype;
+            Version = version;
         }
 
         public EmptyContext(CS cs)
         {
             CSName = cs.Value;
             DBType = cs.DbType.Value;
+            Version = cs.Version;
             ConnectionString = cs;
         }
 
@@ -345,7 +349,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
 
@@ -357,7 +361,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
         /// <summary>
@@ -516,7 +520,13 @@ namespace WalkingTec.Mvvm.Core
                     }
                     break;
                 case DBTypeEnum.MySql:
-                    optionsBuilder.UseMySql(CSName);
+                    optionsBuilder.UseMySql(CSName, mySqlOptions =>
+                    {
+                        if (string.IsNullOrEmpty(Version) == false)
+                        {
+                            mySqlOptions.ServerVersion(Version);
+                        }
+                    });
                     break;
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);

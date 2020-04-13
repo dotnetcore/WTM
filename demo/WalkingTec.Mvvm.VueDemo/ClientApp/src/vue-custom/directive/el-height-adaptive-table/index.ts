@@ -25,21 +25,27 @@ const doResize = (el, binding, vnode) => {
 };
 const debounceFn = debounce(doResize, PAUSE);
 const elHeightAdaptiveTable: DirectiveOptions = {
-  inserted: (el, {}, vnode) => {
-    const { componentInstance: $table } = vnode;
-    if ($table) {
-      $table.layout.setHeight("123", "min-height");
+  inserted: (el, { value }, vnode) => {
+    if (value) {
+      const { componentInstance: $table } = vnode;
+      if ($table) {
+        $table.layout.setHeight("123", "min-height");
+      }
     }
   },
   bind(el, binding, vnode) {
-    el.resizeListener = () => {
-      debounceFn(el, binding, vnode);
-    };
-    //addResizeListener(el, el.resizeListener)
-    window.addEventListener("resize", el.resizeListener);
+    if (binding.value) {
+      el.resizeListener = () => {
+        debounceFn(el, binding, vnode);
+      };
+      //addResizeListener(el, el.resizeListener)
+      window.addEventListener("resize", el.resizeListener);
+    }
   },
   update(el, binding, vnode) {
-    debounceFn(el, binding, vnode);
+    if (binding.value) {
+      debounceFn(el, binding, vnode);
+    }
   },
   unbind(el) {
     //removeResizeListener(el, el.resizeListener)

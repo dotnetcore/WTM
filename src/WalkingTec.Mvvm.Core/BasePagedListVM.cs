@@ -644,7 +644,7 @@ namespace WalkingTec.Mvvm.Core
                         }
                         if (Searcher.PageCount > 0 && Searcher.Page > Searcher.PageCount)
                         {
-                            //Searcher.Page = Searcher.PageCount;
+                            Searcher.Page = Searcher.PageCount;
                         }
                         EntityList = query.Skip((Searcher.Page - 1) * Searcher.Limit).Take(Searcher.Limit).AsNoTracking().ToList();
                     }

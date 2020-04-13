@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+ </PropertyGroup>
 
 </Project>
