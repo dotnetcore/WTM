@@ -17,12 +17,14 @@
       <SelectedModule />
       <SelectedActionIDs />
       <Entity-Url />
+      <Entity-ICon />
     </template>
     <template #Update>
       <Entity-IsInside />
       <SelectedModule />
       <SelectedActionIDs />
       <Entity-Url />
+      <Entity-ICon />
     </template>
     <!--<template #Details></template>-->
   </w-actions>

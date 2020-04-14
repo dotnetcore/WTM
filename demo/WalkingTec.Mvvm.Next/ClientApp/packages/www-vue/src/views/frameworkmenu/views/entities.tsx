@@ -2,13 +2,19 @@
 import lodash from 'lodash';
 import { CreateElement } from 'vue';
 import { onGetController } from "../store";
-import { EntitiesItems } from 'components/utils/type';
+import { EntitiesItems } from 'components/pages/type';
+import icon from './icon.vue';
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
  * children  表单组件
  * 验证消息 https://github.com/yiminghe/async-validator#messages
  */
+const provinceData = ['Zhejiang', 'Jiangsu'];
+const cityData = {
+    Zhejiang: ['Hangzhou', 'Ningbo', 'Wenzhou'],
+    Jiangsu: ['Nanjing', 'Suzhou', 'Zhenjiang'],
+};
 export default {
     /**
      * 表单模型 
@@ -43,7 +49,7 @@ export default {
             /** 模块名称 */
             "SelectedModule": {
                 label: "模块名称",
-                span: 24,
+                // span: 24,
                 options: {},
                 dataSource: () => onGetController(),
                 children: `<a-select v-decorator />`
@@ -51,7 +57,7 @@ export default {
             /** 动作名称 */
             "SelectedActionIDs": {
                 label: "动作名称",
-                span: 24,
+                // span: 24,
                 linkage: ['SelectedModule'],
                 dataSource: ({ linkageValue, form }) => {
                     const ModelName = lodash.get(linkageValue, 'SelectedModule');
@@ -102,13 +108,15 @@ export default {
             /** Url */
             "Entity.Url": {
                 label: "Url",
-                span: 24,
+                // span: 24,
+                // children: `<a-input v-decorator />`
                 children: `<a-input v-decorator />`
             },
             "Entity.ICon": {
                 label: "图标",
-                span: 24,
-                children: `<a-input v-decorator />`
+                // span: 24,
+                options: { rules: [{ required: true }] },
+                children: icon
             },
             /** 父目录 */
             "Entity.ParentId": {

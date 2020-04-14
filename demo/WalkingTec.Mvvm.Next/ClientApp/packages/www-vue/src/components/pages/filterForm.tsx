@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Icon, Row, Col } from 'ant-design-vue';
 import { WrappedFormUtils } from 'ant-design-vue/types/form/form';
-import { renderFormItem } from '../utils/entitiesHelp';
+// import { renderFormItem } from '../utils/entitiesHelp';
 import Vue, { CreateElement } from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import VueI18n from 'vue-i18n';

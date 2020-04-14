@@ -1,7 +1,8 @@
 ﻿import Request from '@leng/public/src/utils/request';
 import lodash from 'lodash';
 import { CreateElement } from 'vue';
-import { EntitiesItems } from '../../../components/utils/type';
+import { EntitiesItems } from 'components/pages/type';
+
 
 /**
  * label  标识

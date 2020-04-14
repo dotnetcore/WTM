@@ -25,10 +25,15 @@ function CreateFormItem(item: FormItem, key, options: FormItemsOptions) {
     if (lodash.isNumber(colProps) || lodash.isString(colProps)) {
         colProps = { span: colProps };
     }
+    const components = lodash.merge({
+        display: displayComponents,
+        // FormItemChildren: () => lodash.isObject(item.children) && item.children,
+    }, item.components);
+    if (lodash.isObject(item.children)) {
+        lodash.set(components, 'FormItemChildren', item.children);
+    }
     @Component({
-        components: lodash.merge({
-            display: displayComponents
-        }, item.components),
+        components,
         template: `
         <a-col
         :span="${colProps.span}"
@@ -226,13 +231,16 @@ function CreateChildrenTemplate(item: FormItem) {
     if (lodash.isObject(label)) {
         label = lodash.get(label, globalConfig.settings.language);
     }
+    let placeholder = `$t('placeholder.input', { label:'${label}'  })`
+    if (lodash.isObject(item.children)) {
+        return `<FormItemChildren v-decorator="decorator"  :placeholder="${placeholder}" />`
+    }
     let children = lodash.replace(item.children, 'v-decorator', ` 
             v-decorator="decorator" 
             :disabled="isDisabled" 
             allowClear
             WTM
         `);
-    let placeholder = `$t('placeholder.input', { label:'${label}'  })`
     switch (true) {
         /**
          *  a-select 

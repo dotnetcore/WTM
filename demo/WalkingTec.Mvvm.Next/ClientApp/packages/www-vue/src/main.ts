@@ -3,6 +3,7 @@ import 'ant-design-vue/dist/antd.less';
 import './styles/base.less';
 import 'viewerjs/dist/viewer.css';
 import 'nprogress/nprogress.css';
+import "./assets/font/font";
 import Vue from 'vue';
 import router from './router';
 import VueI18n from 'vue-i18n';

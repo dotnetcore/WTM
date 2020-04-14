@@ -106,7 +106,7 @@ export interface FormItem {
      * @type {*}
      * @memberof FormItem
      */
-    children: any;
+    children: string | VueComponent<any, any, any, any> | AsyncComponent<any, any, any, any>;
 }
 export interface EntitiesItems {
     [key: string]: FormItem

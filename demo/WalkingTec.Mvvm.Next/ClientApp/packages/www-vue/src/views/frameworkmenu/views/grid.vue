@@ -14,6 +14,7 @@ import PageStore from "../store";
 import { GridOptions } from "ag-grid-community";
 import { toJS } from "mobx";
 import Action from "./action.vue";
+import { GridIcon } from "./icon.vue";
 @Component
 export default class ViewGrid extends Vue {
   @Inject("PageStore")
@@ -21,7 +22,8 @@ export default class ViewGrid extends Vue {
   GridOptions: GridOptions = {
     frameworkComponents: {
       // 传递 行 操作组件 自动注册 Action 列
-      Action
+      Action,
+      GridIcon
     },
     context: {
       PageStore: this.PageStore
@@ -47,7 +49,8 @@ export default class ViewGrid extends Vue {
       },
       {
         headerName: "图标",
-        field: "ICon"
+        field: "ICon",
+        cellRenderer: "GridIcon"
       }
     ]
   };
@@ -60,5 +63,4 @@ export default class ViewGrid extends Vue {
   mounted() {}
 }
 </script>
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>
