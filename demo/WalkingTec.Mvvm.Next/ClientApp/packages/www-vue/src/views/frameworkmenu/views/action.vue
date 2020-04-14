@@ -13,10 +13,12 @@
       <a-divider type="vertical" />
     </template>
     <template #Insert>
-      <Entity-IsInside />
-      <SelectedModule />
-      <SelectedActionIDs />
-      <Entity-Url />
+      <Entity-FolderOnly />
+      <Entity-ShowOnMenu />
+      <Entity-IsInside :disabled="disabled.FolderOnly" />
+      <SelectedModule :disabled="disabled.FolderOnly" />
+      <SelectedActionIDs :disabled="disabled.FolderOnly" />
+      <Entity-Url :disabled="disabled.FolderOnly" />
       <Entity-ICon />
     </template>
     <template #Update>
@@ -55,8 +57,13 @@ export default class ViewAction extends Vue {
   // }>();
   // aggird 组件 自带属性 不可删除
   params = {};
+  disabled = {
+    FolderOnly: false,
+  };
+  display = {};
   /** @fieldsChange="onFieldsChange" form onFieldsChange 事件 */
   onFieldsChange(props, fields, form) {
+    console.log("ViewAction -> onFieldsChange -> fields", fields);
     if (lodash.hasIn(fields, "SelectedModule")) {
       const SelectedModule = lodash.get(fields, "SelectedModule.value");
       onGetController().subscribe(data => {
@@ -67,6 +74,10 @@ export default class ViewAction extends Vue {
           )
         });
       });
+    }
+    if (lodash.hasIn(fields, "Entity.FolderOnly")) {
+      const FolderOnly = lodash.get(fields, "Entity.FolderOnly.value");
+      this.disabled.FolderOnly = FolderOnly;
     }
   }
   /** @submit="onSubmit" 替换 默认 提交函数 */

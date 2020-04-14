@@ -76,8 +76,11 @@ export default {
             /** 目录 */
             "Entity.FolderOnly": {
                 label: "目录",
-                span: 24,
-                children: `<a-input v-decorator />`
+                options: { initialValue: false },
+                children: `<a-switch v-decorator >
+                <a-icon type="check" slot="checkedChildren" />
+                <a-icon type="close" slot="unCheckedChildren" />
+              </a-switch>`
             },
             /** 继承 */
             "Entity.IsInherit": {
@@ -88,8 +91,11 @@ export default {
             /** 菜单显示 */
             "Entity.ShowOnMenu": {
                 label: "菜单显示",
-                span: 24,
-                children: `<a-input v-decorator />`
+                options: { initialValue: true },
+                children: `<a-switch v-decorator >
+                <a-icon type="check" slot="checkedChildren" />
+                <a-icon type="close" slot="unCheckedChildren" />
+              </a-switch>`
             },
             /** 公开 */
             "Entity.IsPublic": {
