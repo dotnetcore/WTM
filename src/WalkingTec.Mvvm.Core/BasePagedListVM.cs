@@ -7,6 +7,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +15,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -99,6 +101,7 @@ namespace WalkingTec.Mvvm.Core
             IEnumerable<IGridColumn<TModel>> headers = GetHeaders();
             return headers.Max(x => x.MaxDepth);
         }
+
         private List<GridAction> _gridActions;
 
         /// <summary>
@@ -106,14 +109,12 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public List<GridAction> GetGridActions()
         {
-                if (_gridActions == null)
-                {
-                    _gridActions = InitGridAction();
-                }
-                return _gridActions;
+            if (_gridActions == null)
+            {
+                _gridActions = InitGridAction();
+            }
+            return _gridActions;
         }
-
-
 
         /// <summary>
         /// 初始化 InitGridHeader，继承的类应该重载这个函数来设定数据的列和动作
@@ -122,6 +123,7 @@ namespace WalkingTec.Mvvm.Core
         {
             return new List<GridColumn<TModel>>();
         }
+
         protected virtual List<GridAction> InitGridAction()
         {
             return new List<GridAction>();
@@ -136,60 +138,67 @@ namespace WalkingTec.Mvvm.Core
         public virtual byte[] GenerateExcel()
         {
             NeedPage = false;
+
+            //获取导出的表头
             if (GridHeaders == null)
             {
                 GetHeaders();
             }
+
+            //去掉ID列和Action列
+            RemoveActionAndIdColumn();
+
+            //如果没有数据源，进行查询
             if (IsSearched == false)
             {
                 DoSearch();
             }
-            HSSFWorkbook workbook = new HSSFWorkbook();
-            List<HSSFSheet> sheets = new List<NPOI.HSSF.UserModel.HSSFSheet>();
-            //准备好sheet，每6万行生成一个sheet
-            var sheetno = ((EntityList.Count - 1) / 60000) + 1;
-            var headerStyle = workbook.CreateCellStyle();
-            //设定单元格边框
-            headerStyle.BorderBottom = BorderStyle.Thin;
-            headerStyle.BorderLeft = BorderStyle.Thin;
-            headerStyle.BorderRight = BorderStyle.Thin;
-            headerStyle.BorderTop = BorderStyle.Thin;
-            //用灰色填充背景
-            var headerbg = HSSFColor.Grey25Percent.Index;
-            headerStyle.FillForegroundColor = headerbg;
-            headerStyle.FillPattern = FillPattern.SolidForeground;
-            headerStyle.FillBackgroundColor = headerbg;
-            //去掉 Id 列和动作列
-            RemoveActionAndIdColumn();
-            //循环生成所有sheet，并为每个sheet添加表头
-            var headerrows = 0;
-            for (int i = 1; i <= sheetno; i++)
+
+            //获取分成Excel的个数
+            ExportMaxCount = ExportMaxCount == 0 ? 1000000 : (ExportMaxCount > 1000000 ? 1000000 : ExportMaxCount);
+            ExportExcelCount = EntityList.Count < ExportMaxCount ? 1 : ((EntityList.Count % ExportMaxCount) == 0 ? (EntityList.Count / ExportMaxCount) : (EntityList.Count / ExportMaxCount + 1));
+
+            //如果是1，直接下载Excel，如果是多个，下载ZIP包
+            if (ExportExcelCount == 1)
             {
-                HSSFSheet sheet = workbook.CreateSheet("Sheet" + i) as HSSFSheet;
-                //生成表头
-                headerrows = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
-                sheets.Add(sheet);
+                return DownLoadExcel();
             }
-
-            var rowIndex = headerrows;
-            var colIndex = 0;
-
-            //Excel中用到的style，每种前景色和背景色的组合为一个style。Nopi值支持4000个style，所以同样的style要重复使用
-            Dictionary<string, ICellStyle> styles = new Dictionary<string, ICellStyle>();
-            //Excel中用到的font，主要是为了更改字体颜色
-            Dictionary<string, IFont> fonts = new Dictionary<string, IFont>();
-            //循环数据
-            foreach (var row in EntityList)
+            else
             {
-                var sheetindex = ((rowIndex - headerrows) / 60000);
-                colIndex = 0;
-                string bgColor = "";
-                string fColor = "";
-                //获取设定的行背景色
-                bgColor = SetFullRowBgColor(row);
-                //获取设定的行前景色
-                fColor = SetFullRowColor(row);
-                var dr = sheets[sheetindex].CreateRow(rowIndex - sheetindex * 60000) as HSSFRow;
+                return DownLoadZipPackage(typeof(TModel).Name + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff"));
+            }
+        }
+
+        /// <summary>
+        /// 根据集合生成单个Excel
+        /// </summary>
+        /// <param name="List"></param>
+        /// <returns></returns>
+        private IWorkbook GenerateWorkBook(List<TModel> List)
+        {
+            IWorkbook book = new XSSFWorkbook();
+            ISheet sheet = book.CreateSheet();
+            IRow row = sheet.CreateRow(0);
+
+            //创建表头样式
+            ICellStyle headerStyle = book.CreateCellStyle();
+            headerStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
+            headerStyle.FillPattern = FillPattern.SolidForeground;
+            IFont font = book.CreateFont();
+            font.FontName = "Calibri";
+            font.FontHeightInPoints = 12;
+            font.Color = NPOI.HSSF.Util.HSSFColor.White.Index;
+            headerStyle.SetFont(font);
+
+            //生成表头
+            MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
+
+            //放入数据
+            var ColIndex = 0;
+            for (int i = 0; i < List.Count; i++)
+            {
+                ColIndex = 0;
+                var DR = sheet.CreateRow(i + 1);
                 foreach (var baseCol in GridHeaders)
                 {
                     //处理枚举变量的多语言
@@ -202,12 +211,10 @@ namespace WalkingTec.Mvvm.Core
 
                     foreach (var col in baseCol.BottomChildren)
                     {
-
                         //获取数据，并过滤特殊字符
-                        string text = Regex.Replace(col.GetText(row).ToString(), @"<[^>]*>", String.Empty);
+                        string text = Regex.Replace(col.GetText(List[i]).ToString(), @"<[^>]*>", String.Empty);
 
                         //处理枚举变量的多语言
-
                         if (IsEmunBoolParp)
                         {
                             if (int.TryParse(text, out int enumvalue))
@@ -216,96 +223,93 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
 
-
                         //建立excel单元格
-                        var cell = dr.CreateCell(colIndex);
-                        ICellStyle style = null;
-                        IFont font = null;
-                        var styleKey = string.Empty;
-                        //获取设定的单元格背景色
-                        string backColor = col.GetBackGroundColor(row);
-                        //获取设定的单元格前景色
-                        string foreColor = col.GetForeGroundColor(row);
-                        //如果行背景色或单元格背景色有值，则用颜色的ARGB的值作为style的key
-                        if (bgColor != "" || backColor != "")
-                        {
-                            styleKey = backColor == "" ? bgColor : backColor;
-                        }
-                        //如果行前景色或单元格前景色有值，则用颜色的ARGB加上背景色的ARGB作为style的key
-                        if (fColor != "" || foreColor != "")
-                        {
-                            styleKey += foreColor == "" ? foreColor : fColor;
-                        }
-                        //如果已经有符合条件的style，则使用
-                        if (styles.ContainsKey(styleKey))
-                        {
-                            style = styles[styleKey];
-                        }
-                        //如果没有，则新建一个style
-                        else
-                        {
-                            var newKey = "";
-                            var newFontKey = "";
-                            //新建style
-                            style = workbook.CreateCellStyle();
-                            //设定单元格边框
-                            style.BorderBottom = BorderStyle.Thin;
-                            style.BorderLeft = BorderStyle.Thin;
-                            style.BorderRight = BorderStyle.Thin;
-                            style.BorderTop = BorderStyle.Thin;
-                            //如果行前景色或单元格前景色有值，则设定单元格的填充颜色
-                            if (bgColor != "" || backColor != "")
-                            {
-                                newKey = backColor == "" ? bgColor : backColor;
-                                var ci = Utils.GetExcelColor(backColor == "" ? bgColor : backColor);
-                                style.FillForegroundColor = ci;
-                                style.FillPattern = FillPattern.SolidForeground;
-                                style.FillBackgroundColor = ci;
-                            }
-                            //如果行前景色或单元格前景色有值，则设定单元格的字体的颜色
-                            if (fColor != "" || foreColor != "")
-                            {
-                                newFontKey = foreColor == "" ? foreColor : fColor;
-                                newKey += foreColor == "" ? foreColor : fColor;
-                                //如果已经有符合条件的字体，则使用
-                                if (fonts.ContainsKey(newFontKey))
-                                {
-                                    font = fonts[newFontKey];
-                                }
-                                //如果没有，则新建
-                                else
-                                {
-                                    //新建字体
-                                    font = workbook.CreateFont();
-                                    //设定字体颜色
-                                    font.Color = Utils.GetExcelColor(foreColor == "" ? fColor : foreColor);
-                                    //向集合中添加新字体
-                                    fonts.Add(newFontKey, font);
-                                }
-                                //设定style中的字体
-                                style.SetFont(font);
-                            }
-                            //将新建的style添加到集合中
-                            styles.Add(newKey, style);
-                        }
-                        cell.CellStyle = style;
+                        var cell = DR.CreateCell(ColIndex);
                         cell.SetCellValue(text);
-                        colIndex++;
+                        ColIndex++;
                     }
                 }
-                rowIndex++;
             }
+            return book;
+        }
 
-            //获取Excel文件的二进制数据
+        private byte[] DownLoadExcel()
+        {
+            var book = GenerateWorkBook(EntityList);
             byte[] rv = new byte[] { };
             using (MemoryStream ms = new MemoryStream())
             {
-                workbook.Write(ms);
-                ms.Flush();
-                ms.Position = 0;
+                book.Write(ms);
                 rv = ms.ToArray();
             }
             return rv;
+        }
+
+        private byte[] DownLoadZipPackage(string FileName)
+        {
+            //文件根目录
+            string RootPath = $"{ConfigInfo.FileUploadOptions.UploadDir}{FileName}";
+
+            //文件夹目录
+            string FilePath = $"{RootPath}//FileFolder";
+
+            //压缩包目录
+            string ZipPath = $"{RootPath}//{FileName}.zip";
+
+            //打开文件夹
+            DirectoryInfo FileFolder = new DirectoryInfo(FilePath);
+            if (!FileFolder.Exists)
+            {
+                //创建文件夹
+                FileFolder.Create();
+            }
+            else
+            {
+                //清空文件夹
+                FileSystemInfo[] Files = FileFolder.GetFileSystemInfos();
+                foreach (var item in Files)
+                {
+                    if (item is DirectoryInfo)
+                    {
+                        DirectoryInfo Directory = new DirectoryInfo(item.FullName);
+                        Directory.Delete(true);
+                    }
+                    else
+                    {
+                        File.Delete(item.FullName);
+                    }
+                }
+            }
+
+            //放入数据
+            for (int i = 0; i < ExportExcelCount; i++)
+            {
+                var List = EntityList.Skip(i * ExportMaxCount).Take(ExportMaxCount).ToList();
+                var WorkBook = GenerateWorkBook(List);
+                string SavePath = $"{FilePath}/{FileName}_{i + 1}.xlsx";
+                using (FileStream FS = new FileStream(SavePath, FileMode.CreateNew))
+                {
+                    WorkBook.Write(FS);
+                }
+            }
+
+            //生成压缩包
+            ZipFile.CreateFromDirectory(FilePath, ZipPath);
+
+            //读取压缩包
+            FileStream ZipFS = new FileStream(ZipPath, FileMode.Open, FileAccess.Read);
+            byte[] bt = new byte[ZipFS.Length];
+            ZipFS.Read(bt, 0, bt.Length);
+            ZipFS.Close();
+
+            //删除根目录文件夹
+            DirectoryInfo RootFolder = new DirectoryInfo(RootPath);
+            if (RootFolder.Exists)
+            {
+                RootFolder.Delete(true);
+            }
+
+            return bt;
         }
 
         /// <summary>
@@ -317,9 +321,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="colIndex"></param>
         /// <param name="style"></param>
         /// <returns></returns>
-        private int MakeExcelHeader(HSSFSheet sheet, IEnumerable<IGridColumn<TModel>> cols, int rowIndex, int colIndex, ICellStyle style)
+        private int MakeExcelHeader(ISheet sheet, IEnumerable<IGridColumn<TModel>> cols, int rowIndex, int colIndex, ICellStyle style)
         {
-            var row = sheet.CreateRow(rowIndex) as HSSFRow;
+            var row = sheet.CreateRow(rowIndex);
             int maxLevel = cols.Select(x => x.MaxLevel).Max();
             //循环所有列
             foreach (var col in cols)
@@ -340,7 +344,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     for (int j = cellRangeAddress.FirstColumn; j <= cellRangeAddress.LastColumn; j++)
                     {
-                        var c = HSSFCellUtil.GetCell(HSSFCellUtil.GetRow(i, sheet), j);
+                        var c = sheet.GetRow(i).GetCell(j); //HSSFCellUtil.GetCell(HSSFCellUtil.GetRow(i, (HSSFSheet)sheet), j);
                         c.CellStyle = style;
                     }
                 }
@@ -401,6 +405,18 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         public bool NeedPage { get; set; }
+
+        /// <summary>
+        /// 允许导出Excel的最大行数，超过行数会分成多个文件，最多不能超过100万
+        /// </summary>
+        [JsonIgnore]
+        public int ExportMaxCount { get; set; }
+
+        /// <summary>
+        /// 根据允许导出的Excel最大行数，算出最终导出的Excel个数
+        /// </summary>
+        [JsonIgnore]
+        public int ExportExcelCount { get; set; }
 
         /// <summary>
         /// 数据列表
@@ -991,7 +1007,7 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        public virtual void UpdateEntityList(bool updateAllFields=false)
+        public virtual void UpdateEntityList(bool updateAllFields = false)
         {
             if (EntityList != null)
             {

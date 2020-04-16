@@ -256,7 +256,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                if(vm.Entity.Majors == null)
+                if (vm.Entity.Majors == null)
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
@@ -297,7 +297,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                if(vm.Entity.Majors == null)
+                if (vm.Entity.Majors == null)
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
@@ -321,12 +321,20 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public IActionResult ExportExcel(SchoolListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            if (vm.ExportExcelCount > 1)
+            {
+                return File(data, "application/x-zip-compressed", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.zip");
+            }
+            else
+            {
+                return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xlsx");
+            }
         }
 
         [HttpPost]
-        public IActionResult Download(long id,long[] ids)
+        public IActionResult Download(long id, long[] ids)
         {
             return File(new byte[0], "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
