@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     groupids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }

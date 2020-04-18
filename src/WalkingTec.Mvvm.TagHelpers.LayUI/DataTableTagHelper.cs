@@ -663,7 +663,7 @@ layui.use(['table'], function(){{
             bool isSub = false
         )
         {
-            if (vm.LoginUserInfo?.IsAccessable(item.Url) == true ||
+            if (vm.WtmContext?.IsAccessable(item.Url) == true ||
                 item.ParameterType == GridActionParameterTypesEnum.AddRow ||
                 item.ParameterType == GridActionParameterTypesEnum.RemoveRow
             )

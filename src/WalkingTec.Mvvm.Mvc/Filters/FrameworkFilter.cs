@@ -32,7 +32,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (ctrl.WtmContext == null)
             {
                 ctrl.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
-                ctrl.WtmContext.HttpContext = context.HttpContext;
+                try
+                {
+                    ctrl.WtmContext.MSD = new ModelStateServiceProvider(context.ModelState);
+                    ctrl.WtmContext.Session = new SessionServiceProvider(context.HttpContext.Session);
+                }
+                catch { }
             }
             if (context.HttpContext.Items.ContainsKey("actionstarttime") == false)
             {
@@ -52,44 +57,33 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             log.ActionUrl = ctrl.BaseUrl;
             log.IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            ctrl.Log = log;
+            ctrl.WtmContext.Log = log;
             foreach (var item in context.ActionArguments)
             {
                 if (item.Value is BaseVM)
                 {
                     var model = item.Value as BaseVM;
-                    model.Session = new SessionServiceProvider(context.HttpContext.Session);
-                    model.Cache = ctrl.Cache;
-                    model.LoginUserInfo = ctrl.WtmContext.LoginUserInfo;
-                    model.DC = ctrl.DC;
-                    model.MSD = new ModelStateServiceProvider(ctrl.ModelState);
+                    model.WtmContext = ctrl.WtmContext;
                     model.FC = new Dictionary<string, object>();
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
-                    model.FromFixedCon = ctrlActDesc.MethodInfo.IsDefined(typeof(FixConnectionAttribute), false) || ctrlActDesc.ControllerTypeInfo.IsDefined(typeof(FixConnectionAttribute), false); ;
-                    model.CurrentCS = ctrl.CurrentCS;
-                    model.Log = ctrl.Log;
-                    model.CurrentUrl = ctrl.BaseUrl;
-                    model.ConfigInfo = (Configs)context.HttpContext.RequestServices.GetService(typeof(Configs));
-                    model.DataContextCI = ctrl.WtmContext.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == ctrl.CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
                     model.Localizer = ctrl.Localizer;
-                    model.WtmContext = ctrl.WtmContext;
                     var programtype = ctrl.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
                     {
                         model.Localizer = context.HttpContext.RequestServices.GetService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
                     }
-                    if (ctrl is BaseController c)
-                    {
-                        model.WindowIds = c.WindowIds;
-                        model.UIService = c.UIService;
-                    }
-                    else
-                    {
-                        model.WindowIds = "";
-                        model.UIService = new DefaultUIService();
-                    }
+                    //if (ctrl is BaseController c)
+                    //{
+                    //    model.WtmContext.WindowIds = c.WindowIds;
+                    //    model.UIService = c.UIService;
+                    //}
+                    //else
+                    //{
+                    //    model.WindowIds = "";
+                    //    model.UIService = new DefaultUIService();
+                    //}
                     try
                     {
                         var f = context.HttpContext.Request.Form;

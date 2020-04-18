@@ -28,7 +28,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (controller.WtmContext == null)
             {
                 controller.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
-                controller.WtmContext.HttpContext = context.HttpContext;
+                try
+                {
+                    controller.WtmContext.MSD = new ModelStateServiceProvider(context.ModelState);
+                    controller.WtmContext.Session = new SessionServiceProvider(context.HttpContext.Session);
+                }
+                catch { }
             }
 
             if (controller.WtmContext.ConfigInfo.IsQuickDebug && controller is BaseApiController)
@@ -58,7 +63,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
-            controller.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent(); ;
+            controller.WtmContext.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent(); ;
 
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限
@@ -111,7 +116,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             {
                 if (isAllRights == false)
                 {
-                    bool canAccess = controller.WtmContext.LoginUserInfo.IsAccessable(controller.BaseUrl);
+                    bool canAccess = controller.WtmContext.IsAccessable(controller.BaseUrl);
                     if (canAccess == false && controller.ConfigInfo.IsQuickDebug == false)
                     {
                         if (controller is ControllerBase ctrl)

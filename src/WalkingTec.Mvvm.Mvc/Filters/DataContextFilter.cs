@@ -34,7 +34,13 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (controller.WtmContext == null)
             {
                 controller.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
-                controller.WtmContext.HttpContext = context.HttpContext;
+                try
+                {
+                    controller.WtmContext.MSD = new ModelStateServiceProvider(context.ModelState);
+                    controller.WtmContext.Session = new SessionServiceProvider(context.HttpContext.Session);
+                }
+                catch { }
+
             }
 
             string cs = "";
@@ -83,9 +89,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
-            controller.CurrentCS = cs;
-            controller.CurrentDbType = dbtype;
             controller.WtmContext.CurrentCS = cs;
+            controller.WtmContext.CurrentDbType = dbtype;
             base.OnActionExecuting(context);
         }
     }

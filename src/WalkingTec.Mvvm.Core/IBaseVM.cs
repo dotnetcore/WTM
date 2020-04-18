@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// WindowIds
         /// </summary>
-        string WindowIds { get; set; }
+        string WindowIds { get;}
         /// <summary>
         /// ViewDivId
         /// </summary>
@@ -42,23 +42,19 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         string CurrentCS { get; }
         /// <summary>
-        /// FromFixedCon
-        /// </summary>
-        bool FromFixedCon { get; set; }
-        /// <summary>
         /// FC
         /// </summary>
         Dictionary<string, object> FC { get; set; }
-        ///// <summary>
-        ///// Config
-        ///// </summary>
-        //Configs Config { get; set; }
+        /// <summary>
+        /// Config
+        /// </summary>
+        Configs ConfigInfo { get;  }
 
-        ISessionService Session { get; set; }
+        ISessionService Session { get;  }
 
-        IDistributedCache Cache { get; set; }
+        IDistributedCache Cache { get;  }
 
-        LoginUserInfo LoginUserInfo { get; set; }
+        LoginUserInfo LoginUserInfo { get; }
         #endregion
 
         #region Event

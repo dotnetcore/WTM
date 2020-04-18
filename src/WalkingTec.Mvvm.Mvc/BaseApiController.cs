@@ -26,148 +26,20 @@ namespace WalkingTec.Mvvm.Mvc
 
         public WTMContext WtmContext { get; set; }
 
-        private Configs _configInfo;
-        public Configs ConfigInfo
-        {
-            get
-            {
-                if (_configInfo == null)
-                {
-                    _configInfo = (Configs)HttpContext.RequestServices.GetService(typeof(Configs));
-                }
-                return _configInfo;
-            }
-            set
-            {
-                _configInfo = value;
-            }
-        }
-        private GlobalData _globaInfo;
-        public GlobalData GlobaInfo
-        {
-            get
-            {
-                if (_globaInfo == null)
-                {
-                    _globaInfo = (GlobalData)HttpContext.RequestServices.GetService(typeof(GlobalData));
-                }
-                return _globaInfo;
-            }
-            set
-            {
-                _globaInfo = value;
-            }
-        }
+        public Configs ConfigInfo { get => WtmContext?.ConfigInfo; }
 
-        private IDistributedCache _cache;
-        public IDistributedCache Cache
-        {
-            get
-            {
-                if (_cache == null)
-                {
-                    _cache = (IDistributedCache)HttpContext.RequestServices.GetService(typeof(IDistributedCache));
-                }
-                return _cache;
-            }
-            set
-            {
-                _cache = value;
-            }
-        }
+        public GlobalData GlobaInfo { get => WtmContext?.GlobaInfo; }
 
-        public string CurrentCS { get; set; }
 
-        public DBTypeEnum? CurrentDbType { get; set; }
+        public IDistributedCache Cache { get => WtmContext?.Cache; }
 
-        private IDataContext _dc;
-        public IDataContext DC
-        {
-            get
-            {
-                if (_dc == null)
-                {
-                    _dc = this.CreateDC();
-                }
-                return _dc;
-            }
-            set
-            {
-                _dc = value;
-            }
-        }
+        public string CurrentCS { get => WtmContext?.CurrentCS; }
 
-        private LoginUserInfo _loginUserInfo;
-        public LoginUserInfo LoginUserInfo
-        {
-            get
-            {
-                if (User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
-                {
-                    var userIdStr = User.Claims.FirstOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
-                    Guid userId = Guid.Parse(userIdStr);
-                    var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
-                    _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
-                    {
-                        var userInfo = DC.Set<FrameworkUserBase>()
-                                            .Include(x => x.UserRoles)
-                                            .Include(x => x.UserGroups)
-                                            .Where(x => x.ID == userId && x.IsValid == true)
-                                            .SingleOrDefault();
-                        if (userInfo != null)
-                        {
-                            // 初始化用户信息
-                            var roleIDs = userInfo.UserRoles.Select(x => x.RoleId).ToList();
-                            var groupIDs = userInfo.UserGroups.Select(x => x.GroupId).ToList();
-                            var dataPris = DC.Set<DataPrivilege>()
-                                            .Where(x => x.UserId == userInfo.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
-                                            .ToList();
-                            ProcessTreeDp(dataPris);
+        public DBTypeEnum? CurrentDbType { get => WtmContext?.CurrentDbType; }
 
-                            ProcessTreeDp(dataPris);
-                            //查找登录用户的页面权限
-                            var funcPrivileges = DC.Set<FunctionPrivilege>()
-                                .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                                .ToList();
+        public IDataContext DC { get => WtmContext?.DC; }
 
-                            _loginUserInfo = new LoginUserInfo
-                            {
-                                Id = userInfo.ID,
-                                ITCode = userInfo.ITCode,
-                                Name = userInfo.Name,
-                                PhotoId = userInfo.PhotoId,
-                                Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
-                                Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
-                                DataPrivileges = dataPris,
-                                FunctionPrivileges = funcPrivileges
-                            };
-                            Cache.Add(cacheKey, _loginUserInfo);
-                        }
-                        else
-                        {
-                            HttpContext.ChallengeAsync().Wait();
-                            return null;
-                        }
-                    }
-                }
-                return _loginUserInfo;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}");
-                }
-                else
-                {
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{value.Id}", value);
-                }
-                _loginUserInfo = value;
-            }
-        }
-
-        public string BaseUrl { get; set; }
+        public string BaseUrl { get => WtmContext?.BaseUrl; }
         private IStringLocalizer _localizer;
         public IStringLocalizer Localizer
         {
@@ -213,24 +85,9 @@ namespace WalkingTec.Mvvm.Mvc
             //通过反射创建ViewModel并赋值
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
             BaseVM rv = ctor.Invoke(null) as BaseVM;
-            try
-            {
-                rv.Session = new SessionServiceProvider(HttpContext.Session);
-            }
-            catch { }
-            rv.ConfigInfo = ConfigInfo;
-            rv.Cache = Cache;
-            rv.LoginUserInfo = LoginUserInfo;
-            rv.DataContextCI = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x=>x.DcConstructor).FirstOrDefault();
-            rv.DC = this.DC;
-            rv.MSD = new ModelStateServiceProvider(ModelState);
+            rv.WtmContext = WtmContext;
             rv.FC = new Dictionary<string, object>();
             rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
-            rv.CurrentCS = CurrentCS;
-            rv.CurrentUrl = this.BaseUrl;
-            rv.WindowIds = "";
-            rv.UIService = new DefaultUIService();
-            rv.Log = this.Log;
             rv.ControllerName = this.GetType().FullName;
             rv.Localizer = this.Localizer;
             if (HttpContext != null && HttpContext.Request != null)

@@ -29,15 +29,6 @@ namespace WalkingTec.Mvvm.Core
             FC = new Dictionary<string, object>();
         }
 
-        /// <summary>
-        /// BaseVM
-        /// </summary>
-        /// <param name="dc">使用的DataContext</param>
-        public BaseVM(IDataContext dc)
-        {
-            DC = dc;
-        }
-
         #region Property
 
         public WTMContext WtmContext { get; set; }
@@ -65,7 +56,7 @@ namespace WalkingTec.Mvvm.Core
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
         /// </summary>
         [JsonIgnore]
-        public string WindowIds { get; set; }
+        public string WindowIds { get => WtmContext?.WindowIds; }
 
         private string _viewdivid;
         /// <summary>
@@ -85,12 +76,31 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+
+        private IDataContext _dc;
         /// <summary>
         /// 数据库环境
         /// </summary>
         [JsonIgnore]
-        [BindNever]
-        public IDataContext DC { get; set; }
+        [BindNever]       
+        public IDataContext DC
+        {
+            get
+            {
+                if (_dc == null)
+                {
+                    return WtmContext?.DC;
+                }
+                else
+                {
+                    return _dc;
+                }
+            }
+            set
+            {
+                _dc = value;
+            }
+        }
 
         /// <summary>
         /// 获取VM的全名
@@ -121,14 +131,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取当前使用的连接字符串
         /// </summary>
         [JsonIgnore]
-        public string CurrentCS { get; set; }
-
-        /// <summary>
-        /// 指示是否使用固定连接字符串
-        /// </summary>
-        [JsonIgnore]
-        [BindNever]
-        public bool FromFixedCon { get; set; }
+        public string CurrentCS { get => WtmContext?.CurrentCS; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
@@ -142,58 +145,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         [BindNever]
-        public Configs ConfigInfo { get; set; }
-
-        /// <summary>
-        /// 获取DbContext构造函数
-        /// </summary>
-        [JsonIgnore]
-        [BindNever]
-        public ConstructorInfo DataContextCI { get; set; }
+        public Configs ConfigInfo { get=> WtmContext?.ConfigInfo; }
 
 
         [JsonIgnore]
-        public IUIService UIService { get; set; }
+        public IUIService UIService { get=> WtmContext?.UIService; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
         [JsonIgnore]
-        public string CurrentWindowId
-        {
-            get
-            {
-                string rv = null;
-                if (WindowIds != null)
-                {
-                    rv = WindowIds.Split(',').LastOrDefault();
-                }
-
-                return rv ?? "";
-            }
-        }
+        public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
 
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
         [JsonIgnore]
-        public string ParentWindowId
-        {
-            get
-            {
-                string rv = null;
-                if (WindowIds != null)
-                {
-                    var ids = WindowIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (ids.Length > 1)
-                    {
-                        rv = ids[ids.Length - 2];
-                    }
-                }
-
-                return rv ?? string.Empty;
-            }
-        }
+        public string ParentWindowId { get => WtmContext?.ParentWindowId; }
 
         [JsonIgnore]
         [BindNever]
@@ -201,41 +169,34 @@ namespace WalkingTec.Mvvm.Core
 
         [JsonIgnore]
         [BindNever]
-        public IDistributedCache Cache { get; set; }
+        public IDistributedCache Cache { get => WtmContext?.Cache; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
         [BindNever]
-        public LoginUserInfo LoginUserInfo { get; set; }
+        public LoginUserInfo LoginUserInfo { get=> WtmContext?.LoginUserInfo;}
 
         /// <summary>
         /// 当前Url
         /// </summary>
         [JsonIgnore]
-        public string CurrentUrl { get; set; }
+        public string CurrentUrl { get => WtmContext?.BaseUrl; }
 
         /// <summary>
         /// Session信息
         /// </summary>
         [JsonIgnore]
         [BindNever]
-        public ISessionService Session { get; set; }
+        public ISessionService Session { get => WtmContext?.Session; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
         [JsonIgnore]
         [BindNever]
-        public IModelStateService MSD { get; set; }
-
-        /// <summary>
-        /// 日志信息
-        /// </summary>
-        [JsonIgnore]
-        [BindNever]
-        public SimpleLog Log { get; set; }
+        public IModelStateService MSD { get => WtmContext?.MSD; }
 
         /// <summary>
         /// 用于保存删除的附件ID
@@ -316,69 +277,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="vm">复制的源</param>
         public void CopyContext(BaseVM vm)
         {
-            DC = vm.DC;
+            WtmContext = vm.WtmContext;
             FC = vm.FC;
-            CurrentCS = vm.CurrentCS;
             CreatorAssembly = vm.CreatorAssembly;
-            MSD = vm.MSD;
-            Session = vm.Session;
-            ConfigInfo = vm.ConfigInfo;
-            DataContextCI = vm.DataContextCI;
-            UIService = vm.UIService;
-            LoginUserInfo = vm.LoginUserInfo;
-        }
-
-        /// <summary>
-        /// Create DbContext
-        /// </summary>
-        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
-        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
-        /// <returns>data context</returns>
-        public virtual IDataContext CreateDC(string csName = null, DBTypeEnum? dbtype = null)
-        {
-            if (string.IsNullOrEmpty(csName))
-            {
-                csName = CurrentCS ?? "default";
-            }
-            var dbt = dbtype ?? ConfigInfo.DbType;
-            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), dbt });
-        }
-
-        /// <summary>
-        /// DoLog
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="logtype"></param>
-        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
-        {
-            var log = this.Log.GetActionLog();
-            log.LogType = logtype;
-            log.ActionTime = DateTime.Now;
-            log.Remark = msg;
-            LogLevel ll = LogLevel.Information;
-            switch (logtype)
-            {
-                case ActionLogTypesEnum.Normal:
-                    ll = LogLevel.Information;
-                    break;
-                case ActionLogTypesEnum.Exception:
-                    ll = LogLevel.Error;
-                    break;
-                case ActionLogTypesEnum.Debug:
-                    ll = LogLevel.Debug;
-                    break;
-                default:
-                    break;
-            }
-            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
-                return $@"
-===WTM Log===
-内容:{a.Remark}
-地址:{a.ActionUrl}
-时间:{a.ActionTime}
-===WTM Log===
-";
-            });
         }
 
         #endregion

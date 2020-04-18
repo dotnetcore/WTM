@@ -46,8 +46,8 @@ namespace WalkingTec.Mvvm.Core.Auth
                 audience: _jwtOptions.Audience,
                 claims: new List<Claim>()
                 {
-                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.Id.ToString()),
-                    new Claim(AuthConstants.JwtClaimTypes.Name, loginUserInfo.Name)
+                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.Id.ToString())
+                    //new Claim(AuthConstants.JwtClaimTypes.Name, loginUserInfo.Name)
                 },
                 expires: DateTime.Now.AddSeconds(_jwtOptions.Expires),
                 signingCredentials: signinCredentials
@@ -100,10 +100,9 @@ namespace WalkingTec.Mvvm.Core.Auth
                 _dc.DeleteEntity(persistedGrant);
                 await _dc.SaveChangesAsync();
 
-                var user = await _dc.Set<FrameworkUserBase>()
-                                    .Include(x => x.UserRoles).Include(x => x.UserGroups)
-                                    .Where(x => x.ID == persistedGrant.UserId)
-                                    .SingleAsync();
+                //var user = await _dc.Set<FrameworkUserBase>()
+                //                    .Where(x => x.ID == persistedGrant.UserId)
+                //                    .SingleAsync();
 
                 //var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
                 //var groupIDs = usesr.UserGroups.Select(x => x.GroupId).ToList();
@@ -118,12 +117,12 @@ namespace WalkingTec.Mvvm.Core.Auth
                 //                        .ToListAsync();
 
                 //生成并返回登录用户信息
-                var loginUserInfo = new LoginUserInfo
+                var loginUserInfo = new LoginUserInfo()
                 {
-                    Id = user.ID,
-                    ITCode = user.ITCode,
-                    Name = user.Name,
-                    PhotoId = user.PhotoId,
+                    Id = persistedGrant.UserId
+                    //ITCode = user.ITCode,
+                    //Name = user.Name,
+                    //PhotoId = user.PhotoId,
                     //Roles = await _dc.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToListAsync(),
                     //Groups = await _dc.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToListAsync(),
                     //DataPrivileges = dpris,
@@ -131,7 +130,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 };
 
                 // 清理过期 refreshtoken
-                var sql = $"DELETE FROM persistedgrants WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
+                var sql = $"DELETE FROM {DC.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
                 _dc.RunSQL(sql);
                 _logger.LogDebug("清理过期的refreshToken：【sql:{0}】", sql);
 

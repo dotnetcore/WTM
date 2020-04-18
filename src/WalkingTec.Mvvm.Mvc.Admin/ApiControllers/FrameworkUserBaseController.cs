@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     tempids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }
@@ -173,108 +173,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetRoles")]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(WtmContext.LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
-        }
-
-        [AllRights]
-        [HttpGet("[action]")]
-        [ActionDescription("Login")]
-        public async Task<IActionResult> GetUserInfo()
-        {
-            var user = await DC.Set<FrameworkUserBase>()
-                            .Include(x => x.UserRoles)
-                            .Include(x => x.UserGroups)
-                            .Where(x => x.ID == LoginUserInfo.Id)
-                            .SingleOrDefaultAsync();
-
-            //如果没有找到则输出错误
-            if (user == null)
-            {
-                ModelState.AddModelError(" login", "登录失败");
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
-            var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
-            //查找登录用户的数据权限
-            var dpris = DC.Set<DataPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
-                .ToList();
-
-            //生成并返回登录用户信息
-            LoginUserInfo rv = new LoginUserInfo();
-            rv.Id = user.ID;
-            rv.ITCode = user.ITCode;
-            rv.Name = user.Name;
-            rv.Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList();
-            rv.Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList();
-            rv.DataPrivileges = dpris;
-            rv.PhotoId = user.PhotoId;
-            //查找登录用户的页面权限
-            var pris = DC.Set<FunctionPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .ToList();
-            rv.FunctionPrivileges = pris;
-            LoginUserInfo = rv;
-
-            LoginUserInfo forapi = new LoginUserInfo();
-            forapi.Id = user.ID;
-            forapi.ITCode = user.ITCode;
-            forapi.Name = user.Name;
-            forapi.Roles = rv.Roles;
-            forapi.Groups = rv.Groups;
-            forapi.PhotoId = rv.PhotoId;
-            List<SimpleMenu> ms = new List<SimpleMenu>();
-
-            var menus = DC.Set<FunctionPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .Select(x => x.MenuItem).Distinct()
-                .Where(x => x.MethodName == null)
-                .OrderBy(x => x.DisplayOrder)
-                .Select(x => new SimpleMenu
-                {
-                    Id = x.ID.ToString().ToLower(),
-                    ParentId = x.ParentId.ToString().ToLower(),
-                    Text = x.PageName,
-                    Url = x.Url,
-                    Icon = x.ICon
-                }).ToList();
-
-            var folders = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).Select(x => new SimpleMenu
-            {
-                Id = x.ID.ToString().ToLower(),
-                ParentId = x.ParentId.ToString().ToLower(),
-                Text = x.PageName,
-                Url = x.Url,
-                Icon = x.ICon
-            }).ToList();
-            ms.AddRange(folders);
-            foreach (var item in menus)
-            {
-                if (folders.Any(x => x.Id == item.Id) == false)
-                {
-                    ms.Add(item);
-                }
-            }
-
-            List<string> urls = new List<string>();
-            urls.AddRange(DC.Set<FunctionPrivilege>()
-                .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                .Select(x => x.MenuItem).Distinct()
-                .Where(x => x.MethodName != null)
-                .Select(x => x.Url)
-                );
-            urls.AddRange(GlobaInfo.AllModule.Where(x => x.IsApi == true).SelectMany(x => x.Actions).Where(x => (x.IgnorePrivillege == true || x.Module.IgnorePrivillege == true) && x.Url != null).Select(x => x.Url));
-            forapi.Attributes = new Dictionary<string, object>();
-            forapi.Attributes.Add("Menus", ms);
-            forapi.Attributes.Add("Actions", urls);
-            return Ok(forapi);
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext.LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
         }
 
     }

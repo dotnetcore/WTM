@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -47,14 +48,12 @@ namespace WalkingTec.Mvvm.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<Configs>(Configuration);
-            services.AddControllersWithViews();
-            services.AddWtmContext();
+           // services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
             services.AddWtmSession(Configuration, 3600);
             services.AddWtmCrossDomain(Configuration);
             services.AddWtmAuthorization(Configuration);
             services.AddWtmHttpClient(Configuration);
-            services.AddLayui();
             services.AddWtmSwagger();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -84,6 +83,7 @@ namespace WalkingTec.Mvvm.Demo
                     return new BadRequestObjectResult(a.ModelState.GetErrorJson());
                 };
             })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization(options => 
             {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
@@ -98,6 +98,7 @@ namespace WalkingTec.Mvvm.Demo
                     }
                 };
             });
+            services.AddWtmContext(Configuration);
 
         }
 

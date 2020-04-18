@@ -3,64 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
     public class WTMContext
     {
-        public HttpContext HttpContext { get; set; }
+        private HttpContext _httpContext;
+        public HttpContext HttpContext { get => _httpContext; }
 
         private Configs _configInfo;
-        public Configs ConfigInfo
-        {
-            get
-            {
-                return _configInfo;
-            }
-        }
+        public Configs ConfigInfo { get => _configInfo; }
 
         private GlobalData _globaInfo;
-        public GlobalData GlobaInfo
-        {
-            get
-            {
-                if (_globaInfo == null)
-                {
-                    _globaInfo = (GlobalData)HttpContext.RequestServices.GetService(typeof(GlobalData));
-                }
-                return _globaInfo;
-            }
-            set
-            {
-                _globaInfo = value;
-            }
-        }
+        public GlobalData GlobaInfo { get => _globaInfo; }
 
         private IUIService _uiservice;
-        public IUIService UIService
-        {
-            get
-            {
-                if (_uiservice == null)
-                {
-                    _uiservice = (IUIService)HttpContext.RequestServices.GetService(typeof(IUIService));
-                }
-                return _uiservice;
-            }
-            set
-            {
-                _uiservice = value;
-            }
-        }
+        public IUIService UIService { get => _uiservice; }
 
         private IDistributedCache _cache;
         public IDistributedCache Cache
@@ -136,6 +107,10 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+
+        public ISessionService Session { get; set; }
+
+        public IModelStateService MSD { get; set; }
         #region DataContext
 
         private IDataContext _dc;
@@ -154,25 +129,6 @@ namespace WalkingTec.Mvvm.Core
                 _dc = value;
             }
         }
-
-        #endregion
-
-        #region Domain
-
-        public List<FrameworkDomain> Domains
-        {
-            get
-            {
-                return ReadFromCache<List<FrameworkDomain>>("Domains", () =>
-                {
-                    using (var dc = this.CreateDC())
-                    {
-                        return dc.Set<FrameworkDomain>().ToList();
-                    }
-                });
-            }
-        }
-        public static Guid? DomainId { get; set; }
 
         #endregion
 
@@ -270,17 +226,20 @@ namespace WalkingTec.Mvvm.Core
                     .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Distinct()
                     .ToListAsync();
+                
+                var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.ID)).ToList();
+                var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.ID)).ToList();
 
-                rv = new LoginUserInfo
+                rv = new LoginUserInfo()
                 {
                     Id = userInfo.ID,
                     ITCode = userInfo.ITCode,
                     Name = userInfo.Name,
                     PhotoId = userInfo.PhotoId,
-                    Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
-                    Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
-                    DataPrivileges = dataPris,
-                    FunctionPrivileges = funcPrivileges
+                    Roles = roles.Select(x=> new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName}).ToList(),
+                    Groups =groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList(),
+                    DataPrivileges = dataPris.Select(x=> new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserId = x.UserId, GroupId = x.GroupId }).ToList(),
+                    FunctionPrivileges = funcPrivileges.Select(x=> new SimpleFunctionPri { ID = x.ID, UserId = x.UserId, RoleId = x.RoleId, Allowed = x.Allowed, MenuItemId = x.MenuItemId}).ToList()
                 };
             }
             return rv;
@@ -311,12 +270,15 @@ namespace WalkingTec.Mvvm.Core
         public string BaseUrl { get; set; }
         #endregion
 
-        public ActionLog Log { get; set; }
+        public SimpleLog Log { get; set; }
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd)
+
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd;
+            _httpContext = _http.HttpContext;
+            _uiservice = _ui;
         }
 
         protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
@@ -367,17 +329,107 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
+        /// <summary>
+        /// 判断某URL是否有权限访问
+        /// </summary>
+        /// <param name="url">url地址</param>
+        /// <returns>true代表可以访问，false代表不能访问</returns>
+        public bool IsAccessable(string url)
+        {
+            // 如果是调试 或者 url 为 null or 空字符串
+            if (_configInfo.IsQuickDebug || string.IsNullOrEmpty(url))
+            {
+                return true;
+            }
+            //循环所有不限制访问的url，如果含有当前判断的url，则认为可以访问
+            var publicActions = _globaInfo.AllAccessUrls;
+            foreach (var au in publicActions)
+            {
+                if (new Regex(au + "[/\\?]?", RegexOptions.IgnoreCase).IsMatch(url))
+                {
+                    return true;
+                }
+            }
+            //如果没有任何页面权限，则直接返回false
+            if (LoginUserInfo?.FunctionPrivileges == null)
+            {
+                return false;
+            }
+
+
+            url = Regex.Replace(url, "/do(batch.*)", "/$1", RegexOptions.IgnoreCase);
+
+            //如果url以#开头，一般是javascript使用的临时地址，不需要判断，直接返回true
+            url = url.Trim();
+
+            if (url.StartsWith("#"))
+            {
+                return true;
+            }
+            var menus = _globaInfo.AllMenus;
+            var menu = Utils.FindMenu(url);
+            //如果最终没有找到，说明系统菜单中并没有配置这个url，返回false
+            if (menu == null)
+            {
+                return false;
+            }
+            //如果找到了，则继续验证其他权限
+            else
+            {
+                return IsAccessable(menu, menus);
+            }
+        }
+
+        /// <summary>
+        /// 判断某菜单是否有权限访问
+        /// </summary>
+        /// <param name="menu">菜单项</param>
+        /// <param name="menus">所有系统菜单</param>
+        /// <returns>true代表可以访问，false代表不能访问</returns>
+        public bool IsAccessable(FrameworkMenu menu, List<FrameworkMenu> menus)
+        {
+            //寻找当前菜单的页面权限
+            var find = LoginUserInfo?.FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
+            //如果能找到直接对应的页面权限
+            if (find != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
         {
-            var log = Log.Clone() as ActionLog;
+            var log = this.Log.GetActionLog();
             log.LogType = logtype;
             log.ActionTime = DateTime.Now;
             log.Remark = msg;
-            using (var dc = CreateDC())
+            LogLevel ll = LogLevel.Information;
+            switch (logtype)
             {
-                dc.Set<ActionLog>().Add(log);
-                dc.SaveChanges();
+                case ActionLogTypesEnum.Normal:
+                    ll = LogLevel.Information;
+                    break;
+                case ActionLogTypesEnum.Exception:
+                    ll = LogLevel.Error;
+                    break;
+                case ActionLogTypesEnum.Debug:
+                    ll = LogLevel.Debug;
+                    break;
+                default:
+                    break;
             }
+            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+                return $@"
+===WTM Log===
+内容:{a.Remark}
+地址:{a.ActionUrl}
+时间:{a.ActionTime}
+===WTM Log===
+";
+            });
         }
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
@@ -425,6 +477,5 @@ namespace WalkingTec.Mvvm.Core
         }
 
     }
-
 
 }

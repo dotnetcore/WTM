@@ -11,6 +11,7 @@ using System.Transactions;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -37,7 +38,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="SortByName">是否根据Text字段排序，默认为是</param>
         /// <returns>SelectListItem列表</returns>
         public static List<TreeSelectListItem> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
-            , List<DataPrivilege> dps
+            , List<SimpleDataPri> dps
             , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
             , Expression<Func<T, string>> valueField = null
@@ -177,7 +178,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="SortByName">是否根据Text字段排序，默认为是</param>
         /// <returns>SelectListItem列表</returns>
         public static List<ComboSelectListItem> GetSelectListItems<T>(this IQueryable<T> baseQuery
-            , List<DataPrivilege> dps
+            , List<SimpleDataPri> dps
             , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
             , Expression<Func<T, string>> valueField = null
@@ -272,7 +273,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="query">源query</param>
         /// <param name="dps">数据权限列表</param>
         /// <returns>拼接好where条件的query</returns>
-        private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, List<DataPrivilege> dps) where T : TopBasePoco
+        private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, List<SimpleDataPri> dps) where T : TopBasePoco
         {
             var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
@@ -313,7 +314,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="dps">数据权限</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<SimpleDataPri> dps, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
         {
             //循环所有关联外键
             List<string> tableNameList = new List<string>();
@@ -352,7 +353,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<DataPrivilege> dps, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<SimpleDataPri> dps, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
         {
             // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));

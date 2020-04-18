@@ -10,6 +10,7 @@ using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -102,45 +103,6 @@ namespace WalkingTec.Mvvm.Mvc
             return rv;
         }
 
-        [Obsolete("已废弃，预计v3.0版本及v2.10版本开始将删除")]
-        /// <summary>
-        /// 获取分页数据
-        /// </summary>
-        /// <param name="_DONOT_USE_VMNAME"></param>
-        /// <param name="_DONOT_USE_CS"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ActionDescription("GetPagingData")]
-        public IActionResult GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
-        {
-            var qs = new Dictionary<string, object>();
-            foreach (var item in Request.Form.Keys)
-            {
-                qs.Add(item, Request.Form[item]);
-            }
-            //LogDebug.Info($"QueryString:{JsonConvert.SerializeObject(qs)}");
-            //var vmType = Type.GetType(_DONOT_USE_VMNAME);
-            //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
-            //var listVM = vmCreater.Invoke(null) as BaseVM;
-            CurrentCS = _DONOT_USE_CS ?? "default";
-            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
-            listVM.FC = qs;
-            if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
-            {
-                RedoUpdateModel(listVM);
-                var rv = new ContentResult
-                {
-                    ContentType = "application/json",
-                    Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
-                };
-                return rv;
-            }
-            else
-            {
-                throw new Exception("Invalid Vm Name");
-            }
-        }
-
         /// <summary>
         /// 单元格编辑
         /// </summary>
@@ -188,7 +150,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
@@ -217,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("DownloadTemplate")]
         public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var importVM = CreateVM(_DONOT_USE_VMNAME) as IBaseImport<BaseTemplateVM>;
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -284,7 +246,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadFileRoute")]
         public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -310,7 +272,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return Upload(sm, groupName, IsTemprory, _DONOT_USE_CS);
             }
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -351,7 +313,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var FileData = Request.Form.Files[0];
             var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
             var vm = CreateVM<FileAttachmentVM>();
@@ -373,7 +335,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             return Ok(vm.Entity.FileName);
         }
@@ -381,7 +343,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             if (id == Guid.Empty)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
@@ -434,7 +396,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                Response.Body.Write(data, 0, data.Count());
+                Response.Body.WriteAsync(data, 0, data.Count());
                 return new EmptyResult();
             }
         }
@@ -442,7 +404,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             string html = string.Empty;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             if (vm.Entity.FileExt.ToLower() == "pdf")
@@ -487,7 +449,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 pagetitle += menu.PageName;
             }
-            if (WtmContext.LoginUserInfo.IsAccessable(url))
+            if (WtmContext.IsAccessable(url))
             {
                 return Content($@"<title>{pagetitle}</title>
 <iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
@@ -525,7 +487,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     url = url.Replace("/_framework/outside?url=", "");
                 }
-                if (!string.IsNullOrEmpty(url) && info.IsAccessable(url) == false)
+                if (!string.IsNullOrEmpty(url) && WtmContext.IsAccessable(url) == false)
                 {
                     toRemove.Add(menu);
                 }
@@ -657,7 +619,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                bool canAccess = WtmContext.LoginUserInfo.IsAccessable(url);
+                bool canAccess = WtmContext.IsAccessable(url);
                 return Ok(canAccess);
             }
         }
@@ -777,7 +739,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIUEditor")]
         public IActionResult UploadForLayUIUEditor(string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
             var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
             var vm = CreateVM<FileAttachmentVM>();
 
@@ -819,6 +781,18 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.UEditorOptions == null)
                 throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
             return Json(ConfigInfo.UEditorOptions);
+        }
+
+        [Public]
+        public IActionResult SetLanguage(string culture)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return FFResult().AddCustomScript("location.reload();");
         }
     }
 

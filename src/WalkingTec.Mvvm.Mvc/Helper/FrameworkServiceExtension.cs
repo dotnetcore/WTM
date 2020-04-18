@@ -49,6 +49,7 @@ using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
+using WalkingTec.Mvvm.TagHelpers.LayUI;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -81,423 +82,11 @@ namespace WalkingTec.Mvvm.Mvc
             return cb;
         }
 
-        public static IServiceCollection AddFrameworkService(this IServiceCollection services,
-            Func<ActionExecutingContext, string> CsSector = null,
-            List<IDataPrivilege> dataPrivilegeSettings = null,
-            WebHostBuilderContext webHostBuilderContext = null
-        )
-        {
-
-            //var configBuilder = new ConfigurationBuilder();
-            //configBuilder.WTM_SetCurrentDictionary()
-            //            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            //            .AddEnvironmentVariables();
-
-            //var config = configBuilder.Build();
-            //services.Configure<Configs>(config);
-            //var con = config.Get<Configs>() ?? new Configs();
-            //services.AddWtmContext();
-
-            //services.AddLocalization(options => options.ResourcesPath = "Resources");
-            ////add dataprivileges
-
-            ////services.AddSingleton(con);
-            //services.AddDistributedMemoryCache();
-            //services.AddSession(options =>
-            //{
-            //    options.Cookie.Name = con.CookiePre + ".Session";
-            //    options.IdleTimeout = TimeSpan.FromSeconds(3600);
-            //});
-            //SetupDFS(con);
-
-            //services.AddCors(options =>
-            //{
-            //    if (con.CorsOptions?.Policy?.Count > 0)
-            //    {
-            //        foreach (var item in con.CorsOptions.Policy)
-            //        {
-            //            string[] domains = item.Domain?.Split(',');
-            //            options.AddPolicy(item.Name,
-            //               builder =>
-            //               {
-            //                   builder.WithOrigins(domains)
-            //                                       .AllowAnyHeader()
-            //                                       .AllowAnyMethod()
-            //                                       .AllowCredentials();
-            //               });
-            //        }
-            //    }
-            //    else
-            //    {
-            //        options.AddPolicy("_donotusedefault",
-            //            builder =>
-            //            {
-            //                builder.WithOrigins("http://localhost",
-            //                                    "https://localhost")
-            //                                    .AllowAnyHeader()
-            //                                    .AllowAnyMethod()
-            //                                    .AllowCredentials();
-            //            });
-            //    }
-            //});
-
-
-            //// edit start by @vito
-            //services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
-            //services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
-            //services.TryAddEnumerable(
-            //    ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
-            //// edit end
-
-
-
-            //services.AddMvc(options =>
-            //{
-            //    // ModelBinderProviders
-            //    options.ModelBinderProviders.Insert(0, new StringBinderProvider());
-
-            //    // Filters
-            //    options.Filters.Add(new AuthorizeFilter());
-            //    options.Filters.Add(new DataContextFilter(CsSector));
-            //    options.Filters.Add(new PrivilegeFilter());
-            //    options.Filters.Add(new FrameworkFilter());
-            //    options.EnableEndpointRouting = true;
-            //})
-            ////.ConfigureApplicationPartManager(appPartsManager =>
-            ////{
-            ////    var feature = new ControllerFeature();
-            ////    if (mvc != null)
-            ////    {
-            ////        appPartsManager.ApplicationParts.Add(new AssemblyPart(mvc));
-            ////    }
-            ////    if (admin != null)
-            ////    {
-            ////        appPartsManager.ApplicationParts.Add(new AssemblyPart(admin));
-            ////    }
-            ////    //appPartsManager.PopulateFeature(feature);
-            ////    //services.AddSingleton(feature.Controllers.Select(t => t.AsType()).ToArray());
-            ////})
-            //.AddNewtonsoftJson(options =>
-            //{
-            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //    options.SerializerSettings.ContractResolver = new WTMContractResolver()
-            //    {
-            //    };
-            //})
-            //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-            //.ConfigureApiBehaviorOptions(options =>
-            //{
-            //    options.SuppressModelStateInvalidFilter = true;
-            //    options.InvalidModelStateResponseFactory = (a) =>
-            //    {
-            //        return new BadRequestObjectResult(a.ModelState.GetErrorJson());
-            //    };
-            //})
-            //.AddDataAnnotationsLocalization(options =>
-            //{
-            //    var coreType = coredll?.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-            //    options.DataAnnotationLocalizerProvider = (type, factory) =>
-            //    {
-            //        if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
-            //        {
-            //            var rv = factory.Create(coreType);
-            //            return rv;
-            //        }
-            //        else
-            //        {
-            //            return factory.Create(programType);
-            //        }
-            //    };
-            //});
-
-            //services.Configure<FormOptions>(y =>
-            //{
-            //    y.ValueLengthLimit = int.MaxValue - 20480;
-            //    y.MultipartBodyLengthLimit = con.FileUploadOptions.UploadLimit;
-            //});
-
-            //services.AddSingleton<IUIService, DefaultUIService>();
-
-            //#region CookieWithJwtAuth
-
-            //// services.AddSingleton<UserStore>();
-            //services.AddSingleton<ITokenService, TokenService>();
-
-            //var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
-            //if (jwtOptions == null)
-            //{
-            //    jwtOptions = new JwtOptions();
-            //}
-            //services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
-
-            //var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
-            //if (cookieOptions == null)
-            //{
-            //    cookieOptions = new Core.Auth.CookieOptions();
-            //}
-
-            //services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
-
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            //        {
-            //            options.Cookie.Name = CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName;
-            //            options.Cookie.HttpOnly = true;
-            //            options.Cookie.SameSite = SameSiteMode.Strict;
-
-            //            options.ClaimsIssuer = cookieOptions.Issuer;
-            //            options.SlidingExpiration = cookieOptions.SlidingExpiration;
-            //            options.ExpireTimeSpan = TimeSpan.FromSeconds(cookieOptions.Expires);
-            //            // options.SessionStore = new MemoryTicketStore();
-
-            //            options.LoginPath = cookieOptions.LoginPath;
-            //            options.LogoutPath = cookieOptions.LogoutPath;
-            //            options.ReturnUrlParameter = cookieOptions.ReturnUrlParameter;
-            //            options.AccessDeniedPath = cookieOptions.AccessDeniedPath;
-            //        })
-            //        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-            //        {
-            //            options.TokenValidationParameters = new TokenValidationParameters
-            //            {
-            //                NameClaimType = AuthConstants.JwtClaimTypes.Name,
-            //                RoleClaimType = AuthConstants.JwtClaimTypes.Role,
-
-            //                ValidateIssuer = true,
-            //                ValidIssuer = jwtOptions.Issuer,
-
-            //                ValidateAudience = true,
-            //                ValidAudience = jwtOptions.Audience,
-
-            //                ValidateIssuerSigningKey = true,
-            //                IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
-
-            //                ValidateLifetime = true
-            //            };
-            //        });
-            //#endregion
-
-            //services.AddHttpClient();
-            //if (con.Domains != null)
-            //{
-            //    foreach (var item in con.Domains)
-            //    {
-            //        services.AddHttpClient(item.Key, x =>
-            //        {
-            //            x.BaseAddress = new Uri(item.Value.Url);
-            //            x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-            //            x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
-            //        });
-            //    }
-            //}
-
-            //GlobalServices.SetServiceProvider(services.BuildServiceProvider());
-            return services;
-        }
-
-        public static IApplicationBuilder UseFrameworkService(this IApplicationBuilder app, Action<IRouteBuilder> customRoutes = null)
-        {
-            //IconFontsHelper.GenerateIconFont();
-            //var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
-            //var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
-
-            //if (configs == null)
-            //{
-            //    throw new InvalidOperationException("Can not find Configs service, make sure you call AddFrameworkService at ConfigService");
-            //}
-            //if (gd == null)
-            //{
-            //    throw new InvalidOperationException("Can not find GlobalData service, make sure you call AddFrameworkService at ConfigService");
-            //}
-            //if (string.IsNullOrEmpty(configs.Languages) == false)
-            //{
-            //    List<CultureInfo> supportedCultures = new List<CultureInfo>();
-            //    var lans = configs.Languages.Split(",");
-            //    foreach (var lan in lans)
-            //    {
-            //        supportedCultures.Add(new CultureInfo(lan));
-            //    }
-
-            //    app.UseRequestLocalization(new RequestLocalizationOptions
-            //    {
-            //        DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-            //        SupportedCultures = supportedCultures,
-            //        SupportedUICultures = supportedCultures
-            //    });
-            //}
-
-            //app.UseExceptionHandler(configs.ErrorHandler);
-
-            //app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    RequestPath = new PathString("/_js"),
-            //    FileProvider = new EmbeddedFileProvider(
-            //        typeof(_CodeGenController).GetTypeInfo().Assembly,
-            //        "WalkingTec.Mvvm.Mvc")
-            //});
-
-            //app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
-
-            //if (configs.CorsOptions.EnableAll == true)
-            //{
-            //    if (configs.CorsOptions?.Policy?.Count > 0)
-            //    {
-            //        app.UseCors(configs.CorsOptions.Policy[0].Name);
-            //    }
-            //    else
-            //    {
-            //        app.UseCors("_donotusedefault");
-            //    }
-            //}
-
-            //bool InitDataBase = false;
-            //app.Use(async (context, next) =>
-            //{
-            //    if (InitDataBase == false)
-            //    {
-            //        InitDataBase = true;
-            //        var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
-            //        foreach (var m in gd.AllModule)
-            //        {
-            //            //if (m.IsApi == true)
-            //            //{
-            //            foreach (var a in m.Actions)
-            //            {
-            //                string u = null;
-            //                if (a.ParasToRunTest != null && a.ParasToRunTest.Any(x => x.ToLower() == "id"))
-            //                {
-            //                    u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { id = 0, area = m.Area?.AreaName });
-            //                }
-            //                else
-            //                {
-            //                    u = lg.GetPathByAction(context, a.MethodName, m.ClassName, new { area = m.Area?.AreaName });
-            //                }
-            //                if (u != null && u.EndsWith("/0"))
-            //                {
-            //                    u = u.Substring(0, u.Length - 2);
-            //                    if (m.IsApi == true)
-            //                    {
-            //                        u = u + "/{id}";
-            //                    }
-            //                }
-            //                a.Url = u;
-            //            }
-            //            //}
-            //        }
-
-            //        var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            //        var cs = configs.ConnectionStrings;
-            //        foreach (var item in cs)
-            //        {
-            //            var dc = item.CreateDC();
-            //            dc.DataInit(gd.AllModule, test != null).Wait();
-            //        }
-            //        GlobalServices.SetServiceProvider(app.ApplicationServices);
-            //    }
-            //    if (context.Request.Path == "/")
-            //    {
-            //        context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
-            //        context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
-            //    }
-            //    context.Request.EnableBuffering();
-            //    context.Request.Body.Position = 0;
-            //    StreamReader tr = new StreamReader(context.Request.Body);
-            //    string body = tr.ReadToEndAsync().Result;
-            //    context.Request.Body.Position = 0;
-            //    if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
-            //    {
-            //        context.Items.Add("DONOTUSE_REQUESTBODY", body);
-            //    }
-            //    else
-            //    {
-            //        context.Items["DONOTUSE_REQUESTBODY"] = body;
-            //    }
-            //    await next.Invoke();
-            //    if (context.Response.StatusCode == 404)
-            //    {
-            //        await context.Response.WriteAsync(string.Empty);
-            //    }
-            //});
-
-            //app.UseSession();
-            //if (configs.CorsOptions.EnableAll == true)
-            //{
-            //    if (configs.CorsOptions?.Policy?.Count > 0)
-            //    {
-            //        app.UseCors(configs.CorsOptions.Policy[0].Name);
-            //    }
-            //    else
-            //    {
-            //        app.UseCors("_donotusedefault");
-            //    }
-            //}
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //       name: "areaRoute",
-            //       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-            //    endpoints.MapControllerRoute(
-            //        name: "default",
-            //        pattern: "{controller=Home}/{action=Index}/{id?}");
-            //});
-
-            return app;
-        }
 
         private static GlobalData GetGlobalData()
         {
             var gd = new GlobalData();
 
-            //获取所有程序集
-            gd.AllAssembly = Utils.GetAllAssembly();
-            var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
-            if (admin != null && gd.AllAssembly.Contains(admin) == false)
-            {
-                gd.AllAssembly.Add(admin);
-            }
-            var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
-            if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
-            {
-                gd.AllAssembly.Add(mvc);
-            }
-            var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
-            if (core != null && gd.AllAssembly.Contains(core) == false)
-            {
-                gd.AllAssembly.Add(core);
-            }
-            var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
-            if (layui != null && gd.AllAssembly.Contains(layui) == false)
-            {
-                gd.AllAssembly.Add(layui);
-            }
-            var controllers = GetAllControllers(gd.AllAssembly);
-            gd.AllAccessUrls = GetAllAccessUrls(controllers);
-
-            gd.AllModule = GetAllModules(controllers);
-            gd.DataPrivilegeSettings = new List<IDataPrivilege>();
-
-            gd.SetMenuGetFunc(() =>
-            {
-                var menus = new List<FrameworkMenu>();
-                var cache = GlobalServices.GetService<IDistributedCache>();
-                var menuCacheKey = "FFMenus";
-                if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
-                {
-                    var data = GetAllMenus(gd.AllModule);
-                    cache.Add(menuCacheKey, data);
-                    menus = data;
-                }
-                else
-                {
-                    menus = rv;
-                }
-
-                return menus;
-            });
             return gd;
         }
 
@@ -909,28 +498,28 @@ namespace WalkingTec.Mvvm.Mvc
             FDFSConfig.Trackers = TrackerServers;
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfigurationRoot config)
         {
             var gd = GetGlobalData();
+            services.AddHttpContextAccessor();
             services.AddSingleton(gd);
+            services.AddLayui();
             services.AddScoped<WTMContext>();
-            var mvc = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.dll").FirstOrDefault();
-            var admin = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Mvc.Admin.dll").FirstOrDefault();
+            var con = config.Get<Configs>();
+            List<CultureInfo> supportedCultures = new List<CultureInfo>();
+            var lans = con.Languages.Split(",");
+            foreach (var lan in lans)
+            {
+                supportedCultures.Add(new CultureInfo(lan));
+            }
 
-            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
-            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
-            var programLocalizer = new ResourceManagerStringLocalizerFactory(
-                                        Options.Create(
-                                            new LocalizationOptions
-                                            {
-                                                ResourcesPath = "Resources"
-                                            })
-                                            , new Microsoft.Extensions.Logging.LoggerFactory()
-                                        )
-                                        .Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
-            services.AddSingleton<IUIService, DefaultUIService>();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+            GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services, IConfigurationRoot config)
@@ -1098,6 +687,68 @@ namespace WalkingTec.Mvvm.Mvc
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
+            //获取所有程序集
+            gd.AllAssembly = Utils.GetAllAssembly();
+            var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
+            if (admin != null && gd.AllAssembly.Contains(admin) == false)
+            {
+                gd.AllAssembly.Add(admin);
+            }
+            var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
+            if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
+            {
+                gd.AllAssembly.Add(mvc);
+            }
+            var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
+            if (core != null && gd.AllAssembly.Contains(core) == false)
+            {
+                gd.AllAssembly.Add(core);
+            }
+            var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
+            if (layui != null && gd.AllAssembly.Contains(layui) == false)
+            {
+                gd.AllAssembly.Add(layui);
+            }
+
+            //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
+            var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+            var coredll = gd.AllAssembly.Where(x => x.ManifestModule.Name == "WalkingTec.Mvvm.Core.dll").FirstOrDefault();
+            var programLocalizer = new ResourceManagerStringLocalizerFactory(
+                                        Options.Create(
+                                            new LocalizationOptions
+                                            {
+                                                ResourcesPath = "Resources"
+                                            })
+                                            , new Microsoft.Extensions.Logging.LoggerFactory()
+                                        )
+                                        .Create(programType);
+            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+
+
+            var controllers = GetAllControllers(gd.AllAssembly);
+            gd.AllModule = GetAllModules(controllers);
+            gd.AllAccessUrls = GetAllAccessUrls(controllers);
+
+            gd.DataPrivilegeSettings = new List<IDataPrivilege>();
+
+            gd.SetMenuGetFunc(() =>
+            {
+                var menus = new List<FrameworkMenu>();
+                var cache = GlobalServices.GetService<IDistributedCache>();
+                var menuCacheKey = "FFMenus";
+                if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
+                {
+                    var data = GetAllMenus(gd.AllModule);
+                    cache.Add(menuCacheKey, data);
+                    menus = data;
+                }
+                else
+                {
+                    menus = rv;
+                }
+
+                return menus;
+            });
             foreach (var m in gd.AllModule)
             {
                 foreach (var a in m.Actions)
@@ -1134,7 +785,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public static IApplicationBuilder UseWtmLanguages(this IApplicationBuilder app)
         {
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;            
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
                 List<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -1150,6 +801,8 @@ namespace WalkingTec.Mvvm.Mvc
                     SupportedCultures = supportedCultures,
                     SupportedUICultures = supportedCultures
                 });
+                System.Threading.Thread.CurrentThread.CurrentCulture = supportedCultures[0];
+                System.Threading.Thread.CurrentThread.CurrentUICulture = supportedCultures[0];
             }
             return app;
         }

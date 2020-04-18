@@ -28,153 +28,27 @@ namespace WalkingTec.Mvvm.Mvc
         public WTMContext WtmContext { get; set; }
 
 
-        private Configs _configInfo;
-        public Configs ConfigInfo
-        {
-            get
-            {
-                if (_configInfo == null)
-                {
-                    _configInfo = (Configs)HttpContext.RequestServices.GetService(typeof(Configs));
-                }
-                return _configInfo;
-            }
-            set
-            {
-                _configInfo = value;
-            }
-        }
+        public Configs ConfigInfo { get => WtmContext?.ConfigInfo; }
 
-        private GlobalData _globaInfo;
-        public GlobalData GlobaInfo
-        {
-            get
-            {
-                if (_globaInfo == null)
-                {
-                    _globaInfo = (GlobalData)HttpContext.RequestServices.GetService(typeof(GlobalData));
-                }
-                return _globaInfo;
-            }
-            set
-            {
-                _globaInfo = value;
-            }
-        }
+        public GlobalData GlobaInfo { get => WtmContext?.GlobaInfo; }
 
-        private IUIService _uiservice;
-        public IUIService UIService
-        {
-            get
-            {
-                if (_uiservice == null)
-                {
-                    _uiservice = (IUIService)HttpContext.RequestServices.GetService(typeof(IUIService));
-                }
-                return _uiservice;
-            }
-            set
-            {
-                _uiservice = value;
-            }
-        }
+        public IUIService UIService { get => WtmContext?.UIService; }
 
-        private IDistributedCache _cache;
-        public IDistributedCache Cache
-        {
-            get
-            {
-                if (_cache == null)
-                {
-                    _cache = (IDistributedCache)HttpContext.RequestServices.GetService(typeof(IDistributedCache));
-                }
-                return _cache;
-            }
-            set
-            {
-                _cache = value;
-            }
-        }
+        public IDistributedCache Cache { get => WtmContext?.Cache; }
 
-        public string CurrentCS { get; set; }
+        public string CurrentCS { get => WtmContext?.CurrentCS; }
 
-        public DBTypeEnum? CurrentDbType { get; set; }
+        public DBTypeEnum? CurrentDbType { get => WtmContext?.CurrentDbType; }
 
-        public string ParentWindowId
-        {
-            get
-            {
-                string rv = null;
-                if (WindowIds != null)
-                {
-                    var ids = WindowIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (ids.Length > 1)
-                    {
-                        rv = ids[ids.Length - 2];
-                    }
-                }
+        public string ParentWindowId { get => WtmContext?.ParentWindowId; }
 
-                return rv ?? string.Empty;
-            }
-        }
+        public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
 
-        public string CurrentWindowId
-        {
-            get
-            {
-                string rv = null;
-                if (WindowIds != null)
-                {
-                    var ids = WindowIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (ids.Length > 0)
-                    {
-                        rv = ids[ids.Length - 1];
-                    }
-                }
-
-                return rv ?? string.Empty;
-            }
-        }
-
-        public string WindowIds
-        {
-            get
-            {
-                string rv = string.Empty;
-                try
-                {
-                    if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}windowguid", out string windowguid) == true)
-                    {
-
-                        if (HttpContext.Request.Cookies.TryGetValue($"{ConfigInfo?.CookiePre}{windowguid}windowids", out string windowid) == true)
-                        {
-                            rv = windowid;
-                        }
-                    }
-                }
-                catch { }
-                return rv;
-            }
-        }
+        public string WindowIds { get => WtmContext?.WindowIds; }
 
         #region DataContext
 
-        private IDataContext _dc;
-        public IDataContext DC
-        {
-            get
-            {
-                if (_dc == null)
-                {
-                    _dc = this.CreateDC();
-                }
-                return _dc;
-            }
-            set
-            {
-                _dc = value;
-            }
-        }
+        public IDataContext DC { get => WtmContext?.DC; }
 
         #endregion
 
@@ -219,7 +93,7 @@ namespace WalkingTec.Mvvm.Mvc
         #endregion
 
         #region URL
-        public string BaseUrl { get; set; }
+        public string BaseUrl { get => WtmContext?.BaseUrl; }
         #endregion
 
         private IStringLocalizer _localizer;
@@ -247,8 +121,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        public SimpleLog Log { get; set; }
-
 
         //-------------------------------------------方法------------------------------------//
 
@@ -267,28 +139,13 @@ namespace WalkingTec.Mvvm.Mvc
             //Use reflection to create viewmodel
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
             BaseVM rv = ctor.Invoke(null) as BaseVM;
-            try
-            {
-                rv.Session = new SessionServiceProvider(HttpContext.Session);
-            }
-            catch { }
-            rv.ConfigInfo = WtmContext.ConfigInfo;
-            rv.Cache = Cache;
-            rv.LoginUserInfo = WtmContext.LoginUserInfo;
-            rv.DataContextCI = WtmContext.ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == CurrentCS.ToLower()).Select(x => x.DcConstructor).FirstOrDefault();
-            rv.DC = this.DC;
-            rv.MSD = new ModelStateServiceProvider(ModelState);
+            rv.WtmContext = this.WtmContext;
+
             rv.FC = new Dictionary<string, object>();
             rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
-            rv.CurrentCS = CurrentCS;
-            rv.CurrentUrl = this.BaseUrl;
-            rv.WindowIds = this.WindowIds;
-            rv.UIService = this.UIService;
-            rv.Log = this.Log;
             rv.Controller = this;
             rv.ControllerName = this.GetType().FullName;
             rv.Localizer = this.Localizer;
-            rv.WtmContext = this.WtmContext;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try
@@ -651,38 +508,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return rv;
             }
-        }
-
-        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
-        {
-            var log = this.Log.GetActionLog();
-            log.LogType = logtype;
-            log.ActionTime = DateTime.Now;
-            log.Remark = msg;
-            LogLevel ll = LogLevel.Information;
-            switch (logtype)
-            {
-                case ActionLogTypesEnum.Normal:
-                    ll = LogLevel.Information;
-                    break;
-                case ActionLogTypesEnum.Exception:
-                    ll = LogLevel.Error;
-                    break;
-                case ActionLogTypesEnum.Debug:
-                    ll = LogLevel.Debug;
-                    break;
-                default:
-                    break;
-            }
-            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
-                return $@"
-===WTM Log===
-内容:{a.Remark}
-地址:{a.ActionUrl}
-时间:{a.ActionTime}
-===WTM Log===
-";
-            });
         }
 
         [NonAction]

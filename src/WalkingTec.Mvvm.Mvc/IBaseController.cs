@@ -13,17 +13,15 @@ namespace WalkingTec.Mvvm.Mvc
 
         Configs ConfigInfo { get; }
         GlobalData GlobaInfo { get; }
-        string CurrentCS { get; set; }
+        string CurrentCS { get; }
 
-        DBTypeEnum? CurrentDbType { get; set; }
+        DBTypeEnum? CurrentDbType { get;  }
 
-        IDataContext DC { get; set; }
+        IDataContext DC { get; }
 
         IDistributedCache Cache { get; }
 
-        string BaseUrl { get; set; }
-
-        SimpleLog Log { get; set; }
+        string BaseUrl { get;  }
 
         IDataContext CreateDC(bool isLog = false);
 
