@@ -88,9 +88,6 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region Menus
-        public List<FrameworkMenu> FFMenus => GlobaInfo.AllMenus;
-        #endregion
 
         #region URL
         public string BaseUrl { get => WtmContext?.BaseUrl; }
@@ -103,7 +100,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (_localizer == null)
                 {
-                    var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     if (programtype != null)
                     {
                         try

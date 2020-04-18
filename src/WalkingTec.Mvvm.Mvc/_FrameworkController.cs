@@ -12,11 +12,13 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Model;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -102,6 +104,46 @@ namespace WalkingTec.Mvvm.Mvc
             };
             return rv;
         }
+
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="_DONOT_USE_VMNAME"></param>
+        /// <param name="_DONOT_USE_CS"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ActionDescription("GetPagingData")]
+        public IActionResult GetPagingData(string _DONOT_USE_VMNAME, string _DONOT_USE_CS)
+        {
+            var qs = new Dictionary<string, object>();
+            foreach (var item in Request.Form.Keys)
+            {
+                qs.Add(item, Request.Form[item]);
+            }
+            //LogDebug.Info($"QueryString:{JsonConvert.SerializeObject(qs)}");
+            //var vmType = Type.GetType(_DONOT_USE_VMNAME);
+            //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
+            //var listVM = vmCreater.Invoke(null) as BaseVM;
+            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
+            listVM.FC = qs;
+            if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
+            {
+                RedoUpdateModel(listVM);
+                var rv = new ContentResult
+                {
+                    ContentType = "application/json",
+                    Content = $@"{{""Data"":{listVM.GetDataJson()},""Count"":{listVM.Searcher.Count},""Msg"":""success"",""Code"":{StatusCodes.Status200OK}}}"
+                };
+                return rv;
+            }
+            else
+            {
+                throw new Exception("Invalid Vm Name");
+            }
+        }
+
 
         /// <summary>
         /// 单元格编辑
@@ -530,13 +572,35 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        private void LocalizeMenu(List<Menu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                LocalizeMenu(menu.Children);
+                if (Localizer[menu.Title].ResourceNotFound == true)
+                {
+                    menu.Title = Core.Program._localizer[menu.Title];
+                }
+                else
+                {
+                    menu.Title = Localizer[menu.Title];
+                }
+            }
+        }
+
+
         /// <summary>
         /// genreate menu
         /// </summary>
         /// <param name="menus"></param>
         /// <param name="resultMenus"></param>
         /// <param name="quickDebug"></param>
-        private void GenerateMenuTree(List<FrameworkMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
+        private void GenerateMenuTree(List<SimpleMenu> menus, List<Menu> resultMenus, bool quickDebug = false)
         {
             resultMenus.AddRange(menus.Where(x => x.ParentId == null).Select(x => new Menu()
             {
@@ -544,7 +608,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Title = x.PageName,
                 Url = x.Url,
                 Order = x.DisplayOrder,
-                ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
+                ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
             })
             .OrderBy(x => x.Order)
             .ToList());
@@ -557,7 +621,7 @@ namespace WalkingTec.Mvvm.Mvc
                     Title = x.PageName,
                     Url = x.Url,
                     Order = x.DisplayOrder,
-                    ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
+                    ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
                 })
                 .OrderBy(x => x.Order)
                 .ToList();
@@ -571,7 +635,7 @@ namespace WalkingTec.Mvvm.Mvc
                             Title = x.PageName,
                             Url = x.Url,
                             Order = x.DisplayOrder,
-                            ICon = quickDebug && string.IsNullOrEmpty(x.ICon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.ICon
+                            ICon = quickDebug && string.IsNullOrEmpty(x.Icon) ? $"_wtmicon _wtmicon-{(string.IsNullOrEmpty(x.Url) ? "folder" : "file")}" : x.Icon
                         })
                         .OrderBy(x => x.Order)
                         .ToList();
@@ -589,8 +653,9 @@ namespace WalkingTec.Mvvm.Mvc
             if (WtmContext.ConfigInfo.IsQuickDebug == true)
             {
                 var resultMenus = new List<Menu>();
-                GenerateMenuTree(FFMenus, resultMenus, true);
+                GenerateMenuTree(GlobaInfo.AllMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -599,9 +664,10 @@ namespace WalkingTec.Mvvm.Mvc
             else
             {
                 var resultMenus = new List<Menu>();
-                GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
+                GenerateMenuTree(GlobaInfo.AllMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, WtmContext.LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore

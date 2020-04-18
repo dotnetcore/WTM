@@ -186,17 +186,5 @@ namespace WalkingTec.Mvvm.Admin.Test
                 Assert.AreEqual(context.Set<FrameworkUserBase>().Count(), 0);
             }
         }
-
-        private void AddXXX()
-        {
-            FrameworkAction v = new FrameworkAction();
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
-            {
-                v.ActionName = "";
-                v.Checked = true;
-                context.Set<FrameworkAction>().Add(v);
-                context.SaveChanges();
-            }
-        }
     }
 }

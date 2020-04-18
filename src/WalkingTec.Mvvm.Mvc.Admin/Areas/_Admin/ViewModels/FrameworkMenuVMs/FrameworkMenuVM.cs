@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
@@ -82,7 +83,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
-            var toRemove = new List<FrameworkModule>();
+            var toRemove = new List<SimpleModule>();
             foreach (var item in modules)
             {
                 if (item.IgnorePrivillege)
@@ -158,7 +159,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                    List<FrameworkAction> otherActions = null;
+                    List<SimpleAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
@@ -169,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     {
                         var model = modules.Where(x => x.FullName == this.SelectedModule)
                                             .FirstOrDefault();
-                        mainAction = new FrameworkAction();
+                        mainAction = new SimpleAction();
                         mainAction.Module = model;
                         mainAction.MethodName = null;
                     }
@@ -259,7 +260,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                    List<FrameworkAction> otherActions = null;
+                    List<SimpleAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
@@ -269,7 +270,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     if (mainAction == null && Entity.ShowOnMenu == false)
                     {
                         var model = modules.Where(x => x.FullName == this.SelectedModule).FirstOrDefault();
-                        mainAction = new FrameworkAction();
+                        mainAction = new SimpleAction();
                         mainAction.Module = model;
                         mainAction.MethodName = null;
                     }

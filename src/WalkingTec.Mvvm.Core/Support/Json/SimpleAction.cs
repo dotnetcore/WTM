@@ -1,45 +1,46 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
-namespace WalkingTec.Mvvm.Core
+namespace WalkingTec.Mvvm.Core.Support.Json
 {
-    /// <summary>
-    /// FrameworkAction
-    /// </summary>
-    [Table("FrameworkActions")]
-    public class FrameworkAction : BasePoco
+    public class SimpleAction
     {
-        [Display(Name = "ActionName")]
-        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
-        [Required(ErrorMessage ="{0}required")]
-        public string ActionName { get; set; }
+        public Guid ID { get; set; }
+        public ActionDescriptionAttribute ActionDes { get; set; }
+        public string _name;
+        public string ActionName
+        {
+            get
+            {
+                if (ActionDes?._localizer != null && string.IsNullOrEmpty(ActionDes?.Description) == false)
+                {
+                    return ActionDes._localizer[ActionDes.Description];
+                }
+                else
+                {
+                    return _name ?? "";
+                }
+            }
+            set
+            {
+                _name = value;
+            }
+        }
 
-        [Required(ErrorMessage ="{0}required")]
-        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
-        [Display(Name = "MethodName")]
         public string MethodName { get; set; }
 
-        [Display(Name = "Module")]
         public Guid? ModuleId { get; set; }
 
-        [Display(Name = "Module")]
-        public FrameworkModule Module { get; set; }
+        public SimpleModule Module { get; set; }
 
-        [Display(Name = "Parameter")]
-        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
         public string Parameter { get; set; }
 
-        [NotMapped]
         public List<string> ParasToRunTest { get; set; }
 
-        [NotMapped]
         public bool IgnorePrivillege { get; set; }
 
-        [NotMapped]
         private string _url;
-        [NotMapped]
         public string Url
         {
             get
@@ -63,5 +64,4 @@ namespace WalkingTec.Mvvm.Core
             }
         }
     }
-
 }

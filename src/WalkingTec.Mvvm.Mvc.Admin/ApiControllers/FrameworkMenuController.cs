@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs;
 
@@ -155,7 +156,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult GetActionsByModel(string ModelName)
         {
             var m = GlobaInfo.AllModule.Where(x => x.IsApi == true && x.FullName.ToLower() == ModelName.ToLower()).SelectMany(x => x.Actions).ToList();
-            List<FrameworkAction> toremove = new List<FrameworkAction>();
+            List<SimpleAction> toremove = new List<SimpleAction>();
             foreach (var item in m)
             {
                 if (item.IgnorePrivillege == true || item.Module.IgnorePrivillege == true)

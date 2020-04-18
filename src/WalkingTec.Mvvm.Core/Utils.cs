@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core.Support;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -62,7 +63,7 @@ namespace WalkingTec.Mvvm.Core
             return rv;
         }
 
-        public static FrameworkMenu FindMenu(string url)
+        public static SimpleMenu FindMenu(string url)
         {
             var menus = GlobalServices.GetRequiredService<GlobalData>()?.AllMenus;
             if(menus == null)

@@ -46,6 +46,7 @@ using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
@@ -90,21 +91,21 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule)
+        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule)
         {
             var ConfigInfo = GlobalServices.GetService<IOptions<Configs>>().Value;
             var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.Program));
-            var menus = new List<FrameworkMenu>();
+            var menus = new List<SimpleMenu>();
 
             if (ConfigInfo.IsQuickDebug)
             {
-                menus = new List<FrameworkMenu>();
+                menus = new List<SimpleMenu>();
                 var areas = allModule.Where(x => x.NameSpace != "WalkingTec.Mvvm.Admin.Api").Select(x => x.Area?.AreaName).Distinct().ToList();
                 foreach (var area in areas)
                 {
-                    var modelmenu = new FrameworkMenu
+                    var modelmenu = new SimpleMenu
                     {
-                        //ID = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         PageName = area ?? localizer["DefaultArea"]
                     };
                     menus.Add(modelmenu);
@@ -112,11 +113,11 @@ namespace WalkingTec.Mvvm.Mvc
                     foreach (var page in pages)
                     {
                         var url = page.Url;
-                        menus.Add(new FrameworkMenu
+                        menus.Add(new SimpleMenu
                         {
                             ID = Guid.NewGuid(),
                             ParentId = modelmenu.ID,
-                            PageName = page.Module.ModuleName,
+                            PageName = page.Module.ActionDes.Description,
                             Url = url
                         });
                     }
@@ -131,6 +132,16 @@ namespace WalkingTec.Mvvm.Mvc
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .Include(x => x.Domain)
                                 .OrderBy(x => x.DisplayOrder)
+                                .Select(x => new SimpleMenu
+                                {
+                                    ID = x.ID,
+                                    ParentId = x.ParentId,
+                                    PageName = x.PageName,
+                                    Url = x.Url,
+                                    DisplayOrder = x.DisplayOrder,
+                                    ShowOnMenu = x.ShowOnMenu,
+                                    Icon = x.ICon,
+                                })
                                 .ToList());
                     }
                 }
@@ -166,9 +177,9 @@ namespace WalkingTec.Mvvm.Mvc
         /// </summary>
         /// <param name="controllers"></param>
         /// <returns></returns>
-        private static List<FrameworkModule> GetAllModules(List<Type> controllers)
+        private static List<SimpleModule> GetAllModules(List<Type> controllers)
         {
-            var modules = new List<FrameworkModule>();
+            var modules = new List<SimpleModule>();
 
             foreach (var ctrl in controllers)
             {
@@ -177,7 +188,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var rightattr = ctrl.GetCustomAttributes(typeof(AllRightsAttribute), false);
                 var debugattr = ctrl.GetCustomAttributes(typeof(DebugOnlyAttribute), false);
                 var areaattr = ctrl.GetCustomAttributes(typeof(AreaAttribute), false);
-                var model = new FrameworkModule
+                var model = new SimpleModule
                 {
                     ClassName = ctrl.Name.Replace("Controller", string.Empty)
                 };
@@ -203,8 +214,8 @@ namespace WalkingTec.Mvvm.Mvc
                 if (attrs.Length > 0)
                 {
                     var ada = attrs[0] as ActionDescriptionAttribute;
-                    var nameKey = ada.GetDescription(ctrl);
-                    model.ModuleName = nameKey;
+                    ada.SetLoccalizer(ctrl);
+                    model.ActionDes = ada;
                 }
                 else
                 {
@@ -221,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     methods = methods.Where(x => x.IsSpecialName == false).ToArray();
                 }
-                model.Actions = new List<FrameworkAction>();
+                model.Actions = new List<SimpleAction>();
                 //循环所有方法
                 foreach (var method in methods)
                 {
@@ -233,7 +244,7 @@ namespace WalkingTec.Mvvm.Mvc
                     //如果不是post的方法，则添加到controller的action列表里
                     if (postAttr.Length == 0)
                     {
-                        var action = new FrameworkAction
+                        var action = new SimpleAction
                         {
                             Module = model,
                             MethodName = method.Name
@@ -247,8 +258,8 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            var nameKey = ada.GetDescription(ctrl);
-                            action.ActionName = nameKey;
+                            ada.SetLoccalizer(ctrl);
+                            action.ActionDes = ada;
                         }
                         else
                         {
@@ -285,7 +296,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 continue;
                             }
                         }
-                        var action = new FrameworkAction
+                        var action = new SimpleAction
                         {
                             Module = model,
                             MethodName = method.Name
@@ -298,8 +309,8 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            string nameKey = ada.GetDescription(ctrl);
-                            action.ActionName = nameKey;
+                            ada.SetLoccalizer(ctrl);
+                            action.ActionDes = ada;
                         }
                         else
                         {
@@ -325,7 +336,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var existArea = modules.Where(x => x.Area?.AreaName == areaName).Select(x => x.Area).FirstOrDefault();
                         if (existArea == null)
                         {
-                            model.Area = new FrameworkArea
+                            model.Area = new SimpleArea
                             {
                                 AreaName = (areaattr[0] as AreaAttribute).RouteValue,
                                 Prefix = (areaattr[0] as AreaAttribute).RouteValue,
@@ -733,13 +744,13 @@ namespace WalkingTec.Mvvm.Mvc
 
             gd.SetMenuGetFunc(() =>
             {
-                var menus = new List<FrameworkMenu>();
+                var menus = new List<SimpleMenu>();
                 var cache = GlobalServices.GetService<IDistributedCache>();
                 var menuCacheKey = "FFMenus";
-                if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
+                if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
                     var data = GetAllMenus(gd.AllModule);
-                    cache.Add(menuCacheKey, data);
+                    cache.Add(menuCacheKey, data,new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     menus = data;
                 }
                 else

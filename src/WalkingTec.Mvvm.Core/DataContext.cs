@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -97,7 +98,7 @@ namespace WalkingTec.Mvvm.Core
 
             if (emptydb == true)
             {
-                var AllModules = allModules as List<FrameworkModule>;
+                var AllModules = allModules as List<SimpleModule>;
                 var roles = new FrameworkRole[]
                 {
                     new FrameworkRole{ RoleCode = "001", RoleName = Program._localizer["Admin"]}
@@ -186,7 +187,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenu(List<FrameworkModule> allModules, string areaName, string controllerName, string actionName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
+        private FrameworkMenu GetMenu(List<SimpleModule> allModules, string areaName, string controllerName, string actionName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
             var acts = allModules.Where(x => x.ClassName == controllerName && (areaName == null || x.Area?.Prefix?.ToLower() == areaName.ToLower())).SelectMany(x => x.Actions).ToList();
             var act = acts.Where(x => x.MethodName == actionName).SingleOrDefault();
@@ -205,7 +206,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
+        private FrameworkMenu GetMenu2(List<SimpleModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
             var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
@@ -229,7 +230,7 @@ namespace WalkingTec.Mvvm.Core
             return menu;
         }
 
-        private FrameworkMenu GetMenuFromAction(FrameworkAction act, bool isMainLink, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder = 1)
+        private FrameworkMenu GetMenuFromAction(SimpleAction act, bool isMainLink, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder = 1)
         {
             if (act == null)
             {
