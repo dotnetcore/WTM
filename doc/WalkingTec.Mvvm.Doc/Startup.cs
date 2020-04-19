@@ -28,7 +28,7 @@ using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 
-namespace WalkingTec.Mvvm.Demo
+namespace WalkingTec.Mvvm.Doc
 {
     public class Startup
     {

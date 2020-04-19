@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
@@ -14,14 +15,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
         public BasePaedListVMTest()
         {
-            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
-            mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
-            mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
-            GlobalServices.SetServiceProvider(mockService.Object);
-
             _seed = Guid.NewGuid().ToString();
             _studentListVM = new BasePagedListVM<Student, BaseSearcher>();
-            _studentListVM.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _studentListVM.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             for (int i = 1; i <= 20; i++)
             {
                 _studentListVM.DC.Set<Student>().Add(new Student

@@ -173,14 +173,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetRoles")]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(WtmContext.LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(null, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext.LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems( null, x => x.GroupName));
         }
 
     }

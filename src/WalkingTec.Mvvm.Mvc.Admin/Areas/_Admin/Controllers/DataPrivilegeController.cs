@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult Index()
         {
             var vm = CreateVM<DataPrivilegeListVM>();
-            vm.Searcher.TableNames = GlobaInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            vm.Searcher.TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
 
@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
-            var dps = GlobaInfo.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
+            var dps = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
                 AllItems = dps.GetItemList(DC, WtmContext.LoginUserInfo);

@@ -694,7 +694,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public string GetGithubStarts()
         {
-            return ReadFromCache<string>("githubstar", () =>
+            return WtmContext.ReadFromCache<string>("githubstar", () =>
             {
                 var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
                 return s.stargazers_count.ToString();
@@ -705,7 +705,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public ActionResult GetGithubInfo()
         {
-            var rv = ReadFromCache<string>("githubinfo", () =>
+            var rv = WtmContext.ReadFromCache<string>("githubinfo", () =>
             {
                 var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
                 return JsonConvert.SerializeObject(s);

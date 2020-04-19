@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 if (_cache == null)
                 {
-                    _cache = GlobalServices.GetRequiredService<IDistributedCache>() as IDistributedCache;
+                    _cache = GlobalServices.GetRequiredService<WTMContext>().Cache;
                 }
                 return _cache;
             }

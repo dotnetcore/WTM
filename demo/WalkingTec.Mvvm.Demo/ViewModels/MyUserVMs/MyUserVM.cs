@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,9 +27,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 
         protected override void InitVM()
         {
-            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.RoleName);
+            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(null, y => y.RoleName);
             SelectedUserRolesIDs = Entity.UserRoles?.Select(x => x.RoleId).ToList();
-            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.GroupName);
+            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(null, y => y.GroupName);
             SelectedUserGroupsIDs = Entity.UserGroups?.Select(x => x.GroupId).ToList();
         }
 

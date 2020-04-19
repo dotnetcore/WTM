@@ -74,11 +74,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             else
             {
-                if (_csfunc != null)
-                {
-                    cs = _csfunc.Invoke(context);
-                }
-                else
+                cs = _csfunc?.Invoke(context);
+                if (string.IsNullOrEmpty(cs))
                 {
                     if(ispost != null)
                     {

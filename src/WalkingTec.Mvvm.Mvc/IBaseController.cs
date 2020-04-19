@@ -23,8 +23,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         string BaseUrl { get;  }
 
-        IDataContext CreateDC(bool isLog = false);
-
         ModelStateDictionary ModelState { get; }
 
         IStringLocalizer Localizer { get; }

@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.Name));
+            return Ok(DC.Set<City>().GetSelectListItems( null, x => x.Name));
         }
 
     }

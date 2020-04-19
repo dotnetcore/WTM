@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
@@ -23,8 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         protected override void InitVM()
         {
-            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null,y => y.RoleName);
-            //AllUsers = DC.Set<FrameworkUserBase>().GetSelectListItems(null, x => x.ITCode, LoginUserInfo.DataPrivileges);
+            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems( null,y => y.RoleName);
 
             SelectedRolesIDs = new List<Guid>();
             SelectedRolesIDs.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == true).Select(x => x.RoleId.Value).ToList());
@@ -32,7 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             SelectedUsersID = new List<Guid>();
             SelectedUsersID.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.UserId != null && x.Allowed == true).Select(x => x.UserId.Value).ToList());
 
-            AllUsers = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID.Contains(x.ID)).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.ITCode);
+            AllUsers = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID.Contains(x.ID)).GetSelectListItems( null, x => x.ITCode);
 
             SelectedRolesID2 = new List<Guid>();
             SelectedRolesID2.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == false).Select(x => x.RoleId.Value).ToList());
@@ -40,24 +39,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             SelectedUsersID2 = new List<Guid>();
             SelectedUsersID2.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.UserId != null && x.Allowed == false).Select(x => x.UserId.Value).ToList());
 
-            AllUsers2 = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID2.Contains(x.ID)).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.ITCode);
+            AllUsers2 = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID2.Contains(x.ID)).GetSelectListItems(null, x => x.ITCode);
 
         }
 
         public List<ComboSelectListItem> GetUsers(string text)
         {
-            var d = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().Contains(text.ToLower())).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.ITCode);
+            var d = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().Contains(text.ToLower())).GetSelectListItems(null, x => x.ITCode);
             return d;
         }
 
         protected override void ReInitVM()
         {
-            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.RoleName);
+            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems( null, y => y.RoleName);
 
             if (SelectedUsersID != null)
-                AllUsers = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID.Contains(x.ID)).GetSelectListItems(LoginUserInfo.DataPrivileges,null, x => x.ITCode);
+                AllUsers = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID.Contains(x.ID)).GetSelectListItems(null, x => x.ITCode);
             if (SelectedUsersID2 != null)
-                AllUsers2 = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID2.Contains(x.ID)).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.ITCode);
+                AllUsers2 = DC.Set<FrameworkUserBase>().Where(x => SelectedUsersID2.Contains(x.ID)).GetSelectListItems(null, x => x.ITCode);
         }
 
         public override void DoAdd()

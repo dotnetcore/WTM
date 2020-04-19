@@ -52,43 +52,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-        #region Domain
-
-        public List<FrameworkDomain> Domains
-        {
-            get
-            {
-                return ReadFromCache<List<FrameworkDomain>>("Domains", () =>
-                {
-                    using (var dc = this.CreateDC())
-                    {
-                        return dc.Set<FrameworkDomain>().ToList();
-                    }
-                });
-            }
-        }
-        public static Guid? DomainId { get; set; }
-
-        #endregion
-
-
-        #region GUID
-        public List<EncHash> EncHashs
-        {
-            get
-            {
-                return ReadFromCache<List<EncHash>>("EncHashs", () =>
-                {
-                    using (var dc = this.CreateDC())
-                    {
-                        return dc.Set<EncHash>().ToList();
-                    }
-                });
-            }
-        }
-        #endregion
-
-
         #region URL
         public string BaseUrl { get => WtmContext?.BaseUrl; }
         #endregion
@@ -379,43 +342,6 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        #region CreateDC
-        /// <summary>
-        /// Create a new datacontext with current connectionstring and current database type
-        /// </summary>
-        /// <param name="isLog">if true, use defaultlog connection string</param>
-        /// <returns>data context</returns>
-        public virtual IDataContext CreateDC(bool isLog = false)
-        {
-            string cs = CurrentCS??"default";
-            if (isLog == true)
-            {
-                if (WtmContext.ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
-                {
-                    cs = "defaultlog";
-                }
-                else
-                {
-                    cs = "default";
-                }
-            }
-            return WtmContext.ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
-        }
-
-        /// <summary>
-        /// Create DataContext
-        /// </summary>
-        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
-        /// <returns>data context</returns>
-        public virtual IDataContext CreateDC(string csName)
-        {
-            string cs = csName ?? "default";
-            return ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == cs.ToLower()).FirstOrDefault()?.CreateDC();
-        }
-
-
-        #endregion
-
         #region ReInit model
         private void SetReInit(ModelStateDictionary msd, BaseVM model)
         {
@@ -482,30 +408,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
         #endregion
-
-        protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
-        {
-            if (Cache.TryGetValue(key, out T rv) == false || rv == null)
-            {
-                T data = setFunc();
-                if (timeout == null)
-                {
-                    Cache.Add(key, data);
-                }
-                else
-                {
-                    Cache.Add(key, data, new DistributedCacheEntryOptions()
-                    {
-                        SlidingExpiration = new TimeSpan(0,0,timeout.Value)
-                    });
-                }
-                return data;
-            }
-            else
-            {
-                return rv;
-            }
-        }
 
         [NonAction]
         public FResult FFResult()
@@ -585,50 +487,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-        private void ProcessTreeDp(List<DataPrivilege> dps)
-        {
-            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
-            foreach (var ds in dpsSetting)
-            {
-                if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
-                {
-                    var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
-                    if (ids.Count > 0 && ids.Contains(null) == false)
-                    {
-                        List<Guid> tempids = new List<Guid>();
-                        foreach (var item in ids)
-                        {
-                            if (Guid.TryParse(item, out Guid g))
-                            {
-                                tempids.Add(g);
-                            }
-                        }
-                        List<Guid> subids = new List<Guid>();
-                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
-                        subids = subids.Distinct().ToList();
-                        subids.ForEach(x => dps.Add(new DataPrivilege
-                        {
-                            TableName = ds.ModelName,
-                            RelateId = x.ToString()
-                        }));
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType)
-        {
-            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
-            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
-            if (subids.Count > 0)
-            {
-                return subids.Concat(GetSubIds(subids, modelType));
-            }
-            else
-            {
-                return new List<Guid>();
-            }
-        }
 
     }
 

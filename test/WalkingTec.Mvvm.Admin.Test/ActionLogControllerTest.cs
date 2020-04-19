@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
@@ -17,7 +18,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public ActionLogControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<ActionLogController>(_seed, "user");
+            _controller = MockController.CreateController<ActionLogController>(new FrameworkContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]

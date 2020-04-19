@@ -509,12 +509,13 @@ namespace WalkingTec.Mvvm.Mvc
             FDFSConfig.Trackers = TrackerServers;
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfigurationRoot config)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfigurationRoot config, List<IDataPrivilege> dps)
         {
             var gd = GetGlobalData();
             services.AddHttpContextAccessor();
             services.AddSingleton(gd);
             services.AddLayui();
+            services.AddSingleton(dps);
             services.AddScoped<WTMContext>();
             var con = config.Get<Configs>();
             List<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -739,8 +740,6 @@ namespace WalkingTec.Mvvm.Mvc
             var controllers = GetAllControllers(gd.AllAssembly);
             gd.AllModule = GetAllModules(controllers);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
-
-            gd.DataPrivilegeSettings = new List<IDataPrivilege>();
 
             gd.SetMenuGetFunc(() =>
             {

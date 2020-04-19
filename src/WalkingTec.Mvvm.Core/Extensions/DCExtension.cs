@@ -178,7 +178,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="SortByName">是否根据Text字段排序，默认为是</param>
         /// <returns>SelectListItem列表</returns>
         public static List<ComboSelectListItem> GetSelectListItems<T>(this IQueryable<T> baseQuery
-            , List<SimpleDataPri> dps
             , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
             , Expression<Func<T, string>> valueField = null
@@ -186,6 +185,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             , bool SortByName = true)
             where T : TopBasePoco
         {
+            var wtmcontext = GlobalServices.GetService<WTMContext>();
+            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             var query = baseQuery;
 
             //如果条件不为空，则拼上条件
@@ -275,7 +276,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>拼接好where条件的query</returns>
         private static IQueryable<T> AppendSelfDPWhere<T>(IQueryable<T> query, List<SimpleDataPri> dps) where T : TopBasePoco
         {
-            var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
+            var dpsSetting = GlobalServices.GetService<WTMContext>().DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
             Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
             //循环数据权限，加入到where条件中，达到自动过滤的效果
@@ -314,8 +315,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="dps">数据权限</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<SimpleDataPri> dps, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery,params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
         {
+            var wtmcontext = GlobalServices.GetService<WTMContext>();
+            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             //循环所有关联外键
             List<string> tableNameList = new List<string>();
             foreach (var IdField in IdFields)
@@ -340,7 +343,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
             }
             //var test = DPWhere(baseQuery, dps, tableNameList, IdFields);
-            return DPWhere(baseQuery, dps, tableNameList, IdFields);
+            return DPWhere(baseQuery,tableNameList, IdFields);
         }
 
         #region AddBy YOUKAI 20160310
@@ -353,8 +356,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="tableName">关联数据权限的表名,如果关联外键为自身，则参数第一个为自身</param>
         /// <param name="IdFields">关联表外键</param>
         /// <returns>修改后的查询语句</returns>
-        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<SimpleDataPri> dps, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
+        public static IQueryable<T> DPWhere<T>(this IQueryable<T> baseQuery, List<string> tableName, params Expression<Func<T, object>>[] IdFields) where T:TopBasePoco
         {
+            var wtmcontext = GlobalServices.GetService<WTMContext>();
+            var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
+
             // var dpsSetting = BaseVM.AllDPS;
             ParameterExpression pe = Expression.Parameter(typeof(T));
             Expression left1 = Expression.Constant(1);
@@ -419,7 +425,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     {
                         fieldName = tableName[0];
                     }
-                    var dpsSetting = GlobalServices.GetService<GlobalData>().DataPrivilegeSettings;
+                    var dpsSetting = wtmcontext.DataPrivilegeSettings;
 
                     //循环系统设定的数据权限，如果没有和关联类一样的表，则跳过
                     if (dpsSetting.Where(x => x.ModelName == fieldName).SingleOrDefault() == null)

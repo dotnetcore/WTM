@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WalkingTec.Mvvm.Admin.Api;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
@@ -20,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public FrameworkUserApiTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateApi<FrameworkUserController>(_seed, "user");
+            _controller = MockController.CreateApi<FrameworkUserController>(new FrameworkContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]

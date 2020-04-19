@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             ViewData["title"] = "WTM";
             var user = new LoginUserInfo { ITCode = "admin", Id = Guid.Parse("F75317BB-2C36-451F-ADA7-29DD42DAA492") };
-            LoginUserInfo = user;
+            WtmContext.LoginUserInfo = user;
             AuthenticationProperties properties = null;
                 properties = new AuthenticationProperties
                 {
@@ -57,7 +57,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ResponseCache(Duration = 3600)]
         public github GetGithubInfo()
         {
-            var rv = ReadFromCache<github>("githubinfo", () =>
+            var rv = WtmContext.ReadFromCache<github>("githubinfo", () =>
             {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
                 return s;

@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 	    protected override void InitVM()
         {
             SchoolId_Excel.DataType = ColumnDataType.ComboBox;
-            SchoolId_Excel.ListItems = DC.Set<School>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.SchoolName);
+            SchoolId_Excel.ListItems = DC.Set<School>().GetSelectListItems( null, y => y.SchoolName);
         }
 
     }

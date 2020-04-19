@@ -36,8 +36,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             TableNames = new List<ComboSelectListItem>();
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
-                TableNames = WtmContext.GlobaInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(null, x => x.GroupName);
+                TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             }
             SelectedItemsID = new List<string>();
             List<string> rids = null;
@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         {
             TableNames = new List<ComboSelectListItem>();
             AllItems = new List<ComboSelectListItem>();
-            TableNames = WtmContext.GlobaInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
         }
 
         public override void Validate()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +13,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// IocContainer
         /// </summary>
-        public static IServiceProvider ServiceProvider => _serviceProvider ??
-                throw new NullReferenceException("请先设置 DI Container 例 GlobalServices.SetServiceProvider(container)");
+        public static IServiceProvider ServiceProvider => _serviceProvider;
 
         /// <summary>
         /// SetServiceProvider
@@ -29,42 +28,42 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetService<T>() where T : class => ServiceProvider.GetService<T>();
+        public static T GetService<T>() where T : class => ServiceProvider?.GetService<T>();
 
         /// <summary>
         /// GetService
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object GetService(Type type) => ServiceProvider.GetService(type);
+        public static object GetService(Type type) => ServiceProvider?.GetService(type);
 
         /// <summary>
         /// GetServices
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetServices<T>() where T : class => ServiceProvider.GetServices<T>();
+        public static IEnumerable<T> GetServices<T>() where T : class => ServiceProvider?.GetServices<T>();
 
         /// <summary>
         /// GetServices
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static IEnumerable<object> GetServices(Type type) => ServiceProvider.GetServices(type);
+        public static IEnumerable<object> GetServices(Type type) => ServiceProvider?.GetServices(type);
 
         /// <summary>
         /// GetRequiredService
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetRequiredService<T>() where T : class => ServiceProvider.GetRequiredService<T>();
+        public static T GetRequiredService<T>() where T : class => ServiceProvider?.GetRequiredService<T>();
 
         /// <summary>
         /// GetRequiredService
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static object GetRequiredService(Type type) => ServiceProvider.GetRequiredService(type);
+        public static object GetRequiredService(Type type) => ServiceProvider?.GetRequiredService(type);
 
         #endregion
     }

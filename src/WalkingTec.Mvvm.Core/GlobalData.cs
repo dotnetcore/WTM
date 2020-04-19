@@ -11,15 +11,6 @@ namespace WalkingTec.Mvvm.Core
     public class GlobalData
     {
 
-        #region Data Privilege
-
-        /// <summary>
-        /// Data Privilege
-        /// </summary>
-        public List<IDataPrivilege> DataPrivilegeSettings { get; set; }
-
-        #endregion
-
         /// <summary>
         /// 程序集
         /// </summary>

@@ -1,21 +1,10 @@
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
-using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -43,25 +32,6 @@ namespace WalkingTec.Mvvm.Demo
 
         }
 
-        public static string CSSelector(ActionExecutingContext context)
-        {
-            var userinfo = (context.Controller as IBaseController)?.WtmContext?.LoginUserInfo;
-            if (userinfo == null)
-            {
-                return "default";
-            }
-            else
-            {
-                if (userinfo.ITCode.StartsWith("a"))
-                {
-                    return "default";
-                }
-                else
-                {
-                    return "default";
-                }
-            }
-        }
     }
 
     public static class ConfigInfoExtension

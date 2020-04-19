@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 
-namespace WalkingTec.Mvvm.Admin.Test
+namespace WalkingTec.Mvvm.Test.Mock
 {
     public class MockHttpSession : ISession
     {

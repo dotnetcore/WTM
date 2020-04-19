@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.RoleName, x => x.ID.ToString(), true, true);
+            AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(null, x => x.RoleName, x => x.ID.ToString(), true, true);
         }
     }
 

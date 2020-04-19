@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{DE184A47-C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.TagHelpers.LayUI", "src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj", "{0401952E-D2BB-40CB-9F1B-8008BB947631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Core", "src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj", "{5FF462FC-FD3F-4321-BE59-DF206C9B78FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Core", "src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj", "{5FF462FC-FD3F-4321-BE59-DF206C9B78FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Mvc", "src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj", "{4207C275-FDCD-4681-AAAC-23228294EC27}"
 EndProject
@@ -43,6 +43,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.ReactDemo", "demo\WalkingTec.Mvvm.ReactDemo\WalkingTec.Mvvm.ReactDemo.csproj", "{93064FB9-6CAB-46D0-9F17-154B9517429A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.VueDemo", "demo\WalkingTec.Mvvm.VueDemo\WalkingTec.Mvvm.VueDemo.csproj", "{D6A25BAD-2519-4594-953D-7A6F1311E5F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Test.Mock", "WalkingTec.Mvvm.Test.Mock\WalkingTec.Mvvm.Test.Mock.csproj", "{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6A25BAD-2519-4594-953D-7A6F1311E5F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +111,7 @@ Global
 		{B1A6773F-A9F2-42A6-806C-07B175AF4165} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
 		{93064FB9-6CAB-46D0-9F17-154B9517429A} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
 		{D6A25BAD-2519-4594-953D-7A6F1311E5F3} = {DE184A47-CF5F-41C0-AB7D-CAD0AF2DAE75}
+		{178F8F9C-2FA0-4FA7-A75B-B71B8253AB99} = {55D5759D-10E9-4FC8-B2EC-A824CF6D74A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D25EAAD-E43A-466A-95DA-ECE1F3C462DC}

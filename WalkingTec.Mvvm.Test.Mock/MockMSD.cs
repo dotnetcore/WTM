@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Core.Test
+namespace WalkingTec.Mvvm.Test.Mock
 {
     public class MockMSD : IModelStateService
     {

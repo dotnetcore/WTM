@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Hosting;
+using WalkingTec.Mvvm.Core;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Doc
 {
@@ -9,20 +10,25 @@ namespace WalkingTec.Mvvm.Doc
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return
+                Host.CreateDefaultBuilder(args)
+                 .ConfigureLogging((hostingContext, logging) =>
+                 {
+                     logging.ClearProviders();
+                     logging.AddConsole();
+                     logging.AddWTMLogger();
+                 })
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    x.AddFrameworkService();
-                    x.AddLayui();
-                })
-                .Configure(x =>
-                {
-                    x.UseFrameworkService();
-                })
-                .Build();
+                    webBuilder.UseStartup<Startup>();
+                });
+
+        }
+
     }
 }

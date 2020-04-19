@@ -182,15 +182,15 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [ActionDescription("获取角色")]
         public ActionResult GetUserRoles()
         {
-            var test = DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName);
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.RoleName));
+            var test = DC.Set<FrameworkRole>().GetSelectListItems( null, x => x.RoleName);
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(null, x => x.RoleName));
         }
 
         [HttpGet("GetUserGroups")]
         [ActionDescription("获取角色")]
         public ActionResult GetUserGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, x => x.GroupName));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems( null, x => x.GroupName));
         }
 
         [HttpGet("GetSex")]

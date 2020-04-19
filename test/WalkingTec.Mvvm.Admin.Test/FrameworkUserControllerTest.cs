@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc.Admin.Controllers;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Admin.Test
 {
@@ -20,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public FrameworkUserControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<FrameworkUserController>(_seed, "user");
+            _controller = MockController.CreateController<FrameworkUserController>(new FrameworkContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]

@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
@@ -19,26 +24,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public BaseCRUDVMTestTop()
         {
             _seed = Guid.NewGuid().ToString();
-            _schoolvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _studentvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-
-            _schoolvm.Session = new MockSession();
-            _majorvm.Session = new MockSession();
-            _studentvm.Session = new MockSession();
-
-            _schoolvm.MSD = new MockMSD();
-            _majorvm.MSD = new MockMSD();
-            _studentvm.MSD = new MockMSD();
-
-            _schoolvm.LoginUserInfo = new LoginUserInfo { ITCode = "schooluser" };
-            _majorvm.LoginUserInfo = new LoginUserInfo { ITCode = "majoruser" };
-            _studentvm.LoginUserInfo = new LoginUserInfo { ITCode = "studentuser" };
-
-            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
-            mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
-            mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
-            GlobalServices.SetServiceProvider(mockService.Object);
+            _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
+            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
+            _studentvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
         }
 
         [TestMethod]
@@ -584,8 +572,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
 
             _majorvm = new MajorVM1();
-            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _majorvm.MSD = new MockMSD();
+            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             _majorvm.Entity = new MajorTop { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
@@ -602,8 +589,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
 
             _majorvm = new MajorVM2();
-            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _majorvm.MSD = new MockMSD();
+            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             _majorvm.Entity = new MajorTop { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
@@ -624,8 +610,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
 
             var OptMajorvm = new MajorVM3();
-            OptMajorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            OptMajorvm.MSD = new MockMSD();
+            OptMajorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             OptMajorvm.Entity = new OptMajor { MajorCode = "111", MajorName = "not222", SchoolId=null, MajorType = MajorTypeEnum.Required };
             OptMajorvm.Validate();
             Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);

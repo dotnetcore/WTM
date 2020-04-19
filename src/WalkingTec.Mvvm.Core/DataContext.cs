@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Core
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
             //用户和用户搜索条件级联删除
-            modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
@@ -521,8 +521,8 @@ namespace WalkingTec.Mvvm.Core
             }
             try
             {
-                var Configs = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;//如果是debug模式,将EF生成的sql语句输出到debug输出
-                if (Configs.IsQuickDebug)
+                var Configs = GlobalServices.GetRequiredService<IOptions<Configs>>()?.Value;//如果是debug模式,将EF生成的sql语句输出到debug输出
+                if (Configs?.IsQuickDebug == true)
                 {
                     optionsBuilder.EnableDetailedErrors();
                     optionsBuilder.EnableSensitiveDataLogging();

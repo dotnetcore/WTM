@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 
         protected override void InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, y => y.SchoolName);
+            AllSchools = DC.Set<School>().GetSelectListItems( null, y => y.SchoolName);
         }
 
     }

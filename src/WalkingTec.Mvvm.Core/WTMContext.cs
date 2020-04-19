@@ -24,6 +24,9 @@ namespace WalkingTec.Mvvm.Core
         private HttpContext _httpContext;
         public HttpContext HttpContext { get => _httpContext; }
 
+        private List<IDataPrivilege> _dps;
+        public List<IDataPrivilege> DataPrivilegeSettings { get => _dps; }
+
         private Configs _configInfo;
         public Configs ConfigInfo { get => _configInfo; }
 
@@ -139,7 +142,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if (HttpContext.User.Identity.IsAuthenticated && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
+                if (HttpContext?.User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = HttpContext.User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
                     Guid userId = Guid.Parse(userIdStr);
@@ -269,17 +272,22 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui, List<IDataPrivilege> _dp)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd;
             _httpContext = _http.HttpContext;
             _uiservice = _ui;
+            if(_dp == null)
+            {
+                _dp = new List<IDataPrivilege>();
+            }
+            _dps = _dp;
         }
 
-        protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
+        public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
-            if (Cache.TryGetValue(key, out T rv) == false)
+            if (Cache.TryGetValue(key, out T rv) == false || rv == null)
             {
                 T data = setFunc();
                 if (timeout == null)
@@ -290,7 +298,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Cache.Add(key, data, new DistributedCacheEntryOptions()
                     {
-                        SlidingExpiration = new TimeSpan(0,0,timeout.Value)
+                        SlidingExpiration = new TimeSpan(0, 0, timeout.Value)
                     });
                 }
                 return data;
@@ -430,7 +438,7 @@ namespace WalkingTec.Mvvm.Core
 
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
-            var dpsSetting = GlobaInfo.DataPrivilegeSettings;
+            var dpsSetting = DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
                 if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))

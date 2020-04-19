@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         public ActionResult GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
-            var dps =GlobaInfo.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
+            var dps =WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
                 AllItems = dps.GetItemList(DC, WtmContext.LoginUserInfo);
@@ -126,7 +126,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetPrivileges()
         {
-            var rv = GlobaInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            var rv = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return Ok(rv);
         }
 
@@ -134,7 +134,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext.LoginUserInfo.DataPrivileges, null, x => x.GroupName);
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(null, x => x.GroupName);
             return Ok(rv);
         }
     }

@@ -24,7 +24,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public override IOrderedQueryable<DpView> GetSearchQuery()
         {
 
-            var dps = WtmContext.GlobaInfo.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
+            var dps = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
             if (dps != null)
             {
                 return dps.GetItemList(DC, LoginUserInfo).Select(x => new DpView { ID = x.Value, Name = x.Text }).AsQueryable().OrderBy(x => x.Name);

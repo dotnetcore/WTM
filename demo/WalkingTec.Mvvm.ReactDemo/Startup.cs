@@ -28,7 +28,7 @@ using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 
-namespace WalkingTec.Mvvm.Demo
+namespace WalkingTec.Mvvm.ReactDemo
 {
     public class Startup
     {
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Demo
 
                 // Filters
                 options.Filters.Add(new AuthorizeFilter());
-                options.Filters.Add(new DataContextFilter(CSSelector));
+                options.Filters.Add(new DataContextFilter());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
                 options.EnableEndpointRouting = true;
@@ -165,5 +165,6 @@ namespace WalkingTec.Mvvm.Demo
             //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
             return pris;
         }
+
     }
 }

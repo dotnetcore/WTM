@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     data = new int[] {
                         10,
                         WtmContext.GlobaInfo.AllAssembly.Count(),
-                        WtmContext.GlobaInfo.DataPrivilegeSettings.Count(),
+                        WtmContext.DataPrivilegeSettings.Count(),
                         WtmContext.ConfigInfo.ConnectionStrings.Count(),
                         WtmContext.ConfigInfo.AppSettings.Count()
                     },
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ResponseCache(Duration = 3600)]
         public github GetGithubInfo()
         {
-            var rv = ReadFromCache<github>("githubinfo", () =>
+            var rv = WtmContext.ReadFromCache<github>("githubinfo", () =>
             {
                 var s = WtmContext.ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
                 return s;
