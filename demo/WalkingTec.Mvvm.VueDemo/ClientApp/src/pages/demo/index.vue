@@ -1,36 +1,23 @@
 <template>
     <div>
-        json创建form:
-        <el-button type="primary" @click="onTest">切换status</el-button>
-        <el-button type="primary" @click="onResetFields">清空</el-button>
-        <el-button @click="testSubmit">提交</el-button>
-        <el-button @click="testFormItem">表单项</el-button>
-        <wtm-create-form ref="wForm" :status="status" :options="options">
-            <template #skey="data">
-                <span v-if="data.status === $actionType.detail">{{
-                    JSON.stringify(data)
-                    }}</span>
-                <el-input-number v-else v-model="num" :min="1" :max="10"></el-input-number>
-            </template>
-        </wtm-create-form>
-
-        <wtm-render-view hml="<span>string装html</span><el-button>提交</el-button>"></wtm-render-view>
-
-        <el-tree :data="treeData" :props="defaultProps" :highlight-current="true" :default-expand-all="true" @node-click="handleNodeClick"></el-tree>
-        <el-button type="primary" icon="el-icon-plus" @click="onAdd">
-            添加
-        </el-button>
-        <table-form />
-        <!-- 弹出框 -->
-        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" :testValue="testValue" @onSearch="onHoldSearch" />
+        <el-tabs type="border-card">
+            <el-tab-pane label="wtm-create-form">
+                <create-form />
+            </el-tab-pane>
+            <el-tab-pane label="search-box">
+                <search-box />
+            </el-tab-pane>
+            <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+            <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { AppModule } from "@/store/modules/app";
-import DialogForm from "./dialog-form.vue";
-import TableForm from "./table-form.vue";
+import CreateForm from "./create-form.vue";
+import SearchBox from "./search-box.vue";
 import actionMixin from "@/vue-custom/mixin/action-mixin";
 import searchMixin from "@/vue-custom/mixin/search";
 import store from "../actionlog/store/index";
@@ -39,13 +26,13 @@ import store from "../actionlog/store/index";
     name: "demo",
     mixins: [searchMixin(), actionMixin()],
     store,
-    components: { DialogForm, TableForm },
+    components: { CreateForm, SearchBox },
 })
 export default class extends Vue {
     form = {};
     status = "add";
     num = 2;
-
+    dialogIsShows = false;
     // 表单结构
     get formOptions() {
         return {
@@ -267,7 +254,7 @@ export default class extends Vue {
                     {
                         Text: "天津",
                         Value: "tianjin",
-                        slot: `<span style="float: left">{Text}</span>
+                        slot: `<span style="float: left">{Text}</span>-
                         <span style="float: right; color: #8492a6; font-size: 13px">{Value}</span>`,
                     },
                     {
@@ -314,6 +301,10 @@ export default class extends Vue {
                 },
             ];
         }
+    }
+    onAdd() {
+        console.log("this.dialogIsShow", this.dialogIsShows);
+        this.dialogIsShows = true;
     }
     //树型点选触发
     private handleNodeClick(data) {

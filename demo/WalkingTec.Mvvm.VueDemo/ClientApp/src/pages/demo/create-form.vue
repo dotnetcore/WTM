@@ -1,7 +1,17 @@
 ﻿<template>
-    <wtm-create-form :ref="refName" :status="'add'" :options="formOptions">
-
-    </wtm-create-form>
+    <div>
+        <el-button type="primary" @click="onStatus">切换status</el-button>
+        <el-button type="primary" @click="onResetFields">清空</el-button>
+        <el-button @click="testSubmit">提交</el-button>
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions">
+            <template #skey="data">
+                <span v-if="data.status === $actionType.detail">{{
+                    JSON.stringify(data)
+                    }}</span>
+                <el-input-number v-else v-model="mergeFormData.Entity.testsole" :min="1" :max="10"></el-input-number>
+            </template>
+        </wtm-create-form>
+    </div>
 </template>
 
 <script lang="ts">
@@ -14,7 +24,9 @@ import formMixin from "@/vue-custom/mixin/form-mixin";
 })
 export default class Index extends Vue {
     mergeFormData = {
-        Pages: [],
+        Entity: {
+            testsole: "",
+        },
     };
 
     // 表单结构
@@ -68,8 +80,25 @@ export default class Index extends Vue {
                     rules: [],
                     type: "input",
                 },
+                "Entity.testsole": {
+                    type: "wtmSlot",
+                    label: "自定义",
+                    slotKey: "skey",
+                },
             },
         };
+    }
+
+    onStatus() {
+        this.status = this.status === "add" ? "detail" : "add";
+    }
+    onResetFields() {
+        this.$refs.refName.resetFields();
+    }
+
+    testSubmit() {
+        console.log("formData", JSON.stringify(this.$refs.refName.formData));
+        // console.log("sourceFormData", JSON.stringify(this.sourceFormData));
     }
 
     mounted() {
