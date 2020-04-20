@@ -1,86 +1,115 @@
 ﻿<template>
-    <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions"></wtm-create-form>
-    </wtm-dialog-box>
+    <el-dialog title="出库单明细" :visible.sync="isShow" :before-close="CloseCallback">
+        <wtm-table-box height="300px" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}"> </wtm-table-box>
+    </el-dialog>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import formMixin from "@/vue-custom/mixin/form-mixin";
-import UploadImg from "@/components/page/UploadImg.vue";
+
+import searchMixin from "@/vue-custom/mixin/search";
+import actionMixin from "@/vue-custom/mixin/action-mixin";
+import mixinForm from "@/vue-custom/mixin/form-mixin";
+
+// 查询参数, table列 ★★★★★
+import { TABLE_HEADER, ASSEMBLIES } from "./config";
 
 @Component({
-    mixins: [formMixin()]
+    name: "outorder",
+    mixins: [mixinForm(), searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
+    components: {},
 })
-export default class Index extends Vue {
-    @Prop()
-    testValue;
-    // 表单结构
-    get formOptions() {
+export default class extends Vue {
+    @Action
+    search1;
+
+    @Action
+    batchDelete1;
+
+    get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "100px"
+                "label-width": "75px",
+                inline: true,
             },
             formItem: {
-                "Entity.ID": {
-                    isHidden: true
-                },
-                "Entity.Code": {
-                    label: "层位编码",
-                    rules: [
-                        {
-                            required: true,
-                            message: "层位编码不能为空",
-                            trigger: "blur"
-                        }
-                    ],
-                    type: "input"
-                },
-                "Entity.LayerTrans": {
-                    label: "层位翻译",
+                OutOrderId: {
+                    label: "出库单号",
                     rules: [],
-                    type: "input"
-                },
-                "Entity.LibraryStructId": {
-                    label: "所属单位",
-                    rules: [
-                        {
-                            required: true,
-                            message: "所属单位不能为空",
-                            trigger: "blur"
-                        }
-                    ],
                     type: "select",
-                    children: [
-                        {
-                            Text: "天津2",
-                            Value: "tianjin2"
-                        },
-                        {
-                            Text: "深圳2",
-                            Value: "shenzhen2",
-                            disabled: true
-                        },
-                        {
-                            Text: "韶关2",
-                            Value: "shaoguan2"
-                        }
-                    ],
+                    children: this.getOutOrderData,
                     props: {
-                        clearable: true
-                    }
-                }
-            }
+                        clearable: true,
+                        placeholder: "全部",
+                    },
+                },
+                BookinfoId: {
+                    label: "图书名称",
+                    rules: [],
+                    type: "select",
+                    children: this.getBookinfoData,
+                    props: {
+                        clearable: true,
+                        placeholder: "全部",
+                    },
+                },
+                State: {
+                    label: "状态",
+                    rules: [],
+                    type: "select",
+                    children: StateTypes,
+                    props: {
+                        clearable: true,
+                        placeholder: "全部",
+                    },
+                    isHidden: !this.isActive,
+                },
+            },
         };
     }
-    afterOpen() {
-        if (this["status"] === this["$actionType"].add) {
-            this.FormComp().setFormDataItem(
-                "Entity.LibraryStructId",
-                this.testValue
-            );
-        }
+
+    onDelete(row) {
+        this.onConfirm().then(() => {
+            this.batchDelete1(new Array(row.ID))
+                .then((res) => {
+                    this["$notify"]({
+                        title: "删除成功",
+                        type: "success",
+                    });
+                    this["onHoldSearch"]();
+                })
+                .catch((err) => {
+                    this["$notify"]({
+                        title: err.response.data.Form,
+                        type: "error",
+                    });
+                });
+        });
+
+        //this.batchDelete1(new Array(row.ID));
+
+        //this["onHoldSearch"]();
     }
+
+    onOpen() {
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+    }
+
+    mounted() {}
+
+    CloseCallback() {
+        this.$emit("update:is-show", false);
+    }
+
+    // /**
+    //  * 查询接口 ★★★★★
+    //  * @param params
+    //  */
+    // privateRequest(params) {
+    //     console.log("11111111111111111111111111111");
+    //     return this.search1(params);
+    // }
 }
 </script>

@@ -126,13 +126,20 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
       this.onConfirm().then(() => {
         const parameters = listToString(this["selectData"], "ID");
         console.log('this["selectData"]', this["selectData"], parameters);
-        this.batchDelete(parameters).then(res => {
-          this["$notify"]({
-            title: "删除成功",
-            type: "success"
+        this.batchDelete(parameters)
+          .then(res => {
+            this["$notify"]({
+              title: "删除成功",
+              type: "success"
+            });
+            this["onHoldSearch"]();
+          })
+          .catch(err => {
+            this["$notify"]({
+              title: "删除失败",
+              type: "error"
+            });
           });
-          this["onHoldSearch"]();
-        });
       });
     }
     /**
