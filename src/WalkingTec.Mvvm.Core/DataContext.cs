@@ -1,6 +1,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -15,6 +17,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -59,7 +62,7 @@ namespace WalkingTec.Mvvm.Core
         public FrameworkContext(CS cs) : base(cs)
         {
         }
-        public FrameworkContext(DbContextOptions<FrameworkContext> options) : base(options) { }
+        public FrameworkContext(DbContextOptions options) : base(options) { }
 
         /// <summary>
         /// OnModelCreating
@@ -336,7 +339,7 @@ namespace WalkingTec.Mvvm.Core
             ConnectionString = cs;
         }
 
-        public EmptyContext(DbContextOptions<FrameworkContext> options) : base(options) { }
+        public EmptyContext(DbContextOptions options) : base(options) { }
 
         public IDataContext CreateNew()
         {
@@ -721,4 +724,126 @@ namespace WalkingTec.Mvvm.Core
         }
     }
 
+    public class NullContext : IDataContext
+    {
+
+
+        public bool IsFake { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public IModel Model => throw new NotImplementedException();
+
+        public DatabaseFacade Database => throw new NotImplementedException();
+
+        public string CSName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public void AddEntity<T>(T entity) where T : TopBasePoco
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>
+        {
+            throw new NotImplementedException();
+        }
+
+        public object CreateCommandParameter(string name, object value, ParameterDirection dir)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDataContext CreateNew()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DataInit(object AllModel, bool IsSpa)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteEntity<T>(T entity) where T : TopBasePoco
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            
+        }
+
+        public IDataContext ReCreate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataTable Run(string sql, CommandType commandType, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataTable RunSP(string command, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TElement> RunSP<TElement>(string command, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataTable RunSQL(string command, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TElement> RunSQL<TElement>(string sql, params object[] paras)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DbSet<T> Set<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateEntity<T>(T entity) where T : TopBasePoco
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateProperty<T>(T entity, Expression<Func<T, object>> fieldExp) where T : TopBasePoco
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateProperty<T>(T entity, string fieldName) where T : TopBasePoco
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

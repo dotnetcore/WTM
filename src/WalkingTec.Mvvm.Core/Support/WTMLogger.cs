@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Core
         public static ILoggingBuilder AddWTMLogger(this ILoggingBuilder builder)
         {
             builder.AddConfiguration();
-            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider,WTMLoggerProvider>());
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, WTMLoggerProvider>());
             return builder;
         }
     }
@@ -62,12 +62,8 @@ namespace WalkingTec.Mvvm.Core
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            if (this.categoryName != "WalkingTec.Mvvm.Core.ActionLog")
-            {
-                return false;
-            }
             var levels = GlobalServices.GetRequiredService<IOptionsMonitor<LoggerFilterOptions>>();
-            var l = levels.CurrentValue.Rules.Where(x => x.ProviderName == "WTM").Select(x => x.LogLevel).FirstOrDefault();
+            var l = levels.CurrentValue.Rules.Where(x => x.ProviderName == "WTM" && (x.CategoryName != null && categoryName.ToLower().StartsWith(x.CategoryName.ToLower()))).Select(x => x.LogLevel).FirstOrDefault();
             if (l == null)
             {
                 l = levels.CurrentValue.MinLevel;
@@ -86,11 +82,39 @@ namespace WalkingTec.Mvvm.Core
         {
             if (IsEnabled(logLevel))
             {
+                ActionLog log = null;
+                if (typeof(TState) != typeof(ActionLog))
+                {
+                    ActionLogTypesEnum ll = ActionLogTypesEnum.Normal;
+                    if (logLevel == LogLevel.Trace || logLevel == LogLevel.Debug)
+                    {
+                        ll = ActionLogTypesEnum.Debug;
+                    }
+                    if (logLevel == LogLevel.Error || logLevel == LogLevel.Warning || logLevel == LogLevel.Critical)
+                    {
+                        ll = ActionLogTypesEnum.Exception;
+                    }
+
+                    log = new ActionLog
+                    {
+                        Remark = formatter?.Invoke(state, exception),
+                        CreateTime = DateTime.Now,
+                        ActionTime = DateTime.Now,
+                        ActionName = this.categoryName,
+                        ModuleName = "System",
+                        LogType = ll
+                    };
+                }
+                else
+                {
+                    log = state as ActionLog;
+                }
+
                 if (cs != null)
                 {
                     using (var dc = cs.CreateDC())
                     {
-                        dc.AddEntity<ActionLog>(state as ActionLog);
+                        dc.AddEntity<ActionLog>(log);
                         dc.SaveChanges();
                     }
                 }

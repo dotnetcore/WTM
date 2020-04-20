@@ -272,7 +272,7 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui, List<IDataPrivilege> _dp)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui, List<IDataPrivilege> _dp,IDataContext dc)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd;
@@ -283,6 +283,14 @@ namespace WalkingTec.Mvvm.Core
                 _dp = new List<IDataPrivilege>();
             }
             _dps = _dp;
+            if(dc is NullContext)
+            {
+                _dc = null;
+            }
+            else
+            {
+                _dc = dc;
+            }
         }
 
         public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)

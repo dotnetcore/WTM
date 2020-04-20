@@ -516,6 +516,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton(gd);
             services.AddLayui();
             services.AddSingleton(dps);
+            services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
             var con = config.Get<Configs>();
             List<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -784,13 +785,24 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            var cs = configs.ConnectionStrings;
-            foreach (var item in cs)
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-                var dc = item.CreateDC();
-                dc.DataInit(gd.AllModule, test != null).Wait();
-            }
+                var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();
+                if (fixdc is NullContext)
+                {
+                    var cs = configs.ConnectionStrings;
+                    foreach (var item in cs)
+                    {
+                        var dc = item.CreateDC();
+                        dc.DataInit(gd.AllModule, test != null).Wait();
+                    }
+                }
+                else
+                {
+                    fixdc.DataInit(gd.AllModule, test != null).Wait();
+                }
 
+            }
             return app;
         }
         public static IApplicationBuilder UseWtmLanguages(this IApplicationBuilder app)

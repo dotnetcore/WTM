@@ -97,11 +97,11 @@ namespace WalkingTec.Mvvm.Core.Auth
             var result = _evaluator.Evaluate(authContext);
             if (result.Succeeded)
             {
-                _logger.UserAuthorizationSucceeded();
+                _logger.LogDebug("Authorization was successful.");
             }
             else
             {
-                _logger.UserAuthorizationFailed();
+                _logger.LogError("Authorization failed.");
             }
             return result;
         }
@@ -130,30 +130,6 @@ namespace WalkingTec.Mvvm.Core.Auth
             }
             return await this.AuthorizeAsync(user, resource, policy);
         }
-    }
-
-    internal static class LoggingExtensions
-    {
-        private static Action<ILogger, Exception> _userAuthorizationFailed;
-        private static Action<ILogger, Exception> _userAuthorizationSucceeded;
-
-        static LoggingExtensions()
-        {
-            _userAuthorizationSucceeded = LoggerMessage.Define(
-                eventId: 1,
-                logLevel: LogLevel.Information,
-                formatString: "Authorization was successful.");
-            _userAuthorizationFailed = LoggerMessage.Define(
-                eventId: 2,
-                logLevel: LogLevel.Information,
-                formatString: "Authorization failed.");
-        }
-
-        public static void UserAuthorizationSucceeded(this ILogger logger)
-            => _userAuthorizationSucceeded(logger, null);
-
-        public static void UserAuthorizationFailed(this ILogger logger)
-            => _userAuthorizationFailed(logger, null);
     }
 
 }

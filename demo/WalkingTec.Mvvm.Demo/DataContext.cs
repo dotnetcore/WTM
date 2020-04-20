@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Demo
         {
 
         }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
