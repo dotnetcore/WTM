@@ -30,15 +30,17 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component({
     components: {
-        index
-    }
+        index,
+    },
 })
 export default class App extends Vue {
     links: any[] = [
         { text: "GitHub", url: "https://github.com/dotnetcore/WTM" },
         { text: "Vue", url: "https://cn.vuejs.org/" },
         { text: "Vuex", url: "https://vuex.vuejs.org/zh/" },
-        { text: "Lodash", url: "https://lodash.com/" }
+        { text: "Lodash", url: "https://lodash.com/" },
+        { text: "element-ui", url: "https://element.eleme.cn/#/zh-CN" },
+        { text: "Less" },
     ];
     get bgImg() {
         return `app-login-back-${_.sample([1, 2, 3, 4, 5])}`;

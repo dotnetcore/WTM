@@ -10,6 +10,8 @@ interface routerItem {
   meta: {};
 }
 let url_index = 0;
+const urlList: String[] = [];
+
 class Menu {
   constructor() {}
   /**
@@ -18,6 +20,7 @@ class Menu {
    */
   private getRouterItem(menuItem) {
     url_index++;
+    urlList.push("" + url_index);
     const routerItem: RouteConfig = {
       path: menuItem.Url || "" + url_index,
       name: menuItem.Text,
@@ -76,7 +79,18 @@ class Menu {
     if (development) {
       menu = require("@/subMenu.json");
     }
-    return this.recursionTree(menu);
+    const trees = this.recursionTree(menu);
+    console.log("trees", trees);
+    return trees.filter(item => {
+      if (
+        urlList.includes(item.path) &&
+        item.children &&
+        item.children.length === 0
+      ) {
+        return false;
+      }
+      return true;
+    });
   }
 
   /**

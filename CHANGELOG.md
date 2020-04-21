@@ -2,6 +2,12 @@
 
 ## v3.5.x （2.5.x同步更新）
 
+##3.5.6 以及 2.5.5 (2020-4-13)
+* **新增：**  ConnectionString配置中可以设置Version字段，用于控制mysql的具体版本
+* **修改：**  移除了动态控制器，因为和动态编译页面产生冲突
+* **修改：**  IsFilePublic现在可以正常工作
+* **修改：**  更新了默认生成的VUE项目代码，修复了一些bug
+
 ##3.5.4 以及 2.5.4 (2020-4-3)
 * **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
 

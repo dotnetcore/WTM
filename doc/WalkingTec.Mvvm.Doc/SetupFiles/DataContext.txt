@@ -14,8 +14,8 @@ namespace $ns$
         {
         }
 
-        public DataContext(string cs, DBTypeEnum dbtype)
-             : base(cs, dbtype)
+        public DataContext(string cs, DBTypeEnum dbtype, string version=null)
+             : base(cs, dbtype, version)
         {
         }
 

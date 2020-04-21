@@ -166,9 +166,9 @@ const _request = (option, serverHost?) => {
     .then(res => {
       return res.data;
     })
-    .catch(res => {
-      rBase.requestError(res);
-      throw res;
+    .catch(error => {
+      rBase.requestError(error);
+      throw error;
     });
 };
 export default _request;
