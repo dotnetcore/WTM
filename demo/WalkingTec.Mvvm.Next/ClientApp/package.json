@@ -1,8 +1,10 @@
 {
   "name": "leng",
-  "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "directories": {
     "doc": "docs"
   },
@@ -52,7 +54,7 @@
   "devDependencies": {
     "@types/crypto-js": "^3.1.44",
     "@types/jest": "^25.2.1",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.150",
     "@types/mockjs": "^1.0.2",
     "@types/node": "^13.11.1",
     "babel-plugin-import": "^1.13.0",
@@ -65,8 +67,8 @@
     "less-loader": "^5.0.0",
     "mockjs": "^1.1.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^25.3.1",
+    "ts-jest": "^25.4.0",
     "typescript": "~3.8.3",
-    "webpack-bundle-analyzer": "^3.6.1"
+    "webpack-bundle-analyzer": "^3.7.0"
   }
 }

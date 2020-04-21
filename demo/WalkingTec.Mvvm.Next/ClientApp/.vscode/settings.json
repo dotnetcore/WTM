@@ -1,9 +1,10 @@
 {
     "npm-scripts.showStartNotification": false,
-    "liveServer.settings.root": "/packages/www-react/build",
+    "liveServer.settings.root": "/packages/www-vue/build",
+    "liveServer.settings.file": "/packages/www-vue/build/inde.html",
     "liveServer.settings.proxy": {
         "enable": true,
         "baseUri": "/api",
-        "proxyUri": "http://localhost:5555/"
+        "proxyUri": "http://localhost:5555/api/"
     }
 }

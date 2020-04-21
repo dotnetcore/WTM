@@ -19,6 +19,6 @@
   "description": "",
   "gitHead": "9f986a0907b2f3e0cf982b2175ee554e106dda8e",
   "devDependencies": {
-    "jest": "^25.1.0"
+    "jest": "^25.4.0"
   }
 }

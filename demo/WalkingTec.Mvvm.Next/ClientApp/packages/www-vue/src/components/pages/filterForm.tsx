@@ -58,28 +58,28 @@ export class ViewFilterBasics extends Vue {
         // if (!this.PageStore.FilterCollapse) {
         //     renderItems.length = showLength
         // }
-        return (
-            <Form {...{ class: "page-filter-form", form: this.form }} on-submit={this.onSubmit} >
-                <Row props={{ gutter: 20, type: "flex" }}>
-                    {/* {renderItems} */}
-                    {this.$slots.default}
-                    <Col {...{ class: "page-filter-btns" }} >
-                        <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
-                        <Divider props={{ type: 'vertical' }} />
-                        <Button props={{}} on-click={this.onReset} >Clear</Button>
-                        {length > showLength && (
-                            <span>
-                                <Divider props={{ type: 'vertical' }} />
-                                <a on-click={this.onToggle}>
-                                    <span>Collapse</span>
-                                    <Icon props={{ type: this.PageStore.FilterCollapse ? 'up' : 'down' }} />
-                                </a>
-                            </span>
-                        )}
-                    </Col>
-                </Row>
-            </Form >
-        )
+        // return (
+        //     <Form {...{ class: "page-filter-form", form: this.form }} on-submit={this.onSubmit} >
+        //         <Row props={{ gutter: 20, type: "flex" }}>
+        //             {/* {renderItems} */}
+        //             {this.$slots.default}
+        //             <Col {...{ class: "page-filter-btns" }} >
+        //                 <Button props={{ type: 'primary', icon: "search" }} html-type="submit" >提交</Button>
+        //                 <Divider props={{ type: 'vertical' }} />
+        //                 <Button props={{}} on-click={this.onReset} >Clear</Button>
+        //                 {length > showLength && (
+        //                     <span>
+        //                         <Divider props={{ type: 'vertical' }} />
+        //                         <a on-click={this.onToggle}>
+        //                             <span>Collapse</span>
+        //                             <Icon props={{ type: this.PageStore.FilterCollapse ? 'up' : 'down' }} />
+        //                         </a>
+        //                     </span>
+        //                 )}
+        //             </Col>
+        //         </Row>
+        //     </Form >
+        // )
     }
 }
 // export const FormFilter = Form.create({})(FilterView);
