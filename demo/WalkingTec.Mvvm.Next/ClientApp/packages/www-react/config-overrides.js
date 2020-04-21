@@ -2,13 +2,13 @@ const { override, fixBabelImports, addBundleVisualizer, addLessLoader, disableEs
 const path = require('path');
 module.exports = override(
     // 模块 解析 路径
-    addWebpackResolve({
-        modules: [
-            path.resolve(path.dirname(path.dirname(process.cwd())), 'node_modules'),
-            path.resolve(process.cwd(), 'node_modules'),
-            path.resolve(process.cwd(), 'src'),
-        ]
-    }),
+    // addWebpackResolve({
+    //     modules: [
+    //         path.resolve(path.dirname(path.dirname(process.cwd())), 'node_modules'),
+    //         path.resolve(process.cwd(), 'node_modules'),
+    //         path.resolve(process.cwd(), 'src'),
+    //     ]
+    // }),
     // 添加 需要 编译的目录
     babelInclude([
         // 当前项目

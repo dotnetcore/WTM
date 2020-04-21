@@ -1,4 +1,4 @@
-const proxy = require('http-proxy-middleware');
+const proxy = require('http-proxy-middleware').createProxyMiddleware;
 // const mock = require('./mock');
 module.exports = (app) => {
     app.use(proxy('/api', {

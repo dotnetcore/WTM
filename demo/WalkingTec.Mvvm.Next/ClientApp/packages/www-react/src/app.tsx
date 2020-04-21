@@ -1,5 +1,5 @@
 import { EntitiesTimeStore, EntitiesUserStore, EntitiesPageStore } from '@leng/public/src';
-import { Icon, Layout, Menu, Spin } from 'antd';
+import { Layout, Menu, Spin } from 'antd';
 import { BasicLayout, SettingDrawer } from '@ant-design/pro-layout';
 import lodash from 'lodash';
 import { Provider, observer } from 'mobx-react';
@@ -19,7 +19,7 @@ const RootStore = {
         Insert: { url: '/_FrameworkGroup/Add' },
         Update: { url: '/_FrameworkGroup/Edit' },
         Delete: { url: '/_FrameworkGroup/BatchDelete' },
-        Export: { url: '/_FrameworkGroup/ExportExcel',body:{} },
+        Export: { url: '/_FrameworkGroup/ExportExcel', body: {} },
     }),
 }
 RootStore.UserStore.onCheckLogin()
@@ -49,7 +49,7 @@ class AppLayout extends React.Component<any> {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                    }}><Spin size="large" tip="loading..." indicator={<Icon type="loading" spin />} /></div>}>
+                    }}><Spin size="large" tip="loading..." /></div>}>
                         {RenderRoutes}
                     </React.Suspense>
                 </BasicLayout>
