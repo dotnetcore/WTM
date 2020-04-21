@@ -692,6 +692,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
+
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fa)
@@ -713,14 +714,18 @@ namespace WalkingTec.Mvvm.Core
                     }
                     f.SetValue(Entity, null);
                 }
-                using (var newdc = DC.ReCreate())
+                if (typeof(TModel) != typeof(FileAttachment))
                 {
-                    TModel m = new TModel();
-                    m.SetPropertyValue("ID", Entity.GetID());
-                    newdc.Set<TModel>().Attach(m);
-                    newdc.DeleteEntity(m);
-                    newdc.SaveChanges();
+                    foreach (var pro in pros)
+                    {
+                        if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            pro.SetValue(Entity, null);
+                        }
+                    }
                 }
+                DC.DeleteEntity(Entity);
+                DC.SaveChanges();
                 foreach (var item in fileids)
                 {
                     FileAttachmentVM ofa = new FileAttachmentVM();
@@ -742,6 +747,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
+
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fa)
@@ -751,6 +757,27 @@ namespace WalkingTec.Mvvm.Core
                         fileids.Add(file.ID);
                     }
                     f.SetValue(Entity, null);
+                }
+
+                var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
+                    foreach (var sub in subs)
+                    {
+                        fileids.Add(sub.FileId);
+                    }
+                    f.SetValue(Entity, null);
+                }
+                if (typeof(TModel) != typeof(FileAttachment))
+                {
+                    foreach (var pro in pros)
+                    {
+                        if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            pro.SetValue(Entity, null);
+                        }
+                    }
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
@@ -762,7 +789,7 @@ namespace WalkingTec.Mvvm.Core
                     await ofa.DoDeleteAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }
