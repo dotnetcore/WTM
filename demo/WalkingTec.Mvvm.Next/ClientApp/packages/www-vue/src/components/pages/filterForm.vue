@@ -59,14 +59,11 @@ export default class ViewAction extends Vue {
     lodash.delay(() => this.onSubmit(), 200);
   }
   onSearch(body?) {
-    this.PageStore.EventSubject.next({
-      EventType: "onSearch",
-      AjaxRequest: {
-        body: {
-          Page: 1,
-          Limit: this.PageStore.PageSize,
-          ...body
-        }
+    this.PageStore.onSearch({
+      body: {
+        Page: 1,
+        Limit: this.PageStore.PageSize,
+        ...body
       }
     });
   }

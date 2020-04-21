@@ -28,7 +28,7 @@ export default class PageView extends Vue {
   }
   destroyed() {
     // 销毁订阅
-    this.PageStore.onUnsubscribe();
+    // this.PageStore.onUnsubscribe();
   }
 }
 </script>

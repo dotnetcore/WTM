@@ -58,7 +58,7 @@ export default class ViewAction extends Vue {
   // aggird 组件 自带属性 不可删除
   params = {};
   disabled = {
-    FolderOnly: false,
+    FolderOnly: false
   };
   display = {};
   /** @fieldsChange="onFieldsChange" form onFieldsChange 事件 */
@@ -90,12 +90,9 @@ export default class ViewAction extends Vue {
     try {
       await this.PageStore.onRefreshMenu();
       this.$message.success(`Success`);
-      this.PageStore.EventSubject.next({
-        EventType: "onSearch",
-        AjaxRequest: {
-          body: {
-            Page: 1
-          }
+      this.PageStore.onSearch({
+        body: {
+          Page: 1
         }
       });
     } catch (error) {

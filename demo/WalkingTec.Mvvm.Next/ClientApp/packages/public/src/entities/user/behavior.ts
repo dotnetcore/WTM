@@ -1,7 +1,6 @@
 import lodash from 'lodash';
-import { action, runInAction } from 'mobx';
+import { runInAction } from 'mobx';
 import { Regulars } from '../../utils/regulars';
-import { Request } from '../../utils/request';
 import Entities, { MenuDataItem } from './entities';
 
 /**
@@ -33,35 +32,7 @@ export default class EntitiesUserBehavior extends Entities {
             }
         })
     }
-    /**
-     * 解析登录信息
-     * @protected
-     * @memberof EntitiesUserBehavior
-     */
-    @action
-    protected onVerifyingLanding(UserInfo: any = {}) {
-        // jwt
-        if (UserInfo.access_token) {
-            lodash.set(Request.headers, 'Authorization', `${UserInfo.token_type} ${UserInfo.access_token}`);
-        } else {
-            // this.Loading = false;
-            this.Name = lodash.get(UserInfo, 'Name');
-            this.Id = lodash.get(UserInfo, 'Id');
-            this.ITCode = lodash.get(UserInfo, 'ITCode');
-            // 动作
-            this._Actions = lodash.get(UserInfo, 'Attributes.Actions', []);
-            const PhotoId = lodash.get(UserInfo, 'PhotoId');
-            this.Avatar = PhotoId ? `/api/_file/getFile/${PhotoId}` : 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png';
-            const onAnalysisMenus = async () => {
-                await this.onAnalysisMenus(lodash.get(UserInfo, 'Attributes.Menus', []));
-                this.UserSubject.next(this);
-            }
-            lodash.defer(() => {
-                onAnalysisMenus();
-            })
-        }
-
-    }
+   
     /**
      * 解析菜单 
      * @memberof EntitiesUserBehavior

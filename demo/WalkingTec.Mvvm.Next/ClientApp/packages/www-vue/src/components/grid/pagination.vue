@@ -31,14 +31,11 @@ export default class Pagination extends Vue {
     this.Pagination
   );
   onChange(current, size) {
-    this.PageStore.EventSubject.next({
-      EventType: "onSearch",
-      AjaxRequest: {
-        body: lodash.merge({}, toJS(this.PageStore.SearchParams), {
-          Page: current,
-          Limit: size
-        })
-      }
+    this.PageStore.onSearch({
+      body: lodash.merge({}, toJS(this.PageStore.SearchParams), {
+        Page: current,
+        Limit: size
+      })
     });
   }
   mounted() {}

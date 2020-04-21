@@ -17,7 +17,24 @@ export class EntitiesPageStore extends EntitiesBehavior {
     constructor(options: IPageBehaviorOptions) {
         super(options);
     }
-
+    static SearchMap = {
+        /**
+         * 接口返回数据集合 key
+         */
+        RowData: 'Data',
+        /**
+         * 接口返回 数据总数 key
+         */
+        Total: 'Count',
+        /**
+         * 参数 每页条数  key
+         */
+        PageSize: 'Limit',
+        /**
+         * 接口返回 当前页码  key
+         */
+        Current: 'Page',
+    }
     /**
      * Request.ajax  工厂
      * @param type 
@@ -29,10 +46,10 @@ export class EntitiesPageStore extends EntitiesBehavior {
             case 'Search':
                 observable = observable.pipe(map(data => {
                     return {
-                        RowData: lodash.get(data, 'Data', []),
-                        Total: lodash.get(data, 'Count', 0),
-                        PageSize: lodash.get(request, 'body.Limit', 0),
-                        Current: lodash.get(data, 'Page', 0),
+                        RowData: lodash.get(data, EntitiesPageStore.SearchMap.RowData, []),
+                        Total: lodash.get(data, EntitiesPageStore.SearchMap.Total, 0),
+                        PageSize: lodash.get(request, `body.${EntitiesPageStore.SearchMap.PageSize}`, 0),
+                        Current: lodash.get(data, EntitiesPageStore.SearchMap.Current, 0),
                         SearchParams: lodash.get(request, 'body', {}),
                     }
                 }));

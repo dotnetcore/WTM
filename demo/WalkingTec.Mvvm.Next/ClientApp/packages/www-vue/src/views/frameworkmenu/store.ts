@@ -34,7 +34,7 @@ export class PageStore extends EntitiesPageStore {
          * 默认只处理 内置 事件 'onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport'
          * @memberof PageStore
          */
-        this.onCreateSubscribe();
+        // this.onCreateSubscribe();
     }
     /**
      * 刷新菜单

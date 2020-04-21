@@ -4,7 +4,7 @@
       name="file"
       :showUploadList="false"
       :action="fileService.fileUpload.src"
-      accept=".xlsx,.xls"
+      accept=".xlsx, .xls"
       @change="handleChange"
     >
       <p class="ant-upload-drag-icon">
@@ -44,13 +44,10 @@ export default class ImportContent extends Vue {
   mounted() {}
   destroyed() {
     if (this.success) {
-      this.PageStore.EventSubject.next({
-        EventType: "onSearch",
-        AjaxRequest: {
-          body: lodash.merge({}, toJS(this.PageStore.SearchParams), {
-            Page: 1
-          })
-        }
+      this.PageStore.onSearch({
+        body: lodash.merge({}, toJS(this.PageStore.SearchParams), {
+          Page: 1
+        })
       });
     }
   }

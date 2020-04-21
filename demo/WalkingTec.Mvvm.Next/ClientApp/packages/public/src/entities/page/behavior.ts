@@ -129,24 +129,24 @@ export default class EntitiesPageBehavior extends Entities {
      * 默认只处理 'onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport' 内置事件
      * @memberof EntitiesPageBehavior
      */
-    onCreateSubscribe() {
-        this.Subscription = this.EventSubject.pipe(
-            filter(obj => lodash.includes<EnumEventType>(['onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport'], obj.EventType))
-        ).subscribe(event => {
-            // 查找事件函数
-            const EventFn = lodash.get(this, event.EventType, () => { console.warn(`未解析事件 ${event.EventType}`) });
-            // 日志
-            this.DeBugLog && console.warn(`TCL: ${event.EventType} ->`, event);
-            // 执行
-            EventFn(event.AjaxRequest);
-        });
-    }
-    /**
-     * 取消订阅
-     * @memberof EntitiesPageBehavior
-     */
-    onUnsubscribe() {
-        this.Subscription && this.Subscription.unsubscribe();
-        this.Subscription = undefined;
-    }
+    // onCreateSubscribe() {
+    //     this.Subscription = this.EventSubject.pipe(
+    //         filter(obj => lodash.includes<EnumEventType>(['onSearch', 'onDetails', 'onDelete', 'onInsert', 'onUpdate', 'onImport', 'onExport'], obj.EventType))
+    //     ).subscribe(event => {
+    //         // 查找事件函数
+    //         const EventFn = lodash.get(this, event.EventType, () => { console.warn(`未解析事件 ${event.EventType}`) });
+    //         // 日志
+    //         this.DeBugLog && console.warn(`TCL: ${event.EventType} ->`, event);
+    //         // 执行
+    //         EventFn(event.AjaxRequest);
+    //     });
+    // }
+    // /**
+    //  * 取消订阅
+    //  * @memberof EntitiesPageBehavior
+    //  */
+    // onUnsubscribe() {
+    //     this.Subscription && this.Subscription.unsubscribe();
+    //     this.Subscription = undefined;
+    // }
 }

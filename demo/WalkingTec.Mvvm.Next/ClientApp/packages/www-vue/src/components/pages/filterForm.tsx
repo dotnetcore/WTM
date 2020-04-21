@@ -18,16 +18,16 @@ export class ViewFilterBasics extends Vue {
     @Prop() Entities: Entities;
 
     onSearch(body?) {
-        this.PageStore.EventSubject.next({
-            EventType: "onSearch",
-            AjaxRequest: {
-                body: {
-                    Page: 1,
-                    Limit: this.PageStore.PageSize,
-                    ...body,
-                }
-            }
-        });
+        // this.PageStore.EventSubject.next({
+        //     EventType: "onSearch",
+        //     AjaxRequest: {
+        //         body: {
+        //             Page: 1,
+        //             Limit: this.PageStore.PageSize,
+        //             ...body,
+        //         }
+        //     }
+        // });
     }
     mounted() {
         this.onSubmit();

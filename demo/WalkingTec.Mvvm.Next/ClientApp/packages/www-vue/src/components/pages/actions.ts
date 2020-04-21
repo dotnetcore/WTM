@@ -4,7 +4,7 @@ import { WrappedFormUtils } from "ant-design-vue/types/form/form";
 import lodash from "lodash";
 import { toJS } from "mobx";
 import { Observable, Subject } from "rxjs";
-import { Component, Prop, Vue,Provide } from "vue-property-decorator";
+import { Component, Prop, Vue, Provide } from "vue-property-decorator";
 import ImportUpload from "../upload/import.vue";
 import { messages } from "./messages";
 @Component({ components: {} })
@@ -248,13 +248,10 @@ export class ViewAction extends Vue {
    * 重置 搜索
    */
   onSearch() {
-    this.PageStoreContext.EventSubject.next({
-      EventType: "onSearch",
-      AjaxRequest: {
-        body: {
-          ...toJS(this.PageStoreContext.SearchParams),
-          Page: 1
-        }
+    this.PageStoreContext.onSearch({
+      body: {
+        ...toJS(this.PageStoreContext.SearchParams),
+        Page: 1
       }
     });
   }

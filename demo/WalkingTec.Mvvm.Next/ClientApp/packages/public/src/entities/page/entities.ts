@@ -33,13 +33,13 @@ export default class EntitiesPage {
      * 事件发布
      * @memberof EntitiesPage
      */
-    EventSubject = new Subject<EntitiesPageEventSubject>();
-    /**
-     * 事件订阅
-     * @type {Subscription}
-     * @memberof EntitiesPage
-     */
-    Subscription: Subscription | undefined;
+    // EventSubject = new Subject<EntitiesPageEventSubject>();
+    // /**
+    //  * 事件订阅
+    //  * @type {Subscription}
+    //  * @memberof EntitiesPage
+    //  */
+    // Subscription: Subscription | undefined;
     /**
      * 每页条数
      * @memberof EntitiesPage
