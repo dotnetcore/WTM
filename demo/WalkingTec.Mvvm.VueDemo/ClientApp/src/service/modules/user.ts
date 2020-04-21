@@ -11,7 +11,13 @@ const loginLogout = {
   method: "get"
 };
 
+const ChangePassword = {
+  url: reqPath + "ChangePassword",
+  method: "post"
+};
+
 export default {
   loginCheckLogin,
-  loginLogout
+  loginLogout,
+  ChangePassword
 };
