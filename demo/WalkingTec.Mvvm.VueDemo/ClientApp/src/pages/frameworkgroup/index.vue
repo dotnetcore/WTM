@@ -33,7 +33,7 @@ export default class Index extends Vue {
     get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "80px",
+                "label-width": "100px",
                 inline: true
             },
             formItem: {
