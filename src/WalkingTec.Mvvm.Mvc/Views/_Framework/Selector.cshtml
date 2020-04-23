@@ -5,7 +5,7 @@
     var tempvar = $"var_{Guid.NewGuid().ToNoSplitString()}";
 }
 
-<script>
+  <script>
     function submitSelect() {
         var res = []
             ,multiSel = @(ViewBag.MultiSel.ToString().ToLower())
@@ -18,7 +18,7 @@
         }
         if (selected.length > 0) {
             if (!multiSel && selected.length > 1) {
-                layui.layer.msg('最多只能选择一行');
+                layui.layer.msg('@WalkingTec.Mvvm.Core.Program._localizer["SelectOneRowMax"]');
                 return;
             }
             for (var i = 0; i < selected.length; i++) {
@@ -90,13 +90,13 @@
         }
         wtVar_@(Model.UniqueId).config.where.Ids = ids;
     }
-</script>
+  </script>
 
 <wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv'>
     <div style="height:10px">&nbsp;</div>
     $$SearchPanel$$
     <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" />
     <wt:row align="AlignEnum.Right">
-        <wt:button click="submitSelect();" text="确定" size="ButtonSizeEnum.Normal" />
+        <wt:button click="submitSelect();" text="@WalkingTec.Mvvm.Core.Program._localizer["OK"]" size="ButtonSizeEnum.Normal" />
     </wt:row>
 </wt:container>

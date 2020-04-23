@@ -31,7 +31,7 @@ Layout = null;
 
         <wt:form vm="@Model" url="/_CodeGen/Gen" label-width="150" class="donotuse_pdiv donotuse_fill" old-post="true">
           <wt:quote>
-            请进行字段配置<br />
+            @WalkingTec.Mvvm.Core.Program._localizer["Codegen.setup"]<br />
           </wt:quote>
           <wt:hidden field="SelectedModel" />
           <wt:hidden field="Area" />
@@ -42,7 +42,7 @@ Layout = null;
           <wt:hidden field="AuthMode" />
           <wt:grid vm="FieldList" use-local-data="true" hidden-checkbox="true" hidden-panel="true" />
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="确定生成代码" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.Program._localizer["Continue"]" />
             <wt:closebutton />
           </wt:row>
         </wt:form>
