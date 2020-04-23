@@ -10,6 +10,7 @@ using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -568,6 +569,27 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        private void LocalizeMenu(List<Menu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                LocalizeMenu(menu.Children);
+                if (Localizer[menu.Title].ResourceNotFound == true)
+                {
+                    menu.Title = Core.Program._localizer[menu.Title];
+                }
+                else
+                {
+                    menu.Title = Localizer[menu.Title];
+                }
+            }
+        }
+
         /// <summary>
         /// genreate menu
         /// </summary>
@@ -629,6 +651,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -640,6 +663,7 @@ namespace WalkingTec.Mvvm.Mvc
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -819,6 +843,18 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.UEditorOptions == null)
                 throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
             return Json(ConfigInfo.UEditorOptions);
+        }
+
+        [Public]
+        public IActionResult SetLanguage(string culture)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return FFResult().AddCustomScript("location.reload();");
         }
     }
 
