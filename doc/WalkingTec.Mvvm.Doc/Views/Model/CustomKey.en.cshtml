@@ -1,0 +1,42 @@
+<wt:fieldset field-set-style="Simple" title="Custom primary key">
+  <p>Since V2.3.5, the framework supports user-defined primary key categories. In addition to the guid, it also supports auto increment int, long, and string types.</p>
+  <p>The code generator of the framework can accurately identify the primary key type in the model and generate the corresponding code.</p>
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Key]
+    [Column("testid")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public new int ID { get; set; }
+
+    // 。。。。 其他属性
+}
+    </wt:code>
+</wt:fieldset>
+<wt:quote>
+  <p>The above code demonstrates how to use of ‘new’ to override the ID attribute, defined in the base class to form an auto increment primary key of type int and change the name of the primary key by setting [Column (‘XXX’)]</p>
+</wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="String type primary key">
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Key]
+    public new string ID { get; set; }
+
+    // 。。。。 其他属性
+}
+    </wt:code>
+</wt:fieldset>
+<wt:quote>
+
+  <p>The above code demonstrates a String type primary key, String type primary key can not be auto-increment , So you need to set manually when adding.</p>
+</wt:quote>
+
+<p>
+  Customize primary key is mainly used to develop the existing database. We can use other functions of the framework as long as we match the attributes in the model with the existing database.
+</p>
+
+  <script>
+    layui.use('code', function () { layui.code({ about: false }) })
+  </script>
