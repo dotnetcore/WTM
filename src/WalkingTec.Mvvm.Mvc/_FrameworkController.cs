@@ -256,9 +256,9 @@ namespace WalkingTec.Mvvm.Mvc
                 log.ActionUrl = ex.Path;
                 log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
                 log.Remark = ex.Error.ToString();
-                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
                 {
-                    log.Remark = log.Remark.Substring(0, 1000);
+                    log.Remark = log.Remark.Substring(0, 2000);
                 }
                 DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
                 if (starttime != null)
