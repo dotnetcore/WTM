@@ -228,6 +228,9 @@
   <data name="CodeGenSuccess" xml:space="preserve">
     <value>生成成功！请关闭调试重新编译运行</value>
   </data>
+  <data name="ColumnFilter" xml:space="preserve">
+    <value>筛选列</value>
+  </data>
   <data name="ComboBox" xml:space="preserve">
     <value>下拉菜单</value>
   </data>
@@ -677,6 +680,9 @@
   </data>
   <data name="Preview" xml:space="preserve">
     <value>预览</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>打印</value>
   </data>
   <data name="Privileges" xml:space="preserve">
     <value>权限</value>

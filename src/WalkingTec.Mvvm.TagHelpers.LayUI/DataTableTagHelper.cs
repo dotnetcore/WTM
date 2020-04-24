@@ -532,6 +532,8 @@ layui.use(['table'], function(){{
       var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
       {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
       {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
+       tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{Program._localizer["ColumnFilter"]}');
+       tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{Program._localizer["Print"]}');
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
