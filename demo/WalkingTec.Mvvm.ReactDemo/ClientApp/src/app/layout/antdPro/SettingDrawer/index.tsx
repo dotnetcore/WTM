@@ -52,7 +52,7 @@ export interface Settings {
    * ag-theme-balham
    * ag-theme-material
    */
-  agGridTheme?: "ag-theme-balham" | "ag-theme-material";
+  agGridTheme?: "ag-theme-balham" | "ag-theme-material" | 'ag-theme-alpine';
   /**
    *页签 页面
    *
