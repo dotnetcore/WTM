@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.VueDemo
 {
@@ -21,7 +22,14 @@ namespace WalkingTec.Mvvm.VueDemo
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
+                         .ConfigureLogging((hostingContext, logging) =>
+                         {
+                             logging.ClearProviders();
+                             logging.AddConsole();
+                             logging.AddDebug();
+                             logging.AddWTMLogger();
+                         })
+               .ConfigureServices(x =>
                 {
                     var pris = new List<IDataPrivilege>
                         {
