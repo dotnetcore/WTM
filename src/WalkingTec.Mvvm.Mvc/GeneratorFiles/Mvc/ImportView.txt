@@ -6,7 +6,7 @@
     </wt:row>
     <wt:upload field="UploadFileId" label-text="@Model.Localizer["UploadTemplate"]" upload-type="ExcelFile" />
     <wt:grid vm="ErrorListVM" use-local-data="true" hidden-checkbox="true" hidden-grid-index="true" hidden-panel="true"  height="300"/>
-    <wt:row align=" AlignEnum.Right">
+    <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />
     </wt:row>
