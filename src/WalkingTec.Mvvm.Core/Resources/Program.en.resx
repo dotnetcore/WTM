@@ -228,6 +228,9 @@
   <data name="CodeGenSuccess" xml:space="preserve">
     <value>Code has been generated, please close the debug and rebuild the solution.</value>
   </data>
+  <data name="ColumnFilter" xml:space="preserve">
+    <value>Filters</value>
+  </data>
   <data name="ComboBox" xml:space="preserve">
     <value>ComboBox</value>
   </data>
@@ -680,6 +683,9 @@
   </data>
   <data name="Preview" xml:space="preserve">
     <value>Preview</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
   </data>
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>
