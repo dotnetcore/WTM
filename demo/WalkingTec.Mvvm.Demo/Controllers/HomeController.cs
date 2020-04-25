@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [AllRights]
-        [ActionDescription("首页")]
+        [ActionDescription("FrontPage")]
         public IActionResult FrontPage()
         {
             var areas = GlobaInfo.AllModule.Select(x => x.Area).Distinct();
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             var series = new List<object>();
             foreach (var area in areas)
             {
-                var legendName = area?.AreaName ?? "默认";
+                var legendName = area?.AreaName ?? "Default";
                 var controllers = GlobaInfo.AllModule.Where(x => x.Area == area);
                 legend.Add(legendName);
                 series.Add(new
@@ -51,11 +51,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 });
             }
 
-            var otherLegend = new List<string>() { "相关信息" };
+            var otherLegend = new List<string>() { "Info" };
             var otherSeries = new List<object>()
             {
                 new {
-                    name = "相关信息",
+                    name = "Info",
                     type = "bar",
                     data = new int[] {
                         GlobaInfo.AllModels.Count(),
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 return Json(cookieData);
             }
             else
-                return Json("无数据");
+                return Json("No Data");
         }
 
         [AllowAnonymous]

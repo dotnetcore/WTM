@@ -646,7 +646,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 catch (DbUpdateException)
                 {
-                    MSD.AddModelError("", "数据使用中，无法删除");
+                    MSD.AddModelError("", Program._localizer["DeleteFailed"]);
                 }
             }
             //如果是普通的TopBasePoco，则进行物理删除
@@ -673,7 +673,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 catch (DbUpdateException)
                 {
-                    MSD.AddModelError("", "数据使用中，无法删除");
+                    MSD.AddModelError("", Program._localizer["DeleteFailed"]);
                 }
             }
             //如果是普通的TopBasePoco，则进行物理删除
@@ -736,7 +736,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch (Exception e)
             {
-                MSD.AddModelError("", "数据使用中，无法删除");
+                MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }
         }
 
@@ -791,7 +791,7 @@ namespace WalkingTec.Mvvm.Core
             }
             catch (Exception e)
             {
-                MSD.AddModelError("", "数据使用中，无法删除");
+                MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }
         }
 
@@ -924,12 +924,12 @@ namespace WalkingTec.Mvvm.Core
                         //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
                         if (props.Count == 1)
                         {
-                            MSD.AddModelError(GetValidationFieldName(props[0])[0], AllName + "字段重复");
+                            MSD.AddModelError(GetValidationFieldName(props[0])[0], Program._localizer["DuplicateError", AllName]);
                         }
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                             MSD.AddModelError(GetValidationFieldName(props.First())[0], AllName + "字段组合重复");
+                             MSD.AddModelError(GetValidationFieldName(props.First())[0], Program._localizer["DuplicateGroupError", AllName]);
                         }
                     }
                 }

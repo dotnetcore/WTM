@@ -141,6 +141,9 @@
   <data name="ChangePassword" xml:space="preserve">
     <value>修改密码</value>
   </data>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>密码修改成功，下次请使用新密码登录。</value>
+  </data>
   <data name="CheckExport" xml:space="preserve">
     <value>勾选导出</value>
   </data>
@@ -183,6 +186,30 @@
   <data name="Import" xml:space="preserve">
     <value>导入</value>
   </data>
+  <data name="Login.InputPassword" xml:space="preserve">
+    <value>请输入密码</value>
+  </data>
+  <data name="Login.InputUserName" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="Login.InputValidation" xml:space="preserve">
+    <value>请输入验证码</value>
+  </data>
+  <data name="Login.Login" xml:space="preserve">
+    <value>登 录</value>
+  </data>
+  <data name="Login.Register" xml:space="preserve">
+    <value>注 册</value>
+  </data>
+  <data name="Login.RememberMe" xml:space="preserve">
+    <value>记住我</value>
+  </data>
+  <data name="Login.ValidationFail" xml:space="preserve">
+    <value>验证码不正确</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>登陆失败</value>
+  </data>
   <data name="LogOut" xml:space="preserve">
     <value>退出</value>
   </data>
@@ -203,6 +230,15 @@
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>刷新</value>
+  </data>
+  <data name="Reg.ItcodeDuplicate" xml:space="preserve">
+    <value>账号重复</value>
+  </data>
+  <data name="Reg.Success" xml:space="preserve">
+    <value>注册成功</value>
+  </data>
+  <data name="Reg.Title" xml:space="preserve">
+    <value>新用户注册</value>
   </data>
   <data name="UploadTemplate" xml:space="preserve">
     <value>上传模板</value>

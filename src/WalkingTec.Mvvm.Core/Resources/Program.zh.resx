@@ -138,6 +138,9 @@
   <data name="Admin" xml:space="preserve">
     <value>超级管理员</value>
   </data>
+  <data name="Alert" xml:space="preserve">
+    <value>警告</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>全部</value>
   </data>
@@ -290,6 +293,9 @@
   </data>
   <data name="DeleteConfirm" xml:space="preserve">
     <value>确定要删除这条数据么：</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>数据使用中，无法删除</value>
   </data>
   <data name="Details" xml:space="preserve">
     <value>详细</value>
@@ -467,6 +473,9 @@
   </data>
   <data name="ImportSuccess" xml:space="preserve">
     <value>成功导入{0}行数据</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>信息</value>
   </data>
   <data name="Inside" xml:space="preserve">
     <value>内部</value>

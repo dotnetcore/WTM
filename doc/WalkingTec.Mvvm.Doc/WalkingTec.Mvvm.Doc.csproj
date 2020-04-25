@@ -11,8 +11,8 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Mvc\home\FrontPage2.txt" />
     <None Remove="SetupFiles\Mvc\home\Reg.txt" />
-    <None Remove="SetupFiles\Mvc\LoginController3.txt" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
     <None Remove="SetupFiles\Spa\React\Program3.txt" />
     <None Remove="SetupFiles\Spa\Vue\ClientApp.zip" />
@@ -32,6 +32,7 @@
     <EmbeddedResource Include="SetupFiles\Mvc\Dockerfile.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage2.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
@@ -43,7 +44,6 @@
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\LoginController3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\ViewStart.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />

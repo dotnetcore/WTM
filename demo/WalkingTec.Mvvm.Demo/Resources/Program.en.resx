@@ -141,6 +141,9 @@
   <data name="ChangePassword" xml:space="preserve">
     <value>Change my password</value>
   </data>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>The password has been modified successfully. Please log in with the new password next time.</value>
+  </data>
   <data name="CheckExport" xml:space="preserve">
     <value>Check export</value>
   </data>
@@ -183,14 +186,38 @@
   <data name="Import" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="Login.InputPassword" xml:space="preserve">
+    <value>Please input password</value>
+  </data>
+  <data name="Login.InputUserName" xml:space="preserve">
+    <value>Please input user name</value>
+  </data>
+  <data name="Login.InputValidation" xml:space="preserve">
+    <value>Validation code</value>
+  </data>
+  <data name="Login.Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Login.Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Login.RememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="Login.ValidationFail" xml:space="preserve">
+    <value>Incorrect verification code</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
   <data name="LogOut" xml:space="preserve">
     <value>LogOut</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
-    <value>New</value>
+    <value>New passwrod</value>
   </data>
   <data name="NewPasswordComfirm" xml:space="preserve">
-    <value>New again</value>
+    <value>Passwrod again</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Current</value>
@@ -203,6 +230,15 @@
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="Reg.ItcodeDuplicate" xml:space="preserve">
+    <value>Account is duplicated</value>
+  </data>
+  <data name="Reg.Success" xml:space="preserve">
+    <value>Registered successfully</value>
+  </data>
+  <data name="Reg.Title" xml:space="preserve">
+    <value>New user registration</value>
   </data>
   <data name="UploadTemplate" xml:space="preserve">
     <value>Template</value>
