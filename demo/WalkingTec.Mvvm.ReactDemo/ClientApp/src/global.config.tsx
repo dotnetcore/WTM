@@ -88,7 +88,7 @@ class ConfigStore {
         * ag-theme-balham
         * ag-theme-material
         */
-        agGridTheme: "ag-theme-material",
+        agGridTheme: "ag-theme-alpine",
         /**
          * 页签 页面
          */
