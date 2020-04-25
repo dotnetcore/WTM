@@ -138,6 +138,9 @@
   <data name="Admin" xml:space="preserve">
     <value>Admin</value>
   </data>
+  <data name="Alert" xml:space="preserve">
+    <value>Alert</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
@@ -290,6 +293,9 @@
   </data>
   <data name="DeleteConfirm" xml:space="preserve">
     <value>Are you sure to delete this data</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>Data is in use, delete failed.</value>
   </data>
   <data name="Details" xml:space="preserve">
     <value>Details</value>
@@ -470,6 +476,9 @@
   </data>
   <data name="ImportSuccess" xml:space="preserve">
     <value>{0} rows have been imported</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
   </data>
   <data name="Inside" xml:space="preserve">
     <value>Inside</value>

@@ -24,7 +24,6 @@ namespace $ns$.Test
         public void PIndexTest()
         {
             ViewResult rv = (ViewResult)_controller.PIndex();
-            //测试是否正确返回
             Assert.IsNotNull(rv);
         }
 
@@ -32,7 +31,6 @@ namespace $ns$.Test
         public void FrontPageTest()
         {
             PartialViewResult rv = (PartialViewResult)_controller.FrontPage();
-            //测试是否正确返回
             Assert.IsNotNull(rv);
         }
     }
