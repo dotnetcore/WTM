@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("MenuMangement")]
     [ApiController]
-    [Route("api/_[controller]")]
-    public class FrameworkMenuController : BaseApiController
+    [Route("api/[controller]")]
+    public class _FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
