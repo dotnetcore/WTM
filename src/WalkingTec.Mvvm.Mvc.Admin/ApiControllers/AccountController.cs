@@ -28,12 +28,12 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     [Route("api/_login")]
     [ActionDescription("Login")]
-    public class AccountController : BaseApiController
+    public class _AccountController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ITokenService _authService;
-        public AccountController(
-            ILogger<AccountController> logger,
+        public _AccountController(
+            ILogger<_AccountController> logger,
             ITokenService authService)
         {
             _logger = logger;

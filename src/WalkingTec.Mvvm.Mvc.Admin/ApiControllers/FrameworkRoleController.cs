@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("RoleManagement")]
     [ApiController]
-    [Route("api/_[controller]")]
-    public class FrameworkRoleController : BaseApiController
+    [Route("api/[controller]")]
+    public class _FrameworkRoleController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]

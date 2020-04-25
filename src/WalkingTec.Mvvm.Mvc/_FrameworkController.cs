@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Mvc
             //var vmType = Type.GetType(_DONOT_USE_VMNAME);
             //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
             //var listVM = vmCreater.Invoke(null) as BaseVM;
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -189,7 +189,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
@@ -285,7 +285,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadFileRoute")]
         public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -311,7 +311,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return Upload(sm, groupName, IsTemprory, _DONOT_USE_CS);
             }
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -352,7 +352,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
             var vm = CreateVM<FileAttachmentVM>();
@@ -374,7 +374,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             return Ok(vm.Entity.FileName);
         }
@@ -382,7 +382,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             if (id == Guid.Empty)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
@@ -443,7 +443,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
         {
-            CurrentCS = _DONOT_USE_CS ?? "default";
+            CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default":_DONOT_USE_CS;
             string html = string.Empty;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             if (vm.Entity.FileExt.ToLower() == "pdf")
