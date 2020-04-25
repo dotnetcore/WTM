@@ -6,7 +6,7 @@ namespace WalkingTec.Mvvm.Core
     public enum ColumnFormatTypeEnum
     {
         Dialog,//弹出窗口
-        Redirect,//转向
+        Button,//按钮
         Download,//下载
         ViewPic,//查看图片
         Script,//脚本
@@ -76,6 +76,18 @@ namespace WalkingTec.Mvvm.Core
         Button,
         Link
     };
+
+    /// <summary>
+    /// 按钮
+    /// </summary>
+    public enum RedirectTypesEnum
+    {
+        Layer,
+        Self,
+        NewWindow,
+        NewTab,
+    };
+
 
     /// <summary>
     /// 按钮类型
@@ -169,7 +181,7 @@ namespace WalkingTec.Mvvm.Core
     }
 
     public enum UIEnum
-    { LayUI, React }
+    { LayUI, React, VUE }
 
     public enum NoRightEnum
     {

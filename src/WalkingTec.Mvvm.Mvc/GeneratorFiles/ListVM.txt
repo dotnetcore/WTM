@@ -17,14 +17,14 @@ namespace $vmnamespace$
         {
             return new List<GridAction>
             {
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Create, "新建","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Edit, "修改","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Delete, "删除", "$area$",dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Details, "详细","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchEdit, "批量修改","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchDelete, "批量删除","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Import, "导入","$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.ExportExcel, "导出","$area$"),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Create, Localizer["Create"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Edit, Localizer["Edit"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Delete, Localizer["Delete"], "$area$",dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Details, Localizer["Details"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchEdit, Localizer["BatchEdit"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchDelete, Localizer["BatchDelete"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Import, Localizer["Import"],"$area$", dialogWidth: 800),
+                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.ExportExcel, Localizer["Export"],"$area$"),
             };
         }
 

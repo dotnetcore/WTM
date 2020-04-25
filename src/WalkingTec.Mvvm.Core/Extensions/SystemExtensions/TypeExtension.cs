@@ -173,8 +173,12 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         int end = 100;
                         if (range != null)
                         {
-                            start = (int)Math.Truncate(double.Parse(range.Minimum.ToString()));
-                            end = (int)Math.Truncate(double.Parse(range.Maximum.ToString()));
+                            try
+                            {
+                                start = (int)Math.Truncate(double.Parse(range.Minimum.ToString()));
+                                end = (int)Math.Truncate(double.Parse(range.Maximum.ToString()));
+                            }
+                            catch { }
                         }
                         Random r = new Random();
                         val = r.Next(start,end).ToString();

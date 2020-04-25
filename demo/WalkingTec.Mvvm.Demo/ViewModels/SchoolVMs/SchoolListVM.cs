@@ -9,13 +9,32 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 {
     public class SchoolListVM : BasePagedListVM<School_View, SchoolSearcher>
     {
+
+        public SchoolListVM()
+        {
+            NeedPage = false;
+        }
+
+        public override string SetFullRowBgColor(object entity)
+        {
+            var t = entity as School_View;
+            if (t.SchoolType == SchoolTypeEnum.PRI)
+            {
+                return "FF0000";
+            }
+            else
+            {
+                return base.SetFullRowBgColor(entity);
+            }
+        }
+
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
             {
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false),
-                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除","", dialogWidth: 800),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetHideOnToolBar(false).SetPromptMessage("你确定要修改么？").SetButtonClass("layui-btn-normal"),
+                this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除","", dialogWidth: 800).SetPromptMessage("你确定要删除么？").SetButtonClass("layui-btn-danger"),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeAction("School","EditIndex","列表编辑","列表编辑", GridActionParameterTypesEnum.NoId,dialogWidth:800).SetShowDialog(false).SetIsRedirect
                 (true),
@@ -23,6 +42,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeAction("School","Edit2","主子表修改","主子表修改", GridActionParameterTypesEnum.SingleId,dialogWidth:800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
                 this.MakeStandardAction("School", GridActionStandardTypesEnum.ExportExcel, "导出",""),
+                this.MakeAction("School","Download","下载",null, GridActionParameterTypesEnum.SingleId).SetOnClickScript("download"),
                 this.MakeActionsGroup("批量处理",new List<GridAction>(){
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
                       this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),

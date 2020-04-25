@@ -13,6 +13,10 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
             /// 默认列表行数
             /// </summary>
             public int RPP { get; set; }
+
+            public bool ShowPrint { get; set; }
+
+            public bool ShowFilter { get; set; }
         }
 
         public class ComboBoxOptions

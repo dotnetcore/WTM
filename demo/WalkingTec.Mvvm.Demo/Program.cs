@@ -12,6 +12,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -41,12 +42,20 @@ namespace WalkingTec.Mvvm.Demo
 
             return
                 WebHost.CreateDefaultBuilder(args)
-                    .ConfigureServices((hostingCtx, x) =>
-                    {
+                        .ConfigureLogging((hostingContext, logging) =>
+                        {
+                            logging.ClearProviders();
+                            logging.AddConsole();
+                            logging.AddDebug();
+                            logging.AddWTMLogger();
+                        })
+                        .ConfigureServices((hostingCtx, x) =>
+                        {
                         var pris = new List<IDataPrivilege>
                         {
-                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
-                            new DataPrivilegeInfo<Major>("专业", y => y.MajorName)
+                            //new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
+                            //new DataPrivilegeInfo<Major>("专业", y => y.MajorName),
+                            //new DataPrivilegeInfo<FrameworkMenu>("菜单", y=>y.PageName)
                         };
                         x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx,CsSector:CSSelector);
                         x.AddLayui();
@@ -69,14 +78,14 @@ namespace WalkingTec.Mvvm.Demo
                     .Configure(x =>
                     {
                         var configs = x.ApplicationServices.GetRequiredService<Configs>();
-                        if (configs.IsQuickDebug == true)
-                        {
+                        //if (configs.IsQuickDebug == true)
+                        //{
                             x.UseSwagger();
                             x.UseSwaggerUI(c =>
                             {
                                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                             });
-                        }
+                        //}
                         x.UseFrameworkService();
                     })
                     .UseUrls(globalConfig.ApplicationUrl);
@@ -100,6 +109,14 @@ namespace WalkingTec.Mvvm.Demo
                     return "default";
                 }
             }
+        }
+    }
+
+    public static class ConfigInfoExtension
+    {
+        public static string Key1(this Configs self)
+        {
+            return self.AppSettings["Key1"];
         }
     }
 }

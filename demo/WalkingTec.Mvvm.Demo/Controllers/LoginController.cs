@@ -9,6 +9,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -25,6 +26,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.ITCode = "admin";
                 vm.Password = "000000";
             }
+            DoLog("LogTest");
             return View(vm);
         }
 
@@ -77,6 +79,36 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 return Redirect(HttpUtility.UrlDecode(url));
             }
         }
+
+        [Public]
+        public IActionResult Reg()
+        {
+            var vm = CreateVM<RegVM>();
+            return PartialView(vm);
+        }
+
+        [Public]
+        [HttpPost]
+        public IActionResult Reg(RegVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView(vm);
+            }
+            else
+            {
+                var rv = vm.DoReg();
+                if (rv == true)
+                {
+                    return FFResult().CloseDialog().Alert("注册成功");
+                }
+                else
+                {
+                    return PartialView(vm);
+                }
+            }
+        }
+
 
         [AllRights]
         [ActionDescription("登出")]

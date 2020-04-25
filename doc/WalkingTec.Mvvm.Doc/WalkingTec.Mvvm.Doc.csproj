@@ -11,8 +11,15 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Mvc\home\Reg.txt" />
     <None Remove="SetupFiles\Mvc\LoginController3.txt" />
+    <None Remove="SetupFiles\Spa\React\Program.txt" />
+    <None Remove="SetupFiles\Spa\React\Program3.txt" />
+    <None Remove="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <None Remove="SetupFiles\Spa\Vue\Program.txt" />
+    <None Remove="SetupFiles\Spa\Vue\Program3.txt" />
     <None Remove="SetupFiles\test\MockController3.txt" />
+    <None Remove="SetupFiles\vms\LoginVM.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +35,7 @@
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\Reg.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Login.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\PIndex.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Layout.txt" />
@@ -45,10 +53,12 @@
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program3.txt" />
-    <EmbeddedResource Include="SetupFiles\Spa\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />
-    <EmbeddedResource Include="SetupFiles\Spa\React\Proj.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\React\Program3.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program.txt" />
+    <EmbeddedResource Include="SetupFiles\Spa\Vue\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj.txt" />
     <EmbeddedResource Include="SetupFiles\TestProj3.txt" />
     <EmbeddedResource Include="SetupFiles\test\HomeControllerTest.txt" />
@@ -57,8 +67,8 @@
     <EmbeddedResource Include="SetupFiles\test\MockController.txt" />
     <EmbeddedResource Include="SetupFiles\test\MockHttpSession.txt" />
     <EmbeddedResource Include="SetupFiles\vms\ChangePasswordVM.txt" />
-    <EmbeddedResource Include="SetupFiles\vms\IndexVM.txt" />
     <EmbeddedResource Include="SetupFiles\vms\LoginVM.txt" />
+    <EmbeddedResource Include="SetupFiles\vms\RegVM.txt" />
   </ItemGroup>
 
   <ItemGroup>

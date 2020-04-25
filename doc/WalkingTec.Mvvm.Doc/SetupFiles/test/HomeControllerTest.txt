@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,6 @@ namespace $ns$.Test
         {
             _seed = Guid.NewGuid().ToString();
             _controller = MockController.CreateController<HomeController>(_seed, "user");
-        }
-
-        [TestMethod]
-        public void IndexTest()
-        {
-            ViewResult rv = (ViewResult)_controller.Index();
-            //测试是否正确IndexVM
-            Assert.IsInstanceOfType(rv.Model, typeof(IndexVM));
         }
 
         [TestMethod]

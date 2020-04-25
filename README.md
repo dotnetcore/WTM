@@ -1,6 +1,6 @@
 # WalkingTec.Mvvm for aspnet core
 
-WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework, 当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。 2017年9月，我们将代码移植到了.Net Core上，并进行了深度优化和重构，推出了基于Asp.net Core和EF Core的全新框架，新框架在架构，稳定性，速度上都有长足进步，真正成为一款高效开发的利器。
+WalkingTec.Mvvm框架（简称WTM）是基于.net core的快速开发框架。支持Layui(前后端不分离), React(前后端分离),VUE(前后端分离)，内置代码生成器，最大程度的提高开发效率，是一款高效开发的利器。
 
 [![Coverage Status](https://coveralls.io/repos/github/dotnetcore/WTM/badge.svg?branch=master)](https://coveralls.io/github/dotnetcore/WTM?branch=master)
 [![Member project of .NET Core Community](https://img.shields.io/badge/member%20project%20of-NCC-9e20c9.svg)](https://github.com/dotnetcore)
@@ -13,7 +13,7 @@ WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 
 | Platform | Build Server | SDK | Master Status  | Develop Status  |
 | -------- | ------------ | ---- |---------|---------|
 | Azure Pipelines |  Windows/Linux/OSX |  v2.2.300 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=12&branchName=develop) |
-| Azure Pipelines |  Windows/Linux/OSX |  v3.0.100-preview8-013656 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.0?branchName=master)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=18&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.0?branchName=develop)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=18&branchName=develop) |
+| Azure Pipelines |  Windows/Linux/OSX |  v3.1.101 | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=master) | [![Build Status](https://dev.azure.com/vitowu/WTM/_apis/build/status/WTM-CI-sdk_v3.1?branchName=feature/dotnet3)](https://dev.azure.com/vitowu/WTM/_build/latest?definitionId=28&branchName=feature/dotnet3) |
 | AppVeyor |  Windows/Linux |  v2.2.300 | - | - |
 | Travis   | Linux/OSX |  v2.2.300 | - | - |
 
@@ -50,23 +50,27 @@ Package name                              | Version                     | Downlo
 | 模式 | UI | 状态  |
 |--------- |------------- |---------|
 |不分离 |LayUI |稳定|
-|前后端分离 |React |RTM|
-|前后端分离 |VUE |开发中|
+|前后端分离 |React |稳定|
+|前后端分离 |VUE |RTM|
 
 WTM框架的前后端分离模式同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
 
 
 
-![WTM框架微信公众号](https://mmbiz.qpic.cn/mmbiz_jpg/L66Un3Tp12ria8hmdkjlfYQdOjA9dusW5xOOlS26GZTfk9Hs2uzHiaMXG4df96849seoGFiatGrqODTWPr7SsOqoA/0?wx_fmt=jpeg)
+![WTM框架微信公众号](./doc/WalkingTec.Mvvm.Doc/wwwroot/imgs/gongzhonghao.jpg)
 
 关注WTM微信公众号，及时了解框架更新，公众号还会定期发布视频教程
 
-框架文档地址：http://wtmdoc.walkingtec.cn  文档还在不断完善中。。。
+框架文档地址：http://wtmdoc.walkingtec.cn
+
+框架问答社区：https://community.walkingtec.cn
+
 框架QQ交流群：694148336
 
 您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
 
-
+****
+目前我们是一个7人团队在维护这个项目，诚征各路C#，React，VUE高手加入！有意者可以进QQ群加群主详聊。
 ****
 
 
@@ -74,5 +78,5 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
 
-<img src="https://wtmdoc.walkingtec.cn/imgs/zanshang.jpg"  >
+<img src="./doc/WalkingTec.Mvvm.Doc/wwwroot/imgs/WTM-Ali.png"  height="300" width="300">
 

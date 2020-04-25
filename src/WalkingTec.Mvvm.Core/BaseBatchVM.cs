@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     /// <typeparam name="TModel">批量修改的VM</typeparam>
     /// <typeparam name="TLinkModel">批量列表VM</typeparam>
-    public class BaseBatchVM<TModel, TLinkModel> : BaseVM, IBaseBatchVM<TLinkModel> where TModel : TopBasePoco where TLinkModel : BaseVM
+    public class BaseBatchVM<TModel, TLinkModel> : BaseVM, IBaseBatchVM<TLinkModel> where TModel : TopBasePoco,new() where TLinkModel : BaseVM
     {
         /// <summary>
         /// 批量修改的VM
@@ -229,11 +229,10 @@ namespace WalkingTec.Mvvm.Core
                         var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
                         if (proToSet != null && val != null)
                         {
-                            var hasvalue = false;
-                            if (val is StringValues sv && StringValues.IsNullOrEmpty(sv) == false)
+                            var hasvalue = true;
+                            if ( val is StringValues sv && StringValues.IsNullOrEmpty(sv) == true)
                             {
-                                hasvalue = true;
-
+                                hasvalue = false;
                             }
                             if (hasvalue)
                             {
