@@ -96,7 +96,7 @@ namespace $ns$.Controllers
                 var rv = vm.DoReg();
                 if (rv == true)
                 {
-                    return FFResult().CloseDialog().Message(Localizer["Reg.Success"]);
+                    return FFResult().CloseDialog().Alert(Localizer["Reg.Success"]);
                 }
                 else
                 {
