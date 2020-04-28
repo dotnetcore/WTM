@@ -603,7 +603,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             DC.UpdateProperty(Entity, name);
                         }
-                        catch (Exception)
+                        catch (Exception ea)
                         {
                         }
                     }
