@@ -14,13 +14,13 @@ namespace WalkingTec.Mvvm.Admin.Test
     [TestClass]
     public class FrameworkUserApiTest
     {
-        private FrameworkUserController _controller;
+        private _FrameworkUserController _controller;
         private string _seed;
 
         public FrameworkUserApiTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateApi<FrameworkUserController>(_seed, "user");
+            _controller = MockController.CreateApi<_FrameworkUserController>(_seed, "user");
         }
 
         [TestMethod]
