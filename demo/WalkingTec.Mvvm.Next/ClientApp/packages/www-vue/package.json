@@ -7,14 +7,15 @@
     "build": "vue-cli-service build --report"
   },
   "dependencies": {
+    "@ant-design/icons": "^2.1.1",
     "ag-grid-vue": "23.0.2",
     "ant-design-vue": "^1.5.3",
     "mobx-vue": "^2.0.10",
     "viser-vue": "^2.4.8",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
-    "vue-i18n": "^8.17.3",
-    "vue-property-decorator": "^8.4.1",
+    "vue-i18n": "^8.17.4",
+    "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.1.6"
   },
   "devDependencies": {
