@@ -1,10 +1,11 @@
 import lodash from 'lodash'
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
+import layout from "./components/layout/index.vue"
+import exception from "./components/other/exception.vue"
+import Globalconfig from './global.config'
 import RootStore from './rootStore'
 import views, { Basics } from './views'
-import exception from "./components/other/exception.vue"
-import Globalconfig from './global.config';
 Vue.use(VueRouter);
 const tabsPage = Globalconfig.settings.tabsPage;
 // // 命名 组件 tabpages 使用
@@ -33,16 +34,39 @@ const pageRoutes: RouteConfig[] = lodash.map(views, (value) => {
 const routes: RouteConfig[] = [
   {
     path: '/',
-    name: "Home",
+    // name: "Home",
     // meta: { pageKey: 'home' },
-    component: Basics.home,
+    component: layout,
+    children: [
+      { path: '/', component: Basics.home, },
+      ...pageRoutes,
+      {
+        path: '*',
+        // redirect: "/"
+        component: exception,
+        // components
+      }
+    ]
     // components
   },
+  // {
+  //   path: '/',
+  //   name: "Home",
+  //   // meta: { pageKey: 'home' },
+  //   component: Basics.home,
+  //   // components
+  // },
   {
     path: '/external/:url',
     name: "external",
     // meta: { pageKey: 'external' },
     component: Basics.external,
+    // components
+  },
+  {
+    path: '*',
+    // redirect: "/"
+    component: exception,
     // components
   }
 ]
@@ -50,9 +74,8 @@ const routes: RouteConfig[] = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes: routes
 });
-
 router.beforeEach((to, from, next) => {
   console.log("TCL: from " + from);
   // console.log("TCL: to", to);
@@ -74,19 +97,11 @@ router.beforeEach((to, from, next) => {
 //   })
 // })
 // 登陆成功 注册路由
-RootStore.UserStore.UserObservable.subscribe((entitie) => {
-  if ((!entitie.Loading) && entitie.OnlineState) {
-    router.addRoutes([
-      ...pageRoutes,
-      {
-        path: '*',
-        // redirect: "/"
-        component: exception,
-        // components
-      }
-    ]);
-    console.table(pageRoutes, ['path', 'name'])
-  }
-});
+// RootStore.UserStore.UserObservable.subscribe((entitie) => {
+//   if ((!entitie.Loading) && entitie.OnlineState) {
+//     router.addRoutes(routes);
+//     console.table(pageRoutes, ['path', 'name'])
+//   }
+// });
 
 export default router

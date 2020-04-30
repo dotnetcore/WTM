@@ -3,7 +3,6 @@
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
 @import "~ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "~ant-design-vue/es/style/themes/default.less";
-
 .ant-layout-sider-zero-width-trigger {
   top: 10px;
 }
@@ -116,4 +115,21 @@
 
 ::-webkit-scrollbar-corner {
   background-color: #fafafa;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+  animation-duration: .5s;
+  animation-iteration-count: 1;
 }
