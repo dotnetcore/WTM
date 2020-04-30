@@ -41,6 +41,13 @@ const routes: RouteConfig[] = [
       { path: '/', component: Basics.home, },
       ...pageRoutes,
       {
+        path: '/external/:url',
+        name: "external",
+        // meta: { pageKey: 'external' },
+        component: Basics.external,
+        // components
+      },
+      {
         path: '*',
         // redirect: "/"
         component: exception,
@@ -56,13 +63,7 @@ const routes: RouteConfig[] = [
   //   component: Basics.home,
   //   // components
   // },
-  {
-    path: '/external/:url',
-    name: "external",
-    // meta: { pageKey: 'external' },
-    component: Basics.external,
-    // components
-  },
+
   {
     path: '*',
     // redirect: "/"
