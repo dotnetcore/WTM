@@ -2,7 +2,7 @@ import client from 'webpack-theme-color-replacer/client';
 import generate from '@ant-design/colors/lib/generate';
 import { message } from 'antd';
 import { getLocalesValue } from 'locale';
-
+let oldColor = "#1890FF"
 export default {
   getAntdSerials(color: string): string[] {
     const lightCount = 9;
@@ -15,12 +15,12 @@ export default {
     return lightens.concat(colorPalettes).concat(rgb);
   },
   async changeColor(color?: string): Promise<void> {
-    if (!color) {
+    if (!color || oldColor === color) {
       return Promise.resolve();
     }
     const options = {
       // new colors array, one-to-one corresponde with `matchColors`
-      oldColors: this.getAntdSerials('#1890FF'),
+      oldColors: this.getAntdSerials(oldColor),
       newColors: this.getAntdSerials(color),
       changeUrl(cssUrl: string = 'static/css/theme-colors.css'): string {
         // while router is not `hash` mode, it needs absolute path
@@ -29,7 +29,8 @@ export default {
     };
     message.loading({ content: getLocalesValue('tips.theme.loading'), key: 'changeColor' });
     const res = await client.changer.changeColor(options, Promise);
-    message.destroy()
+    message.destroy();
+    oldColor = color;
     return;
   },
 };
