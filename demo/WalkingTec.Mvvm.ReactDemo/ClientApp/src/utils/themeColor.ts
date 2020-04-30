@@ -20,9 +20,9 @@ export default {
     }
     const options = {
       // new colors array, one-to-one corresponde with `matchColors`
+      oldColors: this.getAntdSerials('#1890FF'),
       newColors: this.getAntdSerials(color),
       changeUrl(cssUrl: string = 'static/css/theme-colors.css'): string {
-        console.log("changeUrl -> cssUrl", cssUrl)
         // while router is not `hash` mode, it needs absolute path
         return `/${cssUrl}`;
       },
