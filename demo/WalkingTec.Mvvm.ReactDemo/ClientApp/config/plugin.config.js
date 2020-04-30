@@ -40,8 +40,9 @@ const getAntdSerials = (color) => {
   return lightens.concat(colorPalettes).concat(rgb);
 };
 module.exports = new ThemeColorReplacer({
-  fileName: 'css/theme-colors-[contenthash:8].css',
+  fileName: 'static/css/theme-colors.css',
   matchColors: getAntdSerials('#1890ff'), // 主色系列
+  injectCss: true,
   // 改变样式选择器，解决样式覆盖问题(最好能通过修改antd解决)
   changeSelector(selector, util) {
     switch (selector) {
