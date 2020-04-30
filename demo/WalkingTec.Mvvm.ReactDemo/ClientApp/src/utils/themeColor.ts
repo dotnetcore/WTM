@@ -15,6 +15,7 @@ export default {
     return lightens.concat(colorPalettes).concat(rgb);
   },
   async changeColor(color?: string): Promise<void> {
+    console.log("color", oldColor, color)
     if (!color || oldColor === color) {
       return Promise.resolve();
     }
