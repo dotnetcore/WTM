@@ -5,6 +5,7 @@ import ImgUser from 'assets/img/user.png';
 import lodash from 'lodash';
 import { configure, observable, toJS } from 'mobx';
 import { create, persist } from 'mobx-persist';
+import themeColor from 'utils/themeColor';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "./global.less";
@@ -30,6 +31,7 @@ class ConfigStore {
             // post hydration
             .then(() => {
                 console.log('WTM_GlobalConfig', toJS(this));
+                themeColor.changeColor(this.settings.primaryColor);
                 window['g_locale'] = this.language;
             })
     }
@@ -67,6 +69,7 @@ class ConfigStore {
         layout: 'sidemenu',
         // layout 的内容模式,Fluid：定宽 1200px，Fixed：自适应
         contentWidth: 'Fluid',
+        primaryColor: "#1890FF",
         // 是否固定 header 到顶部
         fixedHeader: true,
         // 是否下滑时自动隐藏 header

@@ -5,6 +5,7 @@
 import { Divider, Drawer, Icon, List, Select, Switch, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import BlockCheckbox from './BlockCheckbox';
+import ThemeColor from './ThemeColor';
 import globalConfig from 'global.config';
 import { getLocales } from 'locale';
 import './index.less';
@@ -23,6 +24,10 @@ export interface Settings {
    * layout of content: `Fluid` or `Fixed`, only works when layout is topmenu
    */
   contentWidth: ContentWidth;
+  /**
+   * 主题色
+   */
+  primaryColor: string;
   /**
    * sticky header
    */
@@ -430,12 +435,12 @@ class SettingDrawer extends Component<SettingDrawerProps, SettingDrawerState> {
             />
           </Body>
 
-          {/* <ThemeColor
+          <ThemeColor
             title={formatMessage({ id: 'app.setting.themecolor' })}
             value={primaryColor}
             formatMessage={formatMessage}
             onChange={color => this.changeSetting('primaryColor', color)}
-          /> */}
+          />
 
           <Divider />
 
