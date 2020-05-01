@@ -567,6 +567,9 @@
   <data name="Name" xml:space="preserve">
     <value>姓名</value>
   </data>
+  <data name="NeedLogin" xml:space="preserve">
+    <value>您没有登录或登录已过期，请重新登陆</value>
+  </data>
   <data name="NewPassword" xml:space="preserve">
     <value>新密码</value>
   </data>

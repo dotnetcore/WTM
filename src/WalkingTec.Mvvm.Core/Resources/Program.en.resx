@@ -570,6 +570,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NeedLogin" xml:space="preserve">
+    <value>You havn't logged in or your login is expired, please login again.</value>
+  </data>
   <data name="NewPassword" xml:space="preserve">
     <value>New password</value>
   </data>
