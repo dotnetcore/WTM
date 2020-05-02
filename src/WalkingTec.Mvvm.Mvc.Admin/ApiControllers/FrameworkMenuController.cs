@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("MenuMangement")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class _FrameworkMenuController : BaseApiController
+    [Route("api/_[controller]")]
+    public class FrameworkMenuController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
@@ -173,8 +173,24 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFolders")]
         public ActionResult GetFolders()
         {
-            var m = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
-            return Ok(m);
+            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.PageName);
+            foreach (var p in AllParents)
+            {
+                if (p.Text.StartsWith("MenuKey."))
+                {
+                    if (Localizer[p.Text].ResourceNotFound == true)
+                    {
+                        p.Text = Core.Program._localizer[p.Text];
+                    }
+                    else
+                    {
+                        p.Text = Localizer[p.Text];
+                    }
+
+                }
+            }
+
+            return Ok(AllParents);
         }
 
     }

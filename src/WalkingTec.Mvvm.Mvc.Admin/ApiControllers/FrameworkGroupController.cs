@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("GroupManagement")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class _FrameworkGroupController : BaseApiController
+    [Route("api/_[controller]")]
+    public class FrameworkGroupController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]

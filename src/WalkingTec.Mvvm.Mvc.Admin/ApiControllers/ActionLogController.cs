@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("Log")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class _ActionLogController : BaseApiController
+    [Route("api/_[controller]")]
+    public class ActionLogController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]

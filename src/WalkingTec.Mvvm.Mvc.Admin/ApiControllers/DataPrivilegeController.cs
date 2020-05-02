@@ -15,8 +15,8 @@ namespace WalkingTec.Mvvm.Admin.Api
     [AuthorizeJwtWithCookie]
     [ActionDescription("DataPrivilege")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class _DataPrivilegeController : BaseApiController
+    [Route("api/_[controller]")]
+    public class DataPrivilegeController : BaseApiController
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
