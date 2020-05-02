@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -338,6 +339,9 @@ namespace WalkingTec.Mvvm.Mvc
                         x.BaseAddress = new Uri(item.Value.Url);
                         x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
                         x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
+                    }).ConfigurePrimaryHttpMessageHandler(() =>
+                    {
+                        return new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip, UseProxy = false, UseCookies = false };
                     });
                 }
             }
