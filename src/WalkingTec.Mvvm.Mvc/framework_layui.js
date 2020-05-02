@@ -112,14 +112,24 @@ window.ff = {
     return layui.table.checkStatus(gridId).isAll;
   },
 
-  Alert: function (msg) {
-    var layer = layui.layer;
-    layer.alert(msg);
+  Alert: function (msg,title) {
+      var layer = layui.layer;
+      if (title != undefined) {
+          layer.alert(msg, { title: title });
+      }
+      else {
+          layer.alert(msg);
+      }
   },
 
-  Msg: function (msg) {
+    Msg: function (msg, title) {
     var layer = layui.layer;
-    layer.msg(msg);
+        if (title != undefined) {
+            layer.msg(msg, { title: title });
+        }
+        else {
+            layer.msg(msg);
+        }
   },
 
   LoadPage: function (url, newwindow, title, para) {
