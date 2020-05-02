@@ -120,7 +120,7 @@ ff.RenderForm('{Id}');
 layui.use(['form'],function(){{
   layui.form.on('submit({Id}filter)', function(data){{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
-    ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
+    ff.PostForm('', '{Id}', '{baseVM?.ViewDivId}')
     return false;
   }});
 }})
@@ -133,7 +133,7 @@ layui.use(['form'],function(){{
                 output.PostElement.AppendHtml($@"
 $('#{search.SearchBtnId}').on('click', function () {{
     if({BeforeSubmit ?? "true"} == false){{return false;}}
-    ff.PostForm('{output.Attributes["action"].Value}', '{Id}', '{baseVM?.ViewDivId}')
+    ff.PostForm('', '{Id}', '{baseVM?.ViewDivId}')
     return false;
   }});
 ");
@@ -155,7 +155,7 @@ $('#{search.SearchBtnId}').on('click', function () {{
                             firstkey = key;
                         }
                         output.PostElement.AppendHtml($@"
-$(""#{Id}submiterrorholder"").before(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{error.ErrorMessage}</label></div>"");
+$(""#{Id}"").find(""button[type=submit]:first"").before(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{error.ErrorMessage}</label></div>"");
 ");
                     }
                     if (haserror == true)

@@ -25,19 +25,19 @@
   <div class="layui-layout">
     <div class="layui-body" style="left:0px" id="DONOTUSE_MAINPANEL">
       <div class='donotuse_pdiv'>
-        <wt:form vm="@Model" url="/_CodeGen/SetField" old-post="true">
+        <wt:form vm="@Model" url="/_CodeGen/SetField" old-post="true"  label-width="100">
           <wt:hidden field="EntryDir" />
           <wt:hidden field="UI" />
           <wt:combobox field="SelectedModel" items="AllModels" />
           <wt:textbox field="Area" />
-          <wt:textbox field="ModuleName" placeholder="请输入模块名称，比如xx管理" />
+          <wt:textbox field="ModuleName" placeholder="@WalkingTec.Mvvm.Core.Program._localizer["Codegen.InputModuleName"]" />
           @if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.LayUI)
           {
-            <wt:checkbox field="IsApi" padding-text="(勾选此项将只生成api，而没有前端代码)" width="80" />
+            <wt:checkbox field="IsApi" padding-text="(@WalkingTec.Mvvm.Core.Program._localizer["Codegen.ApiOnly"])"  />
           }
           <wt:combobox field="AuthMode" />
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="生成代码" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.Program._localizer["Codegen.gen"]" />
             <wt:closebutton />
           </wt:row>
 

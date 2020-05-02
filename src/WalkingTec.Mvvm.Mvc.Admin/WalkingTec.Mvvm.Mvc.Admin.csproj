@@ -4,8 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
-    <OutputType>Library</OutputType>
-    <IsPackable>true</IsPackable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

@@ -21,7 +21,7 @@ namespace $vmnamespace$
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class $classname$_BatchEdit : BaseVM
     {$pros$

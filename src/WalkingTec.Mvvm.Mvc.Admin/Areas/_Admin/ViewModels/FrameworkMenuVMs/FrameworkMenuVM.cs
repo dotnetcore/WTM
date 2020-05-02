@@ -80,6 +80,22 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var pids = Entity.GetAllChildrenIDs(DC);
             AllParents = data.Where(x => x.ID != Entity.ID && !pids.Contains(x.ID) && x.FolderOnly == true).ToList().ToListItems(y => y.PageName, x => x.ID);
 
+            foreach (var p in AllParents)
+            {
+                if (p.Text.StartsWith("MenuKey."))
+                {
+                    if (Localizer[p.Text].ResourceNotFound == true)
+                    {
+                        p.Text = Core.Program._localizer[p.Text];
+                    }
+                    else
+                    {
+                        p.Text = Localizer[p.Text];
+                    }
+
+                }
+            }
+
             var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
 
             var toRemove = new List<FrameworkModule>();
@@ -176,7 +192,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
-                    Entity.ActionName = mainAction.ActionName;
+                    Entity.ActionName = mainAction.ActionDes?.Description ?? mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.FullName;
                     Entity.MethodName = null;
 
@@ -208,9 +224,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
-                            menu.PageName = action.ActionName;
+                            menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
-                            menu.ActionName = action.ActionName;
+                            menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
@@ -275,7 +291,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     }
                     Entity.Url = mainAction.Url;
                     Entity.ModuleName = mainAction.Module.ModuleName;
-                    Entity.ActionName = mainAction.ActionName;
+                    Entity.ActionName = mainAction.ActionDes?.Description ?? mainAction.ActionName;
                     Entity.ClassName = mainAction.Module.FullName;
                     Entity.MethodName = null;
                     Entity.Children = new List<FrameworkMenu>();
@@ -297,9 +313,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
-                            menu.PageName = action.ActionName;
+                            menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
-                            menu.ActionName = action.ActionName;
+                            menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;
                             menu.Url = action.Url;
