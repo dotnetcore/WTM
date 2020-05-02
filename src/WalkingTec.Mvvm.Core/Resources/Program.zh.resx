@@ -546,6 +546,30 @@
   <data name="MenuItem" xml:space="preserve">
     <value>菜单项</value>
   </data>
+  <data name="MenuKey.Api" xml:space="preserve">
+    <value>内置Api</value>
+  </data>
+  <data name="MenuKey.DataPrivilege" xml:space="preserve">
+    <value>数据权限</value>
+  </data>
+  <data name="MenuKey.GroupManagement" xml:space="preserve">
+    <value>用户组管理</value>
+  </data>
+  <data name="MenuKey.Log" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="MenuKey.MenuMangement" xml:space="preserve">
+    <value>菜单管理</value>
+  </data>
+  <data name="MenuKey.RoleManagement" xml:space="preserve">
+    <value>角色管理</value>
+  </data>
+  <data name="MenuKey.SystemManagement" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
+  <data name="MenuKey.UserManagement" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
   <data name="MenuMangement" xml:space="preserve">
     <value>菜单管理</value>
   </data>

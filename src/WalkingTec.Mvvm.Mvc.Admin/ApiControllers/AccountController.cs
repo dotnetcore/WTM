@@ -25,15 +25,15 @@ namespace WalkingTec.Mvvm.Admin.Api
 {
     [AuthorizeJwtWithCookie]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/_[controller]")]
     [Route("api/_login")]
     [ActionDescription("Login")]
-    public class _AccountController : BaseApiController
+    public class AccountController : BaseApiController
     {
         private readonly ILogger _logger;
         private readonly ITokenService _authService;
-        public _AccountController(
-            ILogger<_AccountController> logger,
+        public AccountController(
+            ILogger<AccountController> logger,
             ITokenService authService)
         {
             _logger = logger;
@@ -114,7 +114,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                         Text = x.PageName,
                         Url = x.Url,
                         Icon = x.ICon
-                    });
+                    }).ToList();
+                LocalizeMenu(menus);
                 ms.AddRange(menus);
 
                 List<string> urls = new List<string>();
@@ -139,6 +140,31 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Content(JsonConvert.SerializeObject(token), "application/json");
             }
         }
+
+
+        private void LocalizeMenu(List<SimpleMenu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                if (menu.Text?.StartsWith("MenuKey.") == true)
+                {
+                    if (Localizer[menu.Text].ResourceNotFound == true)
+                    {
+                        menu.Text = Core.Program._localizer[menu.Text];
+                    }
+                    else
+                    {
+                        menu.Text = Localizer[menu.Text];
+                    }
+                }
+            }
+        }
+
 
         [HttpPost("[action]")]
         [AllRights]
@@ -199,6 +225,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                         ms.Add(item);
                     }
                 }
+                LocalizeMenu(menus);
+
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .AsNoTracking()
@@ -266,6 +294,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                         ms.Add(item);
                     }
                 }
+                LocalizeMenu(ms);
+
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .AsNoTracking()

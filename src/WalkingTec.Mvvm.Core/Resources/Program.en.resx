@@ -549,6 +549,30 @@
   <data name="MenuItem" xml:space="preserve">
     <value>MenuItem</value>
   </data>
+  <data name="MenuKey.Api" xml:space="preserve">
+    <value>Buildin Api</value>
+  </data>
+  <data name="MenuKey.DataPrivilege" xml:space="preserve">
+    <value>Data Privilege</value>
+  </data>
+  <data name="MenuKey.GroupManagement" xml:space="preserve">
+    <value>Group Management</value>
+  </data>
+  <data name="MenuKey.Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="MenuKey.MenuMangement" xml:space="preserve">
+    <value>Menu Mangement</value>
+  </data>
+  <data name="MenuKey.RoleManagement" xml:space="preserve">
+    <value>Role Management</value>
+  </data>
+  <data name="MenuKey.SystemManagement" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="MenuKey.UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
   <data name="MenuMangement" xml:space="preserve">
     <value>Menu Mangement</value>
   </data>

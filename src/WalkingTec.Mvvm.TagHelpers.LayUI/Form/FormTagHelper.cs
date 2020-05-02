@@ -155,7 +155,7 @@ $('#{search.SearchBtnId}').on('click', function () {{
                             firstkey = key;
                         }
                         output.PostElement.AppendHtml($@"
-$(""#{Id}submiterrorholder"").before(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{error.ErrorMessage}</label></div>"");
+$(""#{Id}"").find(""button[type=submit]:first"").before(""<div class='layui-input-block' style='text-align:left'><label style='color:red'>{error.ErrorMessage}</label></div>"");
 ");
                     }
                     if (haserror == true)

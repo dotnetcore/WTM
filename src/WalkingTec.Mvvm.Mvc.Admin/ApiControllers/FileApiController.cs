@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_file")]
     [AllRights]
     [ActionDescription("File")]
-    public class _FileApiController : BaseApiController
+    public class FileApiController : BaseApiController
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
