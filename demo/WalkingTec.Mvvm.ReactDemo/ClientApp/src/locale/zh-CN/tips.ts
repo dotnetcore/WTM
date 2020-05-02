@@ -15,4 +15,5 @@ export default {
     'tips.bool.true': '是',
     'tips.bool.false': '否',
     'tips.all': '全部',
+    'tips.theme.loading': '正在加载主题',
 };
