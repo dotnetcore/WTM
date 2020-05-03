@@ -20,13 +20,15 @@ import { Action, State } from "vuex-class";
 import formMixin from "@/vue-custom/mixin/form-mixin";
 
 @Component({
-    mixins: [formMixin()],
+    mixins: [formMixin()]
 })
 export default class Index extends Vue {
+    status = "add";
+
     mergeFormData = {
         Entity: {
-            testsole: "",
-        },
+            testsole: ""
+        }
     };
 
     // 表单结构
@@ -37,11 +39,11 @@ export default class Index extends Vue {
 
         return {
             formProps: {
-                "label-width": "100px",
+                "label-width": "100px"
             },
             formItem: {
                 "Entity.ID": {
-                    isHidden: true,
+                    isHidden: true
                 },
                 "Entity.Name": {
                     label: "图书名称",
@@ -49,20 +51,20 @@ export default class Index extends Vue {
                         {
                             required: true,
                             message: "图书名称不能为空",
-                            trigger: "blur",
-                        },
+                            trigger: "blur"
+                        }
                     ],
-                    type: "input",
+                    type: "input"
                 },
                 "Entity.Barcode": {
                     label: "图书条码号",
                     rules: [],
-                    type: "input",
+                    type: "input"
                 },
                 "Entity.Author": {
                     label: "作者",
                     rules: [],
-                    type: "input",
+                    type: "input"
                 },
                 "Entity.Price": {
                     label: "价格",
@@ -70,22 +72,32 @@ export default class Index extends Vue {
                         {
                             required: true,
                             message: "价格不能为空",
-                            trigger: "blur",
-                        },
+                            trigger: "blur"
+                        }
                     ],
-                    type: "input",
+                    type: "input"
                 },
                 "Entity.BookIndex": {
-                    label: "索书号",
-                    rules: [],
-                    type: "input",
+                    type: "select",
+                    label: "下拉框",
+                    mapKey: "DicDiagnoseId",
+                    children: this.diagremoteMethodData,
+                    props: {
+                        filterable: true,
+                        reservekeyword: true,
+                        multiple: true,
+                        placeholder: "请输入",
+                        remote: true,
+                        clearable: true,
+                        "remote-method": this.diagremoteMethod
+                    }
                 },
                 "Entity.testsole": {
                     type: "wtmSlot",
                     label: "自定义",
-                    slotKey: "skey",
-                },
-            },
+                    slotKey: "skey"
+                }
+            }
         };
     }
 
@@ -97,22 +109,40 @@ export default class Index extends Vue {
     }
 
     testSubmit() {
-        console.log("formData", JSON.stringify(this.$refs.refName.formData));
-        // console.log("sourceFormData", JSON.stringify(this.sourceFormData));
+        console.log("formData", this.$refs[this.refName]);
+        console.log(JSON.stringify(this.$refs[this.refName].getFormData()));
     }
 
     mounted() {
         this.setFormData({
             Entity: {
-                ID: "212121212",
-                Name: "212121212",
-                Barcode: "212121212",
-                Author: "212121212",
-                Price: "212121212",
-                BookIndex: "32323",
-                SchoolType: 1,
-            },
+                ID: "",
+                Name: "",
+                Barcode: "",
+                Author: "",
+                Price: "",
+                BookIndex: [],
+                SchoolType: 1
+            }
         });
+    }
+
+    diagremoteMethodData: Array<any> = [];
+
+    diagremoteMethod() {
+        console.log("diagremoteMethod");
+        setTimeout(() => {
+            const list: Array<any> = [];
+            list.push({
+                Text: "1111",
+                Value: 11
+            });
+            list.push({
+                Text: "222",
+                Value: 22
+            });
+            this.diagremoteMethodData = list;
+        }, 200);
     }
 }
 </script>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 页面集合
  */
 export default {
@@ -38,5 +38,12 @@ export default {
     controller: "WalkingTec.Mvvm.Admin.Api,DataPrivilege",
     icon: "el-icon-odometer"
   }
-  /**WTM**/
+  
+, school: {
+    name: 'test007',
+    path: '/school',
+    controller: 'WalkingTec.Mvvm.VueDemo.Controllers,School'
+    }
+/**WTM**/
+ 
 };
