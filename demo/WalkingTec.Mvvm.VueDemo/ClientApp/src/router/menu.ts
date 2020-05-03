@@ -36,8 +36,8 @@ class Menu {
     if (menuItem.Url) {
       // 判断是否需要 external
       if (
-        isExternal(menuItem.Url) ||
-        _.startsWith(menuItem.Url, config.staticPage)
+        (isExternal(menuItem.Url) ||
+        _.startsWith(menuItem.Url, config.staticPage))
       ) {
         routerItem.component = () => import("@/pages/external/index.vue");
         routerItem.path = `/external_${url_index}`;
