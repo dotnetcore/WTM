@@ -1,0 +1,50 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+The framework has some custom properties that can be written on the Controller or Controller methods
+
+<wt:fieldset field-set-style="Simple" title="ActionDescription">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>The framework will use the name defined here as the model name and action name in the FrameworkModules and FrameworkModules table</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="AllRight">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>The controller or method marked with AllRight will skip page permission verification and can be accessed as long as the user logs in</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Public">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>The controller or method marked with Public is a public method, which can be accessed without login</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="DebugOnly">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>The controller or method marked DebugOnly can only be accessed when IsQuickDebug=true in the configuration file</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="FixConnection">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>The controller or method marked with FixConnection will use the specified database as the default DataContext.  For details please refer to<a href="/#/Global/CS">database split</a></p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="ReInit">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>By default, the framework will automatically call ReInitVM() method in VM when VM verification fails after post. This default behavior can be changed by marking ReInit</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="ValidateFormItemOnly">
+    <p>Can be written on the method in the controller</p>
+    <p>Instructs framework only verify the fields submitted by the form. Do not verify the fields not submitted by the form. It is mainly used to modify some fields</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="StringNeedLTGT">
+    <p>It can be written on the controller or the method in the controller</p>
+    <p>By default, the framework will automatically filter the characters <, > in the form. If you need these characters, please add this tag to the Action</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="NoLog">
+  <p>It can be written on the controller or the method in the controller</p>
+  <p>The tagging method does not require system logging</p>
+</wt:fieldset>

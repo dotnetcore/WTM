@@ -100,6 +100,7 @@
             </div>
           </div>
         </div>
+        友情链接：<a href="https://www.layui.com/" target="_blank">LayUI</a> <a href="http://www.hzhcontrols.com" target="_blank">HZHControls</a>
       </div>
     </div>
 
@@ -195,7 +196,7 @@
   $("#frontpage").parent().css("background-color", "#eee");
   $("#frontpage").parent().css("height", "auto");
 
-  $.get("/_framework/GetGithubInfo", function (r) {
+  $.get("/Home/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);
     $("#githubstars").html(r.stargazers_count);
     $("#githubfork").html(r.forks_count);
@@ -252,7 +253,7 @@
         , { field: 'date', title: '日期', width: 120, sort: true }
         , { field: 'name', title: '姓名', width: 150, sort: true }
         , { field: 'amount', title: '金额', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
-        , { field: 'from', title: '来源', width: 60 }
+        , { field: 'from', title: '来源', width: 80 }
         , { field: 'comment', title: '留言' }
       ]]
       , parseData: function(res){

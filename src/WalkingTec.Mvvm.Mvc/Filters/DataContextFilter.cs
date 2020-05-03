@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -35,6 +36,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
             var fixcontroller = ad.ControllerTypeInfo.GetCustomAttributes(typeof(FixConnectionAttribute), false).Cast<FixConnectionAttribute>().FirstOrDefault();
             var fixaction = ad.MethodInfo.GetCustomAttributes(typeof(FixConnectionAttribute), false).Cast<FixConnectionAttribute>().FirstOrDefault();
+            var ispost = ad.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
             string mode = "Read";
 
             if (fixcontroller != null || fixaction != null)
@@ -66,6 +68,10 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
                 else
                 {
+                    if(ispost != null)
+                    {
+                        mode = "Write";
+                    }
                     cs = context.HttpContext.Request.Query["DONOTUSECSName"];
                     cs = Utils.GetCS(cs, mode, controller.ConfigInfo);
                 }

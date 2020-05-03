@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,7 +52,7 @@ namespace WalkingTec.Mvvm.Core
         {
         }
 
-        public FrameworkContext(string cs, DBTypeEnum dbtype):base(cs,dbtype)
+        public FrameworkContext(string cs, DBTypeEnum dbtype, string version=null):base(cs,dbtype,version)
         {
         }
 
@@ -72,6 +73,7 @@ namespace WalkingTec.Mvvm.Core
             modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
             base.OnModelCreating(modelBuilder);
         }
 
@@ -113,7 +115,7 @@ namespace WalkingTec.Mvvm.Core
                 var adminRole = roles[0];
                 if (Set<FrameworkMenu>().Any() == false)
                 {
-                    var systemManagement = GetFolderMenu(Program._localizer["SystemManagement"], new List<FrameworkRole> { adminRole }, null);
+                    var systemManagement = GetFolderMenu("SystemManagement", new List<FrameworkRole> { adminRole }, null);
                     var logList = IsSpa ? GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) : GetMenu(AllModules, "_Admin", "ActionLog", "Index", new List<FrameworkRole> { adminRole }, null, 1);
                     var userList = IsSpa ? GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2) : GetMenu(AllModules, "_Admin", "FrameworkUser", "Index", new List<FrameworkRole> { adminRole }, null, 2);
                     var roleList = IsSpa ? GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3) : GetMenu(AllModules, "_Admin", "FrameworkRole", "Index", new List<FrameworkRole> { adminRole }, null, 3);
@@ -128,6 +130,14 @@ namespace WalkingTec.Mvvm.Core
 
                     if(IsSpa == false)
                     {
+                        systemManagement.ICon = "layui-icon layui-icon-set";
+                        logList.ICon = "layui-icon layui-icon-form";
+                        userList.ICon = "layui-icon layui-icon-friends";
+                        roleList.ICon = "layui-icon layui-icon-user";
+                        groupList.ICon = "layui-icon layui-icon-group";
+                        menuList.ICon = "layui-icon layui-icon-menu-fill";
+                        dpList.ICon = "layui-icon layui-icon-auz";
+
                         var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole }, null);
                         apifolder.ShowOnMenu = false;
                         apifolder.DisplayOrder = 100;
@@ -138,7 +148,7 @@ namespace WalkingTec.Mvvm.Core
                         var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
                         var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
                         var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2};
-                        apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
+                        //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
                         apifolder.Children.AddRange(apis);
                         Set<FrameworkMenu>().Add(apifolder);
                     }
@@ -155,7 +165,7 @@ namespace WalkingTec.Mvvm.Core
         {
             FrameworkMenu menu = new FrameworkMenu
             {
-                PageName = FolderText,
+                PageName = "MenuKey."+ FolderText,
                 Children = new List<FrameworkMenu>(),
                 Privileges = new List<FunctionPrivilege>(),
                 ShowOnMenu = isShowOnMenu,
@@ -212,9 +222,9 @@ namespace WalkingTec.Mvvm.Core
             if (menu != null)
             {
                 menu.Url = "/" + acts[0].Module.ClassName.ToLower();
-                menu.ModuleName = acts[0].Module.ModuleName;
+                menu.ModuleName = menu.ModuleName;
                 menu.PageName = menu.ModuleName;
-                menu.ActionName = Program._localizer["MainPage"];
+                menu.ActionName = "MainPage";
                 menu.ClassName = acts[0].Module.FullName;
                 menu.MethodName = null;
                 for (int i = 0; i < rest.Count; i++)
@@ -252,16 +262,16 @@ namespace WalkingTec.Mvvm.Core
             };
             if (isMainLink)
             {
-                menu.PageName = act.Module.ModuleName;
-                menu.ModuleName = act.Module.ModuleName;
-                menu.ActionName = act.ActionName;
+                menu.PageName = "MenuKey."+act.Module.ActionDes?.Description;
+                menu.ModuleName = "MenuKey." + act.Module.ActionDes?.Description;
+                menu.ActionName = act.ActionDes?.Description ?? act.ActionName;
                 menu.MethodName = null;
             }
             else
             {
-                menu.PageName = act.ActionName;
-                menu.ModuleName = act.Module.ModuleName;
-                menu.ActionName = act.ActionName;
+                menu.PageName = "MenuKey." + act.ActionDes?.Description;
+                menu.ModuleName = "MenuKey." + act.ActionDes?.Description;
+                menu.ActionName = act.ActionDes?.Description ?? act.ActionName;
             }
             if (allowedRoles != null)
             {
@@ -302,6 +312,7 @@ namespace WalkingTec.Mvvm.Core
 
         public DBTypeEnum DBType { get; set; }
 
+        public string Version { get; set; }
         public CS ConnectionString { get; set; }
         /// <summary>
         /// FrameworkContext
@@ -321,16 +332,18 @@ namespace WalkingTec.Mvvm.Core
             CSName = cs;
         }
 
-        public EmptyContext(string cs, DBTypeEnum dbtype)
+        public EmptyContext(string cs, DBTypeEnum dbtype,string version=null)
         {
             CSName = cs;
             DBType = dbtype;
+            Version = version;
         }
 
         public EmptyContext(CS cs)
         {
             CSName = cs.Value;
             DBType = cs.DbType.Value;
+            Version = cs.Version;
             ConnectionString = cs;
         }
 
@@ -344,7 +357,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
 
@@ -356,7 +369,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else
             {
-                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) }).Invoke(new object[] { CSName, DBType });
+                return (IDataContext)this.GetType().GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum), typeof(string) }).Invoke(new object[] { CSName, DBType, Version });
             }
         }
         /// <summary>
@@ -515,7 +528,13 @@ namespace WalkingTec.Mvvm.Core
                     }
                     break;
                 case DBTypeEnum.MySql:
-                    optionsBuilder.UseMySql(CSName);
+                    optionsBuilder.UseMySql(CSName, mySqlOptions =>
+                    {
+                        if (string.IsNullOrEmpty(Version) == false)
+                        {
+                            mySqlOptions.ServerVersion(Version);
+                        }
+                    });
                     break;
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);

@@ -49,6 +49,7 @@ export class Request {
     getHeaders() {
         return {
             ...GlobalConfig.headers,
+            'Accept-Language': GlobalConfig.language,
             token: GlobalConfig.token.get()
         }
     }

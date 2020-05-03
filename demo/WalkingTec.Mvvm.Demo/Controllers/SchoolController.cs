@@ -17,21 +17,21 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     public class SchoolController : BaseController
     {
         #region 搜索
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         public ActionResult Index()
         {
             var vm = CreateVM<SchoolListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost]
         public ActionResult Index(SchoolListVM vm)
         {
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost]
         public string Search(SchoolListVM vm)
         {

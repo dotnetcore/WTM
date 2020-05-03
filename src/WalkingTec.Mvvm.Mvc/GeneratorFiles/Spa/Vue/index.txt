@@ -25,6 +25,7 @@ import store from "./store/index";
 import { ASSEMBLIES, TABLE_HEADER, $enums$ } from "./config";
 
 @Component({
+    name: "$modelname$",
     mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
@@ -46,7 +47,7 @@ $fields$
         };
     }
 
-     created() {
+     mounted() {
 $runactions$
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core.Auth
 {
@@ -130,7 +131,7 @@ namespace WalkingTec.Mvvm.Core.Auth
                 };
 
                 // 清理过期 refreshtoken
-                var sql = $"DELETE FROM persistedgrants WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
+                var sql = $"DELETE FROM {_dc.GetTableName<PersistedGrant>()} WHERE Expiration<'{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}'";
                 _dc.RunSQL(sql);
                 _logger.LogDebug("清理过期的refreshToken：【sql:{0}】", sql);
 
