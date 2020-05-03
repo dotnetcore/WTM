@@ -216,7 +216,7 @@ namespace WalkingTec.Mvvm.Core
 
         private FrameworkMenu GetMenu2(List<FrameworkModule> allModules, string controllerName, List<FrameworkRole> allowedRoles, List<FrameworkUserBase> allowedUsers, int displayOrder)
         {
-            var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,_{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
+            var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
             FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
