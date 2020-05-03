@@ -128,7 +128,7 @@ class TabsPagesStore {
     }
     // @persist
     @observable height = this.getHeight();
-    @persist("list")
+    // @persist("list")
     @observable tabPane = [this.onCreateHoem()];
     @action
     pushTabPane(pathname) {

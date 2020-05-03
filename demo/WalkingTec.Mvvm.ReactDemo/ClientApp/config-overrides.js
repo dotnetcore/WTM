@@ -5,6 +5,7 @@
 const moment = require('moment');
 const lodash = require('lodash');
 const path = require('path');
+const IgnorePlugin = require('webpack').IgnorePlugin
 const fs = require('fs');
 const { override, fixBabelImports, addLessLoader, disableEsLint, addBundleVisualizer, removeModuleScopePlugin, addWebpackPlugin } = require('customize-cra');
 const appDirectory = fs.realpathSync(process.cwd());
@@ -23,7 +24,7 @@ createFonts();
 module.exports = (...params) => {
   const config = override(
     disableEsLint(),
-    addWebpackPlugin(ThemeColorReplacer),
+    addWebpackPlugin(ThemeColorReplacer, new IgnorePlugin(/^\.\/locale$/, /moment$/)),
     fixBabelImports('import', {
       libraryName: 'antd',
       libraryDirectory: 'es',
