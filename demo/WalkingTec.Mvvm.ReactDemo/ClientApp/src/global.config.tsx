@@ -23,7 +23,7 @@ const hydrate = create({
     debounce: 1000,
 });
 // 环境变量 开发 模型
-const development = process.env.NODE_ENV === "development"
+const development = false//process.env.NODE_ENV === "development"
 class ConfigStore {
     constructor() {
         hydrate('WTM_GlobalConfig', this)
@@ -107,11 +107,16 @@ class ConfigStore {
     /**
      * 请求头
      */
-    headers = {
-        credentials: 'include',
-        accept: "*/*",
-        "Content-Type": "application/json",
-        "token": null
+    getHeaders(headers?) {
+        headers = lodash.merge({
+            credentials: 'include',
+            accept: "*/*",
+            "Content-Type": "application/json",
+            'Accept-Language': this.language,
+            token: this.token.get()
+        }, headers);
+        console.log("ConfigStore -> getHeaders -> headers", headers)
+        return headers
     };
     /**
      * token
