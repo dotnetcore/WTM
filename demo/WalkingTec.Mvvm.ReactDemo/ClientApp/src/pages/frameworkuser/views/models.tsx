@@ -138,6 +138,7 @@ export default {
                 label: <FormattedMessage id='frameworkuser.UserRoles' />,
                 rules: [],
                 formItem: <WtmTransfer
+                    listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
                     mapKey="RoleId"
                 />
@@ -147,6 +148,7 @@ export default {
                 label: <FormattedMessage id='frameworkuser.UserGroups' />,
                 rules: [],
                 formItem: <WtmTransfer
+                    listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
                     mapKey="GroupId"
                 />

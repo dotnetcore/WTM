@@ -21,7 +21,9 @@ Layout = null;
     var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
   </script>
 </head>
-
+@{
+    string preview = WalkingTec.Mvvm.Core.Program._localizer["Preview"];
+}
 <body class="layui-layout-body">
 
   <div class="layui-layout">
@@ -30,27 +32,27 @@ Layout = null;
 
         <wt:form vm="@Model" url="/_CodeGen/DoGen" label-width="150">
           <wt:quote>
-            该操作将生成如下文件，是否确定？<br />
+            @WalkingTec.Mvvm.Core.Program._localizer["Codegen.confirm"]<br />
           </wt:quote>
           <wt:fieldset title="Controller">
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Controller" />
             @Model.ControllerDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")Controller.cs <br />
           </wt:fieldset>
           <wt:fieldset title="ViewModels">
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=CrudVM" />
             @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")VM.cs <br />
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ListVM" />
             @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")ListVM.cs <br />
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=BatchVM" />
             @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")BatchVM.cs <br />
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ImportVM" />
             @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")ImportVM.cs <br />
-            <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+            <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                            target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=Searcher" />
             @Model.VmDir\@(Model.ModelName)@($"{(Model.IsApi == true ? "Api" : "")}")Searcher.cs <br />
           </wt:fieldset>
@@ -59,66 +61,90 @@ Layout = null;
             if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.LayUI)
             {
               <wt:fieldset title="Views">
-                <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ListView" />
                 @Model.ViewDir\Index.cshtml <br />
-                <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=CreateView" />
                 @Model.ViewDir\Create.cshtml <br />
-                <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=EditView" />@Model.ViewDir\Edit.cshtml
                               <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=DeleteView" />
                               @Model.ViewDir\Delete.cshtml <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=DetailsView" />
                               @Model.ViewDir\Details.cshtml <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=BatchEditView" />
                               @Model.ViewDir\BatchEdit.cshtml <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=BatchDeleteView" />
                               @Model.ViewDir\BatchDelete.cshtml <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=ImportView" />
                               @Model.ViewDir\Import.cshtml <br />
                             </wt:fieldset>
             }
-            else
+            else if(Model.UI == WalkingTec.Mvvm.Core.UIEnum.React)
             {
               var viewdir = Model.MainDir + "\\ClientApp\\src\\pages\\" + Model.ModelName.ToLower();
-                            <wt:fieldset title="React页面">
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                            <wt:fieldset title="React Views">
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=index&ui=react" />
                               @viewdir\index.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=style&ui=react" />
                               @viewdir\style.less<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=storeindex&ui=react" />
                               @viewdir\store\index.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=table&ui=react" />
                               @viewdir\views\table.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=action&ui=react" />
                               @viewdir\views\action.tsx <br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=models&ui=react" />
                               @viewdir\views\models.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=forms&ui=react" />
                               @viewdir\views\forms.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=search&ui=react" />
                               @viewdir\views\search.tsx<br />
-                              <wt:linkbutton text="预览" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                              <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
                                              target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=other&ui=react" />
                               @viewdir\views\other.tsx<br />
                             </wt:fieldset>
 
             }
+
+            else 
+            {
+              var viewdir = Model.MainDir + "\\ClientApp\\src\\pages\\" + Model.ModelName.ToLower();
+        <wt:fieldset title="VUE Views">
+          <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                         target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=index&ui=vue" />
+          @viewdir\index.vue<br />
+          <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                         target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=config&ui=vue" />
+          @viewdir\config.ts<br />
+          <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                         target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=store.index&ui=vue" />
+          @viewdir\store\index.ts<br />
+          <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                         target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=store.api&ui=vue" />
+          @viewdir\store\api.ts<br />
+          <wt:linkbutton text="@preview" window-width="600" post-current-form="true" size=" ButtonSizeEnum.Mini"
+                         target=" ButtonTargetEnum.Layer" url="/_CodeGen/Preview?PreviewFile=views.dialog-form&ui=vue" />
+          @viewdir\views\dialog-form.vue <br />
+        </wt:fieldset>
+
+            }
+
           }
           <wt:display field="ModelNS" />
           <wt:textbox field="ControllerNs" />
@@ -133,7 +159,7 @@ Layout = null;
           <wt:hidden field="AuthMode" />
 
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="确定生成代码" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.Program._localizer["Codegen.start"]" />
             <wt:closebutton />
           </wt:row>
 

@@ -112,14 +112,24 @@ window.ff = {
     return layui.table.checkStatus(gridId).isAll;
   },
 
-  Alert: function (msg) {
-    var layer = layui.layer;
-    layer.alert(msg);
+  Alert: function (msg,title) {
+      var layer = layui.layer;
+      if (title != undefined) {
+          layer.alert(msg, { title: title });
+      }
+      else {
+          layer.alert(msg);
+      }
   },
 
-  Msg: function (msg) {
+    Msg: function (msg, title) {
     var layer = layui.layer;
-    layer.msg(msg);
+        if (title != undefined) {
+            layer.msg(msg, { title: title });
+        }
+        else {
+            layer.msg(msg);
+        }
   },
 
   LoadPage: function (url, newwindow, title, para) {
@@ -151,9 +161,9 @@ window.ff = {
             child.document.close();
             $(child.document).ready(function () {
               setTimeout(function () {
-                $('#Lay_app_body_main', child.document).html(data);
+                  $('#LAY_app_body', child.document).html(data);
                 $(child.document).attr("title", title);
-              }, 500);
+              }, 100);
             });
           }
           layer.close(index);
@@ -280,7 +290,7 @@ window.ff = {
     });
   },
 
-  BgRequest: function (url, para) {
+  BgRequest: function (url, para,divid) {
     var layer = layui.layer;
     var index = layer.load(2);
     var getpost = "GET";
@@ -308,8 +318,9 @@ window.ff = {
           eval(str);
         }
         else {
-          var did = $.cookie("divid");
-          $("#" + did).html(str);
+            data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + str + "</div>";
+            var p = $("#" + divid).parent();
+            p.html(data);
         }
       }
     });
@@ -350,8 +361,8 @@ window.ff = {
           return false;
         }
         ff.SetCookie("windowids", owid);
-        if (request.responseText !== undefined && request.responseText !== "") {
-          layer.alert(request.responseText);
+          if (xhr.responseText !== undefined && xhr.responseText !== "") {
+              layer.alert(xhr.responseText);
         }
         else {
           layer.alert(ff.DONOTUSE_Text_LoadFailed);

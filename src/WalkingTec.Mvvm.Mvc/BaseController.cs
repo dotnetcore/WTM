@@ -703,7 +703,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         protected T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
-            if (Cache.TryGetValue(key, out T rv) == false)
+            if (Cache.TryGetValue(key, out T rv) == false || rv == null)
             {
                 T data = setFunc();
                 if (timeout == null)
@@ -746,7 +746,6 @@ namespace WalkingTec.Mvvm.Mvc
                 default:
                     break;
             }
-            var test = GlobalServices.GetRequiredService<ILogger<ActionLog>>();
             GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
                 return $@"
 ===WTM Log===

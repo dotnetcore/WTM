@@ -1,5 +1,45 @@
 # 更新日志
 
+## v3.5.x （2.5.x同步更新）
+
+##3.5.6 以及 2.5.5 (2020-4-13)
+* **新增：**  ConnectionString配置中可以设置Version字段，用于控制mysql的具体版本
+* **修改：**  移除了动态控制器，因为和动态编译页面产生冲突
+* **修改：**  IsFilePublic现在可以正常工作
+* **修改：**  更新了默认生成的VUE项目代码，修复了一些bug
+
+##3.5.4 以及 2.5.4 (2020-4-3)
+* **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
+
+* **修改：**  修复vue代码生成没有正确生成某些api的bug
+* **修改：**  修复vue自带系统管理中的一些bug，整体更稳定
+* **修改：**  IsFilePublic配置在3.x下可以正常工作
+* **修改：**  修复框架自带GetFile和ViewFile方法无法正常调用的bug
+
+##3.5.2 以及 2.5.2 (2020-3-29)
+* **修改：**  修复vue代码生成下拉菜单少了一个逗号的bug
+* **修改：**  修复vue发布时的问题
+* **修改：**  修复vue列表高度计算的问题
+* **修改：**  修复vue数据权限列表的删除bug
+
+* **新增：**  Layui. 现在ListVM中的GridAction可以通过SetButtonClass方法设置按钮颜色
+* **新增：**  Layui. UIService中新增MakeButton方法替换之前有问题的MakeRedirectButton方法
+* **修改：**  修复GetGridActions会被调用两次的问题（这其实是.netcore的bug...)
+
+
+##3.5.1 以及 2.5.1 (2020-3-26)
+* **修改：**  修复vue菜单相关的一些bug
+* **修改：**  修复vue代码生成器对于布尔值的控件生成的bug
+* **修改：**  修复vue代码生成器对于下拉菜单生成的bug
+
+##3.5.0 以及 2.5.0 发布，你心心念的Vue来了！！！vue目前还属于预览版，欢迎大家多提宝贵意见
+* **新增：**  现在官网可以生成Vue的项目了
+* **新增：**  VUE项目可以使用和Layui，React相同的代码生成
+* **新增：**  appsettings文件中增加了Domains的配置，用来注册httpclient。在Controller和VM中通过ConfigInfo.Domains["key"].CallAPI来方便高效的调用其他网站的api
+* **修改：**  修复代码生成器会将bool的搜索条件啊生成两次的bug
+* **修改：**  修复继承自TopBasePoco的Model在DoAdd中没有正确的添加子表数据的bug
+* **修改：**  修复用户没有权限时没有正确返回401错误的bug
+
 ## v3.1.x
 
 3.1版本正式发布，支持.netcore 3.1，与2.4.x最新版本在功能上同步更新

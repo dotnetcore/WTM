@@ -400,11 +400,11 @@ namespace WalkingTec.Mvvm.Mvc
                     if(UI == UIEnum.VUE)
                     {
                         List<string> apipneeded = new List<string>();
-                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.vue", GeneratVUEView("index",apipneeded), Encoding.UTF8);
-                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}config.ts", GeneratVUEView("config", apipneeded), Encoding.UTF8);
-                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}dialog-form.vue", GeneratVUEView("views.dialog-form", apipneeded), Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}index.vue", GenerateVUEView("index",apipneeded), Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}config.ts", GenerateVUEView("config", apipneeded), Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}views{Path.DirectorySeparatorChar}dialog-form.vue", GenerateVUEView("views.dialog-form", apipneeded), Encoding.UTF8);
                         File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}index.ts", GetResource("index.txt", "Spa.Vue.store").Replace("$modelname$", ModelName.ToLower()), Encoding.UTF8);
-                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}api.ts", GeneratVUEView("store.api", apipneeded), Encoding.UTF8);
+                        File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}{ModelName.ToLower()}{Path.DirectorySeparatorChar}store{Path.DirectorySeparatorChar}api.ts", GenerateVUEView("store.api", apipneeded), Encoding.UTF8);
                     }
                     var index = File.ReadAllText($"{MainDir}{Path.DirectorySeparatorChar}ClientApp{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}pages{Path.DirectorySeparatorChar}index.ts");
                     if (index.Contains($"path: '/{ModelName.ToLower()}'") == false)
@@ -508,7 +508,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 StringBuilder other = new StringBuilder();
                 List<FieldInfo> pros = FieldInfos.Where(x => x.IsSearcherField == true || x.IsFormField == true).ToList();
-                List<PropertyInfo> existSubPro = new List<PropertyInfo>();
+                List<string> existSubPro = new List<string>();
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
@@ -516,8 +516,9 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         var subtype = Type.GetType(item.RelatedField);
                         var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
-                        existSubPro.Add(subpro);
-                        int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
+                        var key = subtype.FullName + ":" + subpro.Name;
+                        existSubPro.Add(key);
+                        int count = existSubPro.Where(x => x== key).Count();
                         if (count == 1)
                         {
 
@@ -1505,7 +1506,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
 
-        public string GeneratVUEView(string name,List<string> apineeded)
+        public string GenerateVUEView(string name,List<string> apineeded)
         {
             var rv = GetResource($"{name}.txt", "Spa.Vue")
                 .Replace("$modelname$", ModelName.ToLower());
@@ -1669,7 +1670,10 @@ namespace WalkingTec.Mvvm.Mvc
                             if (string.IsNullOrEmpty(item.SubIdField) == true)
                             {
                                 fieldstr.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data");
+                    children: this.get{subtype.Name}Data,
+                    props: {{
+                        clearable: true
+                    }}");
                             }
                             else
                             {
@@ -1707,7 +1711,11 @@ namespace WalkingTec.Mvvm.Mvc
                         else if (checktype.IsEnum())
                         {
                             fieldstr.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types");
+                    children: {item.FieldName}Types,
+                    props: {{
+                        clearable: true
+                    }}");
+
                             enums.Add(item.FieldName + "Types");
                         }
                         else if (checktype.IsNumber())
@@ -1766,7 +1774,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var mpro = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
                         if (mpro.PropertyType.IsBoolOrNullableBool())
                         {
-                            actions.AppendLine($@"      <template #IsValid=""rowData"">
+                            actions.AppendLine($@"      <template #{item.FieldName}=""rowData"">
         <el-switch :value=""rowData.row.{item.FieldName} === 'true' || rowData.row.{item.FieldName} === true"" disabled />
       </template>
 ");
@@ -1779,98 +1787,110 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 if (item.FieldName.ToLower().Contains("photo") || item.FieldName.ToLower().Contains("pic") || item.FieldName.ToLower().Contains("icon"))
                                 {
-                                    actions.AppendLine($@"      <template #PhotoId=""rowData"">
+                                    actions.AppendLine($@"      <template #{fk}=""rowData"">
         <el-image v-if=""!!rowData.row.{fk}"" style=""width: 100px; height: 100px"" :src=""'/api/_file/downloadFile/'+rowData.row.{fk}"" fit=""cover"" />
       </template>
 ");
                                 }
                                 else
                                 {
-                                    actions.AppendLine($@"      <template #PhotoId=""rowData"">
+                                    actions.AppendLine($@"      <template #{fk}=""rowData"">
         <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/_file/downloadFile/'+rowData.row.{fk}"">下载</el-link>
       </template>
 ");
                                 }
                             }
                         }
-                        continue;
                     }
-                    if (item.SubField == "`file")
+                    if (item.IsSearcherField == true)
                     {
-                        continue;
-                    }
-                    var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
-                    string label = property.GetPropertyDisplayName();
-                    string rules = "rules: []";
+                        if (item.SubField == "`file")
+                        {
+                            continue;
+                        }
+                        var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                        string label = property.GetPropertyDisplayName();
+                        string rules = "rules: []";
 
-                    if (string.IsNullOrEmpty(item.RelatedField) == false)
-                    {
-                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
-                            var fk = DC.GetFKName2(modelType, item.FieldName);
-                            fieldstr2.AppendLine($@"                ""{fk}"":{{");
+                            if (string.IsNullOrEmpty(item.SubIdField) == true)
+                            {
+                                var fk = DC.GetFKName2(modelType, item.FieldName);
+                                fieldstr2.AppendLine($@"                ""{fk}"":{{");
+                            }
+                            else
+                            {
+                                fieldstr2.AppendLine($@"                ""Selected{item.FieldName}IDs"":{{");
+                            }
                         }
                         else
                         {
-                            fieldstr2.AppendLine($@"                ""Selected{item.FieldName}IDs"":{{");
+                            fieldstr2.AppendLine($@"                ""{item.FieldName}"":{{");
                         }
-                    }
-                    else
-                    {
-                        fieldstr2.AppendLine($@"                ""{item.FieldName}"":{{");
-                    }
-                    fieldstr2.AppendLine($@"                    label: ""{label}"",");
-                    fieldstr2.AppendLine($@"                    {rules},");
-                    if (string.IsNullOrEmpty(item.RelatedField) == false)
-                    {
-                        var subtype = Type.GetType(item.RelatedField);
-                        if (string.IsNullOrEmpty(item.SubIdField) == true)
+                        fieldstr2.AppendLine($@"                    label: ""{label}"",");
+                        fieldstr2.AppendLine($@"                    {rules},");
+                        if (string.IsNullOrEmpty(item.RelatedField) == false)
                         {
-                            fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: this.get{subtype.Name}Data");
-                        }
-                        else
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""select"",
+                            var subtype = Type.GetType(item.RelatedField);
+                            if (string.IsNullOrEmpty(item.SubIdField) == true)
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""select"",
                     children: this.get{subtype.Name}Data,
                     props: {{
+                        clearable: true,
+                        placeholder: '全部'
+                    }}");
+
+                            }
+                            else
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""select"",
+                    children: this.get{subtype.Name}Data,
+                    props: {{
+                        clearable: true ,
                         multiple: true,
                         ""collapse-tags"": true
                     }}");
 
+                            }
+                            apineeded.Add($"get{subtype.Name}");
+                            acts.Add($"get{subtype.Name}");
                         }
-                        apineeded.Add($"get{subtype.Name}");
-                        acts.Add($"get{subtype.Name}");
-                    }
-                    else
-                    {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
-                        Type checktype = proType;
-                        if (proType.IsNullable())
+                        else
                         {
-                            checktype = proType.GetGenericArguments()[0];
-                        }
-                        if (checktype == typeof(bool))
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""switch""");
-                        }
-                        else if (checktype.IsEnum())
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""select"",
-                    children: {item.FieldName}Types");
-                            enums.Add(item.FieldName + "Types");
-                        }
-                        else if (checktype.IsNumber())
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""input""");
-                        }
-                        else if (checktype == typeof(string))
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""input""");
-                        }
-                        else if (checktype == typeof(DateTime))
-                        {
-                            fieldstr2.AppendLine($@"                    type: ""datePicker"",
+                            var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                            Type checktype = proType;
+                            if (proType.IsNullable())
+                            {
+                                checktype = proType.GetGenericArguments()[0];
+                            }
+                            if (checktype == typeof(bool))
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""switch""");
+                            }
+                            else if (checktype.IsEnum())
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""select"",
+                    children: {item.FieldName}Types,
+                    props: {{
+                        clearable: true,
+                        placeholder: '全部'
+                    }}");
+
+                                enums.Add(item.FieldName + "Types");
+                            }
+                            else if (checktype.IsNumber())
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""input""");
+                            }
+                            else if (checktype == typeof(string))
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""input""");
+                            }
+                            else if (checktype == typeof(DateTime))
+                            {
+                                fieldstr2.AppendLine($@"                    type: ""datePicker"",
                     span: 12,
                     props: {{
                             type: ""datetimerange"",
@@ -1879,18 +1899,19 @@ namespace WalkingTec.Mvvm.Mvc
                         ""start-placeholder"": ""开始日期"",
                         ""end-placeholder"": ""结束日期""
                     }}");
+                            }
                         }
+                        if (i > 1)
+                        {
+                            fieldstr2.AppendLine("                    ,isHidden: !this.isActive");
+                        }
+                        fieldstr2.Append("            }");
+                        if (i < pros2.Count - 1)
+                        {
+                            fieldstr2.Append(",");
+                        }
+                        fieldstr2.Append(Environment.NewLine);
                     }
-                    if (i > 1)
-                    {
-                        fieldstr2.AppendLine("                    ,isHidden: !this.isActive");
-                    }
-                    fieldstr2.Append("            }");
-                    if (i < pros2.Count - 1)
-                    {
-                        fieldstr2.Append(",");
-                    }
-                    fieldstr2.Append(Environment.NewLine);
                 }
 
                 string a1 = "";

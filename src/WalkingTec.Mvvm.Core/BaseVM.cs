@@ -70,7 +70,6 @@ namespace WalkingTec.Mvvm.Core
         /// PartialView中主Div的Id
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string ViewDivId
         {
             set { _viewdivid = value; }
@@ -325,6 +324,7 @@ namespace WalkingTec.Mvvm.Core
             DataContextCI = vm.DataContextCI;
             UIService = vm.UIService;
             LoginUserInfo = vm.LoginUserInfo;
+            Localizer = vm.Localizer;
         }
 
         /// <summary>

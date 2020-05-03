@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -40,6 +40,32 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             var data = DC.Set<FrameworkMenu>().ToList();
             var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
+            foreach (var item in topdata)
+            {
+                if (item.PageName?.StartsWith("MenuKey.") == true)
+                {
+                    if (Localizer[item.PageName].ResourceNotFound == true)
+                    {
+                        item.PageName = Core.Program._localizer[item.PageName];
+                    }
+                    else
+                    {
+                        item.PageName = Localizer[item.PageName];
+                    }
+                }
+                if (item.ModuleName?.StartsWith("MenuKey.") == true)
+                {
+                    if (Localizer[item.ModuleName].ResourceNotFound == true)
+                    {
+                        item.ModuleName = Core.Program._localizer[item.ModuleName];
+                    }
+                    else
+                    {
+                        item.ModuleName = Localizer[item.ModuleName];
+                    }
+                }
+
+            }
             int order = 0;
             var data2 = topdata.Select(x => new FrameworkMenu_ListView
             {
@@ -59,6 +85,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
             return data2.AsQueryable() as IOrderedQueryable<FrameworkMenu_ListView>;
         }
+
+
 
     }
 

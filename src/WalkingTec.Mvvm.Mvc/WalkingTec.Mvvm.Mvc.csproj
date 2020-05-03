@@ -4,6 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
+    <LangVersion>latest</LangVersion>
     <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 

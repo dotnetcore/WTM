@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
         public string Key { get; set; }
         public string Value { get; set; }
         public DBTypeEnum? DbType { get; set; }
-
+        public string Version { get; set; }
         public string DbContext { get; set; }
 
         public ConstructorInfo DcConstructor;
