@@ -6,12 +6,11 @@ import lodash from 'lodash';
 import { configure, observable, toJS } from 'mobx';
 import { create, persist } from 'mobx-persist';
 import themeColor from 'utils/themeColor';
+import Help from 'utils/Help';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "./global.less";
-const language = lodash.get(window, 'navigator.language', 'zh-CN');
-// 日期中文
-moment.locale('zh-cn');
+// const language = lodash.get(window, 'navigator.language', 'zh-CN');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
 configure({ enforceActions: "observed" });
 notification.config({
@@ -31,8 +30,11 @@ class ConfigStore {
             // post hydration
             .then(() => {
                 console.log('WTM_GlobalConfig', toJS(this));
+                // 主题色
                 themeColor.changeColor(this.settings.primaryColor);
                 window['g_locale'] = this.language;
+                // 日期中文
+                moment.locale(lodash.toLower(this.language));
             })
     }
     buildTime = process.env.REACT_APP_TIME;
@@ -54,7 +56,7 @@ class ConfigStore {
      */
     @persist
     @observable
-    language: "zh-CN" | "en-US" = language;
+    language: "zh-CN" | "en-US" = Help.GetNavigatorLanguage();
     /**
      * ant Pro 布局 设置  https://github.com/ant-design/ant-design-pro-layout/blob/master/README.zh-CN.md#MenuDataItem
      * @type {Settings}
