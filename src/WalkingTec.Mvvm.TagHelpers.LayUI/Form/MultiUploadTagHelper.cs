@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 同时上传的文件数（0不限制）
         /// </summary>
         public int NumFileOnce { get; set; }
+        public string ConnectionString { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -125,9 +126,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     url += "&height=" + ThumbHeight;
                 }
             }
-            if (vm != null)
+            if (string.IsNullOrEmpty(ConnectionString) == true)
             {
-                url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                if (vm != null)
+                {
+                    url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                }
+            }
+            else
+            {
+                url += $"&_DONOT_USE_CS={ConnectionString}";
             }
 
             output.PreElement.SetHtmlContent($@"
