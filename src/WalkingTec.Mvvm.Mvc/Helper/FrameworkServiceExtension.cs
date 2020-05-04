@@ -325,7 +325,8 @@ namespace WalkingTec.Mvvm.Mvc
                             ValidateIssuerSigningKey = true,
                             IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
 
-                            ValidateLifetime = true
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.FromSeconds(1)
                         };
                     });
             #endregion
