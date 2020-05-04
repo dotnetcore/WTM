@@ -6,7 +6,6 @@ publish/
 *.tar.gz
 *.ppk
 NuPack*
-package-lock.json
 node_modules/
 
 ## Ignore Visual Studio temporary files, build results, and

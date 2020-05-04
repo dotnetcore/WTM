@@ -39,6 +39,7 @@ export default class App extends React.Component<any> {
     changeLang(event) {
         GlobalConfig.language = event.key;
         window['g_locale'] = GlobalConfig.language;
+        window.location.reload()
     }
     // 菜单 打开 的 key
     defaultOpenKeys = [];
