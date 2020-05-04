@@ -8,7 +8,7 @@ import { create, persist } from 'mobx-persist';
 import themeColor from 'utils/themeColor';
 import Help from 'utils/Help';
 import moment from 'moment';
-import 'moment/locale/zh-cn';
+// import 'moment/locale/zh-cn';
 import "./global.less";
 // const language = lodash.get(window, 'navigator.language', 'zh-CN');
 // mobx 严格模式 https://cn.mobx.js.org/refguide/api.html
@@ -20,7 +20,7 @@ notification.config({
 const hydrate = create({
     storage: window.localStorage,   // 存储的对象
     jsonify: true, // 格式化 json
-    debounce: 1000,
+    // debounce: 1000,
 });
 // 环境变量 开发 模型
 const development = false//process.env.NODE_ENV === "development"
