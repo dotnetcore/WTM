@@ -74,8 +74,8 @@ import config from "@/config/index";
         Screenfull,
         SizeSelect,
         Settings,
-        Password,
-    },
+        Password
+    }
 })
 export default class extends Vue {
     get isDev() {
