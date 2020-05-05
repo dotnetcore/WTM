@@ -504,6 +504,7 @@ layui.use(['table'], function(){{
     {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(UseLocalData ? string.Empty : $",url: '{Url}'")}
+    ,headers: {{layuisearch: 'true'}}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
@@ -529,9 +530,12 @@ layui.use(['table'], function(){{
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
     ,done: function(res,curr,count){{
+      if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{Program._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
       var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
       {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
       {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
+       tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{Program._localizer["ColumnFilter"]}');
+       tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{Program._localizer["Print"]}');
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
@@ -893,7 +897,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     if (string.IsNullOrEmpty(item.PromptMessage) == false)
                     {
                         actionScript = $@"
-        layer.confirm('{item.PromptMessage}', function(index){{
+        layer.confirm('{item.PromptMessage}', {{title:'{Program._localizer["Info"]}'}},function(index){{
             {actionScript}
         layer.close(index);
       }});";

@@ -29,12 +29,12 @@
       "Value": "$cs$"
     }
   ],
-  "DBType": "$dbtype$", //使用的数据库，可选mysql,sqlserver,pgsql,sqlite,oracle
-  "IsOldSqlServer":  false,//如果使用sql server2008或者更老的，请设置为true
-  "CookiePre": "$cookiepre$", //cookie前缀
-  "IsQuickDebug": true, //是否启用debug模式
+  "DBType": "$dbtype$", //DataBase, you can choose mysql,sqlserver,pgsql,sqlite,oracle
+  "IsOldSqlServer":  false,//If you are using .netcore 2.x, setting this to true will support sql server 2008
+  "CookiePre": "$cookiepre$", //cookie prefix
+  "IsQuickDebug": true, //is debug mode
   "CorsOptions": {
-    "EnableAll": true, //所有方法是否默认跨域
+    "EnableAll": true,
     "Policy": [
       {
         "Name": "Default",
@@ -46,29 +46,27 @@
   "Languages":"zh,en",
   "UIOptions": {
     "DataTable": {
-      "RPP": $rpp$, //默认列表每页行数
+      "RPP": $rpp$, //default records per page for all datagrid
       "ShowPrint": true,
       "ShowFilter": true
     },
     "ComboBox": {
-      "DefaultEnableSearch": true //默认允许ComboBox搜索
+      "DefaultEnableSearch": true 
     },
     "DateTime": {
-      "DefaultReadonly": true //默认开启DateTime只读
+      "DefaultReadonly": true 
     },
     "SearchPanel": {
-      "DefaultExpand": true //默认展开SearchPanel内容
+      "DefaultExpand": true 
     }
   },
-  "SyncDb": true, //是否自动同步数据库
-  "EncryptKey": "", //加密密钥
-  "PageMode": "$pagemode$", //页面显示模式，Single或者Tab
-  "TabMode": "Simple", //Tab页显示方式，Default或者Simple
-  "IsFilePublic": false,//是否允许附件不用登陆就可以查看和下载
+  "PageMode": "$pagemode$", //display mode，Single or Tab
+  "TabMode": "Simple", //Tab mode，Default or Simple
+  "IsFilePublic": false,//Can download or view attachment file without login
   "FileUploadOptions": {
     "UploadLimit": 20971520,
-    "SaveFileMode": "$filemode$", //上传文件的保存方式，可选Database,local,dfs
-    "UploadDir": "$uploaddir$"    //当上传文件选择Local时，指定硬盘目录
+    "SaveFileMode": "$filemode$", //file attachment mode: Database,local or dfs
+    "UploadDir": "$uploaddir$"    //when file attachment mode is local, set path on your disk
   },
   "DFSServer": {
     "StorageMaxConnection": 100,

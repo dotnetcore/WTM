@@ -3,7 +3,7 @@ import Card from "@/components/layout/components/Card/index.vue";
 // 弹出框
 import DialogBox from "@/components/page/DialogBox/index.vue";
 // 查询
-import SearchBox from "@/components/page/SearchBox.vue";
+import SearchBox from "@/components/page/SearchBox.tsx";
 // 列表
 import TableBox from "@/components/page/TableBox/index.vue";
 // 操作按钮

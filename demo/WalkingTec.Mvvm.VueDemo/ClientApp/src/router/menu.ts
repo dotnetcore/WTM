@@ -10,6 +10,8 @@ interface routerItem {
   meta: {};
 }
 let url_index = 0;
+const urlList: String[] = [];
+
 class Menu {
   constructor() {}
   /**
@@ -18,6 +20,7 @@ class Menu {
    */
   private getRouterItem(menuItem) {
     url_index++;
+    urlList.push("" + url_index);
     const routerItem: RouteConfig = {
       path: menuItem.Url || "" + url_index,
       name: menuItem.Text,
@@ -33,8 +36,8 @@ class Menu {
     if (menuItem.Url) {
       // 判断是否需要 external
       if (
-        isExternal(menuItem.Url) ||
-        _.startsWith(menuItem.Url, config.staticPage)
+        (isExternal(menuItem.Url) ||
+        _.startsWith(menuItem.Url, config.staticPage))
       ) {
         routerItem.component = () => import("@/pages/external/index.vue");
         routerItem.path = `/external_${url_index}`;
@@ -76,7 +79,18 @@ class Menu {
     if (development) {
       menu = require("@/subMenu.json");
     }
-    return this.recursionTree(menu);
+    const trees = this.recursionTree(menu);
+    console.log("trees", trees);
+    return trees.filter(item => {
+      if (
+        urlList.includes(item.path) &&
+        item.children &&
+        item.children.length === 0
+      ) {
+        return false;
+      }
+      return true;
+    });
   }
 
   /**

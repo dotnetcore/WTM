@@ -23,11 +23,11 @@
       , totalRow: true
       , cols: [[
         { type: 'numbers', fixed: 'left' }
-        , { field: 'date', title: '日期', width: 120, sort: true }
-        , { field: 'name', title: '姓名', width: 150, sort: true }
-        , { field: 'amount', title: '金额', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
-        , { field: 'from', title: '来源', width: 60 }
-        , { field: 'comment', title: '留言' }
+        , { field: 'date', title: 'Date', width: 120, sort: true }
+        , { field: 'name', title: 'Name', width: 150, sort: true }
+        , { field: 'amount', title: 'Amount', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
+        , { field: 'from', title: 'From', width: 60 }
+        , { field: 'comment', title: 'Msg' }
       ]]
       , parseData: function(res){
         var list = res.Data;

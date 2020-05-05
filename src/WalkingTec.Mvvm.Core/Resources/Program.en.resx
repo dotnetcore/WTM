@@ -138,6 +138,9 @@
   <data name="Admin" xml:space="preserve">
     <value>Admin</value>
   </data>
+  <data name="Alert" xml:space="preserve">
+    <value>Alert</value>
+  </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
@@ -193,7 +196,7 @@
     <value>CellPhone</value>
   </data>
   <data name="ChangePassword" xml:space="preserve">
-    <value>Change Password</value>
+    <value>Password</value>
   </data>
   <data name="CheckPage" xml:space="preserve">
     <value>Check Page</value>
@@ -207,8 +210,29 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Codegen.ApiOnly" xml:space="preserve">
+    <value>Generate api only, no frontend code</value>
+  </data>
+  <data name="Codegen.confirm" xml:space="preserve">
+    <value>This will generate following files, are you sure?</value>
+  </data>
+  <data name="Codegen.gen" xml:space="preserve">
+    <value>Generate code</value>
+  </data>
+  <data name="Codegen.InputModuleName" xml:space="preserve">
+    <value>Please input module name, such as xxx management</value>
+  </data>
+  <data name="Codegen.setup" xml:space="preserve">
+    <value>Please setup fields</value>
+  </data>
+  <data name="Codegen.start" xml:space="preserve">
+    <value>Start generation</value>
+  </data>
   <data name="CodeGenSuccess" xml:space="preserve">
     <value>Code has been generated, please close the debug and rebuild the solution.</value>
+  </data>
+  <data name="ColumnFilter" xml:space="preserve">
+    <value>Filters</value>
   </data>
   <data name="ComboBox" xml:space="preserve">
     <value>ComboBox</value>
@@ -218,6 +242,9 @@
   </data>
   <data name="ConditionName" xml:space="preserve">
     <value>Condition name</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
   </data>
   <data name="ControllerNs" xml:space="preserve">
     <value>ControllerNs</value>
@@ -266,6 +293,9 @@
   </data>
   <data name="DeleteConfirm" xml:space="preserve">
     <value>Are you sure to delete this data</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>Data is in use, delete failed.</value>
   </data>
   <data name="Details" xml:space="preserve">
     <value>Details</value>
@@ -447,6 +477,9 @@
   <data name="ImportSuccess" xml:space="preserve">
     <value>{0} rows have been imported</value>
   </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
   <data name="Inside" xml:space="preserve">
     <value>Inside</value>
   </data>
@@ -516,6 +549,30 @@
   <data name="MenuItem" xml:space="preserve">
     <value>MenuItem</value>
   </data>
+  <data name="MenuKey.Api" xml:space="preserve">
+    <value>Buildin Api</value>
+  </data>
+  <data name="MenuKey.DataPrivilege" xml:space="preserve">
+    <value>Data Privilege</value>
+  </data>
+  <data name="MenuKey.GroupManagement" xml:space="preserve">
+    <value>Group Management</value>
+  </data>
+  <data name="MenuKey.Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="MenuKey.MenuMangement" xml:space="preserve">
+    <value>Menu Mangement</value>
+  </data>
+  <data name="MenuKey.RoleManagement" xml:space="preserve">
+    <value>Role Management</value>
+  </data>
+  <data name="MenuKey.SystemManagement" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="MenuKey.UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
   <data name="MenuMangement" xml:space="preserve">
     <value>Menu Mangement</value>
   </data>
@@ -536,6 +593,9 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="NeedLogin" xml:space="preserve">
+    <value>You havn't logged in or your login is expired, please login again.</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
     <value>New password</value>
@@ -569,6 +629,9 @@
   </data>
   <data name="NotHave" xml:space="preserve">
     <value>None</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Current password</value>
@@ -656,6 +719,9 @@
   </data>
   <data name="Preview" xml:space="preserve">
     <value>Preview</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
   </data>
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>

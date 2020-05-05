@@ -1,8 +1,9 @@
 import { BasicLayout, GridContent } from '@ant-design/pro-layout';
+import { Icon } from 'antd';
 import LayoutSpin from "components/other/LayoutSpin";
 import GlobalConfig from 'global.config';
 import lodash from 'lodash';
-import { action, toJS, observable } from 'mobx';
+import { action, observable, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { renderRoutes } from 'react-router-config';
@@ -10,10 +11,10 @@ import { Link } from 'react-router-dom';
 import Store from 'store/index';
 import RightContent from './GlobalHeader/RightContent';
 import UserMenu from './GlobalHeader/userMenu';
-import TabsPages from './TabsPages';
 import SettingDrawer, { ContentWidth } from './SettingDrawer';
+import themeColor from 'utils/themeColor';
 import './style.less';
-import { Icon } from 'antd';
+import TabsPages from './TabsPages';
 // import { ConfigConsumer } from 'antd/lib/config-provider';
 // import {  } from 'antd';
 // ConfigConsumer
@@ -29,12 +30,16 @@ export default class App extends React.Component<any> {
      */
     @action.bound
     onSettingChange(settings) {
+        if (!lodash.eq(settings.primaryColor, GlobalConfig.settings.primaryColor)) {
+            themeColor.changeColor(settings.primaryColor)
+        }
         GlobalConfig.settings = settings;
     }
     @action.bound
     changeLang(event) {
         GlobalConfig.language = event.key;
         window['g_locale'] = GlobalConfig.language;
+        window.location.reload()
     }
     // 菜单 打开 的 key
     defaultOpenKeys = [];
@@ -86,7 +91,7 @@ export default class App extends React.Component<any> {
                         <RightContent {...rightProps} selectedLang={language} changeLang={this.changeLang} >
                             <UserMenu {...rightProps} {...this.props} />
                             <div className={`ant-pro-setting ${settings.navTheme} ${settings.layout}`} onClick={this.togglerContent}>
-                                <Icon type={ 'setting'} />
+                                <Icon type={'setting'} />
                             </div>
                         </RightContent>
                     )}

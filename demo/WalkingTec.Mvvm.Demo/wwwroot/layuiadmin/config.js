@@ -1,141 +1,132 @@
-/**
-
- @Name：全局配置
- @Author：贤心
- @Site：http://www.layui.com/admin/
- @License：LPPL（layui付费产品协议）
-
- */
 
 layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
   exports('setter', {
-    container: 'LAY_app' //容器ID
-    , base: layui.cache.base //记录layuiAdmin文件夹所在路径
+    container: 'LAY_app' //container ID
+    , base: layui.cache.base //path of layuiAdmin folder
 
-    , views: '/' //视图所在目录
-    , entry: 'Home/FrontPage' //默认视图文件名
-    , engine: '' //视图文件后缀名
+    , views: '/' //path of views
+    , entry: 'Home/FrontPage' //entry page
+    , engine: '' //view surfix
 
-    , pageTabs: $.cookie("pagemode") === 'Tab' //是否开启页面选项卡功能。单页版不推荐开启
+    , pageTabs: $.cookie("pagemode") === 'Tab' //tab mode
 
 
     , name: 'WTM'
-    , tableName: 'layuiAdmin' //本地存储表名
-    , MOD_NAME: '_wtm' //模块事件名
+    , tableName: 'layuiAdmin' //local storage name
+    , MOD_NAME: '_wtm' 
 
-    , debug: true //是否开启调试模式。如开启，接口异常时会抛出异常 URL 等信息
+    , debug: true 
 
-    , interceptor: false //是否开启未登入拦截
+    , interceptor: false 
 
-    //自定义请求字段
+    
     , request: {
-      tokenName: 'access_token' //自动携带 token 的字段名。可设置 false 不携带。
+      tokenName: 'access_token' 
     }
 
-    //自定义响应字段
+    
     , response: {
-      statusName: 'Code' //数据状态的字段名称
+      statusName: 'Code' 
       , statusCode: {
-        ok: 200 //数据状态一切正常的状态码
-        , logout: 1001 //登录状态失效的状态码
+        ok: 200 
+        , logout: 1001 
       }
-      , msgName: 'Msg' //状态信息的字段名称
-      , dataName: 'Data' //数据详情的字段名称
+      , msgName: 'Msg' 
+      , dataName: 'Data' 
     }
 
-    //独立页面路由，可随意添加（无需写参数）
+    
     , indPage: [
-      '/user/login' //登入页
-      , '/user/reg' //注册页
-      , '/user/forget' //找回密码
-      , '/template/tips/test' //独立页的一个测试 demo
+      '/user/login' 
+      , '/user/reg' 
+      , '/user/forget' 
+      , '/template/tips/test' 
     ]
 
-    //扩展的第三方模块
+   
     , extend: [
-      'echarts', //echarts 核心包
-      'echartsTheme' //echarts 主题
+      'echarts', 
+      'echartsTheme' 
     ]
 
-    //主题配置
+    
     , theme: {
-      //内置主题配色方案
+      
       color: [{
-        main: '#20222A' //主题色
-        , selected: '#009688' //选中色
-        , alias: 'default' //默认别名
+        main: '#20222A' 
+        , selected: '#009688' 
+        , alias: 'default'
       }, {
         main: '#03152A'
         , selected: '#3B91FF'
-        , alias: 'dark-blue' //藏蓝
+        , alias: 'dark-blue' //藏蓝Tibetan blue
       }, {
         main: '#2E241B'
         , selected: '#A48566'
-        , alias: 'coffee' //咖啡
+        , alias: 'coffee' //咖啡Cofee
       }, {
         main: '#50314F'
         , selected: '#7A4D7B'
-        , alias: 'purple-red' //紫红
+        , alias: 'purple-red' //紫红Purplish red
       }, {
         main: '#344058'
         , logo: '#1E9FFF'
         , selected: '#1E9FFF'
-        , alias: 'ocean' //海洋
+        , alias: 'ocean' //海洋ocean
       }, {
         main: '#3A3D49'
         , logo: '#2F9688'
         , selected: '#5FB878'
-        , alias: 'green' //墨绿
+        , alias: 'green' //墨绿blackish green
       }, {
         main: '#20222A'
         , logo: '#F78400'
         , selected: '#F78400'
-        , alias: 'red' //橙色
+        , alias: 'red' //橙色orange
       }, {
         main: '#28333E'
         , logo: '#AA3130'
         , selected: '#AA3130'
-        , alias: 'fashion-red' //时尚红
+        , alias: 'fashion-red' //时尚红fashion red
       }, {
         main: '#24262F'
         , logo: '#3A3D49'
         , selected: '#009688'
-        , alias: 'classic-black' //经典黑
+        , alias: 'classic-black' //经典黑classic black
       }, {
         logo: '#226A62'
         , header: '#2F9688'
-        , alias: 'green-header' //墨绿头
+        , alias: 'green-header' //墨绿头blackish green header
       }, {
         main: '#344058'
         , logo: '#0085E8'
         , selected: '#1E9FFF'
         , header: '#1E9FFF'
-        , alias: 'ocean-header' //海洋头
+        , alias: 'ocean-header' //海洋头ocean header
       }, {
         header: '#393D49'
-        , alias: 'classic-black-header' //经典黑
+        , alias: 'classic-black-header' //经典黑classic black header
       }, {
         main: '#50314F'
         , logo: '#50314F'
         , selected: '#7A4D7B'
         , header: '#50314F'
-        , alias: 'purple-red-header' //紫红头
+        , alias: 'purple-red-header' //紫红头 Purplish red header
       }, {
         main: '#28333E'
         , logo: '#28333E'
         , selected: '#AA3130'
         , header: '#AA3130'
-        , alias: 'fashion-red-header' //时尚红头
+        , alias: 'fashion-red-header' //时尚红头fashion red header
       }, {
         main: '#28333E'
         , logo: '#009688'
         , selected: '#009688'
         , header: '#009688'
-        , alias: 'green-header' //墨绿头
+        , alias: 'green-header' //墨绿头blackish green header
       }]
 
-      //初始的颜色索引，对应上面的配色方案数组索引
-      //如果本地已经有主题色记录，则以本地记录为优先，除非请求本地数据（localStorage）
+      
       , initColorIndex: 0
     }
   });

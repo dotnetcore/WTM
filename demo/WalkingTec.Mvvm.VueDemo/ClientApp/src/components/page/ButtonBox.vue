@@ -81,7 +81,7 @@ export default class ButBox extends Vue {
                 add: "add",
                 edit: "edit",
                 batchDelete: "batchDelete",
-                import: "Import",
+                import: "imported",
                 exportExcel: "exportExcel",
                 exportExcelByIds: "exportExcelByIds"
             };

@@ -1,3 +1,2 @@
-// 当前页面样式
 .app-page-$modelname$ {
 }

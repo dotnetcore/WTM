@@ -1,0 +1,41 @@
+﻿<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="front-end and back-end separation">
+    <p>Although in my view, there is no need to separate the front and back ends by a  back-end management program at all, along with times developing, requirements for the interface of the back-end management program are getting higher and higher, and product managers are constantly trying to apply the ‘To c’ bushiness interaction to the management ‘To B’ bushiness.
+    <p>Once the front-end and back-end are separated, it will inevitably improve the cost of personnel, communication costs and code complexity.</p>
+    <p>WTM's front-end and back-end separation mode defines a set of universally applicable front-end and back-end interface specifications, realizes one key generation of front-end, back-end and API documents, minimizes development costs and improves development efficiency.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="front-end and back-end separation">
+    <wt:quote>
+        <p>You can directly generate the front end and back end separated projects online.<a href="/setup" target="_blank">Click here </a> to directly generate the zip package containing the solution for you. Download, decompress and open vs</p>
+    </wt:quote>
+
+    <ul class="doc">
+        <li>
+            Similar to the non separated projects, only when running setup, select react mode (VUE will be supported later),as shown in the figure below:<br /><br />
+            <img src="~/imgs/react1.png" width="1200" /><br /><br />
+        </li>
+        <li>
+            After generating the project, press F5 to run it. The first time you run it, you will download many dependent packages of JavaScript. Please wait patiently for a long time. The running result is as shown in the figure below<br /><br />
+            <img src="~/imgs/react3.png" width="1200"/><br /><br />
+            <wt:quote>
+                <p>建议使用淘宝的npm镜像来加快依赖包的安装速度</p>
+            </wt:quote>
+        </li>
+        <li>
+            Through the menu in the upper right corner, we can start the code generator to generate code according to the model and access the swagger document of the interface.<br />
+            For how to use the code generator，please refer to the <a href="/#/QuickStart/FirstModule">first module</a><br />
+            The steps of generating code are the same, except that in the mode of front-end and back-end separation, the back-end API and front-end react pages will be generated
+        </li>
+        <li>
+            The front-end code will be in the ClientApp directory. When we debug in VisualStudio, it will automatically start the front-end and back-end, which is very convenient.<br />
+            ClientApp directory is a complete React project. Pure front-end engineer can directly open ClientAppdirectory with compiler such as Code, which is no different from other React projects.<br />
+            The pure front-end engineer generally don't like to install Visual Studio. They can let the front-end people only install. Net core SDK (above 2.2), and  enter dotnet run --launch-profile ApiOnly in the directory where the project is located through the command line. In this way, they can directly start the back-end API and play at will.
+        </li>
+
+    </ul>
+</wt:fieldset>

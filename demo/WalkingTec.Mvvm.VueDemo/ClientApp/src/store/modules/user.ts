@@ -3,7 +3,8 @@ import {
   Module,
   Action,
   Mutation,
-  getModule
+  getModule,
+  MutationAction
 } from "vuex-module-decorators";
 import { getToken, setToken, removeToken } from "@/util/cookie";
 import { resetRouter } from "@/router";
@@ -88,6 +89,16 @@ class User extends VuexModule implements IUserState {
     removeToken();
     // 单页面
     this.ResetToken();
+  }
+
+  @Action
+  public ChangePassword(params) {
+    return _request({
+      ...serviceUrl.ChangePassword,
+      data: { ...params }
+    }).catch(({ response }) => {
+      return { error: true, data: response.data };
+    });
   }
   /********************* 单页面 需要如下***********************/
   @Action

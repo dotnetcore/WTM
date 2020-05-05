@@ -3,17 +3,18 @@ import config from "@/config/index";
 import { DirectiveOptions } from "vue";
 /**
  * 按钮 action权限
+ * v-visible="{api path}"
  */
 const visible: DirectiveOptions = {
   inserted: (el, { value }, vnode) => {
     if (config.development) {
       return;
     }
-    const actions = UserModule.actionList.map(item => item.toUpperCase());
+    const actions = UserModule.actionList.map((item) => item.toUpperCase());
     if (_.isArray(value)) {
       const fslist = _.filter(
         value,
-        item => !!item && actions.includes(item.toUpperCase())
+        (item) => !!item && actions.includes(item.toUpperCase())
       );
       if (fslist.length < 1) {
         el.parentNode && el.parentNode.removeChild(el);
@@ -23,6 +24,6 @@ const visible: DirectiveOptions = {
         el.parentNode && el.parentNode.removeChild(el);
       }
     }
-  }
+  },
 };
 export default visible;

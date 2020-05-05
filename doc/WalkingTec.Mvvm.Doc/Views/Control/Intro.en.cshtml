@@ -1,0 +1,95 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+WTM framework provides a BaseController. All Controller written in the framework should inherit this base class. BaseControllerprovides many convenient properties and methods
+
+<wt:fieldset field-set-style="Simple" title="Attribute specification">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Property</th>
+                <th lay-data="{field:'joinTime', width:600}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ConfigInfo</td>
+                <td>Get profile data,For details refers to <a href="/#/Global/Global">global variables</a></td>
+            </tr>
+            <tr>
+                <td>GlobaInfo</td>
+                <td>Get some global variables.For details refers to<a href="/#/Global/Global"> global variables </a></td>
+            </tr>
+            <tr>
+                <td>UIService</td>
+                <td>Get UI service and provide some functions to generate foreground HTML control conveniently</td>
+            </tr>
+            <tr>
+                <td>Cache</td>
+                <td>Get cache</td>
+            </tr>
+            <tr>
+                <td>ParentWindowId</td>
+                <td>Get the ID of the parent page of the front-end page</td>
+            </tr>
+            <tr>
+                <td>CurrentWindowId</td>
+                <td>Get the ID of the current window of the front-end page </td>
+            </tr>
+            <tr>
+                <td>DC</td>
+                <td>Database environment</td>
+            </tr>
+            <tr>
+                <td>LoginUserInfo</td>
+                <td>Current login user information</td>
+            </tr>
+        </tbody>
+    </table>
+
+<wt:fieldset field-set-style="Simple" title="Method description">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Method</th>
+                <th lay-data="{field:'joinTime', width:600}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CreateVM()</td>
+                <td>Create a new ViewModel. All VMS in the framework should be created in the Controller through this function</td>
+            </tr>
+            <tr>
+                <td>CreateDC()</td>
+                <td>Create database environment</td>
+            </tr>
+            <tr>
+                <td>RedoValidation()</td>
+                <td>Validate a model by simulating MVC</td>
+            </tr>
+            <tr>
+                <td>RedoUpdateModel</td>
+                <td>initialize a model by simulating MVC based on the data from post</td>
+            </tr>
+            <tr>
+                <td>DoLog()</td>
+                <td>Log</td>
+            </tr>
+            <tr>
+                <td>FFResult()</td>
+                <td>Inherited from ContentResult, used to output some commonly used JS to the front-end</td>
+            </tr>
+        </tbody>
+    </table>
+
+<script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+</script>
