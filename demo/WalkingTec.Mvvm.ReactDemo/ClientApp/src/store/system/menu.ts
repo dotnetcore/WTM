@@ -12,6 +12,8 @@ import lodash from 'lodash';
 import Request from 'utils/Request';
 import User from './user';
 import globalConfig from 'global.config';
+import { getLocalesValue } from 'locale';
+
 class Store {
     constructor() {
     }
@@ -62,7 +64,7 @@ class Store {
             return lodash.merge(data, {
                 key: data.Id,
                 path: data.Url || '',
-                name: data.Text,
+                name: getLocalesValue(data.Text, data.Text),
                 icon: data.Icon || "pic-right",
                 children: []
             })
