@@ -94,14 +94,14 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
      * @param data
      */
     onEdit(data) {
-      this.openDialog(this.$actionType.edit, data);
+      this.openDialog(this.$actionType.edit, { ID: data.ID });
     }
     /**
      * 详情
      * @param data
      */
     onDetail(data) {
-      this.openDialog(this.$actionType.detail, data);
+      this.openDialog(this.$actionType.detail, { ID: data.ID });
     }
     /**
      * 单个删除

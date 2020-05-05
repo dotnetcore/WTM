@@ -196,7 +196,7 @@
     <value>CellPhone</value>
   </data>
   <data name="ChangePassword" xml:space="preserve">
-    <value>Change Password</value>
+    <value>Password</value>
   </data>
   <data name="CheckPage" xml:space="preserve">
     <value>Check Page</value>

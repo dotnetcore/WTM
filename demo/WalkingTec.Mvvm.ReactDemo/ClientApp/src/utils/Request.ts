@@ -37,7 +37,7 @@ export class Request {
         if (typeof target === "string") {
             this.target = target;
         }
-        this.getHeaders();
+        // this.getHeaders();
     }
     /** 
      * 请求路径前缀
@@ -47,11 +47,7 @@ export class Request {
      * 获取 认证 token请求头
      */
     getHeaders() {
-        return {
-            ...GlobalConfig.headers,
-            'Accept-Language': GlobalConfig.language,
-            token: GlobalConfig.token.get()
-        }
+        return GlobalConfig.getHeaders()
     }
 
     /**
@@ -213,7 +209,7 @@ export class Request {
      */
     ajax(urlOrRequest: string | AjaxRequest) {
         if (lodash.isString(urlOrRequest)) {
-            return this.AjaxObservable(ajax(this.get({ url: urlOrRequest })))
+            return this.AjaxObservable(ajax(this.get({ url: urlOrRequest, headers: this.getHeaders() })))
         }
         urlOrRequest.headers = { ...this.getHeaders(), ...urlOrRequest.headers };
         switch (lodash.toLower(urlOrRequest.method)) {
