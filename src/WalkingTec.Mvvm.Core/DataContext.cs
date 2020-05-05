@@ -48,11 +48,11 @@ namespace WalkingTec.Mvvm.Core
         /// FrameworkContext
         /// </summary>
         /// <param name="cs"></param>
-        public FrameworkContext(string cs):base(cs)
+        public FrameworkContext(string cs) : base(cs)
         {
         }
 
-        public FrameworkContext(string cs, DBTypeEnum dbtype, string version=null):base(cs,dbtype,version)
+        public FrameworkContext(string cs, DBTypeEnum dbtype, string version = null) : base(cs, dbtype, version)
         {
         }
 
@@ -126,32 +126,44 @@ namespace WalkingTec.Mvvm.Core
                     {
                         systemManagement.Children.AddRange(new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList });
                         Set<FrameworkMenu>().Add(systemManagement);
+
+                        if (IsSpa == false)
+                        {
+                            systemManagement.ICon = "layui-icon layui-icon-set";
+                            logList.ICon = "layui-icon layui-icon-form";
+                            userList.ICon = "layui-icon layui-icon-friends";
+                            roleList.ICon = "layui-icon layui-icon-user";
+                            groupList.ICon = "layui-icon layui-icon-group";
+                            menuList.ICon = "layui-icon layui-icon-menu-fill";
+                            dpList.ICon = "layui-icon layui-icon-auz";
+
+                            var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole }, null);
+                            apifolder.ShowOnMenu = false;
+                            apifolder.DisplayOrder = 100;
+                            var logList2 = GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1);
+                            var userList2 = GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2);
+                            var roleList2 = GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3);
+                            var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
+                            var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
+                            var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
+                            var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2 };
+                            //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
+                            apifolder.Children.AddRange(apis);
+                            Set<FrameworkMenu>().Add(apifolder);
+                        }
+                        else
+                        {
+                            systemManagement.ICon = " _wtmicon _wtmicon-icon_shezhi";
+                            logList.ICon = " _wtmicon _wtmicon-chaxun";
+                            userList.ICon = " _wtmicon _wtmicon-zhanghaoquanxianguanli";
+                            roleList.ICon = " _wtmicon _wtmicon-quanxianshenpi";
+                            groupList.ICon = " _wtmicon _wtmicon-zuzhiqunzu";
+                            menuList.ICon = " _wtmicon _wtmicon--lumingpai";
+                            dpList.ICon = " _wtmicon _wtmicon-anquan";
+
+                        }
                     }
 
-                    if(IsSpa == false)
-                    {
-                        systemManagement.ICon = "layui-icon layui-icon-set";
-                        logList.ICon = "layui-icon layui-icon-form";
-                        userList.ICon = "layui-icon layui-icon-friends";
-                        roleList.ICon = "layui-icon layui-icon-user";
-                        groupList.ICon = "layui-icon layui-icon-group";
-                        menuList.ICon = "layui-icon layui-icon-menu-fill";
-                        dpList.ICon = "layui-icon layui-icon-auz";
-
-                        var apifolder = GetFolderMenu("Api", new List<FrameworkRole> { adminRole }, null);
-                        apifolder.ShowOnMenu = false;
-                        apifolder.DisplayOrder = 100;
-                        var logList2 = GetMenu2(AllModules, "ActionLog", new List<FrameworkRole> { adminRole }, null, 1) ;
-                        var userList2 = GetMenu2(AllModules, "FrameworkUser", new List<FrameworkRole> { adminRole }, null, 2);
-                        var roleList2 = GetMenu2(AllModules, "FrameworkRole", new List<FrameworkRole> { adminRole }, null, 3);
-                        var groupList2 = GetMenu2(AllModules, "FrameworkGroup", new List<FrameworkRole> { adminRole }, null, 4);
-                        var menuList2 = GetMenu2(AllModules, "FrameworkMenu", new List<FrameworkRole> { adminRole }, null, 5);
-                        var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
-                        var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2};
-                        //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
-                        apifolder.Children.AddRange(apis);
-                        Set<FrameworkMenu>().Add(apifolder);
-                    }
                 }
                 Set<FrameworkRole>().AddRange(roles);
                 Set<FrameworkUserBase>().AddRange(users);
@@ -165,7 +177,7 @@ namespace WalkingTec.Mvvm.Core
         {
             FrameworkMenu menu = new FrameworkMenu
             {
-                PageName = "MenuKey."+ FolderText,
+                PageName = "MenuKey." + FolderText,
                 Children = new List<FrameworkMenu>(),
                 Privileges = new List<FunctionPrivilege>(),
                 ShowOnMenu = isShowOnMenu,
@@ -262,7 +274,7 @@ namespace WalkingTec.Mvvm.Core
             };
             if (isMainLink)
             {
-                menu.PageName = "MenuKey."+act.Module.ActionDes?.Description;
+                menu.PageName = "MenuKey." + act.Module.ActionDes?.Description;
                 menu.ModuleName = "MenuKey." + act.Module.ActionDes?.Description;
                 menu.ActionName = act.ActionDes?.Description ?? act.ActionName;
                 menu.MethodName = null;
@@ -332,7 +344,7 @@ namespace WalkingTec.Mvvm.Core
             CSName = cs;
         }
 
-        public EmptyContext(string cs, DBTypeEnum dbtype,string version=null)
+        public EmptyContext(string cs, DBTypeEnum dbtype, string version = null)
         {
             CSName = cs;
             DBType = dbtype;
