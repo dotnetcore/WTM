@@ -6,6 +6,7 @@
     <Title>$(AssemblyName)</Title>
     <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
