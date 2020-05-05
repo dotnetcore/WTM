@@ -106,11 +106,15 @@ namespace WalkingTec.Mvvm.Mvc
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                     {
-                        var userInfo = DC.Set<FrameworkUserBase>()
+                        FrameworkUserBase userInfo = null;
+                        if (DC != null)
+                        {
+                            userInfo = DC.Set<FrameworkUserBase>()
                                             .Include(x => x.UserRoles)
                                             .Include(x => x.UserGroups)
                                             .Where(x => x.ID == userId && x.IsValid == true)
                                             .SingleOrDefault();
+                        }
                         if (userInfo != null)
                         {
                             // 初始化用户信息

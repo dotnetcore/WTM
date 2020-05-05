@@ -43,11 +43,11 @@
           <i class="layui-icon layui-icon-screen-full"></i>
         </a>
       </li>
-      <li class="layui-nav-item" lay-unselect>
+      <li class="layui-nav-item" lay-unselect style="margin-right:20px;">
         <a href="javascript:;">
           <cite>@requestCulture.RequestCulture.UICulture.NativeName</cite>
         </a>
-        <dl class="layui-nav-child">
+        <dl class="layui-nav-child" >
           @foreach (var item in cultureItems)
           {
             <dd>
@@ -62,8 +62,7 @@
   <!-- 侧边菜单 -->
   <div class="layui-side layui-side-menu">
     <div class="layui-side-scroll">
-       <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}" 
-      @*<script type="text/html" template lay-url="/_Framework/Menu"*@
+       <script type="text/html" template lay-url="./json/@(requestCulture.RequestCulture.UICulture.Name?.ToLower().StartsWith("zh")==true?"menu":"menuen").js?v={{ layui.admin.v }}" 
               lay-done="layui.element.render('nav', 'layadmin-system-side-menu');layui.event.call(this, layui.setter.MOD_NAME, 'hash({*})', layui.router());" id="TPL_layout">
 
         <div class="layui-logo" lay-href="">

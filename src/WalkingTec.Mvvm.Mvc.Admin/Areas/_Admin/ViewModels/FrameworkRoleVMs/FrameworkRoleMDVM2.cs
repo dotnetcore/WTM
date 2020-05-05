@@ -43,6 +43,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 {
                     item.AllActions = new List<ComboSelectListItem>();
                 }
+                foreach (var act in item.AllActions)
+                {
+                    if (act.Text?.StartsWith("MenuKey.") == true)
+                    {
+                        if (Localizer[act.Text].ResourceNotFound == true)
+                        {
+                            act.Text = Core.Program._localizer[act.Text];
+                        }
+                        else
+                        {
+                            act.Text = Localizer[act.Text];
+                        }
+                    }
+                }
                 item.AllActions.Insert(0, new ComboSelectListItem { Text = Program._localizer["MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value));
                 item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
