@@ -66,6 +66,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return rv;
         }
 
+        [Public]
+        public string RefreshVersion()
+        {
+            Cache.Delete("nugetversion");
+            return "OK";
+        }
+
         public class github
         {
             public int stargazers_count { get; set; }

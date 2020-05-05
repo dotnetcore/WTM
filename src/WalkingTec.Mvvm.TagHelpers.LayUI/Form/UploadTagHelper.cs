@@ -51,6 +51,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string CustomType { get; set; }
 
+        public string ConnectionString { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "button";
@@ -110,9 +112,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     url += "&height=" + ThumbHeight;
                 }
             }
-            if (vm != null)
+            if (string.IsNullOrEmpty(ConnectionString) == true)
             {
-                url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                if (vm != null)
+                {
+                    url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                }
+            }
+            else
+            {
+                url += $"&_DONOT_USE_CS={ConnectionString}";
             }
 
             output.PreElement.SetHtmlContent($@"

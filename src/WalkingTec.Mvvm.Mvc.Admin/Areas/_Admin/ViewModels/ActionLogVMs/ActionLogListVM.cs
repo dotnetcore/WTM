@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
         {
             var header = new List<GridColumn<ActionLog>>();
 
-            header.Add(this.MakeGridHeader(x => x.LogType, 80).SetForeGroundFunc((entity)=> {
+            header.Add(this.MakeGridHeader(x => x.LogType, 100).SetForeGroundFunc((entity)=> {
                 if(entity.LogType == ActionLogTypesEnum.Exception)
                 {
                     return "FF0000";

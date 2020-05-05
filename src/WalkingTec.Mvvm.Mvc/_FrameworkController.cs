@@ -690,8 +690,8 @@ namespace WalkingTec.Mvvm.Mvc
         {
             return ReadFromCache<string>("githubstar", () =>
             {
-                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
-                return s.stargazers_count.ToString();
+                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
+                return s==null? "" :s.stargazers_count.ToString();
             }, 1800);
         }
 
@@ -700,8 +700,8 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetGithubInfo()
         {
             var rv = ReadFromCache<string>("githubinfo", () =>
-            {
-                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+            {               
+                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return JsonConvert.SerializeObject(s);
             }, 1800);
             return Content(rv, "application/json");
