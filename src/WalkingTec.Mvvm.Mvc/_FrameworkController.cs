@@ -693,7 +693,7 @@ namespace WalkingTec.Mvvm.Mvc
             return ReadFromCache<string>("githubstar", () =>
             {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
-                return s.stargazers_count.ToString();
+                return s==null? "" :s.stargazers_count.ToString();
             }, 1800);
         }
 
