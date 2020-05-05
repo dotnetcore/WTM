@@ -8,8 +8,8 @@ export const ASSEMBLIES: Array<string> = [
 ];
 
 export const TABLE_HEADER: Array<object> = [
-  { key: "GroupCode", sortable: true, label: "用户组编码" },
-  { key: "GroupName", sortable: true, label: "用户组名称" },
-  { key: "GroupRemark", sortable: true, label: "备注" },
+    { key: "GroupCode", sortable: "custom", label: "用户组编码" },
+    { key: "GroupName", sortable: "custom", label: "用户组名称" },
+    { key: "GroupRemark", sortable: "custom", label: "备注" },
   { isOperate: true, label: "操作", actions: ["detail", "edit", "deleted"] } //操作列
 ];
