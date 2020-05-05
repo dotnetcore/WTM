@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Distributed;
 using NPOI.HSSF.Util;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Runtime.Loader;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support;
 
 namespace WalkingTec.Mvvm.Core
@@ -701,14 +703,25 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetNugetVersion(string start = null, bool pre = false)
         {
-            NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+            var Cache = GlobalServices.GetRequiredService<IDistributedCache>() as IDistributedCache;
+            if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
+            {
+                NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+                var data = v;
+                    Cache.Add("nugetversion", data, new DistributedCacheEntryOptions()
+                    {
+                        SlidingExpiration = new TimeSpan(0, 0, 36000)
+                    });
+                rv = data;
+            }
+
             if (string.IsNullOrEmpty(start))
             {
-                return v.data[0]?.version;
+                return rv.data[0]?.version;
             }
             else
             {
-                return v.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
+                return rv.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
             }
         }
     }

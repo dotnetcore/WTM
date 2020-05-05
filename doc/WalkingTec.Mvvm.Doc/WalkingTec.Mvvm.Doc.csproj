@@ -13,6 +13,8 @@
   <ItemGroup>
     <None Remove="SetupFiles\Mvc\home\FrontPage2.txt" />
     <None Remove="SetupFiles\Mvc\home\Reg.txt" />
+    <None Remove="SetupFiles\SetupIndex1_en.txt" />
+    <None Remove="SetupFiles\SetupIndex_en.txt" />
     <None Remove="SetupFiles\Spa\React\Program.txt" />
     <None Remove="SetupFiles\Spa\React\Program3.txt" />
     <None Remove="SetupFiles\Spa\Vue\ClientApp.zip" />
@@ -50,7 +52,9 @@
     <EmbeddedResource Include="SetupFiles\Proj3.txt" />
     <EmbeddedResource Include="SetupFiles\Resourceen.txt" />
     <EmbeddedResource Include="SetupFiles\Resourcezh.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex_en.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1_en.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />

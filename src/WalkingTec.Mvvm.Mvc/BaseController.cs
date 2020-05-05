@@ -214,11 +214,15 @@ namespace WalkingTec.Mvvm.Mvc
                         FrameworkUserBase userInfo = null;
                         if (DC != null)
                         {
-                            userInfo = DC.Set<FrameworkUserBase>()
-                                                .Include(x => x.UserRoles)
-                                                .Include(x => x.UserGroups)
-                                                .Where(x => x.ID == userId && x.IsValid == true)
-                                                .SingleOrDefault();
+                            try
+                            {
+                                userInfo = DC.Set<FrameworkUserBase>()
+                                                    .Include(x => x.UserRoles)
+                                                    .Include(x => x.UserGroups)
+                                                    .Where(x => x.ID == userId && x.IsValid == true)
+                                                    .SingleOrDefault();
+                            }
+                            catch { }
                         }
                         if (userInfo != null)
                         {

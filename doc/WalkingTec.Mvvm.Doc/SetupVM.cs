@@ -504,9 +504,17 @@ module.exports = (app) => {{
             }
         }
 
-        public string GetIndex()
+        public string GetIndex(bool en=false)
         {
-            var rv = GetResource("SetupIndex.txt");
+            string rv = "";
+            if (en == false)
+            {
+                rv = GetResource("SetupIndex.txt");
+            }
+            else
+            {
+                rv = GetResource("SetupIndex_en.txt");
+            }
             string dbname = "";
             if (MainNs.Contains("."))
             {
@@ -525,6 +533,13 @@ module.exports = (app) => {{
             var rv = GetResource("SetupIndex1.txt");
             return rv;
         }
+
+        public string GetIndex1En()
+        {
+            var rv = GetResource("SetupIndex1_en.txt");
+            return rv;
+        }
+
 
         private string GetResource(string fileName, string subdir = "")
         {
