@@ -5,10 +5,21 @@
 @inject IOptions<RequestLocalizationOptions> LocOptions
 
 @{
-  var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-  var cultureItems = LocOptions.Value.SupportedUICultures
-      .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
-      .ToList();
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+        .ToList();
+    foreach (var item in cultureItems)
+    {
+      if(item.Value == "zh")
+      {
+        item.Text = "简体中文";
+      }
+      else
+      {
+        item.Text = "English";
+      }
+    }
 }
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
@@ -45,7 +56,7 @@
       </li>
       <li class="layui-nav-item" lay-unselect style="margin-right:20px;">
         <a href="javascript:;">
-          <cite>@requestCulture.RequestCulture.UICulture.NativeName</cite>
+          <cite>@(requestCulture.RequestCulture.UICulture.Name == "zh"?"简体中文":"English")</cite>
         </a>
         <dl class="layui-nav-child" >
           @foreach (var item in cultureItems)
