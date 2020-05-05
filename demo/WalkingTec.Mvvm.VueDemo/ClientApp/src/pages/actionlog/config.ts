@@ -8,7 +8,7 @@ export const TABLE_HEADER: Array<object> = [
   { key: "ITCode", label: "ITCode" },
   { key: "ActionUrl", label: "地址" },
   { key: "ActionTime", label: "操作时间" },
-  { key: "Duration", label: "时长" },
+    { key: "Duration", sortable: "custom",label: "时长" },
   { key: "IP", label: "IP" },
   { key: "Remark", label: "备注" },
   { isOperate: true, label: "操作", actions: ["detail", "deleted"] } //操作列

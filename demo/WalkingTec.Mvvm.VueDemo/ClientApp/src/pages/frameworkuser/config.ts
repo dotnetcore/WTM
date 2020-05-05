@@ -8,9 +8,9 @@ export const ASSEMBLIES: Array<string> = [
 ];
 // 列表
 export const TABLE_HEADER: Array<object> = [
-  { key: "ITCode", sortable: true, label: "账号" },
-  { key: "Name", sortable: true, label: "姓名" },
-  { key: "Sex", sortable: true, label: "性别" },
+    { key: "ITCode", sortable: "custom", label: "账号" },
+    { key: "Name", sortable: "custom", label: "姓名" },
+    { key: "Sex", sortable: "custom", label: "性别" },
   { key: "PhotoId", label: "照片", isSlot: true },
   { key: "IsValid", label: "是否生效", isSlot: true },
   { key: "RoleName_view", label: "角色" },
