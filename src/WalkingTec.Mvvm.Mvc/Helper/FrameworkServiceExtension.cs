@@ -564,9 +564,9 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             ID = Guid.NewGuid(),
                             ParentId = modelmenu.ID,
-                            PageName = page.Module.ActionDes.Description,
+                            PageName = page.Module.ActionDes == null ? page.Module.ModuleName : page.Module.ActionDes.Description,
                             Url = url
-                        });
+                        }) ;
                     }
                 }
             }
