@@ -1,0 +1,105 @@
+<html>
+<style>
+    body{
+        margin:0px;
+        padding:0px;
+        list-style: none;
+        font-family: Hiragino Sans GB,Helvetica Neue,Microsoft Yahei,Arial,\5b8b\4f53,sans-serif;
+    }
+
+    .container{
+        width:90%;
+        margin:30px auto;
+        /*background: #f9f9f9;*/
+        /*padding: 20px;*/
+    }
+    .field{
+        position: relative;
+    }
+    .field legend{
+        padding-bottom: 10px;
+        font-size: 20px;
+        font-weight: 300;
+        margin-bottom: 20px;
+        /*border-bottom: 1px solid #e4e3e3;*/
+        /*font-size: 18px;*/
+    }
+    .content table tr td:nth-child(odd){
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 240px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+        color: #151515;
+    }
+
+    .content table tr td:nth-child(even){
+        /*margin-left: 110px;*/
+        display: inline-block;
+        min-height: 36px;
+    }
+
+    .content table tr{
+        margin-bottom: 15px;
+        clear: both;
+        display: block;
+    }
+
+    .content table tr:nth-child(1) td:nth-child(2) input{
+        width:500px !important;
+    }
+
+    .content table tr td:nth-child(even) input,select{
+        display: block;
+        width: 200px;
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 34px;
+        border:1px solid #e8e7e4;
+    }
+    .content table tr td:nth-child(even) input[type="checkbox"]{
+        width: auto;
+    }
+    .content .submitColor{
+        background: #01AAED;
+        color:#fff;
+        border:0px;
+        padding:10px 20px;
+        border-radius: 2px;
+        margin-left: 16%;
+        margin-top: 20px;
+    }
+  .submitColor:hover{
+        background: #1E9FFF;
+        cursor: pointer;
+    }
+    /*.content .submitColor{*/
+        /*text-align: center;*/
+        /*margin: 0px auto;*/
+        /*display: block;*/
+
+    /*}*/
+</style>
+<body>
+<div class="field container">
+    <legend><span>This wizard will help you quickly configure and use the WTM framework</span></legend>
+    <form method="post" class="content" >
+        <table>
+            <tr>
+                <td>Project name：</td>
+                <td><input name="ns" value=""/></td>
+            </tr>
+            <tr>
+				<td></td>
+                <td>The project name is the default namespace name</td>
+            </tr>
+        </table>
+
+        <button class="submitColor" type="submit" >Next</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>Like other MVC core program, the WTM framework uses appsettings.json as the configuration file. Here is the content of a default configuration file.</p>
+<wt:code title="appsettings.json">
+  {
+    "Logging": {
+      "Console": {
+        "IncludeScopes": true,
+        "LogLevel": {
+          "Default": "Information",
+          "WalkingTec": "Debug"
+        }
+      },
+      "WTM": {
+        "LogLevel": {
+          "Default": "Debug"
+        }
+      }
+    },
+    "ConnectionStrings": [
+      {
+        "Key": "default",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true",
+        "DbType":"SqlServer",
+        "DbContext":"DataContext"
+      },
+      {
+        "Key": "test",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true",
+        "DbType":"Mysql",
+        "DbContext":"DataContext2"
+      }
+    ],
+    "DBType": "SqlServer",
+    "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
+    "CookiePre": "WTM",//cookie前缀
+    "IsQuickDebug": true,//是否启用debug模式
+    "ErrorHandler": "/_Framework/Error",
+    "PageMode": "Tab",//页面显示模式，Single或者Tab
+    "Languages": "zh,en",//系统支持的语言
+    "CorsOptions": {
+      "EnableAll": true, //所有方法是否默认跨域
+      "Policy": [
+        {
+          "Name": "Default",
+          "Domain": "http://localhost, https://localhost"
+        }
+      ]
+    },
+    "UIOptions": { //默认UI配置
+      "DataTable": {
+        "RPP": 20, //列表每页行数
+        "ShowPrint": true,//列表是否显示打印
+        "ShowFilter": true //列表是否显示列筛选
+       },
+      "ComboBox": {
+        "DefaultEnableSearch": true, //下拉菜单是否默认可搜索
+      },
+      "DateTime": {
+        "DefaultReadonly": true //日期控件是否默认不可输入
+      },
+      "SearchPanel": {
+        "DefaultExpand": false //默认展开SearchPanel内容
+      }
+    },
+    "FileUploadOptions": {
+      "UploadLimit": 20971520,
+      "SaveFileMode": "Database",
+      "UploadDir": "D:\\"
+    },
+    "DFSServer": {
+      "StorageMaxConnection": 100,
+      "TrackerMaxConnection": 100,
+      "ConnectionTimeout": 100,
+      "ConnectionLifeTime": 100,
+      "Trackers": [
+      {
+        "IP": "127.0.0.1",
+        "Port": 22122
+      }
+      ]
+    },
+    "JwtOptions": {
+      "Issuer": "http://localhost",
+      "Audience": "http://localhost",
+      "Expires": 3600,
+      "SecurityKey": "superSecretKey@345",
+      "RefreshTokenExpires": 86400,
+      "LoginPath": "/Login/Login"
+    },
+    "CookieOptions": {
+      "Issuer": "http://localhost",
+      "Audience": "http://localhost",
+      "Expires": 3600,
+      "SlidingExpiration": true,
+      "SecurityKey": "superSecretKey@345",
+      "RefreshTokenExpires": 86400,
+      "LoginPath": "/Login/Login"
+    },
+
+    "AppSettings": {
+      "Key1": "abc",
+      "Key2": "123"
+    }
+  }
+</wt:code>
+
+<wt:fieldset field-set-style="Simple" title="Configuration description">
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Configuration</th>
+                <th lay-data="{field:'joinTime', width:600}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Logging</td>
+            <td>
+              Using the default log logic of. NETCORE, the logs will be output to both console and WTM. WTM logs are written to the database.<br />
+              WTM logs are 3 levels:debug, information and error. By setting the’ loglevel’ in WTM, you can control which level of data will be written to the database.<br/>
+              Setting loglevel in WTM to a large value, such as 10, to prevent all logs from being written to the database.
+            </td>
+          </tr>
+
+          <tr>
+            <td>ConnectionStrings</td>
+            <td>
+              You can configure more than one Connectionstrings.By default, the key value of Connectionstring is ‘default’ in WTM. However, for log function,the default key value of Connectionstring is ‘logdfault’ . If the content of ‘logdfault’ was not previously set , WTM will also use ‘default’.<br />
+              Starting with versions 2.4.6 and 3.1.3, you can set dbtype and dbcontext values separately
+            </td>
+          </tr>
+          <tr>
+            <td>DBType</td>
+            <td>Corresponding DBType of ConnectionStrings: mysql, sqlserver, PgSQL, SQLite, Oracle</td>
+          </tr>
+          <tr>
+            <td>IsOldSqlServer</td>
+            <td>Set to ‘true’, if using SQL Server 2008 or older</td>
+          </tr>
+          <tr>
+            <td>CookiePre</td>
+            <td>Prefix for generating cookies</td>
+          </tr>
+          <tr>
+            <td>EnableLog</td>
+            <td>Enable log or not</td>
+          </tr>
+          <tr>
+            <td>PageMode</td>
+            <td>Page display mode: single /tab</td>
+          </tr>
+          <tr>
+            <td>TabMode</td>
+            <td>Tab page display mode: default/simple</td>
+          </tr>
+          <tr>
+            <td>LogExceptionOnly</td>
+            <td>Whether Only exceptions are record or not</td>
+          </tr>
+          <tr>
+            <td>IsQuickDebug</td>
+            <td>Debugging mode or not. In debugging mode, the verification of page permission and data permission will be skipped, and all methods under all controllers will be directly reflected in the menu.</td>
+          </tr>
+          <tr>
+            <td>ErrorHandler</td>
+            <td>Global error handling. The default address is ‘ / _framework / error’ </td>
+          </tr>
+          <tr>
+            <td>RPP</td>
+            <td>Default list rows</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.EnableAll</td>
+            <td>Whether cross domain is enabled for all methods. If ‘policy’ is not configured , cross domain is enabled for ‘localhost’ by default. If ‘policy’ is configured, cross domain is enabled for all methods using the first ‘policy’.</td>
+          </tr>
+          <tr>
+            <td>CorsOptions.Policy</td>
+            <td>The name filled in when [enablecors ('']) is used on the controller or controller method.Use ‘domains’ [string] to set the domain names that are allowed to cross domains. If you need to configure multiple domain names, separate them with ‘,’</td>
+          </tr>
+          <tr>
+            <td>FileUploadOptions.SaveFileMode</td>
+            <td>Framework attachment storage mode:database/local/ DFS</td>
+          </tr>
+          <tr>
+            <td>FileUploadOptions.UploadDir</td>
+            <td>When attachment storage mode is ‘Local’, set the hard disk directory</td>
+          </tr>
+          <tr>
+            <td>DFSServer</td>
+            <td>When attachment storage mode is ‘DFS’, set the information of DFS server</td>
+          </tr>
+          <tr>
+            <td>Languages</td>
+            <td>Set languages supported by framework,separated by commas. Exmple： Zh, en</td>
+          </tr>
+          <tr>
+            <td>JwtOptions</td>
+            <td>Configure JWT authentication, such as expiration time, key, etc</td>
+          </tr>
+          <tr>
+            <td>CookieOptions</td>
+            <td>Configure  cookie authentication, such as expiration time, key, etc</td>
+          </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+        <p>These configuration frameworks in the file are automatically read and stored in the ConfigInfo classes of BaseController and BaseVM</p>
+    </wt:quote>
+</wt:fieldset>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>

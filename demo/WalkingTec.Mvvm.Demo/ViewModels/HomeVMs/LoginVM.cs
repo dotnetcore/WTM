@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             //如果没有找到则输出错误
             if (user == null)
             {
-                MSD.AddModelError("", "登录失败");
+                MSD.AddModelError("", Localizer["LoginFail"]);
                 return null;
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();

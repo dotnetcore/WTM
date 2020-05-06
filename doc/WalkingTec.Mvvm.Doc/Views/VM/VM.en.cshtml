@@ -1,0 +1,160 @@
+<p>BaseVM is the basic VM in the WTM framework. All built-in VMs in the framework inherit from it. At the same time, the framework requires that all VMs customized by developers inherit from it.</p>
+<br />
+<wt:quote>
+    BaseVM provides a place for developers to write logic by connecting controller and view. If you need to add, delete, modify, query, import and export data, please inherit a more specific VM
+</wt:quote>
+<wt:fieldset field-set-style="Simple" title="Build a VM">
+    <p>It's very simple to build a basic VM. You only need to inherit theBaseVM. In the following, we will build a LoginVM to handle user login operations.</p>
+    <wt:code title="LoginVM.cs">
+using WalkingTec.Mvvm.Core;
+
+public class LoginVM : BaseVM{
+
+}
+    </wt:code>
+    <p>The above code defines a LoginVM. What's the use of it?</p>
+    <p>In short, when you create this VM in the Controller through the CreateVM method, the framework will automatically transfer a lot of data needed for writing logic to the VM, such as the information of the current login user, the information of form submission, the current database connection, etc</p>
+    <p>At the same time, the properties in VM can also be used to bind the front-end page controls. Such a VM connects the front-end, back-end and database. In VM, you can access all the required information to write the logic you need.</p>
+    <p>Let's improve LoginVM ,here is a demonstration of a simple login operation</p>
+    <wt:code title="LoginVM.cs">
+using WalkingTec.Mvvm.Core;
+
+public class LoginVM : BaseVM{
+
+    [Display( Name = "账号")]
+    [Required( AllowEmptyStrings = false)]
+    [StringLength(10)]
+    public string Username { get; set; }
+
+    [Display( Name = "密码")]
+    [Required( AllowEmptyStrings = false)]
+    [StringLength(10, ErrorMessage ="{0}最多输入{1}个字符")]
+    public string Password { get; set; }
+
+    public LoginUserInfo DoLogin()
+    {
+        //根据用户名和密码查询用户
+        var user = DC.Set&lt;FrameworkUserBase&gt;()
+            .Where(x =&gt; x.ITCode.ToLower() == ITCode.ToLower() && x.Password.ToLower() == Password.ToLower() && x.IsValid == true)
+            .SingleOrDefault();
+            //如果没有找到则输出错误
+            if (user == null)
+            {
+                MSD.AddModelError("", "登录失败");
+            }
+        return user;
+    }
+}
+    </wt:code>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Using VM">
+    <p>We encapsulate all the login logic in LoginVM, therefor our code is very simple in such controller.</p>
+    <wt:code title="LoginController.cs">
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Mvc;
+
+[Public]
+public class LoginController : BaseController
+{
+    [ActionDescription("登录")]
+    public IActionResult Login()
+    {
+        LoginVM vm = CreateVM&lt;LoginVM&gt;();
+        return View(vm);
+    }
+
+    [HttpPost]
+    public ActionResult Login(LoginVM vm)
+    {
+        var user = vm.DoLogin();
+        if (user == null)
+        {
+            return View(vm);
+        }
+        else
+        {
+            return Redirect("/home/index");
+        }
+    }
+}
+    </wt:code>
+
+    <wt:quote>
+        Basecontroller is the Controller base class provided by the framework. All application framework controllers should inherit this class. For details, please refer to the document of Controller.<br />
+        [Public],[ActionDescription][Public],[ActionDescription]and other attributes are provided by the framework and applied to the controller and action. Please refer to the document of the Controller for details.<br />
+        In the Controller, CreateVM is used to initialize VM, by doing this we can pass a lot of information of current request to VM, such as database connection, session, etc.
+    </wt:quote>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Custom validation of VM">
+    <p>Simple single field validation can be achieved by adding Attribute to attributes</p>
+    <p>Complex validation logic can be implemented by overriding the Validate in BaseVM</p>
+    <p>The following code demonstrates a VM that modifies a password:</p>
+    <wt:code title="ChangePasswordVM.cs">
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using WalkingTec.Mvvm.Core;
+
+namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
+{
+    public class ChangePasswordVM : BaseVM
+    {
+        [Display(Name = "用户名")]
+        public string ITCode { get; set; }
+
+        [Display(Name = "当前密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string OldPassword { get; set; }
+
+        [Display(Name = "新密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string NewPassword { get; set; }
+
+        [Display(Name = "新密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string NewPasswordComfirm { get; set; }
+
+        public override void Validate()
+        {
+            //检查原密码是否正确，如不正确则输出错误
+            if (DC.Set&lt;FrameworkUserBase&gt;()
+      .Where(x =&gt; x.ITCode == LoginUserInfo.ITCode && x.Password == Utils.GetMD5String(OldPassword))
+      .SingleOrDefault() == null){
+                MSD.AddModelError( "OldPassword", "当前密码错误");
+            }
+            //检查两次新密码是否输入一致，如不一致则输出错误
+            if ( NewPassword != NewPasswordComfirm )
+            {
+                MSD.AddModelError( "NewPasswordComfirm", "两次新密码输入不一致");
+            }
+        }
+
+        public void DoChange()
+        {
+            var user = DC.Set&lt;FrameworkUserBase&gt;().Where(x =&gt; x.ITCode == LoginUserInfo.ITCode).SingleOrDefault();
+            if (user != null)
+            {
+                user.Password = Utils.GetMD5String(NewPassword);
+            }
+            DC.SaveChanges();
+        }
+    }
+}
+    </wt:code>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="VM initialization">
+    <p>Rewrite InitVM and ReInitVM methods in VM to perform variables and operations that need to be initialized for VM. The reason for putting the initialization code here is that only after InitVM and ReInitVM, DataContext,Session,ModelState in VM have values.</p>
+    <p>InitVMis is called when creating VM, ReInitVM is called when model validation fails when post returns. If ReInitVMmethod is not overridden, InitVM method will be called by default.</p>
+    <p>When the a VM is established manually through new, InitVM and / or ReInitVM need to be called manually, and the CopyContext method is used to copy the DataContext, Session and modelModelStat from other VM.</p>
+</wt:fieldset>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>

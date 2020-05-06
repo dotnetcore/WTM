@@ -101,18 +101,18 @@ class TabsPages extends React.Component<any, any> {
 }
 class TabsPagesStore {
     constructor(private routes) {
-        hydrate('TabsPagesStore', this)
-            // post hydration
-            .then(() => {
-                runInAction(() => {
-                    this.tabPane = this.tabPane.map(item => {
-                        return {
-                            ...item,
-                            router: this.getRoutes(item.pathname)
-                        }
-                    })
-                })
-            })
+        // hydrate('TabsPagesStore', this)
+        //     // post hydration
+        //     .then(() => {
+        //         runInAction(() => {
+        //             this.tabPane = this.tabPane.map(item => {
+        //                 return {
+        //                     ...item,
+        //                     router: this.getRoutes(item.pathname)
+        //                 }
+        //             })
+        //         })
+        //     })
     }
     componentWillUnmount() {
         this.resize.unsubscribe();
@@ -128,7 +128,7 @@ class TabsPagesStore {
     }
     // @persist
     @observable height = this.getHeight();
-    @persist("list")
+    // @persist("list")
     @observable tabPane = [this.onCreateHoem()];
     @action
     pushTabPane(pathname) {

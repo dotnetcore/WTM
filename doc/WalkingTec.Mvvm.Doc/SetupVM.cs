@@ -454,6 +454,7 @@ EndProject
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Login{Path.DirectorySeparatorChar}Reg.cshtml", GetResource("home.Reg.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}PIndex.cshtml", GetResource("home.PIndex.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}FrontPage.cshtml", GetResource("home.FrontPage.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
+                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Views{Path.DirectorySeparatorChar}Home{Path.DirectorySeparatorChar}FrontPage.en.cshtml", GetResource("home.FrontPage2.txt", "Mvc").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}ChangePasswordVM.cs", GetResource("vms.ChangePasswordVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}LoginVM.cs", GetResource("vms.LoginVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
                 File.WriteAllText($"{vmdir}{Path.DirectorySeparatorChar}HomeVMs{Path.DirectorySeparatorChar}RegVM.cs", GetResource("vms.RegVM.txt").Replace("$ns$", MainNs).Replace("$vmns$", vmns), Encoding.UTF8);
@@ -503,9 +504,17 @@ module.exports = (app) => {{
             }
         }
 
-        public string GetIndex()
+        public string GetIndex(bool en=false)
         {
-            var rv = GetResource("SetupIndex.txt");
+            string rv = "";
+            if (en == false)
+            {
+                rv = GetResource("SetupIndex.txt");
+            }
+            else
+            {
+                rv = GetResource("SetupIndex_en.txt");
+            }
             string dbname = "";
             if (MainNs.Contains("."))
             {
@@ -524,6 +533,13 @@ module.exports = (app) => {{
             var rv = GetResource("SetupIndex1.txt");
             return rv;
         }
+
+        public string GetIndex1En()
+        {
+            var rv = GetResource("SetupIndex1_en.txt");
+            return rv;
+        }
+
 
         private string GetResource(string fileName, string subdir = "")
         {

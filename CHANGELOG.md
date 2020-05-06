@@ -2,6 +2,23 @@
 
 ## v3.5.x （2.5.x同步更新）
 
+##3.5.7 以及 2.5.7 (2020-5-6)
+* **新增：**  SubmitButton中新增SubmitUrl属性，用于多个提交按钮提交到不同的地址
+* **新增：**  BaseController和BaseApiController增加可重写的GetLoginUserInfo方法，用于自定义用户认证
+* **修改：**  优化认证逻辑，加快响应速度
+* **修改：**  修复jwt无效时返回登录界面的错误，现在可以正确返回401，修复jwt token过期时间不准确的问题
+* **修改：**  完善多语言支持
+* **修改：**  修复DoDelete和SetInclude冲突的bug
+* **修改：**  VUE修复菜单空目录bug
+* **修改：**  VUE修复权限配置和搜索的bug
+* **修改：**  React完善多语言支持
+
+##3.5.6 以及 2.5.5 (2020-4-13)
+* **新增：**  ConnectionString配置中可以设置Version字段，用于控制mysql的具体版本
+* **修改：**  移除了动态控制器，因为和动态编译页面产生冲突
+* **修改：**  IsFilePublic现在可以正常工作
+* **修改：**  更新了默认生成的VUE项目代码，修复了一些bug
+
 ##3.5.4 以及 2.5.4 (2020-4-3)
 * **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
 

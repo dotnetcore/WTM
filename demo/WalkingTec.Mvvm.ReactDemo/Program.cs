@@ -11,6 +11,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace WalkingTec.Mvvm.ReactDemo
 {
@@ -23,7 +24,14 @@ namespace WalkingTec.Mvvm.ReactDemo
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
+                         .ConfigureLogging((hostingContext, logging) =>
+                         {
+                             logging.ClearProviders();
+                             logging.AddConsole();
+                             logging.AddDebug();
+                             logging.AddWTMLogger();
+                         })
+               .ConfigureServices(x =>
                 {
                     var pris = new List<IDataPrivilege>
                         {

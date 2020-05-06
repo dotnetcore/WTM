@@ -1,0 +1,19 @@
+﻿The framework will read the properties of model fields to automatically perform data validation of front and back end
+
+<wt:fieldset field-set-style="Simple" title="Required">
+    <p>If the field bound by front-end control is marked with the ‘Required’ attribute, the framework will automatically add a red asterisk after the space name to tips the user ‘required’, also generate JS script to verify the required items automatically</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Display">
+    <p>If the field bound by front-end control is marked with the ‘Display’ , the framework will use the name defined in ‘Display’ as the label of the front-end control by default.</p>
+    <p>If the framework displays enumeration fields, the contents in ‘Display’ will be enumerated by default.</p>
+    <p>When the framework outputs validation error information, the content in ‘Display’ of error field will be used as the name by default.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="other attributes">
+    <p>The framework will automatically generate front-end JS script to verify stringlength, range, regex and other attributes</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="MiddleTable">
+    <p>In many-to-many cases, we usually use an MiddleTable to implement them. The MiddleTable tag can be added to the Model of the MiddleTable. The code generator of the framework will recognize the many-to-many relationship and generate the correct code according to the tag.</p>
+</wt:fieldset>

@@ -12,6 +12,20 @@
   <Import Project="..\..\common.props" />
 
   <ItemGroup>
+    <None Remove="SetupFiles\Mvc\home\FrontPage2.txt" />
+    <None Remove="SetupFiles\Mvc\home\Reg.txt" />
+    <None Remove="SetupFiles\SetupIndex1_en.txt" />
+    <None Remove="SetupFiles\SetupIndex_en.txt" />
+    <None Remove="SetupFiles\Spa\React\Program.txt" />
+    <None Remove="SetupFiles\Spa\React\Program3.txt" />
+    <None Remove="SetupFiles\Spa\Vue\ClientApp.zip" />
+    <None Remove="SetupFiles\Spa\Vue\Program.txt" />
+    <None Remove="SetupFiles\Spa\Vue\Program3.txt" />
+    <None Remove="SetupFiles\test\MockController3.txt" />
+    <None Remove="SetupFiles\vms\LoginVM.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="SetupFiles\Appsettings.txt" />
     <EmbeddedResource Include="SetupFiles\DataContext.txt" />
     <EmbeddedResource Include="SetupFiles\DefaultProj.txt" />
@@ -21,6 +35,7 @@
     <EmbeddedResource Include="SetupFiles\Mvc\Dockerfile.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\HomeController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\ChangePassword.txt" />
+    <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage2.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\FrontPage.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\Index.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\home\layout.txt" />
@@ -32,14 +47,15 @@
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\Program3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\layui\ViewImports.txt" />
-    <EmbeddedResource Include="SetupFiles\Mvc\LoginController3.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\LoginController.txt" />
     <EmbeddedResource Include="SetupFiles\Mvc\ViewStart.txt" />
     <EmbeddedResource Include="SetupFiles\Proj.txt" />
     <EmbeddedResource Include="SetupFiles\Proj3.txt" />
     <EmbeddedResource Include="SetupFiles\Resourceen.txt" />
     <EmbeddedResource Include="SetupFiles\Resourcezh.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex_en.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex.txt" />
+    <EmbeddedResource Include="SetupFiles\SetupIndex1_en.txt" />
     <EmbeddedResource Include="SetupFiles\SetupIndex1.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\Launch.txt" />
     <EmbeddedResource Include="SetupFiles\Spa\React\ClientApp.zip" />

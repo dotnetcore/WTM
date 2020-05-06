@@ -324,6 +324,7 @@ namespace WalkingTec.Mvvm.Core
             DataContextCI = vm.DataContextCI;
             UIService = vm.UIService;
             LoginUserInfo = vm.LoginUserInfo;
+            Localizer = vm.Localizer;
         }
 
         /// <summary>

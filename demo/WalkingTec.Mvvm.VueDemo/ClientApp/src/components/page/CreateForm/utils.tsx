@@ -151,7 +151,8 @@ export default class Utils {
           val.map((item) => ({ [mapKey]: item }))
         );
       };
-      const value = _.get(_t.sourceFormData || _t.formData, key)[mapKey];
+      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
+      const value = keyList.map(item => item[mapKey]);
       return (
         <el-select value={value} {...compData}>
           {components}
@@ -270,7 +271,9 @@ export default class Utils {
           val.map((item) => ({ [mapKey]: item }))
         );
       };
-      const value = _.get(_t.sourceFormData || _t.formData, key)[mapKey];
+      // const value = _.get(_t.sourceFormData || _t.formData, key)[mapKey];
+      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
+      const value = keyList.map(item => item[mapKey]);
       return (
         <el-checkbox-group value={value} {...compData}>
           {components}

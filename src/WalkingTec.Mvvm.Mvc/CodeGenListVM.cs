@@ -123,8 +123,9 @@ namespace WalkingTec.Mvvm.Mvc
                         if(fk != null)
                         {
                             ignoreField.Add(fk);
+                            show = true;
                         }
-                        if(checktype == typeof(FileAttachment))
+                        if (checktype == typeof(FileAttachment))
                         {
                             view.IsImportField = false;
                             view.FieldDes += $"({Program._localizer["Attachment"]})";
@@ -134,7 +135,6 @@ namespace WalkingTec.Mvvm.Mvc
                             view.FieldDes += $"({Program._localizer["OneToMany"]})";
                         }
                         view.LinkedType = checktype.AssemblyQualifiedName;
-                        show = true;
                     }
                     if (checktype.IsList())
                     {

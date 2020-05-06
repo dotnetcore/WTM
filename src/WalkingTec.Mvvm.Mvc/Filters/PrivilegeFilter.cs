@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,7 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 
@@ -98,7 +101,62 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             if (controller.LoginUserInfo == null)
             {
-                context.HttpContext.ChallengeAsync().Wait();
+                if (controller is ControllerBase ctrl)
+                {
+                    //if it's a layui search request,returns a layui format message so that it can parse
+                    if (ctrl.Request.Headers.ContainsKey("layuisearch"))
+                    {
+                        ContentResult cr = new ContentResult()
+                        {
+                            Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\"" + Program._localizer["NeedLogin"] + "\",\"Code\":401}",
+                            ContentType = "application/json",
+                            StatusCode = 200
+                        };
+                        context.Result = cr;
+                    }
+                    else
+                    {
+                        if (ctrl.HttpContext.Request.Headers.ContainsKey("Authorization"))
+                        {
+                            context.Result = ctrl.Unauthorized(JwtBearerDefaults.AuthenticationScheme);
+                        }
+                        else
+                        {
+                            if (controller is BaseApiController)
+                            {
+                                ContentResult cr = new ContentResult()
+                                {
+                                    Content = Program._localizer["NeedLogin"],
+                                    ContentType = "text/html",
+                                    StatusCode = 401
+                                };
+                                context.Result = cr;
+                            }
+                            else
+                            {
+                                string lp = GlobalServices.GetRequiredService<IOptions<CookieOptions>>().Value.LoginPath;
+                                if (lp.StartsWith("/"))
+                                {
+                                    lp = "~" + lp;
+                                }
+                                if (lp.StartsWith("~/"))
+                                {
+                                    lp = ctrl.Url.Content(lp);
+                                }
+                                ContentResult cr = new ContentResult()
+                                {
+                                    Content = $"<script>window.location.href='{lp}';</script>",
+                                    ContentType = "text/html",                                    
+                                    StatusCode = 200
+                                };
+                                //context.HttpContext.Response.Headers.Add("IsScript", "true");
+                                context.Result = cr;
+                                //context.Result = ctrl.Redirect(GlobalServices.GetRequiredService<IOptions<CookieOptions>>().Value.LoginPath);
+                            }
+                        }
+                    }
+                }
+                //context.HttpContext.ChallengeAsync().Wait();
             }
             else
             {
@@ -109,39 +167,58 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         if (controller is ControllerBase ctrl)
                         {
-                            var authenticationSchemes = new List<string>();
-                            if (ad.MethodInfo.IsDefined(typeof(AuthorizeAttribute), false))
+                            //if it's a layui search request,returns a layui format message so that it can parse
+                            if (ctrl.Request.Headers.ContainsKey("layuisearch"))
                             {
-                                var authorizeAttr = ad.MethodInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
-                                if (authorizeAttr != null)
-                                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                            }
-                            else if (ad.ControllerTypeInfo.IsDefined(typeof(AuthorizeAttribute), false))
-                            {
-                                var authorizeAttr = ad.ControllerTypeInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
-                                if (authorizeAttr != null)
-                                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                            }
-
-                            if (ctrl.HttpContext.Request.Headers.ContainsKey("Authorization")
-                                && authenticationSchemes.Contains(JwtBearerDefaults.AuthenticationScheme))
-                            {
-                                context.Result = ctrl.Forbid(JwtBearerDefaults.AuthenticationScheme);
-                            }
-                            else if (ctrl.HttpContext.Request.Cookies.ContainsKey(CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName)
-                                && authenticationSchemes.Contains(CookieAuthenticationDefaults.AuthenticationScheme))
-                            {
-                                throw new Exception(Program._localizer["NoPrivilege"]);
+                                ContentResult cr = new ContentResult()
+                                {
+                                    Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\""+ Program._localizer["NoPrivilege"] + "\",\"Code\":403}",
+                                    ContentType = "application/json",
+                                    StatusCode = 200
+                                };
+                                context.Result = cr;
                             }
                             else
                             {
-                                throw new Exception(Program._localizer["NoPrivilege"]);
+                                if (ctrl.HttpContext.Request.Headers.ContainsKey("Authorization"))
+                                {
+                                    context.Result = ctrl.Forbid(JwtBearerDefaults.AuthenticationScheme);
+                                }
+                                else
+                                {
+                                    ContentResult cr = new ContentResult()
+                                    {
+                                        Content = Program._localizer["NoPrivilege"],
+                                        ContentType = "text/html",
+                                        StatusCode = 403
+                                    };
+                                    context.Result = cr;
+
+                                }
                             }
                         }
                     }
                 }
             }
             base.OnActionExecuting(context);
+        }
+
+        private List<string> getAuthTypes(ControllerActionDescriptor ad)
+        {
+            var authenticationSchemes = new List<string>();
+            if (ad.MethodInfo.IsDefined(typeof(AuthorizeAttribute), false))
+            {
+                var authorizeAttr = ad.MethodInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
+                if (authorizeAttr != null)
+                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+            else if (ad.ControllerTypeInfo.IsDefined(typeof(AuthorizeAttribute), false))
+            {
+                var authorizeAttr = ad.ControllerTypeInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
+                if (authorizeAttr != null)
+                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+            return authenticationSchemes;
         }
     }
 }

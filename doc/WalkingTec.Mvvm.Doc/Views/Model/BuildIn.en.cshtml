@@ -1,0 +1,75 @@
+框架提供了10多个内置模型，用于实现框架自带的用户，角色，权限，菜单，日志等功能
+
+<table lay-filter="parse-table-demo">
+    <thead>
+        <tr>
+            <th lay-data="{field:'username', width:200}">Model</th>
+            <th lay-data="{field:'joinTime', width:400}">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ActionLog</td>
+            <td>Log model ;The log function of the framework depends on this model</td>
+        </tr>
+        <tr>
+            <td>DataPrivilege</td>
+            <td>Data permission model; The automatic data filtering of the framework depends on this model</td>
+        </tr>
+        <tr>
+            <td>FileAttachment</td>
+            <td>Attachment model; The function of uploading and downloading attachments provided by the framework depends on this model</td>
+        </tr>
+        <tr>
+            <td>FrameworkAction</td>
+            <td>Action model; used to record all controller methods in the framework</td>
+        </tr>
+        <tr>
+            <td>FrameworkArea</td>
+            <td>Area model; used to record all areas in the framework</td>
+        </tr>
+        <tr>
+            <td>FrameworkDomain</td>
+            <td>Domain model; for cross domain Single Sign-On</td>
+        </tr>
+        <tr>
+            <td>FrameworkMenu</td>
+            <td>Menu model; for menu configuration</td>
+        </tr>
+        <tr>
+            <td>FrameworkModule</td>
+            <td>Module model; used to record all controllers in the framework</td>
+        </tr>
+        <tr>
+            <td>FrameworkRole</td>
+            <td>Role model; for role management</td>
+        </tr>
+        <tr>
+            <td>FrameworkGroup</td>
+            <td>User group model; for user group management</td>
+        </tr>
+        <tr>
+            <td>FrameworkUser</td>
+            <td>User model ; for user management</td>
+        </tr>
+        <tr>
+            <td>FunctionPrivilege</td>
+            <td>Page authority model; the automatic page permission judgment of the framework depends on this model</td>
+        </tr>
+    </tbody>
+</table>
+
+<wt:quote>
+    <p>The framework provides the management page for these built-in models, call walkingtec.mvvm.admin package.</p>
+    <p>If the management pages provided by the framework cannot meet the requirements, developers can write their own management pages and logic according to these models.</p>
+    <p>If the built-in model can not meet the requirements, developers can add the required fields by inheriting the model, but the existing fields cannot be modified, because many built-in functions of the framework depend on these fields.</p>
+</wt:quote>
+
+<script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+</script>
+
+
+

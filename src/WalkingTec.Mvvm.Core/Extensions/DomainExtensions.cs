@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Mvc
+namespace WalkingTec.Mvvm.Core.Extensions
 {
     public static class DomainExtensions
     {

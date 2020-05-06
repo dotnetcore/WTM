@@ -21,19 +21,22 @@
                             {{ $t('navbar.dashboard') }}
                         </el-dropdown-item>
                     </router-link>
-                    <a target="_blank" href="https://github.com/dotnetcore/WTM">
+                    <a v-if="isDev" target="_blank" href="https://github.com/dotnetcore/WTM">
                         <el-dropdown-item>
                             {{ $t('navbar.github') }}
                         </el-dropdown-item>
                     </a>
-                    <a target="_blank" href="https://wtmdoc.walkingtec.cn/">
+                    <a v-if="isDev" target="_blank" href="https://wtmdoc.walkingtec.cn/">
                         <el-dropdown-item>{{$t('navbar.doc')}}</el-dropdown-item>
                     </a>
-                    <a target="_blank" href="/_codegen?ui=vue">
+                    <a v-if="isDev" target="_blank" href="/_codegen?ui=vue">
                         <el-dropdown-item>{{$t('navbar.generation')}}</el-dropdown-item>
                     </a>
-                    <a target="_blank" href="/swagger">
+                    <a v-if="isDev" target="_blank" href="/swagger">
                         <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
+                    </a>
+                    <a @click="onOpenPassword">
+                        <el-dropdown-item>修改密码</el-dropdown-item>
                     </a>
                     <el-dropdown-item divided>
                         <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
@@ -41,6 +44,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
+        <password ref="password" />
     </div>
 </template>
 
@@ -55,7 +59,9 @@ import HeaderSearch from "@/components/frame/HeaderSearch/index.vue";
 import LangSelect from "@/components/frame/LangSelect/index.vue";
 import Screenfull from "@/components/frame/Screenfull/index.vue";
 import SizeSelect from "@/components/frame/SizeSelect/index.vue";
+import Password from "@/components/frame/Password/index.vue";
 import Settings from "../Settings/index.vue";
+import config from "@/config/index";
 
 @Component({
     name: "Navbar",
@@ -67,10 +73,15 @@ import Settings from "../Settings/index.vue";
         LangSelect,
         Screenfull,
         SizeSelect,
-        Settings
+        Settings,
+        Password
     }
 })
 export default class extends Vue {
+    get isDev() {
+        return config.development;
+    }
+
     get sidebar() {
         return AppModule.sidebar;
     }
@@ -98,6 +109,10 @@ export default class extends Vue {
     private async logout() {
         await UserModule.LogOut();
         this.$router.push(`/login.html?redirect=${this.$route.fullPath}`);
+    }
+
+    private onOpenPassword() {
+        this.$refs["password"].onOpen();
     }
 }
 </script>

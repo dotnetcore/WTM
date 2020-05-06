@@ -1,0 +1,103 @@
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<p>The WTM framework provides two main global variables:ConfigInfo and GlobalInfo, which can be invoked in Controller and VM</p>
+
+<wt:fieldset field-set-style="Simple" title="Configinfo description">
+</wt:fieldset>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Configinfo</th>
+      <th lay-data="{field:'joinTime'}">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ConnectionStrings</td>
+      <td>‘ConnectionStrings’ in the configuration file</td>
+    </tr>
+    <tr>
+      <td>DBType</td>
+      <td>‘DBType’ in the configuration file;Default: sqlserver ;Optional:MySQL/sqlserver</td>
+    </tr>
+    <tr>
+      <td>CookiePre</td>
+      <td>The prefix of the generated cookie; ‘CookiePre’ in the configuration file</td>
+    </tr>
+    <tr>
+      <td>EnableLog</td>
+      <td>Whether to enable log; ‘EnableLog’ in the configuration file; Default value ：false</td>
+    </tr>
+    <tr>
+      <td>LogExceptionOnly</td>
+      <td>If only exceptions are logged when logging is enabled;‘Logexceptiononly’ in configuration file;Default value: false</td>
+    </tr>
+    <tr>
+      <td>IsQuickDebug</td>
+      <td>Debugging mode or not; ‘IsQuickDebug’ in the  configuration file; Default value： false</td>
+    </tr>
+    <tr>
+      <td>RPP</td>
+      <td>Number of paging lines in the list; ‘RPP’ in  configuration file; Default value: is 20.</td>
+    </tr>
+    <tr>
+      <td>SaveFileMode</td>
+      <td>Storage mode of frame accessories; ‘SaveFileMode’ in the configuration file; Default:Database ;Optional: local</td>
+    </tr>
+    <tr>
+      <td>UploadDir</td>
+      <td>If ‘local’ is selected for the upload file; set the hard disk directory; ‘UploadDir’ in the configuration file</td>
+    </tr>
+    <tr>
+      <td>AppSettings</td>
+      <td>Key, value form; Multiple configurable; ‘AppSettings’ in configuration file</td>
+    </tr>
+    <tr>
+      <td>DataPrivilegeSettings</td>
+      <td>The data permission supported by the system can be transferred in the buildwebhost method of the program class</td>
+    </tr>
+  </tbody>
+</table>
+<wt:fieldset field-set-style="Simple" title="Globalinfo description">
+</wt:fieldset>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Attribute</th>
+      <th lay-data="{field:'joinTime'}">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AllAssembly</td>
+      <td>Get all loaded DLLs</td>
+    </tr>
+    <tr>
+      <td>AllAccessUrls</td>
+      <td>Get URL without page permission control</td>
+    </tr>
+    <tr>
+      <td>AllModule</td>
+      <td>Get all modules, one controller corresponds to one module</td>
+    </tr>
+    <tr>
+      <td>AllModels</td>
+      <td>Get all models</td>
+    </tr>
+    <tr>
+      <td>AllMenus</td>
+      <td>Get all menu items</td>
+    </tr>
+  </tbody>
+</table>
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+</script>
+<script>
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false, cellMinWidth: 50
+  });
+</script>
