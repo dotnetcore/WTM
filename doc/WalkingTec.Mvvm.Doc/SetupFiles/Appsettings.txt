@@ -43,7 +43,7 @@
     ]
   },
   "ErrorHandler": "/_Framework/Error",
-  "Languages":"zh,en",
+  "Languages":"en,zh",
   "UIOptions": {
     "DataTable": {
       "RPP": $rpp$, //default records per page for all datagrid
