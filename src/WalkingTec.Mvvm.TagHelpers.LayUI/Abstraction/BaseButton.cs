@@ -114,14 +114,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             if (string.IsNullOrEmpty(Click) == true && Disabled == false)
             {
-                if (this is SubmitButtonTagHelper)
-                {
-                    onclick = "return true;";
-                }
-                else
-                {
-                    onclick = "return false;";
-                }
+                 onclick = "return true;";
             }
             output.PostElement.AppendHtml($@"
 <script>
