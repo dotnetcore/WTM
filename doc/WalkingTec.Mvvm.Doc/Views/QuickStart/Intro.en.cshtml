@@ -1,4 +1,7 @@
-
+@using Microsoft.AspNetCore.Localization
+@{
+  var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+}
   <div class="layui-row layui-col-space15" id="frontpage">
     <div class="layui-col-md8">
       <div class="layui-row layui-col-space15">
@@ -17,7 +20,7 @@
                   </div>
                   <div>
                     We are happy to provide the open-source framework now. Please feel free to send us a note. let us know how we are doing and what you need.Thanks! <a href="https://github.com/WalkingTec/WalkingTec.Mvvm"
-                      target="_blank">https://github.com/WalkingTec/WalkingTec.Mvvm</a>
+                                                                                                                                                                         target="_blank">https://github.com/WalkingTec/WalkingTec.Mvvm</a>
                   </div>
                 </div>
               </div>
@@ -34,21 +37,21 @@
                   <ul class="layui-row layui-col-space10">
                     <li class="layui-col-xs6">
                       <a href="https://github.com/dotnetcore/WTM/stargazers" class="layadmin-backlog-body"
-                        target="_blank">
+                         target="_blank">
                         <h3>Star</h3>
                         <p><cite id="githubstar"></cite></p>
                       </a>
                     </li>
                     <li class="layui-col-xs6">
                       <a href="https://github.com/dotnetcore/WTM/network/members" class="layadmin-backlog-body"
-                        target="_blank">
+                         target="_blank">
                         <h3>Fork</h3>
                         <p><cite id="githubfork"></cite></p>
                       </a>
                     </li>
                     <li class="layui-col-xs6">
                       <a href="https://github.com/dotnetcore/WTM/watchers" class="layadmin-backlog-body"
-                        target="_blank">
+                         target="_blank">
                         <h3>Watch</h3>
                         <p><cite id="githubwatch"></cite></p>
                       </a>
@@ -66,9 +69,9 @@
 
                       <p style="text-align:center">
                         <a href="https://github.com/dotnetcore/wtm" target="_blank"
-                          style="background-color:#eee;background-image:linear-gradient(to bottom, #fcfcfc 0, #eee 100%);background-repeat:no-repeat;border:1px solid #d5d5d5;color:#333;padding:3px 10px 3px 8px;font-size:16px;line-height:22px">
+                           style="background-color:#eee;background-image:linear-gradient(to bottom, #fcfcfc 0, #eee 100%);background-repeat:no-repeat;border:1px solid #d5d5d5;color:#333;padding:3px 10px 3px 8px;font-size:16px;line-height:22px">
                           <span width="20"
-                            style="width:20px;height:20px;font-size:16px;line-height:22px;box-sizing:border-box; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=')">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                style="width:20px;height:20px;font-size:16px;line-height:22px;box-sizing:border-box; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=')">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                           <span>Stars <cite id="githubstars"></cite></span>
                         </a>
                       </p>
@@ -108,7 +111,7 @@
         <div class="layui-card-header">Experience the beauty of WTM， NOW！</div>
         <div class="layui-card-body layadmin-takerates">
           <h2 style="text-align:center;margin-top:20px">
-             <a href="/setup" target="_blank" style="color:#009688">Click here</a> ,  start your first WTM project<br /><br />
+            <a href="/setup" target="_blank" style="color:#009688">Click here</a> ,  start your first WTM project<br /><br />
           </h2>
           <h3 style="text-align:center;margin-top:0px">
             <a href="https://community.walkingtec.cn/" target="_blank" style="color:#009688">
@@ -150,7 +153,7 @@
           </p>
           <p>
             WTM has been loved by more and more developers since its open source. WTM will surely repay your love with a more mature and stable version.Specially thanks to（<a href="http://www.layui.com/"
-                                                                   target="_blank">layui.com</a> Improve yourself, benefit others, we am not alone!
+                                                                                                                                                                               target="_blank">layui.com</a> Improve yourself, benefit others, we am not alone!
           </p>
           <p>
             —— Open source address of framework：<a href="https://github.com/dotnetcore/WTM" target="_blank">https://github.com/dotnetcore/WTM</a>
@@ -163,30 +166,30 @@
         </div>
       </div>
 
-      <div class="layui-card">
-        <div class="layui-card-header">连接你我</div>
-        <div class="layui-card-body" style="height:350px;">
+      @*<div class="layui-card">
+          <div class="layui-card-header">连接你我</div>
+          <div class="layui-card-body" style="height:350px;">
 
-          <div class="layui-carousel layadmin-carousel " data-autoplay="true" data-anim="fade">
-            <div carousel-item style="height:350px;">
-              <div style="height:400px;text-align:center">
-                <img src="~/imgs/gongzhonghao.jpg" width="300" height="300" style="border:solid 1px #d5d5d5" /><br />
-                <p>关注WTM微信公众号，及时了解框架更新</p>
-                <p>公众号还会定期发布视频教程</p>
-              </div>
-              <div style="height:400px;text-align:center">
-                <img src="~/imgs/WTM-Ali.png" width="300" height="300" /><br />
-                如果WTM帮助到了你，那就赞助点<br />
+            <div class="layui-carousel layadmin-carousel " data-autoplay="true" data-anim="fade">
+              <div carousel-item style="height:350px;">
+                <div style="height:400px;text-align:center">
+                  <img src="~/imgs/gongzhonghao.jpg" width="300" height="300" style="border:solid 1px #d5d5d5" /><br />
+                  <p>关注WTM微信公众号，及时了解框架更新</p>
+                  <p>公众号还会定期发布视频教程</p>
+                </div>
+                <div style="height:400px;text-align:center">
+                  <img src="~/imgs/WTM-Ali.png" width="300" height="300" /><br />
+                  如果WTM帮助到了你，那就赞助点<br />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div>*@
 
     </div>
 
   </div>
-<script>
+  <script>
   $("#frontpage").parent().css("background-color", "#eee");
   $("#frontpage").parent().css("height", "auto");
 
@@ -244,11 +247,11 @@
       , totalRow: true
       , cols: [[
         { type: 'numbers', fixed: 'left' }
-        , { field: 'date', title: '日期', width: 120, sort: true }
-        , { field: 'name', title: '姓名', width: 150, sort: true }
-        , { field: 'amount', title: '金额', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
-        , { field: 'from', title: '来源', width: 80 }
-        , { field: 'comment', title: '留言' }
+        , { field: 'date', title: '@(requestCulture.RequestCulture.UICulture.Name == "zh"?"日期":"Date")', width: 120, sort: true }
+        , { field: 'name', title: '@(requestCulture.RequestCulture.UICulture.Name == "zh"?"姓名":"Name")', width: 150, sort: true }
+        , { field: 'amount', title: '@(requestCulture.RequestCulture.UICulture.Name == "zh"?"金额":"Amount")', width: 120, totalRow: true, sort: true, templet:'<div><i class="_wtmicon _wtmicon-renminbi">{{ d.amount }}</i></div>' }
+        , { field: 'from', title: '@(requestCulture.RequestCulture.UICulture.Name == "zh"?"来源":"From")', width: 80 }
+        , { field: 'comment', title: '@(requestCulture.RequestCulture.UICulture.Name == "zh"?"留言":"Message")' }
       ]]
       , parseData: function(res){
         var list = res.Data;
@@ -276,4 +279,4 @@
     });
   });
 
-</script>
+  </script>
