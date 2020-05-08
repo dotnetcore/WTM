@@ -273,8 +273,25 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                             if (pmenu != null)
                             {
+                                if (ctrl.Localizer[pmenu.PageName].ResourceNotFound == true)
+                                {
+                                    pmenu.PageName = Core.Program._localizer[pmenu.PageName];
+                                }
+                                else
+                                {
+                                    pmenu.PageName = ctrl.Localizer[pmenu.PageName];
+                                }
+
                                 pagetitle = pmenu.PageName + " - ";
                             }
+                        }
+                        if (ctrl.Localizer[menu.PageName].ResourceNotFound == true)
+                        {
+                            menu.PageName = Core.Program._localizer[menu.PageName];
+                        }
+                        else
+                        {
+                            menu.PageName = ctrl.Localizer[menu.PageName];
                         }
                         pagetitle += menu.PageName;
                     }
