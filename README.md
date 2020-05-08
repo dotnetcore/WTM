@@ -29,17 +29,27 @@ Package name                              | Version                     | Downlo
 `WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
 Main features of the framework:
-The framework provides 4 types of ViewModel, covering the common functions of mainstream web applications. They are: 
+
+The framework provides 4 types of ViewModel, covering the common functions of mainstream web applications. They are:
+
 CrudVM provides the most common function of data addition, deletion and modification;
-ListVM provides the function of paging list and exporting 
+
+ListVM provides the function of paging list and exporting
+
 ImportVM & TemplateVM provides the function of importing via excel ;
+
 BatchVM provides the function of batch operation.
 
 The framework has its own code generator, which makes the development efficient and fast;
+
 The framework provides dozens of client-side controls, including Form,Grid,Panel,Dialog and almost all common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
+
 The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
+
 The framework supports single sign on, portal and distributed database;
+
 The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
+
 The framework provides both the server-side and client-side mode.
 
 
@@ -58,7 +68,7 @@ Framework Q&A community: https://community.walkingtec.cn
 
 Frame QQ communication group: 694148336
 
-You can click here http://wtmdoc.walkingtec.cn/ to start a WTM project online and experience the beauty of WTM immediately~~~
+You can click here http://wtmdoc.walkingtec.cn/setup to start a WTM project online and experience the beauty of WTM immediately~~~
 
 At present, we are a team of 7 developers. We are looking for all kinds of C#, React, VUE experts to join us! 
 
