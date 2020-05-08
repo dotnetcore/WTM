@@ -1,8 +1,9 @@
-English | [简体中文](./README.zh-CN.md) 
+[English](./README.md) | 简体中文 
+
 
 # WalkingTec.Mvvm for aspnet core
 
-Walkingtec.mvvm framework (WTM) is a rapid development framework based on. Netcore. It supports LayUI, React, VUE. WTM has built-in code generator to maximize development efficiency. It is a powerful tool for efficient development.
+WalkingTec.Mvvm框架（简称WTM）是基于.net core的快速开发框架。支持Layui(前后端不分离), React(前后端分离),VUE(前后端分离)，内置代码生成器，最大程度的提高开发效率，是一款高效开发的利器。
 
 [![Coverage Status](https://coveralls.io/repos/github/dotnetcore/WTM/badge.svg?branch=master)](https://coveralls.io/github/dotnetcore/WTM?branch=master)
 [![Member project of .NET Core Community](https://img.shields.io/badge/member%20project%20of-NCC-9e20c9.svg)](https://github.com/dotnetcore)
@@ -28,37 +29,57 @@ Package name                              | Version                     | Downlo
 `WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.Admin.svg)
 `WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
-Main features of the framework:
-The framework provides 4 types of ViewModel, covering the common functions of mainstream web applications. They are: 
-CrudVM provides the most common function of data addition, deletion and modification;
-ListVM provides the function of paging list and exporting 
-ImportVM & TemplateVM provides the function of importing via excel ;
-BatchVM provides the function of batch operation.
+框架主要特点：
 
-The framework has its own code generator, which makes the development efficient and fast;
-The framework provides dozens of client-side controls, including Form,Grid,Panel,Dialog and almost all common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
-The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
-The framework supports single sign on, portal and distributed database;
-The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
-The framework provides both the server-side and client-side mode.
+框架提供了4类ViewModel，涵盖了主流Web应用程序常见的功能，分别是：
+  BaseCRUDVM 提供最常见的数据增删改的功能
+  PagedListVM 提供分页列表以及导出的功能
+  ImportVM & TemplateVM 提供数据导入的功能
+  BatchVM 提供批量操作的功能
+
+框架自带代码生成器，开发高效快捷
+
+框架提供了数十种前台控件，包括了Form,Grid,Panel,Dialog等几乎所有常用控件，在不进行前后分离的情况下，后端人员也可以轻松写出漂亮的前台页面。目前框架只支持Layui作为前端UI，后期我们会支持更多。
+
+框架提供了内置的用户，角色，用户组，数据权限，页面权限，菜单，日志，邮件，短信，文件等后台常用管理功能
+
+框架支持单点登录，门户Portal，分布式数据库
+
+框架提供了Redis,DFS等后台开发常用库的简化操作
 
 
-| Mode | UI | Status  |
+框架提供了前后端分离和不分离两种模式
+
+| 模式 | UI | 状态  |
 |--------- |------------- |---------|
-|Server-side |LayUI |Stable|
-|Client-side |React |Stable|
-|Client-side |VUE |RTM|
+|不分离 |LayUI |稳定|
+|前后端分离 |React |稳定|
+|前后端分离 |VUE |RTM|
+
+WTM框架的前后端分离模式同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
 
 
-Under WTM framework's client-side mode, you can also use code generator to generate server-side and client-side code at the same time, greatly reducing the communication cost of front-end and back-end developers, essentially improving the development efficiency, so that "separation" is no longer complex and expensive.
 
-Framework document address: http://wtmdoc.walkingtec.cn
+![WTM框架微信公众号](./doc/WalkingTec.Mvvm.Doc/wwwroot/imgs/gongzhonghao.jpg)
 
-Framework Q&A community: https://community.walkingtec.cn
+关注WTM微信公众号，及时了解框架更新，公众号还会定期发布视频教程
 
-Frame QQ communication group: 694148336
+框架文档地址：http://wtmdoc.walkingtec.cn
 
-You can click here http://wtmdoc.walkingtec.cn/ to start a WTM project online and experience the beauty of WTM immediately~~~
+框架问答社区：https://community.walkingtec.cn
 
-At present, we are a team of 7 developers. We are looking for all kinds of C#, React, VUE experts to join us! 
+框架QQ交流群：694148336
+
+您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
+
+****
+目前我们是一个7人团队在维护这个项目，诚征各路C#，React，VUE高手加入！有意者可以进QQ群加群主详聊。
+****
+
+
+最后感谢各位老板的支持和捐赠，具体捐赠信息请见 https://wtmdoc.walkingtec.cn/#/Home/DonateList
+
+如果WTM帮助到了你，欢迎赞助点让我们持续建造更好的轮子：
+
+<img src="./doc/WalkingTec.Mvvm.Doc/wwwroot/imgs/WTM-Ali.png"  height="300" width="300">
 
