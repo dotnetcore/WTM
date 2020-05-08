@@ -9,7 +9,16 @@
     <wt:ueditor field="Entity.Remark" height="300" />
   </wt:row>
   <wt:row align="AlignEnum.Right">
+    <wt:submitbutton click="test()" text="运行js并提交" />
+    <wt:submitbutton click="return test()" text="运行js不提交" />
     <wt:submitbutton />
     <wt:closebutton />
   </wt:row>
 </wt:form>
+
+<script>
+  function test() {
+    alert('test');
+    return false;
+  }
+</script>

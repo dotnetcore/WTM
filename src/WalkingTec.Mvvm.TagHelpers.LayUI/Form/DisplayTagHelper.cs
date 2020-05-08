@@ -15,11 +15,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+
             bool isFile = false;
+
             if (Field?.Name?.ToLower().EndsWith("id") == true)
             {
                 var file = Field.Metadata.ContainerType.GetProperties().Where(x => x.Name.ToLower() + "id" == Field.Metadata.PropertyName.ToLower()).FirstOrDefault();
-                if(file != null)
+                if (file != null && file.PropertyType == typeof(FileAttachment))
                 {
                     isFile = true;
                 }
@@ -65,7 +67,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         val = PropertyHelper.GetEnumDisplayName(Field.Model.GetType(), Field.Model.ToString());
                     }
-                    else if(Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
+                    else if (Field.Model.GetType() == typeof(DateTime) || Field.Model.GetType() == typeof(DateTime?))
                     {
                         if (string.IsNullOrEmpty(Format))
                         {
@@ -78,13 +80,68 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else if (Field.Model.GetType().IsBoolOrNullableBool())
                     {
-                        if((bool?)Field.Model == true)
+                        if ((bool?)Field.Model == true)
                         {
                             val = Program._localizer["Yes"];
                         }
                         else
                         {
                             val = Program._localizer["No"];
+                        }
+                    }
+                    else if (Field.Model.GetType() == typeof(int) || Field.Model.GetType() == typeof(int?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as int?).Value.ToString(Format);
+                        }
+                    }
+                    else if (Field.Model.GetType() == typeof(long) || Field.Model.GetType() == typeof(long?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as long?).Value.ToString(Format);
+                        }
+                    }
+                    else if (Field.Model.GetType() == typeof(float) || Field.Model.GetType() == typeof(float?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as float?).Value.ToString(Format);
+                        }
+                    }
+                    else if (Field.Model.GetType() == typeof(double) || Field.Model.GetType() == typeof(double?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as double?).Value.ToString(Format);
+                        }
+                    }
+                    else if (Field.Model.GetType() == typeof(decimal) || Field.Model.GetType() == typeof(decimal?))
+                    {
+                        if (string.IsNullOrEmpty(Format))
+                        {
+                            val = Field.Model.ToString();
+                        }
+                        else
+                        {
+                            val = (Field.Model as decimal?).Value.ToString(Format);
                         }
                     }
                     else
