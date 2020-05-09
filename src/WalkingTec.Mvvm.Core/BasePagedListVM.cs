@@ -939,6 +939,10 @@ namespace WalkingTec.Mvvm.Core
 
         public void ProcessListError(List<TModel> Entities)
         {
+            if(Entities == null)
+            {
+                return;
+            }
             EntityList = Entities;
             IsSearched = true;
             bool haserror = false;
