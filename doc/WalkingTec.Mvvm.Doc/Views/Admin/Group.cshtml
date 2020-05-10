@@ -1,1 +1,37 @@
-﻿Group
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<wt:fieldset field-set-style="Simple" title="用户组管理-模块截图">
+  <img src="~/imgs/admin-group.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="用户组管理-功能介绍">
+  <p>
+    通过系统管理-用户组管理，进入用户组管理界面，可以看到系统中的用户组列表。
+    通过此处功能可以新增用户组、修改用户组、删除用户组、批量删除、导入、导出的功能。
+    用户组的主要作用是将用户分组并给不同的组设置不同的数据权限。
+  </p>
+  <p>
+    新增用户组。如下图：
+  </p>
+  <img src="~/imgs/admin-group-create.png" />
+  <p>
+    修改用户组。如下图：
+  </p>
+  <img src="~/imgs/admin-group-edit.png" />
+  <p>
+    用户组导入，在导入之前，可以下载模板，填写模板信息后，通过导入批量添加用户组信息，如图：
+  </p>
+  <img src="~/imgs/admin-group-import.png" />
+  <p>导入过程中，一旦有数据的错误，会在导入的弹出窗口中显示错误信息。</p>
+  <p>
+    数据权限，给某个用户组添加数据权限，更多信息请参考<a href="/#/Admin/Dp">数据权限</a>，如图：
+  </p>
+  <img src="~/imgs/admin-group-page.png" />
+
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

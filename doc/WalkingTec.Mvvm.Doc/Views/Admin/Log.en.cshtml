@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="Log management-module screenshot">
-    <img src="~/imgs/admin-log.png" />
+    <img src="~/imgs/admin-logen.png" />
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Log management introduction">
     With the log management module, you can do the following:
@@ -15,11 +15,7 @@
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Log management-Profile">
   <wt:quote>
-    The log can be recorded through the configuration of Enablelog in the appsetting.Json , set whether to record the log or not, and also through the configuration of LogExceptionOnly to set whether to only record the exception log. Log management providing flexible log recording configuration for users.
-  </wt:quote>
-  <img src="~/imgs/admin-appsettings.png" />
-  <wt:quote>
-    <p>SinceV3.1.7 and V2.4.9, EnableLog and LogExceptionOnly properties have become obsolete. The framework uses the default logging process of. Netcore to record logs to achieve more flexible and general purpose. </p>
+    <p>The framework uses the default logging process of. Netcore to record logs to achieve more flexible and general purpose. </p>
     <p>Add the following code before. Configureservices in the program.cs file to control the logs </p>
   </wt:quote>
     <wt:code>
@@ -28,7 +24,7 @@
         logging.ClearProviders();
         logging.AddConsole();
         logging.AddDebug();
-        logging.AddWTMLogger();//添加WTM日志，WTM日志会向数据库的日志管理表中写数据
+        logging.AddWTMLogger();//add wtm logger, wtmlogger will write log into database
       })
     </wt:code>
 
