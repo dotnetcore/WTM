@@ -129,6 +129,7 @@
                         { "name": "Log", "title": "日志管理", "jump": "/Admin/Log" },
                         { "name": "User", "title": "用户管理", "jump": "/Admin/User" },
                         { "name": "Role", "title": "角色管理", "jump": "/Admin/Role" },
+                        { "name": "Group", "title": "用户组管理", "jump": "/Admin/Group" },
                         { "name": "Menu", "title": "菜单管理", "jump": "/Admin/Menu" },
                         { "name": "Dp", "title": "数据权限管理", "jump": "/Admin/Dp" }
                     ]

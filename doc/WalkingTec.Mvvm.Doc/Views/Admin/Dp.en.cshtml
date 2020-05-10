@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="Data permission-module screenshot">
-    <img src="~/imgs/admin-dataprivilege.png" />
+    <img src="~/imgs/admin-dataprivilegeen.png" />
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Data permission introduction">
     From the perspective of name, Data permission is easy to understand, that is the right to view and operate some data. Assuming that different schools can maintain only their own students, let's introduce how the framework filter data permissions.
@@ -16,7 +16,7 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
     .ConfigureServices(x =&gt;
     {
         List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-        pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
+        pris.Add(new DataPrivilegeInfo&lt;School&gt;("School", m =&gt; m.SchoolName));
         x.AddFrameworkService( dataPrivilegeSettings: pris);
         x.AddLayui();
     })
@@ -29,14 +29,14 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
         Configure the following code:
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "School", m =&gt; m.SchoolName));
 x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>When there are multiple data permissions, continue to add here, for example:</p>
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校权限", m =&gt; m.Name));
-pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "专业权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "School permission", m =&gt; m.SchoolName));
+pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "Major permission", m =&gt; m.MajorName));
 x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>
@@ -46,7 +46,7 @@ x.AddFrameworkService( dataPrivilegeSettings: pris);
             After selecting the school authority, you can select all or part of the authority. If you select part of the authority, the system will list the data in the school table to let you choose which school authority you have. As shown in the picture:<br />
         </p>
         <p>
-          <img src="~/imgs/admin-dataprivilege-create3.png" /> <br/><br/>
+          <img src="~/imgs/admin-dataprivilege-create3en.png" /> <br/><br/>
           You can assign data permissions to user groups or to individual users. " Select user group permission in permission category to assign to user group, and select user permission to assign to user.<br />
           The input boxes of user groups and users have the function of fuzzy query, which is convenient for users to choose.<br />
         </p>

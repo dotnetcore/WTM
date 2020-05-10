@@ -17,11 +17,7 @@
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="日志管理-配置文件">
   <wt:quote>
-    日志的记录可以通过appsetting.json配置文件中的EnableLog的配置，设置是否记录日志，还可以通过LogExceptionOnly的配置，设置是否只记录异常日志，为各位使用者提供了灵活的日志记录配置。
-  </wt:quote>
-  <img src="~/imgs/admin-appsettings.png" />
-  <wt:quote>
-    <p>从3.1.7和2.4.9版本开始，EnableLog和LogExceptionOnly属性已经过时，框架使用.netcore默认的日志流程来记录日志，以达到更灵活通用的目的 </p>
+    <p>框架使用.netcore默认的日志流程来记录日志，以达到更灵活通用的目的 </p>
     <p>在program.cs文件中 .ConfigureServices之前加入以下代码来控制使用的日志</p>
   </wt:quote>
     <wt:code>

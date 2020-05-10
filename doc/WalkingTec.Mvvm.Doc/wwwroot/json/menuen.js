@@ -127,6 +127,7 @@
                         { "name": "Log", "title": "Log", "jump": "/Admin/Log" },
                         { "name": "User", "title": "User management", "jump": "/Admin/User" },
                         { "name": "Role", "title": "Role management", "jump": "/Admin/Role" },
+                        { "name": "Group", "title": "Group management", "jump": "/Admin/Group" },
                         { "name": "Menu", "title": "Menu", "jump": "/Admin/Menu" },
                         { "name": "Dp", "title": "Data privilege", "jump": "/Admin/Dp" }
                     ]
