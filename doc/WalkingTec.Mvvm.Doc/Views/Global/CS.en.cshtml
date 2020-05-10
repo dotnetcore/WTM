@@ -50,7 +50,7 @@ public IActionResult Create()
 [HttpPost]
 public IActionResult Create()
 {
-    var testDc = new DataContext("实际连接字符串");
+    var testDc = new DataContext("full connection string");
     return PartialView();
 }
     </wt:code>

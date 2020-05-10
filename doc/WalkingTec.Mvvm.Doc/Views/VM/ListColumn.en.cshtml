@@ -16,7 +16,7 @@
 protected override IEnumerable&lt;IGridColumn&lt;CustomView&gt;&gt; InitGridHeader()
 {
     var header = new List&lt;GridColumn&lt;CustomView&gt;&gt;();
-    var topheader = this.MakeGridHeaderParent("父表头");
+    var topheader = this.MakeGridHeaderParent("Parent");
     topheader.SetChildren(
         this.MakeGridHeader(x =&gt; x.test1, 120),
         this.MakeGridHeader(x =&gt; x.test2, 120)
@@ -44,13 +44,13 @@ public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
         this.MakeGridHeader(x =&gt x.SchoolCode),
         this.MakeGridHeader(x =&gt x.SchoolName),
         this.MakeGridHeader(x =&gt x.SchoolType),
-        //内联函数直接返回格式化后的数字
+        //use a lambda
         this.MakeGridHeader(x =&gt x.Total)
         .SetFormat((entity,v)=&gt { return ((double)v).ToString("f2"); }),
-        //调用方法
+        //use a method
         this.MakeGridHeader(x =&gt x.FullName).SetFormat(TotalFormat),
-        //可以不绑定任何列，直接通过SetFormat输出内容
-        this.MakeGridHeader(null).SetTitle("测试").SetFormat(PhotoIdFormat),
+        //a column dose not have to bind to a field, it can just bind to null or a string like 'abc' and using SetFormat to output
+        this.MakeGridHeader(null).SetTitle("Test").SetFormat(PhotoIdFormat),
         this.MakeGridHeaderAction(width: 200)
       };
     }
@@ -111,12 +111,12 @@ public class School_View : School{
     <wt:code title="SchoolListVM.cs">
 public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
 {
-    //设置整行的背景色
+    //set the background color of entire row
     public override string SetFullRowBgColor(object entity)
     {
         return "FF0000";
     }
-    //设置整行的前景色
+    //set the foreground color of entire row
     public override string SetFullRowColor(object entity)
     {
         return "FF0000";
@@ -125,12 +125,12 @@ public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
     protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
     {
         return new List&ltGridColumn&ltSchool_View&gt&gt{
-            //设置单元格前景色为红色
+            //set cell color to red
             this.MakeGridHeader(x =&gt x.SchoolCode).SetForeGroundFunc((entity)=&gt "ff0000"),
-            //设置单元格背景色为绿色
+            //set cell background color to green
             this.MakeGridHeader(x =&gt x.SchoolName).SetBackGroundFunc((entity)=&gt "00ff00"),
             this.MakeGridHeader(x =&gt x.SchoolType),
-            //根据当前行的数据，返回不同的颜色
+            //return different color depends on current record
             this.MakeGridHeader(x =&gt x.Total).SetForeGroundFunc((entity)=> {
                 if(entity.Total <= 1)
                 {
@@ -189,11 +189,11 @@ public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
     protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
     {
         return new List&ltGridColumn&ltSchool_View&gt&gt{
-            //指定本列可以排序
+            //set this column can sort
             this.MakeGridHeader(x =&gt x.SchoolCode).SetSort(true),
             this.MakeGridHeader(x =&gt x.SchoolName),
             this.MakeGridHeader(x =&gt x.SchoolType),
-            //指定本列显示汇总
+            //set this column shows sum
             this.MakeGridHeader(x =&gt x.Total).SetShowTotal(true),
             this.MakeGridHeaderAction(width: 200)
         };

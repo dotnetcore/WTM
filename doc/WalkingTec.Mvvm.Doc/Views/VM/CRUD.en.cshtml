@@ -19,11 +19,11 @@ Take the ‘school’ model as an example. For the definition of the school mode
 <wt:fieldset field-set-style="Simple" title="Using BaseCRUDVM">
   <p>The steps of using BaseCRUDVM in the controller are also clear at a glance. Please see the following example:</p>
   <wt:code title="SchoolController.cs">
-    [ActionDescription("学校管理")]
+    [ActionDescription("School management")]
     public class SchoolController : BaseController
     {
-      #region 新建
-      [ActionDescription("新建")]
+      #region Create
+      [ActionDescription("Create")]
       public ActionResult Create()
       {
         var vm = CreateVM&ltSchoolVM&gt();
@@ -31,7 +31,7 @@ Take the ‘school’ model as an example. For the definition of the school mode
       }
 
       [HttpPost]
-      [ActionDescription("新建")]
+      [ActionDescription("Create")]
       public ActionResult Create(SchoolVM vm)
       {
         if (!ModelState.IsValid)
@@ -48,15 +48,15 @@ Take the ‘school’ model as an example. For the definition of the school mode
       }
       #endregion
 
-      #region 修改
-      [ActionDescription("修改")]
+      #region Edit
+      [ActionDescription("Edit")]
       public ActionResult Edit(Guid id)
       {
         var vm = CreateVM&ltSchoolVM&gt(id);
         return PartialView(vm);
       }
 
-      [ActionDescription("修改")]
+      [ActionDescription("Edit")]
       [HttpPost]
       public ActionResult Edit(SchoolVM vm)
       {
@@ -74,15 +74,15 @@ Take the ‘school’ model as an example. For the definition of the school mode
       }
       #endregion
 
-      #region 删除
-      [ActionDescription("删除")]
+      #region Delete
+      [ActionDescription("Delete")]
       public ActionResult Delete(Guid id)
       {
         var vm = CreateVM&ltSchoolVM&gt(id);
         return PartialView(vm);
       }
 
-      [ActionDescription("删除")]
+      [ActionDescription("Delete")]
       [HttpPost]
       public ActionResult Delete(Guid id, IFormCollection nouse)
       {
@@ -101,8 +101,8 @@ Take the ‘school’ model as an example. For the definition of the school mode
       }
       #endregion
 
-      #region 详细
-      [ActionDescription("详细")]
+      #region Details
+      [ActionDescription("Details")]
       public ActionResult Details(Guid id)
       {
         var vm = CreateVM&ltSchoolVM&gt(id);
@@ -126,24 +126,24 @@ Take the ‘school’ model as an example. For the definition of the school mode
   <wt:code title="SchoolVM.cs">
     public class SchoolVM : BaseCRUDVM&ltSchool&gt
     {
-    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
-    {
-    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolCode));
-    rv.AddGroup(SimpleField(x => x.SchoolName));
-    return rv;
-    }
+      public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+      {
+        var rv = CreateFieldsInfo( SimpleField(x => x.SchoolCode));
+        rv.AddGroup(SimpleField(x => x.SchoolName));
+        return rv;
+      }
     }
   </wt:code>
   <p>The framework also supports the uniqueness verification of combined fields. For example, the combination of two fields, SchoolName and SchoolType, cannot be repeated, at the same time, SchoolCode cannot be repeated.</p>
   <wt:code title="SchoolVM.cs">
     public class SchoolVM : BaseCRUDVM&ltSchool&gt
     {
-    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
-    {
-    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolName), SimpleField(x => x.SchoolType));
-    rv.AddGroup( SimpleField(x => x.SchoolCode));
-    return rv;
-    }
+      public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+      {
+        var rv = CreateFieldsInfo( SimpleField(x => x.SchoolName), SimpleField(x => x.SchoolType));
+        rv.AddGroup( SimpleField(x => x.SchoolCode));
+        return rv;
+      }
     }
   </wt:code>
 

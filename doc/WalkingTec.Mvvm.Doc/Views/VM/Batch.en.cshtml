@@ -21,11 +21,11 @@ public class SchoolBatchVM : BaseBatchVM&ltSchool, School_BatchEdit&gt
 }
 
 /// <summary>
-/// 批量编辑字段类
+/// Batch edit vm
 /// </summary>
 public class School_BatchEdit : BaseVM
 {
-    [Display(Name = "学校类型")]
+    [Display(Name = "SchoolType")]
     public SchoolTypeEnum? SchoolType { get; set; }
 
 }
@@ -40,9 +40,9 @@ public class School_BatchEdit : BaseVM
 <wt:fieldset field-set-style="Simple" title="Using BaseBatchVM">
     <p>Using BatchVM in the Controller is the same as using other VMs. See the following example:</p>
     <wt:code title="SchoolController.cs">
-#region 批量修改
+#region Batch edit
 [HttpPost]
-[ActionDescription("批量修改")]
+[ActionDescription("BatchEdit")]
 public ActionResult BatchEdit(Guid[] IDs)
 {
     var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
@@ -50,7 +50,7 @@ public ActionResult BatchEdit(Guid[] IDs)
 }
 
 [HttpPost]
-[ActionDescription("批量修改")]
+[ActionDescription("BatchEdit")]
 public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
 {
     if (!ModelState.IsValid || !vm.DoBatchEdit())
@@ -62,14 +62,14 @@ public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
         return FFResult()
       .RefreshGrid()
       .CloseDialog()
-      .Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+      .Alert("Operation successful，"+vm.Ids.Length+" records have been modified.");
     }
 }
 #endregion
 
-#region 批量删除
+#region BatchDelete
 [HttpPost]
-[ActionDescription("批量删除")]
+[ActionDescription("BatchDelete")]
 public ActionResult BatchDelete(Guid[] IDs)
 {
     var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
@@ -77,7 +77,7 @@ public ActionResult BatchDelete(Guid[] IDs)
 }
 
 [HttpPost]
-[ActionDescription("批量删除")]
+[ActionDescription("BatchDelete")]
 public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
 {
     if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -89,7 +89,7 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
         return FFResult()
       .RefreshGrid()
       .CloseDialog()
-      .Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+      .Alert("Operation successful，"+vm.Ids.Length+" records have been deleted.");
     }
 }
 #endregion

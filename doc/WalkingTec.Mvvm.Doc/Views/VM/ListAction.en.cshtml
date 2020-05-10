@@ -47,11 +47,11 @@
       </tr>
       <tr>
         <td>ShowInRow=true</td>
-        <td>按钮在每行的操作列上都显示</td>
+        <td>Show action buttons on every row</td>
       </tr>
       <tr>
         <td>HideOnToolBar=true</td>
-        <td>按钮不在列表上方显示</td>
+        <td>Hide action buttons from tool bar</td>
       </tr>
     </tbody>
   </table>
@@ -62,18 +62,18 @@ protected override List&lt;GridAction&gt; InitGridAction()
 {
     var actions = new List&lt;GridAction&gt;
   {
-    //调用页面上的名为test(ids,datas)的js方法
+    //call the js function test(ids,datas) on page
     this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
 
-    //默认弹出对话框，并在每行显示按钮。通过whereStr指定将当前数据的ModelName字段的值拼接到url中,通过SetQueryString将固定的字符串拼到url中
-    //下面这个语句最终访问的url为 ： /_Admin/ActionLog/Details?id=xxx&ModelName=xxx&a=1
-    this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin",whereStr:x=>x.ModuleName).SetShowInRow(true).SetQueryString("a=1"),
+    //use default dialog, show buttons on each row. using 'whereStr' to put prperties' value into url, using 'SetQueryString' to put fixed string into url
+    //statement below will call  /_Admin/ActionLog/Details?id=xxx&ModelName=xxx&a=1
+    this.MakeAction("ActionLog","Details","Details(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin",whereStr:x=>x.ModuleName).SetShowInRow(true).SetQueryString("a=1"),
 
-    //设置IsRedirect和ShowDialog为true，弹出新浏览器窗口，并在每行显示按钮
-    this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
+    //set both IsRedirect and ShowDialog to true，it will popup new browser window
+    this.MakeAction("ActionLog","Details","Details(new window)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
 
-    //设置IsRedirect为true，ShowDialog为false，在本窗口或tab页上显示，并在每行显示按钮
-    this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
+    //set IsRedirect to true，set ShowDialog to false，it will use current tab to display the new page
+    this.MakeAction("ActionLog","Details","Details(current window)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
   };
   return actions;
 }
@@ -175,15 +175,15 @@ protected override List&lt;GridAction&gt; InitGridAction()
         {
             return new List&lt;GridAction&gt;
             {
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                //使用SetBindVisiableColName方法将修改按钮是否显示关联到CanEdit这个列上
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetBindVisiableColName("CanEdit"),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.ExportExcel, "导出","")
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Create, "Create","", dialogWidth: 800),
+                //use SetBindVisiableColName to bind visibility of the button to a column called 'CanEdit'
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "Edit","", dialogWidth: 800).SetBindVisiableColName("CanEdit"),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Delete, "Delete", "",dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Details, "Details","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchEdit, "BatchEdit","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchDelete, "BatchDelete","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Import, "Import","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.ExportExcel, "ExportExcel","")
             };
         }
 
@@ -192,7 +192,7 @@ protected override List&lt;GridAction&gt; InitGridAction()
             return new List&lt;GridColumn&lt;MyUser_View&gt;&gt;{
                 this.MakeGridHeader(x =&gt; x.ITCode),
                 this.MakeGridHeader(x =&gt; x.Name),
-                //添加一个叫做CanEdit的列，使用SetHide方法使其隐藏，使用SetFormat函数根据本行数据来决定返回true或者false
+                //add a column called 'CanEdit'，using SetHide method to hide it, and use SetFormat method to return 'true' or 'false' to control the visibility of edit button
                 this.MakeGridHeader(x=&gt;"CanEdit").SetHide().SetFormat((e,v)=&gt;{
                     if (e.Sex == SexEnum.Male){
                         return "true";

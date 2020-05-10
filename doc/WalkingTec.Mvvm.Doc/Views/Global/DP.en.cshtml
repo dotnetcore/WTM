@@ -21,7 +21,7 @@ public class Program
             .ConfigureServices(x =&gt;
             {
                 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-                pris.Add(new DataPrivilegeInfo&lt;TestRole&gt;("测试角色", y =&gt; y.RoleName));
+                pris.Add(new DataPrivilegeInfo&lt;TestRole&gt;("Testing role", y =&gt; y.RoleName));
                 x.AddFrameworkService(dataPrivilegeSettings: pris);
                 x.AddLayui();
             })
