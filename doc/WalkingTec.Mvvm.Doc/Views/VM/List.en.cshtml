@@ -20,13 +20,13 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
     {
         return new List&ltGridAction&gt
         {
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "Create","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "Edit","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "Delete", "",dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "Details","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "BatchEdit","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "BatchDelete","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "Import","", dialogWidth: 800),
             this.MakeStandardExportAction(null,false,ExportEnum.Excel)
         };
     }
@@ -116,8 +116,8 @@ public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
 <wt:fieldset field-set-style="Simple" title="Use BasePagedListVM">
     <p>The steps of using BasePagedListVM in controller are also clear at a glance. Please see the following example:</p>
     <wt:code title="SchoolController.cs">
-#region 搜索
-[ActionDescription("搜索")]
+#region Search
+[ActionDescription("Search")]
 public ActionResult Index()
 {
     var vm = CreateVM&ltSchoolListVM&gt();
@@ -139,11 +139,11 @@ public ActionResult Index()
     <wt:code title="SchoolSearcher.cs">
 public class SchoolSearcher : BaseSearcher
 {
-    [Display(Name = "学校编码")]
+    [Display(Name = "School code")]
     public String SchoolCode { get; set; }
-    [Display(Name = "学校名称")]
+    [Display(Name = "School name")]
     public String SchoolName { get; set; }
-    [Display(Name = "学校类型")]
+    [Display(Name = "School type")]
     public SchoolTypeEnum? SchoolType { get; set; }
 }
     </wt:code>
@@ -204,10 +204,10 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         {
             List&ltStudent&gt data = new List&ltStudent&gt
             {
-                new Student{ LoginName = "zhangsan", Name="张三", Sex= Models.SexEnum.Male, CellPhone="13012213483", ExcelIndex = 0, IsValid = true, ID = new Guid("6F5C2D15-4871-4083-B269-06F456A4F1B6")},
-                new Student{ LoginName = "lisi", Name="李四", Sex= Models.SexEnum.Male, CellPhone="13075829654", ExcelIndex = 1, IsValid = false, ID = new Guid("9C7BC358-B8BD-4547-AFC1-11BF6F2B608B")},
-                new Student{ LoginName = "wangwu", Name="王五", Sex= Models.SexEnum.Male, CellPhone="13098635100", ExcelIndex = 2, IsValid = true, ID = new Guid("3BF9217C-1ACF-4D80-9899-42CFDA4C8746")},
-                new Student{ LoginName = "zhaoliu", Name="赵六", Sex= Models.SexEnum.Female, CellPhone="13035698123", ExcelIndex = 3, IsValid = false, ID = new Guid("0C7F6A24-A08D-46BD-86AC-6B6A391A9F04")},
+                new Student{ LoginName = "zhangsan", Name="AAA", Sex= Models.SexEnum.Male, CellPhone="13012213483", ExcelIndex = 0, IsValid = true, ID = new Guid("6F5C2D15-4871-4083-B269-06F456A4F1B6")},
+                new Student{ LoginName = "lisi", Name="BBB", Sex= Models.SexEnum.Male, CellPhone="13075829654", ExcelIndex = 1, IsValid = false, ID = new Guid("9C7BC358-B8BD-4547-AFC1-11BF6F2B608B")},
+                new Student{ LoginName = "wangwu", Name="CCC", Sex= Models.SexEnum.Male, CellPhone="13098635100", ExcelIndex = 2, IsValid = true, ID = new Guid("3BF9217C-1ACF-4D80-9899-42CFDA4C8746")},
+                new Student{ LoginName = "zhaoliu", Name="DDD", Sex= Models.SexEnum.Female, CellPhone="13035698123", ExcelIndex = 3, IsValid = false, ID = new Guid("0C7F6A24-A08D-46BD-86AC-6B6A391A9F04")},
             };
 
             var query = data.AsQueryable().Where(x=&gt
@@ -240,7 +240,7 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         {
             var actions = new List&lt;GridAction&gt;
             {
-                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "Details","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel)
             };
             return actions;

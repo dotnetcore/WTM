@@ -14,13 +14,13 @@
     <wt:code title="SchoolImportVM.cs">
 public class SchoolTemplateVM : BaseTemplateVM
 {
-    [Display(Name = "学校编码")]
+    [Display(Name = "School code")]
     public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
-    [Display(Name = "学校名称")]
+    [Display(Name = "School name")]
     public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
-    [Display(Name = "学校类型")]
+    [Display(Name = "School type")]
     public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
-    [Display(Name = "备注")]
+    [Display(Name = "Remark")]
     public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
 }
 
@@ -37,8 +37,8 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 <wt:fieldset field-set-style="Simple" title="Using BaseImportVM">
     <p>The steps of using BaseImportVM in Controller are also clear at a glance. Please see the following example:</p>
     <wt:code title="SchoolController.cs">
-#region 导入
-[ActionDescription("导入")]
+#region Import
+[ActionDescription("Import")]
 public ActionResult Import()
 {
     var vm = CreateVM&ltSchoolImportVM&gt();
@@ -46,7 +46,7 @@ public ActionResult Import()
 }
 
 [HttpPost]
-[ActionDescription("导入")]
+[ActionDescription("Import")]
 public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
 {
     if (vm.ErrorListVM.EntityList.Count &gt 0 || !vm.BatchSaveData())
@@ -58,7 +58,7 @@ public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
         return FFResult()
       .RefreshGrid()
       .CloseDialog()
-      .Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+      .Alert(vm.EntityList.Count.ToString() + " records have been imported");
     }
 }
 #endregion
@@ -83,13 +83,13 @@ public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
     <wt:code title="SchoolImportVM.cs">
 public class SchoolTemplateVM : BaseTemplateVM
 {
-    [Display(Name = "学校编码")]
+    [Display(Name = "School code")]
     public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
-    [Display(Name = "学校名称")]
+    [Display(Name = "School name")]
     public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
-    [Display(Name = "学校类型")]
+    [Display(Name = "School type")]
     public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
-    [Display(Name = "备注")]
+    [Display(Name = "Remark")]
     public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
 
     protected override void InitVM()
@@ -120,13 +120,13 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
     <wt:code title="SchoolImportVM.cs">
 public class SchoolTemplateVM : BaseTemplateVM
 {
-    [Display(Name = "学校编码")]
+    [Display(Name = "School code")]
     public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
-    [Display(Name = "学校名称")]
+    [Display(Name = "School name")]
     public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
-    [Display(Name = "学校类型")]
+    [Display(Name = "School type")]
     public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
-    [Display(Name = "备注")]
+    [Display(Name = "Remark")]
     public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
 
 }
@@ -135,14 +135,14 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
 {
         public override bool BatchSaveData()
         {
-            //获取excel中的数据并保存在EntityList中
+            //Get records from excel file and save it in to EntityList
             SetEntityList();
-            //循环数据把学校名称后面加个X
+            //Loop the EntityList, add a 'X' at the end
             foreach (var item in EntityList)
             {
                 item.SchoolName += "X";
             }
-            //调用父类方法进行保存，如果还有特殊需求，可以自己操作DC进行数据保存
+            //Call the BatchSaveData from base to save to the database. If there are special requirements, you can operate the DC by yourself to save the data
             return base.BatchSaveData();
         }
 }
@@ -156,20 +156,20 @@ public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
     <wt:code title="SchoolImportVM.cs">
 public class SchoolTemplateVM : BaseTemplateVM
 {
-    [Display(Name = "学校编码")]
+    [Display(Name = "School code")]
     public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolCode);
-    [Display(Name = "学校名称")]
+    [Display(Name = "School name")]
     public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolName);
-    [Display(Name = "学校类型")]
+    [Display(Name = "School type")]
     public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolType);
-    [Display(Name = "备注")]
+    [Display(Name = "Remark")]
     public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.Remark);
 
-    [Display(Name = "专业编码")]
+    [Display(Name = "Major code")]
     public ExcelPropety MajorCode_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorCode);
-    [Display(Name = "专业名称")]
+    [Display(Name = "Major name")]
     public ExcelPropety MajorName_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorName);
-    [Display(Name = "专业类型")]
+    [Display(Name = "Major type")]
     public ExcelPropety MajorType_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorType);
 
 }
