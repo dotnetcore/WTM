@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                         ms.Add(item);
                     }
                 }
-                LocalizeMenu(menus);
+                LocalizeMenu(ms);
 
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
