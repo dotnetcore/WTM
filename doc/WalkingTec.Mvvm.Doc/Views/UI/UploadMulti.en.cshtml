@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                     <td>Field</td>
-                    <td>必须绑定一个List&lt;ISubFile&gt;字段，必填</td>
+                    <td>Must bind to a List&lt;ISubFile&gt;field，required</td>
                 </tr>
                 <tr>
                     <td>Disabled</td>
@@ -81,8 +81,8 @@
     </wt:quote>
         <wt:tab>
           <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
             <wt:tabheader title="Model" />
           </wt:tabheaders>
             <wt:tabcontents>
@@ -111,27 +111,26 @@
                     <wt:code>
     public class School : BasePoco
     {
-        [Display(Name = "学校编码")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        [Display(Name = "School code")]
+        [Required()]
         public string SchoolCode { get; set; }
 
-        [Display(Name = "学校名称")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
-        [Required(ErrorMessage = "{0}是必填项")]
+        [Display(Name = "School name")]
+        [StringLength(50)]
+        [Required()]
         public string SchoolName { get; set; }
 
-        //定义附件列表
+        //Custom file attachments
         public List&lt;SchoolPhoto&gt; Photos { get; set; }
     }
 
-    //继承ISubFile的附件子表
+    //SchoolPhoto should be a Poco implements ISubFile
     public class SchoolPhoto : TopBasePoco, ISubFile
     {
         public int SchoolId { get; set; }
         public School School { get; set; }
 
-        //ISubFile定义的字段
+        //Fields defined in ISubFile
         public Guid FileId { get; set; }
         public FileAttachment File { get; set; }
         public int order { get; set; }

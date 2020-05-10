@@ -16,7 +16,7 @@
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">Property</th>
-                <th lay-data="{field:'required', width:60}">Requirement</th>
+                    <th lay-data="{field:'required', width:100}">Requird</th>
                 <th lay-data="{field:'joinTime', width:600}">Description</th>
             </tr>
         </thead>
@@ -119,16 +119,16 @@
     </wt:quote>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:form vm="@Model" style="max-width:600px;">
                     <wt:transfer items="AllSchools" field="TransferSelectedSchools"
-                                 left-title="自定义Title1" right-title="自定义Title2"
-                                 none-placeholder="没有选中的数据" disabled="false"
-                                 enable-search="true" search-none-placeholder="没有匹配的数据"
+                                 left-title="Custom Title1" right-title="Custom Title2"
+                                 none-placeholder="no data" disabled="false"
+                                 enable-search="true" search-none-placeholder="no matching data"
                                  change-func="onChangeCallback" />
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
@@ -140,9 +140,9 @@
                 <wt:code>
 &ltwt:form vm="@@Model" width="600"&gt
   &ltwt:transfer items="AllSchools" field="TransferSelectedSchools"
-    left-title="自定义Title1" right-title="自定义Title2"
-    none-placeholder="没有选中的数据" disabled="false"
-    enable-search="true" search-none-placeholder="没有匹配的数据"
+    left-title="Custom Title1" right-title="Custom Title2"
+    none-placeholder="no data" disabled="false"
+    enable-search="true" search-none-placeholder="no matching data"
     change-func="onChangeCallback" /&gt
 &ltwt:row align="AlignEnum.Right"&gt
   &ltwt:submitbutton disabled="true" /&gt
@@ -151,7 +151,7 @@
 &lt/wt:form&gt
 &ltscript&gt
   function onChangeCallback(data, index, transferIns) {
-    ff.Alert((index == 0 ? '左到右：' : '右到左：') + '&ltbr/&gtTitle=' + data[0].title + '&ltbr/&gt Value=' + data[0].value);
+    ff.Alert((index == 0 ? 'left to right：' : 'right to left：') + '&ltbr/&gtTitle=' + data[0].title + '&ltbr/&gt Value=' + data[0].value);
   }
 &lt/script&gt
                 </wt:code>
@@ -165,7 +165,7 @@ layui.use('code',function(){layui.code({ about: false })})
         limit: 100, page: false
     });
     function onChangeCallback(data, index, transferIns) {
-        ff.Alert((index == 0 ? '左到右：' : '右到左：') + '<br/>Title=' + data[0].title + '<br/> Value=' + data[0].value);
+        ff.Alert((index == 0 ? 'left to right：' : 'right to left：') + '<br/>Title=' + data[0].title + '<br/> Value=' + data[0].value);
     }
 </script>
 <script>

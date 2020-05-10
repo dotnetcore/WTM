@@ -189,9 +189,10 @@
     </div>
 
   </div>
+
   <script>
   $("#frontpage").parent().css("background-color", "#eee");
-  $("#frontpage").parent().css("height", "auto");
+   $("#frontpage").parent().css("overflow", "scroll");
 
   $.get("/Home/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);

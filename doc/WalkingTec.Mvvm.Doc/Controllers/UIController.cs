@@ -186,23 +186,23 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             List<School> schools = new List<School>()
             {
-                new School { SchoolName = Localizer["U1"], Majors = new List<Major>(){
+                new School { SchoolName = Localizer["U1"].ToString().ToLower().Replace(" ",""), Majors = new List<Major>(){
                     new Major{ MajorName = Localizer["U11"]},
                     new Major{ MajorName = Localizer["U12"]},
                 } },
-                new School { SchoolName = Localizer["U2"], Majors = new List<Major>(){
+                new School { SchoolName = Localizer["U2"].ToString().ToLower().Replace(" ",""), Majors = new List<Major>(){
                     new Major{ MajorName = Localizer["U21"]},
                     new Major{ MajorName = Localizer["U22"]},
                 }},
-                new School { SchoolName = Localizer["U3"], Majors = new List<Major>(){
+                new School { SchoolName = Localizer["U3"].ToString().ToLower().Replace(" ",""), Majors = new List<Major>(){
                     new Major{ MajorName = Localizer["U31"]},
                     new Major{ MajorName = Localizer["U32"]},
                 }},
-                new School { SchoolName = Localizer["U4"], Majors = new List<Major>(){
+                new School { SchoolName = Localizer["U4"].ToString().ToLower().Replace(" ",""), Majors = new List<Major>(){
                     new Major{ MajorName = Localizer["U41"]},
                     new Major{ MajorName = Localizer["U42"]},
                 }},
-                new School { SchoolName = Localizer["U5"], Majors = new List<Major>(){
+                new School { SchoolName = Localizer["U5"].ToString().ToLower().Replace(" ",""), Majors = new List<Major>(){
                     new Major{ MajorName = Localizer["U51"]},
                     new Major{ MajorName = Localizer["U52"]},
                 }},

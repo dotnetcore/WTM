@@ -194,7 +194,7 @@
   </div>
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
-  $("#frontpage").parent().css("height", "auto");
+  $("#frontpage").parent().css("overflow", "scroll");
 
   $.get("/Home/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);
@@ -217,7 +217,7 @@
     $('.layadmin-carousel').each(function () {
       var othis = $(this);
       carousel.render({
-        elem: this
+      elem: this
         , width: '100%'
         , arrow: 'none'
         , interval: othis.data('interval')
@@ -230,19 +230,19 @@
     element.render('progress');
 
     var compareFunc = function (p){ //这是比较函数
-        return function(m,n){
-            var a = m[p.field];
-            var b = n[p.field];
-            if(p.type==='desc'){
-              return a > b?-1:1; // 降序
-            }
-            else{
-              return a > b?1:-1; //升序
-            }
+      return function(m,n){
+        var a = m[p.field];
+        var b = n[p.field];
+        if(p.type==='desc'){
+          return a > b?-1:1; // 降序
         }
+        else{
+          return a > b?1:-1; //升序
+        }
+      }
     }
     const tableIns = table.render({
-      elem: '#WTM-donate'
+    elem: '#WTM-donate'
       , id: 'WTM-donate'
       , url: '/json/donate.js'
       , page: true
@@ -264,7 +264,7 @@
         var pageIndex = this.page.curr===undefined?1:this.page.curr;
         var result = list.slice(this.limit*(pageIndex-1),this.limit*pageIndex);
         return {
-                "Code": 200,
+          "Code": 200,
                 "Msg":"",
                 "Count": res.Data.length,
                 "Data": result
@@ -273,7 +273,7 @@
       , skin: 'line'
       , height: 840
       ,initSort: {
-        field: 'date'
+      field: 'date'
         ,type: 'desc'
       }
     });

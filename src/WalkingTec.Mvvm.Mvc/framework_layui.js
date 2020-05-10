@@ -190,6 +190,7 @@ window.ff = {
     url = url.toLowerCase();
     if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) {
       $('#' + where).html("<iframe frameborder='no' border='0' height='100%' src='" + url + "'></iframe>");
+        $('#' + where).css("overflow-y", "auto");
     }
     else {
       var layer = layui.layer, index = layer.load(2);
@@ -197,7 +198,8 @@ window.ff = {
         url: decodeURIComponent(url),
         type: 'GET',
         success: function (data) {
-          $('#' + where).html(data);
+            $('#' + where).html(data);
+            $('#' + where).css("overflow-y", "scroll");
           layer.close(index);
         },
         error: function (xhr, status, error) {

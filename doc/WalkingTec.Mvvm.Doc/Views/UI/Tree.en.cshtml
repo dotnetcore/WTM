@@ -8,21 +8,21 @@
   <p>The simplest way to implement the tree model is to inherit the ITreeData interface provided by the framework.</p>
   <p>The following shows the model of a ‘department’, which is a tree structure. Each department may have a parent department.</p>
   <wt:code>
-    public class Department : BasePoco,ITreeData<Department>
-      {
-      [Display(Name = "部门名称")]
-      [Required(ErrorMessage = "{0}是必填项")]
-      public string DepName { get; set; }
+public class Department : BasePoco,ITreeData&lt;Department&gt;
+{
+  [Display(Name = "Department name")]
+  [Required()]
+  public string DepName { get; set; }
 
-      public List&lt;Department&gt;
-        Children { get; set; }
+  public List&lt;Department&gt;
+  Children { get; set; }
 
-        [Display(Name = "上级部门")]
-        public Department Parent { get; set; }
+  [Display(Name = "Parent")]
+  public Department Parent { get; set; }
 
-        [Display(Name = "上级部门")]
-        public Guid? ParentId { get; set; }
-        }
+  [Display(Name = "Parent")]
+  public Guid? ParentId { get; set; }
+}
   </wt:code>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Tree">
@@ -32,7 +32,7 @@
   <thead>
     <tr>
       <th lay-data="{field:'username', width:200}">Property</th>
-      <th lay-data="{field:'required', width:60}">Requirement</th>
+      <th lay-data="{field:'required', width:100}">Requird</th>
       <th lay-data="{field:'joinTime', width:600}">Description</th>
     </tr>
   </thead>
@@ -93,12 +93,12 @@
   <p>Tree can determine whether it is a single selection mode or multiple mode according to the type of bound Field. Set the data source through the Items property. Items need to be bound to a List></p>
   <p>TreeSelectListItem is an auxiliary class provided by the framework, with properties such as Id，Text，Url，Childrenetc</p>
   <p>Inheriting the model of ITreeData interface, it is convenient to call the functions provided by the framework to generate the data format needed by tree control,</p>
-  <p>For example, DC. Set(). Gettreeselectlistitems (loginuserinfo. Dataprivileges, null, x = > x.depname) can read the database directly and generate a List<TreeSelectListItem></p>
+  <p>For example, DC. Set(). Gettreeselectlistitems (loginuserinfo. Dataprivileges, null, x = &gt; x.depname) can read the database directly and generate a List&lt;TreeSelectListItem&gt;</p>
 </wt:quote>
 <wt:tab>
   <wt:tabheaders>
-    <wt:tabheader title="效果" />
-    <wt:tabheader title="代码" />
+    <wt:tabheader title="Effect" />
+    <wt:tabheader title="Code" />
   </wt:tabheaders>
   <wt:tabcontents>
     <wt:tabcontent>
@@ -131,13 +131,13 @@
 
 <wt:tab>
   <wt:tabheaders>
-    <wt:tabheader title="多选效果" />
+    <wt:tabheader title="Multiselect" />
   </wt:tabheaders>
   <wt:tabcontents>
     <wt:tabcontent>
       <wt:form vm="@Model" style="max-width:600px;">
         <wt:textbox field="Entity.DepName" />
-        <wt:tree field="SelectedIds" items="AllDeps" height="300" label-text="多选" />
+        <wt:tree field="SelectedIds" items="AllDeps" height="300" label-text="Multi" />
         <wt:row align="AlignEnum.Right">
           <wt:submitbutton disabled="true" />
           <wt:closebutton disabled="true" />

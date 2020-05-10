@@ -60,8 +60,8 @@
     <div style="height:10px;">&nbsp;</div>
         <wt:tab>
             <wt:tabheaders>
-                <wt:tabheader title="效果" />
-                <wt:tabheader title="代码" />
+                <wt:tabheader title="Effect" />
+                <wt:tabheader title="Code" />
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
@@ -97,16 +97,16 @@
     </wt:quote>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
-                <wt:display display-text="在所属学校中试试搜索北京，清华，复旦，浙江"/>
+                <wt:display display-text="try to search Oxford or MIT in school"/>
                 <wt:form vm="@Model" style="max-width:600px;">
                     <wt:textbox field="Entity.MajorCode" />
                     <wt:textbox field="Entity.MajorName" />
-                    <wt:textbox field="SchoolName" label-text="所属学校" search-url="/UI/GetSchool" />
+                    <wt:textbox field="SchoolName" label-text="School" search-url="/UI/GetSchool" />
                     <wt:row align="AlignEnum.Right">
                         <wt:submitbutton disabled="true" />
                         <wt:closebutton disabled="true" />
@@ -118,7 +118,7 @@
 &ltwt:form vm="@@Model" width="600"&gt
     &ltwt:textbox field="Entity.MajorCode" /&gt
     &ltwt:textbox field="Entity.MajorName" /&gt
-    &ltwt:textbox field="SchoolName" label-text="所属学校" search-url="/UI/GetSchool" /&gt
+    &ltwt:textbox field="SchoolName" label-text="School" search-url="/UI/GetSchool" /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
@@ -130,11 +130,11 @@ public IActionResult GetSchool(string keywords)
 {
     List&ltSchool&gt schools = new List&ltSchool&gt()
     {
-        new School { SchoolName = "清华大学"},
-        new School { SchoolName = "北京大学"},
-        new School { SchoolName = "复旦大学"},
-        new School { SchoolName = "北京工业大学"},
-        new School { SchoolName = "浙江大学"},
+        new School { SchoolName = "Oxford"},
+        new School { SchoolName = "University of Cambridge"},
+        new School { SchoolName = "Stanford University"},
+        new School { SchoolName = "MIT"},
+        new School { SchoolName = "Harvard University"},
     };
     var rv = schools.Where(x=&gtx.SchoolName.StartsWith(keywords)).Select(x =&gt new { Text = x.SchoolName, Value = x.SchoolName }).ToList();
     return Json(rv);

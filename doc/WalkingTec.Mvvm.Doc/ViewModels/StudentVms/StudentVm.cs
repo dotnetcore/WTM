@@ -46,11 +46,11 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
             TransferSelectedSchools = new List<string>() { Localizer["U1"], Localizer["U3"] };
             AllSchools = new List<ComboSelectListItem>()
             {
-                new ComboSelectListItem{ Text = Localizer["U1"], Value = Localizer["U1"]},
-                new ComboSelectListItem{ Text = Localizer["U2"], Value = Localizer["U2"]},
-                new ComboSelectListItem{ Text = Localizer["U3"], Value = Localizer["U3"], Disabled = true},
-                new ComboSelectListItem{ Text = Localizer["U4"], Value = Localizer["U4"]},
-                new ComboSelectListItem{ Text = Localizer["U5"], Value =Localizer["U5"]},
+                new ComboSelectListItem{ Text = Localizer["U1"], Value = Localizer["U1"].ToString().ToLower().Replace(" ","")},
+                new ComboSelectListItem{ Text = Localizer["U2"], Value = Localizer["U2"].ToString().ToLower().Replace(" ","")},
+                new ComboSelectListItem{ Text = Localizer["U3"], Value = Localizer["U3"].ToString().ToLower().Replace(" ",""), Disabled = true},
+                new ComboSelectListItem{ Text = Localizer["U4"], Value = Localizer["U4"].ToString().ToLower().Replace(" ","")},
+                new ComboSelectListItem{ Text = Localizer["U5"], Value =Localizer["U5"].ToString().ToLower().Replace(" ","")},
            };
 
             Entity.EnRollDateRange = DateRange.Week;

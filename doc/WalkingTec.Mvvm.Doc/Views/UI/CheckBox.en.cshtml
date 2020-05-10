@@ -58,13 +58,13 @@
     </wt:quote>
         <wt:tab>
             <wt:tabheaders>
-                <wt:tabheader title="效果" />
-                <wt:tabheader title="代码" />
+                <wt:tabheader title="Effect" />
+                <wt:tabheader title="Code" />
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
                     <wt:form vm="@Model" style="max-width:600px;">
-                        <wt:checkbox field="SelectedSchools" label-text="学校多选" items="AllSchools" />
+                        <wt:checkbox field="SelectedSchools" label-text="Schools" items="AllSchools" />
                         <wt:row align="AlignEnum.Right">
                             <wt:submitbutton disabled="true" />
                             <wt:closebutton disabled="true" />
@@ -74,7 +74,7 @@
                 <wt:tabcontent>
                     <wt:code>
 &ltwt:form vm="@@Model" width="600"&gt
-    &ltwt:checkbox field="SelectedSchools" label-text="学校多选" items="AllSchools" /&gt
+    &ltwt:checkbox field="SelectedSchools" label-text="Schools" items="AllSchools" /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt
