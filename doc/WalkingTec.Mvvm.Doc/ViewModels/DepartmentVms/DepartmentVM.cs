@@ -18,24 +18,24 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.DepartmentVms
             AllDeps = new List<TreeSelectListItem>{
                 new TreeSelectListItem
                 {
-                  Text = "部门1",
+                  Text = Localizer["Dep"]+ "1",
                   Id = Guid.NewGuid().ToString(),
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
-                          Text = "部门1-1",
+                          Text = Localizer["Dep"]+ "1-1",
                           Id = Guid.NewGuid().ToString(),
                           Children = new List<TreeSelectListItem>
                           {
                               new TreeSelectListItem
                               {
-                                  Text = "部门1-1-1",
+                                  Text = Localizer["Dep"]+ "1-1-1",
                                   Id = Guid.NewGuid().ToString(),
                               },
                               new TreeSelectListItem
                               {
-                                  Text = "部门1-1-2",
+                                  Text = Localizer["Dep"]+ "1-1-2",
                                   Id = Guid.NewGuid().ToString(),
                               }
 
@@ -43,37 +43,37 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.DepartmentVms
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门1-2",
+                          Text = Localizer["Dep"]+ "1-2",
                           Id = Guid.NewGuid().ToString()
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门1-3",
+                          Text = Localizer["Dep"]+ "1-3",
                           Id = Guid.NewGuid().ToString()
                       }
                   }
                 },
                 new TreeSelectListItem
                 {
-                  Text = "部门2",
+                  Text = Localizer["Dep"]+ "2",
                   Id = Guid.NewGuid().ToString(),
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
-                          Text = "部门2-1",
+                          Text = Localizer["Dep"]+ "2-1",
                           Id = Guid.NewGuid().ToString()
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门2-2",
+                          Text = Localizer["Dep"]+ "2-2",
                           Id = Guid.NewGuid().ToString()
                       }
                   }
                 },
                 new TreeSelectListItem
                 {
-                  Text = "部门3",
+                  Text = Localizer["Dep"]+ "3",
                   Id = Guid.NewGuid().ToString()
                 }
 

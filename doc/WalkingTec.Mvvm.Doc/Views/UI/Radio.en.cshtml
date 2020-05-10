@@ -68,15 +68,15 @@
     </wt:quote>
         <wt:tab>
             <wt:tabheaders>
-                <wt:tabheader title="效果" />
-                <wt:tabheader title="代码" />
+                <wt:tabheader title="Effect" />
+                <wt:tabheader title="Code" />
             </wt:tabheaders>
             <wt:tabcontents>
                 <wt:tabcontent>
                     <wt:form vm="@Model" style="max-width:600px;">
                         <wt:radio field="Entity.Sex" />
-                        <wt:radio field="Entity.IsValid" yes-text="真的是" no-text="真不是" />
-                        <wt:radio field="SelectedSchool" label-text="学校" items="AllSchools" />
+                        <wt:radio field="Entity.IsValid" yes-text="true" no-text="false" />
+                        <wt:radio field="SelectedSchool" label-text="School" items="AllSchools" />
                         <wt:row align="AlignEnum.Right">
                             <wt:submitbutton disabled="true" />
                             <wt:closebutton disabled="true" />
@@ -87,8 +87,8 @@
                     <wt:code>
 &ltwt:form vm="@@Model" width="600"&gt
     &ltwt:radio field="Entity.Sex" /&gt
-    &ltwt:radio field="Entity.IsValid" yes-text="真的是" no-text="真不是" /&gt
-    &ltwt:radio field="SelectedSchool" label-text="学校" items="AllSchools" /&gt
+    &ltwt:radio field="Entity.IsValid" yes-text="true" no-text="false" /&gt
+    &ltwt:radio field="SelectedSchool" label-text="School" items="AllSchools" /&gt
     &ltwt:row align="AlignEnum.Right"&gt
         &ltwt:submitbutton disabled="true" /&gt
         &ltwt:closebutton disabled="true" /&gt

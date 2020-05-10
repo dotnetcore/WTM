@@ -85,8 +85,8 @@
     </wt:quote>
         <wt:tab>
           <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
             <wt:tabheader title="Model" />
           </wt:tabheaders>
             <wt:tabcontents>
@@ -115,26 +115,26 @@
                     <wt:code>
     public class Student : BasePoco
     {
-        [Display(Name = "账号")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Account")]
+        [Required()]
+        [StringLength(50)]
         public string LoginName { get; set; }
 
-        [Display(Name = "密码")]
-        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Password")]
+        [Required()]
         [StringLength(32)]
         public string Password { get; set; }
 
-        [Display(Name = "姓名")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Name")]
+        [Required()]
+        [StringLength(50)]
         public string Name { get; set; }
 
-        //这个Photo和PhotoId一起定义了一个附件
-        [Display(Name = "照片")]
+        //Photo and PhotoId together define a foreign key
+        [Display(Name = "Photo")]
         public Guid? PhotoId { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "Photo")]
         public FileAttachment Photo { get; set; }
 
     }

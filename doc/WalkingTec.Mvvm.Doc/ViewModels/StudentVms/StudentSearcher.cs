@@ -9,13 +9,13 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
 {
     public class StudentSearcher : BaseSearcher
     {
-        [Display(Name = "账号")]
+        [Display(Name = "Account")]
         public string LoginName { get; set; }
 
-        [Display(Name = "姓名")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Display(Name = "性别")]
+        [Display(Name = "Sex")]
         public Models.SexEnum? Sex { get; set; }
 
         public Guid? DepId { get; set; }

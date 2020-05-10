@@ -9,8 +9,8 @@
     <p>Forms and their internal controls are most used in development. TagHelper provided by the framework can be used to quickly build a form.</p>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
@@ -62,8 +62,8 @@
    <p>Using grid control provided by framework to output list quickly</p>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
@@ -71,10 +71,10 @@
                     <wt:row items-per-row="ItemsPerRowEnum.Three">
                         <wt:textbox field="ListVm.Searcher.LoginName" />
                         <wt:textbox field="ListVm.Searcher.Name" />
-                        <wt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" />
+                        <wt:combobox field="ListVm.Searcher.IsValid" empty-text="All" />
                     </wt:row>
                 </wt:searchpanel>
-                <wt:grid vm="@Model.ListVm" use-local-data="true"/>
+                <wt:grid vm="@Model.ListVm" use-local-data="true" height="300"/>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
@@ -82,10 +82,10 @@
     &ltwt:row items-per-row="ItemsPerRowEnum.Three"&gt
         &ltwt:textbox field="ListVm.Searcher.LoginName" /&gt
         &ltwt:textbox field="ListVm.Searcher.Name" /&gt
-        &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" /&gt
+        &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="All" /&gt
     &lt/wt:row&gt
 &lt/wt:searchpanel&gt
-&ltwt:grid vm="@@Model.ListVm" /&gt
+&ltwt:grid vm="@@Model.ListVm" height="300" /&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -95,16 +95,16 @@
     <p>Use the panel, tab, row and other controls provided by the framework to carry out page layout</p>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
                 <wt:form vm="@Model.Vm" >
                     <wt:tab>
                         <wt:tabheaders>
-                            <wt:tabheader title="基本信息" />
-                            <wt:tabheader title="附加信息" />
+                            <wt:tabheader title="Basic" />
+                            <wt:tabheader title="Extra" />
                         </wt:tabheaders>
                         <wt:tabcontents>
                             <wt:tabcontent>
@@ -145,8 +145,8 @@
 &ltwt:form vm="@@Model.Vm"&gt
     &ltwt:tab&gt
         &ltwt:tabheaders&gt
-            &ltwt:tabheader title="基本信息" /&gt
-            &ltwt:tabheader title="附加信息" /&gt
+            &ltwt:tabheader title="Basic" /&gt
+            &ltwt:tabheader title="Extra" /&gt
         &lt/wt:tabheaders&gt
         &ltwt:tabcontents&gt
             &ltwt:tabcontent&gt

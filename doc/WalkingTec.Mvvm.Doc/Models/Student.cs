@@ -9,88 +9,88 @@ namespace WalkingTec.Mvvm.Doc.Models
 {
     public enum SexEnum
     {
-        [Display(Name = "男")]
+        [Display(Name = "Male")]
         Male = 0,
-        [Display(Name = "女")]
+        [Display(Name = "Female")]
         Female = 1
     }
     public class Student : BasePoco
     {
-        [Display(Name = "账号")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Account")]
+        [Required(ErrorMessage = "{0}required")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string LoginName { get; set; }
 
-        [Display(Name = "密码")]
-        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Password")]
+        [Required(ErrorMessage = "{0}required")]
         [StringLength(32)]
         public string Password { get; set; }
 
-        [Display(Name = "邮箱")]
+        [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string Email { get; set; }
 
-        [Display(Name = "姓名")]
-        [Required(ErrorMessage = "{0}是必填项")]
-        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Name")]
+        [Required(ErrorMessage = "{0}required")]
+        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
         public string Name { get; set; }
 
-        [Display(Name = "性别")]
+        [Display(Name = "Sex")]
         public SexEnum? Sex { get; set; }
 
-        [Display(Name = "手机")]
-        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]
+        [Display(Name = "CellPhone")]
+        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}formaterror")]
         public string CellPhone { get; set; }
 
-        [Display(Name = "住址")]
-        [StringLength(200, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Display(Name = "Address")]
+        [StringLength(200, ErrorMessage = "{0}stringmax{1}")]
         public string Address { get; set; }
 
-        [Display(Name = "邮编")]
-        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}必须是6位数字")]
+        [Display(Name = "Zip")]
+        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}formaterror")]
         public string ZipCode { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "Photo")]
         public Guid? PhotoId { get; set; }
 
-        [Display(Name = "照片")]
+        [Display(Name = "Photo")]
         public FileAttachment Photo { get; set; }
 
-        [Display(Name = "是否有效")]
+        [Display(Name = "IsValid")]
         public bool IsValid { get; set; }
 
-        [Display(Name = "日期")]
+        [Display(Name = "Date")]
         public DateTime? EnRollDate { get; set; }
 
-        [Display(Name = "日期区间")]
+        [Display(Name = "DateRange")]
         public DateRange EnRollDateRange { get; set; }
 
-        [Display(Name = "年份区间")]
+        [Display(Name = "YearRange")]
         public DateRange EnYearRange { get; set; }
 
-        [Display(Name = "月份区间")]
+        [Display(Name = "MonthRange")]
         public DateRange EnMonthRange { get; set; }
 
-        [Display(Name = "时间区间")]
+        [Display(Name = "TimeRange")]
         public string EnTimeRange { get; set; }
 
-        [Display(Name = "修改时间")]
+        [Display(Name = "EditTime")]
         public DateRange EnTimeRange0 { get; set; }
 
-        [Display(Name = "英文日历")]
+        [Display(Name = "EnglishC")]
         public string EnTimeRange1 { get; set; }
 
-        [Display(Name = "公历节日")]
+        [Display(Name = "Holiday")]
         public string EnTimeRange2 { get; set; }
 
-        [Display(Name = "标注日期")]
+        [Display(Name = "Mark")]
         public string EnTimeRange3 { get; set; }
 
-        [Display(Name = "事件")]
+        [Display(Name = "Event")]
         public DateRange EnTimeRange4 { get; set; }
 
-        [Display(Name = "专业")]
+        [Display(Name = "Major")]
         public List<StudentMajor> Majors { get; set; }
 
         public Department Department { get; set; }

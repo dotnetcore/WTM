@@ -11,7 +11,7 @@
     <thead>
       <tr>
         <th lay-data="{field:'username', width:200}">properties</th>
-        <th lay-data="{field:'required', width:60}">requirement</th>
+        <th lay-data="{field:'required', width:100}">Requird</th>
         <th lay-data="{field:'joinTime', width:600}">Despription</th>
       </tr>
     </thead>
@@ -81,8 +81,8 @@
   <p>As follow:</p>
   <wt:tab>
     <wt:tabheaders>
-      <wt:tabheader title="效果" />
-      <wt:tabheader title="代码" />
+      <wt:tabheader title="Effect" />
+      <wt:tabheader title="Code" />
     </wt:tabheaders>
     <wt:tabcontents>
       <wt:tabcontent>
@@ -90,7 +90,7 @@
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:code>
-//只需要这一句，框架会从items绑定的这个UrlTree字段中读取url
+//Just one line, WTM will read the URL from the UrlTree field bound by items
 &lt;wt:treecontainer items="UrlTree" /&gt;
         </wt:code>
       </wt:tabcontent>
@@ -104,8 +104,8 @@
   <p>as follows:</p>
   <wt:tab>
     <wt:tabheaders>
-      <wt:tabheader title="效果" />
-      <wt:tabheader title="代码" />
+      <wt:tabheader title="Effect" />
+      <wt:tabheader title="Code" />
     </wt:tabheaders>
     <wt:tabcontents>
       <wt:tabcontent>
@@ -120,13 +120,13 @@
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:code>
-//通过设定click-func来动态操作右侧控件
+//run custom js by setting click-func
 &lt;wt:treecontainer items="AllDeps" click-func="SetText"&gt;
-  //写在treecontainer里面的控件会出现在右侧
-  //写复杂的控件或者html都可以
+  //Controls written inside treecontainer will appear in the right side
+  //it can be any taghelper or html
   &lt;wt:textbox field="Test" /&gt;
 &lt;/wt:treecontainer&gt;
-//click-func指定的js函数，当点击树的时候调用
+//the js function defined by click-func, it will be called when tree is clicked
 &lt;script&gt;
   function SetText(data) {
     $('#VMName_Test').val(data.data.title);
@@ -144,8 +144,8 @@
 
   <wt:tab>
     <wt:tabheaders>
-      <wt:tabheader title="效果" />
-      <wt:tabheader title="代码" />
+      <wt:tabheader title="Effect" />
+      <wt:tabheader title="Code" />
     </wt:tabheaders>
     <wt:tabcontents>
       <wt:tabcontent>
@@ -161,9 +161,9 @@
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:code>
-//通过指定id-field="Searcher.DepId"，将树中选中的值赋值给Search.DepId字段并刷新内部grid
+//By setting id-field="Searcher.DepId"，the value we choosed in the tree will be passed to Search.DepId, and then refresh the grid inside
 &lt;wt:treecontainer items="AllDeps" id-field="Searcher.DepId" height="500"&gt;
-  //将普通的SearchPanel和Grid写在TreeContainer内部即可实现tree和grid的联动
+  //write a SearchPanel and a Grid inside TreeContainer
   &lt;wt:searchpanel vm="@@Model" reset-btn="true"&gt;
     &lt;wt:row items-per-row="ItemsPerRowEnum.Three"&gt;
       &lt;wt:textbox field="Searcher.LoginName" /&gt;

@@ -14,7 +14,7 @@
         <thead>
             <tr>
                 <th lay-data="{field:'username', width:200}">Property</th>
-                <th lay-data="{field:'required', width:60}">Requirement</th>
+                    <th lay-data="{field:'required', width:100}">Requird</th>
                 <th lay-data="{field:'joinTime', width:600}">Description</th>
             </tr>
         </thead>
@@ -139,8 +139,8 @@
     </wt:quote>
     <wt:tab>
         <wt:tabheaders>
-            <wt:tabheader title="效果" />
-            <wt:tabheader title="代码" />
+            <wt:tabheader title="Effect" />
+            <wt:tabheader title="Code" />
         </wt:tabheaders>
         <wt:tabcontents>
             <wt:tabcontent>
@@ -202,7 +202,8 @@
         </wt:tabcontents>
     </wt:tab>
 
-<script>layui.code({ about: false });
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
     layui.table.init('parse-table-demo', {
         limit: 100, page: false
     });
