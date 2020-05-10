@@ -45,7 +45,7 @@ export default class Utils {
   private generateWtmFormItemComponent(h, option, component, vm?) {
     const _t = vm || this;
     const attrs = {
-      label: option.label,
+      label: _t.getLanguageByKey(option), // multi-language
       rules: option.rules,
       prop: option.key ? option.key : "",
       error: option.error,
@@ -93,7 +93,7 @@ export default class Utils {
       style,
       slot,
     };
-    let placeholder = `请输入${option.label}`;
+    let placeholder = `${_t.$t('form.pleaseEnter')}${option.label}`;
     if (props && props.placeholder) {
       placeholder = props.placeholder;
     }
@@ -334,7 +334,7 @@ export default class Utils {
     if (imgID) {
       compData.props["file-list"] = [{ name: label, url: fileApi + imgID }];
     }
-    const defaultSlot = <el-button type="primary">点击上传</el-button>;
+    const defaultSlot = <el-button type="primary">{_t.$t('form.clickUpload')}</el-button>;
     return <el-upload {...compData}>{slot || defaultSlot}</el-upload>;
   }
 
