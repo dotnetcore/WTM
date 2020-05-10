@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -14,11 +15,11 @@
     <ul class="doc">
         <li>
             In a very clean configuration page, choose the configuration you want<br /><br />
-            <img src="~/imgs/FirstProject9.png" /><br /><br />
+            <img src="~/imgs/FirstProject9en.png" /><br /><br />
         </li>
         <li>
             Download the ZIP file, unzip it, open the project file, and press F5 to run<br /><br />
-            <img src="~/imgs/FirstProject11.png" /><br /><br />
+            <img src="~/imgs/FirstProject11en.png" /><br /><br />
         </li>
     </ul>
 
@@ -28,3 +29,6 @@
     </wt:quote>
 
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

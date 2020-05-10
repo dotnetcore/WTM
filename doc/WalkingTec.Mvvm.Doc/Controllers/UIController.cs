@@ -16,45 +16,45 @@ using WalkingTec.Mvvm.Mvc;
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
     [AllowAnonymous]
-    [ActionDescription("页面层")]
+    [ActionDescription("ViewLayer")]
     public class UIController : BaseController
     {
-        [ActionDescription("介绍")]
+        [ActionDescription("Intro")]
         public IActionResult Intro()
         {
             var vm = CreateVM<FrameworkAllVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("布局")]
+        [ActionDescription("Layout")]
         public IActionResult Layout()
         {
             var vm = CreateVM<FrameworkAllVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("表单")]
+        [ActionDescription("Form")]
         public IActionResult Form()
         {
             var vm = CreateVM<SchoolVm>();
             return PartialView(vm);
         }
 
-        [ActionDescription("文本框")]
+        [ActionDescription("TextBox")]
         public IActionResult TextBox()
         {
             var vm = CreateVM<MajorVm>();
             return PartialView(vm);
         }
 
-        [ActionDescription("下拉框")]
+        [ActionDescription("ComboBox")]
         public IActionResult ComboBox()
         {
             var vm = CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
-        [ActionDescription("勾选框")]
+        [ActionDescription("CheckBox")]
         public IActionResult CheckBox()
         {
             var vm = CreateVM<StudentVm>();
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("数据表格")]
+        [ActionDescription("Grid")]
         public IActionResult Grid()
         {
             var vm = CreateVM<StudentListVm>();
@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         }
 
 
-        [ActionDescription("Js函数")]
+        [ActionDescription("Js")]
         public IActionResult Js()
         {
             return PartialView();
@@ -154,14 +154,14 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView(vm);
         }
 
-        [ActionDescription("树形容器")]
+        [ActionDescription("TreeContainer")]
         public IActionResult TreeContainer()
         {
             var vm = CreateVM<StudentListVm3>();
             return PartialView(vm);
         }
 
-        [ActionDescription("按钮")]
+        [ActionDescription("Button")]
         public IActionResult Button()
         {
             return PartialView();
@@ -172,11 +172,11 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             List<School> schools = new List<School>()
             {
-                new School { SchoolName = "清华大学"},
-                new School { SchoolName = "北京大学"},
-                new School { SchoolName = "复旦大学"},
-                new School { SchoolName = "北京工业大学"},
-                new School { SchoolName = "浙江大学"},
+                new School { SchoolName = Localizer["U1"]},
+                new School { SchoolName = Localizer["U2"]},
+                new School { SchoolName = Localizer["U3"]},
+                new School { SchoolName = Localizer["U4"]},
+                new School { SchoolName = Localizer["U5"]},
             };
             var rv = schools.Where(x=>x.SchoolName.StartsWith(keywords)).Select(x => new { Text = x.SchoolName, Value = x.SchoolName }).ToList();
             return Json(rv);
@@ -186,25 +186,25 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             List<School> schools = new List<School>()
             {
-                new School { SchoolName = "清华大学", Majors = new List<Major>(){
-                    new Major{ MajorName = "物理系"},
-                    new Major{ MajorName = "数学系"},
+                new School { SchoolName = Localizer["U1"], Majors = new List<Major>(){
+                    new Major{ MajorName = Localizer["U11"]},
+                    new Major{ MajorName = Localizer["U12"]},
                 } },
-                new School { SchoolName = "北京大学", Majors = new List<Major>(){
-                    new Major{ MajorName = "文学系"},
-                    new Major{ MajorName = "历史系"},
+                new School { SchoolName = Localizer["U2"], Majors = new List<Major>(){
+                    new Major{ MajorName = Localizer["U21"]},
+                    new Major{ MajorName = Localizer["U22"]},
                 }},
-                new School { SchoolName = "复旦大学", Majors = new List<Major>(){
-                    new Major{ MajorName = "生物系"},
-                    new Major{ MajorName = "化学系"},
+                new School { SchoolName = Localizer["U3"], Majors = new List<Major>(){
+                    new Major{ MajorName = Localizer["U31"]},
+                    new Major{ MajorName = Localizer["U32"]},
                 }},
-                new School { SchoolName = "北京工业大学", Majors = new List<Major>(){
-                    new Major{ MajorName = "工业控制"},
-                    new Major{ MajorName = "计算机软件"},
+                new School { SchoolName = Localizer["U4"], Majors = new List<Major>(){
+                    new Major{ MajorName = Localizer["U41"]},
+                    new Major{ MajorName = Localizer["U42"]},
                 }},
-                new School { SchoolName = "浙江大学", Majors = new List<Major>(){
-                    new Major{ MajorName = "人文系"},
-                    new Major{ MajorName = "经济系"},
+                new School { SchoolName = Localizer["U5"], Majors = new List<Major>(){
+                    new Major{ MajorName = Localizer["U51"]},
+                    new Major{ MajorName = Localizer["U52"]},
                 }},
             };
 
@@ -219,7 +219,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             {
                 rv.Add(new ComboSelectListItem
                 {
-                    Text = id + "学生" + i
+                    Text = id + Localizer["Student"] + i
                 }); ;
             }
             return Json(rv);

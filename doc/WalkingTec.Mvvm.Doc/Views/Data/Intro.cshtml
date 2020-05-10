@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，只是提供FrameworkContext作为基类并定义了一些辅助函数
 
 <wt:fieldset field-set-style="Simple" title="方法说明">
@@ -108,4 +109,7 @@ WTM框架基本上使用EF Core作为数据层，没有改变太多的东西，�
         layui.table.init('parse-table-demo', {
         limit: 100, page: false
         });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

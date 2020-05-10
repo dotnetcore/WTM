@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
 
     a {
@@ -9,3 +10,6 @@
 <p>The solution is to modify the project file, add<CopyRefAssembliesToPublishDirectorytrue&lt/CopyRefAssembliesToPublishDirectory&gt，exmple:</p>
 <img src="~/imgs/publish.jpg" /><br /><br />
 
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

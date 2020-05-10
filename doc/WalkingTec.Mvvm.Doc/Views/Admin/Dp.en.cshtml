@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="Data permission-module screenshot">
     <img src="~/imgs/admin-dataprivilege.png" />
 </wt:fieldset>
@@ -80,3 +81,6 @@ public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
         If your data permission inherits the ITreeData model, after you configure the permission of the parent layer, the framework will also search the data of the child layer it contains.
     </ol>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

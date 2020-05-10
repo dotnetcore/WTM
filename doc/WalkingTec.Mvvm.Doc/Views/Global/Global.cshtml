@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
   a {
     color: #01aaed
@@ -100,4 +101,7 @@
   layui.table.init('parse-table-demo', {
     limit: 100, page: false, cellMinWidth: 50
   });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

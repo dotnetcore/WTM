@@ -6,28 +6,28 @@ using WalkingTec.Mvvm.Mvc;
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
     [AllowAnonymous]
-    [ActionDescription("模型层")]
+    [ActionDescription("ModelLayer")]
     public class ModelController : BaseController
     {
-        [ActionDescription("创建模型")]
+        [ActionDescription("CreateModel")]
         public IActionResult Poco()
         {
             return PartialView();
         }
 
-        [ActionDescription("模型属性")]
+        [ActionDescription("Att")]
         public IActionResult Att()
         {
             return PartialView();
         }
 
-        [ActionDescription("内置模型")]
+        [ActionDescription("BuildInModel")]
         public IActionResult BuildIn()
         {
             return PartialView();
         }
 
-        [ActionDescription("自定义主键")]
+        [ActionDescription("CustomKey")]
         public IActionResult CustomKey()
         {
             return PartialView();

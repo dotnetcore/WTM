@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="Menu managemen-module screenshot">
     <img src="~/imgs/admin-menu.png" />
 </wt:fieldset>
@@ -31,3 +32,6 @@
       Click Select to open the role list. Pop up page, with query function, convenient and fast to find the required data. By selecting the roles that are allowed to access, you can quickly configure the access permissions. The permissions of each action can be configured in more detail in the permission configuration of the role.
     </p>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -48,3 +49,6 @@ The framework has some custom properties that can be written on the Controller o
   <p>It can be written on the controller or the method in the controller</p>
   <p>The tagging method does not require system logging</p>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

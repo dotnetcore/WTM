@@ -1,4 +1,5 @@
-﻿<style>
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
     a {
         color: #01aaed
     }
@@ -39,3 +40,6 @@
 
     </ul>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

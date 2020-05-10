@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
 
     a {
@@ -73,5 +74,9 @@ public class DataContext : FrameworkContext
     </ul>
 </wt:fieldset>
 <script>
+
 layui.use('code',function(){layui.code({ about: false })})
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

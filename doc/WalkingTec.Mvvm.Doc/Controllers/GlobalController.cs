@@ -6,49 +6,49 @@ using WalkingTec.Mvvm.Mvc;
 namespace WalkingTec.Mvvm.Doc.Controllers
 {
     [AllowAnonymous]
-    [ActionDescription("框架配置")]
+    [ActionDescription("FrameworkConfig")]
     public class GlobalController : BaseController
     {
         [FixConnection(DBOperationEnum.Read, CsName = "test")]
-        [ActionDescription("配置文件")]
+        [ActionDescription("ConfigFile")]
         public IActionResult Config()
         {
             var test = new FrameworkContext();
             return PartialView();
         }
 
-        [ActionDescription("全局变量")]
+        [ActionDescription("Global")]
         public IActionResult Global()
         {
             return PartialView();
         }
 
-        [ActionDescription("数据库分库")]
+        [ActionDescription("MultiCS")]
         public IActionResult CS()
         {
             return PartialView();
         }
 
-        [ActionDescription("数据权限")]
+        [ActionDescription("Dataprivilege")]
         public IActionResult DP()
         {
             return PartialView();
         }
 
-        [ActionDescription("路由")]
+        [ActionDescription("Route")]
         public IActionResult Route()
         {
             return PartialView();
         }
 
 
-        [ActionDescription("发布")]
+        [ActionDescription("Publish")]
         public IActionResult Publish()
         {
             return PartialView();
         }
 
-        [ActionDescription("多语言")]
+        [ActionDescription("MultiLanguages")]
         public IActionResult MultiLanguages()
         {
             return PartialView();

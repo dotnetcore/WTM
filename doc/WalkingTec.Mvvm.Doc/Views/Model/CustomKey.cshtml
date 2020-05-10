@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="自定义主键">
   <p>从2.3.5开始，框架支持自定义主键类别，除了Guid之外，还支持自增int，long，以及string类型</p>
   <p>框架自带的代码生成器可以准确识别model中的主键类型，生成对应的代码</p>
@@ -40,3 +41,6 @@ public class Student : BasePoco
   <script>
     layui.use('code', function () { layui.code({ about: false }) })
   </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

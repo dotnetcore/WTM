@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
   a {
     color: #01aaed
@@ -13,7 +14,7 @@
     <li>
       First , we create WTM framework project with a multi-layer structure. For how to create a WTM project, please refer to<a href="/#/QuickStart/FirstProject"> the first project</a><br /><br />
       After creation, the structure is as follows<br /><br />
-      <img src="~/imgs/CodeGen1.png" /><br /><br />
+      <img src="~/imgs/CodeGen1en.png" /><br /><br />
     </li>
     <li>
       In the model , we create a new model of ‘school’<br /><br />
@@ -27,30 +28,30 @@ using WalkingTec.Mvvm.Core;
 namespace FirstProject.Model
 {
   public enum SchoolTypeEnum {
-    [Display(Name = "公立学校")]
+    [Display(Name = "Public")]
     PUB,
-    [Display(Name = "私立学校")]
+    [Display(Name = "Private")]
     PRI
   }
 
   public class School : BasePoco
   {
-    [Display( Name = "学校编码")]
-    [Required( ErrorMessage = "{0}是必填项")]
-    [RegularExpression( "^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+    [Display( Name = "School Code")]
+    [Required( ErrorMessage = "{0} is required")]
+    [RegularExpression( "^[0-9]{3,3}$", ErrorMessage = "{0} must be three digits")]
     [StringLength(3)]
     public string SchoolCode { get; set; }
 
-    [Display( Name = "学校名称")]
-    [StringLength( 50, ErrorMessage = "{0}最多输入{1}个字符")]
-    [Required(ErrorMessage = "{0}是必填项")]
+    [Display( Name = "School Name")]
+    [StringLength( 50, ErrorMessage = "{0} has maximun {1} characters")]
+    [Required(ErrorMessage = "{0} is required")]
     public string SchoolName { get; set; }
 
-    [Display( Name = "学校类型")]
-    [Required( ErrorMessage = "{0}是必填项")]
+    [Display( Name = "School Type")]
+    [Required(ErrorMessage = "{0} is required")]
     public SchoolTypeEnum? SchoolType { get; set; }
 
-    [Display( Name = "备注")]
+    [Display( Name = "Remark")]
     public string Remark { get; set; }
   }
 }
@@ -89,34 +90,34 @@ namespace FirstProject.DataAccess
     </li>
     <li>
       Next, we will use the code generator provided by the framework to generate the basic code.After running the program, click the code generator in the upper right corner.<br /><br />
-      <img src="~/imgs/CodeGen2.png" /><br /><br />
+      <img src="~/imgs/CodeGen2en.png" /><br /><br />
     </li>
     <li>
       In the code generator, select the model to generate, fill in the name and area of the function module, and then click ‘generate’<br /><br />
-      <img src="~/imgs/CodeGen3.png" /><br /><br />
+      <img src="~/imgs/CodeGen3en.png" /><br /><br />
     </li>
     <li>
       Next, we can do some simple configuration, such as which fields are form fields, which list needed to be displayed, the search criteria and so on.<br /><br />
       Here we treat all fields as form fields. list fields and import fields, make ‘school code’ ‘school name’ and ‘school type’ as search criteria, and make ‘school type’ as batch update field.<br /><br />
-      <img src="~/imgs/CodeGen4.png" /><br /><br />
+      <img src="~/imgs/CodeGen4en.png" /><br /><br />
     </li>
     <li>
       Click ‘OK’ to generate the code.We will see a summary page to show us the number of files will be generated.<br /><br />
-      <img src="~/imgs/CodeGen5.png" /><br /><br />
+      <img src="~/imgs/CodeGen5en.png" /><br /><br />
       In this interface, final generated code of each file can be previewed by clicking.<br /><br />
-      <img src="~/imgs/CodeGen6.png" /><br /><br />
+      <img src="~/imgs/CodeGen6en.png" /><br /><br />
     </li>
     <li>
       After confirmation, click to complete the final code generation.<br /><br />
       After the generation is successful, exit debugging, we will see the code generated this time under the solution.<br /><br />
-      <img src="~/imgs/CodeGen7.png" /><br /><br />
+      <img src="~/imgs/CodeGen7en.png" /><br /><br />
       <wt:quote>
         <p>Please note that: the code generator will overwrite the original file with the same name. Remember to make a backup in advance.</p>
       </wt:quote>
     </li>
     <li>
       Recompile project, run again, we will find that the module of ‘school management’ Exists in the left menu and functions such as adding, deleting, modifying, querying, importing and exporting, batch modifying, and batch deleting have been done.<br /><br />
-      <img src="~/imgs/CodeGen8.png" /><br /><br />
+      <img src="~/imgs/CodeGen8en.png" /><br /><br />
     </li>
   </ul>
 
@@ -130,4 +131,7 @@ namespace FirstProject.DataAccess
 </wt:fieldset>
 <script>
   layui.use('code', function () { layui.code({ about: false }) })
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

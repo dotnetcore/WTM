@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
 
     a {
@@ -23,10 +24,10 @@ namespace YourNameSpace.Models
     [Table("FrameworkUsers")]
     public class MyUser : FrameworkUserBase
     {
-        [Display(Name = "附加信息1")]
+        [Display(Name = "Extra info1")]
         public string Extra1 { get; set; }
 
-        [Display(Name = "附加信息2")]
+        [Display(Name = "Extra info2")]
         public string Extra2 { get; set; }
     }
 }
@@ -74,4 +75,7 @@ public class DataContext : FrameworkContext
 </wt:fieldset>
 <script>
 layui.use('code',function(){layui.code({ about: false })})
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

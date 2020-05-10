@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
   a {
     color: #01aaed
@@ -130,4 +131,7 @@ namespace FirstProject.DataAccess
 </wt:fieldset>
 <script>
   layui.use('code', function () { layui.code({ about: false }) })
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>
