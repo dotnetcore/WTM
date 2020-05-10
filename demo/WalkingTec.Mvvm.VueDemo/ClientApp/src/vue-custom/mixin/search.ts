@@ -24,7 +24,7 @@ declare module "vue/types/vue" {
   }
 }
 
-function mixinFunc(TABLE_HEADER: Array<object> = []) {
+function mixinFunc(TABLE_HEADER: Array<object> = [], LOCAL: any = null) {
   class mixin extends Vue {
     searchRefName: string = "searchName";
     tableHeader: Array<object> = TABLE_HEADER;
@@ -177,6 +177,14 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
     }
     created() {
       this.onSearch();
+    }
+    beforeCreate() {
+      if (LOCAL && !this.$i18n.getLocaleMessage('en')[this.$options.name]) {
+        this.$i18n.mergeLocaleMessage("en", LOCAL.en);
+        this.$i18n.mergeLocaleMessage("zh", LOCAL.zh);
+        // this.$i18n.mergeLocaleMessage("es", LOCAL.es);
+        // this.$i18n.mergeLocaleMessage("ja", LOCAL.ja);
+      }
     }
   }
   return Component(mixin);

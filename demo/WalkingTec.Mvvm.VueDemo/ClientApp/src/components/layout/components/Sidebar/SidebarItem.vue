@@ -8,9 +8,10 @@
             <sidebar-item-link v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
                 <el-menu-item :index="resolvePath(theOnlyOneChild.path)" :class="{ 'submenu-title-noDropdown': isFirstLevel }">
                     <i :class="[theOnlyOneChild.meta.icon || 'el-icon-files']" class="i-icon"></i>
-                    <span v-if="theOnlyOneChild.meta.title" slot="title">{{
-                        $t("route." + theOnlyOneChild.meta.title)
-                        }}</span>
+                    <span v-if="theOnlyOneChild.meta.title" slot="title">
+                        <!-- {{ $t("route." + theOnlyOneChild.meta.title) }} -->
+                        {{theOnlyOneChild.meta.title}}
+                    </span>
                 </el-menu-item>
             </sidebar-item-link>
         </template>
@@ -18,7 +19,8 @@
             <template slot="title">
                 <i :class="[item.meta.icon || 'el-icon-files']" class="i-icon"></i>
                 <span v-if="item.meta && item.meta.title" slot="title">
-                    {{ $t("route." + item.meta.title) }}
+                    <!-- {{ $t("route." + item.meta.title) }} -->
+                    {{item.meta.title}}
                 </span>
             </template>
             <template v-if="item.children">

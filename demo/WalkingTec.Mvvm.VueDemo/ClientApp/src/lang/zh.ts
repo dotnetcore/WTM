@@ -1,11 +1,10 @@
 export default {
   route: {
     dashboard: "首页",
+    "MenuKey.SystemManagement": "系统管理",
     documentation: "文档",
     guide: "引导页",
     permission: "权限测试页",
-    rolePermission: "角色权限",
-    pagePermission: "页面权限",
     directivePermission: "指令权限",
     icons: "图标",
     components: "组件",
@@ -13,7 +12,6 @@ export default {
     markdown: "Markdown",
     jsonEditor: "JSON 编辑器",
     splitPane: "Splitpane",
-    avatarUpload: "头像上传",
     dropzone: "Dropzone",
     sticky: "Sticky",
     countTo: "Count To",
@@ -29,13 +27,6 @@ export default {
     mixedChart: "混合图表",
     example: "综合实例",
     nested: "路由嵌套",
-    menu1: "菜单 1",
-    "menu1-1": "菜单 1-1",
-    "menu1-2": "菜单 1-2",
-    "menu1-2-1": "菜单 1-2-1",
-    "menu1-2-2": "菜单 1-2-2",
-    "menu1-3": "菜单 1-3",
-    menu2: "菜单 2",
     table: "表格",
     dynamicTable: "动态表格",
     draggableTable: "可拖拽表格",
@@ -126,14 +117,11 @@ export default {
     title: "标题",
     importance: "重要性",
     type: "类型",
-    remark: "点评",
     search: "搜索",
     add: "添加",
     export: "导出",
-    reviewer: "审核人",
     id: "序号",
     date: "时间",
-    author: "作者",
     readings: "阅读数",
     status: "状态",
     actions: "操作",
@@ -143,7 +131,8 @@ export default {
     delete: "删除",
     cancel: "取 消",
     confirm: "确 定",
-    detail: "详情"
+    detail: "详情",
+    custom: "自定义列"
   },
   example: {
     warning:
@@ -186,5 +175,22 @@ export default {
     showSidebarLogo: "显示侧边栏 Logo",
     fixedHeader: "固定 Header",
     sidebarTextTheme: "侧边栏文字主题色"
+  },
+  buttom: {
+    add: "添加",
+    edit: "修改",
+    delete: "删除",
+    import: "导入",
+    export: "导出",
+    exportAll: "导出全部",
+    exportSelect: "导出勾选",
+    reset: "重置",
+    search: "查询",
+    refresh: "刷新"
+  },
+  form: {
+    pleaseEnter: "请输入",
+    upload: "上传",
+    clickUpload: "点击上传"
   }
 };

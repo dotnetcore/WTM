@@ -51,9 +51,7 @@ export const getLocale = () => {
       return locale;
     }
   }
-
-  // Default language is english
-  return "en";
+  return "zh";
 };
 
 const i18n = new VueI18n({

@@ -41,10 +41,7 @@ component.forEach(item => {
   Vue.component(_.kebabCase(item.key), item.value);
 });
 
-// prototype
-prototypes.forEach(item => {
-  Vue.prototype["$" + item.key] = item.value;
-});
+
 
 Vue.config.productionTip = false;
 
@@ -52,5 +49,19 @@ new Vue({
   router,
   store,
   i18n,
-  render: h => h(App)
+  render: h => h(App),
+  beforeCreate: function() {
+    /**
+     * prototype
+     */
+    prototypes.forEach(item => {
+        if (_.isFunction(item.value)) {
+            Vue.prototype["$" + item.key] = function() {
+                return item.value.apply(this, arguments);
+            };
+        } else {
+            Vue.prototype["$" + item.key] = item.value;
+        }
+    });
+  }
 }).$mount("#App");

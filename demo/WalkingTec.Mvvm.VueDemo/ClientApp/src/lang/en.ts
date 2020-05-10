@@ -2,6 +2,7 @@ export default {
   route: {
     dashboard: "Dashboard",
     documentation: "Documentation",
+    "MenuKey.SystemManagement": "SystemManagement",
     guide: "Guide",
     permission: "Permission",
     pagePermission: "Page Permission",
@@ -29,13 +30,6 @@ export default {
     mixedChart: "Mixed Chart",
     example: "Example",
     nested: "Nested Routes",
-    menu1: "Menu 1",
-    "menu1-1": "Menu 1-1",
-    "menu1-2": "Menu 1-2",
-    "menu1-2-1": "Menu 1-2-1",
-    "menu1-2-2": "Menu 1-2-2",
-    "menu1-3": "Menu 1-3",
-    menu2: "Menu 2",
     table: "Table",
     dynamicTable: "Dynamic Table",
     draggableTable: "Draggable Table",
@@ -146,7 +140,8 @@ export default {
     delete: "Delete",
     cancel: "Cancel",
     confirm: "Confirm",
-    detail: "detail"
+    detail: "detail",
+    custom: "Custom column"
   },
   example: {
     warning:
@@ -190,5 +185,21 @@ export default {
     showSidebarLogo: "Sidebar Logo",
     fixedHeader: "Fixed Header",
     sidebarTextTheme: "Sidebar Text Theme"
+  },
+  buttom: {
+    add: "Add",
+    edit: "Edit",
+    delete: "Delete",
+    import: "Import",
+    export: "Export",
+    exportAll: "Export all",
+    exportSelect: "Export select",
+    reset: "Reset",
+    search: "Search"
+  },
+  form: {
+    pleaseEnter: "Please enter ",
+    upload: "Upload",
+    clickUpload: "Click to upload"
   }
 };
