@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <p>BaseVM is the basic VM in the WTM framework. All built-in VMs in the framework inherit from it. At the same time, the framework requires that all VMs customized by developers inherit from it.</p>
 <br />
 <wt:quote>
@@ -158,3 +159,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

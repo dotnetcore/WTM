@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin" xml:space="preserve">
+    <value>Buildin admin pages</value>
+  </data>
+  <data name="Age1" xml:space="preserve">
+    <value>Age1</value>
+  </data>
+  <data name="Age2" xml:space="preserve">
+    <value>Age2</value>
+  </data>
+  <data name="Att" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="BuildInModel" xml:space="preserve">
+    <value>BuildIn model</value>
+  </data>
+  <data name="Button" xml:space="preserve">
+    <value>Button</value>
+  </data>
+  <data name="Clientside" xml:space="preserve">
+    <value>Clientside</value>
+  </data>
+  <data name="ConfigFile" xml:space="preserve">
+    <value>Config file</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Controller</value>
+  </data>
+  <data name="CreateModel" xml:space="preserve">
+    <value>Create model</value>
+  </data>
+  <data name="CustomKey" xml:space="preserve">
+    <value>CustomKey</value>
+  </data>
+  <data name="CustomUser" xml:space="preserve">
+    <value>Custom user</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Data layer</value>
+  </data>
+  <data name="Dataprivilege" xml:space="preserve">
+    <value>Data privileges</value>
+  </data>
+  <data name="Dir" xml:space="preserve">
+    <value>File structure</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>Donate list</value>
+  </data>
+  <data name="FirstModule" xml:space="preserve">
+    <value>First module</value>
+  </data>
+  <data name="FirstProject" xml:space="preserve">
+    <value>First project</value>
+  </data>
+  <data name="Form" xml:space="preserve">
+    <value>Form</value>
+  </data>
+  <data name="FrameworkConfig" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Global" xml:space="preserve">
+    <value>Global variable</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="GroupManagement" xml:space="preserve">
+    <value>Group management</value>
+  </data>
+  <data name="Intro" xml:space="preserve">
+    <value>Intro</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="ListAction" xml:space="preserve">
+    <value>List actions</value>
+  </data>
+  <data name="ListColumn" xml:space="preserve">
+    <value>List columns</value>
+  </data>
+  <data name="ListVM" xml:space="preserve">
+    <value>ListVM</value>
+  </data>
+  <data name="Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="MenuManagement" xml:space="preserve">
+    <value>Menu management</value>
+  </data>
+  <data name="Migration" xml:space="preserve">
+    <value>Migration</value>
+  </data>
+  <data name="ModelLayer" xml:space="preserve">
+    <value>Model layer</value>
+  </data>
+  <data name="MultiCS" xml:space="preserve">
+    <value>Multi databases</value>
+  </data>
+  <data name="MultiLanguages" xml:space="preserve">
+    <value>Multi languages</value>
+  </data>
+  <data name="Publish" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="QuickStart" xml:space="preserve">
+    <value>QuickStart</value>
+  </data>
+  <data name="RoleManagement" xml:space="preserve">
+    <value>Role management</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>Route</value>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>School</value>
+  </data>
+  <data name="SearchMode" xml:space="preserve">
+    <value>Search modes</value>
+  </data>
+  <data name="StuCount" xml:space="preserve">
+    <value>Student count</value>
+  </data>
+  <data name="StuCount1" xml:space="preserve">
+    <value>Student count1</value>
+  </data>
+  <data name="StuCount2" xml:space="preserve">
+    <value>Student count2</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="Transaction" xml:space="preserve">
+    <value>Transaction</value>
+  </data>
+  <data name="TreeContainer" xml:space="preserve">
+    <value>Tree container</value>
+  </data>
+  <data name="U1" xml:space="preserve">
+    <value>Oxford</value>
+  </data>
+  <data name="U11" xml:space="preserve">
+    <value>Physics department</value>
+  </data>
+  <data name="U12" xml:space="preserve">
+    <value>Faculty of Mathematics</value>
+  </data>
+  <data name="U2" xml:space="preserve">
+    <value>University of Cambridge</value>
+  </data>
+  <data name="U21" xml:space="preserve">
+    <value>Department of literature</value>
+  </data>
+  <data name="U22" xml:space="preserve">
+    <value>Department of history</value>
+  </data>
+  <data name="U3" xml:space="preserve">
+    <value>Stanford University</value>
+  </data>
+  <data name="U31" xml:space="preserve">
+    <value>Department of Biology</value>
+  </data>
+  <data name="U32" xml:space="preserve">
+    <value>Department of Chemistry</value>
+  </data>
+  <data name="U4" xml:space="preserve">
+    <value>MIT</value>
+  </data>
+  <data name="U41" xml:space="preserve">
+    <value>Department of industrial control</value>
+  </data>
+  <data name="U42" xml:space="preserve">
+    <value>Computer software</value>
+  </data>
+  <data name="U5" xml:space="preserve">
+    <value>Harvard University</value>
+  </data>
+  <data name="U51" xml:space="preserve">
+    <value>Department of Humanities</value>
+  </data>
+  <data name="U52" xml:space="preserve">
+    <value>Department of Economics</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>User management</value>
+  </data>
+  <data name="ViewLayer" xml:space="preserve">
+    <value>View layer</value>
+  </data>
+</root>

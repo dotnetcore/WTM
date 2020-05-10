@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin" xml:space="preserve">
+    <value>内置管理页面</value>
+  </data>
+  <data name="Age1" xml:space="preserve">
+    <value>年龄1</value>
+  </data>
+  <data name="Age2" xml:space="preserve">
+    <value>年龄2</value>
+  </data>
+  <data name="Att" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="BuildInModel" xml:space="preserve">
+    <value>内置模型</value>
+  </data>
+  <data name="Button" xml:space="preserve">
+    <value>按钮</value>
+  </data>
+  <data name="Clientside" xml:space="preserve">
+    <value>前后端分离</value>
+  </data>
+  <data name="ConfigFile" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>控制器层</value>
+  </data>
+  <data name="CreateModel" xml:space="preserve">
+    <value>创建模型</value>
+  </data>
+  <data name="CustomKey" xml:space="preserve">
+    <value>自定义主键</value>
+  </data>
+  <data name="CustomUser" xml:space="preserve">
+    <value>自定义用户</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>数据层</value>
+  </data>
+  <data name="Dataprivilege" xml:space="preserve">
+    <value>数据权限</value>
+  </data>
+  <data name="Dir" xml:space="preserve">
+    <value>文件结构</value>
+  </data>
+  <data name="Donate" xml:space="preserve">
+    <value>捐赠名单</value>
+  </data>
+  <data name="FirstModule" xml:space="preserve">
+    <value>第一个模块</value>
+  </data>
+  <data name="FirstProject" xml:space="preserve">
+    <value>第一个项目</value>
+  </data>
+  <data name="Form" xml:space="preserve">
+    <value>表单</value>
+  </data>
+  <data name="FrameworkConfig" xml:space="preserve">
+    <value>框架配置</value>
+  </data>
+  <data name="Global" xml:space="preserve">
+    <value>全局变量</value>
+  </data>
+  <data name="Grid" xml:space="preserve">
+    <value>数据表格</value>
+  </data>
+  <data name="GroupManagement" xml:space="preserve">
+    <value>用户组管理</value>
+  </data>
+  <data name="Intro" xml:space="preserve">
+    <value>介绍</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>布局</value>
+  </data>
+  <data name="ListAction" xml:space="preserve">
+    <value>动作配置</value>
+  </data>
+  <data name="ListColumn" xml:space="preserve">
+    <value>列配置</value>
+  </data>
+  <data name="ListVM" xml:space="preserve">
+    <value>列表介绍</value>
+  </data>
+  <data name="Log" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="MenuManagement" xml:space="preserve">
+    <value>菜单管理</value>
+  </data>
+  <data name="Migration" xml:space="preserve">
+    <value>数据同步</value>
+  </data>
+  <data name="ModelLayer" xml:space="preserve">
+    <value>模型层</value>
+  </data>
+  <data name="MultiCS" xml:space="preserve">
+    <value>数据库分库</value>
+  </data>
+  <data name="MultiLanguages" xml:space="preserve">
+    <value>多语言</value>
+  </data>
+  <data name="Publish" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="QuickStart" xml:space="preserve">
+    <value>快速开始</value>
+  </data>
+  <data name="RoleManagement" xml:space="preserve">
+    <value>角色管理</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>路由</value>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>学校</value>
+  </data>
+  <data name="SearchMode" xml:space="preserve">
+    <value>查询模式</value>
+  </data>
+  <data name="StuCount" xml:space="preserve">
+    <value>学生人数</value>
+  </data>
+  <data name="StuCount1" xml:space="preserve">
+    <value>学生人数1</value>
+  </data>
+  <data name="StuCount2" xml:space="preserve">
+    <value>学生人数2</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>学生</value>
+  </data>
+  <data name="Transaction" xml:space="preserve">
+    <value>事务</value>
+  </data>
+  <data name="TreeContainer" xml:space="preserve">
+    <value>树形容器</value>
+  </data>
+  <data name="U1" xml:space="preserve">
+    <value>清华大学</value>
+  </data>
+  <data name="U11" xml:space="preserve">
+    <value>物理系</value>
+  </data>
+  <data name="U12" xml:space="preserve">
+    <value>数学系</value>
+  </data>
+  <data name="U2" xml:space="preserve">
+    <value>北京大学</value>
+  </data>
+  <data name="U21" xml:space="preserve">
+    <value>文学系</value>
+  </data>
+  <data name="U22" xml:space="preserve">
+    <value>历史系</value>
+  </data>
+  <data name="U3" xml:space="preserve">
+    <value>复旦大学</value>
+  </data>
+  <data name="U31" xml:space="preserve">
+    <value>生物系</value>
+  </data>
+  <data name="U32" xml:space="preserve">
+    <value>化学系</value>
+  </data>
+  <data name="U4" xml:space="preserve">
+    <value>北京工业大学</value>
+  </data>
+  <data name="U41" xml:space="preserve">
+    <value>工业控制</value>
+  </data>
+  <data name="U42" xml:space="preserve">
+    <value>计算机软件</value>
+  </data>
+  <data name="U5" xml:space="preserve">
+    <value>浙江大学</value>
+  </data>
+  <data name="U51" xml:space="preserve">
+    <value>人文系</value>
+  </data>
+  <data name="U52" xml:space="preserve">
+    <value>经济系</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="ViewLayer" xml:space="preserve">
+    <value>页面层</value>
+  </data>
+</root>

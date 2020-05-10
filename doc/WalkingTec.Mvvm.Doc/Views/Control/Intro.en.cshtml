@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -92,4 +93,7 @@ WTM framework provides a BaseController. All Controller written in the framework
         layui.table.init('parse-table-demo', {
         limit: 100, page: false
         });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

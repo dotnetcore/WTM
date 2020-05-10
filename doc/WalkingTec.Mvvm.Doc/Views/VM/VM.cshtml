@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <p>BaseVM是WTM框架中的基础VM，框架中所有内置的VM都继承自它，同时框架要求开发者自定义的VM也都要继承它</p>
 <br />
 <wt:quote>
@@ -158,3 +159,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 The WTM framework basically uses EF core as the data layer, provides FrameworkContext as the base class and defines some auxiliary function
 
 <wt:fieldset field-set-style="Simple" title="Method descriptions">
@@ -108,4 +109,7 @@ The WTM framework basically uses EF core as the data layer, provides FrameworkCo
         layui.table.init('parse-table-demo', {
         limit: 100, page: false
         });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

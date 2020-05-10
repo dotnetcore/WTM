@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
   a {
     color: #01aaed
@@ -194,4 +195,7 @@ Take the ‘school’ model as an example. For the definition of the school mode
   layui.table.init('parse-table-demo', {
     limit: 100, page: false
   });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>
