@@ -45,7 +45,7 @@ export default {
             UserRoles: "UserRoles",
             UserGroups: "UserGroups",
             All: "All",
-            Selected: "已选",
+            Selected: "Selected",
             pleaseEnterUserRoles: "please enter user roles",
             pleaseEnterRoleName: "please enter role name",
             pleaseEnterITCode: "please enter ITCode",

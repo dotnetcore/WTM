@@ -12,36 +12,38 @@ import mixinForm from "@/vue-custom/mixin/form-mixin";
 
 @Component({ mixins: [mixinForm()] })
 export default class Index extends Vue {
-    formOptions = {
-        formProps: {
-            "label-width": "100px"
-        },
-        formItem: {
-            "Entity.ID": { isHidden: true },
-            "Entity.GroupCode": {
-                type: "input",
-                label: "用户组编码",
-                rules: {
-                    required: true,
-                    message: "请输入用户组编码",
-                    trigger: "blur"
-                }
+    get formOptions() {
+        return {
+            formProps: {
+                "label-width": "110px"
             },
-            "Entity.GroupName": {
-                type: "input",
-                label: "用户组名称",
-                rules: {
-                    required: true,
-                    message: "请输入用户组名称",
-                    trigger: "blur"
+            formItem: {
+                "Entity.ID": { isHidden: true },
+                "Entity.GroupCode": {
+                    type: "input",
+                    label: this.$t("frameworkmenu.GroupCode"),
+                    rules: {
+                        required: true,
+                        message: this.$t("frameworkmenu.pleaseEnterGroupCode"),
+                        trigger: "blur"
+                    }
+                },
+                "Entity.GroupName": {
+                    type: "input",
+                    label: this.$t("frameworkmenu.GroupName"),
+                    rules: {
+                        required: true,
+                        message: this.$t("frameworkmenu.pleaseEnterGroupName"),
+                        trigger: "blur"
+                    }
+                },
+                "Entity.GroupRemark": {
+                    type: "input",
+                    label: this.$t("frameworkmenu.GroupRemark")
                 }
-            },
-            "Entity.GroupRemark": {
-                type: "input",
-                label: "备注"
             }
-        }
-    };
+        };
+    }
 }
 </script>
 <style lang='less'>

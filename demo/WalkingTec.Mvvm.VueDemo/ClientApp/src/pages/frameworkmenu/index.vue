@@ -7,7 +7,7 @@
             </el-button>
         </wtm-but-box>
         <!-- 列表 -->
-        <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
+        <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" languageKey="frameworkmenu">
             <template #ICon="rowData">
                 <i :class="[rowData.row.ICon]"></i>
             </template>
@@ -28,10 +28,11 @@ import store from "./store/index";
 import DialogForm from "./views/dialog-form.vue";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
+import LOCAL from "./local";
 
 @Component({
     name: "frameworkmenu",
-    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
+    mixins: [searchMixin(TABLE_HEADER, LOCAL), actionMixin(ASSEMBLIES)],
     store,
     components: { DialogForm }
 })

@@ -186,11 +186,20 @@ export default {
     exportSelect: "导出勾选",
     reset: "重置",
     search: "查询",
-    refresh: "刷新"
+    refresh: "刷新",
+    determine: "确定",
+    cancel: "取消"
   },
   form: {
     pleaseEnter: "请输入",
     upload: "上传",
-    clickUpload: "点击上传"
+    clickUpload: "点击上传",
+    confirmDeletion: "确认删除, 是否继续?",
+    prompt: "提示",
+    ImportSucceeded: "导入成功",
+    successfullyDeleted: "删除成功",
+    failedToDelete: "删除失败",
+    ExportSucceeded: "导出成功",
+    SuccessfullyModified: "修改成功",
   }
 };
