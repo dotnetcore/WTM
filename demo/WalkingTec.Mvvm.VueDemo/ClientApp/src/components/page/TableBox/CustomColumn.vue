@@ -94,6 +94,7 @@ export default class CustomColumn extends Vue {
     border: 1px solid #ebeef5;
     border-left: 0px solid #ebeef5;
     .flexbox(row);
+    white-space: nowrap;
     .col-but {
         padding-top: 10px;
         width: 2em;

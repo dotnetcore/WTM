@@ -158,6 +158,7 @@ export default class CreateForm extends Vue {
     });
     const props = {
       ...this.options.formProps,
+      disabled: this.status === "detail",
       model: this.sourceFormData || this.formData,
     };
     const slots = this.$scopedSlots["default"];
