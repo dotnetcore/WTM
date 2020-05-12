@@ -1,5 +1,13 @@
 export default {
     zh: {
+        menu: {
+            actionlog: "日志管理",
+            frameworkgroup: "用户组管理",
+            frameworkrole: "角色管理",
+            frameworkuser: "用户管理",
+            frameworkmenu: "菜单管理",
+            dataprivilege: "数据权限"
+        },
         frameworkmenu: {
             LabelWidth: "100px",
             PageName: "页面名称",
@@ -18,6 +26,14 @@ export default {
         }
     },
     en: {
+        menu: {
+            actionlog: "ActionLog",
+            frameworkgroup: "FrameworkGroup",
+            frameworkrole: "FrameworkRole",
+            frameworkuser: "FrameworkUser",
+            frameworkmenu: "FrameworkMenu",
+            dataprivilege: "DataPrivilege"
+        },
         frameworkmenu: {
             LabelWidth: "120px",
             PageName: "PageName",
