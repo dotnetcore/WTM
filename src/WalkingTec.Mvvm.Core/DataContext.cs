@@ -443,11 +443,17 @@ namespace WalkingTec.Mvvm.Core
         public void DeleteEntity<T>(T entity) where T : TopBasePoco
         {
             var set = this.Set<T>();
-            if (set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault() == null)
+            var exist = set.Local.AsQueryable().CheckID(entity.GetID()).FirstOrDefault();
+            if (exist == null)
             {
                 set.Attach(entity);
+                set.Remove(entity);
             }
-            set.Remove(entity);
+            else
+            {
+                set.Remove(exist);
+
+            }
         }
 
         /// <summary>

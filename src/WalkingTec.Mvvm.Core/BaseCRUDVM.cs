@@ -634,20 +634,8 @@ namespace WalkingTec.Mvvm.Core
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
             if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
             {
-                (Entity as PersistPoco).IsValid = false;
-                (Entity as PersistPoco).UpdateTime = DateTime.Now;
-                (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateProperty(Entity, "IsValid");
-                DC.UpdateProperty(Entity, "UpdateTime");
-                DC.UpdateProperty(Entity, "UpdateBy");
-                try
-                {
-                    DC.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    MSD.AddModelError("", Program._localizer["DeleteFailed"]);
-                }
+                FC.Add("Entity.IsValid", 0);
+                DoEdit();
             }
             //如果是普通的TopBasePoco，则进行物理删除
             else if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
