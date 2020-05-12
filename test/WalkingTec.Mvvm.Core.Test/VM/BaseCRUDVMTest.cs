@@ -204,6 +204,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 Assert.AreEqual(1, context.Set<Student>().Count());
                 var rv = context.Set<Student>().ToList()[0];
+                Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("studentuser", rv.UpdateBy);
                 Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
             }
@@ -229,6 +230,29 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual(0, context.Set<School>().Count());
             }
         }
+
+        [TestMethod]
+        [Description("一对多子表删除")]
+        public void One2ManySubDelete()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<Major>().AsNoTracking().First().ID;
+                var m = context.Set<Major>().Include(x => x.School).Where(x => x.ID == id).FirstOrDefault();
+                _majorvm.DC = context;
+                _majorvm.Entity = new Major { ID = id };
+                _majorvm.DoDelete();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(1, context.Set<Major>().Count());
+            }
+        }
+
+
 
         [TestMethod]
         [Description("多对多主表删除")]
