@@ -40,6 +40,12 @@ export default class Index extends Vue {
         }
     };
     get formOptions() {
+        const moduleChildren = RoutesModule.pageList.map(item => {
+            return {
+                ...item,
+                Text: this.$t(`menu.${item.key}`)
+            };
+        });
         return {
             formProps: {
                 "label-width": this.$t("frameworkmenu.LabelWidth")
@@ -68,7 +74,7 @@ export default class Index extends Vue {
                     type: "select",
                     label: this.$t("frameworkmenu.SelectedModule"),
                     props: { clearable: true },
-                    children: RoutesModule.pageList,
+                    children: moduleChildren,
                     events: {
                         change: this.onSelectedAction
                     },

@@ -188,7 +188,9 @@ export default {
     search: "查询",
     refresh: "刷新",
     determine: "确定",
-    cancel: "取消"
+    cancel: "取消",
+    closed: "关 闭",
+    submit: "提 交"
   },
   form: {
     pleaseEnter: "请输入",

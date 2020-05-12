@@ -195,7 +195,9 @@ export default {
     exportAll: "Export all",
     exportSelect: "Export select",
     reset: "Reset",
-    search: "Search"
+    search: "Search",
+    closed: "Closed",
+    submit: "Submit"
   },
   form: {
     pleaseEnter: "Please enter ",
