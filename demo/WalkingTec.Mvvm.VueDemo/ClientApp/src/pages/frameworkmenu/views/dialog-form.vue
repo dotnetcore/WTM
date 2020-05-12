@@ -43,7 +43,7 @@ export default class Index extends Vue {
         const moduleChildren = RoutesModule.pageList.map(item => {
             return {
                 ...item,
-                Text: this.$t(`menu.${item.key}`)
+                Text: item.key ? this.$t(`menu.${item.key}`) : item.Text
             };
         });
         return {
