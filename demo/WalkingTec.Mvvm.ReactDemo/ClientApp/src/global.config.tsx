@@ -130,7 +130,8 @@ class ConfigStore {
             return window.localStorage.getItem('__token') || null;
         },
         clear() {
-            window.localStorage.clear();
+            window.localStorage.removeItem("__User");
+            //window.localStorage.clear();
             window.location.pathname = "/"
         }
     };
