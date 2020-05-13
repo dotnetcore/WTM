@@ -635,6 +635,7 @@ namespace WalkingTec.Mvvm.Core
             if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
             {
                 FC.Add("Entity.IsValid", 0);
+                (Entity as PersistPoco).IsValid = false;
                 DoEdit();
             }
             //如果是普通的TopBasePoco，则进行物理删除
