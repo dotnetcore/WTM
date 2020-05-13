@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router, { RouteConfig } from "vue-router";
 import Layout from "@/components/layout/index.vue";
+import { AppModule } from "@/store/modules/app";
 Vue.use(Router);
 
 export const constantRoutes: RouteConfig[] = [
@@ -11,10 +12,13 @@ export const constantRoutes: RouteConfig[] = [
         children: [
             {
                 path: "dashboard",
-                component: () =>
-                    import(
-            /* webpackChunkName: "dashboard" */ "@/pages/dashboard/index.vue"
-                    ),
+                key: "dashboard",
+                component: () => {
+                    const languagePage = AppModule.language === 'en' ? '.en' : '';
+                    return import(/* webpackChunkName: "dashboard" */ `@/pages/dashboard/index${languagePage}.vue`).catch(err => {
+                        return import(/* webpackChunkName: "dashboard" */ "@/pages/dashboard/index.vue");
+                    })
+                },
                 name: "Dashboard",
                 meta: {
                     title: "dashboard",

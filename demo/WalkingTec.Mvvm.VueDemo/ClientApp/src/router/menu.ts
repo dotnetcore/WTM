@@ -3,6 +3,8 @@ import config from "@/config/index";
 import Layout from "@/components/layout/index.vue";
 import { VueRouter } from "@/components/layout/components/index";
 import { isExternal } from "@/util/validate";
+import { AppModule } from "@/store/modules/app";
+
 const development = config.development;
 interface routerItem {
   children: [];
@@ -27,6 +29,7 @@ class Menu {
       component: Layout,
       children: [] as RouteConfig[],
       meta: {
+        key: menuItem.Key,
         title: menuItem.Text,
         icon: menuItem.Icon,
         ParentId: menuItem.ParentId,
@@ -50,8 +53,11 @@ class Menu {
             );
         routerItem.props = { default: true, url: url };
       } else {
+        const languagePage = AppModule.language === 'en' ? '.en' : '';
         routerItem.component = () =>
-          import("@/pages" + menuItem.Url + "/index.vue");
+          import(`@/pages${menuItem.Url}/index${languagePage}.vue`).catch(err => {
+            return import(`@/pages${menuItem.Url}/index.vue`);
+          });
       }
     } else {
       if (menuItem.ParentId) {
@@ -80,7 +86,6 @@ class Menu {
       menu = require("@/subMenu.json");
     }
     const trees = this.recursionTree(menu);
-    console.log("trees", trees);
     return trees.filter(item => {
       if (
         urlList.includes(item.path) &&
