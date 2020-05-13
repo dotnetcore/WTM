@@ -34,7 +34,7 @@ export function mergeLocales(mergeLocales: { 'zh-CN'?: any, 'en-US'?: any }) {
  * @returns
  */
 export function getLocalesValue(key: string, defaultValue?) {
-    return lodash.get(getLocales(), key, defaultValue)
+    return lodash.get(getLocales(), key, defaultValue || key)
 }
 /**
  *
