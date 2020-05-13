@@ -68,7 +68,10 @@ Framework Q&A community: https://community.walkingtec.cn
 
 Frame QQ communication group: 694148336
 
-You can click here http://wtmdoc.walkingtec.cn/setup to start a WTM project online and experience the beauty of WTM immediately~~~
+## Click <a href="http://wtmdoc.walkingtec.cn/setup">here</a>  to generate a WTM project online and experience the beauty of WTM immediately~~~
 
 At present, we are a team of 7 developers. We are looking for all kinds of C#, React, VUE experts to join us! 
 
+If WTM hepls you:
+
+<a href="https://www.paypal.me/dotnetWTM" target="_blank"><img src="https://wtmdoc.walkingtec.cn/imgs/pp_h_rgb.webp"  width="150"></a>

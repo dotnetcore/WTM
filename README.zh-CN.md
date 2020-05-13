@@ -70,7 +70,7 @@ WTM框架的前后端分离模式同样可以使用代码生成器同时生成�
 
 框架QQ交流群：694148336
 
-您可以点这里 http://wtmdoc.walkingtec.cn/setup 在线一键生成WTM的项目，立刻开始体验WTM之美~~~
+## 点<a href="http://wtmdoc.walkingtec.cn/setup">这里</a>在线一键生成WTM的项目，立刻开始体验WTM之美~~~
 
 ****
 目前我们是一个7人团队在维护这个项目，诚征各路C#，React，VUE高手加入！有意者可以进QQ群加群主详聊。
