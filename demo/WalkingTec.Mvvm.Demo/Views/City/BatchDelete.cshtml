@@ -1,0 +1,11 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityBatchVM
+
+<wt:form vm="@Model">
+	<wt:quote>@Model.Localizer["BatchDeleteConfirm"]</wt:quote>
+    <wt:hidden field="Ids" />
+    <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@Model.Localizer["Delete"]"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

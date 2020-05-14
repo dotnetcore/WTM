@@ -1,0 +1,13 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
+
+<wt:form vm="@Model">
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.Name" />
+<wt:combobox field="Entity.ParentId" items="AllParents"/>
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
