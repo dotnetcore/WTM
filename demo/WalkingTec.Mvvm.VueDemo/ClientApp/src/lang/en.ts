@@ -1,12 +1,13 @@
 export default {
   route: {
     dashboard: "Dashboard",
-    actionlog: "ActionLog",
-    frameworkgroup: "FrameworkGroup",
-    frameworkrole: "FrameworkRole",
-    frameworkuser: "FrameworkUser",
-    frameworkmenu: "FrameworkMenu",
-    dataprivilege: "DataPrivilege"
+    actionlog: "Log",
+    frameworkgroup: "Group management",
+    frameworkrole: "Role management",
+    frameworkuser: "User management",
+    frameworkmenu: "Menu management",
+    dataprivilege: "Data privileges",
+    systemManagement: "System"
   },
   navbar: {
     logOut: "Log Out",

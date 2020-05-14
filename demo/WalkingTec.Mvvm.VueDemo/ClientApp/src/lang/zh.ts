@@ -6,7 +6,8 @@ export default {
     frameworkrole: "角色管理",
     frameworkuser: "用户管理",
     frameworkmenu: "菜单管理",
-    dataprivilege: "数据权限"
+    dataprivilege: "数据权限",
+    systemManagement: "系统管理"
   },
   navbar: {
     logOut: "退出登录",
