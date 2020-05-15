@@ -9,16 +9,22 @@
     <wt:ueditor field="Entity.Remark" height="300" />
   </wt:row>
   <wt:row align="AlignEnum.Right">
-    <wt:submitbutton click="test()" text="运行js并提交" />
-    <wt:submitbutton click="return test()" text="运行js不提交" />
+    <wt:submitbutton click="test()" text="运行js并提交" submit-url="/School/Create2"/>
+    <wt:submitbutton click="test2()" text="运行js不提交" />
+    <wt:linkbutton target="ButtonTargetEnum.self" post-current-form="true" url="/School/Create" confirm-txt="请先暂存数据！通过系统初审后将自动进入人工审核阶段，将不允许用户修改报名数据。您确定要提交审核吗？" text="提交审核2" />
     <wt:submitbutton />
-    <wt:closebutton />
+    <wt:closebutton confirm-txt="确定关闭么"/>
   </wt:row>
 </wt:form>
 
 <script>
   function test() {
-    alert('test');
+    alert("test提交");
+    return true;
+  }
+  function test2() {
+    alert("test不提交");
     return false;
   }
+
 </script>

@@ -108,6 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
             }
 
+
             output.PostElement.AppendHtml($@"
 <script>
 ff.RenderForm('{Id}');
@@ -125,6 +126,19 @@ layui.use(['form'],function(){{
   }});
 }})
 ");
+                output.PostElement.AppendHtml($@"
+var {Id}validate = false;
+layui.use(['form'],function(){{
+  layui.form.on('submit({Id}filterAuto)', function(data){{
+  {Id}validate = true;
+  return false;
+  }});
+}})
+");
+                output.PostContent.AppendHtml($@"
+<button class=""layui-hide"" id=""{Id}hidesubmit""  type=""submit"" lay-filter=""{Id}filterAuto"" lay-submit></button>
+");
+
             }
 
             //如果是 SearchPanel，并且指定了 OldPost，则提交整个表单，而不是只刷新 Grid 数据
