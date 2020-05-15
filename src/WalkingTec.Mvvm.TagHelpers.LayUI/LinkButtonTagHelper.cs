@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -45,13 +46,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public bool Max { get; set; }
 
-        /// <summary>
-        /// 确认内容（如果不为空则弹出询问框）
-        /// </summary>
-        public string ConfirmTxt { get; set; }
-
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            BaseVM vm = null;
+            string formid = "";
+            if (context.Items.ContainsKey("model") == true)
+            {
+                vm = context.Items["model"] as BaseVM;
+            }
+            if (context.Items.ContainsKey("formid"))
+            {
+                formid = context.Items["formid"].ToString();
+            }
             if (IsLink == false)
             {
                 output.Attributes.SetAttribute("type", "button");
@@ -62,12 +68,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.TagMode = TagMode.StartTagAndEndTag;
                 output.Attributes.SetAttribute("href", "#");
             }
+
             if (Target == null || Target == ButtonTargetEnum.Layer)
             {
                 string windowid = Guid.NewGuid().ToString();
                 if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
                 {
-                    Click = $"ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"}, ff.GetPostData('{context.Items["formid"]}'),{Max.ToString().ToLower()})";
+                    Click = $@"
+    try{{
+        {formid}validate = false;
+        $('#{formid}hidesubmit').trigger('click');
+    }}
+    catch{{ {formid}validate = true;}}
+    if({formid}validate == true){{
+    ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"}, ff.GetPostData('{context.Items["formid"]}'),{Max.ToString().ToLower()})
+    }}
+";
                 }
                 else
                 {
@@ -78,7 +94,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (PostCurrentForm == true && context.Items.ContainsKey("formid"))
                 {
-                    Click = $"ff.BgRequest('{Url}',ff.GetPostData('{context.Items["formid"]}'))";
+                    Click = $@"
+    try{{
+        {formid}validate = false;
+        $('#{formid}hidesubmit').trigger('click');
+    }}
+    catch{{ {formid}validate = true;}}
+    if({formid}validate == true){{
+    ff.BgRequest('{Url}',ff.GetPostData('{context.Items["formid"]}'),'{vm?.ViewDivId}')
+    }}
+";
                 }
                 else
                 {
@@ -96,10 +121,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     Click = $"ff.SetCookie('#{Url}','{WindowTitle ?? ""}',true);window.open('/Home/PIndex#{Url}')";
                 }
-            }
-            if (!string.IsNullOrEmpty(ConfirmTxt))
-            {
-                Click = $"layer.confirm('{ConfirmTxt}', {{icon: 3, title:'提示'}}, function(index){{ {Click};layer.close(index); }})";
             }
             base.Process(context, output);
         }
