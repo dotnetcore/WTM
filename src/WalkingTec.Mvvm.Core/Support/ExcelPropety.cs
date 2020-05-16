@@ -280,7 +280,6 @@ namespace WalkingTec.Mvvm.Core
                         if (!DateTime.TryParse(value, out tryDateTimeResult))
                         {
                             err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
-                            //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDateTimeResult;
                         break;
@@ -289,7 +288,6 @@ namespace WalkingTec.Mvvm.Core
                         if (!int.TryParse(value, out tryIntResult))
                         {
                             err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
-                            //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryIntResult;
                         break;
@@ -298,7 +296,6 @@ namespace WalkingTec.Mvvm.Core
                         if (!decimal.TryParse(value, out tryDecimalResult))
                         {
                             err = new ErrorMessage { Index = rowIndex, Message = Program._localizer["{0}formaterror", this.ColumnName] };
-                            //errorMessage.Add(new ErrorMessage { ColumnName = this.ColumnName, Index = rowIndex, Message = "日期格式错误" });
                         }
                         this.Value = tryDecimalResult;
                         break;
