@@ -1,14 +1,14 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using NPOI.HSSF.Util;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
-using WalkingTec.Mvvm.Mvc.Binders;
-using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Auth.Attribute;
-using System;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Binders;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -318,19 +318,12 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Export")]
         [HttpPost]
-        public IActionResult ExportExcel(SchoolListVM vm)
+        public ActionResult ExportExcel(SchoolListVM vm)
         {
-            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
             vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
-            var data = vm.GenerateExcel();
-            if (vm.ExportExcelCount > 1)
-            {
-                return File(data, "application/x-zip-compressed", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.zip");
-            }
-            else
-            {
-                return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xlsx");
-            }
+            vm.ExportTitleBackColor = HSSFColor.Black.Index;
+            vm.ExportTitleFontColor = HSSFColor.White.Index;
+            return vm.GetExportData();
         }
 
         [HttpPost]
