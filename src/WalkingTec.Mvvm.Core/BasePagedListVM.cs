@@ -923,11 +923,11 @@ namespace WalkingTec.Mvvm.Core
                 var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
                 if (idpro == typeof(string))
                 {
-                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true).ToList();
+                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.DisableExport).ToList();
                 }
                 else
                 {
-                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.FieldName?.ToLower() == "id").ToList();
+                    remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.DisableExport || x.FieldName?.ToLower() == "id").ToList();
                 }
                 foreach (var item in remove)
                 {
