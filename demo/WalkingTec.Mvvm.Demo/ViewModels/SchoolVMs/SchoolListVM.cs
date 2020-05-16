@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => "test").SetFormat((a,b)=>{
                     return this.UIService.MakeScriptButton(ButtonTypesEnum.Button,"测试","alert('aaa');");
-                }).SetHeader("测试").SetAllowExport(false),
+                }).SetHeader("测试").SetDisableExport(),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 500)
             };

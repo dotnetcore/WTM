@@ -61,8 +61,9 @@ namespace WalkingTec.Mvvm.Core
                 }
                 return _title;
             }
-            set {
-                    _title = value;
+            set
+            {
+                _title = value;
             }
         }
 
@@ -95,6 +96,11 @@ namespace WalkingTec.Mvvm.Core
         /// 隐藏列
         /// </summary>
         public bool? Hide { get; set; }
+
+        /// <summary>
+        /// 是否禁止导出此列
+        /// </summary>
+        public bool DisableExport { get; set; }
 
         /// <summary>
         /// 子列
