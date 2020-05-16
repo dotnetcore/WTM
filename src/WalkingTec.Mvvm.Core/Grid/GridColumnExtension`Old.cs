@@ -203,6 +203,17 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
-
+        /// <summary>
+        /// 设置本列是否允许导出
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="show"></param>
+        /// <returns></returns>
+        public static GridColumn<T> SetAllowExport<T>(this GridColumn<T> self, bool show = true) where T : TopBasePoco
+        {
+            self.ColumnType = show == false ? GridColumnTypeEnum.Action : self.ColumnType;
+            return self;
+        }
     }
 }
