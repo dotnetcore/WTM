@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using NPOI.HSSF.UserModel;
+using NPOI.XSSF.UserModel;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 
@@ -97,7 +98,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     Directory.CreateDirectory(pathHeader);
                 }
-                var fullPath = Path.Combine(con.FileUploadOptions.UploadDir,$"{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}");
+                var fullPath = Path.Combine(con.FileUploadOptions.UploadDir, $"{Guid.NewGuid().ToNoSplitString()}.{vm.Entity.FileExt}");
                 using (var fileStream = File.Create(fullPath))
                 {
                     FileData.CopyTo(fileStream);
@@ -135,37 +136,37 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 下载文件 HSSFWorkbook
+        /// 根据定义的SaveFileModeEnum模式，获取File信息放入XSSFWorkbook中
         /// </summary>
-        /// <param name="hssfworkbook"></param>
+        /// <param name="xssfworkbook"></param>
         /// <param name="fa"></param>
         /// <param name="con"></param>
         /// <returns></returns>
-        public static HSSFWorkbook GetHSSWorkbook(HSSFWorkbook hssfworkbook, FileAttachment fa, Configs con)
+        public static XSSFWorkbook GetXSSFWorkbook(XSSFWorkbook xssfworkbook, FileAttachment fa, Configs con)
         {
             var saveMode = fa.SaveFileMode == null ? con.FileUploadOptions.SaveFileMode : fa.SaveFileMode;
             if (saveMode == SaveFileModeEnum.Database)
             {
                 using (MemoryStream ms = new MemoryStream(fa.FileData))
                 {
-                    hssfworkbook = new HSSFWorkbook(ms);
+                    xssfworkbook = new XSSFWorkbook(ms);
                 }
             }
             if (saveMode == SaveFileModeEnum.Local)
             {
                 using (FileStream file = new FileStream(fa.Path, FileMode.Open, FileAccess.Read))
                 {
-                    hssfworkbook = new HSSFWorkbook(file);
+                    xssfworkbook = new XSSFWorkbook(file);
                 }
             }
             if (saveMode == SaveFileModeEnum.DFS)
             {
                 using (MemoryStream ms = new MemoryStream(FDFSClient.DownloadFile(fa.GroupName, fa.Path.TrimStart('/'))))
                 {
-                    hssfworkbook = new HSSFWorkbook(ms);
+                    xssfworkbook = new XSSFWorkbook(ms);
                 }
             }
-            return hssfworkbook;
+            return xssfworkbook;
         }
 
         /// <summary>

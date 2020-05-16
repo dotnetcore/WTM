@@ -18,6 +18,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
         [Display(Name = "学校类型")]
         public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty<School>(x => x.SchoolType);
 
+        [Display(Name = "学校名称")]
+        public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty<School>(x => x.SchoolName);
+
         [Display(Name = "添加日期")]
         public ExcelPropety SchoolTime_Excel = ExcelPropety.CreateProperty<School>(x => x.CreateTime, true);
 
@@ -29,6 +32,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
         [Display(Name = "是否高级")]
         public ExcelPropety IsHgih_Excel = ExcelPropety.CreateProperty<School>(x => x.IsHgih);
+
+        [Display(Name = "备注")]
+        public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty<School>(x => x.Remark);
 
         protected override void InitVM()
         {
