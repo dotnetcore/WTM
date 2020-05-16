@@ -1,13 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using Npgsql;
-using NpgsqlTypes;
-using NPOI.HSSF.UserModel;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using NPOI.SS.Util;
-using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +10,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Npgsql;
+using NpgsqlTypes;
+using NPOI.HSSF.Util;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -182,12 +181,13 @@ namespace WalkingTec.Mvvm.Core
 
             //创建表头样式
             ICellStyle headerStyle = book.CreateCellStyle();
-            headerStyle.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Black.Index;
+            headerStyle.FillBackgroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
             headerStyle.FillPattern = FillPattern.SolidForeground;
+            headerStyle.FillForegroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
             IFont font = book.CreateFont();
             font.FontName = "Calibri";
             font.FontHeightInPoints = 12;
-            font.Color = NPOI.HSSF.Util.HSSFColor.White.Index;
+            font.Color = ExportTitleFontColor == null ? HSSFColor.Black.Index : ExportTitleFontColor.Value;
             headerStyle.SetFont(font);
 
             //生成表头
@@ -417,6 +417,18 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         [JsonIgnore]
         public int ExportExcelCount { get; set; }
+
+        /// <summary>
+        /// 导出文件第一行背景颜色，使用HSSFColor，例如：HSSFColor.Red.Index
+        /// </summary>
+        [JsonIgnore]
+        public short? ExportTitleBackColor { get; set; }
+
+        /// <summary>
+        /// 导出文件第一行文字颜色，使用HSSFColor，例如：HSSFColor.Red.Index
+        /// </summary>
+        [JsonIgnore]
+        public short? ExportTitleFontColor { get; set; }
 
         /// <summary>
         /// 数据列表
