@@ -6,7 +6,8 @@ export default {
     frameworkrole: "FrameworkRole",
     frameworkuser: "FrameworkUser",
     frameworkmenu: "FrameworkMenu",
-    dataprivilege: "DataPrivilege"
+    dataprivilege: "DataPrivilege",
+    systemManagement: "systemManagement"
   },
   navbar: {
     logOut: "Log Out",
