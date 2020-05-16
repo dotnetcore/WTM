@@ -7,14 +7,16 @@ export default class IApp extends React.Component<any, any> {
                 <Row gutter={16} >
                     <Col span={12}>
                         <Card title="WTM—做最好的.netcore开源框架" style={{ minHeight: 250 }} >
-                            WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework, 当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。
+                            <p>WalkingTec.Mvvm框架（简称WTM）最早开发与2013年，基于Asp.net MVC3 和 最早的Entity Framework, 当初主要是为了解决公司内部开发效率低，代码风格不统一的问题。经历了四年间数十个项目的考验，框架逐步的完善，推出了四个主要版本。</p>
+                            <p>2017年9月，我们将代码移植到了.Net Core上，并进行了深度优化和重构，推出了基于Asp.net Core和EF Core的全新框架，新框架在架构，稳定性，速度上都有长足进步，真正成为一款高效开发的利器。</p>
+                            <p>框架已开源，欢迎大家提出宝贵意见 <a href="https://github.com/dotnetcore/WTM" target="_blank" >https://github.com/dotnetcore/WTM</a></p>
               </Card>
                     </Col>
                     <Col span={12}>
                         <Card title="WTM解决的问题" style={{ minHeight: 250 }} >
-                            WTM框架把常规编码结构化，重复编码自动化，极大地提高了开发效率
-                            在不分离的模式下，它连通了前台UI和后台代码。你不需要前后台分离，不需要两个人配合，减少成本，缩短工期。
-                            在前后端分离的模式下，同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。
+                            <p>WTM框架把常规编码结构化，重复编码自动化，极大地提高了开发效率</p>
+                            <p>在不分离的模式下，它连通了前台UI和后台代码。你不需要前后台分离，不需要两个人配合，减少成本，缩短工期。</p>
+                            <p>在前后端分离的模式下，同样可以使用代码生成器同时生成前台和后台的代码，极大的降低了前后端人员的沟通成本，从本质上提升了开发效率，让“分离”不再复杂和昂贵。</p>
               </Card>
                     </Col>
 
@@ -27,7 +29,7 @@ export default class IApp extends React.Component<any, any> {
                             <p>  一键生成增删改查，导入导出，批量操作代码</p>
                             <p> 支持一对多，多对多关联模型的识别和代码生成</p>
                             <p>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式</p>
-                            <p>  支持sqlserver，mysql，pgsql三种数据库</p>
+                            <p>  支持sqlserver，mysql，pgsql，sqlite等多种数据库</p>
                             <p>   封装了Layui，AntD，Element的大部分控件，编写前台更加简便</p>
                             <p>   提供了很多基类，封装了绝大部分后台常用操作</p>
                             <p>     提供了用户，角色，用户组，菜单，日志等常用模块</p>
@@ -50,15 +52,15 @@ export default class IApp extends React.Component<any, any> {
 
 </p>
                             <p>
-                                —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_block" >https://github.com/dotnetcore/WTM</a>
+                                —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_blank" >https://github.com/dotnetcore/WTM</a>
 
                             </p>
                             <p>
-                                —— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_block" >https://wtmdoc.walkingtec.cn</a>
+                                —— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_blank" >https://wtmdoc.walkingtec.cn</a>
 
                             </p>
                             <p>
-                                —— 框架更新日志：<a href="https://github.com/dotnetcore/WTM/blob/develop/CHANGELOG.md" target="_block">查看更新日志</a>
+                                —— 框架更新日志：<a href="https://github.com/dotnetcore/WTM/blob/develop/CHANGELOG.md" target="_blank">查看更新日志</a>
 
                             </p>
                             <p>
@@ -68,18 +70,6 @@ export default class IApp extends React.Component<any, any> {
                         </Card>
                     </Col>
 
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={24}>
-                        <Card title="连接你我" >
-                            <div style={{ textAlign: "center" }}>
-                                <img src="https://wtmdoc.walkingtec.cn/imgs/WTM-Ali.png" width="300" height="300" />
-                                <img src="https://wtmdoc.walkingtec.cn/imgs/gongzhonghao.jpg" width="300" height="300" />
-                            </div>
-
-                        </Card>
-                    </Col>
                 </Row>
             </div>
         );
