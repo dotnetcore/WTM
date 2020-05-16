@@ -12,7 +12,6 @@ export const constantRoutes: RouteConfig[] = [
         children: [
             {
                 path: "dashboard",
-                key: "dashboard",
                 component: () => {
                     const languagePage = AppModule.language === 'en' ? '.en' : '';
                     return import(/* webpackChunkName: "dashboard" */ `@/pages/dashboard/index${languagePage}.vue`).catch(err => {
@@ -23,7 +22,8 @@ export const constantRoutes: RouteConfig[] = [
                 meta: {
                     title: "dashboard",
                     icon: "el-icon-odometer",
-                    affix: true
+                    affix: true,
+                    key: "dashboard",
                 }
             }
         ]
