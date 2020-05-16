@@ -853,7 +853,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 //如果是这2种数据库，进行Bulk插入
-                if (ConfigInfo.DbType == DBTypeEnum.MySql || ConfigInfo.DbType == DBTypeEnum.SqlServer)
+                if (ConfigInfo.DbType == DBTypeEnum.SqlServer)
                 {
                     ListAdd.Add(item);
                 }
