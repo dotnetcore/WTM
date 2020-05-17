@@ -17,7 +17,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { Notification } from "element-ui"; // Message,
 import { contentType } from "@/config/enum";
-import { getLanguage } from "@/util/cookie";
+import { AppModule } from "@/store/modules/app";
 
 class requestBase {
   constructor() {}
@@ -145,7 +145,7 @@ const _request = (option, serverHost?) => {
     params: {},
     headers: {
       "Content-Type": option.contentType || contentType.json,
-      "Accept-Language": getLanguage()
+      "Accept-Language": AppModule.language
     }
   };
   const data = rBase.requestData(option.data);
