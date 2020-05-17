@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
@@ -248,7 +249,7 @@ namespace WalkingTec.Mvvm.Core
         private byte[] DownLoadZipPackage(string FileName)
         {
             //文件根目录
-            string RootPath = $"{ConfigInfo.FileUploadOptions.UploadDir}{FileName}";
+            string RootPath = $"{GlobalServices.GetRequiredService<IHostingEnvironment>().WebRootPath}\\{FileName}";
 
             //文件夹目录
             string FilePath = $"{RootPath}//FileFolder";
