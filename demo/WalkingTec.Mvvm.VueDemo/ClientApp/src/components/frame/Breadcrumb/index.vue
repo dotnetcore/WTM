@@ -2,8 +2,10 @@
     <el-breadcrumb class="app-breadcrumb" separator="/">
         <transition-group name="breadcrumb">
             <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
-                <span v-if="item.redirect === 'noredirect' || index === breadcrumbs.length-1" class="no-redirect">{{ item.meta.title }}</span>
-                <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
+                <span v-if="item.redirect === 'noredirect' || index === breadcrumbs.length-1" class="no-redirect">{{ isDev ? $t("route." + item.meta.key) : item.meta.title }}</span>
+                <a v-else @click.prevent="handleLink(item)">
+                    {{ isDev ? $t("route." + item.meta.key) : item.meta.title }}
+                </a>
             </el-breadcrumb-item>
         </transition-group>
     </el-breadcrumb>
@@ -13,6 +15,7 @@
 import pathToRegexp from "path-to-regexp";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { RouteRecord, Route } from "vue-router";
+import config from "@/config/index";
 
 @Component({
     name: "Breadcrumb"
@@ -27,6 +30,10 @@ export default class extends Vue {
             return;
         }
         this.getBreadcrumb();
+    }
+
+    get isDev() {
+        return config.development;
     }
 
     created() {
