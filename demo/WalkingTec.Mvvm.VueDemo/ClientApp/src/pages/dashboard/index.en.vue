@@ -126,10 +126,10 @@
                                     <el-link @click="onPush(item.Url)" :underline="false"><i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>Project documentation</el-link>
+                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>Doc</el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>Code generation</el-link>
+                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>CodeGen</el-link>
                                 </el-col>
                             </el-row>
                         </el-card>
