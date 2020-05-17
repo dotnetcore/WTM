@@ -220,6 +220,16 @@
 import indexMixin from "./index-mixin";
 export default indexMixin;
 </script>
+<style lang="less">
+.lump-wrap {
+    .el-link.el-link--default {
+        width: 100%;
+        .el-link--inner {
+            width: 100%;
+        }
+    }
+}
+</style>
 <style lang="less" rel="stylesheet/less" scoped>
 @import "~@/assets/css/mixin.less";
 .dashboard-container {
