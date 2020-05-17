@@ -4,7 +4,7 @@
             <el-col :span="8" :xs="24">
                 <chart-card :chart-data="dailySalesChart.data" :chart-options="dailySalesChart.options" :chart-type="dailySalesChart.type" backgroundColor="blue">
                     <template slot="content">
-                        <h4 class="title">Daily Sales</h4>
+                        <h4 class="title">Daily Sales------</h4>
                         <p class="category">
                             <span class="text-success"><i class="el-icon-top"></i> 55% </span>
                             increase in today sales.
@@ -120,23 +120,23 @@
                 <el-row :gutter="10">
                     <el-col :span="12" :xs="24">
                         <el-card shadow="hover">
-                            <div slot="header">快捷方式</div>
+                            <div slot="header">shortcut</div>
                             <el-row class="lump-wrap" :gutter="10">
                                 <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
                                     <el-link @click="onPush(item.Url)" :underline="false"><i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>项目文档</el-link>
+                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>Doc</el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>代码生成</el-link>
+                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>CodeGen</el-link>
                                 </el-col>
                             </el-row>
                         </el-card>
                     </el-col>
                     <el-col :span="12" :xs="24">
                         <el-card shadow="hover">
-                            <div slot="header"><span>WTM开源</span></div>
+                            <div slot="header"><span>WTM open source framework</span></div>
                             <el-row class="lump-wrap cxt-left" :gutter="10">
                                 <el-col :span="12">
                                     <div>
@@ -173,42 +173,36 @@
             <el-col :span="8" :md="8" :xs="24" :sm="24">
                 <el-col :span="24">
                     <el-card shadow="hover">
-                        <div slot="header">框架特点</div>
-                        <i class="el-icon-check"></i>一键生成WTM项目<br />
-                        <i class="el-icon-check"></i>一键生成增删改查，导入导出，批量操作代码<br />
-                        <i class="el-icon-check"></i>支持一对多，多对多关联模型的识别和代码生成<br />
-                        <i class="el-icon-check"></i>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式<br />
-                        <i class="el-icon-check"></i>支持sqlserver，mysql，pgsql三种数据库<br />
-                        <i class="el-icon-check"></i>封装了Layui，AntD，Element的大部分控件，编写前台更加简便<br />
-                        <i class="el-icon-check"></i>提供了很多基类，封装了绝大部分后台常用操作<br />
-                        <i class="el-icon-check"></i>提供了用户，角色，用户组，菜单，日志等常用模块<br />
-                        <i class="el-icon-check"></i>支持数据权限的开发和配置<br />
-                        <i class="el-icon-check"></i>支持读写分离和数据库分库
+                        <div slot="header">Framework features</div>
+                        <i class="el-icon-check"></i>One click to generate WTM project<br />
+                        <i class="el-icon-check"></i>One click to generate add, delete, modify and query<br />
+                        <i class="el-icon-check"></i>Support identification and code generation of one-to-many and many-to-many association models<br />
+                        <i class="el-icon-check"></i>support front-back end separation mode (React+AntD,Vue+Element) and non-separation mode(LayUI)<br />
+                        <i class="el-icon-check"></i>Support 3 databases: sqlserver, MySQL and PgSQL<br />
+                        <i class="el-icon-check"></i>Encapsulates most of the controls of layUI, antd and element<br />
+                        <i class="el-icon-check"></i>A lot of base classes are provided ,encapsulate most common background operations<br />
+                        <i class="el-icon-check"></i>Provide common modules such as users, roles, user groups, menus, logs, etc<br />
+                        <i class="el-icon-check"></i>Support the development and configuration of data authority<br />
+                        <i class="el-icon-check"></i>Supportread/ write splitting ;Support database sub Library
                     </el-card>
                 </el-col>
                 <el-col :span="24">
                     <el-card shadow="hover">
-                        <div slot="header">作者的话</div>
+                        <div slot="header">Author's words</div>
                         <p>
-                            WTM框架，全称WalkingTec
-                            MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。
+                            WTM framework, full name walkingtec MVVM. Walkingtec is my own company. WTM is a rapid development framework.How fast ? At least at present, in the open source project of DotNetcore, I haven't seen another faster one. Our goal of WTM is to speed up the development and reduce cost to the greatest extent.
                         </p>
                         <p>
-                            国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了，
-                            dotnet
-                            core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
+                            WTM has been loved by more and more developers since its open source. WTM will surely repay your love with a more mature and stable version.Specially thanks to（layui.com Improve yourself, benefit others, we am not alone!
                         </p>
                         <p>
-                            WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
+                            —— Open source address of framework：<el-link href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</el-link>
                         </p>
                         <p>
-                            —— 框架开源地址：<el-link href="https://github.com/dotnetcore/WTM" target="_blank" type="primary">https://github.com/dotnetcore/WTM</el-link>
+                            —— Framework online document:<el-link href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</el-link>
                         </p>
                         <p>
-                            —— 框架在线文档：<el-link href="https://wtmdoc.walkingtec.cn" target="_blank" type="primary">https://wtmdoc.walkingtec.cn</el-link>
-                        </p>
-                        <p>
-                            —— 框架QQ交流群：694148336
+                            —— Frame QQ communication：694148336
                         </p>
                     </el-card>
                 </el-col>
@@ -223,17 +217,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import indexMixin from "./index-mixin";
-@Component({
-    mixins: [indexMixin]
-})
-export default class extends Vue {
-    created() {
-        console.log("默认页面：index");
+export default indexMixin;
+</script>
+<style lang="less">
+.lump-wrap {
+    .el-link.el-link--default {
+        width: 100%;
+        .el-link--inner {
+            width: 100%;
+        }
     }
 }
-</script>
+</style>
 <style lang="less" rel="stylesheet/less" scoped>
 @import "~@/assets/css/mixin.less";
 .dashboard-container {

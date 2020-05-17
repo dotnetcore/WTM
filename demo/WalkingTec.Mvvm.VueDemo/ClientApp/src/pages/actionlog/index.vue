@@ -4,7 +4,7 @@
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
-        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" />
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" languageKey="actionlog" />
         <!-- 弹出框 -->
         <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
         <!-- 导入 -->
@@ -21,10 +21,11 @@ import DialogForm from "./views/dialog-form.vue";
 import store from "./store/index";
 // 查询参数, table列 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
+import LOCAL from "./local";
 
 @Component({
     name: "actionlog",
-    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
+    mixins: [searchMixin(TABLE_HEADER, LOCAL), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm
@@ -35,7 +36,7 @@ export default class Index extends Vue {
     get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "75px",
+                "label-width": this.$t("actionlog.LabelWidth"),
                 inline: true
             },
             formItem: {
@@ -49,14 +50,16 @@ export default class Index extends Vue {
                 },
                 ActionTime: {
                     type: "datePicker",
-                    label: "操作时间",
+                    label: this.$t("actionlog.ActionTime"),
                     span: 12,
                     props: {
                         type: "datetimerange",
                         "value-format": "yyyy-MM-dd HH:mm:ss",
-                        "range-separator": "至",
-                        "start-placeholder": "开始日期",
-                        "end-placeholder": "结束日期"
+                        "range-separator": "-",
+                        "start-placeholder": this.$t(
+                            "actionlog.StartPlaceholder"
+                        ),
+                        "end-placeholder": this.$t("actionlog.EndPlaceholder")
                     },
                     isHidden: !this.isActive
                 },
@@ -67,8 +70,12 @@ export default class Index extends Vue {
                 },
                 LogType: {
                     type: "select",
-                    label: "类型",
-                    children: logTypes,
+                    label: this.$t("actionlog.LogType"),
+                    children: [
+                        { Value: 0, Text: this.$t("actionlog.Ordinary") },
+                        { Value: 1, Text: this.$t("actionlog.Abnormal") },
+                        { Value: 2, Text: this.$t("actionlog.Debugging") }
+                    ],
                     props: {
                         multiple: true,
                         "collapse-tags": true

@@ -94,7 +94,7 @@ export default class CreateForm extends Vue {
                 disabled={this.disabledInput}
                 on-click={this.onSearch}
               >
-                查询
+                { this.$t("buttom.search") }
               </el-button>
               {this.needCollapse ? (
                 <el-button
@@ -123,7 +123,7 @@ export default class CreateForm extends Vue {
                 icon="el-icon-refresh"
                 on-click={this.onReset}
               >
-                重置
+                { this.$t("buttom.reset") }
               </el-button>
             ) : (
               ""

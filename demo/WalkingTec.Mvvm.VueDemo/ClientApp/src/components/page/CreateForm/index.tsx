@@ -17,19 +17,38 @@ const componentObj: any = new Utils();
   },
 })
 export default class CreateForm extends Vue {
-  // 表单状态
+  /**
+   * 表单状态
+   */
   @Prop({ type: String, default: "add" }) status;
-  // 表单
+  /**
+   * 表单
+   */
   @Prop() options!: ICreateFormOptions;
-  // row class
+  /**
+   * row class
+   */
   @Prop({ type: String, default: "" }) elRowClass;
-  // source 数据
+  /**
+   * source 数据
+   */
   @Prop() sourceFormData?: object;
-  // 组件display
+  /**
+   * 组件display
+   */
   @Prop({ type: Boolean, default: false }) elDisabled;
-  // key替换'.'之后的数据
+  /**
+   * 多语言key
+   */
+  @Prop({ type: String })
+  languageKey?;
+  /**
+   * key替换'.'之后的数据
+   */
   private formData: object = {};
-  // 事件集合 @Prop({ type: Object, default: () => {} }) events;
+  /**
+   * 事件集合 @Prop({ type: Object, default: () => {} }) events;
+   */
   private elFormRefKey: string = "ref_name";
   /**
    * 透传el-form组件
@@ -92,7 +111,17 @@ export default class CreateForm extends Vue {
   public getFormItem(key): Vue | Element | Vue[] | Element[] {
     return this.$refs[key];
   }
-
+  /**
+   * 多语言
+   * @param option
+   */
+  private getLanguageByKey({ label, key }) {
+      return this.$getLanguageByKey({
+          languageKey: this.languageKey,
+          label,
+          key
+      });
+  }
   private createFormData() {
     let newFormData = {};
     const formItem = this.options.formItem;
@@ -122,7 +151,6 @@ export default class CreateForm extends Vue {
       if ((_.isBoolean(item.isHidden) && item.isHidden) || !item.type) {
         return;
       }
-
       const itemComp = componentObj[item.type];
       const option = { ...item, key };
       const contentComp = itemComp ? itemComp.call(this, h, option) : null;
@@ -130,6 +158,7 @@ export default class CreateForm extends Vue {
     });
     const props = {
       ...this.options.formProps,
+      disabled: this.status === "detail",
       model: this.sourceFormData || this.formData,
     };
     const slots = this.$scopedSlots["default"];

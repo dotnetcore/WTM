@@ -38,60 +38,60 @@ export default class Index extends Vue {
                 },
                 "Entity.ITCode": {
                     type: "input",
-                    label: "账号",
+                    label: this.$t("frameworkuser.ITCode"),
                     rules: {
                         required: true,
-                        message: "请输入账号",
+                        message: this.$t("frameworkuser.pleaseEnterITCode"),
                         trigger: "blur"
                     }
                 },
                 "Entity.Password": {
                     type: "input",
-                    label: "密码",
+                    label: this.$t("frameworkuser.Password"),
                     rules: {
                         required: true,
-                        message: "请输入账号",
+                        message: this.$t("frameworkuser.pleaseEnterPassword"),
                         trigger: "blur"
                     },
                     isHidden: (res, status) => status === "edit"
                 },
                 "Entity.Email": {
                     type: "input",
-                    label: "邮箱"
+                    label: this.$t("frameworkuser.Email")
                 },
                 "Entity.Name": {
                     type: "input",
-                    label: "姓名",
+                    label: this.$t("frameworkuser.Name"),
                     rules: {
                         required: true,
-                        message: "请输入姓名",
+                        message: this.$t("frameworkuser.pleaseEnterName"),
                         trigger: "blur"
                     }
                 },
                 "Entity.Sex": {
                     type: "select",
-                    label: "性别",
+                    label: this.$t("frameworkuser.Sex"),
                     children: sexList
                 },
                 "Entity.CellPhone": {
                     type: "input",
-                    label: "手机号"
+                    label: this.$t("frameworkuser.CellPhone")
                 },
                 "Entity.HomePhone": {
                     type: "input",
-                    label: "座机"
+                    label: this.$t("frameworkuser.HomePhone")
                 },
                 "Entity.Address": {
                     type: "input",
-                    label: "住址"
+                    label: this.$t("frameworkuser.Address")
                 },
                 "Entity.ZipCode": {
                     type: "input",
-                    label: "邮编"
+                    label: this.$t("frameworkuser.ZipCode")
                 },
                 "Entity.PhotoId": {
                     type: "wtmUploadImg",
-                    label: "头像",
+                    label: this.$t("frameworkuser.PhotoId"),
                     props: {
                         isHead: true,
                         imageStyle: { width: "100px", height: "100px" }
@@ -99,39 +99,49 @@ export default class Index extends Vue {
                 },
                 "Entity.IsValid": {
                     type: "switch",
-                    label: "是否有效",
+                    label: this.$t("frameworkuser.IsValid"),
                     defaultValue: true
                 },
                 "Entity.UserRoles": {
                     type: "transfer",
-                    label: "角色",
+                    label: this.$t("frameworkuser.UserRoles"),
                     mapKey: "RoleId",
                     props: {
                         data: this.getFrameworkRolesData.map(item => ({
                             key: item.Value,
                             label: item.Text
                         })),
-                        titles: ["所有", "已选"],
+                        titles: [
+                            this.$t("frameworkuser.All"),
+                            this.$t("frameworkuser.Selected")
+                        ],
                         filterable: true,
                         filterMethod: filterMethod,
-                        "filter-placeholder": "请输入角色"
+                        "filter-placeholder": this.$t(
+                            "frameworkuser.pleaseEnterUserRoles"
+                        )
                     },
                     span: 24,
                     defaultValue: []
                 },
                 "Entity.UserGroups": {
                     type: "transfer",
-                    label: "用户组",
+                    label: this.$t("frameworkuser.UserGroups"),
                     mapKey: "GroupId",
                     props: {
                         data: this.getFrameworkGroupsData.map(item => ({
                             key: item.Value,
                             label: item.Text
                         })),
-                        titles: ["所有", "已选"],
+                        titles: [
+                            this.$t("frameworkuser.All"),
+                            this.$t("frameworkuser.Selected")
+                        ],
                         filterable: true,
                         filterMethod: filterMethod,
-                        "filter-placeholder": "请输入用户组"
+                        "filter-placeholder": this.$t(
+                            "frameworkuser.pleaseEnterRoleName"
+                        )
                     },
                     span: 24,
                     defaultValue: []
