@@ -1,35 +1,35 @@
 <template>
-  <div v-loading="tableAttrs.loading" class="table-card">
-    <div class="table-box">
-      <el-table ref="table" v-el-height-adaptive-table="!height" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents" :height="height || '100px'">
-        <el-table-column v-if="tableAttrs.isSelection" type="selection" align="center" width="55" />
-        <!-- 判断是否需要插槽,自定义列内容 -->
-        <template v-for="(item, index) of Cols">
-          <el-table-column v-if="item.isSlot" :key="index" :label="item.label" :width="item.width" :align="item.align || 'center'" :fixed="item.fixed">
-            <template slot-scope="scope">
-              <slot :name="item.key" :row="{ ...scope.row }" />
-            </template>
-          </el-table-column>
-          <el-table-column v-else-if="item.isOperate" :key="index" :label="item.label" :width="item.width" :align="item.align || 'center'" :fixed="item.fixed">
-            <template slot-scope="scope">
-              <el-button v-if="item.actions.includes('detail')" v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="colEvents.onDetail(scope.row)">
-                详情
-              </el-button>
-              <el-button v-if="item.actions.includes('edit')" v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="colEvents.onEdit(scope.row)">
-                修改
-              </el-button>
-              <el-button v-if="item.actions.includes('deleted')" v-visible="actionList.batchDelete" type="text" size="small" class="view-btn" @click="colEvents.onDelete(scope.row)">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column v-else :key="index" :sortable="item.sortable" :prop="item.key" :label="item.label" :width="item.width" :align="item.align || 'center'" />
-        </template>
-      </el-table>
-      <custom-column :tb-header="tableAttrs.tbHeader" :default-header-keys="tableAttrs.defaultHeaderKeys" @onSetHeader="onSetHeader"></custom-column>
+    <div v-loading="tableAttrs.loading" class="table-card">
+        <div class="table-box">
+            <el-table ref="table" v-el-height-adaptive-table="!height" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents" :height="height || '100px'">
+                <el-table-column v-if="tableAttrs.isSelection" type="selection" align="center" width="55" />
+                <!-- 判断是否需要插槽,自定义列内容 -->
+                <template v-for="(item, index) of Cols">
+                    <el-table-column v-if="item.isSlot" :key="index" :label="getColsRowItemLabel(item)" :width="item.width" :align="item.align || 'center'" :fixed="item.fixed">
+                        <template slot-scope="scope">
+                            <slot :name="item.key" :row="{ ...scope.row }" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column v-else-if="item.isOperate" :key="index" :label="getColsRowItemLabel(item, $t('table.actions'))" :width="item.width || 150" :align="item.align || 'center'" :fixed="item.fixed">
+                        <template slot-scope="scope">
+                            <el-button v-if="item.actions.includes('detail')" v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="colEvents.onDetail(scope.row)">
+                                {{ $t("table.detail") }}
+                            </el-button>
+                            <el-button v-if="item.actions.includes('edit')" v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="colEvents.onEdit(scope.row)">
+                                {{ $t("table.edit") }}
+                            </el-button>
+                            <el-button v-if="item.actions.includes('deleted')" v-visible="actionList.batchDelete" type="text" size="small" class="view-btn" @click="colEvents.onDelete(scope.row)">
+                                {{ $t("table.delete") }}
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column v-else :key="index" :sortable="item.sortable" :prop="item.key" :label="getColsRowItemLabel(item)" :width="item.width" :align="item.align || 'center'" />
+                </template>
+            </el-table>
+            <custom-column :table-header="tableAttrs.tbHeader" :default-header-keys="tableAttrs.defaultHeaderKeys" @onSetHeader="onSetHeader" :languageKey="languageKey"></custom-column>
+        </div>
+        <el-pagination v-if="isPagination" class="page-box" v-bind="pageAttrs" :current-page="pageAttrs.currentPage" :page-sizes="pageAttrs.pageSizes" :page-size="pageAttrs.pageSize" :layout="pageAttrs.layout" :total="pageAttrs.pageTotal" v-on="pageEvents" />
     </div>
-    <el-pagination v-if="isPagination" class="page-box" v-bind="pageAttrs" :current-page="pageAttrs.currentPage" :page-sizes="pageAttrs.pageSizes" :page-size="pageAttrs.pageSize" :layout="pageAttrs.layout" :total="pageAttrs.pageTotal" v-on="pageEvents" />
-  </div>
 </template>
 
 <script lang="ts">
@@ -103,6 +103,11 @@ export default class TableBox extends Vue {
     @Prop({ type: String, default: "total, sizes, prev, pager, next, jumper" })
     layout;
     /**
+     * 多语言key
+     */
+    @Prop({ type: String })
+    languageKey?;
+    /**
      * 事件集合
      */
     @Prop({ type: Object, default: {} })
@@ -148,11 +153,13 @@ export default class TableBox extends Vue {
         const attrsObj = Object.assign({}, this.attrs, this.$attrs);
         return {
             ...attrsObj,
-            isSelection: this.isSelection || attrsObj.isSelection,
             defaultHeaderKeys:
                 this.defaultHeaderKeys || attrsObj.defaultHeaderKeys,
             tbHeader:
-                this.tbHeader.length > 0 ? this.tbHeader : attrsObj.tbHeader
+                this.tbHeader.length > 0 ? this.tbHeader : attrsObj.tbHeader,
+            isSelection: this.isSelection || attrsObj.isSelection,
+            loading: this.loading || attrsObj.loading,
+            languageKey: this.languageKey || attrsObj.languageKey
         };
     }
     /**
@@ -162,7 +169,11 @@ export default class TableBox extends Vue {
         const attrsObj = Object.assign({}, this.attrs, this.$attrs);
         return {
             ...attrsObj,
-            layout: this.layout || attrsObj.attrsObj
+            layout: this.layout || attrsObj.layout,
+            pageSizes: this.pageSizes || attrsObj.pageSizes,
+            pageSize: this.pageSize || attrsObj.pageSize,
+            currentPage: this.currentPage || attrsObj.currentPage,
+            pageTotal: this.pageTotal || attrsObj.pageTotal
         };
     }
     /**
@@ -182,6 +193,19 @@ export default class TableBox extends Vue {
         return _.filter(this.tableAttrs.tbHeader, item => {
             return _.includes(this.selCols, item.key);
         });
+    }
+    /**
+     * 列文案
+     */
+    getColsRowItemLabel(item: Object, defaultLabel: string = "") {
+        return this.$getLanguageByKey(
+            {
+                languageKey: this.tableAttrs.languageKey,
+                label: item.label,
+                key: item.key
+            },
+            defaultLabel
+        );
     }
     /**
      *  选中列

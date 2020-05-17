@@ -4,19 +4,19 @@
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
-        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" languageKey="frameworkrole">
             <template #operate="rowData">
                 <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
-                    详情
+                    {{ $t("table.detail") }}
                 </el-button>
                 <el-button v-visible="actionList.edit" type="text" size="small" class="view-btn" @click="onEdit(rowData.row)">
-                    修改
+                    {{ $t("table.edit") }}
                 </el-button>
                 <el-button type="text" size="small" class="view-btn" @click="openPermission(rowData.row)">
-                    分配权限
+                    {{ $t("frameworkrole.AssignPermissions") }}
                 </el-button>
                 <el-button v-visible="actionList.deleted" type="text" size="small" class="view-btn" @click="onDelete(rowData.row)">
-                    删除
+                    {{ $t("table.delete") }}
                 </el-button>
             </template>
         </wtm-table-box>
@@ -39,10 +39,11 @@ import Permission from "./views/permission.vue";
 import store from "./store/index";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
+import LOCAL from "./local";
 
 @Component({
     name: "frameworkrole",
-    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
+    mixins: [searchMixin(TABLE_HEADER, LOCAL), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm,
@@ -62,17 +63,17 @@ export default class Index extends Vue {
     get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "75px",
+                "label-width": this.$t("frameworkrole.LabelWidth"),
                 inline: true
             },
             formItem: {
                 RoleCode: {
                     type: "input",
-                    label: "角色编号"
+                    label: this.$t("frameworkrole.RoleCode")
                 },
                 RoleName: {
                     type: "input",
-                    label: "角色名称"
+                    label: this.$t("frameworkrole.RoleName")
                 }
             }
         };

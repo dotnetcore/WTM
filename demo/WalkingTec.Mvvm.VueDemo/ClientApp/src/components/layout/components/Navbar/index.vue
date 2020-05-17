@@ -36,7 +36,7 @@
                         <el-dropdown-item>{{$t('navbar.api')}}</el-dropdown-item>
                     </a>
                     <a @click="onOpenPassword">
-                        <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item>{{$t('navbar.password')}}</el-dropdown-item>
                     </a>
                     <el-dropdown-item divided>
                         <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>

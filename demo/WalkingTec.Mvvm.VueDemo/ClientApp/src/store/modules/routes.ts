@@ -65,7 +65,8 @@ class Routes extends VuexModule implements IRoutesModule {
           Text: item.name,
           Value: item.controller,
           Url: item.path,
-          Icon: item.icon
+          Icon: item.icon,
+          key: item.key
         });
       }
     });

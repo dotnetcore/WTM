@@ -3,13 +3,18 @@ export default {
     add: "添加",
     edit: "编辑",
     delete: "删除",
-    detail: "删除"
+    detail: "删除",
+    closed: "关 闭",
+    submit: "提 交"
+
   },
   en: {
     add: "add",
     edit: "edit",
     delete: "delete",
-    detail: "detail"
+    detail: "detail",
+    closed: "closed",
+    submit: "submit"
   },
   es: {
     add: "Añadir",

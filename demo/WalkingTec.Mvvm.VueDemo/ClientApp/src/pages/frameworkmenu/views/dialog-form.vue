@@ -3,7 +3,7 @@
         <wtm-create-form :ref="refName" :status="status" :options="formOptions">
             <template #ICon="data">
                 <i v-if="data.status === $actionType.detail" :class="[data.data]"></i>
-                <el-select v-else v-model="mergeFormData.Entity.ICon" filterable clearable placeholder="请选择">
+                <el-select v-else v-model="mergeFormData.Entity.ICon" filterable clearable>
                     <el-option v-for="(item, index) in iconList" :key="index" :label="item" :value="item">
                         <span style="float: left">{{ item }}</span>
                         <span style="float: right; font-size: 14px"><i :class="[item]"></i></span>
@@ -40,9 +40,15 @@ export default class Index extends Vue {
         }
     };
     get formOptions() {
+        const moduleChildren = RoutesModule.pageList.map(item => {
+            return {
+                ...item,
+                Text: item.key ? this.$t(`menu.${item.key}`) : item.Text
+            };
+        });
         return {
             formProps: {
-                "label-width": "100px"
+                "label-width": this.$t("frameworkmenu.LabelWidth")
             },
             formItem: {
                 "Entity.ID": {
@@ -50,19 +56,25 @@ export default class Index extends Vue {
                 },
                 "Entity.IsInside": {
                     type: "radioGroup",
-                    label: "地址类型",
+                    label: this.$t("frameworkmenu.radioGroup"),
                     span: 24,
                     children: [
-                        { Value: true, Text: "内部地址" },
-                        { Value: false, Text: "外部地址" }
+                        {
+                            Value: true,
+                            Text: this.$t("frameworkmenu.InternalAddress")
+                        },
+                        {
+                            Value: false,
+                            Text: this.$t("frameworkmenu.ExternalAddress")
+                        }
                     ],
                     defaultValue: true
                 },
                 SelectedModule: {
                     type: "select",
-                    label: "模块名称",
+                    label: this.$t("frameworkmenu.SelectedModule"),
                     props: { clearable: true },
-                    children: RoutesModule.pageList,
+                    children: moduleChildren,
                     events: {
                         change: this.onSelectedAction
                     },
@@ -70,7 +82,7 @@ export default class Index extends Vue {
                 },
                 SelectedActionIDs: {
                     type: "select",
-                    label: "动作名称",
+                    label: this.$t("frameworkmenu.Action"),
                     props: { multiple: true, clearable: true },
                     children: this.getActionsByModelData,
                     isHidden: data => !_.get(data, "Entity.IsInside"),
@@ -84,40 +96,42 @@ export default class Index extends Vue {
                 },
                 "Entity.PageName": {
                     type: "input",
-                    label: "页面名称"
+                    label: this.$t("frameworkmenu.PageName")
                 },
                 "Entity.ParentId": {
                     type: "select",
-                    label: "父目录",
+                    label: this.$t("frameworkmenu.ParentDirectory"),
                     children: this.getFoldersData
                 },
                 "Entity.FolderOnly": {
                     type: "switch",
-                    label: "目录",
+                    label: this.$t("frameworkmenu.Directory"),
                     defaultValue: false
                 },
                 "Entity.ShowOnMenu": {
                     type: "switch",
-                    label: "菜单显示"
+                    label: this.$t("frameworkmenu.ShowOnMenu")
                 },
                 "Entity.IsPublic": {
                     type: "switch",
-                    label: "公开",
+                    label: this.$t("frameworkmenu.Public"),
                     defaultValue: false
                 },
                 "Entity.DisplayOrder": {
                     type: "input",
-                    label: "顺序",
+                    label: this.$t("frameworkmenu.DisplayOrder"),
                     defaultValue: 0,
                     rules: {
                         required: true,
-                        message: "请输入顺序",
+                        message: this.$t(
+                            "frameworkmenu.pleaseEnterDisplayOrder"
+                        ),
                         trigger: "blur"
                     }
                 },
                 "Entity.ICon": {
                     type: "wtmSlot",
-                    label: "图标",
+                    label: this.$t("frameworkmenu.ICon"),
                     span: 24,
                     slotKey: "ICon"
                 }

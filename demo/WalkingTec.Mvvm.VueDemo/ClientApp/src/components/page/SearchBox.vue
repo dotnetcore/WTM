@@ -4,14 +4,14 @@
             <wtm-form-item class="search-but-box">
                 <el-button-group class="button-group">
                     <el-button type="primary" class="btn-search" icon="el-icon-search" :disabled="disabledInput" @click="onSearch">
-                        查询
+                        {{ $t("buttom.search") }}
                     </el-button>
                     <el-button v-if="needCollapse" class="toggle-class" type="primary" @click="toggleCollapse">
                         <i class="fa arrow-down el-icon-arrow-down" :class="{ 'is-active': isActive }" />
                     </el-button>
                 </el-button-group>
                 <el-button v-if="needResetBtn" class="reset-btn" plain type="primary" icon="el-icon-refresh" @click="onReset">
-                    重置
+                    {{ $t("buttom.reset") }}
                 </el-button>
             </wtm-form-item>
         </wtm-create-form>

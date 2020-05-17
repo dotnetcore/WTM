@@ -2,7 +2,7 @@
     <div id="tags-view-container" class="tags-view-container">
         <scroll-pane ref="scrollPane" class="tags-view-wrapper">
             <router-link v-for="tag in visitedViews" ref="tag" :key="tag.path" :class="isActive(tag) ? 'active' : ''" :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }" tag="span" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)" @contextmenu.prevent.native="openMenu(tag, $event)">
-                {{ $t("route." + tag.meta.title) }}
+                {{ isDev ? $t("route." + tag.meta.key) : tag.meta.title }}
                 <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
             </router-link>
         </scroll-pane>
@@ -30,6 +30,7 @@ import VueRouter, { Route, RouteRecord, RouteConfig } from "vue-router";
 import { RoutesModule } from "@/store/modules/routes";
 import { TagsViewModule, ITagView } from "@/store/modules/tags-view";
 import ScrollPane from "./ScrollPane.vue";
+import config from "@/config/index";
 
 @Component({
     name: "TagsView",
@@ -43,6 +44,10 @@ export default class extends Vue {
     private left: number = 0;
     private selectedTag: ITagView = {};
     private affixTags: ITagView[] = [];
+
+    get isDev() {
+        return config.development;
+    }
 
     get visitedViews() {
         return TagsViewModule.visitedViews;
