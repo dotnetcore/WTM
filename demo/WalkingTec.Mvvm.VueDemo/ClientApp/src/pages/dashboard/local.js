@@ -1,4 +1,6 @@
-export default {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
     zh: {
         menu: {
             actionlog: "日志管理",
@@ -8,7 +10,6 @@ export default {
             frameworkmenu: "菜单管理",
             dataprivilege: "数据权限"
         }
-
     },
     en: {
         menu: {
@@ -19,5 +20,6 @@ export default {
             frameworkmenu: "Menus",
             dataprivilege: "Permissions"
         }
-  }
-}
+    }
+};
+//# sourceMappingURL=local.js.map
