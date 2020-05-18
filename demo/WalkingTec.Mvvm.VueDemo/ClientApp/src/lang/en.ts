@@ -6,6 +6,7 @@ export default {
     "用户管理": "User management",
     "菜单管理": "Menu management",
     "数据权限": "Data privileges",
+    "系统管理": "System",
     dashboard: "Dashboard",
     actionlog: "Log",
     frameworkgroup: "Group management",
