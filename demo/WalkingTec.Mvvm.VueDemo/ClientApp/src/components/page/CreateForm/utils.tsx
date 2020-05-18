@@ -45,7 +45,7 @@ export default class Utils {
   private generateWtmFormItemComponent(h, option, component, vm?) {
     const _t = vm || this;
     const attrs = {
-      label: _t.getLanguageByKey(option), // multi-language
+      label: _t.getLanguageByKey(option) + ":", // multi-language
       rules: option.rules,
       prop: option.key ? option.key : "",
       error: option.error,
