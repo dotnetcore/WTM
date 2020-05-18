@@ -44,8 +44,9 @@ export default class Utils {
    */
   private generateWtmFormItemComponent(h, option, component, vm?) {
     const _t = vm || this;
+    const isDetail = _t.status === _t.$actionType.detail;
     const attrs = {
-      label: _t.getLanguageByKey(option) + ":", // multi-language
+      label: _t.getLanguageByKey(option) + (isDetail ? ":" : ""), // multi-language
       rules: option.rules,
       prop: option.key ? option.key : "",
       error: option.error,
@@ -56,7 +57,7 @@ export default class Utils {
       isImg: option.isImg,
     };
     // 展示状态 需要操作的组件
-    if (_t.status === _t.$actionType.detail) {
+    if (isDetail) {
       const value = _.get(_t.sourceFormData || _t.formData, option.key);
       delete attrs.rules;
       // 图片
