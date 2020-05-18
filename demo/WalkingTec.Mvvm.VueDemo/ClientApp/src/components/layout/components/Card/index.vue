@@ -2,7 +2,7 @@
 <template>
     <article class="common-card">
         <div v-if="$route.name" class="title">
-            {{ isDev ? $t("route." + $route.meta.key) : $route.meta.title }}
+            {{ $t("route." + $route.meta.title) }}
         </div>
         <div class="content">
             <slot />
@@ -15,16 +15,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import config from "@/config/index";
 
 @Component({
     name: "card"
 })
-export default class extends Vue {
-    get isDev() {
-        return config.development;
-    }
-}
+export default class extends Vue {}
 </script>
 
 <style lang="less" scoped>

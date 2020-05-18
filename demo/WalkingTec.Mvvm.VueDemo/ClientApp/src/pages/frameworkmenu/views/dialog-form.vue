@@ -43,7 +43,7 @@ export default class Index extends Vue {
         const moduleChildren = RoutesModule.pageList.map(item => {
             return {
                 ...item,
-                Text: item.key ? this.$t(`menu.${item.key}`) : item.Text
+                Text: this.$t(`route.${item.Text}`)
             };
         });
         return {
@@ -56,7 +56,7 @@ export default class Index extends Vue {
                 },
                 "Entity.IsInside": {
                     type: "radioGroup",
-                    label: this.$t("frameworkmenu.radioGroup"),
+                    label: this.$t("frameworkmenu.RadioGroup"),
                     span: 24,
                     children: [
                         {
