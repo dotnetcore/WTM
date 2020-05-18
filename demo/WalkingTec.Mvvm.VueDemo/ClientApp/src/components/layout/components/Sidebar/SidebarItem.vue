@@ -9,7 +9,7 @@
                 <el-menu-item :index="resolvePath(theOnlyOneChild.path)" :class="{ 'submenu-title-noDropdown': isFirstLevel }">
                     <i :class="[theOnlyOneChild.meta.icon || 'el-icon-files']" class="i-icon"></i>
                     <span v-if="theOnlyOneChild.meta.title" slot="title">
-                        {{ isDev ? $t("route." + theOnlyOneChild.meta.key) : theOnlyOneChild.meta.title }}
+                        {{  $t("route." + theOnlyOneChild.meta.title) }}
                     </span>
                 </el-menu-item>
             </sidebar-item-link>
@@ -18,7 +18,7 @@
             <template slot="title">
                 <i :class="[item.meta.icon || 'el-icon-files']" class="i-icon"></i>
                 <span v-if="item.meta && item.meta.title" slot="title">
-                    {{ isDev ? $t("route." + item.meta.key) : item.meta.title }}
+                    {{ $t("route." + item.meta.title) }}
                 </span>
             </template>
             <template v-if="item.children">
@@ -34,7 +34,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Route } from "vue-router";
 import { isExternal } from "@/util/validate";
 import SidebarItemLink from "./SidebarItemLink.vue";
-import config from "@/config/index";
 
 @Component({
     name: "SidebarItem",
@@ -51,10 +50,6 @@ export default class extends Vue {
     private isFirstLevel!: boolean;
     @Prop({ default: "" })
     private basePath!: string;
-
-    get isDev() {
-        return config.development;
-    }
 
     get alwaysShowRootMenu() {
         if (this.item.meta && this.item.meta.alwaysShow) {
