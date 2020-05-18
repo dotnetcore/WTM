@@ -99,7 +99,7 @@ export default {
     delete: "Delete",
     cancel: "Cancel",
     confirm: "Confirm",
-    detail: "detail",
+    detail: "Details",
     custom: "Custom column"
   },
   example: {
