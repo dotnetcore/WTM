@@ -22,8 +22,7 @@ export const constantRoutes: RouteConfig[] = [
                 meta: {
                     title: "dashboard",
                     icon: "el-icon-odometer",
-                    affix: true,
-                    key: "dashboard",
+                    affix: true
                 }
             }
         ]

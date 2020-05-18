@@ -21,25 +21,25 @@ export default class Index extends Vue {
                 "Entity.ID": { isHidden: true },
                 "Entity.GroupCode": {
                     type: "input",
-                    label: this.$t("frameworkmenu.GroupCode"),
+                    label: this.$t("frameworkgroup.GroupCode"),
                     rules: {
                         required: true,
-                        message: this.$t("frameworkmenu.pleaseEnterGroupCode"),
+                        message: this.$t("frameworkgroup.pleaseEnterGroupCode"),
                         trigger: "blur"
                     }
                 },
                 "Entity.GroupName": {
                     type: "input",
-                    label: this.$t("frameworkmenu.GroupName"),
+                    label: this.$t("frameworkgroup.GroupName"),
                     rules: {
                         required: true,
-                        message: this.$t("frameworkmenu.pleaseEnterGroupName"),
+                        message: this.$t("frameworkgroup.pleaseEnterGroupName"),
                         trigger: "blur"
                     }
                 },
                 "Entity.GroupRemark": {
                     type: "input",
-                    label: this.$t("frameworkmenu.GroupRemark")
+                    label: this.$t("frameworkgroup.GroupRemark")
                 }
             }
         };
