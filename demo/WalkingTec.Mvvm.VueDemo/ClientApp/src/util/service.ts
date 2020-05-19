@@ -18,6 +18,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { Notification } from "element-ui"; // Message,
 import { contentType } from "@/config/enum";
 import { AppModule } from "@/store/modules/app";
+import i18n from "@/lang";
 
 class requestBase {
   constructor() {}
@@ -97,16 +98,16 @@ class requestBase {
       }
    */
   requestError(res) {
-    let msg = "接口错误";
+    let msg: string = i18n.t('errorMsg.error').toString();
     const { response, data, message } = res;
     // 导入文件错误信息
     const filterError = (ID?: string) => {
-      let notifyMsg: string = "模版错误！";
+      let notifyMsg: string = i18n.t('errorMsg.template').toString();
       if (ID) {
         notifyMsg = `导入时发生错误, 请查看<a style="text-decoration: underline;" href="/api/_file/downloadFile/${ID}"><i>错误文件</i></a>`;
       }
       Notification({
-        title: "导入失败",
+        title: i18n.t('errorMsg.import').toString(),
         dangerouslyUseHTMLString: true,
         type: "error",
         message: notifyMsg
@@ -114,7 +115,7 @@ class requestBase {
     };
     // 错误类型判断
     if (response) {
-      const { Message, Form } = response.data;
+      const { Message, Form } = response.data || response;
       if (Message) {
         msg = Message[0];
       } else if (Form && Form["Entity.Import"]) {
