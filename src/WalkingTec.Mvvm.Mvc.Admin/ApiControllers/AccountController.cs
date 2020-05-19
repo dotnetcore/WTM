@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest(Mvc.Admin.Program._localizer["LoginFailed"]);
+                return BadRequest(Mvc.Admin.Program._localizer["LoginFailed"].Value);
             }
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
