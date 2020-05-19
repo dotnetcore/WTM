@@ -1,12 +1,5 @@
 export default {
   route: {
-    "日志管理": "Log",
-    "用户组管理": "Group management",
-    "角色管理": "Role management",
-    "用户管理": "User management",
-    "菜单管理": "Menu management",
-    "数据权限": "Data privileges",
-    "系统管理": "System",
     dashboard: "Dashboard",
     actionlog: "Log",
     frameworkgroup: "Group management",
@@ -36,6 +29,8 @@ export default {
     logIn: "Login",
     username: "Username",
     password: "Password",
+    pleaseEnterUsername: "Please Enter User Name",
+    pleaseEnterPassword: "Please Enter Password",
     any: "any",
     thirdparty: "Or connect with",
     thirdpartyTips:
@@ -111,6 +106,12 @@ export default {
     description:
       "Now the management system are basically the form of the spa, it enhances the user experience, but it also increases the possibility of page problems, a small negligence may lead to the entire page deadlock. Fortunately Vue provides a way to catch handling exceptions, where you can handle errors or report exceptions.",
     documentation: "Document introduction"
+  },
+  errorMsg: {
+    msg: "Error",
+    error: "Interface error",
+    template: "Template error",
+    import: "Import failed"
   },
   excel: {
     export: "Export",
