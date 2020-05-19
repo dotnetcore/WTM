@@ -123,13 +123,19 @@
                             <div slot="header">快捷方式</div>
                             <el-row class="lump-wrap" :gutter="10">
                                 <el-col :span="6" v-for="item of shortcutList" :key="item.Value">
-                                    <el-link @click="onPush(item.Url)" :underline="false"><i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>{{ item.Text }}</el-link>
+                                    <el-link @click="onPush(item.Url)" :underline="false"><i :class="[item.Icon ? item.Icon : 'el-icon-edit']"></i>
+                                        <div class="link-ctx">{{ item.Text }}</div>
+                                    </el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>项目文档</el-link>
+                                    <el-link target="_blank" href="https://wtmdoc.walkingtec.cn/" :underline="false"><i class="el-icon-document"></i>
+                                        <div class="link-ctx">项目文档</div>
+                                    </el-link>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>代码生成</el-link>
+                                    <el-link target="_blank" href="/_codegen?ui=vue" :underline="false"><i class="el-icon-s-platform"></i>
+                                        <div class="link-ctx">代码生成</div>
+                                    </el-link>
                                 </el-col>
                             </el-row>
                         </el-card>
@@ -312,6 +318,9 @@ export default class extends Vue {
                 font-size: 14px;
                 text-align: center;
             }
+        }
+        .link-ctx {
+            min-width: 80px;
         }
     }
 }
