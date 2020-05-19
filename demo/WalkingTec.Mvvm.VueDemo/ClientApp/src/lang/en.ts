@@ -1,12 +1,5 @@
 export default {
   route: {
-    "日志管理": "Log",
-    "用户组管理": "Group management",
-    "角色管理": "Role management",
-    "用户管理": "User management",
-    "菜单管理": "Menu management",
-    "数据权限": "Data privileges",
-    "系统管理": "System",
     dashboard: "Dashboard",
     actionlog: "Log",
     frameworkgroup: "Group management",
@@ -99,7 +92,7 @@ export default {
     delete: "Delete",
     cancel: "Cancel",
     confirm: "Confirm",
-    detail: "Detail",
+    detail: "Details",
     custom: "Custom column"
   },
   example: {
