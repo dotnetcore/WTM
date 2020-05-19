@@ -219,6 +219,8 @@ namespace WalkingTec.Mvvm.Core
 
                 //获取数据的Sheet页信息
                 ISheet sheet = xssfworkbook.GetSheetAt(0);
+                sheet.ForceFormulaRecalculation = true;
+                XSSFFormulaEvaluator XE = new XSSFFormulaEvaluator(xssfworkbook);
                 IEnumerator rows = sheet.GetRowEnumerator();
                 var cells = sheet.GetRow(0).Cells;
 
@@ -301,10 +303,17 @@ namespace WalkingTec.Mvvm.Core
                         //获取列的值
                         string value = row.GetCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString();
                         ExcelPropety excelPropety = CopyExcelPropety(ListTemplateProptetys[pIndex]);
+
                         if (excelPropety.DataType == ColumnDataType.Date || excelPropety.DataType == ColumnDataType.DateTime)
                         {
                             ICell cell = row.GetCell(i);
                             value = cell.DateCellValue.ToString();
+                        }
+
+                        if (excelPropety.DataType == ColumnDataType.Text)
+                        {
+                            ICell cell = row.GetCell(i);
+                            value = GetCellFormulaValue(XE, cell, value);
                         }
 
                         if (excelPropety.DataType == ColumnDataType.Dynamic)
@@ -342,6 +351,26 @@ namespace WalkingTec.Mvvm.Core
                 ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
             }
         }
+
+        #region 进行公式计算
+        public string GetCellFormulaValue(XSSFFormulaEvaluator XE, ICell cell, string Value)
+        {
+            if (!string.IsNullOrEmpty(Value) && Value.IndexOf("=") == 0)
+            {
+                try
+                {
+                    string Formula = Value.Substring(1);
+                    cell.SetCellFormula(Formula);
+                    XE.EvaluateFormulaCell(cell);
+                    Value = cell.NumericCellValue.ToString();
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return Value;
+        }
+        #endregion
 
         /// <summary>
         /// 根据模板中的数据，填写导入类的集合中
@@ -886,7 +915,7 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 批量插入数据库操作，支持MySQL和SqlServer
+        /// 批量插入数据库操作，支持SqlServer
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <param name="connection"></param>
@@ -1266,7 +1295,6 @@ namespace WalkingTec.Mvvm.Core
             return null;
         }
         #endregion
-
 
         /// <summary>
         /// 创建重复数据信息
