@@ -29,6 +29,8 @@ export default {
     logIn: "Login",
     username: "Username",
     password: "Password",
+    pleaseEnterUsername: "Please Enter User Name",
+    pleaseEnterPassword: "Please Enter Password",
     any: "any",
     thirdparty: "Or connect with",
     thirdpartyTips:
@@ -106,6 +108,7 @@ export default {
     documentation: "Document introduction"
   },
   errorMsg: {
+    msg: "Error",
     error: "Interface error",
     template: "Template error",
     import: "Import failed"

@@ -128,8 +128,8 @@ class requestBase {
       msg = message;
     }
     Notification.error({
-      title: "error",
-      message: msg
+      title: i18n.t("errorMsg.msg").toString(),
+      message: response.data || msg
     });
   }
 }

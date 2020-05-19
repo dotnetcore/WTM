@@ -10,7 +10,7 @@
                             <slot :name="item.key" :row="{ ...scope.row }" />
                         </template>
                     </el-table-column>
-                    <el-table-column v-else-if="item.isOperate" :key="index" :label="getColsRowItemLabel(item, $t('table.actions'))" :width="item.width || 150" :align="item.align || 'center'" :fixed="item.fixed">
+                    <el-table-column v-else-if="item.isOperate" :key="index" :label="getColsRowItemLabel(item, $t('table.actions'))" :width="item.width || actionsColWidth" :align="item.align || 'center'" :fixed="item.fixed">
                         <template slot-scope="scope">
                             <el-button v-if="item.actions.includes('detail')" v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="colEvents.onDetail(scope.row)">
                                 {{ $t("table.detail") }}
@@ -35,6 +35,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import CustomColumn from "./CustomColumn.vue";
+import { AppModule } from "@/store/modules/app";
 /**
  * table列表&分页 组件组合
  *
@@ -193,6 +194,13 @@ export default class TableBox extends Vue {
         return _.filter(this.tableAttrs.tbHeader, item => {
             return _.includes(this.selCols, item.key);
         });
+    }
+
+    get actionsColWidth() {
+        if (AppModule.language === "en") {
+            return 180;
+        }
+        return 150;
     }
     /**
      * 列文案

@@ -20,12 +20,12 @@ export default class extends Vue {
     value: Date = new Date();
     get shortcuts (): any[] {
         return [
-            "日志管理",
-            "用户组管理",
-            "角色管理",
-            "用户管理",
-            "菜单管理",
-            "数据权限"
+            "actionlog",
+            "frameworkgroup",
+            "frameworkrole",
+            "frameworkuser",
+            "frameworkmenu",
+            "dataprivilege"
         ]
     };
     get shortcutList() {
