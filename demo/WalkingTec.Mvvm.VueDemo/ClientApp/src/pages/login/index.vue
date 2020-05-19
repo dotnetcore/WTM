@@ -1,20 +1,20 @@
 <template>
-  <el-card class="app-login-form">
-    <el-form :model="formData" label-width="0">
-      <h1>WalkingTec MVVM</h1>
-      <el-form-item>
-        <el-input v-model="formData.userid" placeholder="请输入账号" prefix-icon="el-icon-user" />
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="formData.password" @keyup.enter.native="onSubmit" placeholder="请输入密码" prefix-icon="el-icon-lock" show-password />
-      </el-form-item>
-      <el-form-item>
-        <el-button class="submit-but" type="primary" :loading="isloading" :disabled="isDisabled" @click="onSubmit">
-          Log in
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+    <el-card class="app-login-form">
+        <el-form :model="formData" label-width="0">
+            <h1>WalkingTec MVVM</h1>
+            <el-form-item>
+                <el-input v-model="formData.userid" :placeholder="$t('login.pleaseEnterUsername')" prefix-icon="el-icon-user" />
+            </el-form-item>
+            <el-form-item>
+                <el-input v-model="formData.password" @keyup.enter.native="onSubmit" :placeholder="$t('login.pleaseEnterPassword')" prefix-icon="el-icon-lock" show-password />
+            </el-form-item>
+            <el-form-item>
+                <el-button class="submit-but" type="primary" :loading="isloading" :disabled="isDisabled" @click="onSubmit">
+                    Log in
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
@@ -37,6 +37,7 @@ export default class Login extends Vue {
         const { userid, password } = this.formData;
         return !(!!userid && !!password);
     }
+
     onSubmit() {
         this.isloading = true;
         this["login"](this.formData)

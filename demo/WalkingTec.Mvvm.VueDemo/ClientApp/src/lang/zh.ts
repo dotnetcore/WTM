@@ -29,6 +29,8 @@ export default {
     logIn: "登录",
     username: "账号",
     password: "密码",
+    pleaseEnterUsername: "请输入账号",
+    pleaseEnterPassword: "请输入密码",
     any: "随便填",
     thirdparty: "第三方登录",
     thirdpartyTips: "本地不能模拟，请结合自己业务进行模拟！！！"
@@ -100,6 +102,7 @@ export default {
     documentation: "文档介绍"
   },
   errorMsg: {
+    msg: "错误",
     error: "接口错误",
     template: "模版错误",
     import: "导入失败"
