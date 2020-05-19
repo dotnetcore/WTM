@@ -33,7 +33,7 @@ export default class extends Vue {
             this.shortcuts.includes(item.Text)
         ).map(item => ({
             ...item,
-            Text: this.$t(`menu.${item.key}`)
+            Text: this.$t(`route.${item.Text}`)
         }));
     }
     @Action
