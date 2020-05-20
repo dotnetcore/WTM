@@ -7,6 +7,7 @@
  */
 import { message, notification } from "antd";
 import moment from "moment";
+import lodash from "lodash";
 import { ajax, AjaxRequest } from "rxjs/ajax";
 import { Request } from "./Request";
 /** 文件服务器 */
@@ -115,7 +116,9 @@ export class RequestFiles extends Request {
         }
         try {
             const result = await ajax(AjaxRequest).toPromise();
-            this.onCreateBlob(result.response, fileType, fileName).click();
+            const disposition = result.xhr.getResponseHeader('content-disposition');
+            fileName = disposition.match(/filename=(.*?);/)[1];
+            this.onCreateBlob(result.response, fileName).click();
             notification.success({
                 key: "download",
                 message: `文件下载成功`,
@@ -138,22 +141,14 @@ export class RequestFiles extends Request {
      */
     onCreateBlob(
         response,
-        fileType = ".xls",
+        // fileType = ".xls",
         fileName = moment().format("YYYY_MM_DD_hh_mm_ss")
     ) {
         const blob = response;
         const a = document.createElement("a");
         const downUrl = window.URL.createObjectURL(blob);
         a.href = downUrl;
-        switch (blob.type) {
-            case "application/vnd.ms-excel":
-                a.download = fileName + ".xls";
-                break;
-            default:
-                a.download = fileName + fileType;
-                break;
-        }
-        console.log("downUrl", a);
+        a.download = fileName;
         a.addEventListener(
             "click",
             () => {
