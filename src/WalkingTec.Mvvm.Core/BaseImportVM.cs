@@ -309,12 +309,6 @@ namespace WalkingTec.Mvvm.Core
                         string value = row.GetCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString();
                         ExcelPropety excelPropety = CopyExcelPropety(ListTemplateProptetys[pIndex]);
 
-                        if (excelPropety.DataType == ColumnDataType.Date || excelPropety.DataType == ColumnDataType.DateTime)
-                        {
-                            ICell cell = row.GetCell(i);
-                            value = cell.DateCellValue.ToString();
-                        }
-
                         if (excelPropety.DataType == ColumnDataType.Text)
                         {
                             ICell cell = row.GetCell(i);
@@ -501,6 +495,12 @@ namespace WalkingTec.Mvvm.Core
                                     if (string.IsNullOrEmpty(fk) == false)
                                     {
                                         PropertyHelper.SetPropertyValue(SubTypeEntity, fk, entity.GetID());
+                                    }
+
+                                    if (typeof(BasePoco).IsAssignableFrom(SubTypeEntity.GetType()))
+                                    {
+                                        (SubTypeEntity as BasePoco).CreateTime = DateTime.Now;
+                                        (SubTypeEntity as BasePoco).CreateBy = LoginUserInfo?.ITCode;
                                     }
 
                                     //将付好值得SubTableType实例添加到List中
@@ -968,158 +968,6 @@ namespace WalkingTec.Mvvm.Core
                 bulkCopy.WriteToServer(table);
             }
         }
-        #endregion
-
-        #region 上传数据并验证
-        /// <summary>
-        /// 读取模版中的数据
-        /// </summary>
-        private void DoMapList()
-        {
-            try
-            {
-                TemplateData = new List<T>();
-                xssfworkbook = new XSSFWorkbook();
-
-                //初始化模板下拉数据和格式化信息
-                Template.InitExcelData();
-                Template.InitCustomFormat();
-
-                //判断是否上传文件
-                if (UploadFileId == null)
-                {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["PleaseUploadTemplate"] });
-                    return;
-                }
-
-                //通过附件ID，填充Excel
-                var UploadFileInfo = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).SingleOrDefault();
-                xssfworkbook = FileHelper.GetXSSFWorkbook(xssfworkbook, (FileAttachment)UploadFileInfo, ConfigInfo);
-
-                //判断是否上传的是正确的模板数据
-                if (ValidityTemplateType && xssfworkbook.GetSheetAt(1).GetRow(0).Cells[2].ToString() != typeof(T).Name)
-                {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
-                    return;
-                }
-
-                //获取所有ExcelPropety属性
-                List<ExcelPropety> ListEPs = new List<ExcelPropety>();
-                ISheet sheet = xssfworkbook.GetSheetAt(0);
-                System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
-                var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
-                for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
-                {
-                    ExcelPropety ep = (ExcelPropety)propetys[porpetyIndex].GetValue(Template);
-                    ListEPs.Add(ep);
-                }
-
-                //验证模板的列数是否正确
-                var cells = sheet.GetRow(0).Cells;
-                var dynamicColumn = ListEPs.Where(x => x.DataType == ColumnDataType.Dynamic).FirstOrDefault();
-                int columnCount = dynamicColumn == null ? ListEPs.Count : (ListEPs.Count + dynamicColumn.DynamicColumns.Count - 1);
-                if (columnCount != cells.Count)
-                {
-                    ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
-                    return;
-                }
-
-                int pIndex = 0;
-                bool HasSubTable = false;
-                for (int i = 0; i < cells.Count; i++)
-                {
-                    //是否有子表
-                    HasSubTable = ListEPs[pIndex].SubTableType != null ? true : HasSubTable;
-
-                    if (ListEPs[pIndex].DataType != ColumnDataType.Dynamic)
-                    {
-                        if (cells[i].ToString().Trim('*') != ListEPs[pIndex].ColumnName)
-                        {
-                            ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
-                            return;
-                        }
-                        pIndex++;
-                    }
-                    else
-                    {
-                        var listDynamicColumns = ListEPs[i].DynamicColumns;
-                        int dcCount = listDynamicColumns.Count;
-                        for (int dclIndex = 0; dclIndex < dcCount; dclIndex++)
-                        {
-                            if (cells[i].ToString().Trim('*') != listDynamicColumns[dclIndex].ColumnName)
-                            {
-                                ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
-                                break;
-                            }
-                            i = i + 1;
-                        }
-                        i = i - 1;
-                        pIndex++;
-                    }
-                }
-
-                //如果有子表，则设置主表字段非必填
-                if (HasSubTable)
-                {
-                    for (int i = 0; i < cells.Count; i++)
-                    {
-                        ListEPs[i].IsNullAble = ListEPs[i].SubTableType == null ? true : ListEPs[i].IsNullAble;
-                    }
-                }
-
-                int rowIndex = 2;
-                rows.MoveNext();
-                while (rows.MoveNext())
-                {
-                    XSSFRow row = (XSSFRow)rows.Current;
-                    if (IsEmptyRow(row, columnCount))
-                    {
-                        return;
-                    }
-
-                    T result = new T();
-                    int propetyIndex = 0;
-                    for (int i = 0; i < columnCount; i++)
-                    {
-                        ExcelPropety excelPropety = CopyExcelPropety(ListEPs[propetyIndex]);
-                        var pts = propetys[propetyIndex];
-                        string value = row.GetCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString();
-
-                        if (excelPropety.DataType == ColumnDataType.Dynamic)
-                        {
-                            int dynamicColCount = excelPropety.DynamicColumns.Count();
-                            for (int dynamicColIndex = 0; dynamicColIndex < dynamicColCount; dynamicColIndex++)
-                            {
-                                //验证数据类型并添加错误信息
-                                excelPropety.DynamicColumns[dynamicColIndex].ValueValidity(row.GetCell(i + dynamicColIndex, MissingCellPolicy.CREATE_NULL_AS_BLANK).ToString(), ErrorListVM.EntityList, rowIndex);
-                            }
-                            i = i + dynamicColCount - 1;
-                        }
-                        else
-                        {
-                            excelPropety.ValueValidity(value, ErrorListVM.EntityList, rowIndex);
-                        }
-
-                        if (ErrorListVM.EntityList.Count == 0)
-                        {
-
-                            pts.SetValue(result, excelPropety);
-                        }
-                        propetyIndex++;
-                    }
-                    result.ExcelIndex = rowIndex;
-                    TemplateData.Add(result);
-                    rowIndex++;
-                }
-                return;
-            }
-            catch
-            {
-                ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
-            }
-            return;
-        }
-
         #endregion
 
         #region 验证是否空行

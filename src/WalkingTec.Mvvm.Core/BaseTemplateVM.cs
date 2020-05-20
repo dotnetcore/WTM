@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 //依次获取属性字段
                 ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
-                ColumnDataType dateType = excelPropety.DataType;
+                ColumnDataType dateType = (excelPropety.DataType == ColumnDataType.DateTime || excelPropety.DataType == ColumnDataType.Date) ? ColumnDataType.Text : excelPropety.DataType; //日期类型默认设置成Text类型,在赋值时会进行日期验证
 
                 //设置是否保护Excel
                 if (excelPropety.ReadOnly)
