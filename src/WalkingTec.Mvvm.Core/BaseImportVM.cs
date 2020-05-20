@@ -893,7 +893,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else
                 {
-                    DC.AddEntity<P>(item);
+                    DC.Set<P>().Add(item);
                 }
             }
 
