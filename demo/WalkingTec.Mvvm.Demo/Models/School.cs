@@ -35,15 +35,6 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Required(ErrorMessage = "{0}是必填项")]
         public SchoolTypeEnum? SchoolType { get; set; }
 
-        [Display(Name = "班级数量")]
-        public int ClassNumber { get; set; }
-
-        [Display(Name = "基础费用")]
-        public decimal SchoolMoney { get; set; }
-
-        [Display(Name = "是否高级")]
-        public bool IsHgih { get; set; }
-
         [Display(Name = "备注")]
         [Required]
         public string Remark { get; set; }
