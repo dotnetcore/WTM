@@ -172,6 +172,7 @@ namespace WalkingTec.Mvvm.Core
                 case ColumnDataType.Date:
                 case ColumnDataType.DateTime:
                     //因为DateTime类型，添加Validation报错，所以去掉
+                    dataStyle.DataFormat = dataFormat.GetFormat("yyyy-MM-dd HH:mm:ss");
                     break;
                 case ColumnDataType.Number:
                     this.MinValueOrLength = string.IsNullOrEmpty(this.MinValueOrLength) ? long.MinValue.ToString() : this.MinValueOrLength;
