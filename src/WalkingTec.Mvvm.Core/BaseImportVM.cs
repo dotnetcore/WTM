@@ -101,6 +101,11 @@ namespace WalkingTec.Mvvm.Core
         protected DuplicatedInfo<P> finalInfo;
 
         /// <summary>
+        /// 是否存在主子表
+        /// </summary>
+        protected bool HasSubTable { get; set; }
+
+        /// <summary>
         /// 是否覆盖已有数据
         /// </summary>
         public bool IsOverWriteExistData { get; set; }
@@ -244,7 +249,7 @@ namespace WalkingTec.Mvvm.Core
 
                 //【CHECK】判断字段是否根据顺序能一对一相对应。  //是否可以去除？
                 int pIndex = 0;
-                bool HasSubTable = false;
+                HasSubTable = false;
                 for (int i = 0; i < cells.Count; i++)
                 {
                     //是否有子表
@@ -881,8 +886,8 @@ namespace WalkingTec.Mvvm.Core
                     (item as PersistPoco).IsValid = true;
                 }
 
-                //如果是这2种数据库，进行Bulk插入
-                if (ConfigInfo.DbType == DBTypeEnum.SqlServer)
+                //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
+                if (ConfigInfo.DbType == DBTypeEnum.SqlServer && !HasSubTable)
                 {
                     ListAdd.Add(item);
                 }
