@@ -196,6 +196,10 @@
         {"date":"2020-04-27","name":"*鑫","amount":10.00,"from":"支付宝","comment":"-"},
         {"date":"2020-04-27","name":"*鑫","amount":10.00,"from":"支付宝","comment":"-"},
         {"date":"2020-04-27","name":"*滨","amount":100.00,"from":"支付宝","comment":"-"},
-        {"date":"2020-04-29","name":"*松谷","amount":20.00,"from":"支付宝","comment":"-"}
+        {"date":"2020-04-29","name":"*松谷","amount":20.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-05-07","name":"*辉","amount":10.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-05-07","name":"*辉","amount":5.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-05-09","name":"*涛","amount":20.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-05-11","name":"*明军","amount":20.00,"from":"支付宝","comment":"-"}
     ]
 }
