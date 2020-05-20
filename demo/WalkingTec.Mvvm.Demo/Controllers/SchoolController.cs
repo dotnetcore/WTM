@@ -1,14 +1,14 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using NPOI.HSSF.Util;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
-using WalkingTec.Mvvm.Mvc.Binders;
-using WalkingTec.Mvvm.Demo.Models;
-using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Auth.Attribute;
-using System;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Binders;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -256,7 +256,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                if(vm.Entity.Majors == null)
+                if (vm.Entity.Majors == null)
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
@@ -297,7 +297,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                if(vm.Entity.Majors == null)
+                if (vm.Entity.Majors == null)
                 {
                     vm.Entity.Majors = new System.Collections.Generic.List<Major>();
                 }
@@ -318,15 +318,16 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("Export")]
         [HttpPost]
-        public IActionResult ExportExcel(SchoolListVM vm)
+        public ActionResult ExportExcel(SchoolListVM vm)
         {
-            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            vm.ExportMaxCount = 5; //自定义每个Excel最多数据行数，默认是100万
+            vm.ExportTitleBackColor = HSSFColor.Black.Index;
+            vm.ExportTitleFontColor = HSSFColor.White.Index;
+            return vm.GetExportData();
         }
 
         [HttpPost]
-        public IActionResult Download(long id,long[] ids)
+        public IActionResult Download(long id, long[] ids)
         {
             return File(new byte[0], "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
