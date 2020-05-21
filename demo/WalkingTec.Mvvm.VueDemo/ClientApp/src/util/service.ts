@@ -167,6 +167,9 @@ const _request = (option, serverHost?) => {
 
   return axios({ ...axiosReq })
     .then(res => {
+      if (option.contentType === contentType.stream) {
+          return res;
+      }
       return res.data;
     })
     .catch(error => {
