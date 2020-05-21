@@ -3,22 +3,14 @@
  * @param response
  */
 const createBlob = (
-    response,
-    fileName: string | number = new Date().getTime(),
-    fileType = ".xls"
+    response
 ) => {
-    const blob = response;
+    const blob = response.data;
+    const fileName = response.headers['content-disposition'].match(/filename=(.*?);/)[1];
     const a = document.createElement("a");
     const downUrl = window.URL.createObjectURL(blob);
     a.href = downUrl;
-    switch (blob.type) {
-    case "application/vnd.ms-excel":
-        a.download = fileName + ".xls";
-        break;
-    default:
-        a.download = fileName + fileType;
-        break;
-    }
+    a.download = fileName;
     a.addEventListener(
         "click",
         () => {

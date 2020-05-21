@@ -152,7 +152,7 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
         Limit: this["pageDate"].pageSize
       };
       this.exportExcel(parameters).then(res => {
-        createBlob(res, this["$route"].name + "all");
+        createBlob(res);
         this["$notify"]({
           title: this.$t("form.ExportSucceeded"),
           type: "success"
@@ -165,7 +165,7 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
     onExport() {
       const parameters = listToString(this["selectData"], "ID");
       this.exportExcelByIds(parameters).then(res => {
-        createBlob(res, this["$route"].name);
+        createBlob(res);
         this["$notify"]({
           title: this.$t("form.ExportSucceeded"),
           type: "success"
