@@ -1078,6 +1078,10 @@ namespace WalkingTec.Mvvm.Core
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Index = id.Value, Message = e.Message });
                 }
+                else
+                {
+                    ErrorListVM.EntityList.Add(new ErrorMessage { Index = 0, Message = e.Message });
+                }
             }
         }
         #endregion
