@@ -697,11 +697,14 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var f in fas)
                 {
                     var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
-                    foreach (var sub in subs)
+                    if (subs != null)
                     {
-                        fileids.Add(sub.FileId);
+                        foreach (var sub in subs)
+                        {
+                            fileids.Add(sub.FileId);
+                        }
+                        f.SetValue(Entity, null);
                     }
-                    f.SetValue(Entity, null);
                 }
                 if (typeof(TModel) != typeof(FileAttachment))
                 {
