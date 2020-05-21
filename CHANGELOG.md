@@ -2,6 +2,19 @@
 
 ## v3.5.x （2.5.x同步更新）
 
+##3.6.0 以及 2.6.0 (2020-5-22)
+* **新增：**  导出优化，支持xlsx格式，单个excel文件现在最大可导出100万行，可设置单个文件最大行数，超过最大行数时会自动下载包含多个excel文件的zip包。详情请参见文档https://wtmdoc.walkingtec.cn/#/VM/Export
+* **新增：**  导入优化，支持xlsx格式，支持公式，使用sqlserver时自动使用bulk导入，提高大批量数据的导入速度。
+* **新增：**  ListVM中的MakeGridHeader方法现在可以正确绑定任何其定义lambda表达式
+* **新增：**  修复有关联关系的数据无法正常删除的bug
+* **修改：**  Layui模式修复默认下载按钮失效的bug
+* **修改：**  Layui模式修复Display TagHelper绑定附件时显示错误的bug
+* **修改：**  React模式修复代码生成器生成一对多控件时的问题
+* **修改：**  Vue模式增加多语言支持
+* **修改：**  VUE模式修复一些近期反馈的小bug
+
+
+
 ##3.5.7 以及 2.5.7 (2020-5-6)
 * **新增：**  SubmitButton中新增SubmitUrl属性，用于多个提交按钮提交到不同的地址
 * **新增：**  BaseController和BaseApiController增加可重写的GetLoginUserInfo方法，用于自定义用户认证
