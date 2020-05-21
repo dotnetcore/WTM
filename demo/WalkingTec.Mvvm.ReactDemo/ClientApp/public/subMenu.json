@@ -5,18 +5,11 @@
     "Text": "MenuKey.SystemManagement",
     "Url": null
   },
- 
   {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
-    "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
-    "Text": "MenuKey.MenuMangement",
-    "Url": "/frameworkmenu"
-  },
-  {
-    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
-    "Id": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
-    "Text": "MenuKey.RoleManagement",
-    "Url": "/frameworkrole"
+    "Id": "8b982671-cf11-4be8-b745-8903bd1df431",
+    "Text": "MenuKey.Log",
+    "Url": "/actionlog"
   },
   {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
@@ -26,12 +19,11 @@
   },
   {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
-    "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
-    "Text": "MenuKey.DataPrivilege",
-    "Url": "/dataprivilege"
+    "Id": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+    "Text": "MenuKey.RoleManagement",
+    "Url": "/frameworkrole"
   },
-  
-   {
+  {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
     "Id": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
     "Text": "MenuKey.GroupManagement",
@@ -39,9 +31,15 @@
   },
   {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
-    "Id": "8b982671-cf11-4be8-b745-8903bd1df431",
-    "Text": "MenuKey.Log",
-    "Url": "/actionlog"
+    "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
+    "Text": "MenuKey.MenuMangement",
+    "Url": "/frameworkmenu"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
+    "Text": "MenuKey.DataPrivilege",
+    "Url": "/dataprivilege"
   },
   {
     "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
@@ -67,7 +65,7 @@
     "Text": "MenuKey.test.step2",
     "Url": "/_test3"
   },
-    {
+  {
     "ParentId": null,
     "Id": "401f84d3-5a77-4b30-92c4-9c723ed2934",
     "Text": "Demo",

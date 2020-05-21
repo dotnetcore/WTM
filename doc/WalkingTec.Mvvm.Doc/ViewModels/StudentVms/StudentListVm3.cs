@@ -19,29 +19,33 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
 
         public StudentListVm3()
         {
+        }
+
+        protected override void InitVM()
+        {
             AllDeps = new List<TreeSelectListItem>{
                 new TreeSelectListItem
                 {
-                  Text = "部门1",
+                  Text = Localizer["Dep"]+ "1",
                   Id = "00000000-0000-0000-0000-000000000001",
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
-                          Text = "部门1-1",
+                          Text = Localizer["Dep"]+ "1-1",
                           Id = "00000000-0000-0000-0000-000000000002",
                           ParentId = "00000000-0000-0000-0000-000000000001",
                           Children = new List<TreeSelectListItem>
                           {
                               new TreeSelectListItem
                               {
-                                    Text = "部门1-1-1",
+                                    Text = Localizer["Dep"]+ "1-1-1",
                                     Id = "00000000-0000-0000-0000-000000000003",
                                     ParentId = "00000000-0000-0000-0000-000000000002",
                               },
                               new TreeSelectListItem
                               {
-                                    Text = "部门1-1-2",
+                                    Text = Localizer["Dep"]+ "1-1-2",
                                     Id = "00000000-0000-0000-0000-000000000004",
                                     ParentId = "00000000-0000-0000-0000-000000000002",
                               }
@@ -50,13 +54,13 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门1-2",
+                          Text = Localizer["Dep"]+ "1-2",
                           Id = "00000000-0000-0000-0000-000000000005",
                           ParentId = "00000000-0000-0000-0000-000000000001",
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门1-3",
+                          Text = Localizer["Dep"]+ "1-3",
                           Id = "00000000-0000-0000-0000-000000000006",
                           ParentId = "00000000-0000-0000-0000-000000000001",
                       }
@@ -64,19 +68,19 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 },
                 new TreeSelectListItem
                 {
-                  Text = "部门2",
+                  Text = Localizer["Dep"]+ "2",
                   Id = "00000000-0000-0000-0000-000000000007",
                   Children = new List<TreeSelectListItem>()
                   {
                       new TreeSelectListItem
                       {
-                          Text = "部门2-1",
+                          Text = Localizer["Dep"]+ "2-1",
                           Id = "00000000-0000-0000-0000-000000000008",
                           ParentId = "00000000-0000-0000-0000-000000000007",
                       },
                       new TreeSelectListItem
                       {
-                          Text = "部门2-2",
+                          Text = Localizer["Dep"]+ "2-2",
                           Id = "00000000-0000-0000-0000-000000000009",
                           ParentId = "00000000-0000-0000-0000-000000000007",
                       }
@@ -84,7 +88,7 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 },
                 new TreeSelectListItem
                 {
-                  Text = "部门3",
+                  Text = Localizer["Dep"]+ "3",
                   Id = "00000000-0000-0000-0000-000000000010",
                 }
 
@@ -94,39 +98,39 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 new TreeSelectListItem
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Text = "内部地址",
+                    Text = "Local",
                     Children = new List<TreeSelectListItem>
                     {
                         new TreeSelectListItem
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Text = "简介",
-                            Url = "/QuickStart/Intro"
+                            Text = "Intro",
+                            Url = "/QuickStart/Intro?h=1"
                         },
                         new TreeSelectListItem
                         {
                             Id = Guid.NewGuid().ToString(),
                             Text = "FAQ",
-                            Url = "/QuickStart/faq"
+                            Url = "/QuickStart/faq?h=1"
                         },
                     }
                 },
                 new TreeSelectListItem
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Text = "外部地址",
+                    Text = "Outside",
                     Children = new List<TreeSelectListItem>
                     {
                         new TreeSelectListItem
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Text = "必应",
+                            Text = "Bing",
                             Url = "https://www.bing.com"
                         },
                         new TreeSelectListItem
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Text = "百度",
+                            Text = "Baidu",
                             Url = "https://www.baidu.com"
                         }
 
@@ -134,7 +138,6 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
                 },
             };
         }
-
 
         protected override List<GridAction> InitGridAction()
         {
@@ -158,6 +161,76 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
 
         public override IOrderedQueryable<Student> GetSearchQuery()
         {
+            AllDeps = new List<TreeSelectListItem>{
+                new TreeSelectListItem
+                {
+                  Text = Localizer["Dep"]+ "1",
+                  Id = "00000000-0000-0000-0000-000000000001",
+                  Children = new List<TreeSelectListItem>()
+                  {
+                      new TreeSelectListItem
+                      {
+                          Text = Localizer["Dep"]+ "1-1",
+                          Id = "00000000-0000-0000-0000-000000000002",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
+                          Children = new List<TreeSelectListItem>
+                          {
+                              new TreeSelectListItem
+                              {
+                                    Text = Localizer["Dep"]+ "1-1-1",
+                                    Id = "00000000-0000-0000-0000-000000000003",
+                                    ParentId = "00000000-0000-0000-0000-000000000002",
+                              },
+                              new TreeSelectListItem
+                              {
+                                    Text = Localizer["Dep"]+ "1-1-2",
+                                    Id = "00000000-0000-0000-0000-000000000004",
+                                    ParentId = "00000000-0000-0000-0000-000000000002",
+                              }
+
+                          }
+                      },
+                      new TreeSelectListItem
+                      {
+                          Text = Localizer["Dep"]+ "1-2",
+                          Id = "00000000-0000-0000-0000-000000000005",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
+                      },
+                      new TreeSelectListItem
+                      {
+                          Text = Localizer["Dep"]+ "1-3",
+                          Id = "00000000-0000-0000-0000-000000000006",
+                          ParentId = "00000000-0000-0000-0000-000000000001",
+                      }
+                  }
+                },
+                new TreeSelectListItem
+                {
+                  Text = Localizer["Dep"]+ "2",
+                  Id = "00000000-0000-0000-0000-000000000007",
+                  Children = new List<TreeSelectListItem>()
+                  {
+                      new TreeSelectListItem
+                      {
+                          Text = Localizer["Dep"]+ "2-1",
+                          Id = "00000000-0000-0000-0000-000000000008",
+                          ParentId = "00000000-0000-0000-0000-000000000007",
+                      },
+                      new TreeSelectListItem
+                      {
+                          Text = Localizer["Dep"]+ "2-2",
+                          Id = "00000000-0000-0000-0000-000000000009",
+                          ParentId = "00000000-0000-0000-0000-000000000007",
+                      }
+                  }
+                },
+                new TreeSelectListItem
+                {
+                  Text = Localizer["Dep"]+ "3",
+                  Id = "00000000-0000-0000-0000-000000000010",
+                }
+
+            };
             var flat = AllDeps.FlatTreeSelectList();
             var current = flat.Where(x => x.Id == Searcher.DepId?.ToString()).FirstOrDefault();
             List<Guid?> depids = new List<Guid?>();
@@ -169,16 +242,16 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
             }
             List<Student> data = new List<Student>
             {
-                new Student{ LoginName = "dingyi", Name="丁一", Sex= Models.SexEnum.Male, ExcelIndex = 0, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Id), DepName = AllDeps[0].Text} },
-                new Student{ LoginName = "liuer", Name="刘二", Sex= Models.SexEnum.Male,  ExcelIndex = 1, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Id), DepName = AllDeps[0].Children[0].Text} },
-                new Student{ LoginName = "zhangsan", Name="张三", Sex= Models.SexEnum.Male,  ExcelIndex = 2, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[0].Id), DepName = AllDeps[0].Children[0].Children[0].Text} },
-                new Student{ LoginName = "lisi", Name="李四", Sex= Models.SexEnum.Male,  ExcelIndex = 3, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[1].Id), DepName = AllDeps[1].Text} },
-                new Student{ LoginName = "wangwu", Name="王五", Sex= Models.SexEnum.Male,  ExcelIndex = 4, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[1].Id), DepName = AllDeps[0].Children[1].Text} },
-                new Student{ LoginName = "zhaoliu", Name="赵六", Sex= Models.SexEnum.Female,  ExcelIndex = 5, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[2].Id), DepName = AllDeps[0].Children[2].Text} },
-                new Student{ LoginName = "qianqi", Name="钱七", Sex= Models.SexEnum.Female, ExcelIndex = 6, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Id), DepName = AllDeps[1].Text} },
-                new Student{ LoginName = "qianqi", Name="冯八", Sex= Models.SexEnum.Female, ExcelIndex = 7, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Children[0].Id), DepName = AllDeps[1].Children[0].Text} },
-                new Student{ LoginName = "zhoujiu", Name="周九", Sex= Models.SexEnum.Female,  ExcelIndex = 8, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Children[1].Id), DepName = AllDeps[1].Children[1].Text} },
-                new Student{ LoginName = "wushi", Name="吴十", Sex= Models.SexEnum.Female,  ExcelIndex = 9, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[2].Id), DepName = AllDeps[2].Text} },
+                new Student{ LoginName = "dingyi", Name="User1", Sex= Models.SexEnum.Male, ExcelIndex = 0, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Id), DepName = AllDeps[0].Text} },
+                new Student{ LoginName = "liuer", Name="User2", Sex= Models.SexEnum.Male,  ExcelIndex = 1, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Id), DepName = AllDeps[0].Children[0].Text} },
+                new Student{ LoginName = "zhangsan", Name="User3", Sex= Models.SexEnum.Male,  ExcelIndex = 2, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[0].Id), DepName = AllDeps[0].Children[0].Children[0].Text} },
+                new Student{ LoginName = "lisi", Name="User4", Sex= Models.SexEnum.Male,  ExcelIndex = 3, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[0].Children[1].Id), DepName = AllDeps[1].Text} },
+                new Student{ LoginName = "wangwu", Name="User5", Sex= Models.SexEnum.Male,  ExcelIndex = 4, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[1].Id), DepName = AllDeps[0].Children[1].Text} },
+                new Student{ LoginName = "zhaoliu", Name="User6", Sex= Models.SexEnum.Female,  ExcelIndex = 5, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[0].Children[2].Id), DepName = AllDeps[0].Children[2].Text} },
+                new Student{ LoginName = "qianqi", Name="User7", Sex= Models.SexEnum.Female, ExcelIndex = 6, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Id), DepName = AllDeps[1].Text} },
+                new Student{ LoginName = "qianqi", Name="User8", Sex= Models.SexEnum.Female, ExcelIndex = 7, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Children[0].Id), DepName = AllDeps[1].Children[0].Text} },
+                new Student{ LoginName = "zhoujiu", Name="User9", Sex= Models.SexEnum.Female,  ExcelIndex = 8, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[1].Children[1].Id), DepName = AllDeps[1].Children[1].Text} },
+                new Student{ LoginName = "wushi", Name="User10", Sex= Models.SexEnum.Female,  ExcelIndex = 9, IsValid = true, ID = Guid.NewGuid(),Department = new Department{ ID = new Guid(AllDeps[2].Id), DepName = AllDeps[2].Text} },
             };
 
             var query = data.AsQueryable().Where(x =>

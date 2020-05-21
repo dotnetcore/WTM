@@ -23,6 +23,7 @@ import DialogForm from "./views/dialog-form.vue";
 import store from "./store/index";
 // 查询参数, table列 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER, $enums$ } from "./config";
+import i18n from "@/lang";
 
 @Component({
     name: "$modelname$",

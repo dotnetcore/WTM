@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,26 +9,26 @@ namespace WalkingTec.Mvvm.Doc.Models
 {
     public class Major : BasePoco
     {
-        [Display(Name = "专业编码")]
+        [Display(Name = "MajorCode")]
         [Required(ErrorMessage = "{0}是必填项")]
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
         [StringLength(3)]
         public string MajorCode { get; set; }
 
-        [Display(Name = "专业名称")]
+        [Display(Name = "MajorName")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
         public string MajorName { get; set; }
 
-        [Display(Name = "备注")]
+        [Display(Name = "Remark")]
         public string Remark { get; set; }
 
-        [Display(Name = "所属学校")]
+        [Display(Name = "School")]
         public School School { get; set; }
 
-        [Display(Name = "学生")]
+        [Display(Name = "Student")]
         public List<StudentMajor> Students { get; set; }
-        [Display(Name = "学生")]
+        [Display(Name = "Student")]
         public List<StudentMajor> Students2 { get; set; }
 
     }

@@ -202,7 +202,8 @@
         </wt:tabcontents>
     </wt:tab>
 
-<script>layui.code({ about: false });
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
     layui.table.init('parse-table-demo', {
         limit: 100, page: false
     });
@@ -212,4 +213,7 @@
     function onChangeCallback(value, sliderIns) {
         ff.Alert(value[0] + '-' + value[1]);
     }
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

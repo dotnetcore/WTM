@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="Custom primary key">
   <p>Since V2.3.5, the framework supports user-defined primary key categories. In addition to the guid, it also supports auto increment int, long, and string types.</p>
   <p>The code generator of the framework can accurately identify the primary key type in the model and generate the corresponding code.</p>
@@ -9,7 +10,7 @@ public class Student : BasePoco
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public new int ID { get; set; }
 
-    // 。。。。 其他属性
+    // 。。。。 other properties
 }
     </wt:code>
 </wt:fieldset>
@@ -24,7 +25,7 @@ public class Student : BasePoco
     [Key]
     public new string ID { get; set; }
 
-    // 。。。。 其他属性
+    // 。。。。 other properties
 }
     </wt:code>
 </wt:fieldset>
@@ -40,3 +41,6 @@ public class Student : BasePoco
   <script>
     layui.use('code', function () { layui.code({ about: false }) })
   </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

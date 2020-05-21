@@ -9,16 +9,16 @@ namespace WalkingTec.Mvvm.Doc.Models
 {
     public class Department : BasePoco,ITreeData<Department>
     {
-        [Display(Name = "部门名称")]
+        [Display(Name = "DepName")]
         [Required(ErrorMessage = "{0}是必填项")]
         public string DepName { get; set; }
 
         public List<Department> Children { get; set; }
 
-        [Display(Name = "上级部门")]
+        [Display(Name = "ParentDep")]
         public Department Parent { get; set; }
 
-        [Display(Name = "上级部门")]
+        [Display(Name = "ParentDep")]
         public Guid? ParentId { get; set; }
     }
 }

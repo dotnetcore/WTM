@@ -1,4 +1,5 @@
-﻿<style>
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
     a {
         color: #01aaed
     }
@@ -44,3 +45,6 @@
         <p>数据权限是标名那些用户具有哪些数据的查看权限。数据权限可以配置到用户组也可以配置到用户。</p>
     </wt:quote>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

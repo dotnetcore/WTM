@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.Config = NuGet.Config
 		QA.md = QA.md
 		README.md = README.md
+		README.zh-CN.md = README.zh-CN.md
 		version.props = version.props
 	EndProjectSection
 EndProject
@@ -22,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{DE184A47-C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.TagHelpers.LayUI", "src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj", "{0401952E-D2BB-40CB-9F1B-8008BB947631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalkingTec.Mvvm.Core", "src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj", "{5FF462FC-FD3F-4321-BE59-DF206C9B78FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Core", "src\WalkingTec.Mvvm.Core\WalkingTec.Mvvm.Core.csproj", "{5FF462FC-FD3F-4321-BE59-DF206C9B78FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalkingTec.Mvvm.Mvc", "src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj", "{4207C275-FDCD-4681-AAAC-23228294EC27}"
 EndProject

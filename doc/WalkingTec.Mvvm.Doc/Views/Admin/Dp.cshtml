@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="数据权限-模块截图">
     <img src="~/imgs/admin-dataprivilege.png" />
 </wt:fieldset>
@@ -16,7 +17,7 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
     .ConfigureServices(x =&gt;
     {
         List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-        pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.Name));
+        pris.Add(new DataPrivilegeInfo&lt;School&gt;("学校", m =&gt; m.SchoolName));
         x.AddFrameworkService( dataPrivilegeSettings: pris);
         x.AddLayui();
     })
@@ -29,14 +30,14 @@ public static IWebHost BuildWebHost(string[] args) =&gt;
         配置如下代码：
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校", m =&gt; m.SchoolName));
 x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>当数据权限有多个的时候，继续在此添加即可，例如：</p>
         <wt:code>
 List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
-pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校权限", m =&gt; m.Name));
-pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "专业权限", m =&gt; m.Name));
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "学校权限", m =&gt; m.SchoolName));
+pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "专业权限", m =&gt; m.MajorName));
 x.AddFrameworkService( dataPrivilegeSettings: pris);
         </wt:code>
         <p>
@@ -81,3 +82,6 @@ public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
         如果你的数据权限是继承了ITreeData的模型，当你配置了父层的权限，框架也会去搜索它包含的子层数据
     </ol>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

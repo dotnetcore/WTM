@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -125,12 +126,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (vm != null)
                 {
-                    url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                    url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
                 }
             }
             else
             {
-                url += $"&_DONOT_USE_CS={ConnectionString}";
+                url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
 
             output.PreElement.SetHtmlContent($@"

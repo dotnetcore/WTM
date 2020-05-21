@@ -74,7 +74,7 @@
                         <wt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" />
                     </wt:row>
                 </wt:searchpanel>
-                <wt:grid vm="@Model.ListVm" use-local-data="true"/>
+                <wt:grid vm="@Model.ListVm" use-local-data="true" height="300"/>
             </wt:tabcontent>
             <wt:tabcontent>
                 <wt:code>
@@ -85,7 +85,7 @@
         &ltwt:combobox field="ListVm.Searcher.IsValid" empty-text="全部" /&gt
     &lt/wt:row&gt
 &lt/wt:searchpanel&gt
-&ltwt:grid vm="@@Model.ListVm" /&gt
+&ltwt:grid vm="@@Model.ListVm" height="300" /&gt
                 </wt:code>
             </wt:tabcontent>
         </wt:tabcontents>
@@ -188,3 +188,6 @@
     <script>
     layui.use('code',function(){layui.code({ about: false })})
     </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

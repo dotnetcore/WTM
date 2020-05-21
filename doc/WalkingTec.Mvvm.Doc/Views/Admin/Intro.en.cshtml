@@ -1,4 +1,5 @@
-﻿<style>
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
     a {
         color: #01aaed
     }
@@ -44,3 +45,6 @@
         <p>Data permission refers to assign certain data permission to certain users . Data permissions can be configured to user groups or users.</p>
     </wt:quote>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

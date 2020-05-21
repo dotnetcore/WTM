@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         private BaseCRUDVM<School> _schoolvm = new BaseCRUDVM<School>();
         private BaseCRUDVM<Major> _majorvm = new BaseCRUDVM<Major>();
         private BaseCRUDVM<Student> _studentvm = new BaseCRUDVM<Student>();
+        private BaseCRUDVM<GoodsSpecification> _goodsvm = new BaseCRUDVM<GoodsSpecification>();
         private string _seed;
 
         public BaseCRUDVMTest()
@@ -22,18 +23,22 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _schoolvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
             _studentvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
+            _goodsvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
 
             _schoolvm.Session = new MockSession();
             _majorvm.Session = new MockSession();
             _studentvm.Session = new MockSession();
+            _goodsvm.Session = new MockSession();
 
             _schoolvm.MSD = new MockMSD();
             _majorvm.MSD = new MockMSD();
             _studentvm.MSD = new MockMSD();
+            _goodsvm.MSD = new MockMSD();
 
             _schoolvm.LoginUserInfo = new LoginUserInfo { ITCode = "schooluser" };
             _majorvm.LoginUserInfo = new LoginUserInfo { ITCode = "majoruser" };
             _studentvm.LoginUserInfo = new LoginUserInfo { ITCode = "studentuser" };
+            _goodsvm.LoginUserInfo = new LoginUserInfo { ITCode = "goodsuser" };
 
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
@@ -196,7 +201,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 Assert.AreEqual(1, context.Set<Student>().Count());
                 _studentvm.DC = context;
-                _studentvm.Entity = new Student { ID = s.ID };
+                _studentvm.Entity = context.Set<Student>().Where(x=>x.ID == s.ID).FirstOrDefault();
                 _studentvm.DoDelete();
             }
 
@@ -204,11 +209,54 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 Assert.AreEqual(1, context.Set<Student>().Count());
                 var rv = context.Set<Student>().ToList()[0];
+                Assert.AreEqual(false, rv.IsValid);
                 Assert.AreEqual("studentuser", rv.UpdateBy);
                 Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
             }
 
         }
+
+
+        [TestMethod]
+        [Description("Persist外键删除")]
+        public void One2ManyTablePersistDelete()
+        {
+            GoodsCatalog gc = new GoodsCatalog
+            {
+                IsValid = true,
+                Name = "c1",
+                OrderNum = 2
+            };
+            _goodsvm.DC.AddEntity(gc);
+            _goodsvm.DC.SaveChanges();
+
+            GoodsSpecification g = new GoodsSpecification();
+            g.Name = "g1";
+            g.OrderNum = 1;
+            g.IsValid = true;
+            g.CatalogId = gc.ID;
+            _goodsvm.Entity = g;
+            _goodsvm.DoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
+                _goodsvm.DC = context;
+                _goodsvm.Entity = context.Set<GoodsSpecification>().Include(x=>x.Catalog).Where(x => x.ID == g.ID).FirstOrDefault();
+                _goodsvm.DoDelete();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(1, context.Set<GoodsSpecification>().Count());
+                var rv = context.Set<GoodsSpecification>().ToList()[0];
+                Assert.AreEqual(false, rv.IsValid);
+                Assert.AreEqual("goodsuser", rv.UpdateBy);
+                Assert.IsTrue(DateTime.Now.Subtract(rv.UpdateTime.Value).Seconds < 10);
+            }
+
+        }
+
 
         [TestMethod]
         [Description("一对多主表删除")]
@@ -220,7 +268,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 var id = context.Set<School>().AsNoTracking().First().ID;
                 _schoolvm.DC = context;
-                _schoolvm.Entity = new School { ID = id };
+                _schoolvm.Entity = context.Set<School>().Include(x=>x.Majors).Where(x => x.ID == id).FirstOrDefault();
                 _schoolvm.DoDelete();
             }
 
@@ -229,6 +277,29 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 Assert.AreEqual(0, context.Set<School>().Count());
             }
         }
+
+        [TestMethod]
+        [Description("一对多子表删除")]
+        public void One2ManySubDelete()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<Major>().AsNoTracking().First().ID;
+                var m = context.Set<Major>().Include(x => x.School).Where(x => x.ID == id).FirstOrDefault();
+                _majorvm.DC = context;
+                _majorvm.Entity = m;
+                _majorvm.DoDelete();
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                Assert.AreEqual(1, context.Set<Major>().Count());
+            }
+        }
+
+
 
         [TestMethod]
         [Description("多对多主表删除")]
@@ -240,7 +311,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 var id = context.Set<Student>().AsNoTracking().First().ID;
                 _studentvm.DC = context;
-                _studentvm.Entity = new Student { ID = id };
+                _studentvm.Entity = context.Set<Student>().Include(x => x.StudentMajor).Where(x => x.ID == id).FirstOrDefault();
                 _studentvm.DoRealDelete();
             }
 
@@ -266,7 +337,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             {
                 Assert.AreEqual(1, context.Set<Student>().Count());
                 _studentvm.DC = context;
-                _studentvm.Entity = new Student { ID = s.ID };
+                _studentvm.Entity = context.Set<Student>().Include(x => x.StudentMajor).Where(x => x.ID == s.ID).FirstOrDefault();
                 _studentvm.DoRealDelete();
             }
 
@@ -322,6 +393,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             }
         }
+
 
         [TestMethod]
         [Description("多对多添加")]
@@ -479,6 +551,59 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             }
         }
+
+        [TestMethod]
+        [Description("一对多修改子表")]
+        public void One2ManyDoEditSub()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                var mid = context.Set<Major>().Select(x => x.ID).First();
+
+                Major m = new Major { ID = mid };
+                m.MajorCode = "maaa";
+                m.MajorName = "mbbb";
+                m.School = new School
+                {
+                    ID = id,
+                    SchoolName = "aaa",
+                    SchoolCode = "bbb",
+                    Remark = "ccc"
+                };
+
+                _majorvm.Entity = m;
+                _majorvm.DC = context;
+                _majorvm.FC.Add("Entity.MajorCode", null);
+                _majorvm.FC.Add("Entity.MajorName", null);
+
+                _schoolvm.Entity = m.School;
+                _schoolvm.DC = context;
+                _schoolvm.FC.Add("Entity.SchoolCode", null);
+                _schoolvm.FC.Add("Entity.SchoolName", null);
+
+                _schoolvm.DoEdit(false);
+                _majorvm.DoEdit(false);
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                Assert.AreEqual(1, context.Set<School>().Count());
+                Assert.AreEqual(2, context.Set<Major>().Where(x => x.SchoolId == id).Count());
+                var rv1 = context.Set<Major>().Where(x => x.MajorCode == "maaa").SingleOrDefault();
+                Assert.AreEqual("maaa", rv1.MajorCode);
+                Assert.AreEqual("mbbb", rv1.MajorName);
+                var rv2 = context.Set<School>().Where(x => x.SchoolCode == "bbb").SingleOrDefault();
+                Assert.AreEqual("bbb", rv2.SchoolCode);
+                Assert.AreEqual("aaa", rv2.SchoolName);
+
+            }
+        }
+
+
 
 
         [TestMethod]

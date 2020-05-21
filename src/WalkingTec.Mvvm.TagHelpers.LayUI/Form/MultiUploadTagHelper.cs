@@ -62,13 +62,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 idstring = subfiles.Select(x => x.FileId.ToString()).ToSpratedString(seperator: "|");
             }
-            else
-            {
-                output.TagName = "div";
-                output.TagMode = TagMode.StartTagAndEndTag;
-                output.Content.SetContent("Field must be set to a List<ISubFile>");
-                return;
-            }
+            //else
+            //{
+            //    output.TagName = "div";
+            //    output.TagMode = TagMode.StartTagAndEndTag;
+            //    output.Content.SetContent("Field must be set to a List<ISubFile>");
+            //    return;
+            //}
             output.TagName = "button";
             output.Attributes.Add("id", Id + "button");
             output.Attributes.Add("name", Id + "button");
@@ -130,12 +130,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 if (vm != null)
                 {
-                    url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                    url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
                 }
             }
             else
             {
-                url += $"&_DONOT_USE_CS={ConnectionString}";
+                url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
 
             output.PreElement.SetHtmlContent($@"

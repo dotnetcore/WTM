@@ -16,7 +16,7 @@ export default class Index extends Vue {
     get formOptions() {
         return {
             formProps: {
-                "label-width": "100px"
+                "label-width": this.$t("actionlog.LabelWidthForm")
             },
             formItem: {
                 "Entity.ID": {
@@ -24,11 +24,11 @@ export default class Index extends Vue {
                 },
                 "Entity.ModuleName": {
                     type: "input",
-                    label: "模块"
+                    label: this.$t("actionlog.ModuleName")
                 },
                 "Entity.ActionName": {
                     type: "input",
-                    label: "动作"
+                    label: this.$t("actionlog.ActionName")
                 },
                 "Entity.ITCode": {
                     type: "input",
@@ -40,11 +40,11 @@ export default class Index extends Vue {
                 },
                 "Entity.ActionTime": {
                     type: "input",
-                    label: "操作时间"
+                    label: this.$t("actionlog.ActionTime")
                 },
                 "Entity.Duration": {
                     type: "input",
-                    label: "时长"
+                    label: this.$t("actionlog.Duration")
                 },
                 "Entity.IP": {
                     type: "input",
@@ -52,7 +52,7 @@ export default class Index extends Vue {
                 },
                 "Entity.Remark": {
                     type: "input",
-                    label: "备注"
+                    label: this.$t("actionlog.Remark")
                 }
             }
         };

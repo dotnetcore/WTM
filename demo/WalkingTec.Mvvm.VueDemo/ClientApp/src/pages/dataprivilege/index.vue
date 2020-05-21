@@ -39,13 +39,13 @@ export default class Index extends Vue {
     get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "75px",
+                "label-width": this.$t("dataprivilege.LabelWidth"),
                 inline: true
             },
             formItem: {
                 TableName: {
                     type: "select",
-                    label: "权限名称",
+                    label: this.$t("dataprivilege.TableName"),
                     props: {
                         clearable: true
                     },
@@ -53,16 +53,16 @@ export default class Index extends Vue {
                 },
                 DpType: {
                     type: "radioGroup",
-                    label: "权限类型",
-                    span: 8,
+                    label: this.$t("dataprivilege.DpType"),
+                    span: 12,
                     children: [
                         {
                             Value: 0,
-                            Text: "用户组权限"
+                            Text: this.$t("dataprivilege.UserGroup")
                         },
                         {
                             Value: 1,
-                            Text: "用户权限"
+                            Text: this.$t("dataprivilege.UserRights")
                         }
                     ]
                 }
@@ -87,7 +87,7 @@ export default class Index extends Vue {
             };
             this.deleted(parameters).then(res => {
                 this["$notify"]({
-                    title: "删除成功",
+                    title: this.$t("dataprivilege.SuccessfullyDeleted"),
                     type: "success"
                 });
                 this["onHoldSearch"]();

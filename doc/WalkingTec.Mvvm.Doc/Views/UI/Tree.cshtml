@@ -8,21 +8,21 @@
   <p>实现树形结构的Model，最简单的做法是继承框架提供的ITreeData接口</p>
   <p>下面展示了一个部门的Model，他是一个树形结构，每个部门都有可能有父级部门</p>
   <wt:code>
-    public class Department : BasePoco,ITreeData<Department>
-      {
-      [Display(Name = "部门名称")]
-      [Required(ErrorMessage = "{0}是必填项")]
-      public string DepName { get; set; }
+public class Department : BasePoco,ITreeData&lt;Department&gt;
+{
+  [Display(Name = "部门名称")]
+  [Required(ErrorMessage = "{0}是必填项")]
+  public string DepName { get; set; }
 
-      public List&lt;Department&gt;
-        Children { get; set; }
+  public List&lt;Department&gt;
+  Children { get; set; }
 
-        [Display(Name = "上级部门")]
-        public Department Parent { get; set; }
+  [Display(Name = "上级部门")]
+  public Department Parent { get; set; }
 
-        [Display(Name = "上级部门")]
-        public Guid? ParentId { get; set; }
-        }
+  [Display(Name = "上级部门")]
+  public Guid? ParentId { get; set; }
+}
   </wt:code>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Tree">
@@ -93,7 +93,7 @@
   <p>Tree可以根据绑定Field字段的类型判断是单选模式还是多选模式，通过 Items 属性设置数据源，Items需要绑定一个List<TreeSelectListItem></p>
   <p>TreeSelectListItem 是框架提供的辅助类，有 Id，Text，Url，Children等属性</p>
   <p>继承了ITreeData接口的模型，可以方便的调用框架提供的函数生成Tree控件需要的数据格式,</p>
-  <p>比如 DC.Set<Department>().GetTreeSelectListItems( LoginUserInfo.DataPrivileges, null, x=>x.DepName) 直接读库并生成一个List<TreeSelectListItem></p>
+  <p>比如 DC.Set<Department>().GetTreeSelectListItems( LoginUserInfo.DataPrivileges, null, x=&gt;x.DepName) 直接读库并生成一个List&lt;TreeSelectListItem&gt;</p>
 </wt:quote>
 <wt:tab>
   <wt:tabheaders>
@@ -157,3 +157,6 @@
 </script>
 
 
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

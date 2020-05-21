@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 {
@@ -44,13 +45,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                     var bvm = context.Items["model"] as BaseVM;
                     if (bvm?.CurrentCS != null)
                     {
-                        url += $"?_DONOT_USE_CS={bvm.CurrentCS}";
+                        url = url.AppendQuery($"_DONOT_USE_CS={bvm.CurrentCS}");
                     }
                 }
             }
             else
             {
-                url += $"&_DONOT_USE_CS={ConnectionString}";
+                url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
 
 
