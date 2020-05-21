@@ -935,7 +935,7 @@ namespace WalkingTec.Mvvm.Core
                 bulkCopy.DestinationTableName = tableName;
 
                 var table = new DataTable();
-                var props = typeof(K).GetProperties();
+                var props = typeof(K).GetProperties().Distinct(x => x.Name);
 
                 //生成Table的列
                 foreach (var propertyInfo in props)
