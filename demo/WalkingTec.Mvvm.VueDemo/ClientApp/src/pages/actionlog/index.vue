@@ -4,7 +4,7 @@
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
-        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" languageKey="actionlog" />
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" />
         <!-- 弹出框 -->
         <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
         <!-- 导入 -->
@@ -21,11 +21,10 @@ import DialogForm from "./views/dialog-form.vue";
 import store from "./store/index";
 // 查询参数, table列 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
-import LOCAL from "./local";
 
 @Component({
     name: "actionlog",
-    mixins: [searchMixin(TABLE_HEADER, LOCAL), actionMixin(ASSEMBLIES)],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm
@@ -71,11 +70,7 @@ export default class Index extends Vue {
                 LogType: {
                     type: "select",
                     label: this.$t("actionlog.LogType"),
-                    children: [
-                        { Value: 0, Text: this.$t("actionlog.Ordinary") },
-                        { Value: 1, Text: this.$t("actionlog.Abnormal") },
-                        { Value: 2, Text: this.$t("actionlog.Debugging") }
-                    ],
+                    children: logTypes,
                     props: {
                         multiple: true,
                         "collapse-tags": true
