@@ -4,7 +4,7 @@
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
-        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}" languageKey="frameworkrole">
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
             <template #operate="rowData">
                 <el-button v-visible="actionList.detail" type="text" size="small" class="view-btn" @click="onDetail(rowData.row)">
                     {{ $t("table.detail") }}
@@ -39,11 +39,10 @@ import Permission from "./views/permission.vue";
 import store from "./store/index";
 // 查询参数/列表 ★★★★★
 import { ASSEMBLIES, TABLE_HEADER } from "./config";
-import LOCAL from "./local";
 
 @Component({
     name: "frameworkrole",
-    mixins: [searchMixin(TABLE_HEADER, LOCAL), actionMixin(ASSEMBLIES)],
+    mixins: [searchMixin(TABLE_HEADER), actionMixin(ASSEMBLIES)],
     store,
     components: {
         DialogForm,
