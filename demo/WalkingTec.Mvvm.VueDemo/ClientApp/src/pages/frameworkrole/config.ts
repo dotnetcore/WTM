@@ -1,3 +1,4 @@
+import i18n from "@/lang";
 // 页面中，需要展示的动作按钮；增，改，删，导入，导出
 export const ASSEMBLIES: Array<string> = [
   "add",
@@ -8,8 +9,8 @@ export const ASSEMBLIES: Array<string> = [
 ];
 
 export const TABLE_HEADER: Array<object> = [
-  { key: "RoleCode", sortable: true, label: "角色编号" },
-  { key: "RoleName", sortable: true, label: "角色姓名" },
-  { key: "RoleRemark", sortable: true, label: "备注" },
-  { key: "operate", label: "操作", isSlot: true }
+  { key: "RoleCode", sortable: true, label: i18n.t(`frameworkrole.RoleCode`) },
+  { key: "RoleName", sortable: true, label: i18n.t(`frameworkrole.RoleName`) },
+  { key: "RoleRemark", sortable: true, label: i18n.t(`frameworkrole.RoleRemark`) },
+  { key: "operate", label: i18n.t(`table.actions`), isSlot: true }
 ];

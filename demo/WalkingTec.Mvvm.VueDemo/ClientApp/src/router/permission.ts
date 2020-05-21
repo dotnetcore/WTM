@@ -22,7 +22,26 @@ const getPageTitle = (key: string) => {
   return `${settings.title}`;
 };
 
+const bindLang = ({zh, en}) => {
+  const localKey = Object.keys(zh).length > 0 ? Object.keys(zh)[0] : "";
+  if (localKey && !i18n.getLocaleMessage('en')[localKey]) {
+      i18n.mergeLocaleMessage("en", en);
+      i18n.mergeLocaleMessage("zh", zh);
+    }
+}
+
 router.beforeEach(async (to: Route, _: Route, next: any) => {
+  // 路由
+  const loadI18n = (isFirst: Boolean = false) => {
+    // 加载语言
+    import(`@/pages${to.path}/local.ts`).then(LOCAL => {
+        bindLang(LOCAL.default)
+        isFirst ? next({ ...to, replace: true }) : next();
+    }).catch(() => {
+        console.warn('找不到 多语言文件');
+        isFirst ? next({ ...to, replace: true }) : next();
+    })
+  }
   NProgress.start();
   if (UserModule.token) {
     // Check roles
@@ -32,7 +51,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
         RoutesModule.PageList(pageList);
         RoutesModule.GenerateRoutes(UserModule.menus);
         router.addRoutes(RoutesModule.dynamicRoutes);
-        next({ ...to, replace: true });
+        loadI18n(true);
       } catch (err) {
         Message.error(err || "Has Error");
         location.href = "/login.html";
@@ -41,7 +60,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
       }
     } else {
       if (to.matched.length !== 0) {
-        next();
+        loadI18n();
       } else {
         next("/404");
       }
@@ -49,7 +68,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
   } else {
     // Has no token
     if (whiteList.indexOf(to.path) !== -1) {
-      next();
+      loadI18n();
     } else {
       // next(`/login?redirect=${to.path}`);
       location.href = `/login.html?redirect=${to.path}`;
@@ -64,3 +83,5 @@ router.afterEach((to: Route) => {
   // set page title
   document.title = getPageTitle(to.meta.title);
 });
+
+
