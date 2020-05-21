@@ -36,18 +36,18 @@ export default {
         },
         frameworkmenu: {
             LabelWidth: "120px",
-            PageName: "PageName",
-            DisplayOrder: "DisplayOrder",
-            ICon: "ICon",
+            PageName: "Page Name",
+            DisplayOrder: "Display Order",
+            ICon: "Icon",
             RadioGroup: "AddressType",
-            InternalAddress: "InternalAddress",
-            ExternalAddress: "ExternalAddress",
-            SelectedModule: "ModuleName",
-            ParentDirectory: "ParentDirectory",
+            InternalAddress: "Internal",
+            ExternalAddress: "External",
+            SelectedModule: "Module",
+            ParentDirectory: "Parent",
             Directory :"Directory",
             ShowOnMenu: "ShowOnMenu",
             Public: "Public",
-            Action: "ActionName",
+            Action: "Actions",
             pleaseEnterDisplayOrder: "please enter display order"
     }
   }
