@@ -47,6 +47,12 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("Export")]
+        public IActionResult Export()
+        {
+            return PartialView();
+        }
+
         [ActionDescription("Transaction")]
         public IActionResult Transaction()
         {
