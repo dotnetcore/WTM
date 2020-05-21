@@ -16,8 +16,8 @@ export default {
     en: {
         frameworkrole: {
             LabelWidth: "100px",
-            RoleCode: "RoleCode",
-            RoleName: "RoleName",
+            RoleCode: "Role Code",
+            RoleName: "Role Name",
             RoleRemark: "Remark",
             pleaseEnterRoleCode: "please enter role code",
             pleaseEnterRoleName: "please enter role name",
