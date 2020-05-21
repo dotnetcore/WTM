@@ -89,7 +89,8 @@ export default {
     cancel: "取 消",
     confirm: "确 定",
     detail: "详情",
-    custom: "自定义列"
+    custom: "自定义列",
+    download:"下载"
   },
   example: {
     warning:

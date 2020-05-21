@@ -95,7 +95,8 @@ export default {
     cancel: "Cancel",
     confirm: "Confirm",
     detail: "Details",
-    custom: "Custom column"
+    custom: "Custom column",
+    download: "Download"
   },
   example: {
     warning:
