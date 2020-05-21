@@ -51,7 +51,8 @@
                                 { "name": "/ListAction", "title": "Intro", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "Action buttons of listvm", "jump": "/VM/ListAction" },
                                 { "name": "/ListColumn", "title": "Headers setting of listvm", "jump": "/VM/ListColumn" },
-                                { "name": "/SearchMode", "title": "SearchMode", "jump": "/VM/SearchMode" }
+                                { "name": "/SearchMode", "title": "SearchMode", "jump": "/VM/SearchMode" },
+                                { "name": "/Export", "title": "Export", "jump": "/VM/Export" }
                             ]
                         },
                         { "name": "/Import", "title": "Import viewmodel", "jump": "/VM/Import" },
