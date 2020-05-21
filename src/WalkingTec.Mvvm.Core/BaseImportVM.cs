@@ -16,6 +16,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -108,7 +109,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 是否覆盖已有数据
         /// </summary>
-        public bool IsOverWriteExistData { get; set; }
+        public bool IsOverWriteExistData { get; set; } = true;
         #endregion
 
         #region 构造函数
@@ -934,33 +935,35 @@ namespace WalkingTec.Mvvm.Core
                 bulkCopy.DestinationTableName = tableName;
 
                 var table = new DataTable();
-                var props = TypeDescriptor.GetProperties(typeof(K))
-                                           .Cast<PropertyDescriptor>()
-                                           .Where(propertyInfo => propertyInfo.PropertyType.Namespace.Equals("System"))
-                                           .ToArray();
+                var props = typeof(K).GetProperties();
 
+                //生成Table的列
                 foreach (var propertyInfo in props)
                 {
-                    string Name = propertyInfo.Name;
-                    if (Name == "Checked" || Name == "BatchError" || Name == "ExcelIndex")
+                    var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
+                    var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
+                    if (notmapped == null && notobject)
                     {
-                        continue;
+                        string Name = propertyInfo.Name;
+                        bulkCopy.ColumnMappings.Add(Name, Name);
+                        table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
                     }
-
-                    bulkCopy.ColumnMappings.Add(Name, Name);
-                    table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
                 }
 
+                //给Table赋值
                 var values = new object[table.Columns.Count];
                 foreach (var item in list)
                 {
-                    for (var i = 0; i < props.Length; i++)
+                    var Index = 0;
+                    foreach (var propertyInfo in props)
                     {
-                        if (props[i].Name == "Checked" || props[i].Name == "BatchError" || props[i].Name == "ExcelIndex")
+                        var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
+                        var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
+                        if (notmapped == null && notobject)
                         {
-                            continue;
+                            values[Index] = propertyInfo.GetValue(item);
+                            Index++;
                         }
-                        values[i] = props[i].GetValue(item);
                     }
                     table.Rows.Add(values);
                 }
