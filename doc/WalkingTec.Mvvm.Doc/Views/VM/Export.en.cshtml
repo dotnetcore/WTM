@@ -1,0 +1,41 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>The logic of the export is basically the same as the list, and they use the same listvm. If you do not do special processing, the exported content and the list content are exactly the same.</p>
+<p>By adding different columns according to different SearchModes in the InitGridAction() method, you can realize that the exported columns and the columns of the list are different</p>
+<p>By overriding the GetExportQuery() method, you can use different query statements when exporting</p>
+
+<wt:quote>
+  <p>Starting from 2.6.0 / 3.6.0, WTM uses xlsx format for export. It supports setting the maximum number of lines in a single excel. Exceeding the maximum number of lines will automatically export a zip file containing multiple Excel files. A single excel file can have up to 1 million lines</p>
+</wt:quote>
+
+  <wt:code title="InitGridAction">
+[ActionDescription("Export")]
+[HttpPost]
+public ActionResult ExportExcel(SchoolListVM vm)
+{
+    vm.ExportMaxCount = 5; //The maximum number of data lines per Excel can be customized. The default is 1 million
+    vm.ExportTitleBackColor = HSSFColor.Black.Index; //You can set the background color of the title row
+    vm.ExportTitleFontColor = HSSFColor.White.Index; //You can set the foreground color of the title row
+    return vm.GetExportData();
+}
+
+</wt:code>
+
+The above code demonstrates the controller export method in the new version
+
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

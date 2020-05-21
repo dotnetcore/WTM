@@ -39,11 +39,11 @@ export default class Index extends Vue {
             formItem: {
                 GroupCode: {
                     type: "input",
-                    label: "用户组编码"
+                    label: this.$t("frameworkgroup.GroupCode")
                 },
                 GroupName: {
                     type: "input",
-                    label: "用户组名称"
+                    label: this.$t("frameworkgroup.GroupName")
                 }
             }
         };

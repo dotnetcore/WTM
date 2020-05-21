@@ -215,7 +215,7 @@ class Optimization extends React.Component<{
             </div>
         }
         if (option.showSubmit) {
-            return <Form layout="vertical" onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
+            return <Form layout="horizontal" onSubmit={this.onSubmit.bind(this)} className='app-shell-body'>
                 <Spin tip="Loading..." spinning={this.state.loading} >
                     {children}
                 </Spin>

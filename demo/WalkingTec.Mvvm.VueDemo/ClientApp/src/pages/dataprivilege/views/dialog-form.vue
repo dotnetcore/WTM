@@ -33,7 +33,7 @@ export default class Index extends Vue {
     get formOptions() {
         return {
             formProps: {
-                "label-width": "100px"
+                "label-width": this.$t("dataprivilege.LabelWidthForm")
             },
             formItem: {
                 "Entity.ID": {
@@ -41,68 +41,72 @@ export default class Index extends Vue {
                 },
                 DpType: {
                     type: "radioGroup",
-                    label: "模块",
+                    label: this.$t("dataprivilege.DpType"),
                     span: 24,
                     defaultValue: 0,
                     children: [
-                        { Value: 0, Text: "用户组权限" },
-                        { Value: 1, Text: "用户权限" }
+                        { Value: 0, Text: this.$t("dataprivilege.UserGroup") },
+                        { Value: 1, Text: this.$t("dataprivilege.UserRights") }
                     ],
                     rules: {
                         type: "number",
                         required: true,
-                        message: "请选择权限类型",
+                        message: this.$t(
+                            "dataprivilege.PleaseSelectPermissionType"
+                        ),
                         trigger: "change"
                     }
                 },
                 "Entity.GroupId": {
                     type: "select",
-                    label: "用户组",
+                    label: this.$t("dataprivilege.UserGroupList"),
                     children: this.getUserGroupsData,
                     isHidden: data => data.DpType === 1,
                     rules: {
                         required: true,
-                        message: "请选择用户组",
+                        message: this.$t("dataprivilege.PleaseSelectUserGroup"),
                         trigger: "change"
                     }
                 },
                 UserItCode: {
                     type: "input",
-                    label: "用户Id",
+                    label: this.$t("dataprivilege.UserID"),
                     isHidden: data => data.DpType === 0,
                     rules: {
                         required: true,
-                        message: "请输入用户Id",
+                        message: this.$t("dataprivilege.pleaseEnterUserID"),
                         trigger: "blur"
                     }
                 },
                 "Entity.TableName": {
                     type: "select",
-                    label: "权限名称",
+                    label: this.$t("dataprivilege.TableName"),
                     children: this.getPrivilegesData,
                     events: {
                         change: this.onPrivileges
                     },
                     rules: {
                         required: true,
-                        message: "请选择权限名称",
+                        message: this.$t("dataprivilege.PleaseSelectTableName"),
                         trigger: "change"
                     }
                 },
                 IsAll: {
                     type: "select",
-                    label: "全部权限",
+                    label: this.$t("dataprivilege.AllPermissions"),
                     children: whether,
                     rules: {
                         type: "boolean",
                         required: true,
-                        message: "请选择全部权限",
+                        message: this.$t(
+                            "dataprivilege.PleaseSelectAllPermissions"
+                        ),
                         trigger: "change"
                     }
                 },
                 SelectedItemsID: {
                     type: "select",
-                    label: "允许访问",
+                    label: this.$t("dataprivilege.AllowAccess"),
                     props: {
                         multiple: true,
                         filterable: true

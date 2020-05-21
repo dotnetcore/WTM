@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
   a {
     color: #01aaed
@@ -124,24 +125,24 @@
   <wt:code title="SchoolVM.cs">
     public class SchoolVM : BaseCRUDVM&ltSchool&gt
     {
-    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
-    {
-    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolCode));
-    rv.AddGroup(SimpleField(x => x.SchoolName));
-    return rv;
-    }
+      public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+      {
+        var rv = CreateFieldsInfo( SimpleField(x => x.SchoolCode));
+        rv.AddGroup(SimpleField(x => x.SchoolName));
+        return rv;
+      }
     }
   </wt:code>
   <p>框架同时支持组合字段的唯一性验证，比如下面的例子，SchoolName和SchoolType两个字段组合起来不能重复,同时SchoolCode也不能重复</p>
   <wt:code title="SchoolVM.cs">
     public class SchoolVM : BaseCRUDVM&ltSchool&gt
     {
-    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
-    {
-    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolName), SimpleField(x => x.SchoolType));
-    rv.AddGroup( SimpleField(x => x.SchoolCode));
-    return rv;
-    }
+      public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+      {
+        var rv = CreateFieldsInfo( SimpleField(x => x.SchoolName), SimpleField(x => x.SchoolType));
+        rv.AddGroup( SimpleField(x => x.SchoolCode));
+        return rv;
+      }
     }
   </wt:code>
 
@@ -193,4 +194,7 @@
   layui.table.init('parse-table-demo', {
     limit: 100, page: false
   });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

@@ -1,0 +1,41 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>导出和列表的逻辑基本一样，他们使用同样的ListVM。如果不做特殊处理，那么导出的内容和列表的内容是完全一样的。</p>
+<p>通过在InitGridAction()方法中根据不同的SearchMode来添加不同的列，可以实现导出的列和列表的列不同</p>
+<p>通过重写GetExportQuery()方法，可以实现导出时使用不同的查询语句</p>
+
+<wt:quote>
+  <p>从2.6.0/3.6.0 开始，WTM使用xlsx格式进行导出，支持设定单个excel最大行数，超过最大行数将自动导出一个zip文件包含多个excel文件，单个excel文件最多100万行</p>
+</wt:quote>
+
+  <wt:code title="InitGridAction">
+[ActionDescription("Export")]
+[HttpPost]
+public ActionResult ExportExcel(SchoolListVM vm)
+{
+    vm.ExportMaxCount = 5; //可自定义每个Excel最多数据行数，默认是100万
+    vm.ExportTitleBackColor = HSSFColor.Black.Index; //可设定标题行背景色
+    vm.ExportTitleFontColor = HSSFColor.White.Index; //可设定标题行前景色
+    return vm.GetExportData();
+}
+
+</wt:code>
+
+上面代码演示了新版本中Controller导出方法的写法
+
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

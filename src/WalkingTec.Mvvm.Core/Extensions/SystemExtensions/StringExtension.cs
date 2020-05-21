@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -137,5 +137,21 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
+        public static string AppendQuery(this string self,string query)
+        {
+            if(self == null)
+            {
+                return null;
+            }
+            if (self.Contains("?"))
+            {
+                self += "&" + query;
+            }
+            else
+            {
+                self += "?" + query;
+            }
+            return self;
+        }
     }
 }

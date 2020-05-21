@@ -1,12 +1,12 @@
 <template>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="onClose">
-      关 闭
-    </el-button>
-    <el-button v-if="status !== detail" type="primary" @click="onSubmit">
-      提 交
-    </el-button>
-  </div>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="onClose">
+            {{ $t("buttom.closed")}}
+        </el-button>
+        <el-button v-if="status !== detail" type="primary" @click="onSubmit">
+            {{ $t("buttom.submit")}}
+        </el-button>
+    </div>
 </template>
 
 <script lang='ts'>

@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -48,3 +49,6 @@
   <p>可以写在Controller或Controller中的方法上</p>
   <p>标记方法不需要记录系统日志</p>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -23,7 +23,7 @@ declare module "vue/types/vue" {
     resetFields: any;
   }
 }
-
+// delete ------, LOCAL: any = null
 function mixinFunc(TABLE_HEADER: Array<object> = []) {
   class mixin extends Vue {
     searchRefName: string = "searchName";
@@ -177,6 +177,12 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
     }
     created() {
       this.onSearch();
+    }
+    beforeCreate() {
+      // if (LOCAL && !this.$i18n.getLocaleMessage('en')[this.$options.name]) {
+      //   this.$i18n.mergeLocaleMessage("en", LOCAL.en);
+      //   this.$i18n.mergeLocaleMessage("zh", LOCAL.zh);
+      // }
     }
   }
   return Component(mixin);

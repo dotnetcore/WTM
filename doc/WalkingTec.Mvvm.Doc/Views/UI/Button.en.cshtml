@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 
 <wt:fieldset field-set-style="Simple" title="SubmitButton">
 </wt:fieldset>
@@ -144,7 +145,7 @@
 
 <wt:quote>
   <p>LinkButton is more flexible to use. Pop-up window, submit form, run JS, etc. can be realized through LinkButton.</p>
-  <p>For example,&lt;wt:linkbutton target=" ButtonTargetEnum.self" text="提交" url="/xxx/xxx" post-current-form="true" /&gt;</p>
+  <p>For example,&lt;wt:linkbutton target=" ButtonTargetEnum.self" text="Submit" url="/xxx/xxx" post-current-form="true" /&gt;</p>
   <p>This definition can replace the default submitbutton. You can combine various attributes to achieve different effects.</p>
 </wt:quote>
 
@@ -153,4 +154,7 @@
   layui.table.init('parse-table-demo', {
     limit: 100, page: false
   });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>
