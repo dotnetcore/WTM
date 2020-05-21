@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         foreach (var v in invalid)
                         {
-                            if (model.FC.ContainsKey(v) == false)
+                            if (v?.StartsWith("Entity.") == true && model.FC.ContainsKey(v) == false)
                             {
                                 ctrl.ModelState.Remove(v);
                             }

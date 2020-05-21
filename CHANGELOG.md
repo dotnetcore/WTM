@@ -7,6 +7,7 @@
 * **新增：**  导入优化，支持xlsx格式，支持公式，使用sqlserver时自动使用bulk导入，提高大批量数据的导入速度。
 * **新增：**  ListVM中的MakeGridHeader方法现在可以正确绑定任何其定义lambda表达式
 * **新增：**  修复有关联关系的数据无法正常删除的bug
+* **修改：**  Layui模式中所有按钮的TagHelper现在都可以指定confirm-text来弹出一个询问框
 * **修改：**  Layui模式修复默认下载按钮失效的bug
 * **修改：**  Layui模式修复Display TagHelper绑定附件时显示错误的bug
 * **修改：**  React模式修复代码生成器生成一对多控件时的问题
