@@ -9,7 +9,7 @@ export const ASSEMBLIES: Array<string> = [
 ];
 
 export const TABLE_HEADER: Array<object> = [
-  { key: "GroupCode", sortable: true, label: i18n.t(`frameworkgroup.PageName`) },
+    { key: "GroupCode", sortable: true, label: i18n.t(`frameworkgroup.GroupCode`) },
   { key: "GroupName", sortable: true, label: i18n.t(`frameworkgroup.GroupName`) },
   { key: "GroupRemark", sortable: true, label: i18n.t(`frameworkgroup.GroupRemark`) },
   { isOperate: true, label: i18n.t(`table.actions`), actions: ["detail", "edit", "deleted"] } //操作列
