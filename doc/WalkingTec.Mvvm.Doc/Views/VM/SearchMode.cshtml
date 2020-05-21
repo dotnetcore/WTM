@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -100,3 +101,6 @@
         limit: 100, page: false
         });
     </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -1,22 +1,22 @@
 <template>
-  <card>
-    <!-- 操作按钮 -->
-    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent">
-      <el-button v-visible="actionList['refreshMenu']" type="primary" icon="el-icon-refresh-right" @click="onRefreshMenu">
-        刷新
-      </el-button>
-    </wtm-but-box>
-    <!-- 列表 -->
-    <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
-      <template #ICon="rowData">
-        <i :class="[rowData.row.ICon]"></i>
-      </template>
-    </wtm-table-box>
-    <!-- 弹出框 -->
-    <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
-    <!-- 导入 -->
-    <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
-  </card>
+    <card>
+        <!-- 操作按钮 -->
+        <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent">
+            <el-button v-visible="actionList['refreshMenu']" type="primary" icon="el-icon-refresh-right" @click="onRefreshMenu">
+                {{$t('buttom.refresh')}}
+            </el-button>
+        </wtm-but-box>
+        <!-- 列表 -->
+        <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
+            <template #ICon="rowData">
+                <i :class="[rowData.row.ICon]"></i>
+            </template>
+        </wtm-table-box>
+        <!-- 弹出框 -->
+        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+        <!-- 导入 -->
+        <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
+    </card>
 </template>
 
 <script lang='ts'>

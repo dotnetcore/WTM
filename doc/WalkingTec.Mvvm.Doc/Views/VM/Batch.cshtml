@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -160,3 +161,6 @@ public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
         limit: 100, page: false
         });
     </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

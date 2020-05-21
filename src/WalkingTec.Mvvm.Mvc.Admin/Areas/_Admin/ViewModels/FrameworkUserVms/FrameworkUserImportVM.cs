@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             foreach (var item in EntityList)
             {
                 item.IsValid = true;
+                item.Password = Utils.GetMD5String(item.Password);
             }
             return base.BatchSaveData();
         }

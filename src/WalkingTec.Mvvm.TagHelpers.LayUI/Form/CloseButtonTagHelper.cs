@@ -12,6 +12,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 Text = Program._localizer["Close"];
             }
             Click = "ff.CloseDialog()";
+
+
+
             base.Process(context, output);
         }
     }

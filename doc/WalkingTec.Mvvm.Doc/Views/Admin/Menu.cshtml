@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="菜单管理-模块截图">
     <img src="~/imgs/admin-menu.png" />
 </wt:fieldset>
@@ -35,3 +36,6 @@
       通过选择允许访问的角色给菜单快速配置访问权限，细致到每个动作的权限可以去角色中的权限配置里进行更详细的配置。
     </p>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -43,3 +44,6 @@ Here is a collection of frequently asked questions, We will keep updating.
     <p>Q:Why there are no new tables in the database after add a new mode?</p>
     <p>答：EF does not support automatic database update  For  methods of database synchronization<a href="/#/Data/Migration">see here</a></p>
 </wt:quote>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

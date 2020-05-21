@@ -24,7 +24,9 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<MyUser> MyUsers { get; set; }
 
+        public DbSet<City> Cities { get; set; }
         public DbSet<不要用中文模型名> 不要中文 { get; set; }
 
 

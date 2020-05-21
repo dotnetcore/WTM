@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +22,8 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
         {
             Vm.CopyContext(this);
             ListVm.CopyContext(this);
+            Vm.DoInit();
+            ListVm.DoInit();
         }
     }
 }

@@ -25,7 +25,7 @@
     var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
     layui.config({
       base: '/layuiadmin/'
-      , version: '1.2.1'
+      , version: '@DateTime.Now.Ticks'
     });
   </script>
   @RenderBody()

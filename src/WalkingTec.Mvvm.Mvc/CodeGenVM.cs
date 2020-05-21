@@ -1331,6 +1331,7 @@ namespace WalkingTec.Mvvm.Mvc
                             else
                             {
                                 fieldstr.AppendLine($@"                formItem: <WtmTransfer
+                    listStyle={{undefined}}
                     dataSource={{Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                     mapKey=""{item.SubIdField}""
                 /> ");
@@ -1816,7 +1817,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 else
                                 {
                                     actions.AppendLine($@"      <template #{fk}=""rowData"">
-        <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/_file/downloadFile/'+rowData.row.{fk}"">下载</el-link>
+        <el-link icon=""el-icon-edit"" v-if=""!!rowData.row.{fk}"" :href=""'/api/_file/downloadFile/'+rowData.row.{fk}"">{{{{ $t(""table.download"")}}}}</el-link>
       </template>
 ");
                                 }

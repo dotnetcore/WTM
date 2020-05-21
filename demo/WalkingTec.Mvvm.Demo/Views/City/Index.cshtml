@@ -1,0 +1,8 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityListVM
+
+<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:combobox field="Searcher.ParentId" items="Searcher.AllParents" empty-text="全部" />
+</wt:row>
+</wt:searchpanel>
+<wt:grid vm="@Model" url="/City/Search"/>

@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 
 <wt:fieldset field-set-style="Simple" title="SubmitButton">
 </wt:fieldset>
@@ -153,4 +154,7 @@
   layui.table.init('parse-table-demo', {
     limit: 100, page: false
   });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>

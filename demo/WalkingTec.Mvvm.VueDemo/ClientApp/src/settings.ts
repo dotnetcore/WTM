@@ -1,3 +1,5 @@
+import { getSettings } from "@/util/cookie";
+
 interface ISettings {
   title: string; // Overrides the default title
   showSettings: boolean; // Controls settings panel display
@@ -11,19 +13,20 @@ interface ISettings {
   isDialog: boolean;
   menuBackgroundImg: any;
 }
-
+const obj = getSettings() || {};
+console.log('obj', obj)
 const settings: ISettings = {
-  title: "WTM",
-  showSettings: true,
-  showTagsView: true,
-  fixedHeader: false,
-  showSidebarLogo: true,
+  title: obj.title || "WTM",
+  fixedHeader: obj.fixedHeader === undefined ? true : obj.fixedHeader,
+  showSettings: obj.showSettings === undefined ? true : obj.showSettings,
+  showTagsView: obj.showTagsView === undefined ? true : obj.showTagsView,
+  showSidebarLogo: obj.showSidebarLogo === undefined ? true : obj.showSidebarLogo,
   errorLog: ["production"],
-  sidebarTextTheme: true,
-  isDialog: true,
+  sidebarTextTheme: obj.sidebarTextTheme === undefined ? true : obj.sidebarTextTheme,
+  isDialog: obj.isDialog === undefined ? true : obj.isDialog,
   devServerPort: 9527,
   mockServerPort: 9528,
-  menuBackgroundImg: {
+  menuBackgroundImg: obj.menuBackgroundImg || {
     image: require("static/img/sidebar-2.jpg"),
     key: "sidebar-2"
   }

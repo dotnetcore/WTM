@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="TopBasePoco">
     <p>TopBasePoco是框架所有模型的基类，它只定义了一个Guid的主键，所有其他模型都必须直接或间接继承TopBasePoco，否则框架的其他自动化操作无法执行</p>
     <wt:quote>
@@ -180,4 +181,7 @@ namespace FirstProject.Model
 
 <script>
 layui.use('code',function(){layui.code({ about: false })})
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
 </script>
