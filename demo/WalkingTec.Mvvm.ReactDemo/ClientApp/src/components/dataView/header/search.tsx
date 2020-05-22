@@ -45,21 +45,46 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
     @observable toggle = false;
     columnCount = GlobalConfig.searchColumnCount || 3;
     @observable key = Date.now();
+    componentDidMount() {
+        this.onSubmit()
+    }
+    onSetErrorMsg(Form) {
+        const { setFields, getFieldValue } = this.props.form;
+        setFields(lodash.mapValues(Form, (error, key) => {
+            return {
+                value: getFieldValue(key),
+                errors: [new Error(error)]
+            }
+        }))
+    }
+    async onSearch(values) {
+        console.log("搜索参数", values);
+        try {
+            await this.Store.onSearch(values)
+        } catch (error) {
+            console.log("DataViewSearch -> onSearch -> error", error)
+            if (lodash.hasIn(error, 'Form')) {
+                this.onSetErrorMsg(error.Form)
+            }
+        }
+    }
     /**
      * 提交表单
      * @param e 
      */
     // @Debounce(500)
-    onSubmit(e) {
+    onSubmit(e?) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         if (this.props.onSubmit) {
             return this.props.onSubmit(e)
         }
-        e.preventDefault();
-        e.stopPropagation();
+
         this.props.form.validateFields((err, values) => {
-            console.log("搜索参数", values);
             if (!err) {
-                this.Store.onSearch(values)
+                this.onSearch(values)
             }
         });
     }
@@ -78,7 +103,8 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         resetFields();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.Store.onSearch(lodash.mapValues(values, x => undefined))
+                // this.Store.onSearch(lodash.mapValues(values, x => undefined))
+                this.onSearch(values)
                 runInAction(() => { this.key = Date.now() })
             }
         });
