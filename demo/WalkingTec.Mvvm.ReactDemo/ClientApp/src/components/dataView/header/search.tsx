@@ -104,7 +104,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // this.Store.onSearch(lodash.mapValues(values, x => undefined))
-                this.onSearch(values)
+                this.onSearch(lodash.mapValues(values, x => undefined))
                 runInAction(() => { this.key = Date.now() })
             }
         });
