@@ -25,7 +25,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public string Search(MajorListVM vm)
         {
-            return vm.GetJson(false);
+            if (ModelState.IsValid == true)
+            {
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
         #endregion
 
