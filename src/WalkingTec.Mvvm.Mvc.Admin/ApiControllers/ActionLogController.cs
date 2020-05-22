@@ -20,11 +20,13 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
-        public string Search(ActionLogSearcher searcher)
+        public IActionResult Search(ActionLogSearcher searcher)
         {
             var vm = CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
-            return vm.GetJson();
+            vm.MSD.AddModelError("ITCode", "itcode错误");
+            //vm.MSD.AddModelError(" all", "全局错误");
+            return BadRequest(ModelState.GetErrorJson());
         }
 
         [ActionDescription("Get")]
