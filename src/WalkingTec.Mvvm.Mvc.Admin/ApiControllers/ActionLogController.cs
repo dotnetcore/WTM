@@ -24,9 +24,27 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             var vm = CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
-            vm.MSD.AddModelError("ITCode", "itcode错误");
-            //vm.MSD.AddModelError(" all", "全局错误");
-            return BadRequest(ModelState.GetErrorJson());
+            if (searcher.ITCode == "单一错误")
+            {
+                vm.MSD.AddModelError("ITCode", "itcode错误");
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else if (searcher.ITCode == "全局错误")
+            {
+                vm.MSD.AddModelError(" ", "全局错误");
+                return BadRequest(ModelState.GetErrorJson());
+            }
+            else if (searcher.ITCode == "多个错误")
+            {
+                vm.MSD.AddModelError("ITCode", "itcode错误");
+                vm.MSD.AddModelError(" ", "全局错误");
+                return BadRequest(ModelState.GetErrorJson());
+
+            }
+            else
+            {
+                return Content(vm.GetJson());
+            }
         }
 
         [ActionDescription("Get")]
