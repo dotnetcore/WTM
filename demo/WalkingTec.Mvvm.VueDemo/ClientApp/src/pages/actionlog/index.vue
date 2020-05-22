@@ -35,7 +35,7 @@ export default class Index extends Vue {
     get SEARCH_DATA() {
         return {
             formProps: {
-                "label-width": "75px",
+                "label-width": this.$t("actionlog.LabelWidth"),
                 inline: true
             },
             formItem: {
@@ -49,14 +49,16 @@ export default class Index extends Vue {
                 },
                 ActionTime: {
                     type: "datePicker",
-                    label: "操作时间",
+                    label: this.$t("actionlog.ActionTime"),
                     span: 12,
                     props: {
                         type: "datetimerange",
                         "value-format": "yyyy-MM-dd HH:mm:ss",
-                        "range-separator": "至",
-                        "start-placeholder": "开始日期",
-                        "end-placeholder": "结束日期"
+                        "range-separator": "-",
+                        "start-placeholder": this.$t(
+                            "actionlog.StartPlaceholder"
+                        ),
+                        "end-placeholder": this.$t("actionlog.EndPlaceholder")
                     },
                     isHidden: !this.isActive
                 },
@@ -67,7 +69,7 @@ export default class Index extends Vue {
                 },
                 LogType: {
                     type: "select",
-                    label: "类型",
+                    label: this.$t("actionlog.LogType"),
                     children: logTypes,
                     props: {
                         multiple: true,

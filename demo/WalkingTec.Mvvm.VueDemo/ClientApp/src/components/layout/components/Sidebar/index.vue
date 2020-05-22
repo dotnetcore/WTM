@@ -7,6 +7,7 @@
                 <sidebar-item v-for="(route, index) in routes" :key="index" :item="route" :base-path="route.path || index+''" :is-collapse="isCollapse" />
             </el-menu>
         </el-scrollbar>
+        <!-- <div class="mezzanine" :style="{right: `${mezzanineRight}px`}" @mousedown="onMousedown" @mousemove.prevent='onMousemove' @mouseup='onMouseup'></div> -->
     </div>
 </template>
 
@@ -27,6 +28,10 @@ import { style as variables } from "@/config/index";
     }
 })
 export default class extends Vue {
+    isMoving: boolean = false; // 移动
+    initRight: number = 0; // 初始化位置
+    mezzanineRight: number = 0; // 移动位置
+
     get sidebar() {
         return AppModule.sidebar;
     }
@@ -70,6 +75,30 @@ export default class extends Vue {
             backgroundImage: `url(${SettingsModule.menuBackgroundImg.image})`,
             backgroundColor: "#304156"
         };
+    }
+
+    onMousedown(e) {
+        this.isMoving = true;
+        // const startx = e.x;
+        // const sb_bkx = startx - e.target.offsetLeft;
+        // this.mezzanineRight = sb_bkx;
+        this.initRight = e.x;
+        console.log("onMousedown", this.initRight);
+    }
+
+    onMousemove(e) {
+        if (this.isMoving) {
+            const startx = e.x;
+            // const sb_bkx = startx - e.target.offsetLeft;
+            const sb_bkx = startx - this.initRight;
+            this.mezzanineRight = -sb_bkx;
+            console.log("onMousemove", startx, -sb_bkx);
+        }
+    }
+
+    onMouseup(e) {
+        this.isMoving = false;
+        console.log("onMouseup");
     }
 }
 </script>
@@ -117,6 +146,15 @@ export default class extends Vue {
 .has-logo {
     .el-scrollbar {
         height: calc(100% - 50px);
+    }
+    .mezzanine {
+        background-color: red;
+        width: 5px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        z-index: 1;
     }
 }
 .logo-divider {

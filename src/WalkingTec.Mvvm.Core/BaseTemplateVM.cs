@@ -6,6 +6,7 @@ using System.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -16,6 +17,7 @@ namespace WalkingTec.Mvvm.Core
         /// 下载模板显示名称
         /// </summary>
         public string FileDisplayName { get; set; }
+
         /// <summary>
         /// 是否验证模板类型（当其他系统模板导入到某模块时可设置为False）
         /// </summary>
@@ -79,35 +81,37 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>生成的模版文件</returns>
         public byte[] GenerateTemplate(out string displayName)
         {
-            HSSFWorkbook workbook = new HSSFWorkbook();
+            //设置导出的文件名称
+            string SheetName = !string.IsNullOrEmpty(FileDisplayName) ? FileDisplayName : this.GetType().Name;
+            displayName = SheetName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + "_" + DateTime.Now.ToString("hh^mm^ss") + ".xlsx";
+
+            //1.声明Excel文档
+            IWorkbook workbook = new XSSFWorkbook();
+
+            //加载初始化数据和下拉菜单数据，可重载
             InitExcelData();
 
-            CreateDataTable();    //add by dufei
-            SetTemplateDataValus();  //add by dufei
+            //设置TemplateDataTable的各列的类型
+            CreateDataTable();
 
-            if (!string.IsNullOrEmpty(FileDisplayName))
-            {
-                displayName = FileDisplayName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + "_" + DateTime.Now.ToString("hh^mm^ss") + ".xls";
-            }
-            else
-            {
-                displayName = this.GetType().Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + "_" + DateTime.Now.ToString("hh^mm^ss") + ".xls";
-            }
+            //设置初始化数据到DataTable中
+            SetTemplateDataValus();
 
-            //模板sheet页
-            HSSFSheet sheet = (HSSFSheet)workbook.CreateSheet();
-            workbook.SetSheetName(0, string.IsNullOrEmpty(FileDisplayName) ? this.GetType().Name : FileDisplayName);
+            //2.设置workbook的sheet页
+            ISheet sheet = workbook.CreateSheet();
+            workbook.SetSheetName(0, SheetName);
 
-            HSSFRow row = (HSSFRow)sheet.CreateRow(0);
+            //3.设置Sheet页的Row
+            IRow row = sheet.CreateRow(0);
             row.HeightInPoints = 20;
 
-            HSSFSheet enumSheet = (HSSFSheet)workbook.CreateSheet();
-            HSSFRow enumSheetRow1 = (HSSFRow)enumSheet.CreateRow(0);
+            ISheet enumSheet = workbook.CreateSheet();
+            IRow enumSheetRow1 = enumSheet.CreateRow(0);
             enumSheetRow1.CreateCell(0).SetCellValue(Program._localizer?["Yes"]);
             enumSheetRow1.CreateCell(1).SetCellValue(Program._localizer?["No"]);
             enumSheetRow1.CreateCell(2).SetCellValue(this.GetType().Name); //为模板添加标记,必要时可添加版本号
 
-            HSSFSheet dataSheet = (HSSFSheet)workbook.CreateSheet();
+            ISheet dataSheet = workbook.CreateSheet();
 
             #region 设置excel模板列头
             //默认灰色
@@ -125,12 +129,20 @@ namespace WalkingTec.Mvvm.Core
             //取得所有ExcelPropety
             var propetys = this.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
 
+            //设置列的索引
             int _currentColunmIndex = 0;
+
+            //设置Excel是否需要保护，默认不保护
             bool IsProtect = false;
+
+            //循环类的属性，赋值给列
             for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
             {
+                //依次获取属性字段
                 ExcelPropety excelPropety = (ExcelPropety)propetys[porpetyIndex].GetValue(this);
-                ColumnDataType dateType = excelPropety.DataType;
+                ColumnDataType dateType = (excelPropety.DataType == ColumnDataType.DateTime || excelPropety.DataType == ColumnDataType.Date) ? ColumnDataType.Text : excelPropety.DataType; //日期类型默认设置成Text类型,在赋值时会进行日期验证
+
+                //设置是否保护Excel
                 if (excelPropety.ReadOnly)
                 {
                     IsProtect = true;
@@ -207,13 +219,13 @@ namespace WalkingTec.Mvvm.Core
             }
             #endregion
 
-            #region 添加模版数据 add by dufei
+            #region 添加模版数据
             if (TemplateDataTable.Rows.Count > 0)
             {
                 for (int i = 0; i < TemplateDataTable.Rows.Count; i++)
                 {
                     DataRow tableRow = TemplateDataTable.Rows[i];
-                    HSSFRow dataRow = (HSSFRow)sheet.CreateRow(1 + i);
+                    IRow dataRow = sheet.CreateRow(1 + i);
                     for (int porpetyIndex = 0; porpetyIndex < propetys.Count(); porpetyIndex++)
                     {
                         string colName = propetys[porpetyIndex].Name;
@@ -226,14 +238,18 @@ namespace WalkingTec.Mvvm.Core
 
             //冻结行
             sheet.CreateFreezePane(0, 1, 0, 1);
+
             //锁定excel
             if (IsProtect)
             {
                 sheet.ProtectSheet("password");
             }
 
-            workbook.SetSheetHidden(1, true);
-            workbook.SetSheetHidden(2, true);
+            //隐藏前2个Sheet
+            workbook.SetSheetHidden(1, SheetState.Hidden);
+            workbook.SetSheetHidden(2, SheetState.Hidden);
+
+            //返回byte数组
             MemoryStream ms = new MemoryStream();
             workbook.Write(ms);
             return ms.ToArray();
@@ -241,14 +257,16 @@ namespace WalkingTec.Mvvm.Core
         #endregion
 
         #region 取得表头的样式
-        private static ICellStyle GetCellStyle(HSSFWorkbook workbook, BackgroudColorEnum backgroudColor = BackgroudColorEnum.Grey)
+        private static ICellStyle GetCellStyle(IWorkbook workbook, BackgroudColorEnum backgroudColor = BackgroudColorEnum.Grey)
         {
             var headerStyle = workbook.CreateCellStyle();
+
             //设定表头样式
             headerStyle.BorderBottom = BorderStyle.Thin;
             headerStyle.BorderLeft = BorderStyle.Thin;
             headerStyle.BorderRight = BorderStyle.Thin;
             headerStyle.BorderTop = BorderStyle.Thin;
+
             //用灰色填充背景
             short headerbg;
 

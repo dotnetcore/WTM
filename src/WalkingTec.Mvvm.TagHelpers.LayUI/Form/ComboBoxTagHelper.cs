@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     listItems = Items.Model as List<ComboSelectListItem>;
                     foreach (var item in listItems)
                     {
-                        if (selectVal.Contains(item.Value?.ToLower()))
+                        if (selectVal.Contains(item.Value?.ToString().ToLower()))
                         {
                             item.Selected = true;
                         }

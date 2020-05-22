@@ -149,7 +149,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
       return this.edit(formData)
         .then(res => {
           this["$notify"]({
-            title: "修改成功",
+            title: this.$t("form.SuccessfullyModified"),
             type: "success"
           });
           this.onClose();

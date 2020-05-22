@@ -177,7 +177,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             , List<DataPrivilege> dps
             , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
-            , Expression<Func<T, string>> valueField = null
+            , Expression<Func<T, object>> valueField = null
             , bool ignorDataPrivilege = false
             , bool SortByName = true)
             where T : TopBasePoco
@@ -192,7 +192,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
-                valueField = x => x.GetID().ToString().ToLower();
+                valueField = x => x.GetID();
             }
 
             //如果没有指定忽略权限，则拼接权限过滤的where条件

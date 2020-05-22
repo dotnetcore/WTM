@@ -7,14 +7,22 @@ export default class IApp extends React.Component<any, any> {
                 <Row gutter={16} >
                     <Col span={12}>
                         <Card title="WTM -- make the best. NETCORE open source framework" style={{ minHeight: 250 }} >
-                        Walkingtec.mvvm framework (WTM for short) was first developed in 2013. Based on asp.net mvc3 and the earliest Entity Framework, it was mainly used to solve the problems of low development efficiency and inconsistent code style in the company. After four years and dozens of projects, the framework has been gradually improved and four major versions have been launched.
+                            <p>
+                                Walkingtec.mvvm framework (WTM for short) was first developed in 2013 ,based on asp.net mvc3 and the earliest Entity Framework. It was mainly used to solve the problems of low coding efficiency and inconsistent code style. Based on dozens of projects,the framework has been gradually improved and four major versions have been launched during 4 years.
+                            </p>
+                            <p>
+                                In September 2017, we transplanted the code to. Net core and carried out deep optimization and reconstruction. We launched a new framework based on asp.net core and EF core. The new framework has made great progress in architecture, stability and speed. It really become a powerful tool for efficient development.
+                            </p>
+                            <p>
+                                We are happy to provide the open-source framework now. Please feel free to send us a note. let us know how we are doing and what you need.Thanks! <a href="https://github.com/dotnetcore/WTM" target="_blank" >https://github.com/dotnetcore/WTM</a>
+                            </p>
               </Card>
                     </Col>
                     <Col span={12}>
                         <Card title="Problems solved by WTM" style={{ minHeight: 250 }} >
-                        WTM framework constructs conventional coding and automates repetitive coding, which greatly improves development efficiency
-In a non detached mode, it connects the foreground UI with the background code. You don't need to separate the front and back platform. You don't need two people to cooperate. You can reduce the cost and shorten the construction period.
-In the mode of front-end and back-end separation, code generators can also be used to generate front-end and back-end code at the same time, greatly reducing the communication cost of front-end and back-end personnel, essentially improving the development efficiency, so that "separation" is no longer complex and expensive.
+                            <p>WTM framework greatly improves development efficiency by structures conventional coding and automates repetitive coding.</p>
+                            <p>In non-separation mode, it connects front-end UI with back-end code. You don't need to separate the front and back platform. You don't need two people to cooperate. WTM helps you to reduce the cost and shorten the R&D period.</p>
+                            <p>In the mode of front-end and back-end separation, both front-end and back-end code can also be generated at the same time by the code generators. It greatly reduce the communication cost of front-end and back-end personnel. In this way , ‘separation’ is no longer complex and expensive.</p>
               </Card>
                     </Col>
 
@@ -22,64 +30,45 @@ In the mode of front-end and back-end separation, code generators can also be us
                 <Divider />
                 <Row gutter={16} >
                     <Col span={12}>
-                        <Card title="框架特点" style={{ minHeight: 500 }} >
-                            <p>  一键生成WTM项目</p>
-                            <p>  一键生成增删改查，导入导出，批量操作代码</p>
-                            <p> 支持一对多，多对多关联模型的识别和代码生成</p>
-                            <p>支持分离(React+AntD,Vue+Element)和不分离(LayUI)两种模式</p>
-                            <p>  支持sqlserver，mysql，pgsql三种数据库</p>
-                            <p>   封装了Layui，AntD，Element的大部分控件，编写前台更加简便</p>
-                            <p>   提供了很多基类，封装了绝大部分后台常用操作</p>
-                            <p>     提供了用户，角色，用户组，菜单，日志等常用模块</p>
-                            <p>      支持数据权限的开发和配置</p>
-                            <p>    支持读写分离和数据库分库</p>
+                        <Card title="Framework features" style={{ minHeight: 500 }} >
+                            <p>  One click to generate WTM project</p>
+                            <p>  One click to generate add, delete, modify and query</p>
+                            <p>  Support identification and code generation of one-to-many and many-to-many association models</p>
+                            <p>  support front-back end separation mode (React+AntD,Vue+Element) and non-separation mode(LayUI)</p>
+                            <p>  Support many databases, sqlserver, MySQL ,PgSQL , Sqlite..etc</p>
+                            <p>  Encapsulates most of the controls of layUI, antd and element</p>
+                            <p>  A lot of base classes are provided ,encapsulate most common background operations</p>
+                            <p>  Provide common modules such as users, roles, user groups, menus, logs, etc</p>
+                            <p>  Support the development and configuration of data authority</p>
+                            <p>  Supportread/ write splitting ;Support database sub Library</p>
                         </Card>
                     </Col>
                     <Col span={12}>
-                        <Card title="作者的话" style={{ minHeight: 500 }}>
+                        <Card title="Author's words" style={{ minHeight: 500 }}>
                             <p>
-                                WTM框架，全称WalkingTec MVVM（不是“我特么”的拼音首字母），WTM是一个快速开发框架，有多快？至少目前dotnetcore的开源项目中，我还没有见到更接地气，开发速度更快的框架。WTM的设计理念就是最大程度的加快开发速度，降低开发成本。
-
+                                WTM framework, full name walkingtec MVVM. Walkingtec is my own company. WTM is a rapid development framework.How fast ? At least at present, in the open source project of DotNetcore, I haven't seen another faster one. Our goal of WTM is to speed up the development and reduce cost to the greatest extent.
 </p>
                             <p>
-                                国内Java一家独大原因很多，有BAT的示范效应，也有微软自己战略的失误。好在微软这两年终于想明白了， dotnet core的横空出世和收购github都是非常正确的方向。当然要想达到java一样的生态还有很长的路要走，那我就贡献一点绵薄之力吧。
-
-</p>
+                                WTM has been loved by more and more developers since its open source. WTM will surely repay your love with a more mature and stable version.Specially thanks to（layui.com Improve yourself, benefit others, we am not alone!</p>
                             <p>
-                                WTM开源以来，受到了越来越多开发者的喜爱，WTM必将以更加成熟稳定的姿态回报各位的喜爱。特别鸣谢贤心（layui.com），授权WTM开发的项目可以免费使用其收费版的LayuiAdmin。提高自己，造福他人，吾道不孤！
-
-</p>
-                            <p>
-                                —— 框架开源地址：<a href="https://github.com/dotnetcore/WTM" target="_block" >https://github.com/dotnetcore/WTM</a>
+                                —— Open source address of framework:<a href="https://github.com/dotnetcore/WTM" target="_blank" >https://github.com/dotnetcore/WTM</a>
 
                             </p>
                             <p>
-                                —— 框架在线文档：<a href="https://wtmdoc.walkingtec.cn" target="_block" >https://wtmdoc.walkingtec.cn</a>
+                                —— Framework online document:<a href="https://wtmdoc.walkingtec.cn" target="_blank" >https://wtmdoc.walkingtec.cn</a>
 
                             </p>
                             <p>
-                                —— 框架更新日志：<a href="https://github.com/dotnetcore/WTM/blob/develop/CHANGELOG.md" target="_block">查看更新日志</a>
+                                —— Framework update log:<a href="https://github.com/dotnetcore/WTM/blob/develop/CHANGELOG.md" target="_blank">view changelog</a>
 
                             </p>
                             <p>
-                                —— 框架QQ交流群：694148336
+                                —— Frame QQ communication group:694148336
 
 </p>
                         </Card>
                     </Col>
 
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={24}>
-                        <Card title="连接你我" >
-                            <div style={{ textAlign: "center" }}>
-                                <img src="https://wtmdoc.walkingtec.cn/imgs/WTM-Ali.png" width="300" height="300" />
-                                <img src="https://wtmdoc.walkingtec.cn/imgs/gongzhonghao.jpg" width="300" height="300" />
-                            </div>
-
-                        </Card>
-                    </Col>
                 </Row>
             </div>
         );

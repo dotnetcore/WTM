@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                     }
                 }
                 item.AllActions.Insert(0, new ComboSelectListItem { Text = Program._localizer["MainPage"], Value = item.ID.ToString() });
-                var ids = item.AllActions.Select(x => Guid.Parse(x.Value));
+                var ids = item.AllActions.Select(x => Guid.Parse(x.Value.ToString()));
                 item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
             }
             Pages = data2;

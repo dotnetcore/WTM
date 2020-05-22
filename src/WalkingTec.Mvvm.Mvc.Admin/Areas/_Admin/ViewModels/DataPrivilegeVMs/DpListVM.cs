@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             var dps = ConfigInfo.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
             if (dps != null)
             {
-                return dps.GetItemList(DC, LoginUserInfo).Select(x => new DpView { ID = x.Value, Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
+                return dps.GetItemList(DC, LoginUserInfo).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
             }
             else
             {

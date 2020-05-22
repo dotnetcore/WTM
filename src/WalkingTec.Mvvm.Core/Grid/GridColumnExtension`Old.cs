@@ -203,6 +203,16 @@ namespace WalkingTec.Mvvm.Core
             return self;
         }
 
-
+        /// <summary>
+        /// 设置禁止导出此列数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static GridColumn<T> SetDisableExport<T>(this GridColumn<T> self) where T : TopBasePoco
+        {
+            self.DisableExport = true;
+            return self;
+        }
     }
 }

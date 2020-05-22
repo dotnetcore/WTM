@@ -20,35 +20,37 @@ export default class extends Vue {
     @State
     getFrameworkGroupsData;
 
-    formOptions = {
-        formProps: {
-            "label-width": "100px"
-        },
-        formItem: {
-            "Entity.ID": { isHidden: true },
-            "Entity.RoleCode": {
-                type: "input",
-                label: "角色编号",
-                rules: {
-                    required: true,
-                    message: "请输入角色编号",
-                    trigger: "blur"
-                }
+    get formOptions() {
+        return {
+            formProps: {
+                "label-width": "100px"
             },
-            "Entity.RoleName": {
-                type: "input",
-                label: "角色名称",
-                rules: {
-                    required: true,
-                    message: "请输入角色名称",
-                    trigger: "blur"
+            formItem: {
+                "Entity.ID": { isHidden: true },
+                "Entity.RoleCode": {
+                    type: "input",
+                    label: this.$t("frameworkrole.RoleCode"),
+                    rules: {
+                        required: true,
+                        message: this.$t("frameworkrole.pleaseEnterRoleCode"),
+                        trigger: "blur"
+                    }
+                },
+                "Entity.RoleName": {
+                    type: "input",
+                    label: this.$t("frameworkrole.RoleName"),
+                    rules: {
+                        required: true,
+                        message: this.$t("frameworkrole.pleaseEnterRoleName"),
+                        trigger: "blur"
+                    }
+                },
+                "Entity.RoleRemark": {
+                    type: "input",
+                    label: this.$t("frameworkrole.RoleRemark")
                 }
-            },
-            "Entity.RoleRemark": {
-                type: "input",
-                label: "备注"
             }
-        }
-    };
+        };
+    }
 }
 </script>
