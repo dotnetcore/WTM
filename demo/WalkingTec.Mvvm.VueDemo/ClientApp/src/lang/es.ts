@@ -144,7 +144,8 @@ export default {
     delete: "Eliminar",
     cancel: "Cancelar",
     confirm: "Confirmar",
-    detail: "detail"
+    detail: "detail",
+    custom: "Custom column"
   },
   example: {
     warning:
@@ -188,5 +189,16 @@ export default {
     showSidebarLogo: "Show Sidebar Logo",
     fixedHeader: "Fixed Header",
     sidebarTextTheme: "Sidebar Text Theme"
+  },
+  buttom: {
+    add: "add",
+    edit: "edit",
+    delete: "delete",
+    import: "import",
+    export: "export",
+    exportAll: "export all",
+    exportSelect: "export select",
+    reset: "reset",
+    search: "search"
   }
 };

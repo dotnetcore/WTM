@@ -111,8 +111,7 @@ namespace $namespace$
             var vm = CreateVM<$controllername$ListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
         [ActionDescription("CheckExport")]
@@ -125,8 +124,7 @@ namespace $namespace$
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
         [ActionDescription("DownloadTemplate")]

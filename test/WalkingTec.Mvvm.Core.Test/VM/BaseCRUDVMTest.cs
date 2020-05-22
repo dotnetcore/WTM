@@ -552,6 +552,59 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
         }
 
+        [TestMethod]
+        [Description("一对多修改子表")]
+        public void One2ManyDoEditSub()
+        {
+            One2ManyDoAdd();
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                var mid = context.Set<Major>().Select(x => x.ID).First();
+
+                Major m = new Major { ID = mid };
+                m.MajorCode = "maaa";
+                m.MajorName = "mbbb";
+                m.School = new School
+                {
+                    ID = id,
+                    SchoolName = "aaa",
+                    SchoolCode = "bbb",
+                    Remark = "ccc"
+                };
+
+                _majorvm.Entity = m;
+                _majorvm.DC = context;
+                _majorvm.FC.Add("Entity.MajorCode", null);
+                _majorvm.FC.Add("Entity.MajorName", null);
+
+                _schoolvm.Entity = m.School;
+                _schoolvm.DC = context;
+                _schoolvm.FC.Add("Entity.SchoolCode", null);
+                _schoolvm.FC.Add("Entity.SchoolName", null);
+
+                _schoolvm.DoEdit(false);
+                _majorvm.DoEdit(false);
+            }
+
+            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
+            {
+                var id = context.Set<School>().Select(x => x.ID).First();
+                Assert.AreEqual(1, context.Set<School>().Count());
+                Assert.AreEqual(2, context.Set<Major>().Where(x => x.SchoolId == id).Count());
+                var rv1 = context.Set<Major>().Where(x => x.MajorCode == "maaa").SingleOrDefault();
+                Assert.AreEqual("maaa", rv1.MajorCode);
+                Assert.AreEqual("mbbb", rv1.MajorName);
+                var rv2 = context.Set<School>().Where(x => x.SchoolCode == "bbb").SingleOrDefault();
+                Assert.AreEqual("bbb", rv2.SchoolCode);
+                Assert.AreEqual("aaa", rv2.SchoolName);
+
+            }
+        }
+
+
+
 
         [TestMethod]
         [Description("多对多修改")]

@@ -51,8 +51,9 @@
                                 { "name": "/ListAction", "title": "列表简介", "jump": "/VM/List" },
                                 { "name": "/ListAction", "title": "列表动作按钮", "jump": "/VM/ListAction" },
                                 { "name": "/ListColumn", "title": "列表列配置", "jump": "/VM/ListColumn" },
-                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" }
-                            ]
+                                { "name": "/SearchMode", "title": "查询模式", "jump": "/VM/SearchMode" },
+                                { "name": "/Export", "title": "导出", "jump": "/VM/Export" }
+                           ]
                         },
                         { "name": "/Import", "title": "导入VM", "jump": "/VM/Import" },
                         { "name": "/Batch", "title": "批量操作VM", "jump": "/VM/Batch" },

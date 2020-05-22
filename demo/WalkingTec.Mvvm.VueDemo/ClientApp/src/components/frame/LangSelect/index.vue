@@ -1,23 +1,23 @@
 <template>
-  <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
-    <el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">
-      <i class="el-icon-orange"></i>
-    </el-tooltip>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :disabled="language==='zh'" command="zh">
-        中文
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language==='en'" command="en">
-        English
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language==='es'" command="es">
+    <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
+        <el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">
+            <i class="el-icon-orange"></i>
+        </el-tooltip>
+        <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item :disabled="language==='zh'" command="zh">
+                中文
+            </el-dropdown-item>
+            <el-dropdown-item :disabled="language==='en'" command="en">
+                English
+            </el-dropdown-item>
+            <!-- <el-dropdown-item :disabled="language==='es'" command="es">
         Español
       </el-dropdown-item>
       <el-dropdown-item :disabled="language==='ja'" command="ja">
         日本語
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+      </el-dropdown-item> -->
+        </el-dropdown-menu>
+    </el-dropdown>
 </template>
 
 <script lang="ts">
@@ -39,6 +39,7 @@ export default class extends Vue {
             message: "Switch Language Success",
             type: "success"
         });
+        location.reload();
     }
 }
 </script>

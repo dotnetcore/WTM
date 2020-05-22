@@ -2,9 +2,9 @@
     <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
         <wtm-create-form :ref="refName" :status="status" :options="formOptions">
             <template #Pages>
-                <el-table :data="mergeFormData.Pages" stripe border element-loading-text="拼命加载中">
-                    <el-table-column label="页面" prop="Name" width="150"></el-table-column>
-                    <el-table-column label="动作">
+                <el-table :data="mergeFormData.Pages" stripe border :element-loading-text="$t('frameworkrole.loading')">
+                    <el-table-column :label="$t('frameworkrole.page')" prop="Name" width="150"></el-table-column>
+                    <el-table-column :label="$t('frameworkrole.action')">
                         <template slot-scope="scope">
                             <el-checkbox-group v-model="mergeFormData.Pages[scope.$index].Actions">
                                 <el-checkbox v-for="item in mergeFormData.Pages[scope.$index].AllActions" :key="item.Value" :label="item.Value">{{ item.Text }}</el-checkbox>
@@ -47,15 +47,15 @@ export default class extends Vue {
                 },
                 "Entity.RoleCode": {
                     type: "label",
-                    label: "角色编号"
+                    label: this.$t("frameworkrole.RoleCode")
                 },
                 "Entity.RoleName": {
                     type: "label",
-                    label: "角色名称"
+                    label: this.$t("frameworkrole.RoleName")
                 },
                 Pages: {
                     type: "wtmSlot",
-                    label: "备注",
+                    label: this.$t("frameworkrole.RoleRemark"),
                     span: 24,
                     slotKey: "Pages"
                 }

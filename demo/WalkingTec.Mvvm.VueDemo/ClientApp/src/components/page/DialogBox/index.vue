@@ -20,6 +20,7 @@
 import { Component, Vue, Prop, Provide } from "vue-property-decorator";
 import { SettingsModule } from "@/store/modules/settings";
 import DialogFooter from "./dialog-footer.vue";
+
 /**
  * 弹出框
  */
@@ -60,7 +61,7 @@ export default class DialogBox extends Vue {
     }
     // title
     get titlePvt() {
-        return this.title || this.$t(`table.${this.status}`);
+        return this.title || this.$t(`table.${this.status || "add"}`);
     }
     /**
      * 关闭事件

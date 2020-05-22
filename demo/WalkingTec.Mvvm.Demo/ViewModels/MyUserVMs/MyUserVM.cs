@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +23,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         {
             SetInclude(x => x.UserRoles);
             SetInclude(x => x.UserGroups);
+        }
+
+        public override void Validate()
+        {
+            base.Validate();
         }
 
         protected override void InitVM()
