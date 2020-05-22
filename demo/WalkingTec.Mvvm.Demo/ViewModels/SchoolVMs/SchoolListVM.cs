@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             NeedPage = false;
         }
 
+
         public override string SetFullRowBgColor(object entity)
         {
             var t = entity as School_View;
