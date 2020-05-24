@@ -168,6 +168,9 @@
   <data name="Attachment" xml:space="preserve">
     <value>附件</value>
   </data>
+  <data name="AttemptedValueIsInvalidAccessor" xml:space="preserve">
+    <value>'{0}' 不是 {1} 的有效格式</value>
+  </data>
   <data name="BasicInfo" xml:space="preserve">
     <value>基本信息</value>
   </data>
@@ -860,6 +863,9 @@
   </data>
   <data name="Valid" xml:space="preserve">
     <value>有效</value>
+  </data>
+  <data name="ValueIsInvalidAccessor" xml:space="preserve">
+    <value>{0} 格式错误</value>
   </data>
   <data name="ViewFile" xml:space="preserve">
     <value>查看文件</value>
