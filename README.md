@@ -1,8 +1,8 @@
 English | [简体中文](./README.zh-CN.md) 
 
-# WalkingTec.Mvvm for aspnet core
+# WalkingTec.Mvvm for asp.net core
 
-Walkingtec.mvvm framework (WTM) is a rapid development framework based on. Netcore. It supports LayUI, React, VUE. WTM has built-in code generator to maximize development efficiency. It is a powerful tool for efficient development.
+Walkingtec.mvvm framework (WTM) is a rapid development framework based on. Netcore. It supports LayUI, React, VUE. WTM has built-in code generator to maximize development efficiency. It is a powerful tool for efficient web development.
 
 [![Coverage Status](https://coveralls.io/repos/github/dotnetcore/WTM/badge.svg?branch=master)](https://coveralls.io/github/dotnetcore/WTM?branch=master)
 [![Member project of .NET Core Community](https://img.shields.io/badge/member%20project%20of-NCC-9e20c9.svg)](https://github.com/dotnetcore)
