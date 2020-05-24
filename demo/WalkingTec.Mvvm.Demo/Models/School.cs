@@ -29,6 +29,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "学校名称")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
+        [Column("SchoolName2")]
         public string SchoolName { get; set; }
 
         [Display(Name = "学校类型")]

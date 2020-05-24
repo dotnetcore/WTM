@@ -1,10 +1,9 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentListVM
 
 <wt:searchpanel vm="@Model" reset-btn="true">
-  <wt:row items-per-row="ItemsPerRowEnum.Three">
-    <wt:textbox field="Searcher.LoginName" />
-    <wt:textbox field="Searcher.Name" />
-    <wt:combobox field="Searcher.IsValid" empty-text="全部" />
-  </wt:row>
+<wt:row items-per-row="ItemsPerRowEnum.Three">
+<wt:textbox field="Searcher.ID" />
+<wt:combobox field="Searcher.SelectedStudentMajorIDs" items="Searcher.AllStudentMajors" empty-text="全部" />
+</wt:row>
 </wt:searchpanel>
 <wt:grid vm="@Model" url="/Student/Search"/>
