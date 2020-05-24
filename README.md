@@ -28,9 +28,9 @@ Package name                              | Version                     | Downlo
 `WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.Admin.svg)
 `WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
-## features of the framework
+## WTM Features
 
-Framework provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
+WTM provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
 
 - CrudVM provides most common functionalities for data addition, deletion and modification.
 
@@ -40,17 +40,17 @@ Framework provides 4 types of ViewModel, covering all of the common functionalit
 
 - BatchVM provides batch operation functionality.
 
-- Framework has its own code generator, which makes development efficient and fast;
+- WTM has its own code generator, which makes development efficient and fast;
 
-- Framework provides dozens of client-side controls, including Form, Grid, Panel, Dialog and qute alot of other common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
+- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and qute alot of other common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
 
-- The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
+- WTM provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
 
-- The framework supports single sign on, portal and distributed database;
+- WTM supports single sign on, portal and distributed database;
 
-- The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
+- WTM provides simplified operation of common back-end development libraries such as Redis, DFS etc.
 
-- The framework provides both the server-side and client-side mode.
+- WTM provides both the server-side and client-side mode.
 
 
 | Mode | UI | Status  |
