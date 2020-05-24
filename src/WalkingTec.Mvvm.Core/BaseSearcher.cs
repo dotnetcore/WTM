@@ -37,6 +37,8 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public Dictionary<string, object> FC { get; set; }
 
+        public IModelStateService MSD { get; set; }
+
         /// <summary>
         /// 获取VM的全名
         /// </summary>
@@ -154,6 +156,10 @@ namespace WalkingTec.Mvvm.Core
             InitVM();
         }
 
+        public virtual void Validate()
+        {
+
+        }
         /// <summary>
         /// 将源 VM 的 FC 等内容复制到本VM中
         /// </summary>
@@ -164,6 +170,7 @@ namespace WalkingTec.Mvvm.Core
             this.DC = vm.DC;
             this.Session = vm.Session;
             this.LoginUserInfo = vm.LoginUserInfo;
+            this.MSD = vm.MSD;
             //var CurrentCS = vm.CurrentCS;
             //var CreatorAssembly = vm.CreatorAssembly;
         }

@@ -72,6 +72,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 .CheckContain(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.IP, x=>x.IP)
                 .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x=>x.ActionTime, includeMax:false)
+                .CheckWhere(Searcher.Duration,x=>x.Duration >= Searcher.Duration)
                 .Select(x=>new ActionLog()
                 {
                     ID          = x.ID,

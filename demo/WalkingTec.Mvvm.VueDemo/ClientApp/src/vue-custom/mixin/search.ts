@@ -115,8 +115,8 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
           this.pageDate.pageTotal = repData.Count || 0;
           this.tableData = repData.Data || [];
         })
-        .catch(err => {
-          console.log(err);
+        .catch(error => {
+          this.showResponseValidate(error.response.data.Form)
           this.loading = false;
         });
     }
@@ -174,6 +174,12 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
      */
     public onSelectionChange(selectData: Array<any>) {
       this.selectData = selectData;
+    }
+    /**
+     * 展示接口 验证错误提示
+     */
+    private showResponseValidate(resForms: {}) {
+      _.get(this.$refs, this.searchRefName).showResponseValidate(resForms);
     }
     created() {
       this.onSearch();
