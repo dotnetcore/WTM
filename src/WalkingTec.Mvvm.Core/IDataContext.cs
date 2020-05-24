@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         bool IsFake { get; set; }
 
+        DBTypeEnum DBType { get; set; }
         /// <summary>
         /// AddEntity
         /// </summary>

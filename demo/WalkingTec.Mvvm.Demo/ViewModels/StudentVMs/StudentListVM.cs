@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,29 +11,27 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public class StudentListVM : BasePagedListVM<Student_View, StudentSearcher>
+    public partial class StudentListVM : BasePagedListVM<Student_View, StudentSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {
             return new List<GridAction>
             {
-                 this.MakeAction("Student","Index2","多列表","多列表", GridActionParameterTypesEnum.NoId,dialogWidth:800).SetShowDialog(false).SetIsRedirect
-                (true),
-               this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
-                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, "导出",""),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Create, Localizer["Create"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Edit, Localizer["Edit"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Delete, Localizer["Delete"], "",dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Details, Localizer["Details"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchEdit, Localizer["BatchEdit"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.BatchDelete, Localizer["BatchDelete"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.Import, Localizer["Import"],"", dialogWidth: 800),
+                this.MakeStandardAction("Student", GridActionStandardTypesEnum.ExportExcel, Localizer["Export"],""),
             };
         }
 
         protected override IEnumerable<IGridColumn<Student_View>> InitGridHeader()
         {
             return new List<GridColumn<Student_View>>{
-                this.MakeGridHeader(x => x.LoginName),
+                this.MakeGridHeader(x => x.ID),
                 this.MakeGridHeader(x => x.Password),
                 this.MakeGridHeader(x => x.Email),
                 this.MakeGridHeader(x => x.Name),
@@ -44,6 +42,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid),
                 this.MakeGridHeader(x => x.EnRollDate),
+                this.MakeGridHeader(x => x.MajorName_view),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -56,19 +55,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             };
         }
 
+
         public override IOrderedQueryable<Student_View> GetSearchQuery()
         {
-            List<object> newids = new List<object>();
-
             var query = DC.Set<Student>()
-                .CheckContain(Searcher.LoginName, x => x.LoginName)
-                .CheckContain(Searcher.Name, x => x.Name)
-                .CheckEqual(Searcher.IsValid, x => x.IsValid)
-                .DPWhere(LoginUserInfo.DataPrivileges, x => x.StudentMajor[0].MajorId)
+                .CheckContain(Searcher.ID, x=>x.ID)
+                .CheckWhere(Searcher.SelectedStudentMajorIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorIDs.Contains(y.MajorId)).Select(z=>z.StudentId).Contains(x.ID))
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,
-                    LoginName = x.LoginName,
                     Password = x.Password,
                     Email = x.Email,
                     Name = x.Name,
@@ -79,6 +74,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
                     PhotoId = x.PhotoId,
                     IsValid = x.IsValid,
                     EnRollDate = x.EnRollDate,
+                    MajorName_view = x.StudentMajor.Select(y=>y.Major.MajorName).ToSpratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
             return query;
@@ -87,6 +83,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
     }
 
     public class Student_View : Student{
+        [Display(Name = "专业名称")]
+        public String MajorName_view { get; set; }
 
     }
 }
