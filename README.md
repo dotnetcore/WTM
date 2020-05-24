@@ -28,29 +28,29 @@ Package name                              | Version                     | Downlo
 `WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.Admin.svg)
 `WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
-Main features of the framework:
+## features of the framework
 
-The framework provides 4 types of ViewModel, covering the common functions of mainstream web applications. They are:
+Framework provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
 
-CrudVM provides the most common function of data addition, deletion and modification;
+- CrudVM provides most common functionalities for data addition, deletion and modification.
 
-ListVM provides the function of paging list and exporting
+- ListVM provides paging list and exporting functionality
 
-ImportVM & TemplateVM provides the function of importing via excel ;
+- ImportVM & TemplateVM provides importing via excel functionality
 
-BatchVM provides the function of batch operation.
+- BatchVM provides batch operation functionality.
 
-The framework has its own code generator, which makes the development efficient and fast;
+- Framework has its own code generator, which makes development efficient and fast;
 
-The framework provides dozens of client-side controls, including Form,Grid,Panel,Dialog and almost all common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
+- Framework provides dozens of client-side controls, including Form, Grid, Panel, Dialog and qute alot of other common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
 
-The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
+- The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
 
-The framework supports single sign on, portal and distributed database;
+- The framework supports single sign on, portal and distributed database;
 
-The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
+- The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
 
-The framework provides both the server-side and client-side mode.
+- The framework provides both the server-side and client-side mode.
 
 
 | Mode | UI | Status  |
