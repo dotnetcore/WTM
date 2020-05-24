@@ -34,23 +34,23 @@ WTM provides 4 types of ViewModel, covering all of the common functionalities of
 
 - CrudVM provides most common functionalities for data addition, deletion and modification.
 
-- ListVM provides paging list and exporting functionality
+- ListVM provides paging list and exporting functionality.
 
-- ImportVM & TemplateVM provides importing via excel functionality
+- ImportVM & TemplateVM provides importing via excel functionality.
 
 - BatchVM provides batch operation functionality.
 
-- WTM has its own code generator, which makes development efficient and fast;
+- WTM has its own code generator, which makes development efficient and fast.
 
-- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and qute alot of other common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
+- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and quite alot of other common controls. 
 
-- WTM provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
+- WTM provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end  functionalities;
 
 - WTM supports single sign on, portal and distributed database;
 
-- WTM provides simplified operation of common back-end development libraries such as Redis, DFS etc.
+- WTM provides simplified integration with libraries such as Redis, DFS etc.
 
-- WTM provides both the server-side and client-side mode.
+- WTM provides both server-side and client-side frameworks for building user interfaces.
 
 
 | Mode | UI | Status  |
