@@ -185,6 +185,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         template.CopyContext(model);
                         template.DoReInit();
                     }
+                    if(model is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
+                    {
+                        var searcher = lvm.Searcher;
+                        searcher.CopyContext(lvm);                        
+                    }
                     model.Validate();
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
                     if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
@@ -222,6 +227,16 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         ctrl.ModelState.Remove(r);
                     }
+                }
+
+                if(item.Value is BaseSearcher se)
+                {
+                    se.Session = new SessionServiceProvider(context.HttpContext.Session);
+                    se.LoginUserInfo = ctrl.LoginUserInfo;
+                    se.DC = ctrl.DC;
+                    se.FC = new Dictionary<string, object>();
+                    se.MSD = new ModelStateServiceProvider(ctrl.ModelState);
+                    se.Validate();
                 }
             }
 

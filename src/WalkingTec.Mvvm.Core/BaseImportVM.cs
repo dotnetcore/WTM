@@ -907,7 +907,7 @@ namespace WalkingTec.Mvvm.Core
 
                     if (ListAdd.Count > 0)
                     {
-                        BulkInsert<P>(DC.CSName, DC.GetTableName<P>(), ListAdd);
+                        BulkInsert<P>(DC, DC.GetTableName<P>(), ListAdd);
                     }
                 }
                 catch (Exception e)
@@ -927,9 +927,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="list"></param>
-        protected static void BulkInsert<K>(string connection, string tableName, IList<K> list)
+        protected static void BulkInsert<K>(IDataContext dc, string tableName, IList<K> list)
         {
-            using (var bulkCopy = new SqlBulkCopy(connection))
+            using (var bulkCopy = new SqlBulkCopy(dc.CSName))
             {
                 bulkCopy.BatchSize = list.Count;
                 bulkCopy.DestinationTableName = tableName;
@@ -944,7 +944,7 @@ namespace WalkingTec.Mvvm.Core
                     var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
                     if (notmapped == null && notobject)
                     {
-                        string Name = propertyInfo.Name;
+                        string Name = dc.GetFieldName<K>( propertyInfo.Name);
                         bulkCopy.ColumnMappings.Add(Name, Name);
                         table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
                     }

@@ -187,6 +187,9 @@ namespace WalkingTec.Mvvm.Mvc
                 options.Filters.Add(new DataContextFilter(CsSector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
+
+                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor",x]);
+                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x,y) => Core.Program._localizer["AttemptedValueIsInvalidAccessor",x,y]);
                 options.EnableEndpointRouting = true;
             })
             .ConfigureApplicationPartManager(appPartsManager =>

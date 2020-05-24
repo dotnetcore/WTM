@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Core
         ///// Config
         ///// </summary>
         //Configs Config { get; set; }
-
+        IModelStateService MSD { get; set; }
         ISessionService Session { get; set; }
 
         IDistributedCache Cache { get; set; }

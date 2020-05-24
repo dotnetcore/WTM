@@ -66,13 +66,18 @@ namespace WalkingTec.Mvvm.Core
 
         public static FrameworkMenu FindMenu(string url)
         {
+            if(url == null)
+            {
+                return null;
+            }
+            url = url.ToLower();
             var menus = GlobalServices.GetRequiredService<GlobalData>()?.AllMenus;
             if(menus == null)
             {
                 return null;
             }
             //寻找菜单中是否有与当前判断的url完全相同的
-            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
 
             //如果没有，抹掉当前url的参数，用不带参数的url比对
             if (menu == null)
@@ -81,20 +86,15 @@ namespace WalkingTec.Mvvm.Core
                 if (pos > 0)
                 {
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
                 }
             }
 
             //如果还没找到，则判断url是否为/controller/action/id这种格式，如果是则抹掉/id之后再对比
-            if (menu == null)
+            if (menu == null && url.EndsWith("/index"))
             {
-                var split = url.Split('/');
-                if (split.Length >= 2 && Guid.TryParse(split.Last(), out Guid longTest))
-                {
-                    var pos = url.LastIndexOf("/");
-                    url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
-                }
+                url = url.Substring(0, url.Length - 6);
+                menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
             }
             return menu;
         }

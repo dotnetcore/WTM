@@ -726,7 +726,7 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }

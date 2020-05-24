@@ -168,6 +168,9 @@
   <data name="Attachment" xml:space="preserve">
     <value>Attachment</value>
   </data>
+  <data name="AttemptedValueIsInvalidAccessor" xml:space="preserve">
+    <value>The value '{0}' is not valid for {1}.</value>
+  </data>
   <data name="BasicInfo" xml:space="preserve">
     <value>Basic</value>
   </data>
@@ -863,6 +866,9 @@
   </data>
   <data name="Valid" xml:space="preserve">
     <value>Valid</value>
+  </data>
+  <data name="ValueIsInvalidAccessor" xml:space="preserve">
+    <value>The value '{0}' is invalid.</value>
   </data>
   <data name="ViewFile" xml:space="preserve">
     <value>View file</value>

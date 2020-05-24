@@ -5,6 +5,8 @@ import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
 import Request from 'utils/Request';
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
+import { FormattedMessage } from 'react-intl';
 
 /**
  * label  标识
