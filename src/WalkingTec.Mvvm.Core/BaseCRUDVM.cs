@@ -603,7 +603,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             DC.UpdateProperty(Entity, name);
                         }
-                        catch (Exception ea)
+                        catch (Exception)
                         {
                         }
                     }
@@ -781,7 +781,7 @@ namespace WalkingTec.Mvvm.Core
                     await ofa.DoDeleteAsync();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }

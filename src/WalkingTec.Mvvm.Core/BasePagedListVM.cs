@@ -249,7 +249,7 @@ namespace WalkingTec.Mvvm.Core
         private byte[] DownLoadZipPackage(string FileName)
         {
             //文件根目录
-            string RootPath = $"{GlobalServices.GetRequiredService<IHostingEnvironment>().WebRootPath}\\{FileName}";
+            string RootPath = $"{GlobalServices.GetRequiredService<IWebHostEnvironment>().WebRootPath}\\{FileName}";
 
             //文件夹目录
             string FilePath = $"{RootPath}//FileFolder";
