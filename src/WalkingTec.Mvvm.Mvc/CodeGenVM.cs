@@ -1299,7 +1299,7 @@ namespace WalkingTec.Mvvm.Mvc
                     string rules = "rules: []";
                     if (isrequired == true)
                     {
-                        rules = $@"rules: [{{ ""required"": true, ""message"": ""{label}不能为空"" }}]";
+                        rules = $@"rules: [{{ ""required"": true, ""message"": <FormattedMessage id='tips.error.required' values={{{{ txt: getLocalesValue('{label}') }}}} /> }}]";
                     }
                     fieldstr.AppendLine($@"            /** {label} */");
                     if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
@@ -1369,15 +1369,15 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else if (checktype.IsNumber())
                         {
-                            fieldstr.AppendLine($@"                formItem: <InputNumber placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <InputNumber placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
                         }
                         else if (checktype == typeof(string))
                         {
-                            fieldstr.AppendLine($@"                formItem: <Input placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <Input placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
                         }
                         else if (checktype == typeof(DateTime))
                         {
-                            fieldstr.AppendLine($@"                formItem: <WtmDatePicker placeholder=""请输入 {label}"" />");
+                            fieldstr.AppendLine($@"                formItem: <WtmDatePicker placeholder={{getLocalesTemplate('tips.placeholder.input', {{ txt: getLocalesValue('{label}') }})}} />");
                         }
                     }
                     fieldstr.Append("            }");
@@ -1424,13 +1424,13 @@ namespace WalkingTec.Mvvm.Mvc
                         var subtype = Type.GetType(item.RelatedField);
                         if (string.IsNullOrEmpty(item.SubIdField) == true)
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}
                     dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
                         }
                         else
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""  multiple
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}  multiple
                     dataSource ={{ Request.cache({{ url: ""/api/{ModelName}/Get{subtype.Name}s"" }})}}
                 /> ");
 
@@ -1446,14 +1446,14 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype == typeof(bool))
                         {
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部""  dataSource={{[
-                    {{ Text: ""是"", Value: true }},{{ Text: ""否"", Value: false }}
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}}  dataSource={{[
+                    {{ Text: <FormattedMessage id='tips.bool.true' />, Value: true }},{{ Text: <FormattedMessage id='tips.bool.false' />, Value: false }}
                 ]}}/>");
                         }
                         else if (checktype.IsEnum())
                         {
                             var es = checktype.ToListItems();
-                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder=""全部"" dataSource={{[  ");
+                            fieldstr2.AppendLine($@"                formItem: <WtmSelect placeholder={{getLocalesValue('tips.all')}} dataSource={{[  ");
                             for (int a = 0; a < es.Count; a++)
                             {
                                 var e = es[a];
@@ -1655,7 +1655,7 @@ namespace WalkingTec.Mvvm.Mvc
                     string rules = "rules: []";
                     if (isrequired == true)
                     {
-                        rules = $@"rules: [{{ required: true, message: ""{label}不能为空"",trigger: ""blur"" }}]";
+                        rules = $@"rules: [{{ required: true, message: ""{label}""+this.$t(""form.notnull""),trigger: ""blur"" }}]";
                     }
                     if (string.IsNullOrEmpty(item.RelatedField) == false && string.IsNullOrEmpty(item.SubIdField) == true)
                     {
@@ -1706,7 +1706,7 @@ namespace WalkingTec.Mvvm.Mvc
                             key: item.Value,
                             label: item.Text
                         }})),
-                        titles: [""所有"", ""已选""],
+                        titles: [this.$t(""form.all""), this.$t(""form.selected"")],
                         filterable: true,
                         filterMethod: filterMethod
                     }},
@@ -1897,7 +1897,7 @@ namespace WalkingTec.Mvvm.Mvc
                     children: {item.FieldName}Types,
                     props: {{
                         clearable: true,
-                        placeholder: '全部'
+                        placeholder: this.$t(""form.all"")
                     }}");
 
                                 enums.Add(item.FieldName + "Types");
@@ -1917,9 +1917,9 @@ namespace WalkingTec.Mvvm.Mvc
                     props: {{
                             type: ""datetimerange"",
                         ""value-format"": ""yyyy-MM-dd HH:mm:ss"",
-                        ""range-separator"": ""至"",
-                        ""start-placeholder"": ""开始日期"",
-                        ""end-placeholder"": ""结束日期""
+                        ""range-separator"": ""-"",
+                        ""start-placeholder"": this.$t(""table.startdate""),
+                        ""end-placeholder"": this.$t(""table.enddate"")
                     }}");
                             }
                         }
