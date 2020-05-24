@@ -24,7 +24,14 @@ namespace $namespace$
         [HttpPost]
         public string Search($modelname$ListVM vm)
         {
-            return vm.GetJson(false);
+            if (ModelState.IsValid)
+            {
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
         #endregion

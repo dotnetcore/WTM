@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("学生管理")]
+    [ActionDescription("学生")]
     public partial class StudentController : BaseController
     {
         #region Search
@@ -24,7 +24,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public string Search(StudentListVM vm)
         {
-            return vm.GetJson(false);
+            if (ModelState.IsValid)
+            {
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
         #endregion

@@ -14,6 +14,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
     {
         [Display(Name = "账号")]
         public String ID { get; set; }
+        [Display(Name = "姓名")]
+        public String Name { get; set; }
         public List<ComboSelectListItem> AllStudentMajors { get; set; }
         [Display(Name = "专业")]
         public List<Guid> SelectedStudentMajorIDs { get; set; }
