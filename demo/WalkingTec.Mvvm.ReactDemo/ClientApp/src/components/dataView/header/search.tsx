@@ -62,7 +62,7 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         })
         // )
 
-        notification.error({
+        msg && notification.error({
             key: 'DataViewSearch',
             message: msg, //ajax.status,
             duration: 5,
