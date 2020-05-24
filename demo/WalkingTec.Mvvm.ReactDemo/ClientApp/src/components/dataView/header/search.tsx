@@ -5,7 +5,7 @@
  * @modify date 2019-02-24 17:05:58
  * @desc [description]
  */
-import { Button, Col, Divider, Form, Icon, Row, Spin } from 'antd';
+import { Button, Col, Divider, Form, Icon, Row, Spin, notification } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { DesError } from 'components/decorators';
 import GlobalConfig from 'global.config';
@@ -49,13 +49,25 @@ export class DataViewSearch extends React.Component<IAppProps, any> {
         this.onSubmit()
     }
     onSetErrorMsg(Form) {
+        // console.log("DataViewSearch -> onSetErrorMsg -> Form", Form)
         const { setFields, getFieldValue } = this.props.form;
-        setFields(lodash.mapValues(Form, (error, key) => {
-            return {
-                value: getFieldValue(key),
-                errors: [new Error(error)]
-            }
-        }))
+        let msg = '';
+        // setFields(
+        lodash.mapValues(Form, (error, key) => {
+            msg += ` ` + error;
+            // return {
+            //     value: getFieldValue(key),
+            //     errors: [new Error(error)]
+            // }
+        })
+        // )
+
+        notification.error({
+            key: 'DataViewSearch',
+            message: msg, //ajax.status,
+            duration: 5,
+            // description: `${ajax.request.method}: ${ajax.request.url}`,
+        });
     }
     async onSearch(values) {
         console.log("搜索参数", values);
