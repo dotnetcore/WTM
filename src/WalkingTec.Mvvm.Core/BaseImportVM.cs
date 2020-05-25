@@ -967,7 +967,17 @@ namespace WalkingTec.Mvvm.Core
                     }
                     table.Rows.Add(values);
                 }
-
+                //检测是否有继承字段，如果存在，进行赋值
+                string Discriminator = dc.GetFieldName<K>("Discriminator");
+                if (!string.IsNullOrEmpty(Discriminator))
+                {
+                    bulkCopy.ColumnMappings.Add("Discriminator", "Discriminator");
+                    table.Columns.Add("Discriminator", typeof(string));
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        table.Rows[i]["Discriminator"] = typeof(K).Name;
+                    }
+                }
                 bulkCopy.WriteToServer(table);
             }
         }
