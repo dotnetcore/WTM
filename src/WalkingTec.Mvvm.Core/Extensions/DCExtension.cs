@@ -843,7 +843,7 @@ where S : struct
         public static string GetFieldName<T>(this IDataContext self, string fieldname)
         {
             var rv = self.Model.FindEntityType(typeof(T)).FindProperty(fieldname);
-            return rv.GetColumnName();
+            return rv?.GetColumnName();
         }
 
         public static string GetPropertyNameByFk(this IDataContext self, Type sourceType, string fkname)
