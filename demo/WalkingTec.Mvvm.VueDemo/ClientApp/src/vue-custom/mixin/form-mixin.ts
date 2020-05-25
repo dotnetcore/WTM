@@ -125,7 +125,9 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
      */
     onAdd(data: object | null = null) {
       let formData = this.getFormData(data);
-      delete formData.Entity["ID"];
+      if (!formData.Entity["ID"]) {
+        delete formData.Entity["ID"];
+      }
       formData = this.beforeRequest(formData) || formData;
       return this.add(formData)
         .then(res => {

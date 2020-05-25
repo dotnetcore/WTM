@@ -1,2 +1,3 @@
-﻿@using WalkingTec.Mvvm.TagHelpers.LayUI
+@using WalkingTec.Mvvm.TagHelpers.LayUI
+@using Microsoft.Extensions.Localization;
 @addTagHelper *, WalkingTec.Mvvm.TagHelpers.LayUI

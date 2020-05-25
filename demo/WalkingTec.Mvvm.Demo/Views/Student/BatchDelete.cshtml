@@ -1,4 +1,5 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentBatchVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
 	<wt:quote>@Model.Localizer["BatchDeleteConfirm"]</wt:quote>

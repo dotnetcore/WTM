@@ -1,4 +1,5 @@
 @model $vmnamespace$.$modelname$VM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
 	<wt:quote>@Model.Localizer["DeleteConfirm"]</wt:quote>$fields$
