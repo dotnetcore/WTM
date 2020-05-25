@@ -220,7 +220,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 this.autoSizeAll();
             }
         });
-        await this.props.Store.onSearch();
+        // await this.props.Store.onSearch();
         lodash.defer(() => {
             this.sizeColumnsToFit();
             this.autoSizeAll();

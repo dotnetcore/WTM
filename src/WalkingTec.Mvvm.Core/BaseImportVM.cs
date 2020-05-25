@@ -907,7 +907,7 @@ namespace WalkingTec.Mvvm.Core
 
                     if (ListAdd.Count > 0)
                     {
-                        BulkInsert<P>(DC.CSName, DC.GetTableName<P>(), ListAdd);
+                        BulkInsert<P>(DC, DC.GetTableName<P>(), ListAdd);
                     }
                 }
                 catch (Exception e)
@@ -927,9 +927,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="list"></param>
-        protected static void BulkInsert<K>(string connection, string tableName, IList<K> list)
+        protected static void BulkInsert<K>(IDataContext dc, string tableName, IList<K> list)
         {
-            using (var bulkCopy = new SqlBulkCopy(connection))
+            using (var bulkCopy = new SqlBulkCopy(dc.CSName))
             {
                 bulkCopy.BatchSize = list.Count;
                 bulkCopy.DestinationTableName = tableName;
@@ -944,7 +944,7 @@ namespace WalkingTec.Mvvm.Core
                     var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
                     if (notmapped == null && notobject)
                     {
-                        string Name = propertyInfo.Name;
+                        string Name = dc.GetFieldName<K>( propertyInfo.Name);
                         bulkCopy.ColumnMappings.Add(Name, Name);
                         table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
                     }
@@ -967,7 +967,17 @@ namespace WalkingTec.Mvvm.Core
                     }
                     table.Rows.Add(values);
                 }
-
+                //检测是否有继承字段，如果存在，进行赋值
+                string Discriminator = dc.GetFieldName<K>("Discriminator");
+                if (!string.IsNullOrEmpty(Discriminator))
+                {
+                    bulkCopy.ColumnMappings.Add("Discriminator", "Discriminator");
+                    table.Columns.Add("Discriminator", typeof(string));
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        table.Rows[i]["Discriminator"] = typeof(K).Name;
+                    }
+                }
                 bulkCopy.WriteToServer(table);
             }
         }

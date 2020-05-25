@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public class StudentBatchVM : BaseBatchVM<Student, Student_BatchEdit>
+    public partial class StudentBatchVM : BaseBatchVM<Student, Student_BatchEdit>
     {
         public StudentBatchVM()
         {
@@ -21,12 +21,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
     }
 
 	/// <summary>
-    /// 批量编辑字段类
+    /// Class to define batch edit fields
     /// </summary>
     public class Student_BatchEdit : BaseVM
     {
-        [Display(Name = "密码")]
-        public String Password { get; set; }
 
         protected override void InitVM()
         {

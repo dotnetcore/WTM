@@ -99,7 +99,8 @@ class requestBase {
    */
   requestError(res) {
     let msg: string = i18n.t('errorMsg.error').toString();
-    const { response, data, message } = res;
+    const { response, message } = res;
+    console.log('response, message', response, message)
     // 导入文件错误信息
     const filterError = (ID?: string) => {
       let notifyMsg: string = i18n.t('errorMsg.template').toString();
@@ -121,15 +122,15 @@ class requestBase {
       } else if (Form && Form["Entity.Import"]) {
         filterError(Form["Entity.ErrorFileId"]);
         return;
+      } else {
+        msg = response.data;
       }
-    } else if (data) {
-      msg = data.message;
     } else if (message) {
       msg = message;
     }
     Notification.error({
       title: i18n.t("errorMsg.msg").toString(),
-      message: response.data || msg
+      message: msg
     });
   }
 }

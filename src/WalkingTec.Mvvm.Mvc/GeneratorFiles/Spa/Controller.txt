@@ -20,11 +20,18 @@ namespace $namespace$
     {
         [ActionDescription("Search")]
         [HttpPost("Search")]
-		public string Search($controllername$Searcher searcher)
+		public IActionResult Search($controllername$Searcher searcher)
         {
-            var vm = CreateVM<$controllername$ListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = CreateVM<$controllername$ListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Get")]

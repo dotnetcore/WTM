@@ -509,6 +509,12 @@ namespace WalkingTec.Mvvm.Core
             return false;
         }
 
+        public override void Validate()
+        {
+            Searcher?.Validate();
+            base.Validate();
+        }
+
         /// <summary>
         /// 设定行前景色，继承的类应重载这个函数来根据每行的数据显示不同的前景色
         /// </summary>
