@@ -3,6 +3,7 @@
 ## v3.5.x （2.5.x同步更新）
 
 ##3.6.3 以及 2.6.3 (2020-5-26)
+* **修改：**  修复了上一版本引发的搜索报错的问题
 * **修改：**  修复了bulk导入的一个小bug
 * **修改：**  代码生成器生成页面时加入了多语言，老项目请在_ViewImports.cshtml文件中加入一行 @using Microsoft.Extensions.Localization;
 
