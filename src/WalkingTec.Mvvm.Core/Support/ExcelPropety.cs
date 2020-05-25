@@ -301,11 +301,11 @@ namespace WalkingTec.Mvvm.Core
                         this.Value = tryDecimalResult;
                         break;
                     case ColumnDataType.Bool:
-                        if (value == "是")
+                        if (value == Program._localizer["Yes"])
                         {
                             this.Value = true;
                         }
-                        else if (value == "否")
+                        else if (value == Program._localizer["No"])
                         {
                             this.Value = false;
                         }
