@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.不要用中文模型名VMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("123")]
+    [ActionDescription("中文测试")]
     public partial class 不要用中文模型名Controller : BaseController
     {
         #region 搜索

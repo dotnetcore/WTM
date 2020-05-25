@@ -1004,7 +1004,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             fk = $@"Selected{item.FieldName}IDs";
                         }
-                        fieldstr.Append($@"<wt:combobox field=""Searcher.{fk}"" items=""Searcher.{fname}"" empty-text=""全部"" />");
+                        fieldstr.Append($@"<wt:combobox field=""Searcher.{fk}"" items=""Searcher.{fname}"" empty-text=""@Localizer[""All""]"" />");
                     }
                     else
                     {
@@ -1024,7 +1024,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         if (checktype.IsEnum() || checktype.IsBool())
                         {
-                            fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" empty-text=""全部"" />");
+                            fieldstr.Append($@"<wt:combobox field=""Searcher.{item.FieldName}"" empty-text=""@Localizer[""All""]"" />");
                         }
                     }
                     fieldstr.Append(Environment.NewLine);

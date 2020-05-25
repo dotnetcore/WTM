@@ -1,4 +1,5 @@
 @model $vmnamespace$.$modelname$BatchVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
     <div style="margin-bottom:10px">@Model.Localizer["BatchEditConfirm"] </div>$fields$
