@@ -188,8 +188,8 @@ namespace WalkingTec.Mvvm.Mvc
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
 
-                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor",x]);
-                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x,y) => Core.Program._localizer["AttemptedValueIsInvalidAccessor",x,y]);
+                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor", x]);
+                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.Program._localizer["AttemptedValueIsInvalidAccessor", x, y]);
                 options.EnableEndpointRouting = true;
             })
             .ConfigureApplicationPartManager(appPartsManager =>
@@ -438,18 +438,26 @@ namespace WalkingTec.Mvvm.Mvc
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
                     context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
                 }
-                context.Request.EnableBuffering();
-                context.Request.Body.Position = 0;
-                StreamReader tr = new StreamReader(context.Request.Body);
-                string body = tr.ReadToEndAsync().Result;
-                context.Request.Body.Position = 0;
-                if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                if (context.Request.ContentLength > 1024 * 1024 * 5)
                 {
-                    context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = null;
                 }
                 else
                 {
-                    context.Items["DONOTUSE_REQUESTBODY"] = body;
+                    context.Request.EnableBuffering();
+                    context.Request.Body.Position = 0;
+                    StreamReader tr = new StreamReader(context.Request.Body);
+                    string body = tr.ReadToEndAsync().Result;
+                    context.Request.Body.Position = 0;
+                    if (context.Items.ContainsKey("DONOTUSE_REQUESTBODY") == false)
+                    {
+                        context.Items.Add("DONOTUSE_REQUESTBODY", body);
+                    }
+                    else
+                    {
+                        context.Items["DONOTUSE_REQUESTBODY"] = body;
+                    }
+
                 }
                 await next.Invoke();
                 if (context.Response.StatusCode == 404)
