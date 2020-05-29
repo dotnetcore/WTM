@@ -93,7 +93,7 @@ class ConfigStore {
         * ag-theme-balham
         * ag-theme-material
         */
-        agGridTheme: "ag-theme-alpine",
+        agGridTheme: "ag-theme-balham",
         /**
          * 页签 页面
          */
