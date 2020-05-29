@@ -19,7 +19,7 @@ export default {
         component: React.lazy(() => import('./frameworkrole'))
     },
     frameworkuserbase: {
-        name: 'MenuKey.RoleManagement',
+        name: 'MenuKey.UserManagement',
         path: '/frameworkuser',
         controller: 'WalkingTec.Mvvm.Admin.Api,FrameworkUser',
         component: React.lazy(() => import('./frameworkuser'))
