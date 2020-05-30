@@ -34,7 +34,7 @@ WTM provides 4 types of ViewModel, covering all of the common functionalities of
 
 - CrudVM provides most common functionalities for data addition, deletion and modification.
 
-- ListVM provides paging list and exporting functionality.
+- ListVM provides paging and exporting functionality.
 
 - ImportVM & TemplateVM provides importing via excel functionality.
 
