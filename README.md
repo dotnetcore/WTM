@@ -1,8 +1,8 @@
 English | [简体中文](./README.zh-CN.md) 
 
-# WalkingTec.Mvvm for aspnet core
+# WalkingTec.Mvvm for asp.net core
 
-Walkingtec.mvvm framework (WTM) is a rapid development framework based on. Netcore. It supports LayUI, React, VUE. WTM has built-in code generator to maximize development efficiency. It is a powerful tool for efficient development.
+Walkingtec.mvvm framework (WTM) is a rapid development framework based on .net core. It supports LayUI, React, VUE. WTM has built-in code generator to maximize development efficiency. It is a powerful tool for efficient web development.
 
 [![Coverage Status](https://coveralls.io/repos/github/dotnetcore/WTM/badge.svg?branch=master)](https://coveralls.io/github/dotnetcore/WTM?branch=master)
 [![Member project of .NET Core Community](https://img.shields.io/badge/member%20project%20of-NCC-9e20c9.svg)](https://github.com/dotnetcore)
@@ -28,29 +28,29 @@ Package name                              | Version                     | Downlo
 `WalkingTec.Mvvm.Mvc.Admin` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.Mvc.Admin.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.Mvc.Admin/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.Mvc.Admin.svg)
 `WalkingTec.Mvvm.TagHelpers.LayUI` | [![NuGet](https://img.shields.io/nuget/v/WalkingTec.Mvvm.TagHelpers.LayUI.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/WalkingTec.Mvvm.TagHelpers.LayUI/) | ![downloads](https://img.shields.io/nuget/dt/WalkingTec.Mvvm.TagHelpers.LayUI.svg)
 
-## features of the framework
+## WTM Features
 
-Framework provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
+WTM provides 4 types of ViewModel, covering all of the common functionalities of mainstream web applications. 
 
 - CrudVM provides most common functionalities for data addition, deletion and modification.
 
-- ListVM provides paging list and exporting functionality
+- ListVM provides paging and exporting functionality.
 
-- ImportVM & TemplateVM provides importing via excel functionality
+- ImportVM & TemplateVM provides importing via excel functionality.
 
 - BatchVM provides batch operation functionality.
 
-- Framework has its own code generator, which makes development efficient and fast;
+- WTM has its own code generator, which makes development efficient and fast.
 
-- Framework provides dozens of client-side controls, including Form, Grid, Panel, Dialog and qute alot of other common controls. Without client-side, the back-end developers can easily write beautiful client-side pages. Currently, the framework only supports LayUI as the front-end UI, and we will support more later;
+- WTM provides dozens of client-side controls, including Form, Grid, Panel, Dialog and quite alot of other common controls. 
 
-- The framework provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end management functions;
+- WTM provides built-in user, role, user group, Data permission, page permission, menu, log, mail, SMS, file and other common back-end  functionalities;
 
-- The framework supports single sign on, portal and distributed database;
+- WTM supports single sign on, portal and distributed database;
 
-- The framework provides simplified operation of common back-end development libraries such as Redis, DFS etc.
+- WTM provides simplified integration with libraries such as Redis, DFS etc.
 
-- The framework provides both the server-side and client-side mode.
+- WTM provides both server-side and client-side frameworks for building user interfaces.
 
 
 | Mode | UI | Status  |
