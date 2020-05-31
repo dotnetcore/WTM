@@ -1249,12 +1249,12 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
                             existSubPro.Add(subpro);
-                            newname = item.SubField + "_view" + prefix;
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                             if (count > 1)
                             {
                                 prefix = count + "";
                             }
+                            newname = item.SubField + "_view" + prefix;
                         }
                     }
                     fieldstr.Append($@"
@@ -1579,12 +1579,12 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
                             existSubPro.Add(subpro);
-                            newname = item.SubField + "_view" + prefix;
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                             if (count > 1)
                             {
                                 prefix = count + "";
                             }
+                            newname = item.SubField + "_view" + prefix;
                         }
                     }
 
