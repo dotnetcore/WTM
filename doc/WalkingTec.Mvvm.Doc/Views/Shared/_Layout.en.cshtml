@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>WTM， a rapid development framework based on .netcore</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="baidu-site-verification" content="PPo22UtDls" />
+  <meta name="author" content="Michael,Vito">
+  <meta name="keywords" content=".net core 快速开发框架, dotnetcore 快速开发框架,WalkingTec, WTM, .Net Core, ASP.NET Core, dotnet core 框架, .net core 开发框架, dotnet core 开发框架, Mvvm, MVC, WebApi">
+  <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="/sitecss/wtm.css">
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cce7a18264274038f0ee50ef3f9f46ce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="LAY_app"></div>
+  <script src="/jquery.min.js"></script>
+  <script src="/jquery.cookie.js"></script>
+  <script src="/layui/layui.js"></script>
+  <script src="/_js/framework_layui.js?time=@DateTime.Now.Ticks"></script>
+  <script>
+    var DONOTUSE_IGNOREHASH = false;
+    var DONOTUSE_COOKIEPRE = '@ViewData["DONOTUSE_COOKIEPRE"]';
+    var DONOTUSE_WINDOWGUID = '@Guid.NewGuid().ToString().Replace("-", "")';
+    layui.config({
+      base: '/layuiadmin/'
+      , version: '1.2.1'
+    });
+  </script>
+  @RenderBody()
+</body>
+
+</html>

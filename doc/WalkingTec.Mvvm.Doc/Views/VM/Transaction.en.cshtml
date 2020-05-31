@@ -1,0 +1,80 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<p>WTM framework supports simple (Transaction) processing</p>
+
+<wt:fieldset field-set-style="Simple" title="Simple enable of transaction">
+  If there is a transaction operation scenario between two or more models, we can simply modify the VM as follows:
+  <wt:code title="AModelVM.cs">
+
+    public class AModelVM : BaseCRUDVM&lt;AModel&gt;
+    {
+      public override void DoAdd()
+      {
+        using (var transaction = DC.BeginTransaction())
+        {
+          try
+          {
+            // add some specific behaviors & logic
+            // .....
+            base.DoAdd();
+            
+            transaction.Commit();
+          }
+          catch (Exception exception)
+          {
+            transaction.Rollback();
+          }
+        }
+      }
+    }
+  </wt:code>
+  <p>The DoAddmethod of AModelVM defines transactions that can be committed after meeting some specific business logic.</p>
+  <p>If an exception occurs, rollback is executed.</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Another BModelVM need to bont with AModelVM to make a transactional operation">
+  <p>When the AModelVM fails to execute, the BModelVM operation also needs to be regarded as invalid. You can modify BModelVMas follows:</p>
+  <wt:code title="BModelVM.cs">
+
+    public class BModelVM : BaseCRUDVM&lt;BModel&gt;
+    {
+      public override void DoAdd()
+      {
+        using (var transaction = DC.BeginTransaction())
+        {
+          try
+          {
+            var a = new AModelVM()
+            {
+              Entity =
+              {
+                //....
+              }
+            };
+            a.CopyContext(this);
+            a.DoAdd();
+
+            base.DoAdd();
+            
+            transaction.Commit();
+          }
+          catch (Exception exception)
+          {
+            transaction.Rollback();
+          }
+        }
+      }
+    }
+  </wt:code>
+  <p>The above code is just a demonstration of operation.Transactions can be used to any place where transaction operations are needed, including but not limited to DoEdit and DoDelete. In addition, it also provides the same IsolationLevel(transaction locking behavior) as the EF.</p>
+</wt:fieldset>
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+</script>
+
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

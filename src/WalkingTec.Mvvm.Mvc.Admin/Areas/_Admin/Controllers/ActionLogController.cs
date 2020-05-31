@@ -23,7 +23,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(ActionLogListVM vm)
         {
-            return vm.GetJson(false);
+            if (ModelState.IsValid)
+            {
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
 
@@ -39,9 +46,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcel(ActionLogListVM vm)
         {
-            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
     }

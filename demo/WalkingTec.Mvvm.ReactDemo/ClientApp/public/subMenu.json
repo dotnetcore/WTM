@@ -1,0 +1,92 @@
+[
+  {
+    "ParentId": null,
+    "Id": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Text": "MenuKey.SystemManagement",
+    "Url": null
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "8b982671-cf11-4be8-b745-8903bd1df431",
+    "Text": "MenuKey.Log",
+    "Url": "/actionlog"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "dffcd504-1246-4a4f-9f96-4ff93403d64a",
+    "Text": "MenuKey.UserManagement",
+    "Url": "/frameworkuser"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "84e4696f-2171-49ef-bd79-eea0b40e88a0",
+    "Text": "MenuKey.RoleManagement",
+    "Url": "/frameworkrole"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "5adde7b6-0a8c-4935-8161-23c7d0e6f30d",
+    "Text": "MenuKey.GroupManagement",
+    "Url": "/frameworkgroup"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "a975f408-043e-41d6-bbb5-a403ed234acd",
+    "Text": "MenuKey.MenuMangement",
+    "Url": "/frameworkmenu"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "77c21b96-f6aa-41b1-bace-ce94c1ce8b61",
+    "Text": "MenuKey.DataPrivilege",
+    "Url": "/dataprivilege"
+  },
+  {
+    "ParentId": "301f84d3-5a77-4b30-92c4-9c723ed2935a",
+    "Id": "a975f408-043e-41d6-bbb5",
+    "Text": "MenuKey.test.step",
+    "Url": "/_test"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5",
+    "Id": "a975f408-043e-41d6-bbb5-2",
+    "Text": "MenuKey.test.step",
+    "Url": "/_test2"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5",
+    "Id": "a975f408-043e-41d6-bbb5-3",
+    "Text": "MenuKey.test.step2",
+    "Url": "/_test"
+  },
+  {
+    "ParentId": "a975f408-043e-41d6-bbb5-3",
+    "Id": "a975f408-043e-41d6-bbb5-33",
+    "Text": "MenuKey.test.step2",
+    "Url": "/_test3"
+  },
+  {
+    "ParentId": null,
+    "Id": "401f84d3-5a77-4b30-92c4-9c723ed2934",
+    "Text": "Demo",
+    "Url": "/demo"
+  },
+  {
+    "ParentId": null,
+    "Id": "301f84d3-5a77-4b30-92c4-9c723ed2934",
+    "Text": "pages.outerChain",
+    "Url": "https://www.baidu.com/"
+  },
+  {
+    "ParentId": null,
+    "Id": "301f84d3-5a77-4b30-92c4-9c723ed2933",
+    "Text": "pages.static",
+    "Url": "@StaticPage/pages/test.html"
+  },
+  {
+    "ParentId": null,
+    "Id": "301f84d3-5a77-4b30-92c4-9c723ed2937",
+    "Text": "Swagger",
+    "Url": "@StaticPage/swagger/index.html"
+  }
+]

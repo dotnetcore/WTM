@@ -16,4 +16,5 @@ export default {
     'tips.bool.true': 'Yes',
     'tips.bool.false': 'No',
     'tips.all': 'All',
+    'tips.theme.loading': 'Load theme',
 };

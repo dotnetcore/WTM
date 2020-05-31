@@ -183,13 +183,18 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         template.CopyContext(model);
                         template.DoReInit();
                     }
+                    if(model is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
+                    {
+                        var searcher = lvm.Searcher;
+                        searcher.CopyContext(lvm);                        
+                    }
                     model.Validate();
                     var invalid = ctrl.ModelState.Where(x => x.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid).Select(x => x.Key).ToList();
                     if ((ctrl as ControllerBase).Request.Method.ToLower() == "put" || validpostonly != null)
                     {
                         foreach (var v in invalid)
                         {
-                            if (model.FC.ContainsKey(v) == false)
+                            if (v?.StartsWith("Entity.") == true && model.FC.ContainsKey(v) == false)
                             {
                                 ctrl.ModelState.Remove(v);
                             }
@@ -220,6 +225,16 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         ctrl.ModelState.Remove(r);
                     }
+                }
+
+                if(item.Value is BaseSearcher se)
+                {
+                    se.Session = new SessionServiceProvider(context.HttpContext.Session);
+                    se.LoginUserInfo = ctrl.LoginUserInfo;
+                    se.DC = ctrl.DC;
+                    se.FC = new Dictionary<string, object>();
+                    se.MSD = new ModelStateServiceProvider(ctrl.ModelState);
+                    se.Validate();
                 }
             }
 
@@ -271,8 +286,25 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             var pmenu = ctrl.GlobaInfo.AllMenus.Where(x => x.ID == menu.ParentId).FirstOrDefault();
                             if (pmenu != null)
                             {
+                                if (ctrl.Localizer[pmenu.PageName].ResourceNotFound == true)
+                                {
+                                    pmenu.PageName = Core.Program._localizer[pmenu.PageName];
+                                }
+                                else
+                                {
+                                    pmenu.PageName = ctrl.Localizer[pmenu.PageName];
+                                }
+
                                 pagetitle = pmenu.PageName + " - ";
                             }
+                        }
+                        if (ctrl.Localizer[menu.PageName].ResourceNotFound == true)
+                        {
+                            menu.PageName = Core.Program._localizer[menu.PageName];
+                        }
+                        else
+                        {
+                            menu.PageName = ctrl.Localizer[menu.PageName];
                         }
                         pagetitle += menu.PageName;
                     }
@@ -331,9 +363,9 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     log.ActionUrl = context.HttpContext.Request.Path;
                     log.IP = context.HttpContext.GetRemoteIpAddress();
                     log.Remark = context.Exception?.ToString() ?? string.Empty;
-                    if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                    if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
                     {
-                        log.Remark = log.Remark.Substring(0, 1000);
+                        log.Remark = log.Remark.Substring(0, 2000);
                     }
                     var starttime = context.HttpContext.Items["actionstarttime"] as DateTime?;
                     if (starttime != null)

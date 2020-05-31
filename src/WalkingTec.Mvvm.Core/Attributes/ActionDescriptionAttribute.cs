@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Extensions.Localization;
 
@@ -19,7 +19,6 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 新建一个描述
         /// </summary>
-        /// <param name="desc">描述</param>
         public ActionDescriptionAttribute(string desc)
         {
             this.Description = desc;

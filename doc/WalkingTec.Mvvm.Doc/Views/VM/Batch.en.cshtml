@@ -1,0 +1,166 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BaseBatchVM is the VM responsible for batch update and deletion in the framework. It inherits from BaseVM. It is a combined VM includes a list VM used to display batch operations and a BaseVMused to set fields to be updated.</p>
+<wt:fieldset field-set-style="Simple" title="Build a BaseBatchVM">
+    <p>There are two steps to build a BatchVM:</p>
+    <p>1. Create a common VM to set the fields that need to be updated in batch.</p>
+    <p>2. Create a BatchVM and use the VM created in the first step as a generic variable.</p>
+    <p>Take the ‘school’ model as an example to demonstrate how to build a BatchVM to batch modify and delete school data. The definition of school model can refer to the first module<a href="/#/QuickStart/FirstModule">first module</a></p>
+    <wt:code title="SchoolBatchVM.cs">
+public class SchoolBatchVM : BaseBatchVM&ltSchool, School_BatchEdit&gt
+{
+    public SchoolBatchVM()
+    {
+        ListVM = new SchoolListVM();
+        LinkedVM = new School_BatchEdit();
+    }
+}
+
+/// <summary>
+/// Batch edit vm
+/// </summary>
+public class School_BatchEdit : BaseVM
+{
+    [Display(Name = "SchoolType")]
+    public SchoolTypeEnum? SchoolType { get; set; }
+
+}
+    </wt:code>
+    <p>The above code defines a simple BatchVM, which is used to batch modify the field of school type and batch delete school data.</p>
+    <wt:quote>
+        <p>ListVM points to a class inherited from BasePagedListVM, which is responsible for displaying the data list.</p>
+        <p>LinkedVMpoints to a class inherited from BaseVM, which is responsible for setting the fields to be updated.</p>
+    </wt:quote>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Using BaseBatchVM">
+    <p>Using BatchVM in the Controller is the same as using other VMs. See the following example:</p>
+    <wt:code title="SchoolController.cs">
+#region Batch edit
+[HttpPost]
+[ActionDescription("BatchEdit")]
+public ActionResult BatchEdit(Guid[] IDs)
+{
+    var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("BatchEdit")]
+public ActionResult DoBatchEdit(SchoolBatchVM vm, IFormCollection nouse)
+{
+    if (!ModelState.IsValid || !vm.DoBatchEdit())
+    {
+        return PartialView("BatchEdit",vm);
+    }
+    else
+    {
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert("Operation successful，"+vm.Ids.Length+" records have been modified.");
+    }
+}
+#endregion
+
+#region BatchDelete
+[HttpPost]
+[ActionDescription("BatchDelete")]
+public ActionResult BatchDelete(Guid[] IDs)
+{
+    var vm = CreateVM&ltSchoolBatchVM&gt(Ids: IDs);
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("BatchDelete")]
+public ActionResult DoBatchDelete(SchoolBatchVM vm, IFormCollection nouse)
+{
+    if (!ModelState.IsValid || !vm.DoBatchDelete())
+    {
+        return PartialView("BatchDelete",vm);
+    }
+    else
+    {
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert("Operation successful，"+vm.Ids.Length+" records have been deleted.");
+    }
+}
+#endregion
+
+}
+    </wt:code>
+
+    <wt:quote>
+        <p>DoBatchEdit and DoBatchDelete are functions provided in the BatchVM for batch modification and deletion.</p>
+        <p>You must use the CreateVM function to create the ViewModel, not just new. The CreateVM function will pass the Session, ModelState and other information of the current controller to the VM, and perform some operations within the framework</p>
+        <p>FFResultis an auxiliary class provided by the framework, which is mainly used to facilitate developers to return to common JS, such as closing the current window, refreshing the grid, etc</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Custom validation">
+    <p>BaseBatchVM inherits from BaseVM, so you can also carry out complex custom validation by overriding the Validatemethod</p>
+    <p>BatchVMdefines a CheckIfCanDelete method,  overridden the method to define some validation logic during batch deletion</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Main attributes">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Property </th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ListVM</td>
+                <td>A class inherited from BasePagedListVM, responsible for outputting list data</td>
+            </tr>
+            <tr>
+                <td>LinkedVM</td>
+                <td>A class inherited from BaseVM, responsible for defining the fields that need to be modified in batch</td>
+            </tr>
+        </tbody>
+    </table>
+<wt:fieldset field-set-style="Simple" title="Main function">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Function</th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DoBatchDelete()</td>
+                <td>Batch delete</td>
+            </tr>
+            <tr>
+                <td>DoBatchEdit()</td>
+                <td>Batch modify. If there is a field with the same name, modify it by comparing the field bond with Model in BatchVM and the field defined in the LinkedVM, If the same name, modify it </td>
+            </tr>
+            <tr>
+                <td>CheckIfCanDelete()</td>
+                <td>The validation conditions for batch deletion, need to be overridden in the inheritance class</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

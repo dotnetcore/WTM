@@ -30,9 +30,24 @@ export class Help {
 
     static GetFormValue(props: WTM.FormProps, Field) {
         const FieldValue = lodash.toString(props.form.getFieldValue(Field));
-        if (FieldValue === '' ||FieldValue === undefined || FieldValue === null) {
+        if (FieldValue === '' || FieldValue === undefined || FieldValue === null) {
             return lodash.toString(lodash.get(props.defaultValues, Field))
         }
         return FieldValue
     }
+    static GetNavigatorLanguage() {
+        const language = window.navigator.language;
+        switch (true) {
+            case lodash.includes(['zh-CN', 'zh-cn', 'zh'], language):
+                return 'zh-CN'
+                break;
+            case lodash.includes(['en', 'en-US'], language):
+                return 'en-US'
+                break;
+            default:
+                return 'zh-CN'
+                break;
+        }
+    }
 }
+export default Help

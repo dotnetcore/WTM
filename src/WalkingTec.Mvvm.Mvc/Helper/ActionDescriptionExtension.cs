@@ -19,19 +19,13 @@ namespace WalkingTec.Mvvm.Mvc
             string rv = "";
             if (string.IsNullOrEmpty(self.Description) == false)
             {
-                if (Core.Program.Buildindll.Any(x => controllertype.FullName.StartsWith(x)))
+                if (Core.Program._Callerlocalizer[self.Description].ResourceNotFound == true)
                 {
-                    if (Core.Program._localizer != null)
-                    {
-                        rv = Core.Program._localizer[self.Description];
-                    }
+                    rv = Core.Program._localizer[self.Description];
                 }
                 else
                 {
-                    if (Core.Program._Callerlocalizer != null)
-                    {
-                        rv = Core.Program._Callerlocalizer[self.Description];
-                    }
+                    rv = Core.Program._Callerlocalizer[self.Description];
                 }
             }
             return rv;

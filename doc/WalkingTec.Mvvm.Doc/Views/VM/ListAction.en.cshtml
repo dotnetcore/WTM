@@ -1,0 +1,267 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>We define the function buttons on the list by overriding the InitGridAction() method in the ListVM。</p>
+<p></p>
+<wt:fieldset field-set-style="Simple" title="Behavior of function buttons">
+</wt:fieldset>
+  <wt:quote>
+    <p>The combination of ShowDialog and IsDirect can control how to display the page after clicking the button.</p>
+    <p>ShowInRow and HideOnToolBar to control whether buttons appear above the list or on each line.</p>
+  </wt:quote>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">Attribute </th>
+        <th lay-data="{field:'joinTime', width:400}">Behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>IsRedirect=false,ShowDialog=true</td>
+        <td>Pop up model dialog box to display page</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=false,ShowDialog=false</td>
+        <td>Do not pop up any page, just call back-end method and execute the JS returned by the method</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=true,ShowDialog=true</td>
+        <td>Open a new browser window to display the page</td>
+      </tr>
+      <tr>
+        <td>IsRedirect=true,ShowDialog=false</td>
+        <td>In the current page or display page, if it is in tab mode, it will be displayed on the new tab page</td>
+      </tr>
+      <tr>
+        <td>OnClickScript</td>
+        <td>
+          If OnClickScript is set, the framework runs the specified JS method<br/>
+          For example, to set SetOnClickScript(‘test’), when clicking a button, the framework will call the JavaScript method on the page: function test(ids,datas){}<br/>
+          idss an array of checked IDS, and data is an array of all checked fields.
+        </td>
+      </tr>
+      <tr>
+        <td>ShowInRow=true</td>
+        <td>Show action buttons on every row</td>
+      </tr>
+      <tr>
+        <td>HideOnToolBar=true</td>
+        <td>Hide action buttons from tool bar</td>
+      </tr>
+    </tbody>
+  </table>
+  <wt:quote>The default behavior of the list button is displayed at the top of the list. Click to open the Model dialog box to display the page.</wt:quote>
+  <p>The following code snippet shows several ways to set buttons:</p>
+  <wt:code title="InitGridAction">
+protected override List&lt;GridAction&gt; InitGridAction()
+{
+    var actions = new List&lt;GridAction&gt;
+  {
+    //call the js function test(ids,datas) on page
+    this.MakeAction(null,null,"ScriptButton",null, GridActionParameterTypesEnum.NoId).SetOnClickScript("test"),
+
+    //use default dialog, show buttons on each row. using 'whereStr' to put prperties' value into url, using 'SetQueryString' to put fixed string into url
+    //statement below will call  /_Admin/ActionLog/Details?id=xxx&ModelName=xxx&a=1
+    this.MakeAction("ActionLog","Details","Details(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin",whereStr:x=>x.ModuleName).SetShowInRow(true).SetQueryString("a=1"),
+
+    //set both IsRedirect and ShowDialog to true，it will popup new browser window
+    this.MakeAction("ActionLog","Details","Details(new window)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
+
+    //set IsRedirect to true，set ShowDialog to false，it will use current tab to display the new page
+    this.MakeAction("ActionLog","Details","Details(current window)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
+  };
+  return actions;
+}
+</wt:code>
+
+<wt:fieldset field-set-style="Simple" title="Other settings of function buttons">
+</wt:fieldset>
+  <p>When you create a function button through the MakeAction and MakeStandardAction methods, you can use the stream function SetXXX to make more settings for the button.</p>
+  <p>The properties of function buttons are:</p>
+      <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Property</th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>areaName</td>
+                <td>The Area name called by the button, if there is no Area, it is empty</td>
+            </tr>
+            <tr>
+                <td>controllerName</td>
+                <td>Name of the controller called by the button</td>
+            </tr>
+            <tr>
+                <td>actionName</td>
+                <td>Method name of the button call</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>Text on button</td>
+            </tr>
+            <tr>
+                <td>dialogTitle</td>
+                <td>Title of the pop-up</td>
+            </tr>
+            <tr>
+                <td>paraType</td>
+                <td>
+                    Parameter type
+                </td>
+            </tr>
+            <tr>
+                <td>dialogWidth</td>
+                <td>Width of pop-up window, can be empty</td>
+            </tr>
+            <tr>
+                <td>dialogHeight</td>
+                <td>Height of pop-up window, can be empty</td>
+            </tr>
+            <tr>
+                <td>IconCls</td>
+                <td>Button to specify a class in the CSS file</td>
+            </tr>
+            <tr>
+                <td>IsDownload</td>
+                <td>Is it a download button, or not; The URL pointed to by the download button should return a file</td>
+            </tr>
+
+            <tr>
+                <td>ShowDialog</td>
+                <td>if pop ups,or not; Some buttons don't need pop-up windows. If they don't, the framework will only call the specified methods in the back-end</td>
+            </tr>
+            <tr>
+                <td>ShowInRow</td>
+                <td>If the button should appear on the operation column of each row</td>
+            </tr>
+            <tr>
+                <td>BindVisiableColName</td>
+                <td><p>It is used to judge whether to display the inline buttons based on the inline data</p>
+                    <p>For the ShowInRowaction, bind the column name of a hidden column in string format. When the hidden column returns 'true', the inline button will be displayed</p>
+                </td>
+            </tr>
+            <tr>
+                <td>HideOnToolBar</td>
+                <td>If hide this button from above button bar,or not</td>
+            </tr>
+            <tr>
+                <td>Max</td>
+                <td>If the pop-up window is maximized by default when ShowDialog = true</td>
+            </tr>
+            <tr>
+                <td>WhereStr</td>
+                <td>set a column in the list, If the button needs a single ID, the data of the column will be spliced into the URL together with the ID</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+<wt:fieldset field-set-style="Simple" title="Show or hide buttons based on inline data">
+</wt:fieldset>
+  <p>All the action buttons displayed in the row can be displayed/hided according to other fields in the row.</p>
+  <p>The method is to call the BindVisiableColName method on a button , set the name of a hidden column. If the hidden column returns 'true', the action button will be displaye.</p>
+  <p>Please see the following example:</p>
+    <wt:code title="InitGridAction">
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            return new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Create, "Create","", dialogWidth: 800),
+                //use SetBindVisiableColName to bind visibility of the button to a column called 'CanEdit'
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "Edit","", dialogWidth: 800).SetBindVisiableColName("CanEdit"),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Delete, "Delete", "",dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Details, "Details","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchEdit, "BatchEdit","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchDelete, "BatchDelete","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Import, "Import","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.ExportExcel, "ExportExcel","")
+            };
+        }
+
+        protected override IEnumerable&lt;IGridColumn&lt;MyUser_View&gt;&gt; InitGridHeader()
+        {
+            return new List&lt;GridColumn&lt;MyUser_View&gt;&gt;{
+                this.MakeGridHeader(x =&gt; x.ITCode),
+                this.MakeGridHeader(x =&gt; x.Name),
+                //add a column called 'CanEdit'，using SetHide method to hide it, and use SetFormat method to return 'true' or 'false' to control the visibility of edit button
+                this.MakeGridHeader(x=&gt;"CanEdit").SetHide().SetFormat((e,v)=&gt;{
+                    if (e.Sex == SexEnum.Male){
+                        return "true";
+                    }
+                    else {
+                        return "false";
+                    }
+                }),
+                this.MakeGridHeaderAction(width: 200)
+            };
+        }
+</wt:code>
+  <wt:quote>
+    <p>The above code shows how to bound the modification button to a hidden column called CanEdit that does not exist in the model, the CanEdit column determines whether the data in the row returns true or false to control whether the modification button in the row is displayed.</p>
+    <p>The above code is that if the user is male, the modification button will be displayed, and if the user is female, the modification button will not be displayed.</p>
+    <p>Note that the MakeGridHeader method can not only bind a field, but also directly output a field that does not exist in a model as shown in the above code.</p>
+  </wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="Function button to get list data">
+  </wt:fieldset>
+  <wt:quote>
+    <p>When calling the MakeAction method, set whether the button needs list data through GridActionParameterTypesEnum</p>
+  </wt:quote>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">properties</th>
+        <th lay-data="{field:'joinTime', width:450}">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GridActionParameterTypesEnum.NoId</td>
+        <td>When clicking the button, you do not need to obtain the ID of the list data, Example: new button</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.SingleId</td>
+        <td>The button will get the ID of the selected row of data and call a new method Example: Modify button</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.MultiIds</td>
+        <td>The button will get the ID of the selected multi row data and call a new method, Example: batch modify and batch delete (note that the framework will use the method marked as [post] when using the MultiIds)</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.SingleIdWithNull</td>
+        <td>check one line or uncheck </td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.MultiIdWithNull</td>
+        <td>check multiple lines or uncheck them (note that the framework will use the method marked as [post] when MultiIds)</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.AddRow</td>
+        <td>用于可编辑列add a row to an editable list表中添加一行</td>
+      </tr>
+      <tr>
+        <td>GridActionParameterTypesEnum.RemoveRow</td>
+        <td>delete a row from an editable list</td>
+      </tr>
+    </tbody>
+  </table>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

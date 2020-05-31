@@ -14,6 +14,7 @@ import {
 } from "@/util/cookie";
 import { getLocale } from "@/lang";
 import store from "@/store/modules/index";
+import { Component } from "vue-property-decorator";
 
 export enum DeviceType {
   Mobile,
@@ -39,6 +40,7 @@ class App extends VuexModule implements IAppState {
   public device = DeviceType.Desktop;
   public language = getLocale();
   public size = getSize() || "small";
+
 
   @Mutation
   private TOGGLE_SIDEBAR(withoutAnimation: boolean) {
@@ -98,6 +100,14 @@ class App extends VuexModule implements IAppState {
   @Action
   public SetSize(size: string) {
     this.SET_SIZE(size);
+  }
+
+  @Action
+  public ImportPage(url: string): any {
+    const languagePage = this.language === 'en' ? '.en' : '';
+    return import(`${url}${languagePage}.vue`).catch(() => {
+        return import(`${url}.vue`);
+    });
   }
 }
 

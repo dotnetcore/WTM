@@ -1,9 +1,19 @@
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
 @model WalkingTec.Mvvm.Core.BaseVM
+@inject IOptions<RequestLocalizationOptions> LocOptions
 
+@{
+  var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+  var cultureItems = LocOptions.Value.SupportedUICultures
+      .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+      .ToList();
+}
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
 
-    <!-- 头部区域 -->
+    <!-- Header -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item layadmin-flexible" lay-unselect>
         <a href="javascript:;" layadmin-event="flexible" title="@Model.Localizer["HideShow"]">
@@ -35,9 +45,22 @@
       </li>
       <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;">
-          @if(Model.LoginUserInfo?.PhotoId != null)
+          <cite>@requestCulture.RequestCulture.UICulture.NativeName</cite>
+        </a>
+        <dl class="layui-nav-child">
+          @foreach (var item in cultureItems)
           {
-          <img class="layui-nav-img" src="api/_file/getfile/@Model.LoginUserInfo.PhotoId" />
+            <dd>
+              <wt:linkbutton url="/_Framework/SetLanguage?culture=@item.Value" target=" ButtonTargetEnum.self" window-width="400" text="@item.Text" is-link="true" />
+            </dd>
+          }
+        </dl>
+      </li>
+      <li class="layui-nav-item" lay-unselect>
+        <a href="javascript:;">
+          @if (Model.LoginUserInfo?.PhotoId != null)
+          {
+            <img class="layui-nav-img" src="api/_file/getfile/@Model.LoginUserInfo.PhotoId" />
           }
           <cite>@Model.LoginUserInfo.Name</cite>
         </a>
@@ -47,37 +70,37 @@
           </dd>
           <dd><a href="javascript:;" lay-href="/">@Model.Localizer["BackHome"]</a></dd>
           @{
-            if(ViewData["debug"] is bool debug && debug)
+            if (ViewData["debug"] is bool debug && debug)
             {
               <dd>
                 <wt:linkbutton url="~/_CodeGen/Index" target="ButtonTargetEnum.newwindow" is-link="true" text="@Model.Localizer["CodeGen"]"
-                  window-title="@Model.Localizer["CodeGen"]" />
+                               window-title="@Model.Localizer["CodeGen"]" />
               </dd>
-               <dd>
+              <dd>
                 <wt:linkbutton url="~/swagger" target="ButtonTargetEnum.newwindow" is-link="true" text="@Model.Localizer["ApiDoc"]"
-                  window-title="@Model.Localizer["ApiDoc"]" />
+                               window-title="@Model.Localizer["ApiDoc"]" />
               </dd>
-             }
-        }
+            }
+          }
         </dl>
       </li>
       <li class="layui-nav-item"><a href="/Login/Logout">@Model.Localizer["LogOut"]</a></li>
     </ul>
   </div>
 
-  <!-- 侧边菜单 -->
+  <!-- Left menu -->
   <div class="layui-side layui-side-menu">
     <div class="layui-side-scroll">
       <!-- <script type="text/html" template lay-url="./json/menu.js?v={{ layui.admin.v }}" -->
-      <script type="text/html" template lay-url="/_Framework/Menu"
-        lay-done="layui.element.render('nav', 'layadmin-system-side-menu');layui.event.call(this, layui.setter.MOD_NAME, 'hash({*})', layui.router());" id="TPL_layout">
+      <script type="text/html" template lay-url="/_Framework/Menu?t=@DateTime.Now.Ticks"
+              lay-done="layui.element.render('nav', 'layadmin-system-side-menu');layui.event.call(this, layui.setter.MOD_NAME, 'hash({*})', layui.router());" id="TPL_layout">
 
-            <div class="layui-logo" lay-href="">
-              <span><img src="~/layuiadmin/style/res/logo.png" style="margin-right:5px"/>{{ layui.setter.name || 'layuiAdmin' }}</span>
-            </div>
+        <div class="layui-logo" lay-href="">
+          <span><img src="~/layuiadmin/style/res/logo.png" style="margin-right:5px" />{{ layui.setter.name || 'layuiAdmin' }}</span>
+        </div>
 
-            <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-            {{#
+        <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+          {{#
               var path =  layui.router().path
               ,pathURL = layui.admin.correctRouter(path.join('/'))
               ,dataName = layui.setter.response.dataName;
@@ -85,84 +108,84 @@
               layui.each(d[dataName], function(index, item){
                 var hasChildren = typeof item.list === 'object' && item.list.length > 0
                 ,url = (item.jump && typeof item.jump === 'string') ? item.jump : item.name;
-            }}
-              <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}" class="layui-nav-item ">
-                <a href="javascript:;" {{ hasChildren ? '' : 'lay-href="'+ url +'"' }} lay-tips="{{ item.title }}" lay-direction="2">
-                  <i class="{{ item.icon }}"></i>
-                  <cite>{{ item.title }}</cite>
-                </a>
-                {{# if(hasChildren){ }}
-                  <dl class="layui-nav-child">
-                  {{# layui.each(item.list, function(index2, item2){
+          }}
+          <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}" class="layui-nav-item ">
+            <a href="javascript:;" {{ hasChildren ? '' : 'lay-href="'+ url +'"' }} lay-tips="{{ item.title }}" lay-direction="2">
+              <i class="{{ item.icon }}"></i>
+              <cite>{{ item.title }}</cite>
+            </a>
+            {{# if(hasChildren){ }}
+            <dl class="layui-nav-child">
+              {{# layui.each(item.list, function(index2, item2){
                     var hasChildren2 = typeof item2.list == 'object' && item2.list.length > 0
                     ,url2 = (item2.jump && typeof item2.jump === 'string')
                       ? item2.jump
                     : [item.name, item2.name, ''].join('/');
-                  }}
-                    <dd  data-name="{{ item2.name || '' }}"  data-jump="{{ item2.jump || '' }}">
-                      <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>
-                        <i class="{{ item2.icon }}"></i>
-                        <cite>{{ item2.title }}</cite>
-                      </a>
-                      {{# if(hasChildren2){ }}
-                        <dl class="layui-nav-child">
-                          {{# layui.each(item2.list, function(index3, item3){
+              }}
+              <dd data-name="{{ item2.name || '' }}" data-jump="{{ item2.jump || '' }}">
+                <a href="javascript:;" {{ hasChildren2 ? '' : 'lay-href="'+ url2 +'"' }}>
+                  <i class="{{ item2.icon }}"></i>
+                  <cite>{{ item2.title }}</cite>
+                </a>
+                {{# if(hasChildren2){ }}
+                <dl class="layui-nav-child">
+                  {{# layui.each(item2.list, function(index3, item3){
                             var url3 = (item3.jump && typeof item3.jump === 'string')
                               ? item3.jump
                             : [item.name, item2.name, item3.name].join('/')
-                          }}
-                            <dd data-name="{{ item3.name || '' }}"  data-jump="{{ item3.jump || '' }}" >
-                              <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>
-                                <i class="{{ item3.icon }}"></i>
-                                <cite>{{ item3.title }}</cite>
-                              </a>
-                            </dd>
-                          {{# }); }}
-                        </dl>
-                      {{# } }}
-                    </dd>
-                {{# }); }}
+                  }}
+                  <dd data-name="{{ item3.name || '' }}" data-jump="{{ item3.jump || '' }}">
+                    <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>
+                      <i class="{{ item3.icon }}"></i>
+                      <cite>{{ item3.title }}</cite>
+                    </a>
+                  </dd>
+                  {{# }); }}
                 </dl>
                 {{# } }}
-              </li>
-            {{# }); }}
-            </ul>
-          </script>
+              </dd>
+              {{# }); }}
+            </dl>
+            {{# } }}
+          </li>
+          {{# }); }}
+        </ul>
+      </script>
     </div>
   </div>
 
-  <!-- 页面标签 -->
+  <!-- Tags -->
   <script type="text/html" template lay-done="layui.element.render('nav', 'layadmin-pagetabs-nav')">
-        {{# if(layui.setter.pageTabs){ }}
-        <div class="layadmin-pagetabs" id="LAY_app_tabs">
-          <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
-          <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
-          <div class="layui-icon layadmin-tabs-control layui-icon-down">
-            <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
-              <li class="layui-nav-item" lay-unselect>
-                <a href="javascript:;"></a>
-                <dl class="layui-nav-child layui-anim-fadein">
-                  <dd layadmin-event="closeThisTabs"><a href="javascript:;">@Model.Localizer["CloseThisTag"]</a></dd>
-                  <dd layadmin-event="closeOtherTabs"><a href="javascript:;">@Model.Localizer["CloseOtherTags"]</a></dd>
-                  <dd layadmin-event="closeAllTabs"><a href="javascript:;">@Model.Localizer["CloseAllTags"]</a></dd>
-                </dl>
-              </li>
-            </ul>
-          </div>
-          <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
-            <ul class="layui-tab-title" id="LAY_app_tabsheader">
-              <li lay-id="/"><i class="layui-icon layui-icon-home"></i></li>
-            </ul>
-          </div>
-        </div>
-        {{# } }}
-      </script>
+    {{# if(layui.setter.pageTabs){ }}
+    <div class="layadmin-pagetabs" id="LAY_app_tabs">
+      <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-down">
+        <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+          <li class="layui-nav-item" lay-unselect>
+            <a href="javascript:;"></a>
+            <dl class="layui-nav-child layui-anim-fadein">
+              <dd layadmin-event="closeThisTabs"><a href="javascript:;">@Model.Localizer["CloseThisTag"]</a></dd>
+              <dd layadmin-event="closeOtherTabs"><a href="javascript:;">@Model.Localizer["CloseOtherTags"]</a></dd>
+              <dd layadmin-event="closeAllTabs"><a href="javascript:;">@Model.Localizer["CloseAllTags"]</a></dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+      <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+        <ul class="layui-tab-title" id="LAY_app_tabsheader">
+          <li lay-id="/"><i class="layui-icon layui-icon-home"></i></li>
+        </ul>
+      </div>
+    </div>
+    {{# } }}
+  </script>
 
-  <!-- 主体内容 -->
+  <!-- Main content -->
   <div class="layui-body" id="LAY_app_body">
     <div class="layadmin-tabsbody-item layui-show"></div>
   </div>
 
-  <!-- 辅助元素，一般用于移动设备下遮罩 -->
+  <!-- Auxiliary element, generally used for mobile device under mask -->
   <div class="layadmin-body-shade" layadmin-event="shade"></div>
 </div>

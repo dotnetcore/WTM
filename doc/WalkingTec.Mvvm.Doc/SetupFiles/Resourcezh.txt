@@ -126,8 +126,26 @@
   <data name="BackHome" xml:space="preserve">
     <value>返回首页</value>
   </data>
+  <data name="BatchDelete" xml:space="preserve">
+    <value>批量删除</value>
+  </data>
+  <data name="BatchDeleteConfirm" xml:space="preserve">
+    <value>确定要删除以下数据么：</value>
+  </data>
+  <data name="BatchEdit" xml:space="preserve">
+    <value>批量修改</value>
+  </data>
+  <data name="BatchEditConfirm" xml:space="preserve">
+    <value>批量修改以下数据</value>
+  </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>修改密码</value>
+  </data>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>密码修改成功，下次请使用新密码登录。</value>
+  </data>
+  <data name="CheckExport" xml:space="preserve">
+    <value>勾选导出</value>
   </data>
   <data name="CloseAllTags" xml:space="preserve">
     <value>关闭全部标签页</value>
@@ -141,8 +159,56 @@
   <data name="CodeGen" xml:space="preserve">
     <value>代码生成器</value>
   </data>
+  <data name="Create" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="DeleteConfirm" xml:space="preserve">
+    <value>确定要删除这条数据么：</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>详细</value>
+  </data>
+  <data name="DownloadTemplate" xml:space="preserve">
+    <value>下载模板</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
   <data name="HideShow" xml:space="preserve">
     <value>侧边伸缩</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Login.InputPassword" xml:space="preserve">
+    <value>请输入密码</value>
+  </data>
+  <data name="Login.InputUserName" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="Login.InputValidation" xml:space="preserve">
+    <value>请输入验证码</value>
+  </data>
+  <data name="Login.Login" xml:space="preserve">
+    <value>登 录</value>
+  </data>
+  <data name="Login.Register" xml:space="preserve">
+    <value>注 册</value>
+  </data>
+  <data name="Login.RememberMe" xml:space="preserve">
+    <value>记住我</value>
+  </data>
+  <data name="Login.ValidationFail" xml:space="preserve">
+    <value>验证码不正确</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>登陆失败</value>
   </data>
   <data name="LogOut" xml:space="preserve">
     <value>退出</value>
@@ -165,6 +231,18 @@
   <data name="Refresh" xml:space="preserve">
     <value>刷新</value>
   </data>
+  <data name="Reg.ItcodeDuplicate" xml:space="preserve">
+    <value>账号重复</value>
+  </data>
+  <data name="Reg.Success" xml:space="preserve">
+    <value>注册成功</value>
+  </data>
+  <data name="Reg.Title" xml:space="preserve">
+    <value>新用户注册</value>
+  </data>
+  <data name="UploadTemplate" xml:space="preserve">
+    <value>上传模板</value>
+  </data>
   <data name="WtmDoc" xml:space="preserve">
     <value>WTM文档</value>
   </data>
@@ -174,10 +252,25 @@
   <data name="{0}number" xml:space="preserve">
     <value>{0}必须是数字</value>
   </data>
+  <data name="{0}range{1}" xml:space="preserve">
+    <value>{0}至少是{1}</value>
+  </data>
+  <data name="{0}range{1}{2}" xml:space="preserve">
+    <value>{0}必须是{1}到{2}之间的数</value>
+  </data>
+  <data name="{0}range{2}" xml:space="preserve">
+    <value>{0}最多是{1}</value>
+  </data>
   <data name="{0}required" xml:space="preserve">
     <value>{0}是必填项</value>
   </data>
   <data name="{0}stringmax{1}" xml:space="preserve">
     <value>{0}最多输入{1}个字符</value>
+  </data>
+  <data name="{0}ValueNotExist" xml:space="preserve">
+    <value>{0}输入的值在数据库中不存在</value>
+  </data>
+  <data name="{0}ValueTypeNotAllowed" xml:space="preserve">
+    <value>{0}输入的值不在允许的数据类型范围内</value>
   </data>
 </root>

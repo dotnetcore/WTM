@@ -1,0 +1,36 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<wt:fieldset field-set-style="Simple" title="Group management-module screenshot">
+  <img src="~/imgs/admin-groupen.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Group managemen introduction">
+  <p>
+    System management - group management.Enter group management interface, you can see the list of groups in the system. Through this function, you can add groups, modify groups, delete groups, batch delete, import, export.
+    The main function of user groups is to group users and set different data permissions for different groups.
+  </p>
+  <p>
+    New group,as following:
+  </p>
+  <img src="~/imgs/admin-group-createen.png" />
+  <p>
+    Modify groups,as following:
+  </p>
+  <img src="~/imgs/admin-group-editen.png" />
+  <p>
+    Before group import, you can download the template, fill in the template information, and add group information in batch by importing, as shown in the figure:
+  </p>
+  <img src="~/imgs/admin-group-importen.png" />
+  <p>In the process of importing, once there is a data error, the error information will be displayed in the imported pop-up window.</p>
+  <p>
+    Data permission，set data permission to a user group，for more infomations of data permission, please refer <a href="/#/Admin/Dp">Data permission</a>，as following:
+  </p>
+  <img src="~/imgs/admin-group-pageen.png" />
+
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

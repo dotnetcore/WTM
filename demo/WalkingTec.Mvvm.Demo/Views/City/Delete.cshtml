@@ -1,0 +1,14 @@
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.CityVMs.CityVM
+
+<wt:form vm="@Model">
+	<wt:quote>@Model.Localizer["DeleteConfirm"]</wt:quote>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:display field="Entity.Name" />
+<wt:display field="Entity.Parent.Name" />
+</wt:row>
+    <wt:hidden field="Entity.ID" />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="删除"/>
+        <wt:closebutton />
+    </wt:row>
+</wt:form>

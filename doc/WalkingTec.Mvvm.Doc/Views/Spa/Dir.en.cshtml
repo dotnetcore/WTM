@@ -1,0 +1,65 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>ClientApp/src/pages/index.ts defines all modules in the system</p>
+<p>Each subdirectory under ClientApp/src/pages corresponds to an independent module</p>
+<p>For each module, the framework divides them into several files for development and testing</p>
+<wt:fieldset field-set-style="Simple" title="Module file structure">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Document</th>
+                <th lay-data="{field:'joinTime', width:600}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>index.tsx</td>
+                <td>Module home page</td>
+            </tr>
+            <tr>
+                <td>style.less</td>
+                <td>Custom CSS within module</td>
+            </tr>
+            <tr>
+                <td>store/index.ts</td>
+                <td>Defines the API that the module needs to call</td>
+            </tr>
+            <tr>
+                <td>views/models.tsx</td>
+                <td> Defines the form and search criteria</td>
+            </tr>
+            <tr>
+                <td>views/forms.tsx</td>
+                <td>Defines the forms of adding, modifying, and details</td>
+            </tr>
+            <tr>
+                <td>search.tsx</td>
+                <td>Defines the form used for search criteria</td>
+            </tr>
+            <tr>
+                <td>table.tsx</td>
+                <td>Defines table</td>
+            </tr>
+            <tr>
+                <td>action.tsx</td>
+                <td>Various buttons in the module are defined, including the buttons required on each line in the list</td>
+            </tr>
+        </tbody>
+    </table>
+
+<script>
+layui.use('code',function(){layui.code({ about: false })})
+</script>
+<script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+</script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

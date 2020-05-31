@@ -1,0 +1,37 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<wt:fieldset field-set-style="Simple" title="Menu managemen-module screenshot">
+    <img src="~/imgs/admin-menuen.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Menu management introduction">
+    <p>
+        Click system management-menu management to enter the menu management interface. You can see the menu list, which has a hierarchical structure. The hierarchy reflects operations under a page. Through the menu module, you can create new menu, modify menu, delete menu, View menu details, check page, refresh menu functions.
+    </p>
+    <p>
+        Create a new menu, as shown below:
+    </p>
+    <img src="~/imgs/admin-menu-create-1en.png" />
+    <wt:quote>Menu information tab</wt:quote>
+    <ol class="doc">
+        <li>Internal address:</li>
+        You can select internal and external. The reason is that the framework can manage not only the link address of the domain, but also the link address of the foreign domain by selecting internal and external from here. When you select internal, you can see a drop-down list of modules and actions. Here, the data of modules and actions are displayed by the framework through reflection, with the Controller as a module and Action as an action. When selecting the external part, you can see that the drop-down list of modules and actions disappears and the URL field. Here you can fill in a URL address. The framework will load the page into the content area on the right side according to the URL address to realize the management of the external domain system.
+        <br />
+        <li>Page name:</li>The page name maintained here is the name to be displayed on the menu. You can select the parent directory to make the menu hierarchical.
+        <br />
+        <li>Catalog:</li>If you select directory, you cannot click it when it is displayed on the menu. It is just a menu level organization method. If you choose not directory, that is menu, you can click to enter the corresponding page.
+        <br />
+        <li>Menu display:</li>If ‘yes’ is selected, it will be displayed on the left; if ‘no’ is selected, it will not be displayed. This configuration is to configure an operation on the page, such as delete operation. It is only an operation on the page, so it does not need to be displayed as a menu.  
+        <br />
+        <li>Public:</li>If ‘yes’ is selected, the menu can be accessed without permission verification and login. If you select ‘no’, you need to verify the permission. If the login user has the permission of this menu, you can access it.
+        <br />
+        <li>Order:</li>Maintain the order of menu display. You can adjust the order of menu display on the left.  
+        <br />
+        <li>Icon:</li>The font icon can be selected as the icon displayed in the menu to increase the beauty of the system.
+    </ol>
+    <wt:quote>Permission settings</wt:quote>
+    <p>
+      Click Select to open the role list. Pop up page, with query function, convenient and fast to find the required data. By selecting the roles that are allowed to access, you can quickly configure the access permissions. The permissions of each action can be configured in more detail in the permission configuration of the role.
+    </p>
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

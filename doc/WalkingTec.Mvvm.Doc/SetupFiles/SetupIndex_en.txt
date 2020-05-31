@@ -1,0 +1,190 @@
+<html>
+<head>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cce7a18264274038f0ee50ef3f9f46ce";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</head>
+<style>
+    body{
+        margin:0px;
+        padding:0px;
+        list-style: none;
+        font-family: Hiragino Sans GB,Helvetica Neue,Microsoft Yahei,Arial,\5b8b\4f53,sans-serif;
+    }
+
+    .container{
+        width:90%;
+        margin:30px auto;
+        /*background: #f9f9f9;*/
+        /*padding: 20px;*/
+    }
+    .field{
+        position: relative;
+    }
+    .field legend{
+        padding-bottom: 10px;
+        font-size: 20px;
+        font-weight: 300;
+        margin-bottom: 20px;
+        /*border-bottom: 1px solid #e4e3e3;*/
+        /*font-size: 18px;*/
+    }
+    .content table tr td:nth-child(odd){
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 240px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+        color: #151515;
+    }
+
+    .content table tr td:nth-child(even){
+        /*margin-left: 110px;*/
+        display: inline-block;
+        min-height: 36px;
+    }
+
+    .content table tr{
+        margin-bottom: 15px;
+        clear: both;
+        display: block;
+    }
+
+    .content table tr:nth-child(1) td:nth-child(2) input{
+        width:500px !important;
+    }
+
+    .content table tr td:nth-child(even) input,select{
+        display: block;
+        width: 200px;
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 34px;
+        border:1px solid #e8e7e4;
+    }
+    .content table tr td:nth-child(even) input[type="checkbox"]{
+        width: auto;
+    }
+    .content .submitColor{
+        background: #01AAED;
+        color:#fff;
+        border:0px;
+        padding:10px 20px;
+        border-radius: 2px;
+        margin-left: 16%;
+        margin-top: 20px;
+    }
+  .submitColor:hover{
+        background: #1E9FFF;
+        cursor: pointer;
+    }
+    /*.content .submitColor{*/
+        /*text-align: center;*/
+        /*margin: 0px auto;*/
+        /*display: block;*/
+
+    /*}*/
+</style>
+<body>
+<div class="field container">
+    <legend><span>This wizard will help you quickly configure and use the WTM framework</span></legend>
+    <form method="post" class="content">
+        <table>
+            <tr>
+                <td>.netcore version：</td>
+                <td>
+                    <select name="DotnetVersion">
+                        <option value="dotnet2_2">.netcore2.2</option>
+                        <option value="dotnet3_0">.netcore3.1</option>
+                   </select>
+                </td>
+            </tr>
+            <tr>
+                <td>ConnectionString：</td>
+                <td><input name="CS" value="Server=(localdb)\\mssqllocaldb;Database=$dbname$;Trusted_Connection=True;"/></td>
+            </tr>
+            <tr>
+                <td>Database：</td>
+                <td>
+                    <select name="DbType">
+                        <option value="SqlServer">SqlServer</option>
+                        <option value="MySql">MySql</option>
+                        <option value="PgSql">PgSql</option>
+                        <option value="SQLite">SQLite</option>
+                         <option value="Oracle">Oracle</option>
+                   </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Cookie prefix：</td>
+                <td><input name="CookiePre" value="{vm.CookiePre}" /></td>
+            </tr>
+            <tr>
+                <td>Upload：</td>
+                <td>
+                    <select name="FileMode">
+                        <option value="Database">Save to database</option>
+                        <option value="Local">Save to disk</option>
+                        <option value="DFS">Save to dfs server</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Upload path：</td>
+                <td><input name="UploadDir" /></td>
+            </tr>
+            <tr>
+                <td>Records per page：</td>
+                <td><input name="RPP" value="{vm.Rpp}" /></td>
+            </tr>
+            <tr>
+                <td>Front end UI：</td>
+                <td>
+                    <select name="UI">
+                        <option value="LayUI">LayUI</option>
+                        <option value="React">React+AntD</option>
+                        <option value="Vue">Vue+Element</option>
+                    </select>
+                </td>
+            </tr>
+			<tr>
+                <td>Page display：</td>
+                <td>
+                    <select name="PageMode">
+                        <option value="Tab">Tab</option>
+                        <option value="Single">Single page</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Project structure：</td>
+                <td>
+                    <select name="ProjectType">
+                        <option value="Single">Single project</option>
+                        <option value="Multi">Multiple projects</option>
+                    </select>
+                </td>
+            </tr>
+			<tr>
+				<td></td>
+                <td>*The user name automatically created by the framework is admin, and the password is 000000</td>
+            </tr>
+
+        </table>
+		<input type="hidden" name="ExtraDir" value="$extradir$" />
+		<input type="hidden" name="ExtraNs" value="$extrans$" />
+        <button class="submitColor" type="submit" onclick="return confirm('A zip file containing the vs solution will be generated. Do you want to continue?');">Start</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -634,20 +634,9 @@ namespace WalkingTec.Mvvm.Core
             //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
             if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(PersistPoco)))
             {
+                FC.Add("Entity.IsValid", 0);
                 (Entity as PersistPoco).IsValid = false;
-                (Entity as PersistPoco).UpdateTime = DateTime.Now;
-                (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateProperty(Entity, "IsValid");
-                DC.UpdateProperty(Entity, "UpdateTime");
-                DC.UpdateProperty(Entity, "UpdateBy");
-                try
-                {
-                    DC.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    MSD.AddModelError("", "数据使用中，无法删除");
-                }
+                DoEdit();
             }
             //如果是普通的TopBasePoco，则进行物理删除
             else if (typeof(TModel).GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
@@ -673,7 +662,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 catch (DbUpdateException)
                 {
-                    MSD.AddModelError("", "数据使用中，无法删除");
+                    MSD.AddModelError("", Program._localizer["DeleteFailed"]);
                 }
             }
             //如果是普通的TopBasePoco，则进行物理删除
@@ -708,11 +697,14 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var f in fas)
                 {
                     var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
-                    foreach (var sub in subs)
+                    if (subs != null)
                     {
-                        fileids.Add(sub.FileId);
+                        foreach (var sub in subs)
+                        {
+                            fileids.Add(sub.FileId);
+                        }
+                        f.SetValue(Entity, null);
                     }
-                    f.SetValue(Entity, null);
                 }
                 if (typeof(TModel) != typeof(FileAttachment))
                 {
@@ -734,9 +726,9 @@ namespace WalkingTec.Mvvm.Core
                     ofa.DoDelete();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MSD.AddModelError("", "数据使用中，无法删除");
+                MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }
         }
 
@@ -789,9 +781,9 @@ namespace WalkingTec.Mvvm.Core
                     await ofa.DoDeleteAsync();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MSD.AddModelError("", "数据使用中，无法删除");
+                MSD.AddModelError("", Program._localizer["DeleteFailed"]);
             }
         }
 
@@ -924,12 +916,12 @@ namespace WalkingTec.Mvvm.Core
                         //如果只有一个字段重复，则拼接形成 xxx字段重复 这种提示
                         if (props.Count == 1)
                         {
-                            MSD.AddModelError(GetValidationFieldName(props[0])[0], AllName + "字段重复");
+                            MSD.AddModelError(GetValidationFieldName(props[0])[0], Program._localizer["DuplicateError", AllName]);
                         }
                         //如果多个字段重复，则拼接形成 xx，yy，zz组合字段重复 这种提示
                         else if (props.Count > 1)
                         {
-                             MSD.AddModelError(GetValidationFieldName(props.First())[0], AllName + "字段组合重复");
+                             MSD.AddModelError(GetValidationFieldName(props.First())[0], Program._localizer["DuplicateGroupError", AllName]);
                         }
                     }
                 }

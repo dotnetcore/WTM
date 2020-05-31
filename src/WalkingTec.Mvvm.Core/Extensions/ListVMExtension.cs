@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -46,10 +47,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             switch (info.FormatType)
             {
                 case ColumnFormatTypeEnum.Dialog:
-                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed,info.ButtonClass).ToString();
+                    rv = vm.UIService.MakeDialogButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.ShowDialog, info.Resizable, info.Maxed, info.ButtonClass, info.Style).ToString();
                     break;
                 case ColumnFormatTypeEnum.Button:
-                    rv = vm.UIService.MakeButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.Resizable, info.Maxed, vm.ViewDivId, info.ButtonClass,info.RType).ToString();
+                    rv = vm.UIService.MakeButton(info.ButtonType, info.Url, info.Text, info.Width, info.Height, info.Title, info.ButtonID, info.Resizable, info.Maxed, vm.ViewDivId, info.ButtonClass, info.Style, info.RType).ToString();
                     break;
                 case ColumnFormatTypeEnum.Download:
                     if (info.FileID == null)
@@ -58,7 +59,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text, vm.CurrentCS, info.ButtonClass).ToString();
+                        rv = vm.UIService.MakeDownloadButton(info.ButtonType, info.FileID.Value, info.Text, vm.CurrentCS, info.ButtonClass, info.Style).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.ViewPic:
@@ -68,11 +69,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     else
                     {
-                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable,vm.CurrentCS,info.Maxed, info.ButtonClass).ToString();
+                        rv = vm.UIService.MakeViewButton(info.ButtonType, info.FileID.Value, info.Text, info.Width, info.Height, info.Title, info.Resizable, vm.CurrentCS, info.Maxed, info.ButtonClass, info.Style).ToString();
                     }
                     break;
                 case ColumnFormatTypeEnum.Script:
-                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Text, info.Script, info.ButtonID, info.Url, info.ButtonClass).ToString();
+                    rv = vm.UIService.MakeScriptButton(info.ButtonType, info.Text, info.Script, info.ButtonID, info.Url, info.ButtonClass, info.Style).ToString();
                     break;
                 case ColumnFormatTypeEnum.Html:
                     rv = info.Html;
@@ -323,6 +324,31 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static string GetJson<T>(this IBasePagedListVM<T, BaseSearcher> self, bool PlainText = true) where T : TopBasePoco, new()
         {
             return $@"{{""Data"":{self.GetDataJson(PlainText)},""Count"":{self.Searcher.Count},""Page"":{self.Searcher.Page},""PageCount"":{self.Searcher.PageCount},""Msg"":""success"",""Code"":200}}";
+        }
+
+        public static string GetError<T>(this IBasePagedListVM<T, BaseSearcher> self) where T : TopBasePoco, new()
+        {
+            return $@"{{""Data"":{{}},""Count"":0,""Page"":0,""PageCount"":0,""Msg"":""{(self as BaseVM).MSD.GetFirstError()}"",""Code"":400}}";
+        }
+
+
+        /// <summary>
+        /// 生成下载文件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="ExportName"></param>
+        /// <returns></returns>
+        public static FileContentResult GetExportData<T>(this IBasePagedListVM<T, BaseSearcher> self, string ExportName = "") where T : TopBasePoco, new()
+        {
+            self.SearcherMode = self.Ids != null && self.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = self.GenerateExcel();
+            string ContentType = self.ExportExcelCount > 1 ? "application/x-zip-compresse" : "application/vnd.ms-excel";
+            ExportName = string.IsNullOrEmpty(ExportName) ? typeof(T).Name : ExportName;
+            ExportName = self.ExportExcelCount > 1 ? $"Export_{ExportName}_{DateTime.Now.ToString("yyyyMMddHHmmssffff")}.zip" : $"Export_{ExportName}_{DateTime.Now.ToString("yyyyMMddHHmmssffff")}.xlsx";
+            FileContentResult Result = new FileContentResult(data, ContentType);
+            Result.FileDownloadName = ExportName;
+            return Result;
         }
     }
 }

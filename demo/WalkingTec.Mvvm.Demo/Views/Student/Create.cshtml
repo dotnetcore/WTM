@@ -1,30 +1,21 @@
-@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:textbox field="Entity.LoginName" />
-        <wt:textbox field="Entity.Password" />
-        <wt:textbox field="Entity.Email" />
-        <wt:textbox field="Entity.Name" />
-        <wt:combobox field="Entity.Sex" />
-        <wt:textbox field="Entity.CellPhone" />
-        <wt:textbox field="Entity.Address" />
-        <wt:textbox field="Entity.ZipCode" />
-        <wt:upload field="Entity.PhotoId" />
-        <wt:combobox field="Entity.IsValid" />
-        <wt:datetime field="Entity.EnRollDate" />
-        <wt:row id="selector">
-          <wt:selector list-vm="MajorList" field="SelectedMajorIds" text-bind="MajorList.EntityList[0].MajorName" label-text="专业">
-            <wt:searchpanel vm="MajorList" reset-btn="true">
-              <wt:row items-per-row="ItemsPerRowEnum.Three">
-                <wt:textbox field="MajorList.Searcher.MajorCode" />
-                <wt:textbox field="MajorList.Searcher.MajorName" />
-                <wt:combobox field="MajorList.Searcher.SchoolId" items="MajorList.Searcher.AllSchools" empty-text="全部" />
-              </wt:row>
-            </wt:searchpanel>
-          </wt:selector>
-        </wt:row>
-    </wt:row>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.ID" />
+<wt:textbox field="Entity.Password" />
+<wt:textbox field="Entity.Email" />
+<wt:textbox field="Entity.Name" />
+<wt:combobox field="Entity.Sex" />
+<wt:textbox field="Entity.CellPhone" />
+<wt:textbox field="Entity.Address" />
+<wt:textbox field="Entity.ZipCode" />
+<wt:upload field="Entity.PhotoId" />
+<wt:combobox field="Entity.IsValid" />
+<wt:datetime field="Entity.EnRollDate" />
+<wt:checkbox field="SelectedStudentMajorIDs" items="AllStudentMajors"/>
+</wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />

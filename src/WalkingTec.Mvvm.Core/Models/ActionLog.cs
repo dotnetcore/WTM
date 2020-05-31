@@ -61,14 +61,14 @@ namespace WalkingTec.Mvvm.Core
         public string GetLogString()
         {
             return $@"
-|-访问时间：{this.ActionName}
-|-访问用户：{this.ITCode??"无"}
-|-来源地址：{this.IP??"未知"}
-|-访问模块：{this.ModuleName??"未知"}
-|-访问方法：{this.ActionName ?? "未知"}
-|-动作地址：{this.ActionUrl ?? "未知"}
-|-访问时长：{this.Duration.ToString("F2")+"秒"}
-|-具体信息：{this.Remark}
+|-{Core.Program._localizer["ActionTime"]}：{this.ActionTime}
+|-{Core.Program._localizer["Account"]}：{this.ITCode??""}
+|-IP：{this.IP??""}
+|-{Core.Program._localizer["Module"]}：{this.ModuleName??""}
+|-{Core.Program._localizer["MethodName"]}：{this.ActionName ?? ""}
+|-Url：{this.ActionUrl ?? ""}
+|-{Core.Program._localizer["Duration"]}：{this.Duration.ToString("F2")+" s"}
+|-{Core.Program._localizer["Remark"]}：{this.Remark}
 ";
         }
     }

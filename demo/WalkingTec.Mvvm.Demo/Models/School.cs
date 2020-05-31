@@ -20,6 +20,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public new int ID { get; set; }
+
         [Display(Name = "学校编码")]
         [Required(ErrorMessage = "{0}是必填项")]
         [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
@@ -28,8 +29,8 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "学校名称")]
         [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
         [Required(ErrorMessage = "{0}是必填项")]
+        [Column("SchoolName2")]
         public string SchoolName { get; set; }
-
 
         [Display(Name = "学校类型")]
         [Required(ErrorMessage = "{0}是必填项")]

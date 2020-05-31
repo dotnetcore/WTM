@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Core
             var alignType = GridColumnAlignEnum.Center;
             if (me != null)
             {
-                var propType = (me.Member as PropertyInfo).PropertyType;
+                var propType = me.Type;
                 if (propType == typeof(string))
                 {
                     alignType = GridColumnAlignEnum.Left;

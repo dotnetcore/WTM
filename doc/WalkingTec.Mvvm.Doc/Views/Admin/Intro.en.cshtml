@@ -1,0 +1,50 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="Framework management module">
+    <wt:quote>
+        <p>The framework management module contains most common functions in the management system, such as user management, role management, menu management, user group management, data authority management, log management. Using this framework, these basic modules can be used directly without a lot of repetitive work. You can not only meet the needs of customers quickly, but also spend more time with your family and friends. Why not? Let's use WRM!I will introduce the functions of the framework management module now.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Log management">
+    <wt:quote>
+        <p>As the name implies, all actions of all users are recorded. For developers who have used MVC should know that each user action must correspond to an action under a Controller. MVC provides an Action filter. The framework monitors the execution of each action by rewriting OnActionExecuting.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="user management">
+    <wt:quote>
+        <p>Super administrator maintains users who use the system. Super administrator can add users, modify user information and delete users through user management.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Role management">
+    <wt:quote>
+        <p>The addition, modification, deletion and page permission of roles are completed here.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Menu management">
+    <wt:quote>
+        <p>Through the module of menu management, the functions in the system are associated with the menu. There are synchronization module, check page, refresh menu, new menu functions.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="User group management">
+    <wt:quote>
+        <p>It is mainly used to maintain users with the same data permissions. The role is mainly used to maintain the page permissions of a group of users.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Data permissions">
+    <wt:quote>
+        <p>Data permission refers to assign certain data permission to certain users . Data permissions can be configured to user groups or users.</p>
+    </wt:quote>
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

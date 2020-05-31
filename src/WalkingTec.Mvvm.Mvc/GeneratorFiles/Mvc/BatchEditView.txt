@@ -1,10 +1,11 @@
-﻿@model $vmnamespace$.$modelname$BatchVM
+@model $vmnamespace$.$modelname$BatchVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <div style="margin-bottom:10px">批量修改以下数据: </div>$fields$
+    <div style="margin-bottom:10px">@Model.Localizer["BatchEditConfirm"] </div>$fields$
     <wt:hidden field="Ids" />
     <wt:grid vm="ListVM" use-local-data="true" height="300"  hidden-checkbox="true" hidden-panel="true"/>
-    <wt:row align=" AlignEnum.Right">
+    <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
         <wt:closebutton />
     </wt:row>

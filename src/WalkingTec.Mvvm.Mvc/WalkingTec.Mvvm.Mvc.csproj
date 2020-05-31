@@ -4,7 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc</AssemblyName>
     <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <LangVersion>latest</LangVersion>
     <Title>$(AssemblyName)</Title>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
@@ -15,35 +15,6 @@
   <ItemGroup>
     <EmbeddedResource Include="GeneratorFiles\Spa\Vue\**\*.txt" />
     <EmbeddedResource Include="Views\**\*.cshtml" />
-    <None Remove="GeneratorFiles\ApiTest.txt" />
-    <None Remove="GeneratorFiles\ApiTestTopPoco.txt" />
-    <None Remove="GeneratorFiles\BatchVM.txt" />
-    <None Remove="GeneratorFiles\ControllerTest.txt" />
-    <None Remove="GeneratorFiles\ControllerTestTopPoco.txt" />
-    <None Remove="GeneratorFiles\CrudVM.txt" />
-    <None Remove="GeneratorFiles\HeaderFormat.txt" />
-    <None Remove="GeneratorFiles\ImportVM.txt" />
-    <None Remove="GeneratorFiles\ListVM.txt" />
-    <None Remove="GeneratorFiles\Mvc\BatchDeleteView.txt" />
-    <None Remove="GeneratorFiles\Mvc\BatchEditView.txt" />
-    <None Remove="GeneratorFiles\Mvc\Controller.txt" />
-    <None Remove="GeneratorFiles\Mvc\CreateView.txt" />
-    <None Remove="GeneratorFiles\Mvc\DeleteView.txt" />
-    <None Remove="GeneratorFiles\Mvc\DetailsView.txt" />
-    <None Remove="GeneratorFiles\Mvc\EditView.txt" />
-    <None Remove="GeneratorFiles\Mvc\ImportView.txt" />
-    <None Remove="GeneratorFiles\Mvc\ListView.txt" />
-    <None Remove="GeneratorFiles\Searcher.txt" />
-    <None Remove="GeneratorFiles\Spa\Controller.txt" />
-    <None Remove="GeneratorFiles\Spa\React\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\store\index.txt" />
-    <None Remove="GeneratorFiles\Spa\React\style.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\action.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\forms.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\models.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\other.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\search.txt" />
-    <None Remove="GeneratorFiles\Spa\React\views\table.txt" />
     <EmbeddedResource Include="framework_layui.js" />
     <EmbeddedResource Include="GeneratorFiles\ApiTest.txt" />
     <EmbeddedResource Include="GeneratorFiles\ApiTestTopPoco.txt" />
@@ -71,6 +42,9 @@
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\other.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\search.txt" />
     <EmbeddedResource Include="GeneratorFiles\Spa\React\views\table.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\CreateView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\DeleteView.txt" />
+    <EmbeddedResource Include="GeneratorFiles\Mvc\DetailsView.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,21 +56,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <EmbeddedResource Include="GeneratorFiles\Mvc\CreateView.txt" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <EmbeddedResource Include="GeneratorFiles\Mvc\DeleteView.txt" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <EmbeddedResource Include="GeneratorFiles\Mvc\DetailsView.txt" />
   </ItemGroup>
 
 </Project>

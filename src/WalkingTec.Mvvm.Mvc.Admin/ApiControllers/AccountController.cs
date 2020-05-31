@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             //如果没有找到则输出错误
             if (user == null)
             {
-                return BadRequest("LoadFailed");
+                return BadRequest(Mvc.Admin.Program._localizer["LoginFailed"].Value);
             }
             WtmContext.LoginUserInfo = user;
 
@@ -89,7 +89,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                         Text = x.PageName,
                         Url = x.Url,
                         Icon = x.ICon
-                    });
+                    }).ToList();
+                LocalizeMenu(menus);
                 ms.AddRange(menus);
 
                 List<string> urls = new List<string>();
@@ -114,6 +115,31 @@ namespace WalkingTec.Mvvm.Admin.Api
                 return Content(JsonConvert.SerializeObject(token), "application/json");
             }
         }
+
+
+        private void LocalizeMenu(List<SimpleMenu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                if (menu.Text?.StartsWith("MenuKey.") == true)
+                {
+                    if (Localizer[menu.Text].ResourceNotFound == true)
+                    {
+                        menu.Text = Core.Program._localizer[menu.Text];
+                    }
+                    else
+                    {
+                        menu.Text = Localizer[menu.Text];
+                    }
+                }
+            }
+        }
+
 
         [HttpPost("[action]")]
         [AllRights]
@@ -174,6 +200,8 @@ namespace WalkingTec.Mvvm.Admin.Api
                         ms.Add(item);
                     }
                 }
+                LocalizeMenu(ms);
+
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
                     .AsNoTracking()

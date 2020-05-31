@@ -1,4 +1,5 @@
-﻿框架会读取模型字段的属性来自动进行前台和后台的数据验证
+@model WalkingTec.Mvvm.Core.BaseVM
+框架会读取模型字段的属性来自动进行前台和后台的数据验证
 
 <wt:fieldset field-set-style="Simple" title="Required">
     <p>框架前台控件绑定的字段如果标有Required属性，则框架会自动在空间名称后面加红色的星号提示用户必填，并自动生成验证必填项的js脚本</p>
@@ -17,3 +18,6 @@
 <wt:fieldset field-set-style="Simple" title="MiddleTable">
     <p>对于多对多的关系，我们通常使用一个中间表来实现。可以在中间表的Model上添加MiddleTable标记，框架自带的代码生成器会根据这个标记识别多对多的关系并生成正确的代码</p>
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

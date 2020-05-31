@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,10 +10,10 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 {
-    public class StudentTemplateVM : BaseTemplateVM
+    public partial class StudentTemplateVM : BaseTemplateVM
     {
         [Display(Name = "账号")]
-        public ExcelPropety LoginName_Excel = ExcelPropety.CreateProperty<Student>(x => x.LoginName);
+        public ExcelPropety ID_Excel = ExcelPropety.CreateProperty<Student>(x => x.ID);
         [Display(Name = "密码")]
         public ExcelPropety Password_Excel = ExcelPropety.CreateProperty<Student>(x => x.Password);
         [Display(Name = "邮箱")]
@@ -41,7 +41,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
     public class StudentImportVM : BaseImportVM<StudentTemplateVM, Student>
     {
-
     }
 
 }

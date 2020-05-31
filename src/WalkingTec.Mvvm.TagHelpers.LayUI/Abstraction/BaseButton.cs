@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -40,6 +41,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string Click { get; set; }
 
         public bool Disabled { get; set; }
+
+        public string ConfirmTxt { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (string.IsNullOrEmpty(Id))
@@ -91,17 +95,40 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Content.SetHtmlContent(Text ?? string.Empty);
             }
+            string submitButtonUrl = "";
+            if (this is SubmitButtonTagHelper sbt)
+            {
+                if (string.IsNullOrEmpty(sbt.SubmitUrl) == false && context.Items.ContainsKey("formid") == true)
+                {
+                    submitButtonUrl = $"$('#{context.Items["formid"]}').attr('action','{sbt.SubmitUrl}');";
+                }
+            }
+            string onclick = null;
             if (string.IsNullOrEmpty(Click) == false && Disabled == false)
             {
-                output.PostElement.AppendHtml($@"
+                if (!string.IsNullOrEmpty(ConfirmTxt))
+                {
+                    Click = $"layer.confirm('{ConfirmTxt}', {{icon: 3, title:'{Program._localizer["Info"]}'}}, function(index){{ {Click};layer.close(index); }})";
+                }
+                //if (this is SubmitButtonTagHelper)
+                //{
+                //    onclick = Click+";return true;";
+                //}
+                //else
+                //{
+                onclick = Click + ";return false;";
+                //}
+            }
+
+            output.PostElement.AppendHtml($@"
 <script>
   $('#{Id}').on('click',function(){{
-    {Click};
-    return false;
+    {submitButtonUrl}
+    {onclick}
 }});
 </script>
 ");
-            }
+
             base.Process(context, output);
         }
 

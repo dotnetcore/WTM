@@ -124,9 +124,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
-                            menu.PageName = action.ActionName;
+                            menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
-                            menu.ActionName = action.ActionName;
+                            menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
                             menu.Url = action.Url;
                             menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;
@@ -209,9 +209,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
-                            menu.PageName = action.ActionName;
+                            menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
-                            menu.ActionName = action.ActionName;
+                            menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
                             menu.Url = action.Url;
                             menu.ClassName = action.Module.FullName;
                             menu.MethodName = action.MethodName;

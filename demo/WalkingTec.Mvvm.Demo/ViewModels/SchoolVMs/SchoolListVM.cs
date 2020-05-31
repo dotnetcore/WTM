@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
             NeedPage = false;
         }
 
+
         public override string SetFullRowBgColor(object entity)
         {
             var t = entity as School_View;
@@ -58,7 +59,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
                 this.MakeGridHeader(x => x.SchoolType),
                 this.MakeGridHeader(x => "test").SetFormat((a,b)=>{
                     return this.UIService.MakeScriptButton(ButtonTypesEnum.Button,"测试","alert('aaa');");
-                }).SetHeader("测试"),
+                }).SetHeader("测试").SetDisableExport(),
                 this.MakeGridHeader(x => x.Remark),
                 this.MakeGridHeaderAction(width: 500)
             };

@@ -1,30 +1,36 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+
 <style>
     a {
         color: #01aaed
     }
 </style>
-<wt:fieldset field-set-style="Simple" title="在VS中建立第一个WTM项目">
+  <wt:fieldset field-set-style="Simple" title="在VS中建立第一个WTM项目">
     <wt:quote>
-        <p>建立一个使用WTM框架的项目非常简单，框架提供了线上一键生成解决方案</p>
+      <p>建立一个使用WTM框架的项目非常简单，框架提供了线上一键生成解决方案</p>
     </wt:quote>
     <wt:quote>
-        <p>点<a href="/setup" target="_blank">这里</a> 可以直接为你生成包含解决方案的zip包，下载，解压，vs打开即可</p>
+      <p>点<a href="/setup" target="_blank">这里</a> 可以直接为你生成包含解决方案的zip包，下载，解压，vs打开即可</p>
     </wt:quote>
 
     <ul class="doc">
-        <li>
-            你会看到一个非常简洁的配置页面，选择你希望的配置<br /><br />
-            <img src="~/imgs/FirstProject9.png" /><br /><br />
-        </li>
-        <li>
-            下载压缩文件，解压，打开项目文件，按F5即可直接运行<br /><br />
-            <img src="~/imgs/FirstProject11.png" /><br /><br />
-        </li>
+      <li>
+        你会看到一个非常简洁的配置页面，选择你希望的配置<br /><br />
+        <img src="~/imgs/FirstProject9.png" /><br /><br />
+      </li>
+      <li>
+        下载压缩文件，解压，打开项目文件，按F5即可直接运行<br /><br />
+        <img src="~/imgs/FirstProject11.png" /><br /><br />
+      </li>
     </ul>
 
     <wt:quote>
-        <p>搭建WTM框架整个过程也就点几下鼠标，不需要写一行代码就获得了一个后台应用程序的标准结构和常用功能。
-        <p>接下来让我们开始开发业务模块吧，你会发现用WTM框架编写业务模块同样快捷高效</p>
+      <p>搭建WTM框架整个过程也就点几下鼠标，不需要写一行代码就获得了一个后台应用程序的标准结构和常用功能。
+      <p>接下来让我们开始开发业务模块吧，你会发现用WTM框架编写业务模块同样快捷高效</p>
     </wt:quote>
 
-</wt:fieldset>
+  </wt:fieldset>
+
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

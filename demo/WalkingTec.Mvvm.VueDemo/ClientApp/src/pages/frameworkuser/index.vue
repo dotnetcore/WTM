@@ -1,22 +1,22 @@
 <template>
-  <card class="dataprivilege">
-    <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" />
-    <!-- 操作按钮 -->
-    <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
-    <!-- 列表 -->
-    <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
-      <template #PhotoId="rowData">
-        <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
-      </template>
-      <template #IsValid="rowData">
-        <el-switch :value="rowData.row.IsValid === 'true' || rowData.row.IsValid === true" disabled />
-      </template>
-    </wtm-table-box>
-    <!-- 弹出框 -->
-    <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
-    <!-- 导入 -->
-    <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
-  </card>
+    <card class="dataprivilege">
+        <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" />
+        <!-- 操作按钮 -->
+        <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
+        <!-- 列表 -->
+        <wtm-table-box :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
+            <template #PhotoId="rowData">
+                <el-image v-if="!!rowData.row.PhotoId" style="width: 100px; height: 100px" :src="'/api/_file/downloadFile/'+rowData.row.PhotoId" fit="cover" />
+            </template>
+            <template #IsValid="rowData">
+                <el-switch :value="rowData.row.IsValid === 'true' || rowData.row.IsValid === true" disabled />
+            </template>
+        </wtm-table-box>
+        <!-- 弹出框 -->
+        <dialog-form :is-show.sync="dialogIsShow" :dialog-data="dialogData" :status="dialogStatus" @onSearch="onHoldSearch" />
+        <!-- 导入 -->
+        <upload-box :is-show.sync="uploadIsShow" @onImport="onImport" @onDownload="onDownload" />
+    </card>
 </template>
 
 <script lang='ts'>
@@ -53,11 +53,11 @@ export default class Index extends Vue {
             formItem: {
                 ITCode: {
                     type: "input",
-                    label: "账号"
+                    label: this.$t("frameworkuser.ITCode")
                 },
                 Name: {
                     type: "input",
-                    label: "姓名"
+                    label: this.$t("frameworkuser.Name")
                 }
             }
         };

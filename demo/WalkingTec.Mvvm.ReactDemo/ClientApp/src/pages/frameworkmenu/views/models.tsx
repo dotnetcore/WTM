@@ -37,7 +37,7 @@ mergeLocales({
         'frameworkmenu.PageName': 'PageName',
         'frameworkmenu.SelectedModule': 'Module',
         'frameworkmenu.SelectedActionIDs': 'Actions',
-       'frameworkmenu.FolderOnly': 'Folder',
+        'frameworkmenu.FolderOnly': 'Folder',
         'frameworkmenu.ShowOnMenu': 'ShowOnMenu',
         'frameworkmenu.IsPublic': 'IsPublic',
         'frameworkmenu.DisplayOrder': 'DisplayOrder',
@@ -60,7 +60,7 @@ const pages = new Observable<{ Text: string, Value: string, Url: string }[]>((su
         const PagesList = [];
         lodash.map(pages.default, (item) => {
             if (item.controller) {
-                PagesList.push({ Text: item.name, Value: item.controller, Url: item.path })
+                PagesList.push({ Text: getLocalesValue(item.name), Value: item.controller, Url: item.path })
             }
         })
         sub.next(PagesList);

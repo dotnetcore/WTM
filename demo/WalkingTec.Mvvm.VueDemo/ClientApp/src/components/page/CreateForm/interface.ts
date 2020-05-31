@@ -59,6 +59,10 @@ export interface FormItem {
    */
   slotKey?: string;
   /**
+   * 事件
+   */
+  events?: object;
+  /**
    * 是否隐藏组件
    */
   isHidden?: boolean | HiddenFun;

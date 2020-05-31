@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Distributed;
 using NPOI.HSSF.Util;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Runtime.Loader;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support;
 using WalkingTec.Mvvm.Core.Support.Json;
 
@@ -65,13 +67,18 @@ namespace WalkingTec.Mvvm.Core
 
         public static SimpleMenu FindMenu(string url)
         {
+            if(url == null)
+            {
+                return null;
+            }
+            url = url.ToLower();
             var menus = GlobalServices.GetRequiredService<GlobalData>()?.AllMenus;
             if(menus == null)
             {
                 return null;
             }
             //寻找菜单中是否有与当前判断的url完全相同的
-            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+            var menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
 
             //如果没有，抹掉当前url的参数，用不带参数的url比对
             if (menu == null)
@@ -80,20 +87,15 @@ namespace WalkingTec.Mvvm.Core
                 if (pos > 0)
                 {
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
                 }
             }
 
             //如果还没找到，则判断url是否为/controller/action/id这种格式，如果是则抹掉/id之后再对比
-            if (menu == null)
+            if (menu == null && url.EndsWith("/index"))
             {
-                var split = url.Split('/');
-                if (split.Length >= 2 && Guid.TryParse(split.Last(), out Guid longTest))
-                {
-                    var pos = url.LastIndexOf("/");
-                    url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url.ToLower()).FirstOrDefault();
-                }
+                url = url.Substring(0, url.Length - 6);
+                menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
             }
             return menu;
         }
@@ -702,14 +704,25 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetNugetVersion(string start = null, bool pre = false)
         {
-            NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+            var Cache = GlobalServices.GetRequiredService<IDistributedCache>() as IDistributedCache;
+            if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
+            {
+                NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+                var data = v;
+                    Cache.Add("nugetversion", data, new DistributedCacheEntryOptions()
+                    {
+                        SlidingExpiration = new TimeSpan(0, 0, 36000)
+                    });
+                rv = data;
+            }
+
             if (string.IsNullOrEmpty(start))
             {
-                return v.data[0]?.version;
+                return rv.data[0]?.version;
             }
             else
             {
-                return v.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
+                return rv.data[0].versions.Select(x => x.version).Where(x => x.StartsWith(start)).Last();
             }
         }
     }

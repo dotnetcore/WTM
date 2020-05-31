@@ -11,6 +11,7 @@ import Request from 'utils/Request';
 import RequestFiles from 'utils/RequestFiles';
 import styles from './index.module.less';
 import { FormattedMessage } from 'react-intl';
+import { getLocalesTemplate, getLocalesValue } from 'locale';
 @observer
 export default class UserMenu extends React.Component<any, any> {
   render() {
@@ -64,28 +65,28 @@ export default class UserMenu extends React.Component<any, any> {
 export class InsertForm extends React.Component<any, any> {
   models = {
     "OldPassword": {
-      label: "旧密码",
-      rules: [{ "required": true, "message": "旧密码不能为空" }],
-      formItem: <Input.Password placeholder="请输入 旧密码" />
+      label: <FormattedMessage id='update.pwd.old' />,
+      rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('update.pwd.old') }} /> }],
+      formItem: <Input.Password placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('update.pwd.old') })} />
     },
     "NewPassword": {
-      label: "新密码",
-      rules: [{ "required": true, "message": "新密码不能为空" }],
-      formItem: <Input.Password placeholder="请输入 新密码" />
+      label: <FormattedMessage id='update.pwd.new' />,
+      rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('update.pwd.new') }} /> }],
+      formItem: <Input.Password placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('update.pwd.new') })} />
     },
     "NewPasswordComfirm": {
-      label: "确认秘密",
-      rules: [{ "required": true, "message": "确认新密码不能为空" }, {
+      label: <FormattedMessage id='update.pwd.confirm' />,
+      rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('update.pwd.confirm') }} /> }, {
         validator: (rule, value, callback) => {
           const form = this.props.form;
           if (value && value !== form.getFieldValue('NewPassword')) {
-            callback('新密码不一致!');
+            callback(getLocalesValue('update.pwd.inconsistent'));
           } else {
             callback();
           }
         }
       }],
-      formItem: <Input.Password placeholder="确认秘密" />
+      formItem: <Input.Password placeholder={getLocalesValue('update.pwd.confirm')} />
     },
   };
   render() {

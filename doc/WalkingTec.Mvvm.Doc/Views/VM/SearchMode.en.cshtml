@@ -1,0 +1,106 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>Within the same model, we can write multiple ListVMs to adapt to the list in different scenarios, such as common query, export, batch operation list, selector list, etc</p>
+<p>But if these modes are only slightly different, for example, only the displayed columns are different, we can make different settings by judging the SearchMode variable.</p>
+<p>SearchMode is an enumeration variable with the following properties:</p>
+  <table lay-filter="parse-table-demo">
+    <thead>
+      <tr>
+        <th lay-data="{field:'username', width:400}">Attribute</th>
+        <th lay-data="{field:'joinTime', width:400}">Behavior</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Search</td>
+        <td>General search</td>
+      </tr>
+      <tr>
+        <td>Export</td>
+        <td>export</td>
+      </tr>
+      <tr>
+        <td>CheckExport</td>
+        <td>Check out</td>
+      </tr>
+      <tr>
+        <td>Batch</td>
+        <td>Batch operation</td>
+      </tr>
+      <tr>
+        <td>Selector</td>
+        <td>Selector</td>
+      </tr>
+      <tr>
+        <td>Custom1...Custom5</td>
+        <td>Reserve</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The following code shows how to set different columns by judging the SearchMode</p>
+  <wt:code title="InitGridAction">
+  protected override IEnumerable&lt;IGridColumn&lt;FrameworkMenu_ListView&gt;&gt; InitGridHeader()
+  {
+      List&lt;GridColumn&lt;FrameworkMenu_ListView&gt;&gt; rv = new List&lt;GridColumn&lt;FrameworkMenu_ListView&gt;&gt;();
+      switch (SearcherMode)
+      {
+          case ListVMSearchModeEnum.Batch:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName),
+                  this.MakeGridHeader(x =&gt; x.ModuleName, 200),
+                  this.MakeGridHeader(x =&gt; x.ActionName, 150),
+              });
+              break;
+          case ListVMSearchModeEnum.Custom1:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName,300),
+              });
+              break;
+          case ListVMSearchModeEnum.Custom2:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName,200),
+                    this.MakeGridHeader(x =&gt; x.ParentID).SetHeader("操作").SetFormat((item, cell) =&gt; GenerateCheckBox(item)).SetAlign(GridColumnAlignEnum.Left),
+              });
+              break;
+          default:
+              rv.AddRange(new GridColumn&lt;FrameworkMenu_ListView&gt;[] {
+                  this.MakeGridHeader(x =&gt; x.PageName, 300),
+                  this.MakeGridHeader(x =&gt; x.ModuleName, 150),
+                  this.MakeGridHeader(x =&gt; x.ShowOnMenu, 60),
+                  this.MakeGridHeader(x =&gt; x.FolderOnly, 60),
+                  this.MakeGridHeader(x =&gt; x.IsPublic, 60),
+                  this.MakeGridHeader(x =&gt; x.DisplayOrder, 60),
+                  this.MakeGridHeader(x =&gt; x.ICon, 100).SetFormat(PhotoIdFormat),
+                  this.MakeGridHeaderAction(width: 290)
+              });
+              break;
+      }
+      return rv;
+  }
+
+</wt:code>
+
+<p>The above code shows that the menu list only displays three columns in batch operation, but more columns in general search.</p>
+<p>The value of SearchMode, by default, the framework uses Search in the normal list, use Batch in batch operation, uses Selector in the selector pop-up window, and uses Export when export.</p>
+<p>Custom1 and Custom2 need to be specified manually. For example, if you want to use the menu list in other methods with different styles , You can manually set the SearchMode of ListVM to Custom1 after CreateVM, and then judge in ListVM.</p>
+
+<wt:quote>
+  <p>SearchMode can carry out judgement anywhere in ListVM, not only setting columns, such as setting action buttons, but also returning query statements. It can return different results according to different modes.</p>
+  <p>Of course, if the gap between different modes is very large, it is recommended to create a new ListVM.</p>
+</wt:quote>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

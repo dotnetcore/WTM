@@ -1,0 +1,86 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<wt:fieldset field-set-style="Simple" title="Data permission-module screenshot">
+    <img src="~/imgs/admin-dataprivilegeen.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Data permission introduction">
+    From the perspective of name, Data permission is easy to understand, that is the right to view and operate some data. Assuming that different schools can maintain only their own students, let's introduce how the framework filter data permissions.
+    <ol class="doc">
+        <li>Add data permission</li>
+        <wt:quote>
+            Data permission should be determined in the system development stage. After the data permission is determined in the business, you need to declare the data permission to the framework in the code to let the framework know what data permission is in the system. The way of declaration is in the configuration service in the Program file
+        </wt:quote>
+        <wt:code>
+public static IWebHost BuildWebHost(string[] args) =&gt;
+    WebHost
+    .CreateDefaultBuilder(args)
+    .ConfigureServices(x =&gt;
+    {
+        List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+        pris.Add(new DataPrivilegeInfo&lt;School&gt;("School", m =&gt; m.SchoolName));
+        x.AddFrameworkService( dataPrivilegeSettings: pris);
+        x.AddLayui();
+    })
+    .Configure(x =&gt;
+    {
+    x.UseFrameworkService();
+    })
+    .Build();
+        </wt:code>
+        Configure the following code:
+        <wt:code>
+List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "School", m =&gt; m.SchoolName));
+x.AddFrameworkService( dataPrivilegeSettings: pris);
+        </wt:code>
+        <p>When there are multiple data permissions, continue to add here, for example:</p>
+        <wt:code>
+List&lt;IDataPrivilege&gt; pris = new List&lt;IDataPrivilege&gt;();
+pris.Add(new DataPrivilegeInfo&lt;School&gt;( "School permission", m =&gt; m.SchoolName));
+pris.Add(new DataPrivilegeInfo&lt;Major&gt;( "Major permission", m =&gt; m.MajorName));
+x.AddFrameworkService( dataPrivilegeSettings: pris);
+        </wt:code>
+        <p>
+        After the above configuration, the system understand what data permissions it has. In the process of creating a new data permission, the content of the configured data permission will be displayed in the drop-down list of the data permission field.<br />
+        </p>
+        <p>
+            After selecting the school authority, you can select all or part of the authority. If you select part of the authority, the system will list the data in the school table to let you choose which school authority you have. As shown in the picture:<br />
+        </p>
+        <p>
+          <img src="~/imgs/admin-dataprivilege-create3en.png" /> <br/><br/>
+          You can assign data permissions to user groups or to individual users. " Select user group permission in permission category to assign to user group, and select user permission to assign to user.<br />
+          The input boxes of user groups and users have the function of fuzzy query, which is convenient for users to choose.<br />
+        </p>
+      <br /><br />
+
+        <li>Use data permission</li>
+        Suppose you have an employee table associated with the school through the SchoolID. in the query data list, you can filter the data according to the data permission configured by the current login user through DPWhere( LoginUserInfo.DataPrivileges,x=>x.SchoolID)x=>x.SchoolID)
+        <wt:code>
+public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
+{
+    var query = DC.Set&lt;Employee&gt;()
+        .CheckEqual( Searcher.CompanyID, x=&gt;x.CompanyID)
+        .CheckContain( Searcher.Name, x=&gt;x.Name)
+        .CheckEqual( Searcher.Sex, x=&gt;x.Sex)
+        .DPWhere( LoginUserInfo.DataPrivileges, x=&gt;x.SchoolID)
+        .Select(x =&gt; new Employee_View
+        {
+            ID = x.ID,
+            Name_view = x.Company.Name,
+            Name = x.Name,
+            Age = x.Age,
+            Sex = x.Sex,
+        })
+        .OrderBy(x =&gt; x.ID);
+        return query;
+}
+        </wt:code>
+
+         <li>Many-to-many data permission</li>
+        If your students and majors form many-to-many relationships through the StudentMajor intermediate table, and you configure data permissions for majors, you can use DPWhere( LoginUserInfo.DataPrivileges, x=>x.StudentMajor[0].MajorId) to filter data when querying students.
+         <li>Tree data permissions</li>
+        If your data permission inherits the ITreeData model, after you configure the permission of the parent layer, the framework will also search the data of the child layer it contains.
+    </ol>
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

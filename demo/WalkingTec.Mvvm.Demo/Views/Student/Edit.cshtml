@@ -1,23 +1,21 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:textbox field="Entity.LoginName" />
-        <wt:textbox field="Entity.Password" />
-        <wt:textbox field="Entity.Email" />
-        <wt:textbox field="Entity.Name" />
-        <wt:combobox field="Entity.Sex" />
-        <wt:textbox field="Entity.CellPhone" />
-        <wt:textbox field="Entity.Address" />
-        <wt:textbox field="Entity.ZipCode" />
-        <wt:upload field="Entity.PhotoId" />
-        <wt:combobox field="Entity.IsValid" />
-        <wt:datetime field="Entity.EnRollDate" />
-        <wt:row id="selector">
-            <wt:selector list-vm="MajorList" field="SelectedMajorIds" text-bind="MajorList.EntityList[0].MajorName" label-text="专业">
-            </wt:selector>
-        </wt:row>
-    </wt:row>
+<wt:row items-per-row="ItemsPerRowEnum.Two">
+<wt:textbox field="Entity.ID" />
+<wt:textbox field="Entity.Password" />
+<wt:textbox field="Entity.Email" />
+<wt:textbox field="Entity.Name" />
+<wt:combobox field="Entity.Sex" />
+<wt:textbox field="Entity.CellPhone" />
+<wt:textbox field="Entity.Address" />
+<wt:textbox field="Entity.ZipCode" />
+<wt:upload field="Entity.PhotoId" />
+<wt:combobox field="Entity.IsValid" />
+<wt:datetime field="Entity.EnRollDate" />
+<wt:checkbox field="SelectedStudentMajorIDs" items="AllStudentMajors"/>
+</wt:row>
     <wt:hidden field="Entity.ID" />
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />

@@ -18,16 +18,23 @@ namespace $namespace$
     [Route("api/$modelname$")]
 	public partial class $controllername$Controller : BaseApiController
     {
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost("Search")]
-		public string Search($controllername$Searcher searcher)
+		public IActionResult Search($controllername$Searcher searcher)
         {
-            var vm = CreateVM<$controllername$ListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = CreateVM<$controllername$ListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
-        [ActionDescription("获取")]
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
         public $controllername$VM Get(string id)
         {
@@ -35,7 +42,7 @@ namespace $namespace$
             return vm;
         }
 
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         [HttpPost("Add")]
         public IActionResult Add($controllername$VM vm)
         {
@@ -58,7 +65,7 @@ namespace $namespace$
 
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPut("Edit")]
         public IActionResult Edit($controllername$VM vm)
         {
@@ -81,7 +88,7 @@ namespace $namespace$
         }
 
 		[HttpPost("BatchDelete")]
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
             var vm = CreateVM<$controllername$BatchVM>();
@@ -104,18 +111,17 @@ namespace $namespace$
         }
 
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel($controllername$Searcher searcher)
         {
             var vm = CreateVM<$controllername$ListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("勾选导出")]
+        [ActionDescription("CheckExport")]
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
@@ -125,11 +131,10 @@ namespace $namespace$
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [ActionDescription("下载模板")]
+        [ActionDescription("DownloadTemplate")]
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
@@ -144,7 +149,7 @@ namespace $namespace$
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         [HttpPost("Import")]
         public ActionResult Import($controllername$ImportVM vm)
         {

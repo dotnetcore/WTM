@@ -1,7 +1,8 @@
-﻿@model $vmnamespace$.$modelname$VM
+@model $vmnamespace$.$modelname$VM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">$fields$
-    <wt:row align=" AlignEnum.Right">
+    <wt:row align="AlignEnum.Right">
         <wt:closebutton />
     </wt:row>
 </wt:form>

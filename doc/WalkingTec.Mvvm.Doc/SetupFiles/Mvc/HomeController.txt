@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Mvc;
 using $vmns$.HomeVMs;
@@ -30,7 +31,7 @@ namespace $ns$.Controllers
         }
 
         [AllRights]
-        [ActionDescription("首页")]
+        [ActionDescription("FrontPage")]
         public IActionResult FrontPage()
         {
             var areas = GlobaInfo.AllModule.Select(x => x.Area).Distinct();
@@ -38,7 +39,7 @@ namespace $ns$.Controllers
             var series = new List<object>();
             foreach (var area in areas)
             {
-                var legendName = area?.AreaName ?? "默认";
+                var legendName = area?.AreaName ?? "Default";
                 var controllers = GlobaInfo.AllModule.Where(x => x.Area == area);
                 legend.Add(legendName);
                 series.Add(new
@@ -52,11 +53,11 @@ namespace $ns$.Controllers
                 });
             }
 
-            var otherLegend = new List<string>() { "legendName" };
+            var otherLegend = new List<string>() { "Info" };
             var otherSeries = new List<object>()
             {
                 new {
-                    name = "legendName",
+                    name = "Info",
                     type = "bar",
                     data = new int[] {
                         GlobaInfo.AllModels.Count(),
@@ -102,7 +103,7 @@ namespace $ns$.Controllers
                 return Json(cookieData);
             }
             else
-                return Json("无数据");
+                return Json("No Data");
         }
 
         [AllowAnonymous]

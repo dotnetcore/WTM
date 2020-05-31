@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -117,9 +118,9 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             ID = Guid.NewGuid(),
                             ParentId = modelmenu.ID,
-                            PageName = page.Module.ActionDes.Description,
+                            PageName = page.Module.ActionDes == null ? page.Module.ModuleName : page.Module.ActionDes.Description,
                             Url = url
-                        });
+                        }) ;
                     }
                 }
             }
@@ -214,6 +215,8 @@ namespace WalkingTec.Mvvm.Mvc
                 if (attrs.Length > 0)
                 {
                     var ada = attrs[0] as ActionDescriptionAttribute;
+                    var nameKey = ada.GetDescription(ctrl);
+                    model.ModuleName = nameKey;
                     ada.SetLoccalizer(ctrl);
                     model.ActionDes = ada;
                 }

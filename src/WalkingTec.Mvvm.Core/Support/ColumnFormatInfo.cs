@@ -36,7 +36,9 @@ namespace WalkingTec.Mvvm.Core
         public string ButtonClass { get; set; }
 
         public RedirectTypesEnum RType { get; set; }
-        public static ColumnFormatInfo MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height,  string title = null, string buttonID = null, bool showDialog = true, bool resizable = true, bool maxed = false,string buttonclass = null)
+
+        public string Style { get; set; }
+        public static ColumnFormatInfo MakeDialogButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height,  string title = null, string buttonID = null, bool showDialog = true, bool resizable = true, bool maxed = false,string buttonclass = null, string style=null)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Dialog;
@@ -51,10 +53,11 @@ namespace WalkingTec.Mvvm.Core
             rv.Resizable = resizable;
             rv.Maxed = maxed;
             rv.ButtonClass = buttonclass;
+            rv.Style = style;
             return rv;
         }
 
-        public static ColumnFormatInfo MakeScriptButton(ButtonTypesEnum buttonType, string url, string buttonText, string buttonID = null, string script = "", string buttonclass = null)
+        public static ColumnFormatInfo MakeScriptButton(ButtonTypesEnum buttonType, string url, string buttonText, string buttonID = null, string script = "", string buttonclass = null, string style = null)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Script;
@@ -64,10 +67,11 @@ namespace WalkingTec.Mvvm.Core
             rv.ButtonID = buttonID;
             rv.Script = script;
             rv.ButtonClass = buttonclass;
+            rv.Style = style;
             return rv;
         }
 
-        public static ColumnFormatInfo MakeButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height, string title = null, string buttonID = null, bool resizable = true, bool maxed = false, string buttonclass = null,RedirectTypesEnum rtype = RedirectTypesEnum.Layer)
+        public static ColumnFormatInfo MakeButton(ButtonTypesEnum buttonType, string url, string buttonText, int? width, int? height, string title = null, string buttonID = null, bool resizable = true, bool maxed = false, string buttonclass = null, string style = null, RedirectTypesEnum rtype = RedirectTypesEnum.Layer)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Button;
@@ -82,10 +86,11 @@ namespace WalkingTec.Mvvm.Core
             rv.Maxed = maxed;
             rv.ButtonClass = buttonclass;
             rv.RType = rtype;
+            rv.Style = style;
             return rv;
         }
 
-        public static ColumnFormatInfo MakeDownloadButton(ButtonTypesEnum buttonType, Guid? fileID, string buttonText = null, string buttonclass = null)
+        public static ColumnFormatInfo MakeDownloadButton(ButtonTypesEnum buttonType, Guid? fileID, string buttonText = null, string buttonclass = null, string style = null)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.Download;
@@ -93,10 +98,11 @@ namespace WalkingTec.Mvvm.Core
             rv.FileID = fileID;
             rv.Text = buttonText?? Program._localizer["Download"];
             rv.ButtonClass = buttonclass;
+            rv.Style = style;
             return rv;
         }
 
-        public static ColumnFormatInfo MakeViewButton(ButtonTypesEnum buttonType, Guid? fileID, int? width = null, int? height = null, string title = null, string windowID = null, string buttonText = null, bool resizable = true, bool maxed = false, string buttonclass = null)
+        public static ColumnFormatInfo MakeViewButton(ButtonTypesEnum buttonType, Guid? fileID, int? width = null, int? height = null, string title = null, string windowID = null, string buttonText = null, bool resizable = true, bool maxed = false, string buttonclass = null, string style = null)
         {
             ColumnFormatInfo rv = new ColumnFormatInfo();
             rv.FormatType = ColumnFormatTypeEnum.ViewPic;
@@ -110,6 +116,7 @@ namespace WalkingTec.Mvvm.Core
             rv.Resizable = resizable;
             rv.Maxed = maxed;
             rv.ButtonClass = buttonclass;
+            rv.Style = style;
             return rv;
         }
 

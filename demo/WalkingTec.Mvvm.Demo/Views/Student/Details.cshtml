@@ -1,8 +1,9 @@
 ﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
 <wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:display field="Entity.LoginName" />
+<wt:display field="Entity.ID" />
 <wt:display field="Entity.Password" />
 <wt:display field="Entity.Email" />
 <wt:display field="Entity.Name" />
@@ -12,9 +13,10 @@
 <wt:display field="Entity.ZipCode" />
 <wt:display field="Entity.PhotoId" />
 <wt:display field="Entity.IsValid" />
-<wt:display field="Entity.EnRollDate" format="yyyy-MM-dd"/>
+<wt:display field="Entity.EnRollDate" />
+
 </wt:row>
-    <wt:row align=" AlignEnum.Right">
+    <wt:row align="AlignEnum.Right">
         <wt:closebutton />
     </wt:row>
 </wt:form>

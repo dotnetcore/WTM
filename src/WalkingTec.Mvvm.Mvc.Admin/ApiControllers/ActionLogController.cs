@@ -20,11 +20,18 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [ActionDescription("Search")]
         [HttpPost("[action]")]
-        public string Search(ActionLogSearcher searcher)
+        public IActionResult Search(ActionLogSearcher searcher)
         {
-            var vm = CreateVM<ActionLogListVM>();
-            vm.Searcher = searcher;
-            return vm.GetJson();
+            if (ModelState.IsValid)
+            {
+                var vm = CreateVM<ActionLogListVM>();
+                vm.Searcher = searcher;
+                return Content(vm.GetJson());
+            }
+            else
+            {
+                return BadRequest(ModelState.GetErrorJson());
+            }
         }
 
         [ActionDescription("Get")]
@@ -66,8 +73,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var vm = CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
         [ActionDescription("ExportByIds")]
@@ -80,8 +86,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
     }
 }

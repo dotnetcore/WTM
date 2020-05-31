@@ -147,8 +147,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var vm = CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
         [ActionDescription("ExportByIds")]
@@ -161,8 +160,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkRole_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
         [ActionDescription("DownloadTemplate")]

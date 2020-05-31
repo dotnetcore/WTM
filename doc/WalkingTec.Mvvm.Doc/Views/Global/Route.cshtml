@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -41,3 +42,6 @@ template: "{controller = Home}/{action = Index}/{id?}");
     layui.use('code',function(){layui.code({ about: false })})
     </script>
 
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

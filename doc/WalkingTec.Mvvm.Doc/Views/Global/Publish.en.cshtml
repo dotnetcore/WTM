@@ -1,0 +1,15 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+
+    a {
+        color: #01aaed
+    }
+</style>
+<p>When you publish the code, you need to pay attention to one point</p>
+<p>By default, dotnet core 2.1 does not support embedding pages into DLL, which can't be seen during local debugging, but after publishing, there will be a problem that pages can't be found.</p>
+<p>The solution is to modify the project file, add<CopyRefAssembliesToPublishDirectorytrue&lt/CopyRefAssembliesToPublishDirectory&gt，exmple:</p>
+<img src="~/imgs/publish.jpg" /><br /><br />
+
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

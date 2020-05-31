@@ -94,7 +94,7 @@ export default {
                 rules: [],
                 formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkuser.Sex') })} dataSource={[
                     { Text: <FormattedMessage id='frameworkuser.Sex.0' />, Value: 0 },
-                    { Text: <FormattedMessage id='frameworkuser.Sex.0' />, Value: 1 }
+                    { Text: <FormattedMessage id='frameworkuser.Sex.1' />, Value: 1 }
                 ]} />
             },
             /** 手机 */
@@ -138,6 +138,7 @@ export default {
                 label: <FormattedMessage id='frameworkuser.UserRoles' />,
                 rules: [],
                 formItem: <WtmTransfer
+                    listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkRoles" })}
                     mapKey="RoleId"
                 />
@@ -147,6 +148,7 @@ export default {
                 label: <FormattedMessage id='frameworkuser.UserGroups' />,
                 rules: [],
                 formItem: <WtmTransfer
+                    listStyle={undefined}
                     dataSource={Request.cache({ url: "/api/_FrameworkUserBase/GetFrameworkGroups" })}
                     mapKey="GroupId"
                 />

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
     public class LoginController : BaseController
     {
         [Public]
-        [ActionDescription("登录")]
+        [ActionDescription("Login")]
         public IActionResult Login()
         {
             LoginVM vm = CreateVM<LoginVM>();
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 var verifyCode = HttpContext.Session.Get<string>("verify_code");
                 if (string.IsNullOrEmpty(verifyCode) || verifyCode.ToLower() != vm.VerifyCode.ToLower())
                 {
-                    vm.MSD.AddModelError("", "验证码不正确");
+                    vm.MSD.AddModelError("", Localizer["Login.ValidationFail"]);
                     return View(vm);
                 }
             }
@@ -76,7 +76,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
 
                 var principal = user.CreatePrincipal();
-                // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
 
                 return Redirect(HttpUtility.UrlDecode(url));
@@ -103,7 +102,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 var rv = vm.DoReg();
                 if (rv == true)
                 {
-                    return FFResult().CloseDialog().Alert("注册成功");
+                    return FFResult().CloseDialog().Message(Localizer["Reg.Success"]);
                 }
                 else
                 {
@@ -114,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
 
         [AllRights]
-        [ActionDescription("登出")]
+        [ActionDescription("Logout")]
         public async Task Logout()
         {
             HttpContext.Session.Clear();
@@ -123,7 +122,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         }
 
         [AllRights]
-        [ActionDescription("修改密码")]
+        [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword()
         {
             var vm = CreateVM<ChangePasswordVM>();
@@ -133,7 +132,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [AllRights]
         [HttpPost]
-        [ActionDescription("修改密码")]
+        [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword(ChangePasswordVM vm)
         {
             if (!ModelState.IsValid)
@@ -143,7 +142,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             else
             {
                 vm.DoChange();
-                return FFResult().CloseDialog().Alert("密码修改成功，下次请使用新密码登录。");
+                return FFResult().CloseDialog().Alert(Localizer["ChangePasswordSuccess"]);
             }
         }
 

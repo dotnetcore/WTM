@@ -1,9 +1,20 @@
+@using Microsoft.AspNetCore.Localization
+@{
+  var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+}
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
-  <title>WTM基于.netcore的快速开发框架</title>
+  @if (requestCulture.RequestCulture.UICulture.Name == "zh")
+  {
+    <title>WTM基于.netcore的快速开发框架</title>
+  }
+  else
+  {
+    <title>WTM -- Rapid development framework based on dotnet core</title>
+  }
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport"

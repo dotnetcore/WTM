@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -35,3 +36,6 @@
         <img src="~/imgs/admin-role-page.png" />
 
 </wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

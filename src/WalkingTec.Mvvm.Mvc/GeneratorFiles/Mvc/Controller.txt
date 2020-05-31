@@ -12,25 +12,32 @@ namespace $namespace$
     [ActionDescription("$des$")]
     public partial class $modelname$Controller : BaseController
     {
-        #region 搜索
-        [ActionDescription("搜索")]
+        #region Search
+        [ActionDescription("Search")]
         public ActionResult Index()
         {
             var vm = CreateVM<$modelname$ListVM>();
             return PartialView(vm);
         }
 
-        [ActionDescription("搜索")]
+        [ActionDescription("Search")]
         [HttpPost]
         public string Search($modelname$ListVM vm)
         {
-            return vm.GetJson(false);
+            if (ModelState.IsValid)
+            {
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
         #endregion
 
-        #region 新建
-        [ActionDescription("新建")]
+        #region Create
+        [ActionDescription("Create")]
         public ActionResult Create()
         {
             var vm = CreateVM<$modelname$VM>();
@@ -38,7 +45,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("新建")]
+        [ActionDescription("Create")]
         public ActionResult Create($modelname$VM vm)
         {
             if (!ModelState.IsValid)
@@ -61,15 +68,15 @@ namespace $namespace$
         }
         #endregion
 
-        #region 修改
-        [ActionDescription("修改")]
+        #region Edit
+        [ActionDescription("Edit")]
         public ActionResult Edit(string id)
         {
             var vm = CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("修改")]
+        [ActionDescription("Edit")]
         [HttpPost]
         [ValidateFormItemOnly]
         public ActionResult Edit($modelname$VM vm)
@@ -94,15 +101,15 @@ namespace $namespace$
         }
         #endregion
 
-        #region 删除
-        [ActionDescription("删除")]
+        #region Delete
+        [ActionDescription("Delete")]
         public ActionResult Delete(string id)
         {
             var vm = CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
-        [ActionDescription("删除")]
+        [ActionDescription("Delete")]
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
@@ -119,8 +126,8 @@ namespace $namespace$
         }
         #endregion
 
-        #region 详细
-        [ActionDescription("详细")]
+        #region Details
+        [ActionDescription("Details")]
         public ActionResult Details(string id)
         {
             var vm = CreateVM<$modelname$VM>(id);
@@ -128,9 +135,9 @@ namespace $namespace$
         }
         #endregion
 
-        #region 批量修改
+        #region BatchEdit
         [HttpPost]
-        [ActionDescription("批量修改")]
+        [ActionDescription("BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
             var vm = CreateVM<$modelname$BatchVM>(Ids: IDs);
@@ -138,7 +145,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("批量修改")]
+        [ActionDescription("BatchEdit")]
         public ActionResult DoBatchEdit($modelname$BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchEdit())
@@ -147,14 +154,14 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被修改");
+                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer?["OprationSuccess"]);
             }
         }
         #endregion
 
-        #region 批量删除
+        #region BatchDelete
         [HttpPost]
-        [ActionDescription("批量删除")]
+        [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
             var vm = CreateVM<$modelname$BatchVM>(Ids: IDs);
@@ -162,7 +169,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("批量删除")]
+        [ActionDescription("BatchDelete")]
         public ActionResult DoBatchDelete($modelname$BatchVM vm, IFormCollection nouse)
         {
             if (!ModelState.IsValid || !vm.DoBatchDelete())
@@ -171,13 +178,13 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("操作成功，共有"+vm.Ids.Length+"条数据被删除");
+                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer?["OprationSuccess"]);
             }
         }
         #endregion
 
-        #region 导入
-		[ActionDescription("导入")]
+        #region Import
+		[ActionDescription("Import")]
         public ActionResult Import()
         {
             var vm = CreateVM<$modelname$ImportVM>();
@@ -185,7 +192,7 @@ namespace $namespace$
         }
 
         [HttpPost]
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
         public ActionResult Import($modelname$ImportVM vm, IFormCollection nouse)
         {
             if (vm.ErrorListVM.EntityList.Count > 0 || !vm.BatchSaveData())
@@ -194,18 +201,16 @@ namespace $namespace$
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert(WalkingTec.Mvvm.Core.Program._localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
 
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
         [HttpPost]
         public IActionResult ExportExcel($modelname$ListVM vm)
         {
-            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_$modelname$_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
     }

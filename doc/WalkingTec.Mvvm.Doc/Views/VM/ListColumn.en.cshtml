@@ -1,0 +1,247 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p></p>
+<p>Define columns on the list by overriding the InitGridHeader () method in the ListVM.</p>
+<p></p>
+<wt:fieldset field-set-style="Simple" title="Complex header">
+  <wt:quote>
+    <p>GridColumn can set Children to form multi-level headers.</p>
+  </wt:quote>
+  <p>The following code shows how to set the multi-level header:</p>
+  <wt:code title="InitGridHeaderInitGridHeader">
+protected override IEnumerable&lt;IGridColumn&lt;CustomView&gt;&gt; InitGridHeader()
+{
+    var header = new List&lt;GridColumn&lt;CustomView&gt;&gt;();
+    var topheader = this.MakeGridHeaderParent("Parent");
+    topheader.SetChildren(
+        this.MakeGridHeader(x =&gt; x.test1, 120),
+        this.MakeGridHeader(x =&gt; x.test2, 120)
+    );
+    header.Add(topheader);
+    header.Add(this.MakeGridHeaderAction(width: 320));
+
+    return header;
+}
+</wt:code>
+    <wt:quote>
+      <p>MakeGridHeaderAction method outputs the action columns, If the buttons defined in the ListVM displayed in each row, they will be displayed in the action columns.</p>
+  </wt:quote>
+
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Custom output">
+    <p>In fact, we don't always output the original data in the database. In many cases, we need to process, transform or display the original data, or display new columns that don't exist in the database.</p>
+    <p>Please see the following example:</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+      return new List&ltGridColumn&ltSchool_View&gt&gt{
+        this.MakeGridHeader(x =&gt x.SchoolCode),
+        this.MakeGridHeader(x =&gt x.SchoolName),
+        this.MakeGridHeader(x =&gt x.SchoolType),
+        //use a lambda
+        this.MakeGridHeader(x =&gt x.Total)
+        .SetFormat((entity,v)=&gt { return ((double)v).ToString("f2"); }),
+        //use a method
+        this.MakeGridHeader(x =&gt x.FullName).SetFormat(TotalFormat),
+        //a column dose not have to bind to a field, it can just bind to null or a string like 'abc' and using SetFormat to output
+        this.MakeGridHeader(null).SetTitle("Test").SetFormat(PhotoIdFormat),
+        this.MakeGridHeaderAction(width: 200)
+      };
+    }
+
+    private string TotalFormat(School_View entity, object val)
+    {
+        return entity.SchoolCode + "," + entity.SchoolName + "," + entity.SchoolType;
+    }
+
+    private List&ltColumnFormatInfo&gt PhotoIdFormat(School_View entity, object val)
+    {
+        return new List&ltColumnFormatInfo&gt
+        {
+            ColumnFormatInfo.MakeDownloadButton( ButtonTypesEnum.Button,entity.PhotoId),
+            ColumnFormatInfo.MakeViewButton( ButtonTypesEnum.Button,entity.PhotoId,640,480),
+        };
+    }
+
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain( Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain( Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual( Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>In the above code, we have created a new School_View class to extend school to display fields that do not exist in the model.</p>
+    <p>Then we call the SetFormat method on the column to seta function to return the data that the column needs to display.</p>
+    <wt:quote>
+      <p>The SetFormat function has two parameters, the first is the data of the whole row, and the second is the value of the field bound by this column.</p>
+      <p>SetFormat can return string directly or List&ltColumnFormatInfo&gt</p>
+      <p>ColumnFormatInfo is mainly to facilitate us to generate some buttons to display in the list when some string is returned. For example, we need to generate a button according to a column of data, click the button to pop up the window of the specified URL, which may require developers to write a large number of JS.</p>
+      <p>ColumnFormatInfo provides many extension functions for developers to generate various buttons, such as MakeDialogButton，MakeScriptButton，MakeDownloadButton, etc</p>
+    </wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="color">
+    <p>We can control the foreground and background colors of the list cells</p>
+    <p>Please see the following example:</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+    //set the background color of entire row
+    public override string SetFullRowBgColor(object entity)
+    {
+        return "FF0000";
+    }
+    //set the foreground color of entire row
+    public override string SetFullRowColor(object entity)
+    {
+        return "FF0000";
+    }
+
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            //set cell color to red
+            this.MakeGridHeader(x =&gt x.SchoolCode).SetForeGroundFunc((entity)=&gt "ff0000"),
+            //set cell background color to green
+            this.MakeGridHeader(x =&gt x.SchoolName).SetBackGroundFunc((entity)=&gt "00ff00"),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            //return different color depends on current record
+            this.MakeGridHeader(x =&gt x.Total).SetForeGroundFunc((entity)=> {
+                if(entity.Total <= 1)
+                {
+                    return "008000";
+                }
+                else if(entity.Total <= 3)
+                {
+                    return "FFC90E";
+                }
+                else
+                {
+                    return "FF0000";
+                }
+            }),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>Call SetForeGroundFunc and SetBackGroundFunc on the column to set the foreground and background colors of the cell</p>
+    <p>We set the foreground color and background color of the entire row by overriding the SetFullRowColor and SetFullRowBgColor methods in  ListVM</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Sorting and summarizing">
+    <p>We can enable column to sort and summarize.</p>
+    <p>Please see the following example</p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool_View, SchoolSearcher&gt
+{
+
+    protected override IEnumerable&ltIGridColumn&ltSchool_View&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool_View&gt&gt{
+            //set this column can sort
+            this.MakeGridHeader(x =&gt x.SchoolCode).SetSort(true),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            //set this column shows sum
+            this.MakeGridHeader(x =&gt x.Total).SetShowTotal(true),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+    public override IOrderedQueryable&ltSchool_View&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt()
+            .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+            .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+            .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+            .Select(x =&gt new School_View
+            {
+                ID = x.ID,
+                SchoolCode = x.SchoolCode,
+                SchoolName = x.SchoolName,
+                SchoolType = x.SchoolType
+            })
+            .OrderBy(x =&gt x.ID);
+        return query;
+    }
+
+}
+
+public class School_View : School{
+
+    public decimal Total {get;set;}
+    public string FullName {get;set;}
+    public Guid? PhotoId {get;set;}
+}
+
+    </wt:code>
+    <p>Call SetSort method on the column to set the column to be sorted.</p>
+    <p>call SetShowTotal method on the column to set the column to display the summary.</p>
+      <wt:quote>
+        <p>The sorting button will appear on the front-end column header for fields that can be sorted. The sorting is automatic. The framework will automatically obtain the sorting information and update your query statement. Currently, only single column sorting is supported.</p>
+        <p>The summary can only be set on the field of number format, and the column setting of other formats is invalid.</p>
+    </wt:quote>
+
+</wt:fieldset>
+
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

@@ -1,17 +1,43 @@
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
 @model WalkingTec.Mvvm.Core.BaseVM
+@inject IOptions<RequestLocalizationOptions> LocOptions
 
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+        .ToList();
+    foreach (var item in cultureItems)
+    {
+      if(item.Value == "zh")
+      {
+        item.Text = "简体中文";
+      }
+      else
+      {
+        item.Text = "English";
+      }
+    }
+}
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
 
     <!-- 头部区域 -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item layadmin-flexible" lay-unselect>
-        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+        <a href="javascript:;" layadmin-event="flexible" title="@Model.Localizer["HideShow"]">
           <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
         </a>
       </li>
+      <li class="layui-nav-item layui-hide-xs" lay-unselect>
+        <a href="https://wtmdoc.walkingtec.cn" target="_blank" title="@Model.Localizer["WtmDoc"]">
+          <i class="layui-icon layui-icon-website"></i>
+        </a>
+      </li>
       <li class="layui-nav-item" lay-unselect>
-        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+        <a href="javascript:;" layadmin-event="refresh" title="@Model.Localizer["Refresh"]">
           <i class="layui-icon layui-icon-refresh-3"></i>
         </a>
       </li>
@@ -28,13 +54,26 @@
           <i class="layui-icon layui-icon-screen-full"></i>
         </a>
       </li>
+      <li class="layui-nav-item" lay-unselect style="margin-right:20px;">
+        <a href="javascript:;">
+          <cite>@(requestCulture.RequestCulture.UICulture.Name == "zh"?"简体中文":"English")</cite>
+        </a>
+        <dl class="layui-nav-child" >
+          @foreach (var item in cultureItems)
+          {
+            <dd>
+              <wt:linkbutton url="/_Framework/SetLanguage?culture=@item.Value" target=" ButtonTargetEnum.self" window-width="400" text="@item.Text" is-link="true" />
+            </dd>
+          }
+        </dl>
+      </li>
     </ul>
   </div>
 
   <!-- 侧边菜单 -->
   <div class="layui-side layui-side-menu">
     <div class="layui-side-scroll">
-      <script type="text/html" template lay-url="/json/menu.js?v={{ layui.admin.v }}"
+       <script type="text/html" template lay-url="./json/@(requestCulture.RequestCulture.UICulture.Name?.ToLower().StartsWith("zh")==true?"menu":"menuen").js?v={{ layui.admin.v }}" 
               lay-done="layui.element.render('nav', 'layadmin-system-side-menu');layui.event.call(this, layui.setter.MOD_NAME, 'hash({*})', layui.router());" id="TPL_layout">
 
         <div class="layui-logo" lay-href="">
@@ -76,8 +115,7 @@
                               ? item3.jump
                             : [item.name, item2.name, item3.name].join('/')
                   }}
-                  <dd data-name="{{ item3.name || '' }}" data-jump="{{ item3.jump || '' }}"
-                      >
+                  <dd data-name="{{ item3.name || '' }}" data-jump="{{ item3.jump || '' }}">
                     <a href="javascript:;" lay-href="{{ url3 }}" {{ item3.iframe ? 'lay-iframe="true"' : '' }}>
                       <i class="{{ item3.icon }}"></i>
                       <cite>{{ item3.title }}</cite>
@@ -99,33 +137,33 @@
 
   <!-- 页面标签 -->
   <script type="text/html" template lay-done="layui.element.render('nav', 'layadmin-pagetabs-nav')">
-        {{# if(layui.setter.pageTabs){ }}
-        <div class="layadmin-pagetabs" id="LAY_app_tabs">
-          <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
-          <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
-          <div class="layui-icon layadmin-tabs-control layui-icon-down">
-            <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
-              <li class="layui-nav-item" lay-unselect>
-                <a href="javascript:;"></a>
-                <dl class="layui-nav-child layui-anim-fadein">
-                  <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
-                  <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
-                  <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
-                </dl>
-              </li>
-            </ul>
-          </div>
-          <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
-            <ul class="layui-tab-title" id="LAY_app_tabsheader">
-              <li lay-id="/"><i class="layui-icon layui-icon-home"></i></li>
-            </ul>
-          </div>
-        </div>
-        {{# } }}
-      </script>
+    {{# if(layui.setter.pageTabs){ }}
+    <div class="layadmin-pagetabs" id="LAY_app_tabs">
+      <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+      <div class="layui-icon layadmin-tabs-control layui-icon-down">
+        <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+          <li class="layui-nav-item" lay-unselect>
+            <a href="javascript:;"></a>
+            <dl class="layui-nav-child layui-anim-fadein">
+              <dd layadmin-event="closeThisTabs"><a href="javascript:;">@Model.Localizer["CloseThisTag"]</a></dd>
+              <dd layadmin-event="closeOtherTabs"><a href="javascript:;">@Model.Localizer["CloseOtherTags"]</a></dd>
+              <dd layadmin-event="closeAllTabs"><a href="javascript:;">@Model.Localizer["CloseAllTags"]</a></dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+      <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+        <ul class="layui-tab-title" id="LAY_app_tabsheader">
+          <li lay-id="/"><i class="layui-icon layui-icon-home"></i></li>
+        </ul>
+      </div>
+    </div>
+    {{# } }}
+  </script>
 
   <!-- 主体内容 -->
-  <div class="layui-body" id="LAY_app_body" style="background-color:white">
+  <div class="layui-body" id="LAY_app_body">
     <div class="layadmin-tabsbody-item layui-show"></div>
   </div>
 

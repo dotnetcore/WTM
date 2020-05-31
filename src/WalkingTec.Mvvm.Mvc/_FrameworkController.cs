@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Mvc
             //var vmType = Type.GetType(_DONOT_USE_VMNAME);
             //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
             //var listVM = vmCreater.Invoke(null) as BaseVM;
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -192,7 +192,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
@@ -246,32 +246,32 @@ namespace WalkingTec.Mvvm.Mvc
             log.ActionTime = DateTime.Now;
             log.ITCode = WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
 
-            var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-            var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-            var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
-            //给日志的多语言属性赋值
-            log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-            log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
-            if (postDes != null)
-            {
-                log.ActionName += "[P]";
-            }
-            log.ActionUrl = ex.Path;
-            log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
-            log.Remark = ex.Error.ToString();
-            if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
-            {
-                log.Remark = log.Remark.Substring(0, 1000);
-            }
-            DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
-            if (starttime != null)
-            {
-                log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
-            }
-            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(LogLevel.Error, new EventId(), log, null, (a, b) => {
-                return a.GetLogString();
-            });
-
+                var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+                var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
+                //给日志的多语言属性赋值
+                log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+                log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
+                if (postDes != null)
+                {
+                    log.ActionName += "[P]";
+                }
+                log.ActionUrl = ex.Path;
+                log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
+                log.Remark = ex.Error.ToString();
+                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
+                {
+                    log.Remark = log.Remark.Substring(0, 2000);
+                }
+                DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
+                if (starttime != null)
+                {
+                    log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
+                }
+                GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>( LogLevel.Error, new EventId(), log, null, (a, b) => {
+                    return a.GetLogString();
+                });
+            
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
@@ -288,7 +288,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadFileRoute")]
         public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -314,7 +314,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return Upload(sm, groupName, IsTemprory, _DONOT_USE_CS);
             }
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
             var vm = CreateVM<FileAttachmentVM>();
@@ -355,7 +355,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
             var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
             var vm = CreateVM<FileAttachmentVM>();
@@ -377,7 +377,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             return Ok(vm.Entity.FileName);
         }
@@ -385,7 +385,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFile")]
         public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             if (id == Guid.Empty)
             {
                 return new StatusCodeResult(StatusCodes.Status404NotFound);
@@ -446,7 +446,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             string html = string.Empty;
             FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
             if (vm.Entity.FileExt.ToLower() == "pdf")
@@ -593,6 +593,27 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
+        private void LocalizeMenu(List<Menu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                LocalizeMenu(menu.Children);
+                if (Localizer[menu.Title].ResourceNotFound == true)
+                {
+                    menu.Title = Core.Program._localizer[menu.Title];
+                }
+                else
+                {
+                    menu.Title = Localizer[menu.Title];
+                }
+            }
+        }
+
 
         /// <summary>
         /// genreate menu
@@ -696,8 +717,8 @@ namespace WalkingTec.Mvvm.Mvc
         {
             return WtmContext.ReadFromCache<string>("githubstar", () =>
             {
-                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
-                return s.stargazers_count.ToString();
+                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
+                return s==null? "" :s.stargazers_count.ToString();
             }, 1800);
         }
 
@@ -706,8 +727,8 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetGithubInfo()
         {
             var rv = WtmContext.ReadFromCache<string>("githubinfo", () =>
-            {
-                var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
+            {               
+                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return JsonConvert.SerializeObject(s);
             }, 1800);
             return Content(rv, "application/json");

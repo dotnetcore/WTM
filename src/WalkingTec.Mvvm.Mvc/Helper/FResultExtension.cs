@@ -16,11 +16,18 @@ namespace WalkingTec.Mvvm.Mvc
             return self;
         }
 
-        public static FResult Alert(this FResult self, string msg)
+        public static FResult Alert(this FResult self, string msg, string title = null)
         {
-            self.ContentBuilder.Append($"ff.Alert('{msg}');");
+            self.ContentBuilder.Append($"ff.Alert('{msg}','{title??Program._localizer["Info"]}');");
             return self;
         }
+
+        public static FResult Message(this FResult self, string msg, string title = null)
+        {
+            self.ContentBuilder.Append($"ff.Msg('{msg}','{title??Program._localizer["Info"]}');");
+            return self;
+        }
+
 
         public static FResult RefreshGrid(this FResult self, string winId = "", int index = 0)
         {

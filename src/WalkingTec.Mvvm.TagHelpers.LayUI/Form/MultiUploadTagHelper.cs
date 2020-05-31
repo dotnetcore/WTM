@@ -53,6 +53,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 同时上传的文件数（0不限制）
         /// </summary>
         public int NumFileOnce { get; set; }
+        public string ConnectionString { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -61,13 +62,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 idstring = subfiles.Select(x => x.FileId.ToString()).ToSpratedString(seperator: "|");
             }
-            else
-            {
-                output.TagName = "div";
-                output.TagMode = TagMode.StartTagAndEndTag;
-                output.Content.SetContent("Field must be set to a List<ISubFile>");
-                return;
-            }
+            //else
+            //{
+            //    output.TagName = "div";
+            //    output.TagMode = TagMode.StartTagAndEndTag;
+            //    output.Content.SetContent("Field must be set to a List<ISubFile>");
+            //    return;
+            //}
             output.TagName = "button";
             output.Attributes.Add("id", Id + "button");
             output.Attributes.Add("name", Id + "button");
@@ -125,9 +126,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     url += "&height=" + ThumbHeight;
                 }
             }
-            if (vm != null)
+            if (string.IsNullOrEmpty(ConnectionString) == true)
             {
-                url += $"&_DONOT_USE_CS={vm.CurrentCS}";
+                if (vm != null)
+                {
+                    url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
+                }
+            }
+            else
+            {
+                url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
 
             output.PreElement.SetHtmlContent($@"

@@ -1,0 +1,222 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+<p>BaseTemplateVM and BaseImportVM are the VMs responsible for importing in the framework. TemplateVM is used to define Excel templates.ImportVM uses the templates defined by TemplateVM for import operations</p>
+<wt:fieldset field-set-style="Simple" title="Build a baseimportvm">
+    <p>Since ImportVM needs to use the template defined in TemplateVM,  there are two steps to establish ImportVM:</p>
+    <p>1. Create a TemplateVM and define the fields to be imported</p>
+    <p>2. Create an ImportVM and pass in the TemplateVM created in the first step as a generic variable</p>
+    <p>Take the ‘school’ model as an example to demonstrate how to build an ImportVM to import school information. The definition of school model can refer to<a href="/#/QuickStart/FirstModule">the first module</a></p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "School code")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    [Display(Name = "School name")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    [Display(Name = "School type")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    [Display(Name = "Remark")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+
+}
+        </wt:code>
+    <p>For simple import tasks, the above code is enough. Just inherit the base class and define the fields to be imported, the framework will complete the rest.</p>
+    <wt:quote>
+        ExcelPropetyis a class that defines the columns to be imported, provided by framework.
+    </wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Using BaseImportVM">
+    <p>The steps of using BaseImportVM in Controller are also clear at a glance. Please see the following example:</p>
+    <wt:code title="SchoolController.cs">
+#region Import
+[ActionDescription("Import")]
+public ActionResult Import()
+{
+    var vm = CreateVM&ltSchoolImportVM&gt();
+    return PartialView(vm);
+}
+
+[HttpPost]
+[ActionDescription("Import")]
+public ActionResult Import(SchoolImportVM vm, IFormCollection nouse)
+{
+    if (vm.ErrorListVM.EntityList.Count &gt 0 || !vm.BatchSaveData())
+    {
+        return PartialView(vm);
+    }
+    else
+    {
+        return FFResult()
+      .RefreshGrid()
+      .CloseDialog()
+      .Alert(vm.EntityList.Count.ToString() + " records have been imported");
+    }
+}
+#endregion
+    </wt:code>
+    <wt:quote>
+        <p>BatchSaveDatais a function defined in the ImportVM, which will perform the final operation of importing the database.</p>
+        <p>You must use the CreateVM function to create the ViewModel, not just new. The CreateVM function will pass the Session, ModelState and other information of the current Controller to the VM, and perform some operations within the framework.</p>
+        <p>FFResult is an auxiliary class provided by the framework, which is mainly used to facilitate developers to return to common JS, such as closing the current window, refreshing the grid, etc.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Customized validation">
+    <p>ImportVMwill find its corresponding BaseCRUDVM according to the associated Model. If it can be found, it will call the Validate and SetDuplicatedCheck methods in BaseCRUDVM for logical verification and data repeatability verification.</p>
+    <p>At the same time, the ImportVM itself can override the SetDuplicatedCheck method. Finally, the framework will merge the data repeatability verification in the ImportVM and BaseCRUDVM.</p>
+    <p>Please refer to the corresponding chapter in BaseCRUDVM for the description of SetDuplicatedCheck.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Complex import templates">
+    <p>The framework will automatically generate Excel templates according to the bound field types, for example, it will automatically generate pull-down menus for enumeration columns.</p>
+    <p>The framework also supports manual setting of complex templates. For example, when importing, you need to use the drop-down menu to select associated table data.</p>
+    <p>Like the previous school example, if the school name has to be selected from the drop-down menu, we can make it happen by doing this:</p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "School code")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    [Display(Name = "School name")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    [Display(Name = "School type")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    [Display(Name = "Remark")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+
+    protected override void InitVM()
+    {
+        SchoolName_Excel.DataType = ColumnDataType.ComboBox;
+        SchoolName_Excel.ListItems = new List&ltComboSelectListItem&gt
+        {
+            new ComboSelectListItem{ Text="aaa", Value="aaa"},
+            new ComboSelectListItem{ Text="bbb", Value="bbb"},
+            new ComboSelectListItem{ Text="ccc", Value="ccc"},
+            new ComboSelectListItem{ Text="ddd", Value="ddd"},
+        };
+    }
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+
+}
+    </wt:code>
+    <p>As shown above, we can set the DataType of the SchoolName column to ComboBox and set its ListItems. The framework will automatically generate a drop-down menu in Excel when generating a template.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Customized import">
+    <p>Sometimes the default process provided by the framework does not fully meet the needs.</p>
+    <p>For example, you need to process the data in Excel first, and then save it to the database.</p>
+    <p>The following code demonstrates modifying the data in excel before importing, by overriding the BatchSaveDatamethod.</p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "School code")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolCode);
+    [Display(Name = "School name")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolName);
+    [Display(Name = "School type")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.SchoolType);
+    [Display(Name = "Remark")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt(x =&gt x.Remark);
+
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+        public override bool BatchSaveData()
+        {
+            //Get records from excel file and save it in to EntityList
+            SetEntityList();
+            //Loop the EntityList, add a 'X' at the end
+            foreach (var item in EntityList)
+            {
+                item.SchoolName += "X";
+            }
+            //Call the BatchSaveData from base to save to the database. If there are special requirements, you can operate the DC by yourself to save the data
+            return base.BatchSaveData();
+        }
+}
+    </wt:code>
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="primary and secondary tables import">
+    <p>The framework supports simultaneous import of primary and secondary tables.</p>
+    <p>The following code demonstrates the import of the ‘school’ and the ‘majors’ under the school at the same time:</p>
+    <wt:code title="SchoolImportVM.cs">
+public class SchoolTemplateVM : BaseTemplateVM
+{
+    [Display(Name = "School code")]
+    public ExcelPropety SchoolCode_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolCode);
+    [Display(Name = "School name")]
+    public ExcelPropety SchoolName_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolName);
+    [Display(Name = "School type")]
+    public ExcelPropety SchoolType_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.SchoolType);
+    [Display(Name = "Remark")]
+    public ExcelPropety Remark_Excel = ExcelPropety.CreateProperty&ltSchool&gt( x =&gt x.Remark);
+
+    [Display(Name = "Major code")]
+    public ExcelPropety MajorCode_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorCode);
+    [Display(Name = "Major name")]
+    public ExcelPropety MajorName_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorName);
+    [Display(Name = "Major type")]
+    public ExcelPropety MajorType_Excel = ExcelPropety.CreateProperty<School>( x =&gt x.Majors[0].MajorType);
+
+}
+
+public class SchoolImportVM : BaseImportVM&ltSchoolTemplateVM, School&gt
+{
+}
+    </wt:code>
+    <p>As shown above, when we define a field, we can use x.Majors[0].MajorCode to set secondary table field</p>
+    <p>When importing primary and secondary tables import, fill in the template in the form shown below:</p><br />
+            <img src="~/imgs/Importen.png" /><br /><br />
+
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="Main functions">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Function</th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GenerateTemplate()</td>
+                <td>Template generation</td>
+            </tr>
+            <tr>
+                <td>SetEntityList</td>
+                <td>Save the template data to the local class.If the default logic does not support the requirements, you can override this function in the subclass.</td>
+            </tr>
+            <tr>
+                <td>BatchSaveData</td>
+                <td>Perform the final database write operation. If the default logic does not support the requirements, you can override this function in the subclass</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

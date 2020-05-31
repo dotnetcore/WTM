@@ -1,3 +1,4 @@
+@model WalkingTec.Mvvm.Core.BaseVM
 <style>
     a {
         color: #01aaed
@@ -43,3 +44,6 @@
     <p>问：为什么我添加了新model，但是数据库中没有新的表</p>
     <p>答：EF目前不支持自动更新数据库，关于同步数据库的几种方法，请参考<a href="/#/Data/Migration">这里</a></p>
 </wt:quote>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

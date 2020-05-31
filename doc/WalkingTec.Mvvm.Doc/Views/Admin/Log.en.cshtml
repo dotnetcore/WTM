@@ -1,0 +1,82 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<wt:fieldset field-set-style="Simple" title="Log management-module screenshot">
+    <img src="~/imgs/admin-logen.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Log management introduction">
+    With the log management module, you can do the following:
+    <ol class="doc">
+        <li>Query system operation log</li>
+        The log records the information about each module, each action, operator, operator IP, and operation time.
+        <li>Analyze system through logs</li>
+        For example, there is a time-consuming field in the log list. Based on this field, analyze the execution time of each action, you will know which actions are time-consuming, and then optimize the system accordingly. There are three types of logs in the query criteria: normal, exception and debugging. According to the exception log, system problems can be found. This exception information is very helpful for debugging process. Click Details to view the details of the log. If it is an exception log, you can view the exception stack information thrown in details. By analyzing the stack information, you can quickly locate code problems.
+        <li>Export logs for quick view and backup</li>
+        Click ‘export Excel’ to export the log to excel table for easy viewing and backup of log information.
+    </ol>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Log management-Profile">
+  <wt:quote>
+    <p>The framework uses the default logging process of. Netcore to record logs to achieve more flexible and general purpose. </p>
+    <p>Add the following code before. Configureservices in the program.cs file to control the logs </p>
+  </wt:quote>
+    <wt:code>
+      .ConfigureLogging((hostingContext, logging) =&gt;
+      {
+        logging.ClearProviders();
+        logging.AddConsole();
+        logging.AddDebug();
+        logging.AddWTMLogger();//add wtm logger, wtmlogger will write log into database
+      })
+    </wt:code>
+
+    <p>In the appsettings file, use the general setting method of. Netcore to set the level of the log..</p>
+  <p>The following code configures the default display of Information level logs in Console and Debug, but for logs from WalkingTec, that is, logs output by the framework display the Debug level.</p>
+  <p>For the logs recorded in WTM, they are Information level, that is to say, only logs above Information level will be written to the database.</p>
+  <wt:code>
+  "Logging": {
+    "Console": {
+      "IncludeScopes": true,
+      "LogLevel": {
+        "Default": "Information",
+        "WalkingTec": "Debug"
+      }
+    },
+    "Debug": {
+      "IncludeScopes": true,
+      "LogLevel": {
+        "Default": "Information",
+        "WalkingTec": "Debug"
+      }
+    },
+    "WTM": {
+      "LogLevel": {
+        "Default": "Information"
+      }
+    }
+  },
+  </wt:code>
+
+  <p>If you want WTM to log only exceptions, you can configure like this:</p>
+    <wt:code>
+  "Logging": {
+    "WTM": {
+      "LogLevel": {
+        "Default": "Error"
+      }
+    }
+  },
+  </wt:code>
+    <p>If you want WTM to log nothing at all, you can set the logging level of WTM to ‘None’</p>
+    <wt:code>
+  "Logging": {
+    "WTM": {
+      "LogLevel": {
+        "Default": "None"
+      }
+    }
+  },
+  </wt:code>
+
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

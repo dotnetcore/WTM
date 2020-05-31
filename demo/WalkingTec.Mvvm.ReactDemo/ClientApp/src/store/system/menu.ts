@@ -9,8 +9,11 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import Regular from 'utils/Regular';
 import { action, observable, runInAction, computed } from "mobx";
 import lodash from 'lodash';
+import Request from 'utils/Request';
 import User from './user';
 import globalConfig from 'global.config';
+import { getLocalesValue } from 'locale';
+
 class Store {
     constructor() {
     }
@@ -25,7 +28,7 @@ class Store {
      */
     async onInitMenu(menu: any[]) {
         if (globalConfig.development) {
-            menu = await import("../../subMenu.json").then(x => x.default);
+            menu = await Request.ajax('/subMenu.json').toPromise()//import("../../subMenu.json").then(x => x.default);
         }
         menu = lodash.map(menu, data => {
             // 跨域页面
@@ -61,7 +64,7 @@ class Store {
             return lodash.merge(data, {
                 key: data.Id,
                 path: data.Url || '',
-                name: data.Text,
+                name: getLocalesValue(data.Text, data.Text),
                 icon: data.Icon || "pic-right",
                 children: []
             })

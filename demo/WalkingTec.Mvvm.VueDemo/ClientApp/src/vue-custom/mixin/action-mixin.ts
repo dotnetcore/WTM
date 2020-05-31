@@ -94,14 +94,14 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
      * @param data
      */
     onEdit(data) {
-      this.openDialog(this.$actionType.edit, data);
+      this.openDialog(this.$actionType.edit, { ID: data.ID });
     }
     /**
      * 详情
      * @param data
      */
     onDetail(data) {
-      this.openDialog(this.$actionType.detail, data);
+      this.openDialog(this.$actionType.detail, { ID: data.ID });
     }
     /**
      * 单个删除
@@ -112,7 +112,7 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
         const parameters = [params.ID];
         this.batchDelete(parameters).then(res => {
           this["$notify"]({
-            title: "删除成功",
+            title: this.$t("form.successfullyDeleted"),
             type: "success"
           });
           this["onHoldSearch"]();
@@ -129,14 +129,14 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
         this.batchDelete(parameters)
           .then(res => {
             this["$notify"]({
-              title: "删除成功",
+              title: this.$t("form.successfullyDeleted"),
               type: "success"
             });
             this["onHoldSearch"]();
           })
           .catch(err => {
             this["$notify"]({
-              title: "删除失败",
+              title: this.$t("form.failedToDelete"),
               type: "error"
             });
           });
@@ -152,9 +152,9 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
         Limit: this["pageDate"].pageSize
       };
       this.exportExcel(parameters).then(res => {
-        createBlob(res, this["$route"].name + "all");
+        createBlob(res);
         this["$notify"]({
-          title: "导出成功",
+          title: this.$t("form.ExportSucceeded"),
           type: "success"
         });
       });
@@ -165,9 +165,9 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
     onExport() {
       const parameters = listToString(this["selectData"], "ID");
       this.exportExcelByIds(parameters).then(res => {
-        createBlob(res, this["$route"].name);
+        createBlob(res);
         this["$notify"]({
-          title: "导出成功",
+          title: this.$t("form.ExportSucceeded"),
           type: "success"
         });
       });
@@ -194,7 +194,7 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
       };
       this.imported(parameters).then(res => {
         this["$notify"]({
-          title: "导入成功",
+          title: this.$t("form.ImportSucceeded"),
           type: "success"
         });
         this["onHoldSearch"]();
@@ -204,10 +204,13 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
      * 删除确认
      * @param title
      */
-    onConfirm(title: string = "确认删除, 是否继续?") {
-      return this["$confirm"](title, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+    onConfirm(title?: string) {
+      if (!title) {
+        title = this.$t("form.confirmDeletion");
+      }
+      return this["$confirm"](title, this.$t("form.prompt"), {
+        confirmButtonText: this.$t("buttom.determine"),
+        cancelButtonText: this.$t("buttom.cancel"),
         type: "warning"
       });
     }

@@ -249,6 +249,7 @@ class Transfer extends React.Component<any, any> {
             label: "province",
             rules: [],
             formItem: <WtmTransfer
+                listStyle={undefined}
                 dataSource={Request.cache({ url: "/mock/select" })}
                 // 重置 子数据 使用 setFieldsValue 或者 resetFields
                 onChange={event => {
@@ -260,6 +261,7 @@ class Transfer extends React.Component<any, any> {
             label: "city",
             rules: [],
             formItem: <WtmTransfer
+                listStyle={undefined}
                 // 级联模型 配合 dataSource 函数 返回使用
                 linkage={['province']}
                 dataSource={(linkage) => {
@@ -278,6 +280,7 @@ class Transfer extends React.Component<any, any> {
             label: "county",
             rules: [],
             formItem: <WtmTransfer
+                listStyle={undefined}
                 // 级联模型  配合 dataSource 函数 返回使用
                 linkage={['province', 'city']}
                 dataSource={(linkage) => {

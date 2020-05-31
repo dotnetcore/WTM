@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return Redirect("/QuickStart/Intro");
         }
 
-        [ActionDescription("捐赠名单")]
+        [ActionDescription("Donate")]
         public IActionResult DonateList()
         {
             return PartialView();
@@ -64,6 +64,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             }, 1800);
 
             return rv;
+        }
+
+        [Public]
+        public string RefreshVersion()
+        {
+            Cache.Delete("nugetversion");
+            return "OK";
         }
 
         public class github

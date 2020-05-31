@@ -1,0 +1,39 @@
+@model WalkingTec.Mvvm.Core.BaseVM
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="Role management-module screenshot">
+    <img src="~/imgs/admin-roleen.png" />
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Role managemen introduction">
+        <p>
+            System management -role management.Enter role management interface, you can see the list of roles in the system. Through this function, you can add roles, modify roles, delete roles, batch delete, import, export and page permissions. Among them, the function of page permission is special. With this function, you can give certain permissions to a role. The authority of the framework is controlled to every Action, which provides flexible and changeable authority management function for the system.
+        </p>
+        <p>
+            New role,as following:
+        </p>
+        <img src="~/imgs/admin-role-createen.png" />
+        <p>
+            Modify roles,as following:
+        </p>
+        <img src="~/imgs/admin-role-editen.png" />
+        <p>
+            Role details ,as following:
+        </p>
+        <img src="~/imgs/admin-role-detailen.png" />
+        <p>
+            Before role import, you can download the template, fill in the template information, and add role information in batch by importing, as shown in the figure:
+        </p>
+        <img src="~/imgs/admin-role-importen.png" />
+        <p>In the process of importing, once there is a data error, the error information will be displayed in the imported pop-up window.</p>
+        <p>
+            Page permission: add page permission to a role. The permission granularity is controlled to each action, as shown in the figure:
+        </p>
+        <img src="~/imgs/admin-role-pageen.png" />
+
+</wt:fieldset>
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+</script>

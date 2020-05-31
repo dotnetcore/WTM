@@ -12,6 +12,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 // import 'ag-grid-community/dist/styles/ag-theme-bootstrap.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { LicenseManager } from 'ag-grid-enterprise';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { Button, Icon, Pagination, Spin, Switch } from 'antd';
@@ -219,7 +220,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 this.autoSizeAll();
             }
         });
-        await this.props.Store.onSearch();
+        // await this.props.Store.onSearch();
         lodash.defer(() => {
             this.sizeColumnsToFit();
             this.autoSizeAll();
@@ -281,6 +282,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
         const checkboxSelectionWidth = {
             "ag-theme-balham": 40,
             "ag-theme-material": 70,
+            "ag-theme-alpine": 50,
         }[theme];
         if (loading) {
             props.rowData = undefined
@@ -335,7 +337,7 @@ export class GridCommunity extends React.Component<ITableProps, any> {
                 enableValue: false,
                 suppressResize: false,
                 editable: false,
-                suppressToolPanel: true,
+                suppressColumnsToolPanel: true,
                 suppressAutoSize: true,
                 filter: false,
                 resizable: false,
