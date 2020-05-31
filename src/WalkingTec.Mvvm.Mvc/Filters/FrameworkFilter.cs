@@ -230,7 +230,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if(item.Value is BaseSearcher se)
                 {
                     se.Session = new SessionServiceProvider(context.HttpContext.Session);
-                    se.LoginUserInfo = ctrl.LoginUserInfo;
+                    se.LoginUserInfo = ctrl.WtmContext.LoginUserInfo;
                     se.DC = ctrl.DC;
                     se.FC = new Dictionary<string, object>();
                     se.MSD = new ModelStateServiceProvider(ctrl.ModelState);

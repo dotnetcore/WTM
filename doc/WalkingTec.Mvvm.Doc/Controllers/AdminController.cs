@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         }
 
         [ActionDescription("Log")]
-        public new IActionResult Log()
+        public  IActionResult Log()
         {
             return PartialView();
         }

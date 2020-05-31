@@ -170,9 +170,7 @@ namespace WalkingTec.Mvvm.Core
             this.DC = vm.DC;
             this.Session = vm.Session;
             this.LoginUserInfo = vm.LoginUserInfo;
-            this.MSD = vm.MSD;
-            //var CurrentCS = vm.CurrentCS;
-            //var CreatorAssembly = vm.CreatorAssembly;
+            this.MSD = vm.WtmContext.MSD;
         }
 
         #endregion

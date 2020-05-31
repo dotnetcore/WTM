@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                             else
                             {
-                                string lp = GlobalServices.GetRequiredService<IOptions<CookieOptions>>().Value.LoginPath;
+                                string lp = GlobalServices.GetRequiredService<IOptions<Core.Auth.CookieOptions>>().Value.LoginPath;
                                 if (lp.StartsWith("/"))
                                 {
                                     lp = "~" + lp;

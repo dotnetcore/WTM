@@ -593,28 +593,6 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        private void LocalizeMenu(List<Menu> menus)
-        {
-            if (menus == null)
-            {
-                return;
-            }
-            //循环所有菜单项
-            foreach (var menu in menus)
-            {
-                LocalizeMenu(menu.Children);
-                if (Localizer[menu.Title].ResourceNotFound == true)
-                {
-                    menu.Title = Core.Program._localizer[menu.Title];
-                }
-                else
-                {
-                    menu.Title = Localizer[menu.Title];
-                }
-            }
-        }
-
-
         /// <summary>
         /// genreate menu
         /// </summary>

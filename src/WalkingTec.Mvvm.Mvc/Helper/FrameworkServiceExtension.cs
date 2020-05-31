@@ -25,7 +25,9 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -860,6 +862,41 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
+
+        public static IApplicationBuilder UseVue(this IApplicationBuilder app)
+        {
+            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
+            if (env.IsDevelopment())
+            {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = false,
+                    ConfigFile = "config/webpack.dev.js",
+                    ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
+
+                });
+            }
+            app.UseSpaStaticFiles();
+
+            return app;
+        }
+
+        public static IApplicationBuilder UseReact(this IApplicationBuilder app)
+        {
+            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
+            app.UseSpaStaticFiles();
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+            });
+
+            return app;
+        }
+
     }
 
 

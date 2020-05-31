@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 	    protected override void InitVM()
         {
             Parent_Excel.DataType = ColumnDataType.ComboBox;
-            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.Name);
+            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(null, y => y.Name);
         }
 
     }

@@ -175,33 +175,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-        #region Database type
-
-        private DBTypeEnum? _dbtype;
-
-        /// <summary>
-        /// Database type
-        /// </summary>
-        public DBTypeEnum DbType
-        {
-            get
-            {
-                if (_dbtype == null)
-                {
-                    _dbtype = DBTypeEnum.SqlServer;
-                }
-                return _dbtype.Value;
-            }
-            set
-            {
-                _dbtype = value;
-            }
-        }
-
-        public bool IsOldSqlServer { get; set; }
-
-        #endregion
-
         #region PageMode
 
         private PageModeEnum? _pageMode;

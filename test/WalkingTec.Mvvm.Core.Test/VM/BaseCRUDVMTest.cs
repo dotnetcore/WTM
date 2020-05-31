@@ -29,6 +29,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
             _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
             _studentvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
+            _goodsvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "goodsuser");
 
         }
 

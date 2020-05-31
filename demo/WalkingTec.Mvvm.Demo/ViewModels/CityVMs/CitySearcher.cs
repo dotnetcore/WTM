@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 
         protected override void InitVM()
         {
-            AllParents = DC.Set<City>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.Name);
+            AllParents = DC.Set<City>().GetSelectListItems(null, y => y.Name);
         }
 
     }

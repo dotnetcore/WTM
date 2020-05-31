@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using WalkingTec.Mvvm.Test.Mock;
 
 namespace WalkingTec.Mvvm.Core.Test.VM
 {
@@ -17,22 +18,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public BaseBatchVMTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _schoolvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-            _majorvm.DC = new DataContext(_seed, DBTypeEnum.Memory);
-
-            _schoolvm.Session = new MockSession();
-            _majorvm.Session = new MockSession();
-
-            _schoolvm.MSD = new MockMSD();
-            _majorvm.MSD = new MockMSD();
-
-            _schoolvm.LoginUserInfo = new LoginUserInfo { ITCode = "schooluser" };
-            _majorvm.LoginUserInfo = new LoginUserInfo { ITCode = "majoruser" };
-
-            Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
-            mockService.Setup(x => x.GetService(typeof(GlobalData))).Returns(new GlobalData());
-            mockService.Setup(x => x.GetService(typeof(Configs))).Returns(new Configs());
-            GlobalServices.SetServiceProvider(mockService.Object);
+            _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
+            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
 
         }
 

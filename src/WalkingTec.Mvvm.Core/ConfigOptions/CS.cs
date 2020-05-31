@@ -19,26 +19,28 @@ namespace WalkingTec.Mvvm.Core
 
         public IDataContext CreateDC()
         {
-            if(DcConstructor == null)
+            if (DcConstructor == null)
             {
                 GlobalData _gd = GlobalServices.GetRequiredService<GlobalData>();
                 List<ConstructorInfo> cis = new List<ConstructorInfo>();
-                foreach (var ass in _gd.AllAssembly)
+                if (_gd.AllAssembly != null)
                 {
-                    try
+                    foreach (var ass in _gd.AllAssembly)
                     {
-                        var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext" && x.Name != "FrameworkContext" && x.Name != "EmptyContext").ToList();
-                        foreach (var st in t)
+                        try
                         {
-                            var ci = st.GetConstructor(new Type[] { typeof(CS) });
-                            if (ci != null)
+                            var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext" && x.Name != "FrameworkContext" && x.Name != "EmptyContext").ToList();
+                            foreach (var st in t)
                             {
-                                cis.Add(ci);
+                                var ci = st.GetConstructor(new Type[] { typeof(CS) });
+                                if (ci != null)
+                                {
+                                    cis.Add(ci);
+                                }
                             }
                         }
+                        catch { }
                     }
-                    catch { }
-                }
                     string dcname = DbContext;
                     if (string.IsNullOrEmpty(dcname))
                     {
@@ -49,6 +51,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         DcConstructor = cis.FirstOrDefault();
                     }
+                }
             }
             return (IDataContext)DcConstructor?.Invoke(new object[] { this });
         }

@@ -246,7 +246,7 @@ namespace WalkingTec.Mvvm.Core
         {
             var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
-            FrameworkAction act = null;
+            SimpleAction act = null;
             if(acts.Count > 0)
             {
                 act = acts[0];
@@ -363,6 +363,7 @@ namespace WalkingTec.Mvvm.Core
         public EmptyContext(string cs)
         {
             CSName = cs;
+            DBType = DBTypeEnum.SqlServer;
         }
 
         public EmptyContext(string cs, DBTypeEnum dbtype, string version = null)
@@ -375,7 +376,7 @@ namespace WalkingTec.Mvvm.Core
         public EmptyContext(CS cs)
         {
             CSName = cs.Value;
-            DBType = cs.DbType.Value;
+            DBType = cs.DbType ?? DBTypeEnum.SqlServer;
             Version = cs.Version;
             ConnectionString = cs;
         }
@@ -788,6 +789,7 @@ namespace WalkingTec.Mvvm.Core
         public DatabaseFacade Database => throw new NotImplementedException();
 
         public string CSName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public DBTypeEnum DBType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void AddEntity<T>(T entity) where T : TopBasePoco
         {

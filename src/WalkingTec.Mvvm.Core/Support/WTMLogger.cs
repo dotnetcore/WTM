@@ -63,10 +63,17 @@ namespace WalkingTec.Mvvm.Core
         public bool IsEnabled(LogLevel logLevel)
         {
             var levels = GlobalServices.GetRequiredService<IOptionsMonitor<LoggerFilterOptions>>();
-            var l = levels.CurrentValue.Rules.Where(x => x.ProviderName == "WTM" && (x.CategoryName != null && categoryName.ToLower().StartsWith(x.CategoryName.ToLower()))).Select(x => x.LogLevel).FirstOrDefault();
+            var l = levels.CurrentValue.Rules.Where(x =>
+                x.ProviderName == "WTM" &&
+                    (
+                      (x.CategoryName != null &&  categoryName.ToLower().StartsWith(x.CategoryName.ToLower()) ) ||
+                      categoryName == "WalkingTec.Mvvm.Core.ActionLog"
+                    )
+                )
+                .Select(x => x.LogLevel).FirstOrDefault();
             if (l == null)
             {
-                l = levels.CurrentValue.MinLevel;
+                l = LogLevel.Error;
             }
             if (logLevel >= l)
             {
@@ -114,8 +121,11 @@ namespace WalkingTec.Mvvm.Core
                 {
                     using (var dc = cs.CreateDC())
                     {
-                        dc.AddEntity<ActionLog>(log);
-                        dc.SaveChanges();
+                        if (dc != null)
+                        {
+                            dc.AddEntity<ActionLog>(log);
+                            dc.SaveChanges();
+                        }
                     }
                 }
             }

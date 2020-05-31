@@ -100,6 +100,10 @@ namespace WalkingTec.Mvvm.ReactDemo
                 };
             });
             services.AddWtmContext(Configuration, DataPrivilegeSettings());
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
 
         }
 
@@ -147,6 +151,7 @@ namespace WalkingTec.Mvvm.ReactDemo
 
             app.UseWtmContext();
 
+            app.UseReact();
 
         }
 

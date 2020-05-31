@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +59,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public override IOrderedQueryable<Student_View> GetSearchQuery()
         {
             var query = DC.Set<Student>()
-                .CheckContain(Searcher.LoginName, x => x.LoginName)
                 .CheckContain(Searcher.Name, x => x.Name)
                 .CheckEqual(Searcher.IsValid, x => x.IsValid)
                 .DPWhere(x => x.StudentMajor[0].MajorId)

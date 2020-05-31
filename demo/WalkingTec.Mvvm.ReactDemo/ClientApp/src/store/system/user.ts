@@ -43,7 +43,7 @@ class Store {
         try {
             const userid = lodash.get(this.UserInfo, 'Id');
             if (userid) {
-                const res = await Request.ajax("/api/_login/CheckLogin/" + userid).toPromise();
+                const res = await Request.ajax("/api/_Account/CheckUserInfo" ).toPromise();
                 await this.onSetUserInfo(res);
             }
         } catch (error) {
@@ -57,7 +57,7 @@ class Store {
         try {
             const res = await Request.ajax({
                 method: "post",
-                url: "/api/_login/Login",
+                url: "/api/_Account/Login",
                 body: params,
                 headers: { 'Content-Type': null }
             }).toPromise();
@@ -77,7 +77,7 @@ class Store {
         this.UserInfo = null;
         if (Logout && userid) {
             try {
-                Request.ajax("/api/_login/Logout/" + userid).toPromise();
+                Request.ajax("/api/_Account/Logout/" + userid).toPromise();
             } catch (error) {
             }
         }

@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
         public override DbCommand GetSearchCommand()
         {
             string sql = string.Empty;
-            switch (ConfigInfo.DbType)
+            switch (DC.DBType)
             {
                 case DBTypeEnum.MySql:
                 case DBTypeEnum.PgSql:

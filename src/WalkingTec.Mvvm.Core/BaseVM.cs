@@ -278,7 +278,6 @@ namespace WalkingTec.Mvvm.Core
         public void CopyContext(BaseVM vm)
         {
             WtmContext = vm.WtmContext;
-            DC = vm.DC;
             FC = vm.FC;
             CreatorAssembly = vm.CreatorAssembly;
         }

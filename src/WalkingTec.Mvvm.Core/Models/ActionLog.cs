@@ -22,11 +22,11 @@ namespace WalkingTec.Mvvm.Core
     public class ActionLog : BasePoco, ICloneable
     {
         [Display(Name = "Module")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(255, ErrorMessage = "{0}stringmax{1}")]
         public string ModuleName { get; set; }
 
         [Display(Name = "Action")]
-        [StringLength(50, ErrorMessage = "{0}stringmax{1}")]
+        [StringLength(255, ErrorMessage = "{0}stringmax{1}")]
         public string ActionName { get; set; }
 
         [Display(Name = "Account")]

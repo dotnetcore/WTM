@@ -888,7 +888,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
-                if (ConfigInfo.DbType == DBTypeEnum.SqlServer && !HasSubTable)
+                if (DC.DBType == DBTypeEnum.SqlServer && !HasSubTable)
                 {
                     ListAdd.Add(item);
                 }
