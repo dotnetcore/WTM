@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Core
                     _field = PI?.Name;
                     if (_field == null)
                     {
-                        _field = "F"+CompiledCol?.Invoke(null);
+                        _field = CompiledCol?.Invoke(null).ToString();
                     }
                 }
                 return _field;
