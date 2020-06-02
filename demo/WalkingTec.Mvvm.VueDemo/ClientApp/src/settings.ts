@@ -2,6 +2,7 @@ import { getSettings } from "@/util/cookie";
 
 interface ISettings {
   title: string; // Overrides the default title
+  theme: string;
   showSettings: boolean; // Controls settings panel display
   showTagsView: boolean; // Controls tagsview display
   showSidebarLogo: boolean; // Controls siderbar logo display
@@ -14,9 +15,10 @@ interface ISettings {
   menuBackgroundImg: any;
 }
 const obj = getSettings() || {};
-console.log('obj', obj)
+
 const settings: ISettings = {
   title: obj.title || "WTM",
+  theme: obj.theme,
   fixedHeader: obj.fixedHeader === undefined ? true : obj.fixedHeader,
   showSettings: obj.showSettings === undefined ? true : obj.showSettings,
   showTagsView: obj.showTagsView === undefined ? true : obj.showTagsView,
