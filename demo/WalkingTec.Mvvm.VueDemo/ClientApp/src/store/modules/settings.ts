@@ -26,6 +26,7 @@ export interface ISettingsState {
 class Settings extends VuexModule implements ISettingsState {
 
   public title = defaultSettings.title;
+  public theme = variables.theme;
   public fixedHeader = defaultSettings.fixedHeader;
   public showSettings = defaultSettings.showSettings;
   public showTagsView = defaultSettings.showTagsView;
