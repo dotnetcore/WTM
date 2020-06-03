@@ -1,13 +1,14 @@
 <template>
-  <el-color-picker v-model="theme" :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d']" class="theme-picker" popper-class="theme-picker-dropdown" />
+    <el-color-picker v-model="theme" :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d']" class="theme-picker" popper-class="theme-picker-dropdown" />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { SettingsModule } from "@/store/modules/settings";
+import { style as variables } from "@/config/index";
 
 const version = require("element-ui/package.json").version; // element-ui version from node_modules
-const ORIGINAL_THEME = "#409EFF"; // default color
+// const ORIGINAL_THEME = "#409EFF"; // default color
 
 @Component({
     name: "ThemePicker"
@@ -28,7 +29,7 @@ export default class extends Vue {
     @Watch("theme")
     private async onThemeChange(value: string) {
         if (!value) return;
-        const oldValue = this.chalk ? this.theme : ORIGINAL_THEME;
+        const oldValue = this.chalk ? this.theme : variables.menuActiveText;
         const themeCluster = this.getThemeCluster(value.replace("#", ""));
         const originalCluster = this.getThemeCluster(oldValue.replace("#", ""));
         const message = this.$message({
@@ -47,7 +48,7 @@ export default class extends Vue {
         const getHandler = (variable: string, id: string) => {
             return () => {
                 const originalCluster = this.getThemeCluster(
-                    ORIGINAL_THEME.replace("#", "")
+                    variables.menuActiveText.replace("#", "")
                 );
                 const newStyle = this.updateStyle(
                     (this as any)[variable],
