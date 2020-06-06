@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,23 +24,41 @@ namespace WalkingTec.Mvvm.Mvc
     public abstract class BaseApiController : ControllerBase, IBaseController
     {
 
+        [JsonIgnore]
+        [BindNever]
         public WTMContext WtmContext { get; set; }
 
+        [JsonIgnore]
+        [BindNever]
         public Configs ConfigInfo { get => WtmContext?.ConfigInfo; }
 
+        [JsonIgnore]
+        [BindNever]
         public GlobalData GlobaInfo { get => WtmContext?.GlobaInfo; }
 
 
+        [JsonIgnore]
+        [BindNever]
         public IDistributedCache Cache { get => WtmContext?.Cache; }
 
+        [JsonIgnore]
+        [BindNever]
         public string CurrentCS { get => WtmContext?.CurrentCS; }
 
+        [JsonIgnore]
+        [BindNever]
         public DBTypeEnum? CurrentDbType { get => WtmContext?.CurrentDbType; }
 
+        [JsonIgnore]
+        [BindNever]
         public IDataContext DC { get => WtmContext?.DC; }
 
+        [JsonIgnore]
+        [BindNever]
         public string BaseUrl { get => WtmContext?.BaseUrl; }
         private IStringLocalizer _localizer;
+        [JsonIgnore]
+        [BindNever]
         public IStringLocalizer Localizer
         {
             get

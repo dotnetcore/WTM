@@ -31,6 +31,8 @@ namespace WalkingTec.Mvvm.Core
 
         #region Property
 
+        [JsonIgnore]
+        [BindNever]
         public WTMContext WtmContext { get; set; }
 
         private Guid _uniqueId;
@@ -131,6 +133,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取当前使用的连接字符串
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string CurrentCS { get => WtmContext?.CurrentCS; }
 
         /// <summary>
@@ -149,18 +152,21 @@ namespace WalkingTec.Mvvm.Core
 
 
         [JsonIgnore]
+        [BindNever]
         public IUIService UIService { get=> WtmContext?.UIService; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
 
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string ParentWindowId { get => WtmContext?.ParentWindowId; }
 
         [JsonIgnore]
@@ -182,6 +188,7 @@ namespace WalkingTec.Mvvm.Core
         /// 当前Url
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string CurrentUrl { get => WtmContext?.BaseUrl; }
 
         /// <summary>
@@ -205,6 +212,7 @@ namespace WalkingTec.Mvvm.Core
         public List<Guid> DeletedFileIds { get; set; }
 
         [JsonIgnore]
+        [BindNever]
         public string ControllerName { get; set; }
 
         [JsonIgnore]

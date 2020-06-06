@@ -25,38 +25,64 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public abstract class BaseController : Controller, IBaseController
     {
+        [JsonIgnore]
+        [BindNever]
         public WTMContext WtmContext { get; set; }
 
 
+        [JsonIgnore]
+        [BindNever]
         public Configs ConfigInfo { get => WtmContext?.ConfigInfo; }
 
+        [JsonIgnore]
+        [BindNever]
         public GlobalData GlobaInfo { get => WtmContext?.GlobaInfo; }
 
+        [JsonIgnore]
+        [BindNever]
         public IUIService UIService { get => WtmContext?.UIService; }
 
+        [JsonIgnore]
+        [BindNever]
         public IDistributedCache Cache { get => WtmContext?.Cache; }
 
+        [JsonIgnore]
+        [BindNever]
         public string CurrentCS { get => WtmContext?.CurrentCS; }
 
+        [JsonIgnore]
+        [BindNever]
         public DBTypeEnum? CurrentDbType { get => WtmContext?.CurrentDbType; }
 
+        [JsonIgnore]
+        [BindNever]
         public string ParentWindowId { get => WtmContext?.ParentWindowId; }
 
+        [JsonIgnore]
+        [BindNever]
         public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
 
+        [JsonIgnore]
+        [BindNever]
         public string WindowIds { get => WtmContext?.WindowIds; }
 
         #region DataContext
 
+        [JsonIgnore]
+        [BindNever]
         public IDataContext DC { get => WtmContext?.DC; }
 
         #endregion
 
         #region URL
+        [JsonIgnore]
+        [BindNever]
         public string BaseUrl { get => WtmContext?.BaseUrl; }
         #endregion
 
         private IStringLocalizer _localizer;
+        [JsonIgnore]
+        [BindNever]
         public IStringLocalizer Localizer
         {
             get
