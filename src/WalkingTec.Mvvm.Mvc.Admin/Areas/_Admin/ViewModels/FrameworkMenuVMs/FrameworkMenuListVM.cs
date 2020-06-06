@@ -143,24 +143,24 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (item.PageName?.StartsWith("MenuKey.") == true)
                 {
-                    if (Localizer[item.PageName].ResourceNotFound == true)
+                    if (Core.Program._Callerlocalizer[item.PageName].ResourceNotFound == true)
                     {
                         item.PageName = Core.Program._localizer[item.PageName];
                     }
                     else
                     {
-                        item.PageName = Localizer[item.PageName];
+                        item.PageName = Core.Program._Callerlocalizer[item.PageName];
                     }
                 }
                 if (item.ModuleName?.StartsWith("MenuKey.") == true)
                 {
-                    if (Localizer[item.ModuleName].ResourceNotFound == true)
+                    if (Core.Program._Callerlocalizer[item.ModuleName].ResourceNotFound == true)
                     {
                         item.ModuleName = Core.Program._localizer[item.ModuleName];
                     }
                     else
                     {
-                        item.ModuleName = Localizer[item.ModuleName];
+                        item.ModuleName = Core.Program._Callerlocalizer[item.ModuleName];
                     }
                 }
 
