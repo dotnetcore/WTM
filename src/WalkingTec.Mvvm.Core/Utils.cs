@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.Core
                 if (pos > 0)
                 {
                     url = url.Substring(0, pos);
-                    menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
+                    menu = menus.Where(x => x.Url != null && (x.Url.ToLower() == url || x.Url.ToLower()+"async" == url)).FirstOrDefault();
                 }
             }
 
@@ -95,6 +95,11 @@ namespace WalkingTec.Mvvm.Core
             if (menu == null && url.EndsWith("/index"))
             {
                 url = url.Substring(0, url.Length - 6);
+                menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
+            }
+            if (menu == null && url.EndsWith("/indexasync"))
+            {
+                url = url.Substring(0, url.Length - 11);
                 menu = menus.Where(x => x.Url != null && x.Url.ToLower() == url).FirstOrDefault();
             }
             return menu;

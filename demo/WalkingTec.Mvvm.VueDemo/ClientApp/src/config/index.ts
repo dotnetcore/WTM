@@ -23,7 +23,11 @@ const config = {
   /**
    * debugger调试
    */
-  development: true
+  development: true,
+  /**
+   *  cookies 过期时间
+   */
+  cookiesExpires: 365
 };
 // prod环境非调试
 if (process.env.NODE_ENV === "production") {
