@@ -924,7 +924,7 @@ namespace WalkingTec.Mvvm.Core
         /// 批量插入数据库操作，支持SqlServer
         /// </summary>
         /// <typeparam name="K"></typeparam>
-        /// <param name="connection"></param>
+        /// <param name="dc">data context</param>
         /// <param name="tableName"></param>
         /// <param name="list"></param>
         protected static void BulkInsert<K>(IDataContext dc, string tableName, IList<K> list)

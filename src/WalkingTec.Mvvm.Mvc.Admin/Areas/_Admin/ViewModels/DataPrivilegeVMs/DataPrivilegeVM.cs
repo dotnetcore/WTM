@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             TableNames = new List<ComboSelectListItem>();
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(null, x => x.GroupName);
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext, null, x => x.GroupName);
                 TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             }
             SelectedItemsID = new List<string>();

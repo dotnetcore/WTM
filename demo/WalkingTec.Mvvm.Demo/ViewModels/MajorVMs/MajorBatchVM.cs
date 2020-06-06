@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 
         protected override void InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(null, y => y.SchoolName);
+            AllSchools = DC.Set<School>().GetSelectListItems(WtmContext, null, y => y.SchoolName);
         }
 
     }

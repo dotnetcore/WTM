@@ -29,8 +29,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 
         protected override void InitVM()
         {
-            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(null, y => y.RoleName);
-            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(null, y => y.GroupName);
+            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(WtmContext, null, y => y.RoleName);
+            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext, null, y => y.GroupName);
         }
 
     }

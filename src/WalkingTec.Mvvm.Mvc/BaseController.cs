@@ -487,7 +487,6 @@ namespace WalkingTec.Mvvm.Mvc
 
         #endregion
 
-
     }
 
 }

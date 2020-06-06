@@ -275,7 +275,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             "DC",
             "LoginUserInfo",
             "MSD",
-            "Session"
+            "Session",
+            "WtmContext"
         };
 
         /// <summary>

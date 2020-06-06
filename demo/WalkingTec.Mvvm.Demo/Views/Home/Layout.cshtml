@@ -56,20 +56,6 @@
           }
         </dl>
       </li>
-
-      <li class="layui-nav-item" lay-unselect>
-        <a href="javascript:;">
-          <cite>@requestCulture.RequestCulture.UICulture.NativeName</cite>
-        </a>
-        <dl class="layui-nav-child">
-          @foreach (var item in cultureItems)
-          {
-            <dd>
-              <wt:linkbutton url="/_Framework/SetLanguage?culture=@item.Value" target=" ButtonTargetEnum.self" window-width="400" text="@item.Text" is-link="true" />
-            </dd>
-          }
-        </dl>
-      </li>
       <li class="layui-nav-item" lay-unselect>
         <a href="javascript:;">
           @if (Model.LoginUserInfo?.PhotoId != null)

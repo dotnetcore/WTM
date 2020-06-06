@@ -10,7 +10,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
     [ActionDescription("自定义用户")]
-    [FixConnection(CsName = "abc")]
     public partial class MyUserController : BaseController
     {
         #region 搜索

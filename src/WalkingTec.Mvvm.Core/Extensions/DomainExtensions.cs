@@ -216,7 +216,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <summary>
         /// 使用Get方法调用api
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="url">调用地址</param>
         /// <param name="error">如果是框架识别的错误格式，将返回ErrorObj</param>
@@ -235,7 +234,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>
@@ -264,7 +262,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
         /// <param name="url">调用地址</param>
         /// <param name="method">调用方式</param>

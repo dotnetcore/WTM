@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core
 
         Type ModelType { get; set; }
         //获取数据权限的下拉菜单
-        List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user);
+        List<ComboSelectListItem> GetItemList(IDataContext dc, WTMContext wtmcontext);
     }
 
     /// <summary>
@@ -50,18 +50,19 @@ namespace WalkingTec.Mvvm.Core
         /// 获取数据权限的下拉菜单
         /// </summary>
         /// <param name="dc">dc</param>
-        /// <param name="user">user</param>
+        /// <param name="wtmcontext">wtm context</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
-        public List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user)
+        public List<ComboSelectListItem> GetItemList(IDataContext dc,WTMContext wtmcontext)
         {
             List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
+            var user = wtmcontext?.LoginUserInfo;
             if (user.Roles?.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges?.Where(x=>x.RelateId == null).FirstOrDefault() == null)
             {
-                rv = dc.Set<T>().Where(x=>user.DataPrivileges.Select(y=>y.RelateId).Contains(x.ID.ToString())).GetSelectListItems( _where, _displayField, null, ignorDataPrivilege: true);
+                rv = dc.Set<T>().Where(x=>user.DataPrivileges.Select(y=>y.RelateId).Contains(x.ID.ToString())).GetSelectListItems(wtmcontext, _where, _displayField, null, ignorDataPrivilege: true);
             }
             else
             {
-                rv = dc.Set<T>().GetSelectListItems(_where, _displayField, null, ignorDataPrivilege: true);
+                rv = dc.Set<T>().GetSelectListItems(wtmcontext, _where, _displayField, null, ignorDataPrivilege: true);
             }
             return rv;
         }

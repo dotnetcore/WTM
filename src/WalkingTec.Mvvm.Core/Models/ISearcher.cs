@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WalkingTec.Mvvm.Core;
 
@@ -41,9 +41,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         string VMFullName { get; }
 
-        ISessionService Session { get; set; }
+        ISessionService Session { get;  }
 
-        LoginUserInfo LoginUserInfo { get; set; }
+        LoginUserInfo LoginUserInfo { get; }
         #region 未使用
         /// <summary>
         /// 排序信息

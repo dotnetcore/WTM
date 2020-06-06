@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,12 @@ namespace WalkingTec.Mvvm.Core
         /// 记录 Controller 中的表单数据
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public Dictionary<string, object> FC { get; set; }
 
-        public IModelStateService MSD { get; set; }
+        [JsonIgnore]
+        [BindNever]
+        public IModelStateService MSD { get => WtmContext?.MSD; }
 
         /// <summary>
         /// 获取VM的全名
@@ -53,23 +57,44 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        private IDataContext _dc;
         /// <summary>
         /// 数据库环境
         /// </summary>
         [JsonIgnore]
-        public IDataContext DC { get; set; }
+        [BindNever]
+        public IDataContext DC
+        {
+            get
+            {
+                if (_dc == null)
+                {
+                    return WtmContext?.DC;
+                }
+                else
+                {
+                    return _dc;
+                }
+            }
+            set
+            {
+                _dc = value;
+            }
+        }
 
         /// <summary>
         /// Session信息
         /// </summary>
         [JsonIgnore]
-        public ISessionService Session { get; set; }
+        [BindNever]
+        public ISessionService Session { get => WtmContext?.Session; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get; set; }
+        [BindNever]
+        public LoginUserInfo LoginUserInfo { get => WtmContext?.LoginUserInfo; }
 
         #region 未使用
         /// <summary>
@@ -104,6 +129,9 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public bool? IsExpanded { get; set; }
 
+        [JsonIgnore]
+        [BindNever]
+        public WTMContext WtmContext { get; set; }
         #endregion
 
         #endregion
@@ -167,10 +195,7 @@ namespace WalkingTec.Mvvm.Core
         public void CopyContext(IBaseVM vm)
         {
             FC = vm.FC;
-            this.DC = vm.DC;
-            this.Session = vm.Session;
-            this.LoginUserInfo = vm.LoginUserInfo;
-            this.MSD = vm.WtmContext.MSD;
+            this.WtmContext = vm.WtmContext;
         }
 
         #endregion

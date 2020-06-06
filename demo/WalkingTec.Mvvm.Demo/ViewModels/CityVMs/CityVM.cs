@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
 
         protected override void InitVM()
         {
-            AllParents = DC.Set<City>().GetSelectListItems(null, y => y.Name);
+            AllParents = DC.Set<City>().GetSelectListItems(WtmContext, null, y => y.Name);
         }
 
         public override void DoAdd()

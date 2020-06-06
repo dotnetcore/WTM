@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var dps =WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, WtmContext.LoginUserInfo);
+                AllItems = dps.GetItemList(DC, WtmContext);
             }
             return Ok(AllItems);
         }
@@ -134,7 +134,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(null, x => x.GroupName);
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext, null, x => x.GroupName);
             return Ok(rv);
         }
     }

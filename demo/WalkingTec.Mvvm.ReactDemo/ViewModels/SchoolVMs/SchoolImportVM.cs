@@ -28,9 +28,9 @@ namespace WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs
 	    protected override void InitVM()
         {
             Place_Excel.DataType = ColumnDataType.ComboBox;
-            Place_Excel.ListItems = DC.Set<City>().GetSelectListItems(null, y => y.Name);
+            Place_Excel.ListItems = DC.Set<City>().GetSelectListItems(WtmContext, null, y => y.Name);
             Place2_Excel.DataType = ColumnDataType.ComboBox;
-            Place2_Excel.ListItems = DC.Set<City>().GetSelectListItems( null, y => y.Name);
+            Place2_Excel.ListItems = DC.Set<City>().GetSelectListItems(WtmContext, null, y => y.Name);
         }
 
     }

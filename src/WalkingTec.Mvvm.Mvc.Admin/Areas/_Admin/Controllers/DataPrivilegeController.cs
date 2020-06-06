@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var dps = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, WtmContext.LoginUserInfo);
+                AllItems = dps.GetItemList(DC, WtmContext);
             }
             return Json(AllItems);
         }
