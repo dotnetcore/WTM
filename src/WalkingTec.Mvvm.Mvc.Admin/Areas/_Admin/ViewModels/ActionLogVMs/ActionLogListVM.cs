@@ -52,7 +52,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             }).SetFormat((entity,v)=> { return ((double)v).ToString("f2"); }));
             header.Add(this.MakeGridHeader(x => x.IP, 120));
             header.Add(this.MakeGridHeader(x => x.Remark).SetFormat((a,b)=> {
-                if(a.Remark.Length > 30)
+                if (SearcherMode == ListVMSearchModeEnum.Search && a.Remark?.Length > 30)
                 {
                     a.Remark = a.Remark.Substring(0, 30) + "...";
                 }
