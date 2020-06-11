@@ -373,13 +373,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                if (string.IsNullOrEmpty(Url))
-                {
-                    // TODO 已废弃，预计v3.0版本及v2.10版本开始将删除
-                    Url = "/_Framework/GetPagingData";
-                }
                 if (Filter == null) Filter = new Dictionary<string, object>();
-                Filter.Add("_DONOT_USE_VMNAME", vmQualifiedName);
                 Filter.Add("_DONOT_USE_CS", ListVM.CurrentCS);
                 Filter.Add("SearcherMode", ListVM.SearcherMode);
                 Filter.Add("ViewDivId", ListVM.ViewDivId);

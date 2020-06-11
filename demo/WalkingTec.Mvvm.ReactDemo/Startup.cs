@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             services.AddDistributedMemoryCache();
             services.AddWtmSession(Configuration, 3600);
             services.AddWtmCrossDomain(Configuration);
-            services.AddWtmAuthorization(Configuration);
+            services.AddWtmAuthentication(Configuration);
             services.AddWtmHttpClient(Configuration);
             services.AddWtmSwagger();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -133,7 +133,6 @@ namespace WalkingTec.Mvvm.ReactDemo
             app.UseWtmLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseSession();
             app.UseWtmSwagger();

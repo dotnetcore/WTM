@@ -66,7 +66,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
-            controller.WtmContext.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent(); ;
+            controller.WtmContext.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent();
 
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                             else
                             {
-                                string lp = GlobalServices.GetRequiredService<IOptions<Core.Auth.CookieOptions>>().Value.LoginPath;
+                                string lp = GlobalServices.GetRequiredService<IOptions<Auth.CookieOptions>>().Value.LoginPath;
                                 if (lp.StartsWith("/"))
                                 {
                                     lp = "~" + lp;

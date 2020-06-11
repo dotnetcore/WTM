@@ -50,6 +50,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
 using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Core.Support.Json;
+using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Mvc.Json;
@@ -591,12 +592,8 @@ namespace WalkingTec.Mvvm.Mvc
 
             return services;
         }
-        public static IServiceCollection AddWtmAuthorization(this IServiceCollection services, IConfigurationRoot config)
+        public static IServiceCollection AddWtmAuthentication(this IServiceCollection services, IConfigurationRoot config)
         {
-            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, WTMAuthorizationService>());
-            services.TryAdd(ServiceDescriptor.Transient<IPolicyEvaluator, Core.Auth.PolicyEvaluator>());
-            services.TryAddEnumerable(
-                ServiceDescriptor.Transient<IApplicationModelProvider, Core.Auth.AuthorizationApplicationModelProvider>());
             services.AddSingleton<ITokenService, TokenService>();
 
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
@@ -606,13 +603,13 @@ namespace WalkingTec.Mvvm.Mvc
             }
             services.Configure<JwtOptions>(config.GetSection("JwtOptions"));
 
-            var cookieOptions = config.GetSection("CookieOptions").Get<Core.Auth.CookieOptions>();
+            var cookieOptions = config.GetSection("CookieOptions").Get<Auth.CookieOptions>();
             if (cookieOptions == null)
             {
-                cookieOptions = new Core.Auth.CookieOptions();
+                cookieOptions = new Auth.CookieOptions();
             }
 
-            services.Configure<Core.Auth.CookieOptions>(config.GetSection("CookieOptions"));
+            services.Configure<Auth.CookieOptions>(config.GetSection("CookieOptions"));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

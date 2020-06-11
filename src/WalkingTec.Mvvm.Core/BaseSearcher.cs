@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,11 +35,9 @@ namespace WalkingTec.Mvvm.Core
         /// 记录 Controller 中的表单数据
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public Dictionary<string, object> FC { get; set; }
 
         [JsonIgnore]
-        [BindNever]
         public IModelStateService MSD { get => WtmContext?.MSD; }
 
         /// <summary>
@@ -62,7 +59,6 @@ namespace WalkingTec.Mvvm.Core
         /// 数据库环境
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public IDataContext DC
         {
             get
@@ -86,14 +82,12 @@ namespace WalkingTec.Mvvm.Core
         /// Session信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public ISessionService Session { get => WtmContext?.Session; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public LoginUserInfo LoginUserInfo { get => WtmContext?.LoginUserInfo; }
 
         #region 未使用
@@ -130,7 +124,6 @@ namespace WalkingTec.Mvvm.Core
         public bool? IsExpanded { get; set; }
 
         [JsonIgnore]
-        [BindNever]
         public WTMContext WtmContext { get; set; }
         #endregion
 

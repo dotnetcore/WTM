@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.HSSF.Util;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;

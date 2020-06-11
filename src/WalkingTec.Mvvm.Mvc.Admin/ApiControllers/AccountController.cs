@@ -11,15 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Newtonsoft.Json;
-
 using WalkingTec.Mvvm.Admin.ViewModels;
 using WalkingTec.Mvvm.Core;
-using WalkingTec.Mvvm.Core.Auth;
-using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Auth;
 
 namespace WalkingTec.Mvvm.Admin.Api
 {

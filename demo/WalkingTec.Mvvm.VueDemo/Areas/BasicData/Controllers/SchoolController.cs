@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Core.Auth.Attribute;
 using WalkingTec.Mvvm.VueDemo.BasicData.ViewModels.SchoolVMs;
-using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.VueDemo.Controllers
 {

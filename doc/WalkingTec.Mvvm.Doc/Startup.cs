@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Doc
             services.AddDistributedMemoryCache();
             services.AddWtmSession(Configuration, 3600);
             services.AddWtmCrossDomain(Configuration);
-            services.AddWtmAuthorization(Configuration);
+            services.AddWtmAuthentication(Configuration);
             services.AddWtmHttpClient(Configuration);
             services.AddWtmSwagger();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -64,7 +64,6 @@ namespace WalkingTec.Mvvm.Doc
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
-                options.Filters.Add(new AuthorizeFilter());
                 options.Filters.Add(new DataContextFilter(CSSelector));
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
@@ -129,7 +128,6 @@ namespace WalkingTec.Mvvm.Doc
             app.UseWtmLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseSession();
             app.UseWtmSwagger();

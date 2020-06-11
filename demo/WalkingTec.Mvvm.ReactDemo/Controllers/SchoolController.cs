@@ -7,7 +7,6 @@ using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.ReactDemo.ViewModels.SchoolVMs;
 using WalkingTec.Mvvm.ReactDemo.Models;
-using WalkingTec.Mvvm.Core.Auth.Attribute;
 
 namespace WalkingTec.Mvvm.ReactDemo.Controllers
 {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -32,7 +31,6 @@ namespace WalkingTec.Mvvm.Core
         #region Property
 
         [JsonIgnore]
-        [BindNever]
         public WTMContext WtmContext { get; set; }
 
         private Guid _uniqueId;
@@ -40,7 +38,6 @@ namespace WalkingTec.Mvvm.Core
         /// VM实例的Id
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string UniqueId
         {
             get
@@ -84,7 +81,6 @@ namespace WalkingTec.Mvvm.Core
         /// 数据库环境
         /// </summary>
         [JsonIgnore]
-        [BindNever]       
         public IDataContext DC
         {
             get
@@ -108,7 +104,6 @@ namespace WalkingTec.Mvvm.Core
         /// 获取VM的全名
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string VMFullName
         {
             get
@@ -123,7 +118,6 @@ namespace WalkingTec.Mvvm.Core
         /// 获取VM所在Dll
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string CreatorAssembly
         {
             get; set;
@@ -133,76 +127,64 @@ namespace WalkingTec.Mvvm.Core
         /// 获取当前使用的连接字符串
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string CurrentCS { get => WtmContext?.CurrentCS; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取配置文件的信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public Configs ConfigInfo { get=> WtmContext?.ConfigInfo; }
 
 
         [JsonIgnore]
-        [BindNever]
         public IUIService UIService { get=> WtmContext?.UIService; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
 
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string ParentWindowId { get => WtmContext?.ParentWindowId; }
 
         [JsonIgnore]
-        [BindNever]
         public object Controller { get; set; }
 
         [JsonIgnore]
-        [BindNever]
         public IDistributedCache Cache { get => WtmContext?.Cache; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public LoginUserInfo LoginUserInfo { get=> WtmContext?.LoginUserInfo;}
 
         /// <summary>
         /// 当前Url
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public string CurrentUrl { get => WtmContext?.BaseUrl; }
 
         /// <summary>
         /// Session信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public ISessionService Session { get => WtmContext?.Session; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
         [JsonIgnore]
-        [BindNever]
         public IModelStateService MSD { get => WtmContext?.MSD; }
 
         /// <summary>
@@ -212,11 +194,9 @@ namespace WalkingTec.Mvvm.Core
         public List<Guid> DeletedFileIds { get; set; }
 
         [JsonIgnore]
-        [BindNever]
         public string ControllerName { get; set; }
 
         [JsonIgnore]
-        [BindNever]
         public IStringLocalizer Localizer { get; set; }
         #endregion
 
