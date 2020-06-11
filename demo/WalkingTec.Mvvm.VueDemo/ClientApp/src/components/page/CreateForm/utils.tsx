@@ -317,25 +317,47 @@ export default class Utils {
     const compData = {
       directives,
       on: events || {},
-      props: { ...displayProp(_t), ...props },
+      props: { ...displayProp(_t), action: actionApi, limit: 1, ...props },
       style,
     };
-    compData.props["file-list"] = [];
-    compData.props.limit = 1;
-    if (!compData.props.action) {
-      compData.props.action = actionApi;
-    }
+
+    // 上传钩子
     if (!compData.props.onSuccess) {
-      compData.props.onSuccess = (res, file) => {
-        // _t.formData[key] = res.Id;
-        _.set(_t.sourceFormData || _t.formData, key, res.Id);
+      compData.props.onSuccess = (res, file, fileList) => {
+        let fileIds = res.Id;
+        if (compData.props.limit > 1) {
+          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id );
+        }
+        _.set(_t.sourceFormData || _t.formData, key, fileIds);
       };
     }
-    const imgID = _.get(_t.sourceFormData || _t.formData, key);
-    if (imgID) {
-      compData.props["file-list"] = [{ name: label, url: fileApi + imgID }];
+    // 删除钩子
+    if (!compData.props.onRemove) {
+      compData.props.onRemove = (file, fileList) => {
+        let fileIds = "";
+        if(compData.props.limit > 1) {
+          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id )
+        }
+        _.set(_t.sourceFormData || _t.formData, key, fileIds);
+      };
     }
+    // 赋值
+    const vModel:any = _.get(_t.sourceFormData || _t.formData, key);
+    let dataFiles:any = [];
+    if (vModel) {
+      if(_.isArray(vModel)) {
+        dataFiles = vModel.map(item => {
+          return { name: label, url: fileApi + item, Id: item };
+        });
+      } else {
+        dataFiles = [{ name: label, url: fileApi + vModel, Id: vModel }];
+      }
+    }
+    compData.props["file-list"] = dataFiles;
     const defaultSlot = <el-button type="primary">{_t.$t('form.clickUpload')}</el-button>;
+    if (slot) {
+      slot = slotRender(h, slot);
+    }
     return <el-upload {...compData}>{slot || defaultSlot}</el-upload>;
   }
 
@@ -488,11 +510,23 @@ export const sourceItem = (formData, keyPath) => {
     },
   };
 };
-// function fn(obj: object, path: string[]) {
-//   if (path.length > 1) {
-//     const key = path.shift();
-//     return key !== undefined ? fn(obj[key], path) : obj;
-//   } else {
-//     return obj;
-//   }
-// }
+
+/**
+ * 转 render
+ * @param hml
+ * @param params
+ */
+export const slotRender = (h, hml, params) => {
+    let slot: any = undefined;
+    if (_.isString(hml)) {
+        slot = (
+            <wtm-render-view
+              hml={hml}
+              params={{ ...params }}
+            ></wtm-render-view>
+          );
+    }
+    return slot;
+}
+
+
