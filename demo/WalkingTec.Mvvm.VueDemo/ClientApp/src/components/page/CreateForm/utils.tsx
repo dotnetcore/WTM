@@ -17,6 +17,8 @@
  *    };
  *    <el-input value={formData[key]} ...{on}/>
  */
+import { actionApi, fileApi } from "@/service/modules/upload";
+
 export default class Utils {
   constructor() {}
   public wtmFormItem = this.generateWtmFormItemComponent;
@@ -146,14 +148,9 @@ export default class Utils {
     // mapkey && 多选
     if (mapKey && props.multiple) {
       compData.on["input"] = function (val) {
-        _.set(
-          _t.sourceFormData || _t.formData,
-          key,
-          val.map((item) => ({ [mapKey]: item }))
-        );
+        setMapKeyModel(_t, key, val, mapKey);
       };
-      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
-      const value = keyList.map(item => item[mapKey]);
+      const value = getMapKeyModel(_t, key, mapKey);
       return (
         <el-select value={value} {...compData}>
           {components}
@@ -266,15 +263,9 @@ export default class Utils {
     };
     if (mapKey) {
       compData.on["input"] = function (val) {
-        _.set(
-          _t.sourceFormData || _t.formData,
-          key,
-          val.map((item) => ({ [mapKey]: item }))
-        );
+        setMapKeyModel(_t, key, val, mapKey);
       };
-      // const value = _.get(_t.sourceFormData || _t.formData, key)[mapKey];
-      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
-      const value = keyList.map(item => item[mapKey]);
+      const value = getMapKeyModel(_t, key, mapKey);
       return (
         <el-checkbox-group value={value} {...compData}>
           {components}
@@ -311,9 +302,7 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key, events, label } = option;
-    const actionApi = "/api/_file/upload";
-    const fileApi = "/api/_file/downloadFile/";
+    const { style, props, slot, directives, key, events, label, mapKey } = option;
     const compData = {
       directives,
       on: events || {},
@@ -328,7 +317,8 @@ export default class Utils {
         if (compData.props.limit > 1) {
           fileIds = fileList.map(item => item.response ? item.response.Id : item.Id );
         }
-        _.set(_t.sourceFormData || _t.formData, key, fileIds);
+        setMapKeyModel(_t, key, fileIds, mapKey);
+        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
       };
     }
     // 删除钩子
@@ -342,15 +332,16 @@ export default class Utils {
       };
     }
     // 赋值
-    const vModel:any = _.get(_t.sourceFormData || _t.formData, key);
+    // const value:any = _.get(_t.sourceFormData || _t.formData, key);
+    const value = getMapKeyModel(_t, key, mapKey);
     let dataFiles:any = [];
-    if (vModel) {
-      if(_.isArray(vModel)) {
-        dataFiles = vModel.map(item => {
+    if (value) {
+      if(_.isArray(value)) {
+        dataFiles = value.map(item => {
           return { name: label, url: fileApi + item, Id: item };
         });
       } else {
-        dataFiles = [{ name: label, url: fileApi + vModel, Id: vModel }];
+        dataFiles = [{ name: label, url: fileApi + value, Id: value }];
       }
     }
     compData.props["file-list"] = dataFiles;
@@ -437,8 +428,7 @@ export default class Utils {
     const on = {
       ...translateEvents(option.events, _t),
       input: function (val) {
-        const value = val.map((item) => (mapKey ? { [mapKey]: item } : item));
-        _.set(_t.sourceFormData || _t.formData, key, value);
+        setMapKeyModel(_t, key, val, mapKey);
       },
     };
     // 结构 Text，Value
@@ -452,10 +442,7 @@ export default class Utils {
       props: { ...displayProp(_t), ...props },
       style,
     };
-    // _t.formData[key]
-    const value = _.get(_t.sourceFormData || _t.formData, key).map((item) =>
-      mapKey ? item[mapKey] : item
-    );
+    const value = getMapKeyModel(_t, key, mapKey);
     return <el-transfer value={value} {...compData}></el-transfer>;
   }
 }
@@ -529,4 +516,16 @@ export const slotRender = (h, hml, params) => {
     return slot;
 }
 
+const setMapKeyModel = (_t, key, value, mapKey) => {
+  let val = value;
+  if (_.isArray(value) && mapKey) {
+    val = value.map(item => ({ [mapKey]: item }))
+  }
+  _.set(_t.sourceFormData || _t.formData, key, val);
+}
 
+const getMapKeyModel = (_t, key, mapKey) => {
+  const valueList = _.get(_t.sourceFormData || _t.formData, key) || [];
+  const val = valueList.map(item => mapKey ? item[mapKey] : item);
+  return val;
+}

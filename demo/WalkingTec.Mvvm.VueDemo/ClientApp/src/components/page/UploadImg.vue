@@ -23,12 +23,13 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import { actionApi, fileApi } from "@/service/modules/upload";
 
 @Component
 export default class UploadImg extends Vue {
     @Prop({ type: String, default: "" })
     imgId;
-    @Prop({ type: String, default: "/api/_file/upload" })
+    @Prop({ type: String, default: actionApi })
     uploadApi;
     @Prop({ type: Boolean, default: false })
     isHead;
@@ -39,7 +40,7 @@ export default class UploadImg extends Vue {
 
     get imageUrl() {
         if (this.imgId) {
-            return "/api/_file/downloadFile/" + this.imgId;
+            return fileApi + this.imgId;
         } else {
             return false;
         }
