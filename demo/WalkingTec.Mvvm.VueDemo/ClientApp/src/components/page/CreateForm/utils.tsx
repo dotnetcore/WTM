@@ -17,6 +17,8 @@
  *    };
  *    <el-input value={formData[key]} ...{on}/>
  */
+import { actionApi, fileApi } from "@/service/modules/upload";
+
 export default class Utils {
   constructor() {}
   public wtmFormItem = this.generateWtmFormItemComponent;
@@ -65,7 +67,7 @@ export default class Utils {
         let img = !!value && (
           <el-image
             style={option.props.imageStyle}
-            src={`/api/_file/downloadFile/${value}`}
+            src={fileApi + value}
             fit={option.props.fit || "contain"}
           />
         );
@@ -146,14 +148,9 @@ export default class Utils {
     // mapkey && 多选
     if (mapKey && props.multiple) {
       compData.on["input"] = function (val) {
-        _.set(
-          _t.sourceFormData || _t.formData,
-          key,
-          val.map((item) => ({ [mapKey]: item }))
-        );
+        setMapKeyModel(_t, key, val, mapKey);
       };
-      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
-      const value = keyList.map(item => item[mapKey]);
+      const value = getMapKeyModel(_t, key, mapKey);
       return (
         <el-select value={value} {...compData}>
           {components}
@@ -266,15 +263,9 @@ export default class Utils {
     };
     if (mapKey) {
       compData.on["input"] = function (val) {
-        _.set(
-          _t.sourceFormData || _t.formData,
-          key,
-          val.map((item) => ({ [mapKey]: item }))
-        );
+        setMapKeyModel(_t, key, val, mapKey);
       };
-      // const value = _.get(_t.sourceFormData || _t.formData, key)[mapKey];
-      const keyList = _.get(_t.sourceFormData || _t.formData, key) || [];
-      const value = keyList.map(item => item[mapKey]);
+      const value = getMapKeyModel(_t, key, mapKey);
       return (
         <el-checkbox-group value={value} {...compData}>
           {components}
@@ -311,31 +302,54 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key, events, label } = option;
-    const actionApi = "/api/_file/upload";
-    const fileApi = "/api/_file/downloadFile/";
+    const { style, props, slot, directives, key, events, label, mapKey } = option;
     const compData = {
       directives,
       on: events || {},
-      props: { ...displayProp(_t), ...props },
+      props: { ...displayProp(_t), action: actionApi, disabled: _t.status === _t.$actionType.detail, limit: 1, ...props },
       style,
     };
-    compData.props["file-list"] = [];
-    compData.props.limit = 1;
-    if (!compData.props.action) {
-      compData.props.action = actionApi;
-    }
+
+    // 上传钩子
     if (!compData.props.onSuccess) {
-      compData.props.onSuccess = (res, file) => {
-        // _t.formData[key] = res.Id;
-        _.set(_t.sourceFormData || _t.formData, key, res.Id);
+      compData.props.onSuccess = (res, file, fileList) => {
+        let fileIds = res.Id;
+        if (compData.props.limit > 1) {
+          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id );
+        }
+        setMapKeyModel(_t, key, fileIds, mapKey);
+        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
       };
     }
-    const imgID = _.get(_t.sourceFormData || _t.formData, key);
-    if (imgID) {
-      compData.props["file-list"] = [{ name: label, url: fileApi + imgID }];
+    // 删除钩子
+    if (!compData.props.onRemove) {
+      compData.props.onRemove = (file, fileList) => {
+        let fileIds = "";
+        if(compData.props.limit > 1) {
+          fileIds = fileList.map(item => item.response ? item.response.Id : item.Id )
+        }
+        setMapKeyModel(_t, key, fileIds, mapKey);
+        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
+      };
     }
+    // 赋值
+    // const value:any = _.get(_t.sourceFormData || _t.formData, key);
+    const value = getMapKeyModel(_t, key, mapKey);
+    let dataFiles:any = [];
+    if (value) {
+      if(_.isArray(value)) {
+        dataFiles = value.map(item => {
+          return { name: label, url: fileApi + item, Id: item };
+        });
+      } else {
+        dataFiles = [{ name: label, url: fileApi + value, Id: value }];
+      }
+    }
+    compData.props["file-list"] = dataFiles;
     const defaultSlot = <el-button type="primary">{_t.$t('form.clickUpload')}</el-button>;
+    if (slot) {
+      slot = slotRender(h, slot);
+    }
     return <el-upload {...compData}>{slot || defaultSlot}</el-upload>;
   }
 
@@ -415,8 +429,7 @@ export default class Utils {
     const on = {
       ...translateEvents(option.events, _t),
       input: function (val) {
-        const value = val.map((item) => (mapKey ? { [mapKey]: item } : item));
-        _.set(_t.sourceFormData || _t.formData, key, value);
+        setMapKeyModel(_t, key, val, mapKey);
       },
     };
     // 结构 Text，Value
@@ -430,10 +443,7 @@ export default class Utils {
       props: { ...displayProp(_t), ...props },
       style,
     };
-    // _t.formData[key]
-    const value = _.get(_t.sourceFormData || _t.formData, key).map((item) =>
-      mapKey ? item[mapKey] : item
-    );
+    const value = getMapKeyModel(_t, key, mapKey);
     return <el-transfer value={value} {...compData}></el-transfer>;
   }
 }
@@ -488,11 +498,39 @@ export const sourceItem = (formData, keyPath) => {
     },
   };
 };
-// function fn(obj: object, path: string[]) {
-//   if (path.length > 1) {
-//     const key = path.shift();
-//     return key !== undefined ? fn(obj[key], path) : obj;
-//   } else {
-//     return obj;
-//   }
-// }
+
+/**
+ * 转 render
+ * @param hml
+ * @param params
+ */
+export const slotRender = (h, hml, params) => {
+    let slot: any = undefined;
+    if (_.isString(hml)) {
+        slot = (
+            <wtm-render-view
+              hml={hml}
+              params={{ ...params }}
+            ></wtm-render-view>
+          );
+    }
+    return slot;
+}
+
+const setMapKeyModel = (_t, key, value, mapKey) => {
+  let val = value;
+  if (_.isArray(value) && mapKey) {
+    val = value.map(item => ({ [mapKey]: item }))
+  }
+  _.set(_t.sourceFormData || _t.formData, key, val);
+}
+
+const getMapKeyModel = (_t, key, mapKey) => {
+  const valueList = _.get(_t.sourceFormData || _t.formData, key) || [];
+  if (_.isArray(valueList)) {
+    const val = valueList.map(item => mapKey ? item[mapKey] : item);
+    return val;
+  } else {
+    return valueList;
+  }
+}
