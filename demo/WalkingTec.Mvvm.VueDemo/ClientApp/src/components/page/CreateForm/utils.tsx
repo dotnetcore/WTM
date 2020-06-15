@@ -67,7 +67,7 @@ export default class Utils {
         let img = !!value && (
           <el-image
             style={option.props.imageStyle}
-            src={`/api/_file/downloadFile/${value}`}
+            src={fileApi + value}
             fit={option.props.fit || "contain"}
           />
         );
@@ -306,7 +306,7 @@ export default class Utils {
     const compData = {
       directives,
       on: events || {},
-      props: { ...displayProp(_t), action: actionApi, limit: 1, ...props },
+      props: { ...displayProp(_t), action: actionApi, disabled: _t.status === _t.$actionType.detail, limit: 1, ...props },
       style,
     };
 
@@ -328,7 +328,8 @@ export default class Utils {
         if(compData.props.limit > 1) {
           fileIds = fileList.map(item => item.response ? item.response.Id : item.Id )
         }
-        _.set(_t.sourceFormData || _t.formData, key, fileIds);
+        setMapKeyModel(_t, key, fileIds, mapKey);
+        // _.set(_t.sourceFormData || _t.formData, key, fileIds);
       };
     }
     // 赋值
@@ -526,6 +527,10 @@ const setMapKeyModel = (_t, key, value, mapKey) => {
 
 const getMapKeyModel = (_t, key, mapKey) => {
   const valueList = _.get(_t.sourceFormData || _t.formData, key) || [];
-  const val = valueList.map(item => mapKey ? item[mapKey] : item);
-  return val;
+  if (_.isArray(valueList)) {
+    const val = valueList.map(item => mapKey ? item[mapKey] : item);
+    return val;
+  } else {
+    return valueList;
+  }
 }
