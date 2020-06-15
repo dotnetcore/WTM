@@ -731,6 +731,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 s1.StudentMajor = new List<StudentMajor>();
                 _studentvm.DC = context;
                 _studentvm.Entity = s1;
+                _studentvm.FC = new Dictionary<string, object>();
+                _studentvm.FC.Add("Entity.StudentMajor", null);
                 _studentvm.DoEdit();
             }
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
