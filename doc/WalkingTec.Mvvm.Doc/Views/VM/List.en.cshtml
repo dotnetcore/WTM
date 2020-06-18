@@ -1,0 +1,417 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>BasePagedListVM is the VM that is responsible for paging data presentation and export. It inherits from BaseVM</p>
+<wt:fieldset field-set-style="Simple" title="Establish a BasePagedListVM">
+</wt:fieldset>
+    <p>Few steps to establish BasePagedListVM</p>
+    <p>1. Define the class inherited from BasePagedListVM, and use the associated model as a generic variable</p>
+    <p>2. Rewrite GetSearchQuery function , write query statement and logic in this function</p>
+    <p>3. Rewrite the InitGridHeader function, which defines the columns displayed in the list</p>
+    <p>4. Rewrite the InitGridAction function, which defines the action buttons in the list</p>
+    <p>Take the ‘school’ model as an example to show how to write a simpleListVM. For the definition of the ‘school’  model, please refer to the <a href="/#/QuickStart/FirstModule">first module</a></p>
+    <wt:code title="SchoolListVM.cs">
+public class SchoolListVM : BasePagedListVM&ltSchool, BaseSearcher&gt
+{
+    protected override List&ltGridAction&gt InitGridAction()
+    {
+        return new List&ltGridAction&gt
+        {
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.BatchDelete, "批量删除","", dialogWidth: 800),
+            this.MakeStandardAction("School", GridActionStandardTypesEnum.Import, "导入","", dialogWidth: 800),
+            this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+        };
+    }
+
+    protected override IEnumerable&ltIGridColumn&ltSchool&gt&gt InitGridHeader()
+    {
+        return new List&ltGridColumn&ltSchool&gt&gt{
+            this.MakeGridHeader(x =&gt x.SchoolCode),
+            this.MakeGridHeader(x =&gt x.SchoolName),
+            this.MakeGridHeader(x =&gt x.SchoolType),
+            this.MakeGridHeaderAction(width: 200)
+        };
+    }
+
+    public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+    {
+        var query = DC.Set&ltSchool&gt().OrderBy(x =&gt x.ID);
+        return query;
+    }
+}
+    </wt:code>
+    <p>The above code establishes a simple ListVM, which does not have any search criteria. By default, 20 lines per page are used to query the data of all schools, and the same logic is used to export the Excel. At the same time, it defines new, modify and other buttons</p>
+    <wt:quote>
+        <p>‘RecordsPerPage’ can be used to set the number of rows per page. The default is 20 rows. ‘RecordsPerPage’ can be used to set whether to to do pagination.</p>
+        <p>MakeStandardExportAction is used to generate an Export button on the list</p>
+        <p>MakeGridHeaderAction is to add an action column to the list. The buttons in the action column are all actions defined inInitGridAction with ShowInRow = true. When using MakeStandardAction to create a default action, changes, deletions, and details are displayed on each line</p>
+    </wt:quote>
+    <wt:quote>
+        <p>MakeStandardAction is used to generate standard new and modify buttons. If it is a customized button, please useMakeAction. Makeaction returns a GridAction. The main properties of GridAction are:</p>
+        <p>For more information about button settings, see the <a href="/#/VM/ListAction">buttonlist</a>documentation</p>
+    </wt:quote>
+    <wt:quote>
+        <p>MakeGridHeader is used to set a column of the list. We can set some properties through some stream functions to change the cell foreground color, background color, column header text, column width, etc. The main stream functions are:</p>
+    </wt:quote>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Functions</th>
+                <th lay-data="{field:'joinTime', width:400}">Descriptions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>SetBackGroundFunc</td>
+                <td>Set the background color, color represented by a returned string in the format of FF0000</td>
+            </tr>
+            <tr>
+                <td>SetForeGroundFunc</td>
+                <td>Set the foreground color ,color represented by a returned string in the format of FF0000</td>
+            </tr>
+            <tr>
+                <td>SetChildren</td>
+                <td>Set subheader</td>
+            </tr>
+            <tr>
+                <td>SetFormat</td>
+                <td>Set custom format</td>
+            </tr>
+            <tr>
+                <td>SetFlex</td>
+                <td>Set if column width needs to be filled with blank</td>
+            </tr>
+            <tr>
+                <td>SetWidth</td>
+                <td>
+                    Set column width
+                </td>
+            </tr>
+            <tr>
+                <td>SetSort</td>
+                <td>
+                    Set whether dynamic sorting is require
+                </td>
+            </tr>
+            <tr>
+                <td>SetShowTotal</td>
+                <td>
+                    Set whether to display summary
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <wt:quote>
+      <p>For more information about column settings,see the<a href="/#/VM/ListColumn"> list column </a> </p>
+    </wt:quote>
+
+<wt:fieldset field-set-style="Simple" title="Use BasePagedListVM">
+    <p>The steps of using BasePagedListVM in controller are also clear at a glance. Please see the following example:</p>
+    <wt:code title="SchoolController.cs">
+#region 搜索
+[ActionDescription("搜索")]
+public ActionResult Index()
+{
+    var vm = CreateVM&ltSchoolListVM&gt();
+    return PartialView(vm);
+}
+#endregion
+    </wt:code>
+
+    <wt:quote>
+        <p>You must use the CreateVM function to create the ViewModel, not just new. The CreateVM function will pass the Session, ModelState and other information of the current controller to the VM, and perform some operations within the framework.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Searcher">
+    <p>The above example does not have any search criteria, which is rare in real scenes. There are two steps to add search criteria to the list:</p>
+    <p>1. Define a class inherited from BaseSearcher, take the search criteria as the property of the class, and set the second generic variable of ListVM class as the Searcher.</p>
+    <p>2. Use the data of GetSearchQuery to write query statement in GetSearchQuery function.</p>
+    <p>For example, create a Searcheto search school data</p>
+    <wt:code title="SchoolSearcher.cs">
+public class SchoolSearcher : BaseSearcher
+{
+    [Display(Name = "学校编码")]
+    public String SchoolCode { get; set; }
+    [Display(Name = "学校名称")]
+    public String SchoolName { get; set; }
+    [Display(Name = "学校类型")]
+    public SchoolTypeEnum? SchoolType { get; set; }
+}
+    </wt:code>
+    <p>Then modify SchoolListVM, associate its definition with theSchoolSearcher  public class SchoolListVM : BasePagedListVM&ltSchool, SchoolSearcher&gt</p>
+    <p>Finally, modify GetSearchQuery , use the data of Searcher</p>
+    <wt:code title="SchoolVM.cs">
+public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
+{
+    var query = DC.Set&ltSchool&gt()
+        .CheckContain(Searcher.SchoolCode, x=&gtx.SchoolCode)
+        .CheckContain(Searcher.SchoolName, x=&gtx.SchoolName)
+        .CheckEqual(Searcher.SchoolType, x=&gtx.SchoolType)
+        .OrderBy(x =&gt x.ID);
+    return query;
+}
+    </wt:code>
+    <wt:quote>
+        <p>CheckContain and CheckEqual are convenient functions provided by the framework to replace ‘where’ statements and optimize the generated query statements.</p>
+    </wt:quote>
+
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="Using controls in tables">
+    <p>In projects, we often use grid to edit data in batches,</p>
+    <p>Please see the following example:</p>
+    <wt:code title="SchoolListVM2.cs">
+    public class StudentListVm : BasePagedListVM&ltStudent, StudentSearcher&gt
+    {
+        public StudentListVm()
+        {
+            DetailGridPrix = "Students";
+        }
+
+        protected override List&ltGridAction&gt InitGridAction()
+        {
+            return new List&ltGridAction&gt
+            {
+                this.MakeStandardAction( "Employee", GridActionStandardTypesEnum.AddRow, ""),
+                this.MakeStandardAction( "Employee", GridActionStandardTypesEnum.RemoveRow, ""),
+
+            };
+        }
+
+        protected override IEnumerable&ltIGridColumn&ltStudent&gt&gt InitGridHeader()
+        {
+            return new List&ltGridColumn&ltStudent&gt&gt{
+                this.MakeGridHeader( x =&gt x.LoginName).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x =&gt x.Name).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x =&gt x.Sex)
+      .SetEditType( EditTypeEnum.ComboBox, typeof( Models.SexEnum).ToListItems( pleaseSelect:true)),
+                this.MakeGridHeader( x =&gt x.CellPhone).SetEditType( EditTypeEnum.TextBox),
+                this.MakeGridHeader( x=&gtx.IsValid).SetEditType( EditTypeEnum.CheckBox)
+            };
+        }
+
+        public override IOrderedQueryable&ltStudent&gt GetSearchQuery()
+        {
+            List&ltStudent&gt data = new List&ltStudent&gt
+            {
+                new Student{ LoginName = "zhangsan", Name="张三", Sex= Models.SexEnum.Male, CellPhone="13012213483", ExcelIndex = 0, IsValid = true, ID = new Guid("6F5C2D15-4871-4083-B269-06F456A4F1B6")},
+                new Student{ LoginName = "lisi", Name="李四", Sex= Models.SexEnum.Male, CellPhone="13075829654", ExcelIndex = 1, IsValid = false, ID = new Guid("9C7BC358-B8BD-4547-AFC1-11BF6F2B608B")},
+                new Student{ LoginName = "wangwu", Name="王五", Sex= Models.SexEnum.Male, CellPhone="13098635100", ExcelIndex = 2, IsValid = true, ID = new Guid("3BF9217C-1ACF-4D80-9899-42CFDA4C8746")},
+                new Student{ LoginName = "zhaoliu", Name="赵六", Sex= Models.SexEnum.Female, CellPhone="13035698123", ExcelIndex = 3, IsValid = false, ID = new Guid("0C7F6A24-A08D-46BD-86AC-6B6A391A9F04")},
+            };
+
+            var query = data.AsQueryable().Where(x=&gt
+                    (string.IsNullOrEmpty( Searcher.LoginName) || x.LoginName.Contains( Searcher.LoginName)) &&
+                    (string.IsNullOrEmpty( Searcher.Name) || x.Name.Contains( Searcher.Name)) &&
+                    (Searcher.Sex == null || x.Sex == Searcher.Sex)
+                )
+                .OrderBy(x =&gt x.ExcelIndex);
+            return query;
+        }
+
+    }
+
+
+    </wt:code>
+    <p>In the above code, we set the DetailGridPrix field first, which tells the framework where to save the data after submitting. For example, we set ‘DetailGridPrix=‘Students’, when submitting, the framework will submit the data in the form of Students[0].Id,Students[0].Name,Students[1].Id,Students[1].Name</p>
+    <p>Then in InitGridAction , we define two buttons, which are the AddRow and RemoveRow types. These two buttons are responsible for dynamically adding or deleting rows to the Grid.</p>
+    <p>Finally, in InitGridHeader, we use the SetEditType to define the control to be used for each column.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Using stored procedures">
+  </wt:fieldset>
+
+    <p>Sometimes we need to use SQL statements or stored procedures to query data.</p>
+    <p>Please see the following example:</p>
+    <wt:code title="SchoolListVM2.cs">
+    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
+    {
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            var actions = new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+            };
+            return actions;
+        }
+
+        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
+        {
+            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
+
+            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
+            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
+            header.Add(this.MakeGridHeaderAction(width: 120));
+
+            return header;
+        }
+
+        public override DbCommand GetSearchCommand()
+        {
+            var sql = string.Format("SELECT top 10 * from actionlogs");
+            var cmd = DC.Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.Text;
+            return cmd;
+        }
+    }
+
+
+    </wt:code>
+    <p>In the above code, we rewrite the GetSearchCommand method, which returns a DbCommand. We can set SQL statements or stored procedures.</p>
+    <wt:quote>
+        <p>If you use stored procedures, the paging, sorting and other functions of the framework can only be completed by yourself in the stored procedures</p>
+        <p>The framework automatically adds the following information to the stored procedure as variables.</p>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Variables</th>
+                <th lay-data="{field:'joinTime', width:400}">Descriptions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@@SearchMode</td>
+                <td>Search category</td>
+            </tr>
+            <tr>
+                <td>@@NeedPage</td>
+                <td>If Paging required</td>
+            </tr>
+            <tr>
+                <td>@@CurrentPage</td>
+                <td>Current page</td>
+            </tr>
+            <tr>
+                <td>@@RecordsPerPage</td>
+                <td>Records per page</td>
+            </tr>
+            <tr>
+                <td>@@Sort</td>
+                <td>sort field</td>
+            </tr>
+            <tr>
+                <td>@@SortDir</td>
+                <td>Ascending or descending</td>
+            </tr>
+            <tr>
+                <td>@@IDs</td>
+                <td>When SearchMode is CheckExport, IDs checked by the user will be send and export.</td>
+            </tr>
+            <tr>
+                <td>@@TotalRecords</td>
+                <td>Output variable, return all records</td>
+            </tr>
+        </tbody>
+    </table>
+        <p>Using stored procedures is cumbersome. You can also use lambda or linq to write most of the requirements. Try not to use stored procedures until you have to.</p>
+    </wt:quote>
+
+
+
+<wt:fieldset field-set-style="Simple" title="Main attributes">
+</wt:fieldset>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Property</th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Searcher</td>
+                <td>Get associated search class</td>
+            </tr>
+            <tr>
+                <td>EntityList</td>
+                <td>Get search results</td>
+            </tr>
+            <tr>
+                <td>RecordsPerPage</td>
+                <td>Number of paging lines, 20 by default</td>
+            </tr>
+            <tr>
+                <td>NeedPage</td>
+                <td>if pagination is required,  default=true</td>
+            </tr>
+            <tr>
+                <td>SearcherMode</td>
+                <td>Search mode, used to determine whether the current search is a common list, export, and batch operation</td>
+            </tr>
+
+        </tbody>
+    </table>
+<wt:fieldset field-set-style="Simple" title="Main functions">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Functions</th>
+                <th lay-data="{field:'joinTime', width:400}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>InitGridAction()</td>
+                <td>Operation buttons to be displayed in initialization list</td>
+            </tr>
+            <tr>
+                <td>MakeStandardAction()</td>
+                <td>Generate add, modify, delete, detail, import buttons according to default settings</td>
+            </tr>
+            <tr>
+                <td>MakeStandardExportAction()</td>
+                <td>Generate button for Excel export</td>
+            </tr>
+            <tr>
+                <td>InitGridHeader()</td>
+                <td>Columns to be displayed for initializing the list</td>
+            </tr>
+            <tr>
+                <td>GetSearchQuery()</td>
+                <td>Get query statement</td>
+            </tr>
+            <tr>
+                <td>GetExportQuery()</td>
+                <td>Get the query statement when exporting. If it is not overridden, GetSearchQuery will be called by default</td>
+            </tr>
+            <tr>
+                <td>GetCheckedExportQuery()</td>
+                <td>Get the query statement when the specified data is exported. if it is not overridden, GetSearchQuery will be called by default</td>
+            </tr>
+            <tr>
+                <td>GetSelectorQuery()</td>
+                <td>Get the query statement in selector mode. if it is not overridden, GetSearchQuery is called by default</td>
+            </tr>
+            <tr>
+                <td>GetBatchQuery</td>
+                <td>Get the query statement in batch mode. If it is not overridden, GetSearchQuery will be called by default</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>

@@ -16,6 +16,11 @@ namespace WalkingTec.Mvvm.ReactDemo
 
         public DbSet<City> Cities { get; set; }
 
+        public DataContext(CS cs)
+     : base(cs)
+        {
+        }
+
         public DataContext(string cs, DBTypeEnum dbtype)
              : base(cs, dbtype)
         {

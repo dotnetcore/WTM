@@ -1,10 +1,25 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
+import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
 import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
 import Request from 'utils/Request';
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
+import { FormattedMessage } from 'react-intl';
+
+mergeLocales({
+    "zh-CN": {
+        'frameworkgroup.GroupCode': '用户组编码',
+        'frameworkgroup.GroupName': '用户组名称',
+        'frameworkgroup.GroupRemark': '备注',
+    },
+    "en-US": {
+        'frameworkgroup.GroupCode': 'GroupCode',
+        'frameworkgroup.GroupName': 'GroupName',
+        'frameworkgroup.GroupRemark': 'Remark',
+    }
+});
 
 /**
  * label  标识
@@ -20,21 +35,21 @@ export default {
         return {
             /** 用户组编码 */
             "Entity.GroupCode":{
-                label: "用户组编码",
-                rules: [{ "required": true, "message": "用户组编码不能为空" }],
-                formItem: <Input placeholder="请输入 用户组编码" />
+                label: <FormattedMessage id='frameworkgroup.GroupCode' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkgroup.GroupCode') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkgroup.GroupCode') })} />
             },
             /** 用户组名称 */
             "Entity.GroupName":{
-                label: "用户组名称",
-                rules: [{ "required": true, "message": "用户组名称不能为空" }],
-                formItem: <Input placeholder="请输入 用户组名称" />
+                label: <FormattedMessage id='frameworkgroup.GroupName' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkgroup.GroupName') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkgroup.GroupName') })} />
             },
             /** 备注 */
             "Entity.GroupRemark":{
-                label: "备注",
+                label: <FormattedMessage id='frameworkgroup.GroupRemark' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 备注" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkgroup.GroupRemark') })} />
             }
 
         }
@@ -47,13 +62,13 @@ export default {
         return {
             /** 用户组编码 */
             "GroupCode":{
-                label: "用户组编码",
+                label: <FormattedMessage id='frameworkgroup.GroupCode' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 用户组名称 */
             "GroupName":{
-                label: "用户组名称",
+                label: <FormattedMessage id='frameworkgroup.GroupName' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },

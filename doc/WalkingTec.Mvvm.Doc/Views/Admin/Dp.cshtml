@@ -74,5 +74,10 @@ public override IOrderedQueryable&lt;Employee_View&gt; GetSearchQuery()
         return query;
 }
         </wt:code>
+
+         <li>多对多的数据权限</li>
+        假设你的学生和专业之间通过StudentMajor这个中间表形成多对多的关系，并且你给专业配置了数据权限，那么查询学生的时候可以使用类似 DPWhere( LoginUserInfo.DataPrivileges, x=>x.StudentMajor[0].MajorId) 这种形式来过滤数据
+         <li>树形的数据权限</li>
+        如果你的数据权限是继承了ITreeData的模型，当你配置了父层的权限，框架也会去搜索它包含的子层数据
     </ol>
 </wt:fieldset>

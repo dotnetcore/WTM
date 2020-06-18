@@ -1,0 +1,77 @@
+<style>
+
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title=" User customize">
+    <wt:quote>
+        <p>The framework comes with user management function.However, first problem for many people to use framework is that ‘Need more fields for user structure’</p>
+        <p>Follow shows how to write your own user management by inheriting the framework users</p>
+    </wt:quote>
+    <ul class="doc">
+        <li>
+            First, we create a class in the model, which inherits the ‘Frameworkuserbase’, such as ‘myUser’<br /><br />
+
+            <wt:code title="School.cs">
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WalkingTec.Mvvm.Core;
+
+namespace YourNameSpace.Models
+{
+    [Table("FrameworkUsers")]
+    public class MyUser : FrameworkUserBase
+    {
+        [Display(Name = "附加信息1")]
+        public string Extra1 { get; set; }
+
+        [Display(Name = "附加信息2")]
+        public string Extra2 { get; set; }
+    }
+}
+            </wt:code>
+        </li>
+        <li>
+            The above code let the framework to use the same’ Frameworkusers’ table , just adding two new fields.<br />
+            In ‘Dataaccess’, modify the ‘DataContext’ file and add ‘Myuser’. Since ‘Myuser’ inherits the Frameworkuserbase, instead of adding new tables,it will add a column called ‘Discriminator’ in the Frameworkuser table. This is the EF rule.<br /><br />
+            <wt:code title="DataContext.cs">
+public class DataContext : FrameworkContext
+{
+    public DbSet&ltMyUser&gt MyUsers { get; set; }
+
+    public DataContext(string cs, DBTypeEnum dbtype)
+    : base(cs, dbtype)
+    {
+    }
+}
+            </wt:code>
+        </li>
+        <li>
+            Press F5 to run. Now we have a ‘Myuser’ model, and the database generate the corresponding table.<br /><br />
+            <wt:quote>
+                <p>Because of the addition of the Discriminator field, you need to update the database or use a new library name for EF to generate automatically.</p>
+            </wt:quote>
+        </li>
+        <li>
+            Then, just like we generate other modules,  use the code generator to generate ‘Myuser’.<br /><br />
+        </li>
+        <li>
+            In the code generator, select ‘Myuser’, name the  module such us ‘Customized user management’.<br /><br />
+        </li>
+        <li>
+            After the code is generated, close the browser and restart debugging. We can see ‘Customized user management’on the left menu which is no different from the one provided by the framework, but it has the new fields you need.<br />
+            <wt:quote>
+                <p>The only thing that needs to be modified is that the login of the framework is MD5 authentication. So before you add ‘Myuser’, remember to add : ‘entity.password = utilities.getmd5string (entity. Password)’;Encrypt MD5</p>
+                <p>You can't see the default system admin in ‘Customized user management’. Because EF uses the Discriminator field to determine which class the data belongs to. You can manually change admin field from ‘Discriminator’ to ‘Myuser’. You can also delete the admin directly and add a new administrator account.</p>
+            </wt:quote>
+        </li>
+        <li>
+            Go to menu management, change the original user management to not display, and add the new user management to the menu.<br />
+            In non-debugging mode (in Appsettings file, isquickdebug = false )，the menu on the left becomes your new user management.<br />
+        </li>
+    </ul>
+</wt:fieldset>
+<script>
+layui.use('code',function(){layui.code({ about: false })})
+</script>

@@ -55,9 +55,9 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         }
 
         [ActionDescription("Jwt")]
-        public IActionResult Jwt()
+        public IActionResult CookieAuthAndJwtAuth()
         {
-            return PartialView();
+            return PartialView("CookieAuth&JwtAuth");
         }
     }
 }

@@ -92,26 +92,22 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpPost("[action]")]
         [ActionDescription("Delete")]
-        public IActionResult BatchDelete(string[] ids)
+        public async Task<ActionResult> Delete(SimpleDpModel dp)
         {
-            var vm = CreateVM<DataPrivilegeBatchVM>();
-            if (ids != null && ids.Count() > 0)
+            DataPrivilegeVM vm = null;
+            if (dp.Type == DpTypeEnum.User)
             {
-                vm.Ids = ids;
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.UserId == dp.Id && x.DpType == dp.Type);
             }
             else
             {
-                return Ok();
+                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupId == dp.Id && x.DpType == dp.Type);
             }
-            if (!ModelState.IsValid || !vm.DoBatchDelete())
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(ids.Count());
-            }
+            await vm.DoDeleteAsync();
+            return Ok(1);
         }
+
+
 
         [AllRights]
         [HttpGet("[action]")]
@@ -141,5 +137,12 @@ namespace WalkingTec.Mvvm.Admin.Api
             var rv = DC.Set<FrameworkGroup>().GetSelectListItems(LoginUserInfo.DataPrivileges, null, x => x.GroupName);
             return Ok(rv);
         }
+    }
+
+    public class SimpleDpModel
+    {
+        public string ModelName { get; set; }
+        public Guid Id { get; set; }
+        public DpTypeEnum Type { get; set; }
     }
 }

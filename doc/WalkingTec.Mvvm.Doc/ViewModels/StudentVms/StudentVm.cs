@@ -17,6 +17,7 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
         [Display(Name = "学校")]
         public List<string> SelectedSchools { get; set; }
         public string SelectedMajor { get; set; }
+        public string SelectedStudent { get; set; }
 
         [Display(Name = "学校")]
         public List<string> TransferSelectedSchools { get; set; }

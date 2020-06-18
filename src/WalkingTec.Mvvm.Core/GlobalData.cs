@@ -15,11 +15,6 @@ namespace WalkingTec.Mvvm.Core
         public List<Assembly> AllAssembly { get; set; }
 
         /// <summary>
-        /// 数据库上下文
-        /// </summary>
-        public ConstructorInfo DataContextCI { get; set; }
-
-        /// <summary>
         /// 可访问的url地址
         /// </summary>
         public List<string> AllAccessUrls { get; set; }

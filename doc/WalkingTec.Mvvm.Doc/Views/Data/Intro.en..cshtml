@@ -1,0 +1,111 @@
+The WTM framework basically uses EF core as the data layer, provides FrameworkContext as the base class and defines some auxiliary function
+
+<wt:fieldset field-set-style="Simple" title="Method descriptions">
+ </wt:fieldset>
+   <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Method</th>
+                <th lay-data="{field:'joinTime', width:600}">Descriptions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FrameworkContext(string cs)</td>
+                <td>Create a database environment based on the connectionstring</td>
+            </tr>
+            <tr>
+                <td>FrameworkContext(string cs, DBTypeEnum dbtype)</td>
+                <td>Create a database environment based on the connection string and database type</td>
+            </tr>
+            <tr>
+                <td>AddEntity()</td>
+                <td>Add a record</td>
+            </tr>
+            <tr>
+                <td>UpdateEntity()</td>
+                <td>Modify a record</td>
+            </tr>
+            <tr>
+                <td>UpdateProperty()</td>
+                <td>Modify on a single field</td>
+            </tr>
+            <tr>
+                <td>DeleteEntity()</td>
+                <td>Delete a record</td>
+            </tr>
+            <tr>
+                <td>CascadeDelete()</td>
+                <td>Cascade deletion of tree structure</td>
+            </tr>
+            <tr>
+                <td>DataInit()</td>
+                <td>Data initialization,Subclasses can override this function to initialize their own data</td>
+            </tr>
+        </tbody>
+    </table>
+
+<p>In addition, the framework itself defines some columns of tables to support the internal operations of the framework. As follow:</p>
+<wt:fieldset field-set-style="Simple" title="Built in Datasheet">
+</wt:fieldset>
+    <table lay-filter="parse-table-demo">
+        <thead>
+            <tr>
+                <th lay-data="{field:'username', width:200}">Sheet name</th>
+                <th lay-data="{field:'joinTime', width:600}">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FrameworkAreas</td>
+                <td>System area.one Area corresponds to one area.When the database is generated for the first time, the framework will reflect all Areas, Controllers , Actions and record the information in this tabl</td>
+            </tr>
+            <tr>
+                <td>FrameworkModules</td>
+                <td>For modules in each region, one controller corresponds to one module</td>
+            </tr>
+            <tr>
+                <td>FrameworkActions</td>
+                <td>Methods under each module</td>
+            </tr>
+            <tr>
+                <td>FrameworkMenus</td>
+                <td>system menu</td>
+            </tr>
+
+            <tr>
+                <td>DataPrivileges</td>
+                <td>Data permissions</td>
+            </tr>
+            <tr>
+                <td>FunctionPrivileges</td>
+                <td>Page permission</td>
+            </tr>
+            <tr>
+                <td>FileAttachments</td>
+                <td>System accessories</td>
+            </tr>
+            <tr>
+                <td>FrameworkUsers</td>
+                <td>User table</td>
+            </tr>
+            <tr>
+                <td>FrameworkRoles</td>
+                <td>role</td>
+            </tr>
+            <tr>
+                <td>FrameworkGroups</td>
+                <td>User group</td>
+            </tr>
+            <tr>
+                <td>ActionLogs</td>
+                <td>system log</td>
+            </tr>
+
+        </tbody>
+    </table>
+<script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+</script>

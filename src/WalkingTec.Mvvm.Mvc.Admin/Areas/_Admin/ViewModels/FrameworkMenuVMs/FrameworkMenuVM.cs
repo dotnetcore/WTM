@@ -140,22 +140,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             FC.Add("Entity.ICon", " ");
             if (Entity.IsInside == false)
             {
-                if (Entity.Url != null && Entity.Url != "")
+                if (Entity.Url != null && Entity.Url != ""  && Entity.Url.StartsWith("/") == false)
                 {
-                    if (Entity.DomainId == null)
-                    {
                         if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
-                    }
-                    else
-                    {
-                        if (Entity.Url.StartsWith("/") == false)
-                        {
-                            Entity.Url = "/" + Entity.Url;
-                        }
-                    }
                 }
             }
             else
@@ -250,22 +240,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             Entity.ICon = $"{IconFont} {IconFontItem}";
             if (Entity.IsInside == false)
             {
-                if (Entity.Url != null && Entity.Url != "")
+                if (Entity.Url != null && Entity.Url != "" && Entity.Url.StartsWith("/") == false)
                 {
-                    if (Entity.DomainId == null)
-                    {
                         if (Entity.Url.ToLower().StartsWith("http://") == false && Entity.Url.ToLower().StartsWith("https://") == false)
                         {
                             Entity.Url = "http://" + Entity.Url;
                         }
-                    }
-                    else
-                    {
-                        if (Entity.Url.StartsWith("/") == false)
-                        {
-                            Entity.Url = "/" + Entity.Url;
-                        }
-                    }
                 }
             }
             else

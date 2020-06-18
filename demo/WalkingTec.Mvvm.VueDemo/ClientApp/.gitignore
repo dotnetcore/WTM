@@ -1,4 +1,6 @@
 # dependencies
+/build
+/dist
 /node_modules
 /.pnp
 .pnp.js
@@ -7,7 +9,4 @@
 .cache-loader
 # testing
 /coverage
-
 # production
-/build
-/dist

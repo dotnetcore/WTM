@@ -10,8 +10,9 @@ using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
@@ -237,8 +238,6 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult Error()
         {
             var ex = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            if (ConfigInfo.EnableLog == true)
-            {
                 ActionLog log = new ActionLog();
                 log.LogType = ActionLogTypesEnum.Exception;
                 log.ActionTime = DateTime.Now;
@@ -257,21 +256,19 @@ namespace WalkingTec.Mvvm.Mvc
                 log.ActionUrl = ex.Path;
                 log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
                 log.Remark = ex.Error.ToString();
-                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 1000)
+                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
                 {
-                    log.Remark = log.Remark.Substring(0, 1000);
+                    log.Remark = log.Remark.Substring(0, 2000);
                 }
                 DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
                 if (starttime != null)
                 {
                     log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
                 }
-                using (var dc = CreateDC(true))
-                {
-                    dc.Set<ActionLog>().Add(log);
-                    dc.SaveChanges();
-                }
-            }
+                GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>( LogLevel.Error, new EventId(), log, null, (a, b) => {
+                    return a.GetLogString();
+                });
+            
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
@@ -444,7 +441,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
 
         [ActionDescription("ViewFile")]
-        public IActionResult ViewFile(Guid id, string _DONOT_USE_CS = "default")
+        public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
         {
             CurrentCS = _DONOT_USE_CS ?? "default";
             string html = string.Empty;
@@ -465,7 +462,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                html = $@"<img id='FileObject'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
+                html = $@"<img id='FileObject' style='{(string.IsNullOrEmpty(width)?"":$"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'/>";
             }
             return Content(html);
 
@@ -552,12 +549,43 @@ namespace WalkingTec.Mvvm.Mvc
         /// <param name="menus"></param>
         private void RemoveEmptyMenu(List<Menu> menus)
         {
-            for (int i = 0; i < menus.Count; i++)
+            if (menus == null)
             {
-                if ((menus[i].Children == null || menus[i].Children.Count == 0) && (menus[i].Url == null))
+                return;
+            }
+            List<Menu> toRemove = new List<Menu>();
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                    RemoveEmptyMenu(menu.Children);
+                    if ((menu.Children == null || menu.Children.Count == 0) && (menu.Url == null))
+                    {
+                        toRemove.Add(menu);
+                    }
+            }
+            foreach (var remove in toRemove)
+            {
+                menus.Remove(remove);
+            }
+        }
+
+        private void LocalizeMenu(List<Menu> menus)
+        {
+            if (menus == null)
+            {
+                return;
+            }
+            //循环所有菜单项
+            foreach (var menu in menus)
+            {
+                LocalizeMenu(menu.Children);
+                if (Localizer[menu.Title].ResourceNotFound == true)
                 {
-                    menus.RemoveAt(i);
-                    i--;
+                    menu.Title = Core.Program._localizer[menu.Title];
+                }
+                else
+                {
+                    menu.Title = Localizer[menu.Title];
                 }
             }
         }
@@ -623,6 +651,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(FFMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -634,6 +663,7 @@ namespace WalkingTec.Mvvm.Mvc
                 GenerateMenuTree(FFMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
                 RemoveUnAccessableMenu(resultMenus, LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
+                LocalizeMenu(resultMenus);
                 return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -672,7 +702,7 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetGithubInfo()
         {
             var rv = ReadFromCache<string>("githubinfo", () =>
-            {
+            {               
                 var s = APIHelper.CallAPI<github>("https://api.github.com/repos/dotnetcore/wtm").Result;
                 return JsonConvert.SerializeObject(s);
             }, 1800);
@@ -813,6 +843,18 @@ namespace WalkingTec.Mvvm.Mvc
             if (ConfigInfo.UEditorOptions == null)
                 throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
             return Json(ConfigInfo.UEditorOptions);
+        }
+
+        [Public]
+        public IActionResult SetLanguage(string culture)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return FFResult().AddCustomScript("location.reload();");
         }
     }
 

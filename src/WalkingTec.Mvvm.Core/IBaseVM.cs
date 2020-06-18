@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -14,10 +14,6 @@ namespace WalkingTec.Mvvm.Core
         /// UniqueId
         /// </summary>
         string UniqueId { get; }
-        /// <summary>
-        /// UploadFileId
-        /// </summary>
-        Guid? UploadFileId { get; set; }
         /// <summary>
         /// WindowIds
         /// </summary>

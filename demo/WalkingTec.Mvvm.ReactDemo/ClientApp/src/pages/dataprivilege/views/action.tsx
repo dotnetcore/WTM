@@ -82,10 +82,10 @@ class PageAction extends React.Component<any, any> {
                         <UpdateForm loadData={() => (lodash.find(selectedRowKeys))} />
                     </DialogForm>
                 </Visible>
-                <Visible visible={onAuthorizeActions(Store, "delete")}>
+                {/* <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
                     <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}><FormattedMessage id="action.delete" /></Button>
-                </Visible>
+                </Visible> */}
                 <Visible visible={onAuthorizeActions(Store, "import")}>
                     <Divider type="vertical" />
                     <Button icon="folder-add" onClick={ActionEvents.onImport}><FormattedMessage id="action.import" /></Button>

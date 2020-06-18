@@ -42,14 +42,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     break;
                 default:
                     rv.AddRange(new GridColumn<FrameworkMenu_ListView>[] {
-                        this.MakeGridHeader(x => x.PageName, 300),
+                        this.MakeGridHeader(x => x.PageName,300),
                         this.MakeGridHeader(x => x.ModuleName, 150),
-                        this.MakeGridHeader(x => x.ShowOnMenu, 80),
-                        this.MakeGridHeader(x => x.FolderOnly, 80),
-                        this.MakeGridHeader(x => x.IsPublic, 80),
-                        this.MakeGridHeader(x => x.DisplayOrder, 80),
+                        this.MakeGridHeader(x => x.ShowOnMenu),
+                        this.MakeGridHeader(x => x.FolderOnly),
+                        this.MakeGridHeader(x => x.IsPublic),
+                        this.MakeGridHeader(x => x.DisplayOrder),
                         this.MakeGridHeader(x => x.ICon, 100).SetFormat(PhotoIdFormat),
-                        this.MakeGridHeaderAction(width: 290)
+                        this.MakeGridHeaderAction(width: 270)
                     });
                     break;
             }

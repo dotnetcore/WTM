@@ -1,0 +1,79 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<wt:fieldset field-set-style="Simple" title="Global configuration">
+</wt:fieldset>
+    <wt:quote>The global.config.tsx file in the Clientapp/SRC directory defines some global configurations of the front end</wt:quote>
+
+    <wt:fieldset field-set-style="Simple" title="Configinfo property description">
+      </wt:fieldset>
+      <table lay-filter="parse-table-demo">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'username', width:200}">Property</th>
+                    <th lay-data="{field:'joinTime', width:600}">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>development</td>
+                    <td>Development mode or not</td>
+                </tr>
+                <tr>
+                    <td>Limit</td>
+                    <td>Default list rows</td>
+                </tr>
+                <tr>
+                    <td>infoType</td>
+                    <td>Pop up window mode, drawer or modal, drawer is drawer type pop-up, modal is normal center pop-up</td>
+                </tr>
+                <tr>
+                    <td>infoTypeWidth</td>
+                    <td>Width of default pop up window </td>
+                </tr>
+                <tr>
+                    <td>infoColumnCount</td>
+                    <td>Show several controls per line of the form</td>
+                </tr>
+                <tr>
+                    <td>searchColumnCount</td>
+                    <td>number of controls showed per line in Search criteria </td>
+                </tr>
+                <tr>
+                    <td>lockingTableRoll</td>
+                    <td>fill the blank area with table and scroll inside, or not</td>
+                </tr>
+                <tr>
+                    <td>collapsed</td>
+                    <td>search criteria folded,or not</td>
+                </tr>
+                <tr>
+                    <td>tabsPage</td>
+                    <td>use tab page to display multiple pages,or not</td>
+                </tr>
+                <tr>
+                    <td>tabPosition</td>
+                    <td>When a tab page is used, the location of the tab; optional values :top /right /bottom /left</td>
+                </tr>
+            </tbody>
+        </table>
+<wt:fieldset field-set-style="Simple" title="Menu configuration">
+    <p>In development mode, the framework reads ClientApp/src/subMenu.json file to generate the left menu.</p>
+    <p>After publishing, the framework generates the left menu through the menu configured in the database.</p>
+    <wt:quote>Developers can also set non development patterns by modifying the properties of development in the Clientapp/SRC/global.config.tsx file</wt:quote>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="API proxy configuration">
+    <p>If you use Visual Studio to run the code, the framework automatically matches the front-end and back-end, you do not need to configure the agent.</p>
+    <p>If manually runs the front-end NPM start in the ClientAppdirectory, you need to modify the ClientApp/src/setupProxy.js file to setthe address of the back-end API</p>
+</wt:fieldset>
+
+<script>
+layui.use('code',function(){layui.code({ about: false })})
+</script>
+<script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+</script>

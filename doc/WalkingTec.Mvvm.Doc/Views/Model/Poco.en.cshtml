@@ -1,0 +1,183 @@
+<wt:fieldset field-set-style="Simple" title="TopBasePoco">
+    <p>TopBasePoco is the base class of all models of the framework. It only defines the primary key of one Guid. All other models must inherit TopBasePoco directly or indirectly, otherwise other automation operations of the framework cannot be performed.</p>
+    <wt:quote>
+        <p>SinceV 2.3.5, the framework supports user-defined primary key categories.In addition to the Guid, it also supports auto increment int, long, and string types. Please refer to <a href="/#/Model/CustomKey">user-defined primary key</a></p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="BasePoco">
+    <p>BasePoco is the base class of all the built-in models in the framework. It adds four fields: Creator, modifier, time creation and time modification based onTopBasePoco. For most models, these fields are needed.</p>
+    <p>It is recommended that user-defined models inherit BasePoco</p>
+    <wt:quote>
+        <p>The built-in add and modify operations will automatically update the fields of creator, modifier, time creation and time modification</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="PersistPoco">
+    <p>PersistPoco added isvalid field on the basis of BasePoco ，instruct the framework to make false deletion of such models.</p>
+    <wt:quote>
+        <p>The framework's delete function automatically sets the IsValid field of the model that inherits PersistPoco to’ false’, without actually deleting it.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="One-to-many and many-to-many">
+    <p>The one-to-many and many-to-many relationships between models fully comply with the default rules of EF core.</p>
+    <wt:quote>
+        <p>For the first time users, it is easy to forget to define the foreign key name. For example, if a property that points to the ‘schoo’l class is called’ParentSchool’, then there must be a guid property called ‘ParentSchoolId’ to define the foreign key name. This is the default rule of EF core.</p>
+        <p>If you do not define the field with ID, although the database can be generated, the foreign key name can not be known at the code level,and the code generator of the framework will not work properly.</p>
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Model with attachments">
+    <p>Attachments are commonly used in the system. The framework has its own attachment table ‘FileAttachment’. Models that need attachments only need to associate this table.</p>
+    <p>In the following example, the attributes of ‘Photo’ and ‘PhotoId’ are associated with theFileAttachmen table. According to this association, the code generator can automatically generate the functions of uploading files and browsing / downloading files for you.</p>
+    <wt:code title="Student.cs">
+public class Student : BasePoco
+{
+    [Display(Name = "账号")]
+    [Required(ErrorMessage = "{0}是必填项")]
+    [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+    public string LoginName { get; set; }
+
+    [Display(Name = "照片")]
+    public Guid? PhotoId { get; set; }
+
+    [Display(Name = "照片")]
+    public FileAttachment Photo { get; set; }
+
+}
+    </wt:code>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Others">
+    The framework has no additional requirements except that the model must ultimately inherit from TopBasePoco. As long as you follow the EF core way to create model classes.
+</wt:fieldset>
+
+
+<wt:fieldset field-set-style="Simple" title="Example">
+    <wt:quote>
+        <p>The following code creates a school model, a professional model and a student model:</p>
+        <p>The relationship between schools and majors is ‘one to many’, and the relationship between students and majors, is ‘many to many’. They are related through the middle table StudentMajor.</p>
+        <p>Note the definitions of these associations, such as school and ShoolId, Major and MajorId, student and studentID, they should be all in pairs.</p>
+        <p>The [MiddleTable] mark on the StudentMajor model indicates that this is a many to many intermediate table. Adding [MiddleTable] to the intermediate table enables the code generator to recognize the many to many relationship and generate the correct code.</p>
+    </wt:quote>
+
+    <wt:code title="School.cs">
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using WalkingTec.Mvvm.Core;
+
+namespace FirstProject.Model
+{
+    public enum SchoolTypeEnum {
+        [Display(Name = "公立学校")]
+        PUB,
+        [Display(Name = "私立学校")]
+        PRI
+    }
+
+    public class School : BasePoco
+    {
+        [Display(Name = "学校编码")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        [StringLength(3)]
+        public string SchoolCode { get; set; }
+
+        [Display(Name = "学校名称")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        public string SchoolName { get; set; }
+
+        [Display(Name = "学校类型")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        public SchoolTypeEnum? SchoolType { get; set; }
+
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
+    }
+
+    public class Major : BasePoco
+    {
+        [Display(Name = "专业编码")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [RegularExpression("^[0-9]{3,3}$", ErrorMessage = "{0}必须是3位数字")]
+        public string MajorCode { get; set; }
+
+        [Display(Name = "专业名称")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        public string MajorName { get; set; }
+
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
+
+        [Display(Name = "所属学校")]
+        [Required()]
+        public Guid? SchoolId { get; set; }
+
+        [Display(Name = "所属学校")]
+        public School School { get; set; }
+
+        [Display(Name = "学生")]
+        public List&ltStudentMajor&gt StudentMajors { get; set; }
+
+    }
+
+    public class Student : BasePoco
+    {
+        [Display(Name = "账号")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string LoginName { get; set; }
+
+        [Display(Name = "密码")]
+        [Required(AllowEmptyStrings = false)]
+        [StringLength(32)]
+        public string Password { get; set; }
+
+        [Display(Name = "姓名")]
+        [Required(ErrorMessage = "{0}是必填项")]
+        [StringLength(50, ErrorMessage = "{0}最多输入{1}个字符")]
+        public string Name { get; set; }
+
+        [Display(Name = "手机")]
+        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]
+        public string CellPhone { get; set; }
+
+        [Display(Name = "邮编")]
+        [RegularExpression("^[0-9]{6,6}$", ErrorMessage = "{0}必须是6位数字")]
+        public string ZipCode { get; set; }
+
+        [Display(Name = "日期")]
+        public DateTime? EnRollDate { get; set; }
+
+        [Display(Name = "照片")]
+        public Guid? PhotoId { get; set; }
+
+        [Display(Name = "照片")]
+        public FileAttachment Photo { get; set; }
+
+        [Display(Name = "专业")]
+        public List&ltStudentMajor&gt StudentMajor { get; set; }
+    }
+
+    [MiddleTable]
+    public class StudentMajor : BasePoco
+    {
+        public Major Major { get; set; }
+        public Student Student { get; set; }
+
+        public Guid MajorId { get; set; }
+
+        public Guid StudentId { get; set; }
+    }
+}
+    </wt:code>
+</wt:fieldset>
+
+<script>
+layui.use('code',function(){layui.code({ about: false })})
+</script>

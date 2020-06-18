@@ -1,0 +1,197 @@
+<style>
+  a {
+    color: #01aaed
+  }
+</style>
+<p>BaseCRUDVM is the VM responsible for adding, deleting and modifying in the framework. It inherits from basevm and provides standard DoAdd,DoEdit,DoDelete functions.</p>
+<wt:fieldset field-set-style="Simple" title="Create a BaseCRUDVM">
+  <p>Building BaseCRUDVM is very simple. You only need to use the associated model as a generic variable. 
+Take the ‘school’ model as an example. For the definition of the school model, please refer to the<a href="/#/QuickStart/FirstModule"> first module</a></p>
+  <wt:code title="SchoolVM.cs">
+    public class SchoolVM : BaseCRUDVM&ltSchool&gt
+    {
+
+    }
+  </wt:code>
+  <p>Yes, it's so simple. For a single table without additional requirements, only inherit BaseCRUDVM is enough.</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Using BaseCRUDVM">
+  <p>The steps of using BaseCRUDVM in the controller are also clear at a glance. Please see the following example:</p>
+  <wt:code title="SchoolController.cs">
+    [ActionDescription("学校管理")]
+    public class SchoolController : BaseController
+    {
+      #region 新建
+      [ActionDescription("新建")]
+      public ActionResult Create()
+      {
+        var vm = CreateVM&ltSchoolVM&gt();
+        return PartialView(vm);
+      }
+
+      [HttpPost]
+      [ActionDescription("新建")]
+      public ActionResult Create(SchoolVM vm)
+      {
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          vm.DoAdd();
+          return FFResult()
+          .CloseDialog()
+          .RefreshGrid();
+        }
+      }
+      #endregion
+
+      #region 修改
+      [ActionDescription("修改")]
+      public ActionResult Edit(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
+
+      [ActionDescription("修改")]
+      [HttpPost]
+      public ActionResult Edit(SchoolVM vm)
+      {
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          vm.DoEdit();
+          return FFResult()
+          .CloseDialog()
+          .RefreshGridRow( vm.Entity.ID);
+        }
+      }
+      #endregion
+
+      #region 删除
+      [ActionDescription("删除")]
+      public ActionResult Delete(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
+
+      [ActionDescription("删除")]
+      [HttpPost]
+      public ActionResult Delete(Guid id, IFormCollection nouse)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        vm.DoDelete();
+        if (!ModelState.IsValid)
+        {
+          return PartialView(vm);
+        }
+        else
+        {
+          return FFResult()
+          .CloseDialog()
+          .RefreshGrid();
+        }
+      }
+      #endregion
+
+      #region 详细
+      [ActionDescription("详细")]
+      public ActionResult Details(Guid id)
+      {
+        var vm = CreateVM&ltSchoolVM&gt(id);
+        return PartialView(vm);
+      }
+      #endregion
+
+    }
+  </wt:code>
+
+  <wt:quote>
+    <p>You must use the CreateVM function to create the CreateVM, do not just use'ing ‘new. The CreateVM function will pass the session, ModelStat and other information of the current controller to the VM, and perform some operations within the framework</p>
+    <p>FFResult is an auxiliary class provided by the framework, which is mainly used to facilitate developers to return to common JS, such as closing the current window, refreshing the grid, etc.</p>
+  </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Custom validation">
+  <p>BBaseCRUDVM inherits from BaseVM, therefor complex custom validation can be realized by overriding Validate.</p>
+  <p>At the same time,BaseCRUDVM provides a more convenient way to verify the uniqueness of more fields, overriding the SetDuplicatedCheck</p>
+  <p>The following example extends the SchoolVM and adds uniqueness verification. Both fields SchoolCode and SchoolCode can not be duplicate.</p>
+  <wt:code title="SchoolVM.cs">
+    public class SchoolVM : BaseCRUDVM&ltSchool&gt
+    {
+    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+    {
+    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolCode));
+    rv.AddGroup(SimpleField(x => x.SchoolName));
+    return rv;
+    }
+    }
+  </wt:code>
+  <p>The framework also supports the uniqueness verification of combined fields. For example, the combination of two fields, SchoolName and SchoolType, cannot be repeated, at the same time, SchoolCode cannot be repeated.</p>
+  <wt:code title="SchoolVM.cs">
+    public class SchoolVM : BaseCRUDVM&ltSchool&gt
+    {
+    public override DuplicatedInfo&ltSchool&gt SetDuplicatedCheck()
+    {
+    var rv = CreateFieldsInfo( SimpleField(x => x.SchoolName), SimpleField(x => x.SchoolType));
+    rv.AddGroup( SimpleField(x => x.SchoolCode));
+    return rv;
+    }
+    }
+  </wt:code>
+
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Main functions">
+</wt:fieldset>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Functions</th>
+      <th lay-data="{field:'joinTime', width:400}">Descriptions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DoAdd()</td>
+      <td>Add database</td>
+    </tr>
+    <tr>
+      <td>DoEdit(bool updateAllFields = false)</td>
+      <td>database modification, updateAllFields defaults to false and only the fields returned from post will be modified. If updateAllFields is true, all fields will be modified.</td>
+    </tr>
+    <tr>
+      <td>DoDelete()</td>
+      <td>database deletion; For the model inherited from PersistPoco, the IsValid field will be set to false for false deletion.</td>
+    </tr>
+    <tr>
+      <td>DoRealDelete()</td>
+      <td>Delete , no matter inherited from PersistPoco or not</td>
+    </tr>
+    <tr>
+      <td>GetById(Guid Id)</td>
+      <td>Get model according to ID</td>
+    </tr>
+    <tr>
+      <td>SetInclude(params Expression&ltFunc&ltTModel, object&gt&gt[] exps)</td>
+      <td>Sets the default associated table, which is usually called in the constructor, and then automatically sets the table in GetById.</td>
+    </tr>
+  </tbody>
+</table>
+<wt:quote>
+  <p>All of DoAdd,DoEdit,DoDelete,DoRealDelete have default implementations. For more complex logic, you can override these methods.</p>
+</wt:quote>
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+</script>
+<script>
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false
+  });
+</script>

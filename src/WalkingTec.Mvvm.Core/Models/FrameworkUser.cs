@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core
         public string Password { get; set; }
 
         [Display(Name = "Email" )]
-        [DataType(DataType.EmailAddress,ErrorMessage= "{0}formaterror")]
+        [RegularExpression("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "{0}formaterror")]
         [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
         public string Email { get; set; }
 
@@ -44,11 +44,12 @@ namespace WalkingTec.Mvvm.Core
         public SexEnum? Sex { get; set; }
 
         [Display(Name = "CellPhone")]
-        [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}formaterror")]
+        [RegularExpression("^[1][3-9]\\d{9}$", ErrorMessage = "{0}formaterror")]
         public string CellPhone { get; set; }
 
         [Display(Name = "HomePhone")]
         [StringLength(30, ErrorMessage = "{0}stringmax{1}")]
+        [RegularExpression("^[-0-9\\s]{8,30}$", ErrorMessage = "{0}formaterror")]
         public string HomePhone { get; set; }
 
         [Display(Name = "Address")]

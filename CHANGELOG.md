@@ -1,10 +1,118 @@
 # 更新日志
 
-## v3.0.x
+## v3.5.x （2.5.x同步更新）
 
-3.0版本正式发布，支持.netcore 3.0，与2.4.x最新版本在功能上同步更新
+##3.5.6 以及 2.5.5 (2020-4-13)
+* **新增：**  ConnectionString配置中可以设置Version字段，用于控制mysql的具体版本
+* **修改：**  移除了动态控制器，因为和动态编译页面产生冲突
+* **修改：**  IsFilePublic现在可以正常工作
+* **修改：**  更新了默认生成的VUE项目代码，修复了一些bug
+
+##3.5.4 以及 2.5.4 (2020-4-3)
+* **新增：**  新增了动态控制器，老项目需要手动在Project文件的 \<PropertyGroup\>中加入\<PreserveCompilationReferences>true</PreserveCompilationReferences\>节点
+
+* **修改：**  修复vue代码生成没有正确生成某些api的bug
+* **修改：**  修复vue自带系统管理中的一些bug，整体更稳定
+* **修改：**  IsFilePublic配置在3.x下可以正常工作
+* **修改：**  修复框架自带GetFile和ViewFile方法无法正常调用的bug
+
+##3.5.2 以及 2.5.2 (2020-3-29)
+* **修改：**  修复vue代码生成下拉菜单少了一个逗号的bug
+* **修改：**  修复vue发布时的问题
+* **修改：**  修复vue列表高度计算的问题
+* **修改：**  修复vue数据权限列表的删除bug
+
+* **新增：**  Layui. 现在ListVM中的GridAction可以通过SetButtonClass方法设置按钮颜色
+* **新增：**  Layui. UIService中新增MakeButton方法替换之前有问题的MakeRedirectButton方法
+* **修改：**  修复GetGridActions会被调用两次的问题（这其实是.netcore的bug...)
+
+
+##3.5.1 以及 2.5.1 (2020-3-26)
+* **修改：**  修复vue菜单相关的一些bug
+* **修改：**  修复vue代码生成器对于布尔值的控件生成的bug
+* **修改：**  修复vue代码生成器对于下拉菜单生成的bug
+
+##3.5.0 以及 2.5.0 发布，你心心念的Vue来了！！！vue目前还属于预览版，欢迎大家多提宝贵意见
+* **新增：**  现在官网可以生成Vue的项目了
+* **新增：**  VUE项目可以使用和Layui，React相同的代码生成
+* **新增：**  appsettings文件中增加了Domains的配置，用来注册httpclient。在Controller和VM中通过ConfigInfo.Domains["key"].CallAPI来方便高效的调用其他网站的api
+* **修改：**  修复代码生成器会将bool的搜索条件啊生成两次的bug
+* **修改：**  修复继承自TopBasePoco的Model在DoAdd中没有正确的添加子表数据的bug
+* **修改：**  修复用户没有权限时没有正确返回401错误的bug
+
+## v3.1.x
+
+3.1版本正式发布，支持.netcore 3.1，与2.4.x最新版本在功能上同步更新
+
 
 ## v2.4.x
+
+v2.4.9(2020-3-15)
+* **修改：**  重构日志，使用.netcore默认的日志记录流程和规则。 在.ConfigureLogging中可以使用AddWTMLogger来添加WTM的日志功能，并可以在appsetting文件中配置Logging来指定需要记录日志的级别，就像你操作其他Console，Debug这些日志一样。
+* **修改：**  修复layui下日期控件默认显示当前日期的问题
+* **修改：**  修复form和其中的searchpanel同时指定label-width会报错的问题
+* **修改：**  代码生成现在会默认为DateTime类型的搜索条件生成时间区间的搜索
+* **修改：**  修复了jwt认证失败没有正确返回401的问题
+
+v2.4.7(2020-3-9)
+
+* **新增：**  现在Layui模式下列表可以列筛选和打印
+* **新增：**  现在ListVM中的Action按钮可以通过SetPromptMessage设置询问对话框
+* **新增：**  现在数据权限可以识别多对多和树形结构
+
+* **修改：**  修改了新生成的项目LoginVM和RegVM错位的问题
+* **修改：**  修复了设置不分页不起作用的bug
+* **修改：**  修改了view强制要求model继承BaseVM的bug
+* **修改：**  修复了Combobox在disable状态下的显示问题
+* **修改：**  修复了代码生成器在多个DataContext时候的生成问题
+* **修改：**  修复了SearchPanel中Combobox多选时提交数据错误的问题
+
+v2.4.6(2020-2-22)
+本次更新加入了在连接字符串上指定数据库类型和DataContext的功能，并修复了近一阶段的bug。
+* **新增：**  现在在appsettings中的ConnectionStrings里面可以指定每一个连接字符串的DbType和DbContext
+* **新增：**  现在新增了一个EmptyContext基类，FrameworkContext会包含框架自带的表，而EmptyContext不会，这对于我们使用WTM连接其他系统的数据库十分有用
+* **注意：**  老版本升级时需要在DataContext文件中加入一个新的构造函数：
+        public DataContext(CS cs)
+             : base(cs)
+        {
+        }
+* **新增：**  增加了NoLog标记，用来指定某个方法不记录系统日志
+* **修改：**  移除了不必要的验证，提升webapi的响应速度
+* **新增：**  Layui模式下登陆页面新增了用户注册的演示页面
+* **修改：**  修复了layui模式下autocomplete textbox在有初始值时的js错误
+* **修改：**  修复了layui模式下可编辑grid表头错位的bug
+* **修改：**  修复了PIndex页面的js错误
+* **修改：**  移除了React模式下对node-sass的依赖
+* **修改：**  移除了React模式下数据权限管理的bug
+* **修改：**  修复了WebApi在非调试模式下权限认证的bug
+* **修改：**  修复了代码生成器生成React菜单的bug
+* **修改：**  修复了代码生成器生成标记了[Range(xxx.Max)]字段的bug
+
+
+
+
+
+
+v2.4.5 (2020-1-4)
+本次为累积更新，修复了一个月以来issue上提出的主要bug
+* **修改：**  修复了获取PersistPoco的下拉选项时，没有过滤IsVaild=false的问题
+* **修改：**  修复了弹出窗口在手机上显示不全的问题
+* **修改：**  修复了UEditor单图上传错误的问题
+* **修改：**  修复当搜索条件只有一个时，在搜索框中按回车键会出现异常页面的问题
+* **修改：**  修复了Transfer 穿梭框显示问题的问题
+* **修改：**  修复了在form表达外使用ImageTagHelper 会获得一个异常的问题
+* **修改：**  修复了textbox加了padding-text之后tab无法切换的问题
+* **修改：**  修复了selector display="true"时，显示错误的问题
+* **修改：**  修复了使用一些第三方控件导致view无法显示的问题
+* **修改：**  修复了代码生成器中点击关闭按钮报错的问题
+* **修改：**  修复了连续三级空菜单没有隐藏的问题
+* **修改：**  React模式系统自带管理模块加入了中英文多语言
+
+* **新增：**  upload控件增加了进度条，通过设置ShowProgress可以选择是否显示（鸣谢 ‘阿拉斯没有家’同学 https://github.com/buffonlwx）
+* **新增：**  ListVM中的GridAction中增加了下载类型的按钮
+* **新增：**  BaseController中的CreateDC方法现在可以使用连接字符串的key，而不需要写死整个连接字符串
+* **新增：**  BaseController中的CreateDC方法现在可以指定数据库类型
+* **新增：**  菜单维护时外部菜单可以使用/aaa/bbb的形式来指定一个内部地址，这样方便大家把一个具体方法配置到左侧菜单上
 
 ### v2.4.3 / v3.0.4 (2019-12-8)
 

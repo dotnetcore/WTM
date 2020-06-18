@@ -1,5 +1,5 @@
 .flex-display(@display: flex) {
-  display: ~'-webkit-@{display}';
+  display: ~"-webkit-@{display}";
   display: @display;
 }
 
@@ -13,6 +13,7 @@
   display: -webkit-flex;
   display: flex;
   .flexdirection(@dir);
+  .flexjustify(@justifycontent);
 }
 
 .flexdirection(@dir:row) when(@dir = row) {
@@ -53,8 +54,39 @@
   align-items: @al;
 }
 
+.flexwrap(@wrap) {
+  -webkit-flex-wrap: @wrap;
+  flex-wrap: @wrap;
+}
+
+.flex(@var: 1, @total: 1) {
+  -webkit-box-flex: @var;
+  -webkit-flex: @var;
+  flex: @var;
+}
+
+.order(@number) {
+  -webkit-box-ordinal-group: @number;
+  -webkit-order: @number;
+  order: @number;
+}
+.line(@number) {
+  -webkit-line-clamp: @number;
+}
 .center(@dir:row) {
   .flexbox(@dir);
   .flexalign(center);
   .flexjustify(center);
+}
+.centerBox(@height) {
+  align-items: center;
+  justify-items: center;
+  line-height: @height;
+}
+.clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
   }
+}

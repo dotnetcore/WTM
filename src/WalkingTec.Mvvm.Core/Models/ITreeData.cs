@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Core
@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.Core
         /// 父节点Id
         /// </summary>
         Guid? ParentId { get; set; }
+        Guid ID { get; set; }
     }
 
     /// <summary>

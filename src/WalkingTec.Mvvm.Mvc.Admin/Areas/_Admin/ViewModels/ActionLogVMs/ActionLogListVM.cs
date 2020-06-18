@@ -51,7 +51,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 }
             }).SetFormat((entity,v)=> { return ((double)v).ToString("f2"); }));
             header.Add(this.MakeGridHeader(x => x.IP, 120));
-            header.Add(this.MakeGridHeader(x => x.Remark));
+            header.Add(this.MakeGridHeader(x => x.Remark).SetFormat((a,b)=> {
+                if(a.Remark.Length > 30)
+                {
+                    a.Remark = a.Remark.Substring(0, 30) + "...";
+                }
+                return a.Remark;
+            }));
             header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;
@@ -65,7 +71,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
                 //.CheckEqual(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.LogType, x=>x.LogType)
                 .CheckContain(Searcher.IP, x=>x.IP)
-                .CheckBetween(Searcher.StartActionTime, Searcher.EndActionTime?.Date.AddDays(1), x=>x.ActionTime, includeMax:false)
+                .CheckBetween(Searcher.ActionTime?.GetStartTime(), Searcher.ActionTime?.GetEndTime(), x=>x.ActionTime, includeMax:false)
                 .Select(x=>new ActionLog()
                 {
                     ID          = x.ID,

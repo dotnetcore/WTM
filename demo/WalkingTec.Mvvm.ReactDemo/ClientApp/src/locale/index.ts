@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, MessageDescriptor } from 'react-intl'
 import globalconfig from 'global.config';
 import antdZhCN from 'antd/lib/locale-provider/zh_CN';
 import antdEnUS from 'antd/lib/locale-provider/en_US';
-const locales = {
+let locales = {
     'zh-CN': {
         ...zhcn,
     },
@@ -13,6 +13,18 @@ const locales = {
         ...enus,
     }
 };
+/**
+ * 扩展 多语言 配置
+ * @param key 
+ * @param locales 
+ */
+export function mergeLocales(mergeLocales: { 'zh-CN'?: any, 'en-US'?: any }) {
+    // lodash.update(locales, key, loe => {
+    //     return lodash.merge(loe, locales)
+    // });
+    lodash.merge(locales, mergeLocales);
+    console.warn("TCL: mergeLocales -> locales", locales)
+}
 /**
  * 获取当前配置语言 的 value
  *

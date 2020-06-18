@@ -1,8 +1,27 @@
-﻿import { Input } from 'antd';
+import { Input } from 'antd';
 import { FormItem } from 'components/dataView';
 import { WtmCheckbox, WtmEditTable } from 'components/form';
 import lodash from 'lodash';
 import * as React from 'react';
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
+import { FormattedMessage } from 'react-intl';
+
+mergeLocales({
+    "zh-CN": {
+        'frameworkrole.RoleCode': '角色编码',
+        'frameworkrole.RoleName': '角色名称',
+        'frameworkrole.RoleRemark': '备注',
+        'frameworkrole.Page': '页面',
+        'frameworkrole.Action': '动作',
+    },
+    "en-US": {
+        'frameworkrole.RoleCode': 'RoleCode',
+        'frameworkrole.RoleName': 'RoleName',
+        'frameworkrole.RoleRemark': 'Remark',
+        'frameworkrole.Page': 'Page',
+        'frameworkrole.Action': 'Action(s)',
+   }
+});
 
 /**
  * label  标识
@@ -18,21 +37,21 @@ export default {
         return {
             /** 角色编号 */
             "Entity.RoleCode": {
-                label: "角色编号",
-                rules: [{ "required": true, "message": "角色编号不能为空" }],
-                formItem: <Input placeholder="请输入 角色编号" />
+                label: <FormattedMessage id='frameworkrole.RoleCode' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkrole.RoleCode') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkrole.RoleCode') })} />
             },
             /** 角色名称 */
             "Entity.RoleName": {
-                label: "角色名称",
-                rules: [{ "required": true, "message": "角色名称不能为空" }],
-                formItem: <Input placeholder="请输入 角色名称" />
+                label: <FormattedMessage id='frameworkrole.RoleName' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkrole.RoleName') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkrole.RoleName') })} />
             },
             /** 备注 */
             "Entity.RoleRemark": {
-                label: "备注",
+                label: <FormattedMessage id='frameworkrole.RoleRemark' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 备注" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkrole.RoleRemark') })} />
             }
 
         }
@@ -45,13 +64,13 @@ export default {
         return {
             /** 角色编号 */
             "RoleCode": {
-                label: "角色编号",
+                label: <FormattedMessage id='frameworkrole.RoleCode' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 角色名称 */
             "RoleName": {
-                label: "角色名称",
+                label: <FormattedMessage id='frameworkrole.RoleName' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
@@ -63,21 +82,21 @@ export default {
         return {
             /** 角色编号 */
             "Entity.RoleCode": {
-                label: "角色编号",
-                rules: [{ "required": true, "message": "角色编号不能为空" }],
-                formItem: <Input placeholder="请输入 角色编号" />,
+                label: <FormattedMessage id='frameworkrole.RoleCode' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkrole.RoleCode') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkrole.RoleCode') })} />,
                 formItemProps: { display: true }
             },
             /** 角色名称 */
             "Entity.RoleName": {
-                label: "角色名称",
-                rules: [{ "required": true, "message": "角色名称不能为空" }],
-                formItem: <Input placeholder="请输入 角色名称" />,
+                label: <FormattedMessage id='frameworkrole.RoleName' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkrole.RoleName') }} /> }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkrole.RoleName') })} />,
                 formItemProps: { display: true }
             },
             /** 备注 */
             "Pages": {
-                label: "备注",
+                label: <FormattedMessage id='frameworkrole.RoleRemark' />,
                 rules: [],
                 formItem: (props) => {
                     console.log(props)
@@ -85,7 +104,7 @@ export default {
                         rowKey="ID"
                         models={{
                             "Name": {
-                                label: "页面",
+                                label: <FormattedMessage id='frameworkrole.Page' />,
                                 rules: [],
                                 formItem: (props) => {
                                     var m = props.defaultValues.Level * 20;
@@ -96,14 +115,14 @@ export default {
                                 }
                             },
                             "Actions": {
-                                label: "动作",
+                                label: <FormattedMessage id='frameworkrole.Action' />,
                                 rules: [],
                                 formItem: (props) => {
                                     if (props.defaultValues.AllActions == null || props.defaultValues.AllActions.length == 0) {
                                         return <span></span>;
                                     }
                                     else {
-                                        return <WtmCheckbox placeholder="选择动作"
+                                        return <WtmCheckbox placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkrole.Action') })}
                                             dataSource={props.defaultValues.AllActions}
                                         />
                                     }

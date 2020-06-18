@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +10,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 {
-    public class MyUserBatchVM : BaseBatchVM<MyUser, MyUser_BatchEdit>
+    public partial class MyUserBatchVM : BaseBatchVM<MyUser, MyUser_BatchEdit>
     {
         public MyUserBatchVM()
         {

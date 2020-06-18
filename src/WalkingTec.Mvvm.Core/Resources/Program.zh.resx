@@ -207,6 +207,24 @@
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="Codegen.ApiOnly" xml:space="preserve">
+    <value>勾选此项将只生成api，而没有前端代码</value>
+  </data>
+  <data name="Codegen.confirm" xml:space="preserve">
+    <value>该操作将生成如下文件，是否确定？</value>
+  </data>
+  <data name="Codegen.gen" xml:space="preserve">
+    <value>生成代码</value>
+  </data>
+  <data name="Codegen.InputModuleName" xml:space="preserve">
+    <value>请输入模块名称，比如xx管理</value>
+  </data>
+  <data name="Codegen.setup" xml:space="preserve">
+    <value>请进行字段配置</value>
+  </data>
+  <data name="Codegen.start" xml:space="preserve">
+    <value>开始生成</value>
+  </data>
   <data name="CodeGenSuccess" xml:space="preserve">
     <value>生成成功！请关闭调试重新编译运行</value>
   </data>
@@ -218,6 +236,9 @@
   </data>
   <data name="ConditionName" xml:space="preserve">
     <value>条件名称</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>继续</value>
   </data>
   <data name="ControllerNs" xml:space="preserve">
     <value>Controller命名空间</value>
@@ -566,6 +587,9 @@
   </data>
   <data name="NotHave" xml:space="preserve">
     <value>无</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>确定</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>当前密码</value>

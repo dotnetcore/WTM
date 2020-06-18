@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -43,6 +45,7 @@ namespace WalkingTec.Mvvm.Core
         /// VM实例的Id
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string UniqueId
         {
             get
@@ -55,11 +58,6 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        /// <summary>
-        /// 上传文件的Id，方便导入等操作中进行绑定，这类操作需要上传文件但不需要记录在数据库中，所以Model层中没有文件Id的字段
-        /// </summary>
-        [Display(Name = "UploadFile")]
-        public Guid? UploadFileId { get; set; }
 
         /// <summary>
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
@@ -89,12 +87,14 @@ namespace WalkingTec.Mvvm.Core
         /// 数据库环境
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public IDataContext DC { get; set; }
 
         /// <summary>
         /// 获取VM的全名
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string VMFullName
         {
             get
@@ -109,6 +109,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取VM所在Dll
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public string CreatorAssembly
         {
             get; set;
@@ -117,30 +118,35 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 获取当前使用的连接字符串
         /// </summary>
+        [JsonIgnore]
         public string CurrentCS { get; set; }
 
         /// <summary>
         /// 指示是否使用固定连接字符串
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public bool FromFixedCon { get; set; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public Dictionary<string, object> FC { get; set; }
 
         /// <summary>
         /// 获取配置文件的信息
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public Configs ConfigInfo { get; set; }
 
         /// <summary>
         /// 获取DbContext构造函数
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public ConstructorInfo DataContextCI { get; set; }
 
 
@@ -187,14 +193,19 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        [JsonIgnore]
+        [BindNever]
         public object Controller { get; set; }
 
+        [JsonIgnore]
+        [BindNever]
         public IDistributedCache Cache { get; set; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public LoginUserInfo LoginUserInfo { get; set; }
 
         /// <summary>
@@ -207,19 +218,22 @@ namespace WalkingTec.Mvvm.Core
         /// Session信息
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public ISessionService Session { get; set; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
         [JsonIgnore]
+        [BindNever]
         public IModelStateService MSD { get; set; }
 
         /// <summary>
         /// 日志信息
         /// </summary>
         [JsonIgnore]
-        public ActionLog Log { get; set; }
+        [BindNever]
+        public SimpleLog Log { get; set; }
 
         /// <summary>
         /// 用于保存删除的附件ID
@@ -227,8 +241,11 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public List<Guid> DeletedFileIds { get; set; }
 
+        [JsonIgnore]
         public string ControllerName { get; set; }
 
+        [JsonIgnore]
+        [BindNever]
         public IStringLocalizer Localizer { get; set; }
         #endregion
 
@@ -310,17 +327,19 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 创建DbContext对象
+        /// Create DbContext
         /// </summary>
-        /// <param name="csName"></param>
-        /// <returns></returns>
-        public virtual IDataContext CreateDC(string csName = null)
+        /// <param name="csName">ConnectionString key, "default" will be used if not set</param>
+        /// <param name="dbtype">DataBase type, appsettings dbtype will be used if not set</param>
+        /// <returns>data context</returns>
+        public virtual IDataContext CreateDC(string csName = null, DBTypeEnum? dbtype = null)
         {
             if (string.IsNullOrEmpty(csName))
             {
                 csName = CurrentCS ?? "default";
             }
-            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType });
+            var dbt = dbtype ?? ConfigInfo.DbType;
+            return (IDataContext)DataContextCI?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == csName).Select(x => x.Value).FirstOrDefault(), dbt });
         }
 
         /// <summary>
@@ -330,12 +349,34 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="logtype"></param>
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
         {
-            ActionLog log = Log.Clone() as ActionLog;
+            var log = this.Log.GetActionLog();
             log.LogType = logtype;
             log.ActionTime = DateTime.Now;
             log.Remark = msg;
-            DC.Set<ActionLog>().Add(log);
-            DC.SaveChanges();
+            LogLevel ll = LogLevel.Information;
+            switch (logtype)
+            {
+                case ActionLogTypesEnum.Normal:
+                    ll = LogLevel.Information;
+                    break;
+                case ActionLogTypesEnum.Exception:
+                    ll = LogLevel.Error;
+                    break;
+                case ActionLogTypesEnum.Debug:
+                    ll = LogLevel.Debug;
+                    break;
+                default:
+                    break;
+            }
+            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+                return $@"
+===WTM Log===
+内容:{a.Remark}
+地址:{a.ActionUrl}
+时间:{a.ActionTime}
+===WTM Log===
+";
+            });
         }
 
         #endregion

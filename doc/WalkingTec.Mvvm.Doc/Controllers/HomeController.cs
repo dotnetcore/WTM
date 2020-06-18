@@ -52,5 +52,27 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         {
             return PartialView();
         }
+
+        [AllowAnonymous]
+        [ResponseCache(Duration = 3600)]
+        public github GetGithubInfo()
+        {
+            var rv = ReadFromCache<github>("githubinfo", () =>
+            {
+                var s = ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
+                return s;
+            }, 1800);
+
+            return rv;
+        }
+
+        public class github
+        {
+            public int stargazers_count { get; set; }
+            public int forks_count { get; set; }
+            public int subscribers_count { get; set; }
+            public int open_issues_count { get; set; }
+        }
+
     }
 }

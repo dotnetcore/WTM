@@ -1,10 +1,43 @@
-﻿import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
-import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload } from 'components/form';
+import { Input, Switch, Icon, Select, Upload, message, Modal,InputNumber } from 'antd';
+import { WtmCascader, WtmCheckbox, WtmDatePicker, WtmEditor, WtmRadio, WtmSelect, WtmTransfer, WtmUploadImg, WtmUpload, WtmRangePicker} from 'components/form';
 import { FormItem } from 'components/dataView';
 import * as React from 'react';
 import lodash from 'lodash';
 import Regular from 'utils/Regular';
 import Store from '../store';
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
+import { FormattedMessage } from 'react-intl';
+
+mergeLocales({
+    "zh-CN": {
+        'actionlog.ModuleName': '模块',
+        'actionlog.ActionName': '动作',
+        'actionlog.ITCode': '账户',
+        'actionlog.ActionUrl': 'Url',
+        'actionlog.ActionTime': '操作时间',
+        'actionlog.Duration': '时长',
+        'actionlog.Remark': '备注',
+        'actionlog.IP': 'IP',
+        'actionlog.LogType': '类型',
+        'actionlog.LogType.0':'普通',
+        'actionlog.LogType.1': '异常',
+        'actionlog.LogType.2': '调试',
+    },
+    "en-US": {
+        'actionlog.ModuleName': 'Module',
+        'actionlog.ActionName': 'Action',
+        'actionlog.ITCode': 'Account',
+        'actionlog.ActionUrl': 'Url',
+        'actionlog.ActionTime': 'ActionTime',
+        'actionlog.Duration': 'Duration',
+        'actionlog.Remark': 'Remark',
+        'actionlog.IP': 'IP',
+        'actionlog.LogType': 'LogType',
+        'actionlog.LogType.0': 'Normal',
+        'actionlog.LogType.1': 'Exception',
+        'actionlog.LogType.2': 'Debug',
+    }
+});
 
 /**
  * label  标识
@@ -20,60 +53,60 @@ export default {
         return {
             /** 模块 */
             "Entity.ModuleName":{
-                label: "模块",
+                label: <FormattedMessage id='actionlog.ModuleName' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 模块" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.ModuleName') })} />
             },
             /** 动作 */
             "Entity.ActionName":{
-                label: "动作",
+                label: <FormattedMessage id='actionlog.ActionName' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 动作" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.ActionName') })} />
             },
             /** ITCode */
             "Entity.ITCode":{
-                label: "ITCode",
+                label: <FormattedMessage id='actionlog.ITCode' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 ITCode" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.ITCode') })} />
             },
             /** Url */
             "Entity.ActionUrl":{
-                label: "Url",
+                label: <FormattedMessage id='actionlog.ActionUrl' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 Url" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.ActionUrl') })}/>
             },
             /** 操作时间 */
             "Entity.ActionTime":{
-                label: "操作时间",
+                label: <FormattedMessage id='actionlog.ActionTime' />,
                 rules: [],
-                formItem: <WtmDatePicker placeholder="请输入 操作时间" />
+                formItem: <WtmDatePicker placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.ActionTime') })} />
             },
             /** 时长 */
             "Entity.Duration":{
-                label: "时长",
-                rules: [{ "required": true, "message": "时长不能为空" }],
-                formItem: <InputNumber placeholder="请输入 时长" />
+                label: <FormattedMessage id='actionlog.Duration' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('actionlog.Duration') }} /> }],
+                formItem: <InputNumber placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.Duration') })} />
             },
             /** 备注 */
             "Entity.Remark":{
-                label: "备注",
+                label: <FormattedMessage id='actionlog.Remark' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 备注" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.Remark') })} />
             },
             /** IP */
             "Entity.IP":{
-                label: "IP",
+                label: <FormattedMessage id='actionlog.IP' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 IP" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.IP') })} />
             },
             /** 类型 */
             "Entity.LogType":{
-                label: "类型",
-                rules: [{ "required": true, "message": "类型不能为空" }],
-                formItem: <WtmSelect placeholder="类型" dataSource={[  
-                    { Text: "普通", Value: 0 },
-                    { Text: "异常", Value: 1 },
-                    { Text: "调试", Value: 2 }
+                label: <FormattedMessage id='actionlog.LogType' />,
+                rules: [{ "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('actionlog.LogType') }} />}],
+                formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('actionlog.LogType') })} dataSource={[  
+                    { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 0 },
+                    { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 1 },
+                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 }
                 ]}/>
             }
 
@@ -87,36 +120,36 @@ export default {
         return {
             /** ITCode */
             "ITCode":{
-                label: "ITCode",
+                label: <FormattedMessage id='actionlog.ITCode' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** Url */
             "ActionUrl":{
-                label: "Url",
+                label: <FormattedMessage id='actionlog.ActionUrl' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 操作时间 */
             "ActionTime":{
-                label: "操作时间",
+                label: <FormattedMessage id='actionlog.ActionTime' />,
                 rules: [],
-                formItem: <WtmDatePicker placeholder="" />
+                formItem: <WtmRangePicker placeholder="" />
             },
             /** IP */
             "IP":{
-                label: "IP",
+                label: <FormattedMessage id='actionlog.IP' />,
                 rules: [],
                 formItem: <Input placeholder="" />
             },
             /** 类型 */
             "LogType":{
-                label: "类型",
+                label: <FormattedMessage id='actionlog.LogType' />,
                 rules: [],
-                formItem: <WtmSelect placeholder="全部" dataSource={[  
-                    { Text: "普通", Value: 0 },
-                    { Text: "异常", Value: 1 },
-                    { Text: "调试", Value: 2 }
+                formItem: <WtmSelect placeholder={getLocalesValue('tips.all')} mode="multiple" dataSource={[  
+                    { Text: <FormattedMessage id='actionlog.LogType.0' />, Value: 0 },
+                    { Text: <FormattedMessage id='actionlog.LogType.1' />, Value: 1 },
+                    { Text: <FormattedMessage id='actionlog.LogType.2' />, Value: 2 }
                 ]}/>
             },
 

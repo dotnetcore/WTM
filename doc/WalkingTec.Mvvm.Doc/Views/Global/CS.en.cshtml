@@ -1,0 +1,108 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>WTM framework supports automatic read/write splitting databases and dynamic use of different database connections according to conditions</p>
+<p>At the same time, if the framework needs to operate multiple databases, you can also use the methods described in this chapter</p>
+
+<wt:fieldset field-set-style="Simple" title="Read/Write Splitting">
+    WTM framework will automatically recognize ConnectionStrings of which the key value are ending with ‘underscore + number’.If the key value in this format are recognized, the corresponding database will be set as read-only. Such as the following:
+    <wt:code>
+"ConnectionStrings": [
+    {
+        "Key": "default",
+        "Value": "Server=(localdb)\\mssqllocaldb ;Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_1",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo1; Trusted_Connection=True; MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_2",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo2; Trusted_Connection=True; MultipleActiveResultSets=true"
+    },
+    {
+        "Key": "default_3",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo3; Trusted_Connection=True; MultipleActiveResultSets=true"
+    },
+]
+    </wt:code>
+    <p>This configuration file defines four connectionstrings: default:write database,default? 1/ default? 2/ default? 3 are three read-only database</p>
+    <p>By default, for controller methods marked with HttpPost, the framework selects write database to create DataContext. For other controller methods, the framework will randomly selects a read-only database.</p>
+</wt:fieldset>
+<wt:fieldset field-set-style="Simple" title="Set Connection string">
+    <p>If the default implementation of the framework can not meet the requirements, you can use the Fixconnection to set the connection string, such as the following controller:</p>
+    <wt:code>
+[FixConnection(DBOperationEnum.Read, CsName = "test")]
+[HttpPost]
+public IActionResult Create()
+{
+    var testDc = this.DC;
+    return PartialView();
+}
+    </wt:code>
+    <p>Using Fixconnection as the above , we set that ‘DC’  use a read-only database with the connection string beginning with ‘test’，the framework will look for the connection string of key values, such as test uu1, test uu2, test uu3. If it cannot be found, it will use the connection string called ‘test’. If it still cannot be found, it will use the default.</p>
+    <p>Another overloaded method of Fixconnection allows you to use a specific DbType, which is very useful if you want to operate on different  types of databases.</p>
+    <p>Another way to set connection string is to directly instantiate a DataContext with the specified connection string instead of using the generated DC in the controller and VM. For example:</p>
+    <wt:code>
+[HttpPost]
+public IActionResult Create()
+{
+    var testDc = new DataContext("实际连接字符串");
+    return PartialView();
+}
+    </wt:code>
+    <p>The above code uses connection string of ‘key value= test_2’ to create a new DataContext.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="Dynamically setting connection string">
+    <p>The framework can dynamically set the database to be connected according to the data transmitted from the page or the information in the session. As the following code:</p>
+    <wt:code title="Program.cs">
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        BuildWebHost(args).Run();
+    }
+
+    public static IWebHost BuildWebHost(string[] args) =&gt
+        WebHost.CreateDefaultBuilder(args)
+            .ConfigureServices(x =&gt
+            {
+                x.AddFrameworkService(CsSector: CSSelector);
+                x.AddLayui();
+            })
+            .Configure(x =&gt
+            {
+                x.UseFrameworkService();
+            })
+            .Build();
+
+    public static string CSSelector(ActionExecutingContext context)
+    {
+        var userinfo = (context.Controller as IBaseController)?.LoginUserInfo;
+        if(userinfo == null)
+        {
+            return "default";
+        }
+        else
+        {
+            if (userinfo.ITCode.StartsWith("a"))
+            {
+                return "user1";
+            }
+            else
+            {
+                return "user2";
+            }
+        }
+    }
+}
+    </wt:code>
+    <p>The above code passes a function of connection string setting to AddFrameworkService. This function sets the database according to the current login user. Default database is set when no login, user1 database is set when the user name starts with ‘a’a, and user2 database is set for others.</p>
+</wt:fieldset>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+

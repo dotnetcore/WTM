@@ -73,6 +73,35 @@ namespace $ns$.Controllers
             }
         }
 
+        [Public]
+        public IActionResult Reg()
+        {
+            var vm = CreateVM<RegVM>();
+            return PartialView(vm);
+        }
+
+        [Public]
+        [HttpPost]
+        public IActionResult Reg(RegVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView(vm);
+            }
+            else
+            {
+                var rv = vm.DoReg();
+                if (rv == true)
+                {
+                    return FFResult().CloseDialog().Alert("注册成功");
+                }
+                else
+                {
+                    return PartialView(vm);
+                }
+            }
+        }
+
         [AllRights]
         [ActionDescription("登出")]
         public async Task Logout()

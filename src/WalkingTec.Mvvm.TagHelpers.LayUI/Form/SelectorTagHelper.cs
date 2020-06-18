@@ -178,7 +178,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 output.TagName = "label";
                 output.TagMode = TagMode.StartTagAndEndTag;
                 output.Attributes.Add("class", "layui-form-label");
-                output.Attributes.Add("style", "text-align:left;padding:9px 0;");
+                output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset;");
                 var val = string.Empty;
                 if (Field.Model != null)
                 {

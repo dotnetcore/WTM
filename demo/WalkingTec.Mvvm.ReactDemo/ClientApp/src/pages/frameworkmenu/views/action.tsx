@@ -1,4 +1,4 @@
-﻿import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
+import { Button, Divider, Dropdown, Menu, Modal, Popconfirm, Row } from 'antd';
 import { DialogForm, Visible } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import lodash from 'lodash';
@@ -13,12 +13,6 @@ import { getLocalesTemplate } from 'locale';
  * 动作事件
  */
 export const ActionEvents = {
-    /**
-     * 导入
-     */
-    onImport() {
-        Store.PageState.visiblePort = true;
-    },
     /**
      * 导出
      */
@@ -87,10 +81,6 @@ class PageAction extends React.Component<any, any> {
                 <Visible visible={onAuthorizeActions(Store, "delete")}>
                     <Divider type="vertical" />
                     <Button icon="delete" onClick={ActionEvents.onDeleteList} disabled={disabled}><FormattedMessage id="action.delete" /></Button>
-                </Visible>
-                <Visible visible={onAuthorizeActions(Store, "import")}>
-                    <Divider type="vertical" />
-                    <Button icon="folder-add" onClick={ActionEvents.onImport}><FormattedMessage id="action.import" /></Button>
                 </Visible>
                 <Visible visible={onAuthorizeActions(Store, "export")}>
                     <Divider type="vertical" />

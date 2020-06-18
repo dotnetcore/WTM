@@ -9,11 +9,47 @@ import AntIcons from "@ant-design/icons/lib/manifest";
 import Fonts from "assets/font/font";
 import Request from 'utils/Request';
 import { BindAll } from 'lodash-decorators';
+import { mergeLocales, getLocalesValue, getLocalesTemplate } from 'locale';
+import { FormattedMessage } from 'react-intl';
 Fonts.unshift({
     name: "Antd",
     class: "Antd",
     icons: AntIcons.fill,
 })
+
+mergeLocales({
+    "zh-CN": {
+        'frameworkmenu.PageName': '页面名称',
+        'frameworkmenu.SelectedModule': '模块名称',
+        'frameworkmenu.SelectedActionIDs': '动作名称',
+        'frameworkmenu.FolderOnly': '目录',
+        'frameworkmenu.ShowOnMenu': '菜单显示',
+        'frameworkmenu.IsPublic': '公开',
+        'frameworkmenu.DisplayOrder': '顺序',
+        'frameworkmenu.IsInside': '地址类型',
+        'frameworkmenu.IsInside.0': '内部地址',
+        'frameworkmenu.IsInside.1': '外部地址',
+        'frameworkmenu.Url': 'Url',
+        'frameworkmenu.ICon': '图标',
+        'frameworkmenu.ParentId': '父目录',
+    },
+    "en-US": {
+        'frameworkmenu.PageName': 'PageName',
+        'frameworkmenu.SelectedModule': 'Module',
+        'frameworkmenu.SelectedActionIDs': 'Actions',
+       'frameworkmenu.FolderOnly': 'Folder',
+        'frameworkmenu.ShowOnMenu': 'ShowOnMenu',
+        'frameworkmenu.IsPublic': 'IsPublic',
+        'frameworkmenu.DisplayOrder': 'DisplayOrder',
+        'frameworkmenu.IsInside': 'UrlType',
+        'frameworkmenu.IsInside.0': 'Inside Url',
+        'frameworkmenu.IsInside.1': 'Ourside Url',
+        'frameworkmenu.Url': 'Url',
+        'frameworkmenu.ICon': 'Icon',
+        'frameworkmenu.ParentId': 'ParentFolder',
+    }
+});
+
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -41,15 +77,17 @@ export default {
         return {
             /** 页面名称 */
             "Entity.PageName": {
-                label: "页面名称",
-                rules: [{ "required": true, "message": "页面名称不能为空" }],
-                formItem: <Input placeholder="请输入 页面名称" />
+                label: <FormattedMessage id='frameworkmenu.PageName' />,
+                rules: [{
+                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkmenu.PageName') }} />
+                }],
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkmenu.PageName') })} />
             },
             /** 模块名称 */
             "SelectedModule": {
-                label: "模块名称",
+                label: <FormattedMessage id='frameworkmenu.SelectedModule' />,
                 rules: [],
-                formItem: <WtmSelect placeholder="选择模块"
+                formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkmenu.SelectedModule') })}
                     dataSource={pages}
                     onChange={(value, option) => {
                         pages.subscribe(data => {
@@ -63,9 +101,9 @@ export default {
             },
             /** 动作名称 */
             "SelectedActionIDs": {
-                label: "动作名称",
+                label: <FormattedMessage id='frameworkmenu.SelectedActionIDs' />,
                 rules: [],
-                formItem: <WtmSelect placeholder="选择动作"
+                formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkmenu.SelectedActionIDs') })}
                     mode="multiple"
                     linkage={["SelectedModule"]}
                     dataSource={(props) => {
@@ -78,60 +116,58 @@ export default {
             },
             /** 目录 */
             "Entity.FolderOnly": {
-                label: "目录",
-                rules: [],
-                formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
-            },
-            /** 继承 */
-            "Entity.IsInherit": {
-                label: "继承",
+                label: <FormattedMessage id='frameworkmenu.FolderOnly' />,
                 rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 菜单显示 */
             "Entity.ShowOnMenu": {
-                label: "菜单显示",
+                label: <FormattedMessage id='frameworkmenu.ShowOnMenu' />,
                 rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 公开 */
             "Entity.IsPublic": {
-                label: "公开",
+                label: <FormattedMessage id='frameworkmenu.IsPublic' />,
                 rules: [],
                 formItem: <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
             },
             /** 顺序 */
             "Entity.DisplayOrder": {
-                label: "顺序",
-                rules: [{ "required": true, "message": "顺序不能为空" }],
-                formItem: <InputNumber placeholder="请输入 顺序" />
+                label: <FormattedMessage id='frameworkmenu.DisplayOrder' />,
+                rules: [{
+                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkmenu.DisplayOrder') }} />
+                }],
+                formItem: <InputNumber placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkmenu.DisplayOrder') })} />
             },
             /** 内部地址 */
             "Entity.IsInside": {
-                label: "地址类型",
-                rules: [{ "required": true, "message": "内部地址不能为空" }],
+                label: <FormattedMessage id='frameworkmenu.IsInside' />,
+                rules: [{
+                    "required": true, "message": <FormattedMessage id='tips.error.required' values={{ txt: getLocalesValue('frameworkmenu.IsInside') }} />
+                }],
                 formItem: <WtmRadio
                     dataSource={[
-                        { Text: "内部地址", Value: true },
-                        { Text: "外部地址", Value: false },
+                        { Text: <FormattedMessage id='frameworkmenu.IsInside.0' />, Value: true },
+                        { Text: <FormattedMessage id='frameworkmenu.IsInside.1' />, Value: false },
                     ]} />
             },
             /** Url */
             "Entity.Url": {
-                label: "Url",
+                label: <FormattedMessage id='frameworkmenu.Url' />,
                 rules: [],
-                formItem: <Input placeholder="请输入 Url" />
+                formItem: <Input placeholder={getLocalesTemplate('tips.placeholder.input', { txt: getLocalesValue('frameworkmenu.Url') })} />
             },
             "Entity.ICon": {
-                label: "图标",
+                label: <FormattedMessage id='frameworkmenu.ICon' />,
                 rules: [],
                 formItem: <IConId />
             },
             /** 父目录 */
             "Entity.ParentId": {
-                label: "父目录",
+                label: <FormattedMessage id='frameworkmenu.ParentId' />,
                 rules: [],
-                formItem: <WtmSelect placeholder="父目录"
+                formItem: <WtmSelect placeholder={getLocalesTemplate('tips.placeholder.choose', { txt: getLocalesValue('frameworkmenu.ParentId') })}
                     dataSource={Request.cache({ url: "/api/_FrameworkMenu/GetFolders" })}
                 />
             }

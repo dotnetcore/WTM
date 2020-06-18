@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Mvc
 {
@@ -21,7 +22,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         string BaseUrl { get; set; }
 
-        ActionLog Log { get; set; }
+        SimpleLog Log { get; set; }
 
         IDataContext CreateDC(bool isLog = false);
 

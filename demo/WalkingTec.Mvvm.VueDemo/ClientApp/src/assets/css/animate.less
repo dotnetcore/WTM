@@ -1,0 +1,131 @@
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+.animated2s {
+    animation-duration: 2s;
+    animation-fill-mode: both;
+}
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        visibility: visible;
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.slideInDown {
+    animation-name: slideInDown;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.slideInRight {
+    animation-name: slideInRight;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+}
+@keyframes slideInLeft {
+    from {
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.slideInLeft {
+    animation-name: slideInLeft;
+}
+@keyframes slideInUp {
+    from {
+        transform: translate3d(0, 100%, 0);
+        visibility: visible;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.slideInUp {
+    animation-name: slideInUp;
+}
+
+.pre(@style,@value) {
+    -webkit-@{style}: @value;
+    @{style}: @value;
+}
+
+.opacity(@number) {
+    opacity: @number / 100;
+    filter: alpha(opacity= @number);
+}
+
+//动画
+.transition(@arg) {
+    .pre(transition, @arg);
+}
+.transition-delay(@delay:0) {
+    .pre(transition-delay, @delay);
+}
+.transition-duration(@duration:200ms) {
+    .pre(transition-duration, @duration);
+}
+.transition-property(@property:all) {
+    .pre(transition-property, @property);
+}
+.transition-timing-function(@function:ease) {
+    .pre(transition-timing-function, @function);
+}
+.transform(@arg) {
+    .pre(transform, @arg);
+}
+.transform-origin(@args) {
+    .pre(transform-origin, @args);
+}
+.transform-style(@style) {
+    .pre(transform-style, @style);
+}
+.rotate(@deg:45deg) {
+    .transform(rotate(@deg));
+}
+.scale(@factor:0.5) {
+    .transform(scale(@factor));
+}
+.translate(@x,@y) {
+    .transform(translate(@x, @y));
+}
+.translate3d(@x,@y,@z) {
+    .transform(translate3d(@x, @y, @z));
+}
+.translateHardware(@x,@y) {
+    .translate(@x, @y);
+    .pre(transform, translate3d(@x, @y, 0));
+}

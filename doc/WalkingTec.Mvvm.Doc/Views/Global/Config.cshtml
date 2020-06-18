@@ -6,84 +6,105 @@
 <p>和普通的Mvc Core程序一样，WTM框架使用appsettings.json作为配置文件，以下是一个默认配置文件的内容</p>
 <wt:code title="appsettings.json">
   {
-  "ConnectionStrings": [
-  {
-  "Key": "default",
-  "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true"
-  },
-  {
-  "Key": "test",
-  "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true"
-  }
-  ],
-  "DBType": "SqlServer",
-  "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
-  "CookiePre": "WTM",
-  "EnableLog": true,
-  "LogExceptionOnly": false,
-  "IsQuickDebug": true,
-  "ErrorHandler": "/_Framework/Error",
-  "PageMode": "Tab",
-  "Languages": "zh,en",
-  "CorsOptions": {
-  "EnableAll": true, //所有方法是否默认跨域
-  "Policy": [
-  {
-  "Name": "Default",
-  "Domain": "http://localhost, https://localhost"
-  }
-  ]
-  },
-  "UIOptions": {
-  "DataTable": {
-  "RPP": 20,
-  },
-  "ComboBox": {
-  "DefaultEnableSearch": true,
-  },
-  "DateTime": {
-  "DefaultReadonly": true
-  }
-  },
-  "FileUploadOptions": {
-  "UploadLimit": 20971520,
-  "SaveFileMode": "Database",
-  "UploadDir": "D:\\"
-  },
-  "DFSServer": {
-  "StorageMaxConnection": 100,
-  "TrackerMaxConnection": 100,
-  "ConnectionTimeout": 100,
-  "ConnectionLifeTime": 100,
-  "Trackers": [
-  {
-  "IP": "127.0.0.1",
-  "Port": 22122
-  }
-  ]
-  },
-  "JwtOptions": {
-  "Issuer": "http://localhost",
-  "Audience": "http://localhost",
-  "Expires": 3600,
-  "SecurityKey": "superSecretKey@345",
-  "RefreshTokenExpires": 86400,
-  "LoginPath": "/Login/Login"
-  },
-  "CookieOptions": {
-  "Issuer": "http://localhost",
-  "Audience": "http://localhost",
-  "Expires": 3600,
-  "SlidingExpiration": true,
-  "SecurityKey": "superSecretKey@345",
-  "RefreshTokenExpires": 86400,
-  "LoginPath": "/Login/Login"
-  },
+    "Logging": {
+      "Console": {
+        "IncludeScopes": true,
+        "LogLevel": {
+          "Default": "Information",
+          "WalkingTec": "Debug"
+        }
+      },
+      "WTM": {
+        "LogLevel": {
+          "Default": "Debug"
+        }
+      }
+    },
+    "ConnectionStrings": [
+      {
+        "Key": "default",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=demo; Trusted_Connection=True; MultipleActiveResultSets=true",
+        "DbType":"SqlServer",
+        "DbContext":"DataContext"
+      },
+      {
+        "Key": "test",
+        "Value": "Server=(localdb)\\mssqllocaldb; Database=test; Trusted_Connection=True; MultipleActiveResultSets=true",
+        "DbType":"Mysql",
+        "DbContext":"DataContext2"
+      }
+    ],
+    "DBType": "SqlServer",
+    "IsOldSqlServer":  true,//如果使用sql server2008或者更老的，请设置为true
+    "CookiePre": "WTM",//cookie前缀
+    "IsQuickDebug": true,//是否启用debug模式
+    "ErrorHandler": "/_Framework/Error",
+    "PageMode": "Tab",//页面显示模式，Single或者Tab
+    "Languages": "zh,en",//系统支持的语言
+    "CorsOptions": {
+      "EnableAll": true, //所有方法是否默认跨域
+      "Policy": [
+        {
+          "Name": "Default",
+          "Domain": "http://localhost, https://localhost"
+        }
+      ]
+    },
+    "UIOptions": { //默认UI配置
+      "DataTable": {
+        "RPP": 20, //列表每页行数
+        "ShowPrint": true,//列表是否显示打印
+        "ShowFilter": true //列表是否显示列筛选
+       },
+      "ComboBox": {
+        "DefaultEnableSearch": true, //下拉菜单是否默认可搜索
+      },
+      "DateTime": {
+        "DefaultReadonly": true //日期控件是否默认不可输入
+      },
+      "SearchPanel": {
+        "DefaultExpand": false //默认展开SearchPanel内容
+      }
+    },
+    "FileUploadOptions": {
+      "UploadLimit": 20971520,
+      "SaveFileMode": "Database",
+      "UploadDir": "D:\\"
+    },
+    "DFSServer": {
+      "StorageMaxConnection": 100,
+      "TrackerMaxConnection": 100,
+      "ConnectionTimeout": 100,
+      "ConnectionLifeTime": 100,
+      "Trackers": [
+      {
+        "IP": "127.0.0.1",
+        "Port": 22122
+      }
+      ]
+    },
+    "JwtOptions": {
+      "Issuer": "http://localhost",
+      "Audience": "http://localhost",
+      "Expires": 3600,
+      "SecurityKey": "superSecretKey@345",
+      "RefreshTokenExpires": 86400,
+      "LoginPath": "/Login/Login"
+    },
+    "CookieOptions": {
+      "Issuer": "http://localhost",
+      "Audience": "http://localhost",
+      "Expires": 3600,
+      "SlidingExpiration": true,
+      "SecurityKey": "superSecretKey@345",
+      "RefreshTokenExpires": 86400,
+      "LoginPath": "/Login/Login"
+    },
 
-  "AppSettings": {
-  "Key1": "abc",
-  "Key2": "123"
-  }
+    "AppSettings": {
+      "Key1": "abc",
+      "Key2": "123"
+    }
   }
 </wt:code>
 
@@ -97,8 +118,20 @@
         </thead>
         <tbody>
           <tr>
+            <td>Logging</td>
+            <td>
+              使用.netcore默认的日志逻辑，日志会同时输出到Console和WTM，WTM日志是要写入数据库的。<br />
+              WTM日志分为Debug,Information,Error三个级别，通过设置WTM中的LogLevel来控制什么级别的数据会写入数据库<br/>
+              将WTM中的LogLevel设置为一个很大的数值，比如10，可以阻止所有日志写入数据库
+            </td>
+          </tr>
+
+          <tr>
             <td>ConnectionStrings</td>
-            <td>连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default</td>
+            <td>
+              连接字符串，可配置多个。框架默认使用key值为default的连接，对于日志默认使用key值为logdefault的连接，如果没有配置logdefault则也使用default<br />
+              从2.4.6和3.1.3版本开始，连接字符串上可以单独指定 DbType和DbContext
+            </td>
           </tr>
           <tr>
             <td>DBType</td>

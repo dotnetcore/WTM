@@ -208,8 +208,22 @@ namespace WalkingTec.Mvvm.Doc.Controllers
                 }},
             };
 
-            var rv = schools.Where(x => x.SchoolName == id).SelectMany(x=>x.Majors).Select(x => new { Text = x.MajorName, Value = x.ID }).ToList();
+            var rv = schools.Where(x => x.SchoolName == id).SelectMany(x=>x.Majors).Select(x => new { Text = x.MajorName, Value = x.MajorName }).ToList();
             return Json(rv);
         }
+
+        public IActionResult GetStudentByMajor(string id)
+        {
+            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
+            for(int i = 1; i <= 5; i++)
+            {
+                rv.Add(new ComboSelectListItem
+                {
+                    Text = id + "学生" + i
+                }); ;
+            }
+            return Json(rv);
+        }
+
     }
 }

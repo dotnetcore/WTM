@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <!-- <link rel="icon" type="image/png" href=""> -->
-        <title>
-            demo
-        </title>
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/element-ui@2.10.1/lib/theme-chalk/index.css"
-        />
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" type="image/png" href=""> -->
+    <title>
+      wtm
+    </title>
+    <!-- 去掉cdn引入element样式，改为引入本地特色主题样式-->
+    <!-- <%=process.env.LOACL==='loacl' ? '' : '<link rel="stylesheet" href="https://unpkg.com/element-ui@2.10.1/lib/theme-chalk/index.css" />'%>-->
+  </head>
 
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-        <script src="https://unpkg.com/element-ui@2.8.2/lib/index.js"></script>
-        <div class="page" id="App"></div>
-    </body>
+  <body>
+    <!-- <%=process.env.NODE_ENV==='development' ? '' : '<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>'%>
+        <%=process.env.NODE_ENV==='development' ? '' : '<script src="https://unpkg.com/element-ui@2.8.2/lib/index.js"></script>'%> -->
+    <div class="page" id="App"></div>
+  </body>
 </html>

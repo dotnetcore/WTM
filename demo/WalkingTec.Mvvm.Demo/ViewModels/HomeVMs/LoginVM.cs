@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 using WalkingTec.Mvvm.Core;
@@ -49,11 +51,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
             var groupIDs = user.UserGroups.Select(x => x.GroupId).ToList();
             //查找登录用户的数据权限
-            var dpris = DC.Set<DataPrivilege>()
+            var dpris = DC.Set<DataPrivilege>().AsNoTracking()
                 .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
                 .Distinct()
                 .ToList();
-
+            ProcessTreeDp(dpris);
             //生成并返回登录用户信息
             LoginUserInfo rv = new LoginUserInfo
             {
@@ -61,20 +63,65 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 ITCode = user.ITCode,
                 Name = user.Name,
                 PhotoId = user.PhotoId,
-                Roles = DC.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToList(),
-                Groups = DC.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToList(),
+                Roles = DC.Set<FrameworkRole>().Where(x => roleIDs.Contains(x.ID)).ToList(),
+                Groups = DC.Set<FrameworkGroup>().Where(x => groupIDs.Contains(x.ID)).ToList(),
                 DataPrivileges = dpris
             };
             if (ignorePris == false)
             {
                 //查找登录用户的页面权限
-                var pris = DC.Set<FunctionPrivilege>()
+                var pris = DC.Set<FunctionPrivilege>().AsNoTracking()
                     .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Distinct()
                     .ToList();
                 rv.FunctionPrivileges = pris;
             }
             return rv;
+        }
+
+
+        private void ProcessTreeDp(List<DataPrivilege> dps)
+        {
+            var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
+            foreach (var ds in dpsSetting)
+            {
+                if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
+                {
+                    var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
+                    if (ids.Count > 0 && ids.Contains(null) == false)
+                    {
+                        List<Guid> tempids = new List<Guid>();
+                        foreach (var item in ids)
+                        {
+                            if(Guid.TryParse(item,out Guid g))
+                            {
+                                tempids.Add(g);
+                            }
+                        }
+                        List<Guid> subids = new List<Guid>();
+                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
+                        subids = subids.Distinct().ToList();
+                        subids.ForEach(x => dps.Add(new DataPrivilege {
+                          TableName = ds.ModelName,
+                          RelateId = x.ToString()
+                        }));
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<Guid> GetSubIds(List<Guid> p_id,Type modelType)
+        {
+            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
+            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
+            if (subids.Count > 0)
+            {
+                return subids.Concat(GetSubIds(subids, modelType));
+            }
+            else
+            {
+                return new List<Guid>();
+            }
         }
     }
 }

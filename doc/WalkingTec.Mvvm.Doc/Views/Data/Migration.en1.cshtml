@@ -1,0 +1,53 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+<p>When we create a new model and set database tables in the DataContext ,the framework does not automatically update the database. This is because EF Core does not currently provide this function</p>
+<p>We can use the following methods to synchronize the database:</p>
+
+<wt:fieldset field-set-style="Simple" title="1.Delete database and redo">
+    <p>Delete the existing database, run the project again, and the framework will recreate the database according to the new model</p>
+    <p>This method is the most simple and suitable for the early stage development, but it is obviously not suitable when there are some data in the later stage of the project.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="2.Use command line tools provided by EF">
+    <p>EF core provides some command-line tools for data synchronization, such as add migration and update. For details, please refer to<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/managing-schemas/migrations/">Microsoft documents</a></p>
+    <p>EF The principle of EF core is to find the DbContext in the code through reflection and find the connection string to determine the database to operate.</p>
+    <p>However, the WTM framework supports SqlServer, MySql, PgSql and other databases. The configuration file determines which database to use. EF does not know where to find it.</p>
+    <p>In this case, we can use Design-time DbContext to manually specify the database to be synchronized. For details, please refer to<a target="_blank" href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dbcontext-creation">Microsoft documents</a></p>
+    <p>In short, create a class in the code that inherits IDesignTimeDbContextFactory, for example:</p>
+    <wt:code title="DataContextFactory.cs">
+public class DataContextFactory : IDesignTimeDbContextFactory&lt;DataContext&gt;
+{
+    public DataContext CreateDbContext(string[] args)
+    {
+        return new DataContext("你的完整连接字符串",DBTypeEnum.SqlServer);
+    }
+}
+
+    </wt:code>
+    <p>After adding the above class, we can use add migration and other methods. EF will use the database set in the above class for operation</p>
+    <wt:quote>
+      Since V2.5.2,the project generated will automatically add this class in DataContext.cs
+    </wt:quote>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="3.Use database comparison tools">
+    <p>We can change the connection string to a new database, run the project and let the framework generate a new database.</p>
+    <p>Then we use the third-party database comparison tool to update the structure of the original database to the new one.</p>
+    <p>There are many database comparison tools on the market, which can compare two databases and generate SQL statements to synchronize. Please Google for specific tools.</p>
+</wt:fieldset>
+
+<wt:fieldset field-set-style="Simple" title="4.Manual synchronization">
+    <p>If only a few fields are updated, you can manually change the table corresponding to the database to the structure corresponding to the model</p>
+</wt:fieldset>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+    <script>
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>

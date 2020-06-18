@@ -1,47 +1,49 @@
 <template>
-  <div class="app-login-form">
-    <h1>WalkingTec MVVM</h1>
-    <el-input v-model="username" class="form-item" placeholder="请输入账号" prefix-icon="el-icon-user" size="mini" />
-    <el-input v-model="password" class="form-item" placeholder="请输入密码" prefix-icon="el-icon-lock" size="mini" show-password />
-    <el-button class="form-item" size="mini" type="primary" :loading="isloading" @click="onSubmit">
-      Log in
-    </el-button>
-  </div>
+  <el-card class="app-login-form">
+    <el-form :model="formData" label-width="0">
+      <h1>WalkingTec MVVM</h1>
+      <el-form-item>
+        <el-input v-model="formData.userid" placeholder="请输入账号" prefix-icon="el-icon-user" />
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="formData.password" @keyup.enter.native="onSubmit" placeholder="请输入密码" prefix-icon="el-icon-lock" show-password />
+      </el-form-item>
+      <el-form-item>
+        <el-button class="submit-but" type="primary" :loading="isloading" :disabled="isDisabled" @click="onSubmit">
+          Log in
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>
 <script lang="ts">
-import { mapState, mapMutations, mapActions } from "vuex";
-import baseMixin from "@/mixin/base.ts";
 import { Component, Vue } from "vue-property-decorator";
+import { Action } from "vuex-class";
+import { setCookie } from "@/util/cookie";
+import config from "@/config/index";
 
-const mixin = {
-    computed: {
-        ...mapState({})
-    },
-    methods: {
-        ...mapMutations({}),
-        ...mapActions({
-            postLogin: "postLogin"
-        })
-    }
-};
 @Component({
-    mixins: [mixin, baseMixin]
+    mixins: []
 })
-export default class Index extends Vue {
-    username = "";
-    password = "";
-    isloading = false;
-    mounted() {}
+export default class Login extends Vue {
+    @Action
+    login;
+    formData = {
+        userid: config.development ? "admin" : "",
+        password: config.development ? "000000" : ""
+    };
+    isloading: boolean = false;
+    get isDisabled() {
+        const { userid, password } = this.formData;
+        return !(!!userid && !!password);
+    }
     onSubmit() {
         this.isloading = true;
-        const params = {
-            userid: this.username,
-            password: this.password
-        };
-        this["postLogin"](params)
-            .then(() => {
+        this["login"](this.formData)
+            .then(res => {
                 this.isloading = false;
-                this["onHref"]("/index.html");
+                setCookie(config.tokenKey, res.Id);
+                location.href = "/index.html";
             })
             .catch(() => {
                 this.isloading = false;
@@ -50,26 +52,20 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="less">
+@import "~@/assets/css/mixin.less";
 .app-login-form {
-    width: 400px;
+    padding: 40px;
     box-sizing: border-box;
-    color: rgba(0, 0, 0, 0.65);
-    font-size: 14px;
-    line-height: 1.5;
-    font-feature-settings: "tnum";
-    margin: 0px;
-    padding: 0px;
-    font-variant: tabular-nums;
-    list-style: none;
-    & > h1 {
+    min-width: 500px;
+    min-height: 400px;
+    margin-right: 144px;
+    & h1 {
         font-size: 50px;
-        color: #40a9ff;
         text-align: center;
         margin-bottom: 20px;
     }
-    .form-item {
+    .submit-but {
         width: 100%;
-        margin: 0px 0px 24px;
     }
 }
 </style>

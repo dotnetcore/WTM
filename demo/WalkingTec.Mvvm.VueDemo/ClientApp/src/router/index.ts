@@ -1,34 +1,55 @@
 import Vue from "vue";
-import Router from "vue-router";
-import { state } from "../store/menu";
-
+import Router, { RouteConfig } from "vue-router";
+import Layout from "@/components/layout/index.vue";
 Vue.use(Router);
 
-const generateRoutesFromMenu = (menu = [], routes = [], parentMenu = null) => {
-    for (let i = 0, l = menu.length; i < l; i++) {
-        const item = menu[i];
-        if (item.path) {
-            item.meta.parentMenu = parentMenu;
-            const itemClone = { ...item };
-            delete itemClone.children;
-            routes.push(itemClone);
-        }
-        if (item.children) {
-            generateRoutesFromMenu(item.children, routes, item);
-        }
+export const constantRoutes: RouteConfig[] = [
+    {
+        path: "/",
+        component: Layout,
+        redirect: "/dashboard",
+        children: [
+            {
+                path: "dashboard",
+                component: () =>
+                    import(
+            /* webpackChunkName: "dashboard" */ "@/pages/dashboard/index.vue"
+                    ),
+                name: "Dashboard",
+                meta: {
+                    title: "dashboard",
+                    icon: "el-icon-odometer",
+                    affix: true
+                }
+            }
+        ]
+    },
+    {
+        path: "/404",
+        component: () => import("@/pages/error-page/404.vue"),
+        meta: { hidden: true }
     }
-    return routes;
-};
+];
 
-const router = new Router({
-    mode: "hash", // 'history',
-    routes: [
-        {
-            name: "user",
-            path: "*",
-            component: () => import("@/pages/index/user/index.vue")
+const createRouter = () =>
+    new Router({
+        // mode: 'history',
+        scrollBehavior: (to, from, savedPosition) => {
+            if (savedPosition) {
+                return savedPosition;
+            } else {
+                return { x: 0, y: 0 };
+            }
         },
-        ...generateRoutesFromMenu(state.items)
-    ]
-});
+        base: process.env.BASE_URL,
+        routes: constantRoutes
+    });
+
+const router = createRouter();
+
+export function resetRouter() {
+    const newRouter = createRouter();
+    (router as any).matcher = (newRouter as any).matcher; // reset router
+}
+
 export default router;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -123,6 +123,10 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>true代表可以访问，false代表不能访问</returns>
         public bool IsAccessable(FrameworkMenu menu, List<FrameworkMenu> menus)
         {
+            if(menu.IsPublic == true)
+            {
+                return true;
+            }
             //寻找当前菜单的页面权限
             var find = FunctionPrivileges.Where(x => x.MenuItemId == menu.ID && x.Allowed == true).FirstOrDefault();
             //如果能找到直接对应的页面权限

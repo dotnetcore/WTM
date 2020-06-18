@@ -11,10 +11,36 @@ namespace WalkingTec.Mvvm.Core
     [Table("FrameworkModules")]
     public class FrameworkModule : BasePoco
     {
-        [Display(Name = "ModuleName")]
-        [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
-        [Required(ErrorMessage ="{0}required")]
-        public string ModuleName { get; set; }
+
+        public ActionDescriptionAttribute ActionDes { get; set; }
+        public string _name;
+        public string ModuleName
+        {
+            get
+            {
+                if (ActionDes?._localizer != null && string.IsNullOrEmpty(ActionDes?.Description) == false)
+                {
+                    if (ActionDes._localizer[ActionDes.Description].ResourceNotFound == true)
+                    {
+                        return Core.Program._localizer[ActionDes.Description];
+                    }
+                    else
+                    {
+                        return ActionDes._localizer[ActionDes.Description];
+                    }
+                }
+                else
+                {
+                    return _name ?? "";
+                }
+            }
+            set
+            {
+                _name = value;
+            }
+        }
+
+
 
         [Required(ErrorMessage ="{0}required")]
         [StringLength(50,ErrorMessage ="{0}stringmax{1}")]

@@ -47,7 +47,7 @@ declare namespace WTM {
     }
     interface FormItem {
         [key: string]: {
-            label: string;
+            label: React.ReactNode;
             rules: ValidationRule[];
             formItem: React.ReactNode;
             /** 传递给 formItem 组件的 附加 props table 中有效  */

@@ -1,0 +1,43 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+<p>The WTM framework provides standard route configures. You can also configure your own route by modifying ‘Program.cs’ file</p>
+
+<wt:fieldset field-set-style="Simple" title="Define data route">
+    <wt:code title="Program.cs">
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        BuildWebHost(args).Run();
+    }
+
+    public static IWebHost BuildWebHost(string[] args) =>
+        WebHost.CreateDefaultBuilder(args)
+        .ConfigureServices(x =>
+        {
+          x.AddFrameworkService( dataPrivilegeSettings: pris);
+          x.AddLayui();
+        })
+        .Configure(x =>
+        {
+          x.UseFrameworkService( routes =>
+          {
+            routes.MapRoute(
+name: "areaRoute",
+template: "{area:exists}/{controller = Home}/{actio n= Index}/{id?}");
+            routes.MapRoute(
+name: "default",
+template: "{controller = Home}/{action = Index}/{id?}");
+          });
+        })
+        .Build();
+}
+    </wt:code>
+</wt:fieldset>
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+    </script>
+

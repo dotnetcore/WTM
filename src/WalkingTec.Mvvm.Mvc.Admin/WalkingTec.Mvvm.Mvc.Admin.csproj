@@ -4,6 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Mvc.Admin</AssemblyName>
     <Title>$(AssemblyName)</Title>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

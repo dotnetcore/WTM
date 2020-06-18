@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +15,7 @@ namespace WalkingTec.Mvvm.Core
     /// 单表增删改查VM的接口
     /// </summary>
     /// <typeparam name="T">继承TopBasePoco的类</typeparam>
-    public interface IBaseCRUDVM<out T> where T : TopBasePoco
+    public interface IBaseCRUDVM<out T> where T : TopBasePoco,new()
     {
         T Entity { get; }
         /// <summary>
@@ -73,9 +74,10 @@ namespace WalkingTec.Mvvm.Core
     /// 单表增删改查基类，所有单表操作的VM应该继承这个基类
     /// </summary>
     /// <typeparam name="TModel">继承TopBasePoco的类</typeparam>
-    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco
+    public class BaseCRUDVM<TModel> : BaseVM, IBaseCRUDVM<TModel> where TModel : TopBasePoco,new()
     {
         public TModel Entity { get; set; }
+        [JsonIgnore]
         public bool ByPassBaseValidation { get; set; }
 
         //保存读取时Include的内容
@@ -277,7 +279,7 @@ namespace WalkingTec.Mvvm.Core
                     //获取xxx的类型
                     var ftype = pro.PropertyType.GenericTypeArguments.First();
                     //如果xxx继承自TopBasePoco
-                    if (ftype.IsSubclassOf(typeof(BasePoco)))
+                    if (ftype.IsSubclassOf(typeof(TopBasePoco)))
                     {
                         //界面传过来的子表数据
                         IEnumerable<TopBasePoco> list = pro.GetValue(Entity) as IEnumerable<BasePoco>;
@@ -635,7 +637,9 @@ namespace WalkingTec.Mvvm.Core
                 (Entity as PersistPoco).IsValid = false;
                 (Entity as PersistPoco).UpdateTime = DateTime.Now;
                 (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateEntity(Entity);
+                DC.UpdateProperty(Entity, "IsValid");
+                DC.UpdateProperty(Entity, "UpdateTime");
+                DC.UpdateProperty(Entity, "UpdateBy");
                 try
                 {
                     DC.SaveChanges();
@@ -660,7 +664,9 @@ namespace WalkingTec.Mvvm.Core
                 (Entity as PersistPoco).IsValid = false;
                 (Entity as PersistPoco).UpdateTime = DateTime.Now;
                 (Entity as PersistPoco).UpdateBy = LoginUserInfo?.ITCode;
-                DC.UpdateEntity(Entity);
+                DC.UpdateProperty(Entity, "IsValid");
+                DC.UpdateProperty(Entity, "UpdateTime");
+                DC.UpdateProperty(Entity, "UpdateBy");
                 try
                 {
                     await DC.SaveChangesAsync();
@@ -686,6 +692,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
+
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fa)
@@ -707,7 +714,16 @@ namespace WalkingTec.Mvvm.Core
                     }
                     f.SetValue(Entity, null);
                 }
-
+                if (typeof(TModel) != typeof(FileAttachment))
+                {
+                    foreach (var pro in pros)
+                    {
+                        if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            pro.SetValue(Entity, null);
+                        }
+                    }
+                }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
                 foreach (var item in fileids)
@@ -731,6 +747,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 List<Guid> fileids = new List<Guid>();
                 var pros = typeof(TModel).GetProperties();
+
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
                 foreach (var f in fa)
@@ -740,6 +757,27 @@ namespace WalkingTec.Mvvm.Core
                         fileids.Add(file.ID);
                     }
                     f.SetValue(Entity, null);
+                }
+
+                var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+                foreach (var f in fas)
+                {
+                    var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
+                    foreach (var sub in subs)
+                    {
+                        fileids.Add(sub.FileId);
+                    }
+                    f.SetValue(Entity, null);
+                }
+                if (typeof(TModel) != typeof(FileAttachment))
+                {
+                    foreach (var pro in pros)
+                    {
+                        if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                        {
+                            pro.SetValue(Entity, null);
+                        }
+                    }
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
@@ -751,7 +789,7 @@ namespace WalkingTec.Mvvm.Core
                     await ofa.DoDeleteAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 MSD.AddModelError("", "数据使用中，无法删除");
             }

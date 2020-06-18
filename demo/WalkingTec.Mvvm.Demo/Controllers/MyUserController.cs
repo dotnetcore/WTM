@@ -1,17 +1,17 @@
-using System;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
+    
     [ActionDescription("自定义用户")]
-    public class MyUserController : BaseController
+    [FixConnection(CsName = "abc")]
+    public partial class MyUserController : BaseController
     {
         #region 搜索
         [ActionDescription("搜索")]
@@ -64,7 +64,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 修改
         [ActionDescription("修改")]
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(string id)
         {
             var vm = CreateVM<MyUserVM>(id);
             return PartialView(vm);
@@ -72,6 +72,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("修改")]
         [HttpPost]
+        [ValidateFormItemOnly]
         public ActionResult Edit(MyUserVM vm)
         {
             if (!ModelState.IsValid)
@@ -88,7 +89,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 }
                 else
                 {
-                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID.ToString());
+                    return FFResult().CloseDialog().RefreshGridRow(vm.Entity.ID);
                 }
             }
         }
@@ -96,7 +97,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 删除
         [ActionDescription("删除")]
-        public ActionResult Delete(Guid id)
+        public ActionResult Delete(string id)
         {
             var vm = CreateVM<MyUserVM>(id);
             return PartialView(vm);
@@ -104,7 +105,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         [ActionDescription("删除")]
         [HttpPost]
-        public ActionResult Delete(Guid id, IFormCollection nouse)
+        public ActionResult Delete(string id, IFormCollection nouse)
         {
             var vm = CreateVM<MyUserVM>(id);
             vm.DoDelete();
@@ -121,7 +122,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 
         #region 详细
         [ActionDescription("详细")]
-        public ActionResult Details(Guid id)
+        public ActionResult Details(string id)
         {
             var vm = CreateVM<MyUserVM>(id);
             return PartialView(vm);
@@ -194,18 +195,18 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                return FFResult().RefreshGrid().CloseDialog().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
+                return FFResult().CloseDialog().RefreshGrid().Alert("成功导入 " + vm.EntityList.Count.ToString() + " 行数据");
             }
         }
         #endregion
 
-        [ActionDescription("Export")]
+        [ActionDescription("导出")]
         [HttpPost]
         public IActionResult ExportExcel(MyUserListVM vm)
         {
             vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_ActionLog_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return File(data, "application/vnd.ms-excel", $"Export_MyUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
     }

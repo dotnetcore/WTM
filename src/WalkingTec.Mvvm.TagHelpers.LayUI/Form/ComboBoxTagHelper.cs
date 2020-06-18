@@ -55,7 +55,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public ComboBoxTagHelper()
         {
-            EmptyText = Program._localizer["PleaseSelect"];
+            if (EmptyText == null)
+            {
+                EmptyText = Program._localizer["PleaseSelect"];
+            }
             EnableSearch = GlobalServices.GetRequiredService<Configs>().UiOptions.ComboBox.DefaultEnableSearch;
         }
 
@@ -88,11 +91,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.Add("lay-verify", MultiSelect.Value ? "selectRequired" : "required");
             }
-
-            var contentBuilder = new StringBuilder();
-            if (string.IsNullOrEmpty(EmptyText) == false && Disabled == false)
+            if(LinkField != null)
             {
-                contentBuilder.Append($"<option value=''>{EmptyText}</option>");
+                output.Attributes.Add("linkto", $"{Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name)}");
+            }
+            var contentBuilder = new StringBuilder();
+            if (string.IsNullOrEmpty(EmptyText) == false)
+            {
+                contentBuilder.Append($"<option value=''>{(Disabled == true ? "" : EmptyText)}</option>");
             }
 
             #region 添加下拉数据 并 设置默认选中
@@ -185,7 +191,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     }
                     else
                     {
-                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count>1 ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count>1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }

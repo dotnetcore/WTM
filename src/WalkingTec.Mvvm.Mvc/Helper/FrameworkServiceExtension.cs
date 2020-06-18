@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -91,11 +92,10 @@ namespace WalkingTec.Mvvm.Mvc
                     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             }
             var config = configBuilder.Build();
-
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var gd = GetGlobalData();
-            services.AddSingleton(gd);
             var con = config.Get<Configs>() ?? new Configs();
+            //services.Configure<Configs>(config);
             if (dataPrivilegeSettings != null)
             {
                 con.DataPrivilegeSettings = dataPrivilegeSettings;
@@ -104,6 +104,9 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 con.DataPrivilegeSettings = new List<IDataPrivilege>();
             }
+            SetDbContextCI(gd.AllAssembly, con);
+            gd.AllModels = GetAllModels(con);
+            services.AddSingleton(gd);
             services.AddSingleton(con);
             services.AddResponseCaching();
             services.AddMemoryCache();
@@ -273,7 +276,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton<ITokenService, TokenService>();
 
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
-            if(jwtOptions == null)
+            if (jwtOptions == null)
             {
                 jwtOptions = new JwtOptions();
             }
@@ -318,7 +321,7 @@ namespace WalkingTec.Mvvm.Mvc
                             ValidateAudience = true,
                             ValidAudience = jwtOptions.Audience,
 
-                            ValidateIssuerSigningKey = false,
+                            ValidateIssuerSigningKey = true,
                             IssuerSigningKey = jwtOptions.SymmetricSecurityKey,
 
                             ValidateLifetime = true
@@ -326,6 +329,32 @@ namespace WalkingTec.Mvvm.Mvc
                     });
             #endregion
 
+            services.AddHttpClient();
+            if(con.Domains != null)
+            {
+                foreach (var item in con.Domains)
+                {
+                    services.AddHttpClient(item.Key, x => {
+                        x.BaseAddress = new Uri(item.Value.Url);
+                        x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                        x.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
+                    });
+                }
+            }
+
+            List<CultureInfo> supportedCultures = new List<CultureInfo>();
+            var lans = con.Languages.Split(",");
+            foreach (var lan in lans)
+            {
+                supportedCultures.Add(new CultureInfo(lan));
+            }
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -346,19 +375,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
-                List<CultureInfo> supportedCultures = new List<CultureInfo>();
-                var lans = configs.Languages.Split(",");
-                foreach (var lan in lans)
-                {
-                    supportedCultures.Add(new CultureInfo(lan));
-                }
-
-                app.UseRequestLocalization(new RequestLocalizationOptions
-                {
-                    DefaultRequestCulture = new RequestCulture(supportedCultures[0]),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
-                });
+                app.UseRequestLocalization();
             }
 
             app.UseExceptionHandler(configs.ErrorHandler);
@@ -403,10 +420,10 @@ namespace WalkingTec.Mvvm.Mvc
                     }
 
                     var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-                    var cs = configs.ConnectionStrings.Select(x => x.Value);
+                    var cs = configs.ConnectionStrings;
                     foreach (var item in cs)
                     {
-                        var dc = (IDataContext)gd.DataContextCI.Invoke(new object[] { item, configs.DbType });
+                        var dc = item.CreateDC();
                         dc.DataInit(gd.AllModule, test != null).Wait();
                     }
                     GlobalServices.SetServiceProvider(app.ApplicationServices);
@@ -418,7 +435,11 @@ namespace WalkingTec.Mvvm.Mvc
                     context.Response.Cookies.Append("pagemode", configs.PageMode.ToString());
                     context.Response.Cookies.Append("tabmode", configs.TabMode.ToString());
                 }
-                await next.Invoke();
+                try
+                {
+                    await next.Invoke();
+                }
+                catch (ConnectionResetException) { }
                 if (context.Response.StatusCode == 404)
                 {
                     await context.Response.WriteAsync(string.Empty);
@@ -484,8 +505,6 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 gd.AllAssembly.Add(layui);
             }
-            gd.DataContextCI = GetDbContextCI(gd.AllAssembly);
-            gd.AllModels = GetAllModels(gd.DataContextCI);
             var controllers = GetAllControllers(gd.AllAssembly);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
@@ -502,7 +521,7 @@ namespace WalkingTec.Mvvm.Mvc
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<FrameworkMenu> rv) == false)
                 {
-                    var data = GetAllMenus(gd.AllModule, gd.DataContextCI);
+                    var data = GetAllMenus(gd.AllModule);
                     cache.Add(menuCacheKey, data);
                     menus = data;
                 }
@@ -516,7 +535,7 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule, ConstructorInfo constructorInfo)
+        private static List<FrameworkMenu> GetAllMenus(List<FrameworkModule> allModule)
         {
             var ConfigInfo = GlobalServices.GetService<Configs>();
             var localizer = GlobalServices.GetService<IStringLocalizer<WalkingTec.Mvvm.Core.Program>>();
@@ -542,7 +561,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             ID = Guid.NewGuid(),
                             ParentId = modelmenu.ID,
-                            PageName = page.Module.ModuleName,
+                            PageName = page.Module.ActionDes.Description,
                             Url = url
                         });
                     }
@@ -552,7 +571,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 try
                 {
-                    using (var dc = (IDataContext)constructorInfo?.Invoke(new object[] { ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").Select(x => x.Value).FirstOrDefault(), ConfigInfo.DbType }))
+                    using (var dc = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault().CreateDC())
                     {
                         menus.AddRange(dc?.Set<FrameworkMenu>()
                                 .Include(x => x.Domain)
@@ -591,35 +610,54 @@ namespace WalkingTec.Mvvm.Mvc
         /// 获取DbContextCI
         /// </summary>
         /// <returns></returns>
-        private static ConstructorInfo GetDbContextCI(List<Assembly> AllAssembly)
+        private static void SetDbContextCI(List<Assembly> AllAssembly, Configs con)
         {
-            ConstructorInfo ci = null;
+            List<ConstructorInfo> cis = new List<ConstructorInfo>();
             foreach (var ass in AllAssembly)
             {
                 try
                 {
-                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext").ToList();
-                    ci = t.Where(x => x.Name != "FrameworkContext").FirstOrDefault()?.GetConstructor(new Type[] { typeof(string), typeof(DBTypeEnum) });
-                    if (ci != null)
+                    var t = ass.GetExportedTypes().Where(x => typeof(DbContext).IsAssignableFrom(x) && x.Name != "DbContext" && x.Name != "FrameworkContext" && x.Name != "EmptyContext").ToList();
+                    foreach (var st in t)
                     {
-                        break;
+                        var ci = st.GetConstructor(new Type[] { typeof(CS) });
+                        if (ci != null)
+                        {
+                            cis.Add(ci);
+                        }
                     }
                 }
                 catch { }
             }
-            return ci;
+            foreach (var item in con.ConnectionStrings)
+            {
+                string dcname = item.DbContext;
+                if (string.IsNullOrEmpty(dcname))
+                {
+                    dcname = "DataContext";
+                }
+                item.DcConstructor = cis.Where(x => x.DeclaringType.Name.ToLower() == dcname.ToLower()).FirstOrDefault();
+                if (item.DcConstructor == null)
+                {
+                    item.DcConstructor = cis.FirstOrDefault();
+                }
+                if (item.DbType == null)
+                {
+                    item.DbType = con.DbType;
+                }
+            }
         }
 
         /// <summary>
         /// 获取所有 Model
         /// </summary>
         /// <returns></returns>
-        private static List<Type> GetAllModels(ConstructorInfo dbContextCI)
+        private static List<Type> GetAllModels(Configs con)
         {
             var models = new List<Type>();
 
             //获取所有模型
-            var pros = dbContextCI?.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            var pros = con.ConnectionStrings.SelectMany(x => x.DcConstructor.DeclaringType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
             if (pros != null)
             {
                 foreach (var pro in pros)
@@ -682,6 +720,8 @@ namespace WalkingTec.Mvvm.Mvc
                     var ada = attrs[0] as ActionDescriptionAttribute;
                     var nameKey = ada.GetDescription(ctrl);
                     model.ModuleName = nameKey;
+                    ada.SetLoccalizer(ctrl);
+                    model.ActionDes = ada;
                 }
                 else
                 {
@@ -724,8 +764,8 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            var nameKey = ada.GetDescription(ctrl);
-                            action.ActionName = nameKey;
+                            ada.SetLoccalizer(ctrl);
+                            action.ActionDes = ada;
                         }
                         else
                         {
@@ -775,8 +815,8 @@ namespace WalkingTec.Mvvm.Mvc
                         if (attrs2.Length > 0)
                         {
                             var ada = attrs2[0] as ActionDescriptionAttribute;
-                            string nameKey = ada.GetDescription(ctrl);
-                            action.ActionName = nameKey;
+                            ada.SetLoccalizer(ctrl);
+                            action.ActionDes = ada;
                         }
                         else
                         {

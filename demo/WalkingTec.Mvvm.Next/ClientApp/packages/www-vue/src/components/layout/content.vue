@@ -20,7 +20,11 @@
           </router-link>
         </template>
       </a-tab-pane>
-      <a-tab-pane v-for="page in TabPages" :key="page.fullPath" :closable="true">
+      <a-tab-pane
+        v-for="page in TabPages"
+        :key="page.fullPath"
+        :closable="true"
+      >
         <template #tab>
           <router-link :to="page.path">
             <a-icon :type="page.icon || 'pic-right'" />
@@ -33,13 +37,17 @@
     <div
       ref="pageView"
       class="layout-page-view"
-      :style="$GlobalConfig.settings.tabsPage&&{
-        height: height + 'px'
-      }"
+      :style="
+        $GlobalConfig.settings.tabsPage && {
+          height: height + 'px'
+        }
+      "
     >
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <!-- <transition name="fade"> -->
+        <keep-alive>
+          <router-view :key="$route.fullPath" class="fadeIn"></router-view>
+        </keep-alive>
+      <!-- </transition> -->
       <a-back-top :target="target" />
     </div>
   </a-layout-content>

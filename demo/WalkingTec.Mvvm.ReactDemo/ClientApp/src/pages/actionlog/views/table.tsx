@@ -1,36 +1,61 @@
 ﻿import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGrid } from 'components/dataView';
+import { mergeLocales } from 'locale';
 import React from 'react';
 import Store from '../store';
 import Action from './action';
+mergeLocales({
+    "zh-CN": {
+        'actionlog.LogType': '类型',
+        'actionlog.ModuleName': '模块',
+        'actionlog.ActionName': '动作',
+        'actionlog.ITCode': 'ITCode',
+        'actionlog.ActionUrl': 'Url',
+        'actionlog.ActionTime': '操作时间',
+        'actionlog.Duration': '时长',
+        'actionlog.IP': 'IP',
+        'actionlog.Remark': '备注',
+    },
+    "en-US": {
+        'actionlog.LogType': 'LogType',
+        'actionlog.ModuleName': 'Module',
+        'actionlog.ActionName': 'Action',
+        'actionlog.ITCode': 'ITCode',
+        'actionlog.ActionUrl': 'Url',
+        'actionlog.ActionTime': 'ActionTime',
+        'actionlog.Duration': 'Duration',
+        'actionlog.IP': 'IP',
+        'actionlog.Remark': 'Remark',
+    }
+});
 // 列配置
 const columnDefs: (ColDef | ColGroupDef)[] = [
     {
-        headerName: "类型", field: "LogType",
+        headerName: "actionlog.LogType", field: "LogType",
     },
     {
-        headerName: "模块", field: "ModuleName"
+        headerName: "actionlog.ModuleName", field: "ModuleName"
     },
     {
-        headerName: "动作", field: "ActionName"
+        headerName: "actionlog.ActionName", field: "ActionName"
     },
     {
-        headerName: "ITCode", field: "ITCode"
+        headerName: "actionlog.ITCode", field: "ITCode"
     },
     {
-        headerName: "Url", field: "ActionUrl",
+        headerName: "actionlog.ActionUrl", field: "ActionUrl",
     },
     {
-        headerName: "操作时间", field: "ActionTime",
+        headerName: "actionlog.ActionTime", field: "ActionTime",
     },
     {
-        headerName: "时长", field: "Duration"
+        headerName: "actionlog.Duration", field: "Duration"
     },
     {
-        headerName: "IP", field: "IP",
+        headerName: "actionlog.IP", field: "IP",
     },
     {
-        headerName: "备注", field: "Remark", enableRowGroup: false
+        headerName: "actionlog.Remark", field: "Remark", enableRowGroup: false
     },
 ]
 /**

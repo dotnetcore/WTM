@@ -1,0 +1,45 @@
+<style>
+    a {
+        color: #01aaed
+    }
+</style>
+
+Here is a collection of frequently asked questions, We will keep updating.
+
+<wt:quote>
+    <p>Q: what is the default username and password created by the framework?</p>
+    <p>A: the default user created by the framework is ‘admin’, password ‘000000’</p>
+</wt:quote>
+
+<wt:quote>
+    <p>Q: why is the menu on my left not the one I configured in menu management?</p>
+    <p>A: In the front-end and back-end non-separation mode , the default of ‘isQuickdebug’is ‘true’ in Appsettings file.The framework is in debugging mode when ‘isQuickdebu’is ‘true’. Framework will reflect all your controller's methods and list them in the left menu, and skip the ownership limit verification, so that you can debug conveniently.Only when ‘isQuickdebug’ is ‘false’, the framework will read the menu you configured and verify the permissions. So when you release the production environment, please change ‘isQuickdebug’ to ‘false’.</p>
+    <p>In the front-end and back-end separation mode, the left menu is controlled by the front-end.  In the clientapp / SRC directory,there is a development attribute in the global.config.tsx file. When it is’ true’, the framework will read the menu defined in the clientapp / SRC / submenu.json file. Only when it is’ false’, the framework will use the menu configured in the database. So when publishing the front end, development is automatically set to ‘false’.</p>
+</wt:quote>
+
+<wt:quote>
+    <p>Q: Why did I fail to configure MySQL?</p>
+    <p>A: Generally speaking, there are several reasons:</p>
+    <p>MySQL version is too low, please use 5.7 and above</p>
+    <p>MySQL default character set is not utf8 and does not support Chinese</p>
+    <p>The connection string in Appsettings is not written correctly. The general standard format is similar to this: server = 127.0.0.1; database = dbname; port = 3306; uid = root; password = 12345</p>
+    <p>Dbtype in appsettings should be written as MySQL</p>
+</wt:quote>
+
+<wt:quote>
+    <p>Q: The database is not automatically build or the data is not initialized when first time running?</p>
+    <p>A: please check the following:</p>
+    <p>Whether the connection string and Dbtype in Appsettings file are filled in correctly</p>
+    <p>Whether a library with the same name already exists</p>
+    <p>If there exists library , but no default user is created, it is most likely that the default character set of MySQL is wrong, therefore Chinese cannot be inserted.</p>
+</wt:quote>
+
+<wt:quote>
+    <p>Q: what should I do to customize user tables that I need?</p>
+    <p>A: you can extend the user table of the framework through simple inheritance. For details<a href="/#/QuickStart/CustomUser">see here</a></p>
+</wt:quote>
+
+<wt:quote>
+    <p>Q:Why there are no new tables in the database after add a new mode?</p>
+    <p>答：EF does not support automatic database update  For  methods of database synchronization<a href="/#/Data/Migration">see here</a></p>
+</wt:quote>

@@ -46,6 +46,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("placeholder", placeHolder);
             output.Attributes.Add("class", "layui-input");
+            if (string.IsNullOrEmpty(SearchUrl) == false)
+            {
+                output.Attributes.Add("autocomplete", "off");
+            }
             base.Process(context, output);
         }
     }

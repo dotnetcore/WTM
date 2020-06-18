@@ -1,6 +1,5 @@
-<div class="layui-layout">
-  <div class="layui-body" style="left:0px" id="LAY_app_body">
-    <div id="Lay_app_body_main" class="layadmin-tabsbody-item layui-show" style="height:100%"></div>
-  </div>
+<div class="layui-body" style="left:0px;background-color:#fff" id="LAY_app_body">
 </div>
-<script>layui.use('index', function () { layui.admin.pageType = "console";})</script>
+<script>
+  layui.use('pindex');
+</script>

@@ -233,11 +233,11 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
     <p>有时我们需要使用sql语句或者存储过程来查询数据</p>
     <p>请看下面的例子</p>
     <wt:code title="SchoolListVM2.cs">
-    public class ActionLogListVM : BasePagedListVM<ActionLog,BaseSearcher>
+    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
     {
-        protected override List<GridAction> InitGridAction()
+        protected override List&lt;GridAction&gt; InitGridAction()
         {
-            var actions = new List<GridAction>
+            var actions = new List&lt;GridAction&gt;
             {
                 this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
                 this.MakeStandardExportAction(null,false,ExportEnum.Excel)
@@ -245,19 +245,19 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
             return actions;
         }
 
-        protected override IEnumerable<IGridColumn<ActionLog>> InitGridHeader()
+        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
         {
-            var header = new List<GridColumn<ActionLog>>();
+            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
 
-            header.Add(this.MakeGridHeader(x => x.LogType, 80));
-            header.Add(this.MakeGridHeader(x => x.ModuleName, 120));
-            header.Add(this.MakeGridHeader(x => x.ActionName, 120));
-            header.Add(this.MakeGridHeader(x => x.ITCode, 120));
-            header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
-            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true));
-            header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true));
-            header.Add(this.MakeGridHeader(x => x.IP, 120));
-            header.Add(this.MakeGridHeader(x => x.Remark));
+            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
+            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
             header.Add(this.MakeGridHeaderAction(width: 120));
 
             return header;

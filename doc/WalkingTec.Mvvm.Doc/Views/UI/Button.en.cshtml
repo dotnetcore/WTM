@@ -1,0 +1,156 @@
+
+<wt:fieldset field-set-style="Simple" title="SubmitButton">
+</wt:fieldset>
+<p>SubmitButton is the default button for submitting a form. Common attributes are:</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Property</th>
+      <th lay-data="{field:'joinTime', width:600}">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>Button size, Optional: big, normal, small, mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>Button style, optional primary, normal, warm, danger, disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>Button icon</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>Button text</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>Methods of triggering JS by click</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>Disabled,or not</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<wt:fieldset field-set-style="Simple" title="CloseButton">
+</wt:fieldset>
+<p>CloseButton is the default button to close the pop-up window. The common attributes are:</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Property</th>
+      <th lay-data="{field:'joinTime', width:600}">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>Button size, Optional: big, normal, small, mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>Button style, optional primary, normal, warm, danger, disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>Button icon</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>Button text</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>Methods of triggering JS by click</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>Disabled,or not</td>
+    </tr>
+  </tbody>
+</table>
+
+<wt:fieldset field-set-style="Simple" title="LinkButton">
+</wt:fieldset>
+<p>LinkButton has more functions. Common attributes include:</p>
+<table lay-filter="parse-table-demo">
+  <thead>
+    <tr>
+      <th lay-data="{field:'username', width:200}">Property</th>
+      <th lay-data="{field:'joinTime', width:600}">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Size</td>
+      <td>Button size, Optional: big, normal, small, mini</td>
+    </tr>
+    <tr>
+      <td>Theme</td>
+      <td>Button style, optional primary, normal, warm, danger, disabled</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>Button icon</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>Button text</td>
+    </tr>
+    <tr>
+      <td>Click</td>
+      <td>Methods of triggering JS by click</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>Disabled,or not</td>
+    </tr>
+    <tr>
+      <td>IsLink</td>
+      <td>Display button with a tag or not, , Default=false</td>
+    </tr>
+    <tr>
+      <td>Target</td>
+      <td>target window after clicking the button, Options:layer, self and new window </td>
+    </tr>
+    <tr>
+      <td>Url</td>
+      <td>Jump address</td>
+    </tr>
+    <tr>
+      <td>WindowTitle</td>
+      <td>If the jump mode is layer or newwindow, set the title of the pop-up window</td>
+    </tr>
+    <tr>
+      <td>WindowWidth</td>
+      <td>If the jump mode is layer, set the pop-up window width</td>
+    </tr>
+    <tr>
+      <td>WindowHeight</td>
+      <td>If the jump mode is layer, set the pop-up height</td>
+    </tr>
+    <tr>
+      <td>PostCurrentForm</td>
+      <td>If the button is inside the form, use the form data post to URL</td>
+    </tr>
+  </tbody>
+</table>
+
+<wt:quote>
+  <p>LinkButton is more flexible to use. Pop-up window, submit form, run JS, etc. can be realized through LinkButton.</p>
+  <p>For example,&lt;wt:linkbutton target=" ButtonTargetEnum.self" text="提交" url="/xxx/xxx" post-current-form="true" /&gt;</p>
+  <p>This definition can replace the default submitbutton. You can combine various attributes to achieve different effects.</p>
+</wt:quote>
+
+<script>
+  layui.use('code', function () { layui.code({ about: false }) })
+  layui.table.init('parse-table-demo', {
+    limit: 100, page: false
+  });
+</script>

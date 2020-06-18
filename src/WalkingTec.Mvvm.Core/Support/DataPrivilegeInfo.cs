@@ -15,6 +15,8 @@ namespace WalkingTec.Mvvm.Core
         string ModelName { get; set; }
         //数据权限名称
         string PrivillegeName { get; set; }
+
+        Type ModelType { get; set; }
         //获取数据权限的下拉菜单
         List<ComboSelectListItem> GetItemList(IDataContext dc, LoginUserInfo user);
     }
@@ -33,10 +35,12 @@ namespace WalkingTec.Mvvm.Core
         private Expression<Func<T, string>> _displayField;
         //where过滤条件
         private Expression<Func<T, bool>> _where;
+        public Type ModelType { get; set; }
 
         public DataPrivilegeInfo(string name, Expression<Func<T, string>> displayField, Expression<Func<T, bool>> where = null)
         {
-            ModelName = typeof(T).Name;
+            ModelType = typeof(T);
+            ModelName = ModelType.Name;
             PrivillegeName = name;
             _displayField = displayField;
             _where = where;

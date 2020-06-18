@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Auth;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -97,14 +101,36 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     bool canAccess = controller.LoginUserInfo.IsAccessable(controller.BaseUrl);
                     if (canAccess == false && controller.ConfigInfo.IsQuickDebug == false)
                     {
-                        if (controller is BaseController c)
+                        if (controller is ControllerBase ctrl)
                         {
-                            throw new Exception(Program._localizer["NoPrivilege"]);
-                        }
-                        else if (controller is ControllerBase c2)
-                        {
-                            context.Result = c2.Forbid();
-                            // context.Result = c2.Unauthorized();
+                            var authenticationSchemes = new List<string>();
+                            if (ad.MethodInfo.IsDefined(typeof(AuthorizeAttribute), false))
+                            {
+                                var authorizeAttr = ad.MethodInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
+                                if (authorizeAttr != null)
+                                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            }
+                            else if (ad.ControllerTypeInfo.IsDefined(typeof(AuthorizeAttribute), false))
+                            {
+                                var authorizeAttr = ad.ControllerTypeInfo.GetCustomAttributes(typeof(AuthorizeAttribute), false).FirstOrDefault() as AuthorizeAttribute;
+                                if (authorizeAttr != null)
+                                    authenticationSchemes = authorizeAttr.AuthenticationSchemes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            }
+
+                            if (ctrl.HttpContext.Request.Headers.ContainsKey("Authorization")
+                                && authenticationSchemes.Contains(JwtBearerDefaults.AuthenticationScheme))
+                            {
+                                context.Result = ctrl.Forbid(JwtBearerDefaults.AuthenticationScheme);
+                            }
+                            else if (ctrl.HttpContext.Request.Cookies.ContainsKey(CookieAuthenticationDefaults.CookiePrefix + AuthConstants.CookieAuthName)
+                                && authenticationSchemes.Contains(CookieAuthenticationDefaults.AuthenticationScheme))
+                            {
+                                throw new Exception(Program._localizer["NoPrivilege"]);
+                            }
+                            else
+                            {
+                                throw new Exception(Program._localizer["NoPrivilege"]);
+                            }
                         }
                     }
                 }

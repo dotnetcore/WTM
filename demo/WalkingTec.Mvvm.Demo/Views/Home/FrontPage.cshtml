@@ -241,7 +241,7 @@
 </div>
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
-  $.get("/_framework/GetGithubInfo", function (r) {
+  $.get("/Home/GetGithubInfo", function (r) {
     $("#githubstar").html(r.stargazers_count);
     $("#githubstars").html(r.stargazers_count);
     $("#githubfork").html(r.forks_count);

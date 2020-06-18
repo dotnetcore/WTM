@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace WalkingTec.Mvvm.Core
+namespace WalkingTec.Mvvm.Core.Support.Json
 {
     [Serializable]
     public class SimpleRole

@@ -202,5 +202,7 @@ namespace WalkingTec.Mvvm.Core
             self.ShowTotal = show;
             return self;
         }
+
+
     }
 }

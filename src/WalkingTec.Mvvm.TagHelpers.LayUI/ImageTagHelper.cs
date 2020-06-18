@@ -14,7 +14,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var vm = context.Items["model"] as BaseVM;
+            BaseVM vm = null;
+            if (context.Items.TryGetValue("model", out object baseVM))
+            {
+                vm = baseVM as BaseVM;
+            }
+            else
+            {
+                //TODO 若 image 组件未在form中该如何解决 _DONOT_USE_CS 的问题？
+            }
             if (string.IsNullOrEmpty(Url) && Field.Model != null)
             {
                 Url = $"/_Framework/GetFile/{Field.Model}";

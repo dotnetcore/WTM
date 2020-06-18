@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field?.Name : Name);
             }
-            if (Disabled)
+            if (Disabled && (Field?.Model != null || (this is ComboBoxTagHelper)==false))
             {
                 output.Attributes.SetAttribute("readonly", string.Empty);
                 output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
@@ -128,7 +128,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 preHtml += $@"
 <div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
     <label for=""{Id}"" class=""layui-form-label"" {(LabelWidth == null ? string.Empty : "style='width:" + LabelWidth + "px'")}>{lb}</label>
-    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {(LabelWidth == null ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
+    <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {(LabelWidth == null || string.IsNullOrEmpty(PaddingText)==false ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
 ";
             }
             else
@@ -150,6 +150,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 postHtml += $@"
     </div>
 <div class=""layui-form-mid layui-word-aux"">{PaddingText}</div>
+</div>
 ";
 
             }

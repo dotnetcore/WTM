@@ -207,6 +207,24 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Codegen.ApiOnly" xml:space="preserve">
+    <value>Generate api only, no frontend code</value>
+  </data>
+  <data name="Codegen.confirm" xml:space="preserve">
+    <value>This will generate following files, are you sure?</value>
+  </data>
+  <data name="Codegen.gen" xml:space="preserve">
+    <value>Generate code</value>
+  </data>
+  <data name="Codegen.InputModuleName" xml:space="preserve">
+    <value>Please input module name, such as xxx management</value>
+  </data>
+  <data name="Codegen.setup" xml:space="preserve">
+    <value>Please setup fields</value>
+  </data>
+  <data name="Codegen.start" xml:space="preserve">
+    <value>Start generation</value>
+  </data>
   <data name="CodeGenSuccess" xml:space="preserve">
     <value>Code has been generated, please close the debug and rebuild the solution.</value>
   </data>
@@ -218,6 +236,9 @@
   </data>
   <data name="ConditionName" xml:space="preserve">
     <value>Condition name</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
   </data>
   <data name="ControllerNs" xml:space="preserve">
     <value>ControllerNs</value>
@@ -569,6 +590,9 @@
   </data>
   <data name="NotHave" xml:space="preserve">
     <value>None</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Current password</value>

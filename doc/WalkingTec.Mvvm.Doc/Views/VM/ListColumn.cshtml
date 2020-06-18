@@ -12,13 +12,13 @@
   </wt:quote>
   <p>以下代码片段展示了多级表头的设置方法</p>
   <wt:code title="InitGridHeaderInitGridHeader">
-protected override IEnumerable<IGridColumn<CustomView>> InitGridHeader()
+protected override IEnumerable&lt;IGridColumn&lt;CustomView&gt;&gt; InitGridHeader()
 {
-    var header = new List<GridColumn<CustomView>>();
+    var header = new List&lt;GridColumn&lt;CustomView&gt;&gt;();
     var topheader = this.MakeGridHeaderParent("父表头");
     topheader.SetChildren(
-        this.MakeGridHeader(x => x.test1, 120),
-        this.MakeGridHeader(x => x.test2, 120)
+        this.MakeGridHeader(x =&gt; x.test1, 120),
+        this.MakeGridHeader(x =&gt; x.test2, 120)
     );
     header.Add(topheader);
     header.Add(this.MakeGridHeaderAction(width: 320));
