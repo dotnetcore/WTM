@@ -121,29 +121,32 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                         }
                     }
-                    if (model is IBaseCRUDVM<TopBasePoco> crud)
-                    {
-                        var pros = crud.Entity.GetType().GetProperties();
-                        foreach (var pro in pros)
-                        {
-                            //找到类型为List<xxx>的字段
-                            if (pro.PropertyType.GenericTypeArguments.Count() > 0)
-                            {
-                                //获取xxx的类型
-                                var ftype = pro.PropertyType.GenericTypeArguments.First();
-                                //如果xxx继承自TopBasePoco
-                                if (ftype.IsSubclassOf(typeof(TopBasePoco)))
-                                {
-                                    //界面传过来的子表数据
+                    //if (model is IBaseCRUDVM<TopBasePoco> crud)
+                    //{
+                    //    var pros = crud.Entity.GetType().GetProperties();
+                    //    foreach (var pro in pros)
+                    //    {
+                    //        if (model.FC.ContainsKey("Entity." + pro.Name))
+                    //        {
+                    //            //找到类型为List<xxx>的字段
+                    //            if (pro.PropertyType.GenericTypeArguments.Count() > 0)
+                    //            {
+                    //                //获取xxx的类型
+                    //                var ftype = pro.PropertyType.GenericTypeArguments.First();
+                    //                //如果xxx继承自TopBasePoco
+                    //                if (ftype.IsSubclassOf(typeof(TopBasePoco)))
+                    //                {
+                    //                    //界面传过来的子表数据
 
-                                    if (pro.GetValue(crud.Entity) is IEnumerable<TopBasePoco> list && list.Count() == 0)
-                                    {
-                                        pro.SetValue(crud.Entity, null);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //                    if (pro.GetValue(crud.Entity) is IEnumerable<TopBasePoco> list && list.Count() == 0)
+                    //                    {
+                    //                        pro.SetValue(crud.Entity, null);
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     //如果ViewModel T继承自IBaseBatchVM<BaseVM>，则自动为其中的ListVM和EditModel初始化数据
                     if (model is IBaseBatchVM<BaseVM>)
                     {

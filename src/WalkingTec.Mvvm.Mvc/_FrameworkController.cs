@@ -582,13 +582,13 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 LocalizeMenu(menu.Children);
-                if (Localizer[menu.Title].ResourceNotFound == true)
+                if (Core.Program._Callerlocalizer[menu.Title].ResourceNotFound == true)
                 {
                     menu.Title = Core.Program._localizer[menu.Title];
                 }
                 else
                 {
-                    menu.Title = Localizer[menu.Title];
+                    menu.Title = Core.Program._Callerlocalizer[menu.Title];
                 }
             }
         }
