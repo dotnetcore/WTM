@@ -130,9 +130,9 @@ namespace WalkingTec.Mvvm.Demo
             app.UseWtmLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseSession();
-            app.UseWtmSwagger();
+            app.UseWtmSwagger(false);
             app.UseWtm();
 
             app.UseEndpoints(endpoints =>

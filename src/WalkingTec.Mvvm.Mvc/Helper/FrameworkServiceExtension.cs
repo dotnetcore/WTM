@@ -846,10 +846,10 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
-        public static IApplicationBuilder UseWtmSwagger(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWtmSwagger(this IApplicationBuilder app, bool showInDebugOnly = true)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
-            if (configs.IsQuickDebug == true)
+            if (configs.IsQuickDebug == true || showInDebugOnly == false)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
