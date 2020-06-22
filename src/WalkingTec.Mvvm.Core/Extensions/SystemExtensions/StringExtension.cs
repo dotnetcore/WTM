@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="Format">转化文本字段的表达式</param>
         /// <param name="seperator">分隔符，默认为逗号</param>
         /// <returns>转化后的字符串</returns>
-        public static string ToSpratedString<T, V>(this IEnumerable<T> self, Expression<Func<T, V>> textField, Func<V, string> Format = null, string seperator = ",")
+        public static string ToSepratedString<T, V>(this IEnumerable<T> self, Expression<Func<T, V>> textField, Func<V, string> Format = null, string seperator = ",")
         {
             string rv = "";
             if (self == null)
@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static string ToSpratedString(this IEnumerable self, Func<object, string> Format = null, string seperator = ",")
+        public static string ToSepratedString(this IEnumerable self, Func<object, string> Format = null, string seperator = ",")
         {
             string rv = "";
             if (self == null)
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static string ToSpratedString(this NameValueCollection self, string seperator = ",")
+        public static string ToSepratedString(this NameValueCollection self, string seperator = ",")
         {
             string rv = "";
             if (self == null)

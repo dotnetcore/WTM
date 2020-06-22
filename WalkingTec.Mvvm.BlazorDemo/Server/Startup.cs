@@ -1,24 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
-using WalkingTec.Mvvm.Mvc.Filters;
-using WalkingTec.Mvvm.Mvc.Binders;
-using WalkingTec.Mvvm.Mvc;
-using WalkingTec.Mvvm.Core;
-using Newtonsoft.Json;
-using WalkingTec.Mvvm.Mvc.Json;
-using Microsoft.AspNetCore.Mvc;
-using WalkingTec.Mvvm.Core.Auth;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using Microsoft.Extensions.Options;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Json;
+using WalkingTec.Mvvm.Mvc;
+using WalkingTec.Mvvm.Mvc.Binders;
+using WalkingTec.Mvvm.Mvc.Filters;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Server
 {
@@ -62,10 +58,10 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.Filters.Add(new FrameworkFilter());
                 options.EnableEndpointRouting = true;
             })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.ContractResolver = new WTMContractResolver() { };
+            .AddJsonOptions(options => {
+                options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
+                options.JsonSerializerOptions.Converters.Add(new BodyConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>

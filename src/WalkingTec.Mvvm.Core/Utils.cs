@@ -709,10 +709,11 @@ namespace WalkingTec.Mvvm.Core
 
         public static string GetNugetVersion(string start = null, bool pre = false)
         {
-            var Cache = GlobalServices.GetRequiredService<IDistributedCache>() as IDistributedCache;
+            var Cache = GlobalServices.GetRequiredService<IDistributedCache>();
+            var config = GlobalServices.GetRequiredService<Configs>();
             if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
             {
-                NugetInfo v = APIHelper.CallAPI<NugetInfo>($"https://api-v2v3search-0.nuget.org/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+                NugetInfo v = config.Domains["nuget"].CallAPI<NugetInfo>($"/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
                 var data = v;
                     Cache.Add("nugetversion", data, new DistributedCacheEntryOptions()
                     {

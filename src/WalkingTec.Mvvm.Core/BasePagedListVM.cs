@@ -9,11 +9,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 using Npgsql;
 using NpgsqlTypes;
 using NPOI.HSSF.Util;
@@ -726,7 +725,7 @@ namespace WalkingTec.Mvvm.Core
                     parms.Add(new MySqlParameter("@RecordsPerPage", Searcher.Limit));
                     parms.Add(new MySqlParameter("@Sort", Searcher.SortInfo?.Property));
                     parms.Add(new MySqlParameter("@SortDir", Searcher.SortInfo?.Direction));
-                    parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+                    parms.Add(new MySqlParameter("@IDs", Ids == null ? "" : Ids.ToSepratedString()));
 
                     MySqlParameter outp = new MySqlParameter("@TotalRecords", MySqlDbType.Int64)
                     {
@@ -763,7 +762,7 @@ namespace WalkingTec.Mvvm.Core
                     parms.Add(new NpgsqlParameter("@RecordsPerPage", Searcher.Limit));
                     parms.Add(new NpgsqlParameter("@Sort", Searcher.SortInfo?.Property));
                     parms.Add(new NpgsqlParameter("@SortDir", Searcher.SortInfo?.Direction));
-                    parms.Add(new NpgsqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+                    parms.Add(new NpgsqlParameter("@IDs", Ids == null ? "" : Ids.ToSepratedString()));
 
                     NpgsqlParameter outp = new NpgsqlParameter("@TotalRecords", NpgsqlDbType.Bigint)
                     {
@@ -800,7 +799,7 @@ namespace WalkingTec.Mvvm.Core
                     parms.Add(new SqlParameter("@RecordsPerPage", Searcher.Limit));
                     parms.Add(new SqlParameter("@Sort", Searcher.SortInfo?.Property));
                     parms.Add(new SqlParameter("@SortDir", Searcher.SortInfo?.Direction));
-                    parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSpratedString()));
+                    parms.Add(new SqlParameter("@IDs", Ids == null ? "" : Ids.ToSepratedString()));
 
                     SqlParameter outp = new SqlParameter("@TotalRecords", 0)
                     {
@@ -996,7 +995,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (int.TryParse(r.Match(item).Groups[1].Value, out int index))
                                 {
-                                    EntityList[index].BatchError = errors.Select(x => x.ErrorMessage).ToSpratedString();
+                                    EntityList[index].BatchError = errors.Select(x => x.ErrorMessage).ToSepratedString();
                                     keys.Add(item);
                                     haserror = true;
                                 }

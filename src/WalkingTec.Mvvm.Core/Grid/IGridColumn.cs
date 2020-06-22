@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
     /// <summary>
     /// Grid Column Content Fixed Enum
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum GridColumnFixedEnum
     {
         /// <summary>
@@ -22,6 +24,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// Grid Column Edit Type Enum
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EditTypeEnum
     {
         Text,
@@ -34,6 +37,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// Grid Column Content Align Enum
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum GridColumnAlignEnum
     {
         /// <summary>
@@ -53,6 +57,7 @@ namespace WalkingTec.Mvvm.Core
     /// <summary>
     /// Grid Column Type Enum
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum GridColumnTypeEnum
     {
         /// <summary>

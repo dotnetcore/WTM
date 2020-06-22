@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -24,10 +24,12 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// 记录数
         /// </summary>
+        [JsonIgnore]
         public long Count { get; set; }
         /// <summary>
         /// 分页数
         /// </summary>
+        [JsonIgnore]
         public int PageCount { get; set; }
         #endregion
 

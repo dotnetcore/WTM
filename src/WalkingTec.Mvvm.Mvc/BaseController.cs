@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +14,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
@@ -401,7 +400,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (e.Value.ValidationState == ModelValidationState.Invalid)
                 {
-                    rv.Add(e.Key, e.Value.Errors.Select(x => x.ErrorMessage).ToSpratedString());
+                    rv.Add(e.Key, e.Value.Errors.Select(x => x.ErrorMessage).ToSepratedString());
                 }
             }
 
@@ -449,69 +448,6 @@ namespace WalkingTec.Mvvm.Mvc
             catch { }
             return rv;
         }
-
-        #region JsonResult
-
-        private const string SUCCESS = "success";
-
-        /// <summary>
-        /// Creates a Microsoft.AspNetCore.Mvc.JsonResult object that serializes the specified
-        /// data object to JSON.
-        /// </summary>
-        /// <param name="data">The object to serialize.</param>
-        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
-        /// data to JSON format for the response.</returns>
-        [NonAction]
-        public virtual JsonResult JsonCustom(object data)
-        {
-            return base.Json(data);
-        }
-
-        /// <summary>
-        /// Creates a Microsoft.AspNetCore.Mvc.JsonResult object that serializes the specified
-        /// data object to JSON.
-        /// </summary>
-        /// <param name="data">The object to serialize.</param>
-        /// <param name="serializerSettings">settings</param>
-        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
-        /// data to JSON format for the response.</returns>
-        [NonAction]
-        public virtual JsonResult JsonCustom(object data, JsonSerializerSettings serializerSettings)
-        {
-            return base.Json(data, serializerSettings);
-        }
-
-        /// <summary>
-        /// override Json method
-        /// output format is {data:{object},code:200,msg:""}
-        /// </summary>
-        /// <param name="data">The object to serialize.</param>
-        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
-        /// data to JSON format for the response.</returns>
-        [NonAction]
-        public override JsonResult Json(object data)
-        {
-            return Json(data, StatusCodes.Status200OK, SUCCESS);
-        }
-
-
-        /// <summary>
-        /// override Json method
-        /// output format is {data:{object},code:200,msg:""}
-        /// </summary>
-        /// <param name="data">The object to serialize.</param>
-        /// <param name="statusCode">status code</param>
-        /// <param name="msg">message</param>
-        /// <param name="serializerSettings">settings</param>
-        /// <returns>The created Microsoft.AspNetCore.Mvc.JsonResult that serializes the specified
-        /// data to JSON format for the response.</returns>
-        [NonAction]
-        public virtual JsonResult Json(object data, int statusCode = StatusCodes.Status200OK, string msg = SUCCESS, JsonSerializerSettings serializerSettings = null)
-        {
-            return new JsonResult(new JsonResultT<object> { Msg = msg, Code = statusCode, Data = data }) { SerializerSettings = serializerSettings };
-        }
-
-        #endregion
 
     }
 

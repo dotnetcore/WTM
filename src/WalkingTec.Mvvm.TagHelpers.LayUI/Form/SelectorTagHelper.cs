@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -315,7 +315,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 var {Id}filter = {{}};
 $('#{Id}_Select').on('click',function(){{
   {(string.IsNullOrEmpty(BeforeOnpenDialogFunc) == true ? "" : "var data={};" + FormatFuncName(BeforeOnpenDialogFunc) + ";")}
-  var filter = {JsonConvert.SerializeObject(Filter)};
+  var filter = {JsonSerializer.Serialize(Filter)};
   var vals = $('#{Id}_Container input[type=hidden]');
   filter.Ids = [];
   for(var i=0;i<vals.length;i++){{

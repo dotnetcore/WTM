@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
-
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -37,10 +34,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public const string TABLE_TOOLBAR_PREFIX = "wtToolBar_";
         #endregion
 
-        private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        };
 
         public ModelExpression Vm { get; set; }
 
@@ -508,7 +501,7 @@ layui.use(['table'], function(){{
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
     {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     ,headers: {{layuisearch: 'true'}}
-    {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonConvert.SerializeObject(Filter)}")}
+    {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonSerializer.Serialize(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
     {(page ? $@",page:{{
@@ -528,7 +521,7 @@ layui.use(['table'], function(){{
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
-    ,cols:{JsonConvert.SerializeObject(layuiCols, _jsonSerializerSettings)}
+    ,cols:{JsonSerializer.Serialize(layuiCols, new JsonSerializerOptions { IgnoreNullValues = false })}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
@@ -625,7 +618,7 @@ layui.use(['table'], function(){{
                 };
                 // 非编辑状态且有字段名的情况下，设置template
                 if ((string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false) || item.Field == "BatchError")
-                    tempCol.Templet = new JRaw(getTemplate(item.Field));
+                    tempCol.Templet = getTemplate(item.Field);
 
                 NeedShowTotal |= item.ShowTotal == true;
                 switch (item.ColumnType)
@@ -765,7 +758,7 @@ layui.use(['table'], function(){{
                 {
                     url = $"{url}&_DONOT_USE_VMNAME={vmQualifiedName}";
                 }
-                var script = new StringBuilder($"var tempUrl = '{url}',whereStr={JsonConvert.SerializeObject(item.whereStr)};");
+                var script = new StringBuilder($"var tempUrl = '{url}',whereStr={JsonSerializer.Serialize(item.whereStr)};");
 
                 switch (item.ParameterType)
                 {
@@ -879,7 +872,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         {
                             if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.ActionName == "ExportExcel")
                             {
-                                actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonConvert.SerializeObject(Filter)},ids);";
+                                actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonSerializer.Serialize(Filter)},ids);";
                             }
                             else
                             {

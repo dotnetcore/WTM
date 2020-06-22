@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -136,7 +136,7 @@ layui.use(['tree'],function(){{
   layui.tree.render({{
     id:'tree{Id}',elem: '#div{Id}',onlyIconControl:true, showCheckbox:false,showLine:{ShowLine.ToString().ToLower()}
     {onclick}
-    ,data: {JsonConvert.SerializeObject(treeitems)}
+    ,data: {JsonSerializer.Serialize(treeitems)}
   }});
   {(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
 }})

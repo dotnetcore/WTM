@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using WalkingTec.Mvvm.Admin.ViewModels;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
                 var token = await authService.IssueTokenAsync(WtmContext.LoginUserInfo);
-                return Content(JsonConvert.SerializeObject(token), "application/json");
+                return Content(JsonSerializer.Serialize(token), "application/json");
             }
         }
 

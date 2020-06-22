@@ -1,31 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
     public class LayuiTreeItem
     {
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [JsonProperty("children")]
+        [JsonPropertyName("children")]
         public List<LayuiTreeItem> Children { get; set; }
 
-        [JsonProperty("href")]
+        [JsonPropertyName("href")]
         public string Url { get; set; }
 
-        [JsonProperty("spread")]
+        [JsonPropertyName("spread")]
         public bool Expand { get; set; }
 
-        [JsonProperty("checked")]
+        [JsonPropertyName("checked")]
         public bool Checked { get; set; }
 
-        [JsonProperty("level")]
+        [JsonPropertyName("level")]
         public int Level { get; set; }
     }
 }

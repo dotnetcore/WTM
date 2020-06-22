@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         [Display(Name = "ModelNS")]
         [ValidateNever()]
-        public string ModelNS => SelectedModel?.Split(',').FirstOrDefault()?.Split('.').SkipLast(1).ToSpratedString(seperator: ".");
+        public string ModelNS => SelectedModel?.Split(',').FirstOrDefault()?.Split('.').SkipLast(1).ToSepratedString(seperator: ".");
         [Display(Name = "ModuleName")]
         [Required(ErrorMessage = "{0}required")]
         public string ModuleName { get; set; }
@@ -701,7 +701,7 @@ namespace WalkingTec.Mvvm.Mvc
                                 var middleType = modelType.GetProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
                                 var middlename = DC.GetPropertyNameByFk(middleType, pro.SubIdField);
                                 selectstring += $@"
-                    {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.Select(y=>y.{middlename}.{pro.SubField}).ToSpratedString(null,"",""), ";
+                    {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.Select(y=>y.{middlename}.{pro.SubField}).ToSepratedString(null,"",""), ";
                             }
                             if (subdisplay?.Name != null)
                             {
@@ -1775,7 +1775,7 @@ namespace WalkingTec.Mvvm.Mvc
                 string import = "";
                 if (enums.Count > 0)
                 {
-                    import = $@"import {{ {enums.Distinct().ToSpratedString()} }} from ""../config"";";
+                    import = $@"import {{ {enums.Distinct().ToSepratedString()} }} from ""../config"";";
                 }
                 return rv.Replace("$fields$", fieldstr.ToString()).Replace("$actions$", a1).Replace("$runactions$", a2).Replace("$import$", import);
             }
@@ -1950,7 +1950,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
 
-                return rv.Replace("$fields$", fieldstr2.ToString()).Replace("$actions$", actions.ToString()).Replace("$enums$", enums.Distinct().ToSpratedString())
+                return rv.Replace("$fields$", fieldstr2.ToString()).Replace("$actions$", actions.ToString()).Replace("$enums$", enums.Distinct().ToSepratedString())
                     .Replace("$acts$", a1).Replace("$runactions$", a2);
 
             }

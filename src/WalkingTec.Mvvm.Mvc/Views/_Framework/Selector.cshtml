@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Core.IBasePagedListVM<WalkingTec.Mvvm.Core.TopBasePoco,WalkingTec.Mvvm.Core.BaseSearcher>
 @using WalkingTec.Mvvm.Core.Extensions;
-@using Newtonsoft.Json;
+@using System.Text.Json;
 @{
     var tempvar = $"var_{Guid.NewGuid().ToNoSplitString()}";
 }

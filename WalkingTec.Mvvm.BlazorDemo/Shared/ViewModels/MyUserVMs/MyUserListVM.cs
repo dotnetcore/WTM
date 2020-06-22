@@ -93,8 +93,8 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MyUserVMs
                     ZipCode = x.ZipCode,
                     PhotoId = x.PhotoId,
                     IsValid = x.IsValid,
-                    RoleName_view = x.UserRoles.Select(y=>y.Role.RoleName).ToSpratedString(null,","), 
-                    GroupName_view = x.UserGroups.Select(y=>y.Group.GroupName).ToSpratedString(null,","), 
+                    RoleName_view = x.UserRoles.Select(y=>y.Role.RoleName).ToSepratedString(null,","), 
+                    GroupName_view = x.UserGroups.Select(y=>y.Group.GroupName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
             return query;

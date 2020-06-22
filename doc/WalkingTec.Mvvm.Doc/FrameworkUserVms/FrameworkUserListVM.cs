@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
                 return "";
             }
             var roleids = entity.UserRoles.Select(x => x.RoleId).ToList();
-            return AllRoles.Where(x => roleids.Contains(x.ID)).Select(x => x.RoleName).ToList().ToSpratedString();
+            return AllRoles.Where(x => roleids.Contains(x.ID)).Select(x => x.RoleName).ToList().ToSepratedString();
         }
 
         private string GroupFormat(FrameworkUser_View entity, object val)
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
                 return "";
             }
             var groupids = entity.UserGroups.Select(x => x.GroupId).ToList();
-            return AllGroups.Where(x => groupids.Contains(x.ID)).Select(x => x.GroupName).ToList().ToSpratedString();
+            return AllGroups.Where(x => groupids.Contains(x.ID)).Select(x => x.GroupName).ToList().ToSepratedString();
         }
 
         public override IOrderedQueryable<FrameworkUser_View> GetSearchQuery()

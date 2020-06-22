@@ -292,7 +292,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (e.Value.ValidationState == ModelValidationState.Invalid)
                 {
-                    rv.Add(e.Key, e.Value.Errors.Select(x => x.ErrorMessage).ToSpratedString());
+                    rv.Add(e.Key, e.Value.Errors.Select(x => x.ErrorMessage).ToSepratedString());
                 }
             }
 

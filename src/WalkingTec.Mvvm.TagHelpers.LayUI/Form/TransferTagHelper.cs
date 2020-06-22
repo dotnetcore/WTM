@@ -1,13 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 
@@ -22,14 +18,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         private const string REQUIRED_ATTR_NAMES = "field,items";
 
         private const string _idPrefix = "_transfer";
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new DefaultContractResolver()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            }
-        };
 
         /// <summary>
         /// 左侧穿梭框上方标题
@@ -154,7 +142,7 @@ layui.use(['transfer'],function(){{
   var transferIns = transfer.render({{
     elem: '#'+_id
     ,title:{title}
-    ,data:{JsonConvert.SerializeObject(data, _jsonSerializerSettings)}
+    ,data:{JsonSerializer.Serialize(data)}
     {(string.IsNullOrEmpty(DefaultValue) ? string.Empty : $",value:defaultVal")}
     ,id:'{Id}'
     ,text:{{none:'{NonePlaceholder}',searchNone:'{SearchNonePlaceholder}'}}

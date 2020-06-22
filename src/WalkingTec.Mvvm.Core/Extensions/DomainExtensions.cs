@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
@@ -54,13 +53,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 if (res.IsSuccessStatusCode == true)
                 {
-                    rv = JsonConvert.DeserializeObject<T>(await res.Content.ReadAsStringAsync());
+                    rv = JsonSerializer.Deserialize<T>(await res.Content.ReadAsStringAsync());
                 }
                 else
                 {
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        error = JsonConvert.DeserializeObject<ErrorObj>(await res.Content.ReadAsStringAsync());
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
                     }
                     else
                     {
@@ -140,7 +139,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns></returns>
         public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url, HttpMethodEnum method, object postdata, ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
         {
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(postdata), System.Text.Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI<T>(self, url, method, content, error, errormsg, timeout, proxy);
         }
 
@@ -196,7 +195,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     if (res.StatusCode == System.Net.HttpStatusCode.BadRequest)
                     {
-                        error = JsonConvert.DeserializeObject<ErrorObj>(await res.Content.ReadAsStringAsync());
+                        error = JsonSerializer.Deserialize<ErrorObj>(await res.Content.ReadAsStringAsync());
                     }
                     else
                     {
@@ -273,7 +272,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns></returns>
         public static async Task<string> CallAPI(this FrameworkDomain self, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
-            HttpContent content = new StringContent(JsonConvert.SerializeObject(postdata), System.Text.Encoding.UTF8, "application/json");
+            HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
             return await CallAPI(self, url, method, content, error, errormsg, timeout, proxy);
         }
 

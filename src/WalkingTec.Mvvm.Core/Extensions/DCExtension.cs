@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -534,7 +535,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                var temp = APIHelper.JsonDeserialize<List<SortInfo>>(sortInfo);
+                var temp = JsonSerializer.Deserialize<List<SortInfo>>(sortInfo);
                 info.AddRange(temp);
             }
             foreach (var item in info)

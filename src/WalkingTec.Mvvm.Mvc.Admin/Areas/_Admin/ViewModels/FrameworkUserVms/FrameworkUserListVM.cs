@@ -63,8 +63,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     PhotoId = x.PhotoId,
                     CellPhone = x.CellPhone,
                     IsValid = x.IsValid,
-                    RoleName_view = x.UserRoles.Select(y => y.Role.RoleName).ToSpratedString(null, ","),
-                    GroupName_view = x.UserGroups.Select(y => y.Group.GroupName).ToSpratedString(null, ","),
+                    RoleName_view = x.UserRoles.Select(y => y.Role.RoleName).ToSepratedString(null, ","),
+                    GroupName_view = x.UserGroups.Select(y => y.Group.GroupName).ToSepratedString(null, ","),
                     Sex = x.Sex
                 })
                 .OrderBy(x => x.ITCode);

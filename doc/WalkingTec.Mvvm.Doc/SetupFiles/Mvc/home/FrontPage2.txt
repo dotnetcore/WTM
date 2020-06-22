@@ -1,5 +1,5 @@
 @model WalkingTec.Mvvm.Core.BaseVM
-@using Newtonsoft.Json;
+@using System.Text.Json
 
 <div class="layui-row layui-col-space15" id="frontpage">
   <div class="layui-col-md8">
@@ -282,13 +282,13 @@
         title: { text: 'Controller' },
         tooltip: {},
          legend: {
-          data: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.legend"]))
+          data: @Html.Raw(JsonSerializer.Serialize(ViewData["controller.legend"]))
         },
        xAxis: {},
         yAxis: {
           data: ['Controller', 'Action']
         },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.series"]))
+        series: @Html.Raw(JsonSerializer.Serialize(ViewData["controller.series"]))
       };
       control.setOption(controlOption);
 
@@ -300,7 +300,7 @@
         yAxis: {
           data: ['Model', 'Dll', 'DataPri', 'ConnectionString', 'App Settings']
         },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["other.series"]))
+        series: @Html.Raw(JsonSerializer.Serialize(ViewData["other.series"]))
       };
       other.setOption(otherOption);
 

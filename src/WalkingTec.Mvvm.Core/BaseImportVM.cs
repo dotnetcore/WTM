@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
@@ -17,6 +16,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -71,7 +71,6 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public Dictionary<string, string> Parms { get; set; }
 
-        [JsonIgnore]
         protected List<T> TemplateData;
 
         /// <summary>

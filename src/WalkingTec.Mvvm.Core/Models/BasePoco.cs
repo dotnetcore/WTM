@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -12,23 +13,27 @@ namespace WalkingTec.Mvvm.Core
         /// CreateTime
         /// </summary>
         [Display(Name = "CreateTime")]
+        [JsonIgnore]
         public DateTime? CreateTime { get; set; }
         /// <summary>
         /// CreateBy
         /// </summary>
         [Display(Name = "CreateBy")]
         [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [JsonIgnore]
         public string CreateBy { get; set; }
         /// <summary>
         /// UpdateTime
         /// </summary>
         [Display(Name = "UpdateTime")]
+        [JsonIgnore]
         public DateTime? UpdateTime { get; set; }
         /// <summary>
         /// UpdateBy
         /// </summary>
         [Display(Name = "UpdateBy")]
         [StringLength(50,ErrorMessage ="{0}stringmax{1}")]
+        [JsonIgnore]
         public string UpdateBy { get; set; }
     }
 }

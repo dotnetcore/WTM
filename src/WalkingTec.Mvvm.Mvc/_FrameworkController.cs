@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -14,8 +15,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.Json;
@@ -27,24 +26,6 @@ namespace WalkingTec.Mvvm.Mvc
     [ActionDescription("Framework")]
     public class _FrameworkController : BaseController
     {
-        private static JsonSerializerSettings _jsonSerializerSettings;
-        public static JsonSerializerSettings JsonSerializerSettings
-        {
-            get
-            {
-                if (_jsonSerializerSettings == null)
-                {
-                    _jsonSerializerSettings = new JsonSerializerSettings();
-                    if (_jsonSerializerSettings.Converters == null)
-                    {
-                        _jsonSerializerSettings.Converters = new List<JsonConverter>();
-                    }
-                    //_jsonSerializerSettings.Converters.Add(GlobalServices.GetRequiredService<EnumConverterService>());
-                    //_jsonSerializerSettings.Converters.Add(GlobalServices.GetRequiredService<BoolConverterService>());
-                }
-                return _jsonSerializerSettings;
-            }
-        }
 
         [HttpPost]
         public IActionResult Selector(string _DONOT_USE_VMNAME
@@ -655,9 +636,9 @@ namespace WalkingTec.Mvvm.Mvc
                 GenerateMenuTree(GlobaInfo.AllMenus, resultMenus, true);
                 RemoveEmptyMenu(resultMenus);
                 LocalizeMenu(resultMenus);
-                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
+                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    IgnoreNullValues = true
                 }), "application/json");
             }
             else
@@ -667,9 +648,9 @@ namespace WalkingTec.Mvvm.Mvc
                 RemoveUnAccessableMenu(resultMenus, WtmContext.LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
                 LocalizeMenu(resultMenus);
-                return Content(JsonConvert.SerializeObject(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerSettings()
+                return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    IgnoreNullValues = true
                 }), "application/json");
             }
         }
@@ -707,7 +688,7 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = WtmContext.ReadFromCache<string>("githubinfo", () =>
             {               
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
-                return JsonConvert.SerializeObject(s);
+                return JsonSerializer.Serialize(s);
             }, 1800);
             return Content(rv, "application/json");
         }

@@ -259,7 +259,7 @@ namespace WalkingTec.Mvvm.Core
                             {
                                 if (errors[key].Count > 0)
                                 {
-                                    error += errors[key].Select(x => x.ErrorMessage).ToSpratedString();
+                                    error += errors[key].Select(x => x.ErrorMessage).ToSepratedString();
                                 }
                             }
                             if (error != "")

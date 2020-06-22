@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Linq;
+using System.Text.Json;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -135,7 +133,7 @@ layui.use(['tree'],function(){{
   var loaded{Id} = false;
   layui.tree.render({{
     id:'tree{Id}',elem: '#div{Id}',onlyIconControl:{(!MultiSelect).ToString().ToLower()}, showCheckbox:{MultiSelect.ToString().ToLower()},showLine:{ShowLine.ToString().ToLower()}
-    ,data: {JsonConvert.SerializeObject(treeitems)} {oncheck} {onclick}
+    ,data: {JsonSerializer.Serialize(treeitems)} {oncheck} {onclick}
   }});
   loaded{Id} = true;
 }})

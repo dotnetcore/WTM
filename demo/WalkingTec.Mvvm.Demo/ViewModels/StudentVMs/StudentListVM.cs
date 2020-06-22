@@ -75,7 +75,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
                     PhotoId = x.PhotoId,
                     IsValid = x.IsValid,
                     EnRollDate = x.EnRollDate,
-                    MajorName_view = x.StudentMajor.Select(y=>y.Major.MajorName).ToSpratedString(null,","), 
+                    MajorName_view = x.StudentMajor.Select(y=>y.Major.MajorName).ToSepratedString(null,","), 
                 })
                 .OrderBy(x => x.ID);
             return query;

@@ -1,5 +1,5 @@
 @model WalkingTec.Mvvm.Core.BaseVM
-@using Newtonsoft.Json;
+@using System.Text.Json
 
 <div class="layui-row layui-col-space15" id="frontpage">
   <div class="layui-col-md8">
@@ -287,13 +287,13 @@
         title: { text: '控制器' },
         tooltip: {},
          legend: {
-          data: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.legend"]))
+          data: @Html.Raw(JsonSerializer.Serialize(ViewData["controller.legend"]))
         },
        xAxis: {},
         yAxis: {
           data: ['控制器', '动作']
         },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["controller.series"]))
+        series: @Html.Raw(JsonSerializer.Serialize(ViewData["controller.series"]))
       };
       control.setOption(controlOption);
 
@@ -305,7 +305,7 @@
         yAxis: {
           data: ['模型', 'Dll文件', '数据权限', '连接字符串', 'App Settings']
         },
-        series: @Html.Raw(JsonConvert.SerializeObject(ViewData["other.series"]))
+        series: @Html.Raw(JsonSerializer.Serialize(ViewData["other.series"]))
       };
       other.setOption(otherOption);
 

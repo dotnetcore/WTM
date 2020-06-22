@@ -5,25 +5,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
@@ -36,24 +28,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.DependencyModel.Resolution;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.FDFS;
-using WalkingTec.Mvvm.Core.Implement;
 using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Auth;
-using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
-using WalkingTec.Mvvm.Mvc.Json;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 
 namespace WalkingTec.Mvvm.Mvc
@@ -694,6 +680,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                 }, new string[] { });
                 c.AddSecurityRequirement(sr);
+                c.SchemaFilter<SwaggerFilter>();
             });
             return services;
         }

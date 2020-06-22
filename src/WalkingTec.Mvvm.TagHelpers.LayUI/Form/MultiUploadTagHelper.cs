@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             string idstring = "";
             if (Field.Model is IEnumerable<ISubFile> subfiles)
             {
-                idstring = subfiles.Select(x => x.FileId.ToString()).ToSpratedString(seperator: "|");
+                idstring = subfiles.Select(x => x.FileId.ToString()).ToSepratedString(seperator: "|");
             }
             //else
             //{

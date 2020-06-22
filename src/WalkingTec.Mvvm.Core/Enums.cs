@@ -1,5 +1,14 @@
 namespace WalkingTec.Mvvm.Core
 {
+    public enum HttpMethodEnum
+    {
+        GET,
+        POST,
+        PUT,
+        DELETE
+    }
+
+
     /// <summary>
     /// 列表操作列类型
     /// </summary>

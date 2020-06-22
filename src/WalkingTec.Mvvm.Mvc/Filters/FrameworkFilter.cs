@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Implement;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.Support.Json;
+using System.Text.Json;
+using WalkingTec.Mvvm.Core.Json;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -113,9 +113,8 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         if (context.HttpContext.Items.ContainsKey("DONOTUSE_REQUESTBODY"))
                         {
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
-                            var obj = JsonConvert.DeserializeObject(body) as JObject;
-                            var fields = GetJsonFields(obj);
-                            foreach (var field in fields)
+                            var obj = JsonSerializer.Deserialize<PostedBody>(body);
+                            foreach (var field in obj.ProNames)
                             {
                                 model.FC.Add(field, null);
                             }
@@ -395,36 +394,5 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             base.OnResultExecuted(context);
         }
 
-        private IEnumerable<string> GetJsonFields(JObject j)
-        {
-            var children = j.Children();
-            foreach (var item in children)
-            {
-                var rv = GetTokenFields(item);
-                foreach (var i in rv)
-                {
-                    yield return i;
-                }
-            }
-            yield break;
-        }
-
-        private IEnumerable<string> GetTokenFields(JToken j)
-        {
-            if (j.Type == JTokenType.Property)
-            {
-                yield return j.Path;
-            }
-            var children = j.Children();
-            foreach (var item in children)
-            {
-                var rv = GetTokenFields(item);
-                foreach (var i in rv)
-                {
-                    yield return i;
-                }
-            }
-            yield break;
-        }
     }
 }

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
@@ -259,7 +259,7 @@ layui.use(['laydate'],function(){{
     {(!ConfirmOnly.HasValue ? string.Empty : ShowBottom.HasValue && ShowBottom.Value && ConfirmOnly.Value || !ShowBottom.HasValue && ConfirmOnly.Value ? $",btns: ['confirm']" : string.Empty)}
     {(!Calendar.HasValue ? string.Empty : $",calendar: {Calendar.Value.ToString().ToLower()}")}
     {(!Lang.HasValue ? string.Empty : $",lang: '{Lang.Value.ToString().ToLower()}'")}
-    {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonConvert.SerializeObject(Mark)}")}
+    {(Mark == null || Mark.Count == 0 ? string.Empty : $",mark: {JsonSerializer.Serialize(Mark)}")}
     {(string.IsNullOrEmpty(ReadyFunc) ? string.Empty : $",ready: function(value){{{ReadyFunc}(value,dateIns)}}")}
     {(string.IsNullOrEmpty(ChangeFunc) ? string.Empty : $",change: function(value,date,endDate){{{ChangeFunc}(value,date,endDate,dateIns)}}")}
     {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $",done: function(value,date,endDate){{{DoneFunc}(value,date,endDate,dateIns)}}")}
