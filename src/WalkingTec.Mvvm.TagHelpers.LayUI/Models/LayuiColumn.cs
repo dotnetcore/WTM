@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Json;
@@ -117,7 +118,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// 对齐方式
         /// </summary>
         [JsonPropertyName("align")]
-        public GridColumnAlignEnum Align { get; set; }
+        public GridColumnAlignEnum? Align { get; set; }
 
         /// <summary>
         /// 是否允许编辑

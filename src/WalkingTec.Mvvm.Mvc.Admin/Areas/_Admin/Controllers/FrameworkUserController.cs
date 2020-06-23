@@ -236,7 +236,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult GetUserById(string keywords)
         {
             var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(WtmContext,null, x=>x.CodeAndName, x => x.ITCode);
-            return Json(users);
+            return Json(new {Code=200,Msg="success", Data = users });
 
         }
 

@@ -103,13 +103,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             foreach (var item in self)
             {
+                var s = "";
                 if (Format == null)
                 {
-                    rv += item.ToString() + seperator;
+                    s = item.ToString();
                 }
                 else
                 {
-                    rv += Format.Invoke(item) + seperator;
+                    s = Format.Invoke(item);
+                }
+                if(string.IsNullOrEmpty(s) == false)
+                {
+                    rv += s + seperator;
                 }
             }
             if (rv.Length > 0)

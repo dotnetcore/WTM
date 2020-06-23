@@ -60,9 +60,8 @@ namespace WalkingTec.Mvvm.VueDemo
                 options.EnableEndpointRouting = true;
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
-                options.JsonSerializerOptions.Converters.Add(new BodyConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
@@ -121,7 +120,7 @@ namespace WalkingTec.Mvvm.VueDemo
             app.UseWtmLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseSession();
             app.UseWtmSwagger();
             app.UseVue();

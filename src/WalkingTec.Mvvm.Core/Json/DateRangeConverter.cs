@@ -20,8 +20,10 @@ namespace WalkingTec.Mvvm.Core.Json
             {
                 if (reader.TokenType == JsonTokenType.StartArray)
                 {
+                    reader.Read();
                     string[] ds = new string[2];
                     ds[0] = reader.GetString();
+                    reader.Read();
                     ds[1] = reader.GetString();
                     reader.Read();
                     if (DateRange.TryParse(ds, out var dateRange))

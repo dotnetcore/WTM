@@ -113,10 +113,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         if (context.HttpContext.Items.ContainsKey("DONOTUSE_REQUESTBODY"))
                         {
                             string body = context.HttpContext.Items["DONOTUSE_REQUESTBODY"].ToString();
-                            var obj = JsonSerializer.Deserialize<PostedBody>(body);
+                            var joption = new JsonSerializerOptions();
+                            joption.Converters.Add(new BodyConverter());
+                            var obj = JsonSerializer.Deserialize<PostedBody>(body,joption);
                             foreach (var field in obj.ProNames)
                             {
-                                model.FC.Add(field, null);
+                               model.FC.Add(field, null);
                             }
                         }
                     }

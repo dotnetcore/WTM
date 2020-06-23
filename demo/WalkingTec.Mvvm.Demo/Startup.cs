@@ -17,6 +17,7 @@ using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
+using System.Text.Json;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -60,9 +61,8 @@ namespace WalkingTec.Mvvm.Demo
                 options.EnableEndpointRouting = true;
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
-                options.JsonSerializerOptions.Converters.Add(new BodyConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>

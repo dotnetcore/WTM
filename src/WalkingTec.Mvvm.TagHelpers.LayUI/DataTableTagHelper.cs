@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -479,6 +480,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var vmQualifiedName1 = VMType.AssemblyQualifiedName;
                 vmName = vmQualifiedName1.Substring(0, vmQualifiedName1.LastIndexOf(", Version=", StringComparison.CurrentCulture));
             }
+            var joption = new JsonSerializerOptions();
+            joption.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            joption.IgnoreNullValues = true;
             output.PostElement.AppendHtml($@"
 <script>
 var {Id}option = null;
@@ -521,7 +525,7 @@ layui.use(['table'], function(){{
         : string.Empty)}
     {(!Width.HasValue ? string.Empty : $",width: {Width.Value}")}
     {(!Height.HasValue ? string.Empty : (Height.Value >= 0 ? $",height: {Height.Value}" : $",height: 'full{Height.Value}'"))}
-    ,cols:{JsonSerializer.Serialize(layuiCols, new JsonSerializerOptions { IgnoreNullValues = false })}
+    ,cols:{JsonSerializer.Serialize(layuiCols, joption).Replace("\"_raw_", "").Replace("_raw_\"", "").Replace("\\r\\n",Environment.NewLine).Replace("\\\"","\"")}
     {(!Skin.HasValue ? string.Empty : $",skin: '{Skin.Value.ToString().ToLower()}'")}
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}

@@ -62,9 +62,8 @@ namespace WalkingTec.Mvvm.ReactDemo
                 options.EnableEndpointRouting = true;
             })
             .AddJsonOptions(options => {
-                options.JsonSerializerOptions.Converters.Add(new StringIgnoreLTGTConverter());
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
-                options.JsonSerializerOptions.Converters.Add(new BodyConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             .ConfigureApiBehaviorOptions(options =>
