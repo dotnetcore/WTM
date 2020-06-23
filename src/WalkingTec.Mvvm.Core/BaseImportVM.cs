@@ -941,7 +941,7 @@ namespace WalkingTec.Mvvm.Core
                 foreach (var propertyInfo in props)
                 {
                     var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
-                    var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
+                    var notobject = propertyInfo.PropertyType.Namespace.Equals("System") || propertyInfo.PropertyType.IsEnumOrNullableEnum();
                     if (notmapped == null && notobject)
                     {
                         string Name = dc.GetFieldName<K>( propertyInfo.Name);
@@ -958,7 +958,7 @@ namespace WalkingTec.Mvvm.Core
                     foreach (var propertyInfo in props)
                     {
                         var notmapped = propertyInfo.GetCustomAttribute<NotMappedAttribute>();
-                        var notobject = propertyInfo.PropertyType.Namespace.Equals("System");
+                        var notobject = propertyInfo.PropertyType.Namespace.Equals("System") || propertyInfo.PropertyType.IsEnumOrNullableEnum();
                         if (notmapped == null && notobject)
                         {
                             values[Index] = propertyInfo.GetValue(item);
