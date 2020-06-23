@@ -95,7 +95,7 @@
 <wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv'>
     <div style="height:10px">&nbsp;</div>
     $$SearchPanel$$
-    <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" />
+    <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" url="/_Framework/GetPagingData" need-show-filter="false" need-show-print="false"/>
     <wt:row align="AlignEnum.Right">
         <wt:button click="submitSelect();" text="@WalkingTec.Mvvm.Core.Program._localizer["OK"]" size="ButtonSizeEnum.Normal" />
     </wt:row>
