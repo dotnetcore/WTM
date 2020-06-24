@@ -72,6 +72,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
           comp.getFormItem(key).clearValidate()
         );
         comp.resetFields();
+        comp.setFormDataItem('Entity.ID', '');
       }
     }
     /**
