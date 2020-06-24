@@ -19,5 +19,8 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.StudentVms
         public Models.SexEnum? Sex { get; set; }
 
         public Guid? DepId { get; set; }
+        [Display(Name = "IsValid")]
+        public bool? IsValid { get; set; }
+
     }
 }

@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ModelState.IsValid)
             {
-                var vm = CreateVM<ActionLogListVM>();
+                var vm = CreateVM<ActionLogListVM>(passInit:true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }

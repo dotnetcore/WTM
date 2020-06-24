@@ -23,9 +23,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(FrameworkRoleListVM vm)
+        public string Search(FrameworkRoleSearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = CreateVM<FrameworkRoleListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
         #endregion
 

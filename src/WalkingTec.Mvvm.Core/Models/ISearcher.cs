@@ -44,28 +44,13 @@ namespace WalkingTec.Mvvm.Core
         ISessionService Session { get;  }
 
         LoginUserInfo LoginUserInfo { get; }
-        #region 未使用
         /// <summary>
         /// 排序信息
         /// </summary>
         SortInfo SortInfo { get; set; }
         /// <summary>
-        /// 是否搜索树形结构数据
-        /// </summary>
-        bool TreeMode { get; set; }
-        /// <summary>
-        /// 树形结构数据父Id
-        /// </summary>
-        Guid? ParentId { get; set; }
-        /// <summary>
-        /// 是否有效，针对继承PersistPoco的Model
-        /// </summary>
-        bool? IsValid { get; set; }
-        /// <summary>
         /// 用于框架判断列表页是否全局刷新
         /// </summary>
-        bool IsPostBack { get; set; }
-        #endregion
 
         #endregion
 

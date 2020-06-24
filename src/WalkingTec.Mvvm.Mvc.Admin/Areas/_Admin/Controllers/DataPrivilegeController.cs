@@ -24,9 +24,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(DataPrivilegeListVM vm)
+        public string Search(DataPrivilegeSearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = CreateVM<DataPrivilegeListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
 
         [ActionDescription("Create")]

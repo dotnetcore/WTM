@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 
@@ -11,6 +11,8 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
 
         [Display(Name = "名字")]
         public string Name { get; set; }
+        [Display(Name = "IsValid")]
+        public bool? IsValid { get; set; }
 
     }
 }

@@ -381,12 +381,6 @@ namespace WalkingTec.Mvvm.Core
         public List<string> Ids { get; set; }
 
         /// <summary>
-        /// 每页行数
-        /// </summary>
-        [Obsolete("弃用，改用 DataTableHelper上的Limit")]
-        public int RecordsPerPage { get; set; }
-
-        /// <summary>
         /// 是否已经搜索过
         /// </summary>
         [JsonIgnore]

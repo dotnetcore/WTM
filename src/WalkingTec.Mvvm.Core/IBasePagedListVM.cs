@@ -65,12 +65,6 @@ namespace WalkingTec.Mvvm.Core
         bool GetIsSelected(object item);
 
         /// <summary>
-        /// 每页行数
-        /// </summary>
-        [Obsolete("弃用，改用 DataTableHelper上的Limit")]
-        int RecordsPerPage { get; set; }
-
-        /// <summary>
         /// 是否已经搜索过
         /// </summary>
         bool IsSearched { get; set; }

@@ -22,10 +22,12 @@ namespace $namespace$
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search($modelname$ListVM vm)
+        public string Search($modelname$Searcher searcher)
         {
+            var vm = CreateVM<$modelname$ListVM>(passInit: true);
             if (ModelState.IsValid)
             {
+                vm.Searcher = searcher;
                 return vm.GetJson(false);
             }
             else

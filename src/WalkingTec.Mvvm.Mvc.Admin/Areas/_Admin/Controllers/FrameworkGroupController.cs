@@ -25,9 +25,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(FrameworkGroupListVM vm)
+        public string Search(FrameworkGroupSearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = CreateVM<FrameworkGroupListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
         #endregion
 

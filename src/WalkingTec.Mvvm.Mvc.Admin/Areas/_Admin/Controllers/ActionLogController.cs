@@ -21,10 +21,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(ActionLogListVM vm)
+        public string Search(ActionLogSearcher searcher)
         {
+            var vm = CreateVM<ActionLogListVM>(passInit:true);
             if (ModelState.IsValid)
             {
+                vm.Searcher = searcher;
                 return vm.GetJson(false);
             }
             else

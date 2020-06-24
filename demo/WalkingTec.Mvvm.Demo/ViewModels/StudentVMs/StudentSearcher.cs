@@ -21,6 +21,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public List<ComboSelectListItem> AllStudentMajors { get; set; }
         [Display(Name = "专业")]
         public List<Guid> SelectedStudentMajorIDs { get; set; }
+        [Display(Name = "IsValid")]
+        public bool? IsValid { get; set; }
 
         protected override void InitVM()
         {

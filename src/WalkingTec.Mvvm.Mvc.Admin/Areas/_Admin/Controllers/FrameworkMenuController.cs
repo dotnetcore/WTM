@@ -26,9 +26,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [ActionDescription("Search")]
         [HttpPost]
-        public string Search(FrameworkMenuListVM vm)
+        public string Search(FrameworkMenuSearcher searcher)
         {
-            return vm.GetJson(false);
+            var vm = CreateVM<FrameworkMenuListVM>(passInit: true);
+            if (ModelState.IsValid)
+            {
+                vm.Searcher = searcher;
+                return vm.GetJson(false);
+            }
+            else
+            {
+                return vm.GetError();
+            }
         }
         #endregion
 

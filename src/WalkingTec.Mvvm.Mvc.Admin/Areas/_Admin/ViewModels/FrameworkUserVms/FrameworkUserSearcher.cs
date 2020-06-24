@@ -11,6 +11,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         [Display(Name = "Name")]
         public string Name { get; set; }
+        [Display(Name = "IsValid")]
+        public bool? IsValid { get; set; }
 
     }
 }

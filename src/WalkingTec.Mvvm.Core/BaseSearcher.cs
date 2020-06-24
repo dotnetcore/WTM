@@ -97,27 +97,6 @@ namespace WalkingTec.Mvvm.Core
         /// 排序信息
         /// </summary>
         public SortInfo SortInfo { get; set; }
-        /// <summary>
-        /// 是否搜索树形结构数据
-        /// </summary>
-        [JsonIgnore]
-        public bool TreeMode { get; set; }
-        /// <summary>
-        /// 树形结构数据父Id
-        /// </summary>
-        [JsonIgnore]
-        public Guid? ParentId { get; set; }
-        /// <summary>
-        /// 是否有效，针对继承PersistPoco的Model
-        /// </summary>
-        [Display(Name = "IsValid")]
-        [JsonIgnore]
-        public bool? IsValid { get; set; }
-        /// <summary>
-        /// 用于框架判断列表页是否全局刷新
-        /// </summary>
-        [JsonIgnore]
-        public bool IsPostBack { get; set; }
 
         /// <summary>
         /// 前台搜索框是否展开
