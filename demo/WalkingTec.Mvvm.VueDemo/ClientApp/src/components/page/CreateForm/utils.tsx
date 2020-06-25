@@ -63,19 +63,26 @@ export default class Utils {
       const value = _.get(_t.sourceFormData || _t.formData, option.key);
       delete attrs.rules;
       // 图片
-      if (option.type === "wtmUploadImg") {
-        let img = !!value && (
-          <el-image
-            style={option.props.imageStyle}
-            src={fileApi + value}
-            fit={option.props.fit || "contain"}
-          />
-        );
-        return (
-          <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
-            {img}
-          </wtm-form-item>
-        );
+      if (["wtmUploadImg", "upload"].includes(option.type) && value) {
+        const imgs = _.isArray(value) ? value : [value];
+        const imgComponents = imgs.map(item => {
+          const url = _.isString(item) && !option.mapKey ? item : item[option.mapKey];
+          return (
+            <el-image
+              style={option.props.imageStyle}
+              src={fileApi + url}
+              preview-src-list={[fileApi + url]}
+              fit={option.props.fit || "contain"}
+            ></el-image>
+          )
+        })
+        if (imgComponents) {
+          return (
+            <wtm-form-item ref={option.key} {...{ attrs, props: attrs }}>
+              {imgComponents}
+            </wtm-form-item>
+          );
+        }
       }
     }
     return (
