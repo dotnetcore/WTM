@@ -4,10 +4,12 @@
             <template #ICon="data">
                 <i v-if="data.status === $actionType.detail" :class="[data.data]"></i>
                 <el-select v-else v-model="mergeFormData.Entity.ICon" filterable clearable>
-                    <el-option v-for="(item, index) in iconList" :key="index" :label="item" :value="item">
-                        <span style="float: left">{{ item }}</span>
-                        <span style="float: right; font-size: 14px"><i :class="[item]"></i></span>
-                    </el-option>
+                    <template v-for="fontItem in iconList">
+                        <el-option v-for="(item, index) in fontItem.icons" :key="fontItem.name + index" :label="item" :value="item">
+                            <span style="float: left">{{ item }}</span>
+                            <span style="float: right; font-size: 14px"><i :class="[fontItem.class, item]"></i></span>
+                        </el-option>
+                    </template>
                 </el-select>
             </template>
         </wtm-create-form>
@@ -19,7 +21,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
 import { RoutesModule } from "@/store/modules/routes";
-import { iconList } from "../config";
+import fonts from "@/assets/font/font.ts";
 import { isExternal } from "@/util/validate";
 import config from "@/config/index";
 
@@ -139,7 +141,7 @@ export default class Index extends Vue {
         };
     }
 
-    iconList: Array<any> = iconList;
+    iconList: Array<any> = fonts;
 
     /**
      * 查询详情-after-调用

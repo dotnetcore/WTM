@@ -22,7 +22,13 @@ export default {
     full: "全屏",
     language: "语言",
     set: "设置",
-    password: '修改密码'
+    password: '修改密码',
+    oldPassword: '旧密码',
+    newPassword: '新密码',
+    confirmNewPassword: '确认密码',
+    pleaseEnterOldPassword: "请输入旧密码",
+    pleaseEnterNewPassword: "请输入新密码",
+    pleaseEnterConfirmNewPassword: "请输入确认密码"
   },
   login: {
     title: "系统登录",

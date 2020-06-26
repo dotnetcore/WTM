@@ -209,7 +209,7 @@ function mixinFunc(ASSEMBLIES: Array<string> = []) {
         title = this.$t("form.confirmDeletion");
       }
       return this["$confirm"](title, this.$t("form.prompt"), {
-        confirmButtonText: this.$t("buttom.determine"),
+        confirmButtonText: this.$t("buttom.delete"),
         cancelButtonText: this.$t("buttom.cancel"),
         type: "warning"
       });
