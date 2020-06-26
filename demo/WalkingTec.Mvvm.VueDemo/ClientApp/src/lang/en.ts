@@ -22,7 +22,13 @@ export default {
     full: "full screen",
     language: "language",
     set: "Set up",
-    password: 'password'
+    password: 'password',
+    oldPassword: 'Old Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    pleaseEnterOldPassword: "Please Enter Old Password",
+    pleaseEnterNewPassword: "Please Enter New Password",
+    pleaseEnterConfirmNewPassword: "Please Enter Confirm New Password"
   },
   login: {
     title: "Login Form",
@@ -157,6 +163,7 @@ export default {
     exportSelect: "Export select",
     reset: "Reset",
     search: "Search",
+    determine: "Determine",
     closed: "Closed",
     submit: "Submit"
   },

@@ -1,8 +1,6 @@
 import Vue from "vue";
 import ElementUI from "element-ui";
 import i18n from "@/lang";
-import "element-ui/lib/theme-chalk/index.css";
-import "@/assets/css/index.less";
 import SvgIcon from "vue-svgicon";
 import App from "@/pages/index.vue";
 import router from "@/router";
@@ -10,12 +8,13 @@ import store from "@/store/modules/index";
 import "@/assets/icon/components";
 import "@/router/permission";
 import { AppModule } from "@/store/modules/app";
-
 import directives from "@/vue-custom/directive/index";
 import filters from "@/vue-custom/filters/index";
 import component from "@/vue-custom/component/index";
 import prototypes from "@/vue-custom/prototype/index";
+import "@/assets/css/index.less";
 import "chartist/dist/chartist.min.css";
+import "element-ui/lib/theme-chalk/index.css";
 
 Vue.use(ElementUI, {
   size: AppModule.size, // config.elSize, // Set element-ui default size
