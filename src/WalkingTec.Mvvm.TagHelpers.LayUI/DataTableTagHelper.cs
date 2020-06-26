@@ -477,6 +477,24 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
                 }
             }
+            if (!toolBarBtnStrBuilder.ToString().Contains("des=\"buttongroup\""))
+            {
+                toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"" des=""buttongroup"">layui.use([""form""], function () {{
+                            var form = layui.form, $ = layui.jquery;
+                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
+                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
+                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
+                                            e.stopPropagation();
+                                        }});
+                            $(document).click(function(event) {{
+                            var _con2 = $("".downpanel"");
+                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
+                            _con2.removeClass(""layui -form-selected"");
+                            }}
+                            }});
+                            }});</script>");
+            }
+
             #endregion
 
             #region DataTable
@@ -676,9 +694,10 @@ layui.use(['table'], function(){{
             bool isSub = false
         )
         {
-            if (vm.LoginUserInfo?.IsAccessable(item.Url) == true ||
+            if (string.IsNullOrEmpty(item.Url) ||
+                vm.LoginUserInfo?.IsAccessable(item.Url) == true ||
                 item.ParameterType == GridActionParameterTypesEnum.AddRow ||
-                item.ParameterType == GridActionParameterTypesEnum.RemoveRow
+                item.ParameterType == GridActionParameterTypesEnum.RemoveRow                 
             )
             {
                 // Grid 行内按钮
@@ -726,7 +745,10 @@ layui.use(['table'], function(){{
                                 subBarBtnStrList.AppendFormat("<dd style=\"padding: 0 0px;margin-bottom:1px;line-height: initial;\">{0}</dd>", subBarBtnStr.ToString());
                             }
                         }
-
+                        if(subBarBtnStrList.Length == 0)
+                        {
+                            return;
+                        }
                         toolBarBtnStrBuilder.Append($@"<button type=""button"" class=""layui-btn {(string.IsNullOrEmpty(item.ButtonClass) ? "" : $"{item.ButtonClass}")} layui-btn-sm layui-unselect layui-form-select downpanel"" style=""z-index:10;"" id=""btn_{item.ButtonId}"">
                                  <div class=""layui-select-title"" style=""padding-right:20px;"">
                                         {item.Name}
@@ -736,23 +758,6 @@ layui.use(['table'], function(){{
                                     {subBarBtnStrList.ToString()}
                                  </dl>
                                  </button>");
-                        if (!toolBarBtnStrBuilder.ToString().Contains("layui.use(["))
-                        {
-                            toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"">layui.use([""form""], function () {{
-                            var form = layui.form, $ = layui.jquery;
-                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
-                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
-                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
-                                            e.stopPropagation();
-                                        }});
-                            $(document).click(function(event) {{
-                            var _con2 = $("".downpanel"");
-                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
-                            _con2.removeClass(""layui -form-selected"");
-                            }}
-                            }});
-                            }});</script>");
-                        }
 
                         //按钮组时直接返回
                         return;
