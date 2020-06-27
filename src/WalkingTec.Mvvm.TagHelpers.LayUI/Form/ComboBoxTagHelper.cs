@@ -69,6 +69,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("lay-filter", Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
+            if(Disabled == true)
+            {
+                output.Attributes.Add("disabled", "disabled");
+
+            }
 
             if (MultiSelect == null)
             {
@@ -82,6 +87,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (MultiSelect.Value)
             {
                 output.Attributes.Add("wtm-combo", "MULTI_COMBO");
+                if (string.IsNullOrEmpty(ChangeFunc) == false)
+                {
+                    output.Attributes.Add("changefunc", FormatFuncName(ChangeFunc,false));
+                }
             }
             if (!MultiSelect.Value && EnableSearch)
             {
@@ -174,12 +183,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
 
                 // 添加默认选中项
-                var inputHidBuilder = new StringBuilder();
-                foreach (var item in listItems.Where(x => x.Selected).ToList())
-                {
-                    inputHidBuilder.Append($"<input name='{Field.Name}' value='{item.Value}' text='{item.Text}' hidden/>");
-                }
-                output.PostContent.AppendHtml(inputHidBuilder.ToString());
+                var selected = listItems.Where(x => x.Selected).ToList();
+                var mulvalues = selected.ToSpratedString(x => x.Value, seperator: "`");
+                var mulnamess = selected.ToSpratedString(x => x.Text, seperator: "`");
+                output.Attributes.Add("wtm-combovalue", $"{mulvalues}");
+                output.Attributes.Add("wtm-comboname", $"{mulnamess}");
             }
             else
             {
@@ -187,6 +195,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (item.Selected == true)
                     {
+                        if(Disabled == true)
+                        {
+                            output.PostElement.AppendHtml($"<input name='{Field.Name}' value='{item.Value}' text='{item.Text}' type='hidden' />");
+                        }
                         contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} selected>{item.Text}</option>");
                     }
                     else

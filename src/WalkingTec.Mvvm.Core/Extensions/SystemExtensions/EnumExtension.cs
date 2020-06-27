@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace WalkingTec.Mvvm.Core.Extensions
@@ -40,9 +41,24 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     var name = names[i];
                     var newitem = new ComboSelectListItem { Text = PropertyHelper.GetEnumDisplayName(self, name), Value = ((int)values.GetValue(i)).ToString() };
-                    if (value != null && name == value.ToString())
+                    if (value is IEnumerable it)
                     {
-                        newitem.Selected = true;
+                        foreach (var item in it)
+                        {
+                            if (item != null && name == item.ToString())
+                            {
+                                newitem.Selected = true;
+                                break;
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        if (value != null && name == value.ToString())
+                        {
+                            newitem.Selected = true;
+                        }
                     }
                     rv.Add(newitem);
                 }
