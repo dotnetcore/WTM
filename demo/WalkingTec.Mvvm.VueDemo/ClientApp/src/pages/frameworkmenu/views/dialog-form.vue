@@ -1,14 +1,21 @@
 <template>
     <wtm-dialog-box :is-show.sync="isShow" :status="status" :events="formEvent">
-        <wtm-create-form :ref="refName" :status="status" :options="formOptions">
+        <wtm-create-form :ref="refName" :status="status" :options="formOptions" :sourceFormData="formData">
             <template #ICon="data">
-                <i v-if="data.status === $actionType.detail" :class="[data.data]"></i>
-                <el-select v-else v-model="mergeFormData.Entity.ICon" filterable clearable>
-                    <el-option v-for="(item, index) in iconList" :key="index" :label="item" :value="item">
-                        <span style="float: left">{{ item }}</span>
-                        <span style="float: right; font-size: 14px"><i :class="[item]"></i></span>
-                    </el-option>
-                </el-select>
+                <wtm-icon v-if="data.status === $actionType.detail" :icon="data.data" />
+                <template v-else>
+                    <el-select v-model="formData.Entity.IConType" clearable class="icon-select-type" @change="formData.Entity.ICon = ''">
+                        <el-option v-for="(item, index) in iconList" :key="index" :label="item.name" :value="item.name"></el-option>
+                    </el-select>
+                    <el-select v-model="formData.Entity.ICon" filterable clearable>
+                        <template v-for="fontItem in iconList">
+                            <el-option v-if="formData.Entity.IConType === fontItem.name || !formData.Entity.IConType" v-for="(item, index) in fontItem.icons" :key="fontItem.name + index" :label="item" :value="item">
+                                <span style="float: left">{{ item }}</span>
+                                <span style="float: right; font-size: 14px"><i :class="[fontItem.class, item]"></i></span>
+                            </el-option>
+                        </template>
+                    </el-select>
+                </template>
             </template>
         </wtm-create-form>
     </wtm-dialog-box>
@@ -19,7 +26,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
 import mixinForm from "@/vue-custom/mixin/form-mixin";
 import { RoutesModule } from "@/store/modules/routes";
-import { iconList } from "../config";
+import fonts from "@/assets/font/font.ts";
 import { isExternal } from "@/util/validate";
 import config from "@/config/index";
 
@@ -34,11 +41,26 @@ export default class Index extends Vue {
     @State
     getFoldersData;
 
-    mergeFormData = {
+    formData = {
+        SelectedModule: "",
+        SelectedActionIDs: [],
         Entity: {
+            ID: "",
+            IsInside: true,
+            Url: "",
+            PageName: "",
+            ParentId: "",
+            FolderOnly: false,
+            ShowOnMenu: "",
+            IsPublic: false,
+            DisplayOrder: 0,
+            IConType: "",
             ICon: ""
         }
     };
+
+    iconList: Array<any> = fonts;
+
     get formOptions() {
         const moduleChildren = RoutesModule.pageList.map(item => {
             return {
@@ -132,14 +154,12 @@ export default class Index extends Vue {
                 "Entity.ICon": {
                     type: "wtmSlot",
                     label: this.$t("frameworkmenu.ICon"),
-                    span: 24,
+                    span: 12,
                     slotKey: "ICon"
                 }
             }
         };
     }
-
-    iconList: Array<any> = iconList;
 
     /**
      * 查询详情-after-调用
@@ -147,6 +167,8 @@ export default class Index extends Vue {
     afterOpen(data) {
         this.getFolders();
         this.onSelectedAction(data && data.SelectedModule);
+        const icon = _.findLast(fonts, item => item.icons.includes(data.Entity.ICon));
+        this.formData.Entity.IConType = icon ? icon.name : '';
     }
     /**
      * 动作名称
@@ -176,3 +198,9 @@ export default class Index extends Vue {
     }
 }
 </script>
+
+<style lang="less" scoped>
+    .icon-select-type {
+        margin-bottom: 10px;
+    }
+</style>
