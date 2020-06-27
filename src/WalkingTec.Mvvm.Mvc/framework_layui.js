@@ -222,7 +222,7 @@ window.ff = {
                 layui.layedit.sync(rindex);
             }
         }
-
+        var combobox = $('#' + formId + ' :checkbox');
 
         var datastr = $('#' + formId).serialize();
         var checkboxes = $('#' + formId + ' :checkbox');
@@ -245,18 +245,25 @@ window.ff = {
         else {
             layui.use(['form', 'formSelects'], function () {
                 var formSelects = layui.formSelects;
-                var form = layui.form.render(null, formId);
+                layui.form.render(null, formId);
                 /* 启用 ComboBox 多选 */
                 for (var i = 0; i < comboxs.length; i++) {
-                    var filter = comboxs[i].attributes['lay-filter'].value,
-                        arr = [],
-                        subTag = $('input[name="' + filter + '"]');
-                    for (var a = 0; a < subTag.length; a++) {
-                        arr.push({ name: subTag[a].attributes['text'].value, val: subTag[a].value });
+                    var filter = comboxs[i].attributes['lay-filter'].value;
+                    var vs = comboxs[i].attributes['wtm-combovalue'].value;
+                    var vn = comboxs[i].attributes['wtm-comboname'].value;
+                    var arr = [];
+                    if (vs !== null && vs != "") {
+                        var values = vs.split("`");
+                        var names = vn.split("`");
+                        for (var a = 0; a < values.length; a++) {
+                            arr.push({ name: names[a], val: values[a] });
+                        }
                     }
+                    var changefunc = null;
+                    try { changefunc = comboxs[i].attributes['changefunc'].value } catch{ }
                     formSelects.on({
                         layFilter: filter, left: '', right: '', separator: ',', arr: arr,
-                        selectFunc: null
+                        selectFunc: eval(changefunc)
                     });
                 }
             });
