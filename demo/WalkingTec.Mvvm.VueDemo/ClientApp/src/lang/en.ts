@@ -165,11 +165,19 @@ export default {
     search: "Search",
     determine: "Determine",
     closed: "Closed",
-    submit: "Submit"
+    submit: "Submit",
+    cancel: "Cancel"
   },
   form: {
     pleaseEnter: "Please enter ",
     upload: "Upload",
-    clickUpload: "Click to upload"
+    clickUpload: "Click to upload",
+    confirmDeletion: "Confirm deletion, continue?",
+    prompt: "Prompt",
+    ImportSucceeded: "Import succeeded",
+    successfullyDeleted: "successfully deleted",
+    failedToDelete: "failed to delete",
+    ExportSucceeded: "Export succeeded",
+    SuccessfullyModified: "Successfully modified",
   }
 };
