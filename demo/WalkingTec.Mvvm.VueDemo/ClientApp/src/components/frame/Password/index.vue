@@ -1,7 +1,7 @@
 <template>
-  <wtm-dialog-box class="password-wrap" width="450px" :is-show.sync="isShow" @close="onClose" @onSubmit="onSubmit">
-    <wtm-create-form ref="refForm" :options="formOptions" :sourceFormData="formData"></wtm-create-form>
-  </wtm-dialog-box>
+    <wtm-dialog-box class="password-wrap" width="600px" :is-show.sync="isShow" @close="onClose" @onSubmit="onSubmit">
+        <wtm-create-form ref="refForm" :options="formOptions" :sourceFormData="formData"></wtm-create-form>
+    </wtm-dialog-box>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,7 @@ import { UserModule } from "@/store/modules/user";
 
 @Component({
     name: "password",
-    components: {},
+    components: {}
 })
 export default class extends Vue {
     isShow: Boolean = false;
@@ -19,58 +19,62 @@ export default class extends Vue {
         UserId: UserModule.info.Id,
         OldPassword: "",
         NewPassword: "",
-        NewPasswordComfirm: "",
+        NewPasswordComfirm: ""
     };
 
-    formOptions: Object = {
-        formProps: {
-            "label-width": "80px",
-        },
-        formItem: {
-            UserId: {
-                isHidden: true,
+    get formOptions() {
+        return {
+            formProps: {
+                "label-width": "180px"
             },
-            OldPassword: {
-                label: "旧密码",
-                type: "input",
-                span: 24,
-                props: {
-                    "show-password": true,
+            formItem: {
+                UserId: {
+                    isHidden: true
                 },
-                rules: {
-                    required: true,
-                    message: "请输入旧密码",
-                    trigger: "blur",
+                OldPassword: {
+                    label: this.$t("navbar.oldPassword"),
+                    type: "input",
+                    span: 24,
+                    props: {
+                        "show-password": true
+                    },
+                    rules: {
+                        required: true,
+                        message: this.$t("navbar.pleaseEnterOldPassword"),
+                        trigger: "blur"
+                    }
                 },
-            },
-            NewPassword: {
-                label: "新密码",
-                type: "input",
-                span: 24,
-                props: {
-                    "show-password": true,
+                NewPassword: {
+                    label: this.$t("navbar.newPassword"),
+                    type: "input",
+                    span: 24,
+                    props: {
+                        "show-password": true
+                    },
+                    rules: {
+                        required: true,
+                        message: this.$t("navbar.pleaseEnterNewPassword"),
+                        trigger: "blur"
+                    }
                 },
-                rules: {
-                    required: true,
-                    message: "请输入新密码",
-                    trigger: "blur",
-                },
-            },
-            NewPasswordComfirm: {
-                label: "确认密码",
-                type: "input",
-                span: 24,
-                props: {
-                    "show-password": true,
-                },
-                rules: {
-                    required: true,
-                    message: "请输入确认密码",
-                    trigger: "blur",
-                },
-            },
-        },
-    };
+                NewPasswordComfirm: {
+                    label: this.$t("navbar.confirmNewPassword"),
+                    type: "input",
+                    span: 24,
+                    props: {
+                        "show-password": true
+                    },
+                    rules: {
+                        required: true,
+                        message: this.$t(
+                            "navbar.pleaseEnterConfirmNewPassword"
+                        ),
+                        trigger: "blur"
+                    }
+                }
+            }
+        };
+    }
 
     onOpen() {
         this.isShow = true;
@@ -82,7 +86,7 @@ export default class extends Vue {
         this.isShow = false;
     }
     onSubmit() {
-        UserModule.ChangePassword(this.formData).then((res) => {
+        UserModule.ChangePassword(this.formData).then(res => {
             if (res.error) {
                 const ref = this.$refs["refForm"];
                 _.mapKeys(res.data.Form, (value, key) => {
@@ -94,7 +98,7 @@ export default class extends Vue {
             } else {
                 this["$notify"]({
                     title: "操作成功",
-                    type: "success",
+                    type: "success"
                 });
                 this.onClose();
             }
