@@ -7,7 +7,7 @@
         <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
             <sidebar-item-link v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
                 <el-menu-item :index="resolvePath(theOnlyOneChild.path)" :class="{ 'submenu-title-noDropdown': isFirstLevel }">
-                    <i :class="[theOnlyOneChild.meta.icon || 'el-icon-files']" class="i-icon"></i>
+                    <wtm-icon :icon="theOnlyOneChild.meta.icon || 'el-icon-files'" class="i-icon" />
                     <span v-if="theOnlyOneChild.meta.title" slot="title">
                         {{  $t("route." + theOnlyOneChild.meta.title) }}
                     </span>
@@ -16,7 +16,7 @@
         </template>
         <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
             <template slot="title">
-                <i :class="[item.meta.icon || 'el-icon-files']" class="i-icon"></i>
+                <wtm-icon :icon="item.meta.icon || 'el-icon-files'" class="i-icon" />
                 <span v-if="item.meta && item.meta.title" slot="title">
                     {{ $t("route." + item.meta.title) }}
                 </span>
@@ -123,6 +123,10 @@ export default class extends Vue {
     }
 }
 
+.el-submenu [class^=el-icon-] {
+    margin-right: 0 !important;
+}
+
 .simple-mode {
     &.first-level {
         .submenu-title-noDropdown {
@@ -154,16 +158,26 @@ export default class extends Vue {
 .el-menu--popup-right-start {
     background-color: #545c64 !important;
 }
+
+.i-icon {
+    i {
+        vertical-align: middle;
+        text-align: center;
+        display: inline-block;
+        font-size: 18px;
+        min-width: 24px;
+    }
+}
 </style>
 
 <style lang="less" scoped>
 .icon() {
     width: 1em;
     height: 1em;
-    margin-right: 16px;
+    margin-right: 5px;
     color: #909399;
+    font-size: 18px;
 }
-
 .el-menu-item.is-active {
     .i-icon {
         .icon();
