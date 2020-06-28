@@ -84,8 +84,7 @@ function mixinFunc(defaultRefName: string = "el_form_name") {
       }
       const params = this.beforeOpen(this.dialogData) || this.dialogData;
       if (this["status"] !== this["$actionType"].add) {
-        const resData = { ...params, id: params.ID };
-        this["detail"](resData).then(res => {
+        this["detail"](params).then(res => {
           this.setFormData(res);
           this.afterOpen(res);
         });
