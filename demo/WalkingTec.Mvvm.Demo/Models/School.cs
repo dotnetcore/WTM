@@ -40,6 +40,12 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Required]
         public string Remark { get; set; }
 
+        [Display(Name = "时间")]
+        public TimeSpan Duration { get; set; }
+
+        [Display(Name = "级别")]
+        public int Level { get; set; }
+
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
 

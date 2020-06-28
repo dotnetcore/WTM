@@ -2,10 +2,11 @@
 
 <wt:form vm="@Model">
   <wt:row>
-    <wt:textbox field="Entity.SchoolCode" />
-    <wt:textbox field="Entity.SchoolName" />
-    <wt:combobox field="Entity.SchoolType" />
+    <wt:textbox field="Entity.SchoolCode" default-value="123"/>
+    <wt:textbox field="Entity.SchoolName" default-value="345"/>
+    <wt:combobox field="Entity.SchoolType" default-value="1"  />
     <wt:multiupload field="Entity.Photos" />
+    <wt:datetime field="Entity.Duration" format="HH:mm:ss" type="Time" default-value="1:1:1" />
     <wt:ueditor field="Entity.Remark" height="300" />
   </wt:row>
   <wt:row align="AlignEnum.Right">

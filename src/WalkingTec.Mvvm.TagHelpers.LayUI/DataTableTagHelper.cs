@@ -567,8 +567,18 @@ layui.use(['table'], function(){{
     }}
     }}
   {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
-  {TableJSVar} = table.render({Id}option);
-  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : string.Empty)}
+tempurl = {Id}option.url;
+{Id}option.url = null;
+{Id}defaultfilter = {{}};
+$.extend(true,{Id}defaultfilter ,{Id}option);
+{TableJSVar} = table.render({Id}option);
+  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
+setTimeout(function(){{
+    var tempwhere = {{}};
+    $.extend(tempwhere,{Id}defaultfilter.where);
+    table.reload('{Id}',{{url:tempurl,where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}')),}});
+}},100);
+")}
 
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
       var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
