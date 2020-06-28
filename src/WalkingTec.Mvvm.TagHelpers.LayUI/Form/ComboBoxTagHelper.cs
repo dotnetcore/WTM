@@ -125,29 +125,41 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 if (checktype.IsEnumOrNullableEnum())
                 {
-                    listItems = checktype.ToListItems(Field.Model);
+                    listItems = checktype.ToListItems(DefaultValue?? Field.Model);
                 }
                 else if (checktype == typeof(bool) || checktype == typeof(bool?))
                 {
-                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, (bool?)Field.Model, YesText, NoText);
+                    bool? df = null;
+                    if(bool.TryParse(DefaultValue ?? "",out bool test) == true)
+                    {
+                        df = test;
+                    }
+                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom,df ?? (bool?)Field.Model, YesText, NoText);
                 }
             }
             else // 添加用户设置的设置源
             {
                 var selectVal = new List<string>();
-                if (Field.Model != null)
+                if (DefaultValue == null)
                 {
-                    if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
+                    if (Field.Model != null)
                     {
-                        foreach (var item in Field.Model as dynamic)
+                        if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                         {
-                            selectVal.Add(item.ToString().ToLower());
+                            foreach (var item in Field.Model as dynamic)
+                            {
+                                selectVal.Add(item.ToString().ToLower());
+                            }
+                        }
+                        else
+                        {
+                            selectVal.Add(Field.Model.ToString().ToLower());
                         }
                     }
-                    else
-                    {
-                        selectVal.Add(Field.Model.ToString().ToLower());
-                    }
+                }
+                else
+                {
+                    selectVal.AddRange(DefaultValue.Split(',').Select(x=>x.ToLower()));
                 }
                 if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
                 {

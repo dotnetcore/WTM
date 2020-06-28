@@ -41,7 +41,24 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     var name = names[i];
                     var newitem = new ComboSelectListItem { Text = PropertyHelper.GetEnumDisplayName(self, name), Value = ((int)values.GetValue(i)).ToString() };
-                    if (value is IEnumerable it)
+                    if(value is string)
+                    {
+                        if (value != null)
+                        {
+                            string v = value.ToString();
+                            var vs = v.Split(',');
+                            foreach (var item in vs)
+                            {
+                                if (item != null && (newitem.Value.ToString() == item.ToString())||name == item.ToString())
+                                {
+                                    newitem.Selected = true;
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                    else if (value is IEnumerable it)
                     {
                         foreach (var item in it)
                         {
@@ -51,13 +68,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                 break;
                             }
 
-                        }
-                    }
-                    else
-                    {
-                        if (value != null && name == value.ToString())
-                        {
-                            newitem.Selected = true;
                         }
                     }
                     rv.Add(newitem);
