@@ -203,50 +203,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else // 添加用户设置的设置源
             {
-                var selectVal = new List<string>();
-                if (DefaultValue == null)
+                foreach (var item in listItems)
                 {
-                    if (Field.Model != null)
+                    if (item.Selected == true)
                     {
-                        if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
-                        {
-                            foreach (var item in Field.Model as dynamic)
-                            {
-                                selectVal.Add(item.ToString().ToLower());
-                            }
-                        }
-                        else
-                        {
-                            selectVal.Add(Field.Model.ToString().ToLower());
-                        }
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} selected>{item.Text}</option>");
                     }
-                }
-                else
-                {
-                    selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
-                }
-                if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
-                {
-                    listItems = Items.Model as List<ComboSelectListItem>;
-                    foreach (var item in listItems)
+                    else
                     {
-                        if (selectVal.Contains(item.Value?.ToString().ToLower()))
-                        {
-                            item.Selected = true;
-                        }
-                    }
-                }
-                else if (Items.Metadata.ModelType.IsList())
-                {
-                    var exports = (Items.Model as IList);
-                    foreach (var item in exports)
-                    {
-                        listItems.Add(new ComboSelectListItem
-                        {
-                            Text = item?.ToString(),
-                            Value = item?.ToString(),
-                            Selected = selectVal.Contains(item?.ToString())
-                        });
+                        contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} {(Disabled && listItems.Count > 1 && Field.Model != null ? "disabled=\"\"" : string.Empty)}>{item.Text}</option>");
                     }
                 }
             }

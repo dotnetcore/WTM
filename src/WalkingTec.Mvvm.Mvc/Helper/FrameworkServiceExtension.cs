@@ -189,6 +189,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor",x]);
                 options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x,y) => Core.Program._localizer["AttemptedValueIsInvalidAccessor",x,y]);
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor", x]);
             })
             .AddJsonOptions(options =>
             {

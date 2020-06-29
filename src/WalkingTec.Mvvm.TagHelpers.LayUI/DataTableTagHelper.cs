@@ -477,23 +477,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     AddSubButton(vmQualifiedName, rowBtnStrBuilder, toolBarBtnStrBuilder, gridBtnEventStrBuilder, vm, item);
                 }
             }
-            if (!toolBarBtnStrBuilder.ToString().Contains("des=\"buttongroup\""))
-            {
-                toolBarBtnStrBuilder.Append($@"<script type=""text/javascript"" des=""buttongroup"">layui.use([""form""], function () {{
-                            var form = layui.form, $ = layui.jquery;
-                            $("".downpanel"").on(""click"", "".layui-select-title"", function(e) {{
-                                $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
-                                $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
-                                            e.stopPropagation();
-                                        }});
-                            $(document).click(function(event) {{
-                            var _con2 = $("".downpanel"");
-                            if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
-                            _con2.removeClass(""layui -form-selected"");
-                            }}
-                            }});
-                            }});</script>");
-            }
 
             #endregion
 
@@ -556,6 +539,7 @@ layui.use(['table'], function(){{
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
     ,done: function(res,curr,count){{
+        this.where={Id}defaultfilter.where;
       if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{Program._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
       if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{Program._localizer["Error"]}'}});}}
      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
@@ -567,7 +551,7 @@ layui.use(['table'], function(){{
     }}
     }}
   {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
-tempurl = {Id}option.url;
+var tempurl = {Id}option.url;
 {Id}option.url = null;
 {Id}defaultfilter = {{}};
 $.extend(true,{Id}defaultfilter ,{Id}option);
@@ -603,12 +587,31 @@ setTimeout(function(){{
 }})
 </script>
 <script type=""text / html"" id=""{ToolBarId}2"" >
-<div style=""text-align:right;margin-right:{lefttoolbarmergin}px"">{toolBarBtnStrBuilder}</div>
+<div  id=""{Id}buttons""style=""text-align:right;margin-right:{lefttoolbarmergin}px"">{toolBarBtnStrBuilder}</div>
 </script>
 <!-- Grid 行内按钮 -->
 <script type=""text/html"" id=""{ToolBarId}"">{rowBtnStrBuilder}</script>
 ");
             #endregion
+
+            output.PostElement.AppendHtml($@"
+<script>
+    $(""#{Id}buttons .downpanel"").on(""click"", function(e) {{
+        debugger;
+        $("".layui-form-select"").not($(this).parents("".layui-form-select"")).removeClass(""layui-form-selected"");
+        $(this).parents("".layui-form-select"").toggleClass(""layui-form-selected"");
+        e.stopPropagation();
+    }});
+    $(document).click(function(event) {{
+         debugger;
+       var _con2 = $(""#{Id}buttons .downpanel"");
+        if (!_con2.is (event.target) && (_con2.has(event.target).length === 0)) {{
+            _con2.removeClass(""layui-form-selected"");
+        }}
+    }});
+</script>");
+
+
 
             //output.PreElement.AppendHtml($@"<div style=""text-align:right;padding-bottom:10px;padding-top:5px;margin-right:15px;line-height:35px;"">{toolBarBtnStrBuilder}</div>");
             output.PostElement.AppendHtml($@"
