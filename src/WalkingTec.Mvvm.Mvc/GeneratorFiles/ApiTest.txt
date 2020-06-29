@@ -27,8 +27,8 @@ namespace $tns$
         [TestMethod]
         public void SearchTest()
         {
-            string rv = _controller.Search(new $classnamel$Searcher());
-            Assert.IsTrue(string.IsNullOrEmpty(rv)==false);
+            ContentResult rv = _controller.Search(new $classnamel$Searcher()) as ContentResult;
+            Assert.IsTrue(string.IsNullOrEmpty(rv.Content)==false);
         }
 
         [TestMethod]

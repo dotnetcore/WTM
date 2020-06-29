@@ -124,7 +124,14 @@ namespace WalkingTec.Mvvm.Core
                     var dpList = IsSpa ? GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6) : GetMenu(AllModules, "_Admin", "DataPrivilege", "Index", new List<FrameworkRole> { adminRole }, null, 6);
                     if (logList != null)
                     {
-                        systemManagement.Children.AddRange(new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList });
+                        var menus = new FrameworkMenu[] { logList, userList, roleList, groupList, menuList, dpList };
+                        foreach (var item in menus)
+                        {
+                            if(item != null)
+                            {
+                                systemManagement.Children.Add(item);
+                            }
+                        }
                         Set<FrameworkMenu>().Add(systemManagement);
 
                         if (IsSpa == false)
@@ -148,7 +155,14 @@ namespace WalkingTec.Mvvm.Core
                             var dpList2 = GetMenu2(AllModules, "DataPrivilege", new List<FrameworkRole> { adminRole }, null, 6);
                             var apis = new FrameworkMenu[] { logList2, userList2, roleList2, groupList2, menuList2, dpList2 };
                             //apis.ToList().ForEach(x => { x.ShowOnMenu = false;x.PageName += $"({Program._localizer["BuildinApi"]})"; });
-                            apifolder.Children.AddRange(apis);
+                            foreach (var item in apis)
+                            {
+                                if(item != null)
+                                {
+                                    apifolder.Children.Add(item);
+
+                                }
+                            }
                             Set<FrameworkMenu>().Add(apifolder);
                         }
                         else
@@ -230,7 +244,12 @@ namespace WalkingTec.Mvvm.Core
         {
             var acts = allModules.Where(x => x.FullName == $"WalkingTec.Mvvm.Admin.Api,{controllerName}" && x.IsApi == true).SelectMany(x => x.Actions).ToList();
             var rest = acts.Where(x => x.IgnorePrivillege == false).ToList();
-            FrameworkMenu menu = GetMenuFromAction(acts[0], true, allowedRoles, allowedUsers, displayOrder);
+            FrameworkAction act = null;
+            if(acts.Count > 0)
+            {
+                act = acts[0];
+            }
+            FrameworkMenu menu = GetMenuFromAction(act, true, allowedRoles, allowedUsers, displayOrder);
             if (menu != null)
             {
                 menu.Url = "/" + acts[0].Module.ClassName.ToLower();

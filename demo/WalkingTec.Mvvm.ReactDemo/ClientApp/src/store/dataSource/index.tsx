@@ -66,8 +66,9 @@ export default class PageStore {
       this.PageState.tableLoading = false;
       return res;
     } catch (error) {
-      console.warn(error)
+      // console.warn(error)
       this.PageState.tableLoading = false;
+      throw error
     }
   }
   /** 详情 */

@@ -22,7 +22,7 @@ export default {
     full: "full screen",
     language: "language",
     set: "Set up",
-    password: 'password',
+    password: 'Password',
     oldPassword: 'Old Password',
     newPassword: 'New Password',
     confirmNewPassword: 'Confirm New Password',
@@ -102,7 +102,9 @@ export default {
     confirm: "Confirm",
     detail: "Details",
     custom: "Custom column",
-    download: "Download"
+    download: "Download",
+    startdate: "Start",
+    enddate: "End"
   },
   example: {
     warning:
@@ -171,13 +173,18 @@ export default {
   form: {
     pleaseEnter: "Please enter ",
     upload: "Upload",
-    clickUpload: "Click to upload",
-    confirmDeletion: "Confirm deletion, continue?",
-    prompt: "Prompt",
-    ImportSucceeded: "Import succeeded",
-    successfullyDeleted: "successfully deleted",
-    failedToDelete: "failed to delete",
-    ExportSucceeded: "Export succeeded",
-    SuccessfullyModified: "Successfully modified",
+      clickUpload: "Click to upload",
+      confirmDeletion: "Are you sure to delete?",
+      prompt: "Info",
+      ImportSucceeded: "Import succeeded",
+      successfullyDeleted: "Delete succeeded",
+      failedToDelete: "Delete failed",
+      ExportSucceeded: "Export succeeded",
+      SuccessfullyModified: "Edit succeeded",
+    all: "All",
+    selected: "Selected",
+    yes: "Yes",
+      no: "No",
+      notnull: " can not be null"
   }
 };
