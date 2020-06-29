@@ -9,7 +9,7 @@
         <!-- 列表 -->
         <wtm-table-box :default-expand-all="true" :row-key="'ID'" :tree-props="{children: 'children'}" :data="treeData" :attrs="{...searchAttrs, actionList}" :events="{...searchEvent, ...actionEvent}">
             <template #ICon="rowData">
-                <i :class="[rowData.row.ICon]"></i>
+                <wtm-icon :icon="rowData.row.ICon" />
             </template>
         </wtm-table-box>
         <!-- 弹出框 -->

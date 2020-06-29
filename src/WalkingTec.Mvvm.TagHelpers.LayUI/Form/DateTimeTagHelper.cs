@@ -50,11 +50,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     public class DateTimeTagHelper : BaseFieldTag
     {
         /// <summary>
-        /// Value
-        /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
         /// 控件选择类型
         /// 默认值：date
         /// </summary>
@@ -172,6 +167,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         };
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            string Value = null;
             output.TagName = "input";
             output.TagMode = TagMode.StartTagOnly;
             output.Attributes.Add("type", "text");
@@ -182,29 +178,45 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 RangeSplit = "~";
             }
 
-            if (Field.ModelExplorer.ModelType == typeof(string))
+            if (DefaultValue != null)
             {
-                Value = Field.Model?.ToString() ?? Value;
-            }
-            else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
-            {
-                var dateRange = Field.Model as DateRange;
-                if (string.IsNullOrEmpty(Format))
-                    Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
-                else
-                    Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
+                Value = DefaultValue;
             }
             else
             {
-                DateTime? df = Field.Model as DateTime?;
-                if(df == DateTime.MinValue)
+                if (Field.ModelExplorer.ModelType == typeof(string))
                 {
-                    df = null;
+                    Value = Field.Model?.ToString() ?? Value;
                 }
-                if (string.IsNullOrEmpty(Format))
-                    Value = df?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                else if (Range.HasValue && Range.Value && Field.ModelExplorer.ModelType == typeof(DateRange))
+                {
+                    var dateRange = Field.Model as DateRange;
+                    if (string.IsNullOrEmpty(Format))
+                        Value = dateRange?.ToString(DateTimeFormatDic[Type], RangeSplit) ?? Value;
+                    else
+                        Value = dateRange?.ToString(Format, RangeSplit) ?? Value;
+                }
+                else if (Field.ModelExplorer.ModelType == typeof(TimeSpan) || Field.ModelExplorer.ModelType == typeof(TimeSpan?))
+                {
+                    TimeSpan? df = Field.Model as TimeSpan?;
+                    if (df == TimeSpan.MinValue)
+                    {
+                        df = null;
+                    }
+                    Value = df?.ToString();
+                }
                 else
-                    Value = df?.ToString(Format) ?? Value;
+                {
+                    DateTime? df = Field.Model as DateTime?;
+                    if (df == DateTime.MinValue)
+                    {
+                        df = null;
+                    }
+                    if (string.IsNullOrEmpty(Format))
+                        Value = df?.ToString(DateTimeFormatDic[Type]) ?? Value;
+                    else
+                        Value = df?.ToString(Format) ?? Value;
+                }
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
