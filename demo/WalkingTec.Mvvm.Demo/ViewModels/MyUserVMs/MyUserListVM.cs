@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
             return new List<GridAction>
             {
                 this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Create, "新建","", dialogWidth: 800),
-                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800),
+                this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Edit, "修改","", dialogWidth: 800).SetBindVisiableColName("CanEdit"),
                 this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Delete, "删除", "",dialogWidth: 800),
                 this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.Details, "详细","", dialogWidth: 800),
                 this.MakeStandardAction("MyUser", GridActionStandardTypesEnum.BatchEdit, "批量修改","", dialogWidth: 800),
@@ -46,6 +46,15 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                 this.MakeGridHeader(x => x.IsValid),
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
+                this.MakeGridHeader(x => "你111").SetFormat((a,b)=>"asdf"),
+                this.MakeGridHeader(x=>"CanEdit").SetHide().SetFormat((e,v)=>{
+                    if (e.Sex == SexEnum.Male){
+                        return "true";
+                    }
+                    else {
+                        return "false";
+                    }
+                }),
                 this.MakeGridHeaderAction(width: 200)
             };
         }

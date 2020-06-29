@@ -847,7 +847,10 @@ where S : struct
         public static string GetFieldName<T>(this IDataContext self, string fieldname)
         {
             var rv = self.Model.FindEntityType(typeof(T)).FindProperty(fieldname);
-
+            if(rv == null)
+            {
+                return "";
+            }
             switch (self.DBType)
             {
                 case DBTypeEnum.SqlServer:

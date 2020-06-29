@@ -81,8 +81,12 @@ namespace WalkingTec.Mvvm.Core
                 {
                     using (var dc = cs.CreateDC())
                     {
-                        dc.AddEntity<ActionLog>(state as ActionLog);
-                        dc.SaveChanges();
+                        try
+                        {
+                            dc.AddEntity<ActionLog>(state as ActionLog);
+                            dc.SaveChanges();
+                        }
+                        catch { }
                     }
                 }
             }

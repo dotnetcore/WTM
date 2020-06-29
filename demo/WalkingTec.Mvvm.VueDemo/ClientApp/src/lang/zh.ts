@@ -96,7 +96,9 @@ export default {
     confirm: "确 定",
     detail: "详情",
     custom: "自定义列",
-    download:"下载"
+    download:"下载",
+    startdate: "开始时间",
+    enddate: "结束时间"
   },
   example: {
     warning:
@@ -173,5 +175,10 @@ export default {
     failedToDelete: "删除失败",
     ExportSucceeded: "导出成功",
     SuccessfullyModified: "修改成功",
+      all: "全部",
+      selected: "已选",
+      yes: "是",
+      no: "否",
+      notnull:"不能为空"
   }
 };

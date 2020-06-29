@@ -60,6 +60,8 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         {
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.ID, x=>x.ID)
+                .CheckContain(Searcher.Name, x=>x.Name)
+                .CheckBetween(Searcher.EnRollDate?.GetStartTime(), Searcher.EnRollDate?.GetEndTime(), x => x.EnRollDate, includeMax: false)
                 .CheckWhere(Searcher.SelectedStudentMajorIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorIDs.Contains(y.MajorId)).Select(z=>z.StudentId).Contains(x.ID))
                 .Select(x => new Student_View
                 {
