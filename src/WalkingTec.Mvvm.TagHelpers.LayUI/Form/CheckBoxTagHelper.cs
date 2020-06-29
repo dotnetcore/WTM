@@ -38,7 +38,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             var modelType = Field.Metadata.ModelType;
             var listitems = new List<ComboSelectListItem>();
-
+            List<string> values = null;
+            if(DefaultValue != null)
+            {
+                values = DefaultValue.Split(',').ToList();
+            }
             var middleTable = modelType.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
             //如果指向多对多中间表
             if(middleTable != null)
@@ -53,7 +57,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     if (innerType.IsEnumOrNullableEnum())
                     {
                         listitems = innerType.ToListItems();
-                        SetSelected(listitems, Field.Model as IList);
+                        SetSelected(listitems, values ?? Field.Model as IList);
                     }
                 }
                 else if (modelType.IsBoolOrNullableBool())
@@ -79,7 +83,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         });
                     }
                 }
-                SetSelected(listitems, Field.Model as IList);
+                SetSelected(listitems, values ?? Field.Model as IList);
             }
 
             output.TagName = "div";

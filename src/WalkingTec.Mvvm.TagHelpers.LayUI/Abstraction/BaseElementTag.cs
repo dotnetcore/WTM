@@ -212,7 +212,7 @@ layui.use(['autocomplete'],function(){{
             //}
         }
 
-        public string FormatFuncName(string funcname)
+        public string FormatFuncName(string funcname,bool appendparameter = true)
         {
             if (funcname == null)
             {
@@ -224,7 +224,10 @@ layui.use(['autocomplete'],function(){{
             {
                 rv = rv.Substring(0, ind);
             }
-            rv += "(data)";
+            if (appendparameter == true)
+            {
+                rv += "(data)";
+            }
             return rv;
         }
     }

@@ -143,18 +143,21 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                var rv = $"/{HttpUtility.UrlEncode(ControllerName)}/{HttpUtility.UrlEncode(ActionName)}";
-                if (!string.IsNullOrEmpty(Area))
-                {
-                    rv = $"/{HttpUtility.UrlEncode(Area)}{rv}";
-                }
-                if (!string.IsNullOrEmpty(QueryString))
-                {
-                    rv = $"{rv}?{QueryString}";
-                }
-                else
-                {
-                    rv = $"{rv}?1=1"; ;
+                var rv = "";
+                if(string.IsNullOrEmpty(ControllerName) == false){
+                    rv = $"/{HttpUtility.UrlEncode(ControllerName)}/{HttpUtility.UrlEncode(ActionName)}";
+                    if (!string.IsNullOrEmpty(Area))
+                    {
+                        rv = $"/{HttpUtility.UrlEncode(Area)}{rv}";
+                    }
+                    if (!string.IsNullOrEmpty(QueryString))
+                    {
+                        rv = $"{rv}?{QueryString}";
+                    }
+                    else
+                    {
+                        rv = $"{rv}?1=1"; ;
+                    }
                 }
                 return rv;
             }
