@@ -632,27 +632,6 @@ window.ff = {
         return filter;
     },
 
-    GetFormDataWithoutNull: function (formId) {
-        var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
-        layui.each(fieldElem, function (_, item) {
-            if (!item.name) return;
-            if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            if (item.value !== null && item.value !== "") {
-                if (filter.hasOwnProperty(item.name)) {
-                    var temp = filter[item.name];
-                    if (!(temp instanceof Array))
-                        temp = [temp];
-                    temp.push(item.value);
-                    filter[item.name] = temp;
-                }
-                else {
-                    filter[item.name] = item.value;
-                }
-            }
-        });
-        return filter;
-    },
-
     GetFormData: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
