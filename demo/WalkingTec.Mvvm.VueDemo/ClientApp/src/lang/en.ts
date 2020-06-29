@@ -166,7 +166,7 @@ export default {
     reset: "Reset",
     search: "Search",
     determine: "Determine",
-    closed: "Closed",
+    closed: "Close",
     submit: "Submit",
     cancel: "Cancel"
   },
