@@ -260,7 +260,7 @@ window.ff = {
                         }
                     }
                     var changefunc = null;
-                    try { changefunc = comboxs[i].attributes['changefunc'].value } catch{ }
+                    try { changefunc = comboxs[i].attributes['changefunc'].value } catch (e){ }
                     formSelects.on({
                         layFilter: filter, left: '', right: '', separator: ',', arr: arr,
                         selectFunc: eval(changefunc)
