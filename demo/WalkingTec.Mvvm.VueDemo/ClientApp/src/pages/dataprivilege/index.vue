@@ -75,6 +75,20 @@ export default class Index extends Vue {
     }
 
     /**
+     * 修改
+     * @param data
+     */
+    onEdit(data) {
+        this.openDialog(this.$actionType.edit, data);
+    }
+    /**
+     * 详情
+     * @param data
+     */
+    onDetail(data) {
+        this.openDialog(this.$actionType.detail, data);
+    }
+    /**
      * 单个删除
      * @param params
      */
