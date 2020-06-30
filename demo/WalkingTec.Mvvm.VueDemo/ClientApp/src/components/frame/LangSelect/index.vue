@@ -1,7 +1,7 @@
 <template>
     <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
         <el-tooltip :content="$t('navbar.language')" effect="dark" placement="bottom">
-            <i class="el-icon-orange"></i>
+            <wtm-icon icon="icon-language" icon-font-class="iconfont" />
         </el-tooltip>
         <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :disabled="language==='zh'" command="zh">
@@ -11,11 +11,11 @@
                 English
             </el-dropdown-item>
             <!-- <el-dropdown-item :disabled="language==='es'" command="es">
-        Español
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language==='ja'" command="ja">
-        日本語
-      </el-dropdown-item> -->
+                Español
+            </el-dropdown-item>
+            <el-dropdown-item :disabled="language==='ja'" command="ja">
+                日本語
+            </el-dropdown-item> -->
         </el-dropdown-menu>
     </el-dropdown>
 </template>

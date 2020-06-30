@@ -240,6 +240,9 @@
 <script>
   $("#frontpage").parent().css("background-color", "#eee");
   $.get("/Home/GetGithubInfo", function (r) {
+    if (r === undefined || r === null) {
+      return;
+    }
     $("#githubstar").html(r.stargazers_count);
     $("#githubstars").html(r.stargazers_count);
     $("#githubfork").html(r.forks_count);

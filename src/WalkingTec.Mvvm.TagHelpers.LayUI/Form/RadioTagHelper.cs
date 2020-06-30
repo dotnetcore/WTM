@@ -36,27 +36,48 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("div-for", "radio");
 
             var modeltype = Field.Metadata.ModelType;
-            var listitems = new List<ComboSelectListItem>();
+            var listItems = new List<ComboSelectListItem>();
             if (Items?.Model == null)
             {
-                if (modeltype.IsEnumOrNullableEnum())
+                var checktype = modeltype;
+                if ((modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                 {
-                    listitems = modeltype.ToListItems(Field.Model);
+                    checktype = modeltype.GetGenericArguments()[0];
                 }
-                else if (modeltype == typeof(bool) || modeltype == typeof(bool?))
+
+                if (checktype.IsEnumOrNullableEnum())
                 {
-                    listitems = Utils.GetBoolCombo(BoolComboTypes.Custom, (bool?)Field.Model, YesText, NoText);
+                    listItems = checktype.ToListItems(DefaultValue ?? Field.Model);
+                }
+                else if (checktype == typeof(bool) || checktype == typeof(bool?))
+                {
+                    bool? df = null;
+                    if (bool.TryParse(DefaultValue ?? "", out bool test) == true)
+                    {
+                        df = test;
+                    }
+                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, df ?? (bool?)Field.Model, YesText, NoText);
                 }
 
             }
             else
             {
+                string sv = "";
+                if(DefaultValue == null)
+                {
+                    sv = Field.Model?.ToString();
+                }
+                else
+                {
+                    sv = DefaultValue;
+                }
+
                 if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
                 {
-                    listitems = Items.Model as List<ComboSelectListItem>;
-                    foreach (var item in listitems)
+                    listItems = Items.Model as List<ComboSelectListItem>;
+                    foreach (var item in listItems)
                     {
-                        if (item.Value.ToString().ToLower() == Field.Model?.ToString().ToString().ToLower())
+                        if (item.Value.ToString().ToLower() == sv?.ToLower())
                         {
                             item.Selected = true;
                         }
@@ -70,18 +91,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         ComboSelectListItem newitem = new ComboSelectListItem();
                         newitem.Text = item?.ToString();
                         newitem.Value = item?.ToString();
-                        if (item == Field.Model)
+                        if (item?.ToString() == sv)
                         {
                             newitem.Selected = true;
                         }
-                        listitems.Add(newitem);
+                        listItems.Add(newitem);
                     }
                 }
             }
 
-            for (int i = 0; i < listitems.Count; i++)
+            for (int i = 0; i < listItems.Count; i++)
             {
-                var item = listitems[i];
+                var item = listItems[i];
                 var selected = item.Selected ? " checked" : " ";
                 output.PostContent.AppendHtml($@"
         <input type=""radio"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} />");

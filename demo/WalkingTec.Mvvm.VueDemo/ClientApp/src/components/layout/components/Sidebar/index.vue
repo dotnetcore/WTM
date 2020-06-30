@@ -83,7 +83,6 @@ export default class extends Vue {
         // const sb_bkx = startx - e.target.offsetLeft;
         // this.mezzanineRight = sb_bkx;
         this.initRight = e.x;
-        console.log("onMousedown", this.initRight);
     }
 
     onMousemove(e) {
@@ -92,13 +91,11 @@ export default class extends Vue {
             // const sb_bkx = startx - e.target.offsetLeft;
             const sb_bkx = startx - this.initRight;
             this.mezzanineRight = -sb_bkx;
-            console.log("onMousemove", startx, -sb_bkx);
         }
     }
 
     onMouseup(e) {
         this.isMoving = false;
-        console.log("onMouseup");
     }
 }
 </script>

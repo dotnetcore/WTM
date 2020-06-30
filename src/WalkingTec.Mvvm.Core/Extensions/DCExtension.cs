@@ -743,7 +743,7 @@ where S : struct
 
         public static IQueryable<T> CheckContain<T, S>(this IQueryable<T> baseQuery, List<S> val, Expression<Func<T, S>> field)
         {
-            if (val == null || val.Count == 0)
+            if (val == null || val.Count == 0 || (val.Count == 1 && val[0] == null))
             {
                 return baseQuery;
             }
