@@ -37,6 +37,7 @@ namespace WalkingTec.Mvvm.Mvc
         [Display(Name = "GenApi")]
         public bool IsApi { get; set; }
 
+        [Display(Name = "AuthMode")]
         public ApiAuthMode AuthMode { get; set; }
 
         public string ModelName

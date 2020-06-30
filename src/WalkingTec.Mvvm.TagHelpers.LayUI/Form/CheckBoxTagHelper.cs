@@ -83,7 +83,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         });
                     }
                 }
-                SetSelected(listitems, values ?? Field.Model as IList);
+                List<string> checkvalue = null;
+                if (Field.Model is IList == false && Field.Model != null)
+                {
+                    checkvalue = new List<string> { Field.Model.ToString() };
+                    SetSelected(listitems, values ?? checkvalue);
+                }
+                else
+                {
+                    SetSelected(listitems, values ?? Field.Model as IList);
+                }
             }
 
             output.TagName = "div";
