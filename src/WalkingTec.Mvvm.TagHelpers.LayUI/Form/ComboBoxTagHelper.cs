@@ -197,8 +197,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 // 添加默认选中项
                 var selected = listItems.Where(x => x.Selected).ToList();
-                var mulvalues = selected.ToSpratedString(x => x.Value, seperator: "`");
-                var mulnamess = selected.ToSpratedString(x => x.Text, seperator: "`");
+                var mulvalues = selected.ToSepratedString(x => x.Value, seperator: "`");
+                var mulnamess = selected.ToSepratedString(x => x.Text, seperator: "`");
                 output.Attributes.Add("wtm-combovalue", $"{mulvalues}");
                 output.Attributes.Add("wtm-comboname", $"{mulnamess}");
             }
