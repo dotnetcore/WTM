@@ -171,6 +171,9 @@
   <data name="AttemptedValueIsInvalidAccessor" xml:space="preserve">
     <value>The value '{0}' is not valid for {1}.</value>
   </data>
+  <data name="AuthMode" xml:space="preserve">
+    <value>AuthMode</value>
+  </data>
   <data name="BasicInfo" xml:space="preserve">
     <value>Basic</value>
   </data>
