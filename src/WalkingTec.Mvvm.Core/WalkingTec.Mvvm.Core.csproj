@@ -4,6 +4,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Core</AssemblyName>
     <Title>$(AssemblyName)</Title>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />
