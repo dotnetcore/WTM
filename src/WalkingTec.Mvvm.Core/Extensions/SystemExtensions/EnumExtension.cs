@@ -70,6 +70,13 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
                         }
                     }
+                    else
+                    {
+                        if (value != null && name == value.ToString())
+                        {
+                            newitem.Selected = true;
+                        }
+                    }
                     rv.Add(newitem);
                 }
             }
