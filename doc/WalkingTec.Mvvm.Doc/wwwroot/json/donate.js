@@ -208,6 +208,9 @@
         {"date":"2020-05-29","name":"*永金","amount":20.00,"from":"支付宝","comment":"-"},
         {"date":"2020-05-29","name":"*永金","amount":12.00,"from":"支付宝","comment":"-"},
         {"date":"2020-06-08","name":"*树河","amount":300.00,"from":"支付宝","comment":"-"},
-        {"date":"2020-06-09","name":"*皓","amount":5.00,"from":"支付宝","comment":"-"}
+        {"date":"2020-06-09","name":"*皓","amount":5.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-06-19","name":"*龙发","amount":20.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-06-26","name":"*福国","amount":10.00,"from":"支付宝","comment":"-"},
+        {"date":"2020-06-26","name":"*福国","amount":50.00,"from":"支付宝","comment":"-"}
     ]
 }
