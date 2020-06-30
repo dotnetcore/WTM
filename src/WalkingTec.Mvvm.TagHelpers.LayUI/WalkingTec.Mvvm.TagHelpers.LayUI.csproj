@@ -4,7 +4,8 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.TagHelpers.LayUI</AssemblyName>
     <Title>$(AssemblyName)</Title>
-  </PropertyGroup>
+     <IsPackable>true</IsPackable>
+ </PropertyGroup>
 
   <Import Project="..\..\common.props" />
 
