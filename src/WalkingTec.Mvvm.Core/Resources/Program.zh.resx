@@ -171,6 +171,9 @@
   <data name="AttemptedValueIsInvalidAccessor" xml:space="preserve">
     <value>'{0}' 不是 {1} 的有效格式</value>
   </data>
+  <data name="AuthMode" xml:space="preserve">
+    <value>认证方式</value>
+  </data>
   <data name="BasicInfo" xml:space="preserve">
     <value>基本信息</value>
   </data>

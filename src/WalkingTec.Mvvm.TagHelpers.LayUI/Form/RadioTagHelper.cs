@@ -62,12 +62,22 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
+                string sv = "";
+                if(DefaultValue == null)
+                {
+                    sv = Field.Model?.ToString();
+                }
+                else
+                {
+                    sv = DefaultValue;
+                }
+
                 if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
                 {
                     listItems = Items.Model as List<ComboSelectListItem>;
                     foreach (var item in listItems)
                     {
-                        if (item.Value.ToString().ToLower() == Field.Model?.ToString().ToString().ToLower())
+                        if (item.Value.ToString().ToLower() == sv?.ToLower())
                         {
                             item.Selected = true;
                         }
@@ -81,7 +91,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         ComboSelectListItem newitem = new ComboSelectListItem();
                         newitem.Text = item?.ToString();
                         newitem.Value = item?.ToString();
-                        if (item == Field.Model)
+                        if (item?.ToString() == sv)
                         {
                             newitem.Selected = true;
                         }
