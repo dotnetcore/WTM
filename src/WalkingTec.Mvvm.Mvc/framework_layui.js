@@ -6,6 +6,21 @@ if (typeof String.prototype.startsWith != 'function') {
         return this.slice(0, prefix.length) === prefix;
     };
 }
+if (typeof Array.prototype.removeByID != 'function') {
+    Array.prototype.removeByID = function (val) {
+        var index = -1;
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].ID == val.ID) {
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+}
+
 window.ff = {
     DONOTUSE_Text_LoadFailed: "",
     DONOTUSE_Text_SubmitFailed: "",
