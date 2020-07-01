@@ -83,14 +83,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (!(this is DisplayTagHelper) && !(this is CheckBoxTagHelper) && Field.Metadata.IsRequired)
             {
                 requiredDot = "<font color='red'>*</font>";
-                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper)) // 上传组件自定义验证
+                if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper)) // 上传组件自定义验证
                 {
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
                     {
-                        var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
                         output.Attributes.Add("lay-verify", "required");
-                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required", pro.GetPropertyDisplayName()]}");
+                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
                     }
                 }
             }
