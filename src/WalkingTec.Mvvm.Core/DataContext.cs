@@ -535,7 +535,7 @@ namespace WalkingTec.Mvvm.Core
         {
             if(DBType == DBTypeEnum.Oracle)
             {
-                modelBuilder.Model.Relational().MaxIdentifierLength = 30;
+                modelBuilder.Model.SetMaxIdentifierLength(30);
             }
         }
 
