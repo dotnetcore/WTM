@@ -207,6 +207,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     if (item.Selected == true)
                     {
+                        if (Disabled == true)
+                        {
+                            output.PostElement.AppendHtml($"<input name='{Field.Name}' value='{item.Value}' text='{item.Text}' type='hidden' />");
+                        }
                         contentBuilder.Append($"<option value='{item.Value}'{(string.IsNullOrEmpty(item.ICon) ? string.Empty : $" icon='{item.ICon}'")} selected>{item.Text}</option>");
                     }
                     else

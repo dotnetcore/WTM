@@ -533,7 +533,10 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            if(DBType == DBTypeEnum.Oracle)
+            {
+                modelBuilder.Model.Relational().MaxIdentifierLength = 30;
+            }
         }
 
         /// <summary>
@@ -566,7 +569,17 @@ namespace WalkingTec.Mvvm.Core
                     optionsBuilder.UseSqlite(CSName);
                     break;
                 case DBTypeEnum.Oracle:
-                    //optionsBuilder.UseOracle(CSName);
+                    
+                    optionsBuilder.UseOracle(CSName, option=> {
+                        if (string.IsNullOrEmpty(Version) == false)
+                        {
+                            option.UseOracleSQLCompatibility(Version);
+                        }
+                        else
+                        {
+                            option.UseOracleSQLCompatibility("11");
+                        }
+                    });
                     break;
                 default:
                     break;

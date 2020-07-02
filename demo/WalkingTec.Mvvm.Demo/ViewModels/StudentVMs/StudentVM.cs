@@ -29,7 +29,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         protected override void InitVM()
         {
             AllStudentMajors = DC.Set<Major>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.MajorName);
-            SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
+            if (SelectedStudentMajorIDs == null)
+            {
+                SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
+            }
         }
 
         public override void DoAdd()
