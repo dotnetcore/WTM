@@ -151,9 +151,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 initselected = initselected.Substring(0, initselected.Length - 1);
             }
             initselected += "]";
-
+            var requiredtext = "";
+            if (Field.Metadata.IsRequired)
+            {
+                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
+            }
             output.PostElement.SetHtmlContent($@"
-<input type='hidden' id='{Id}'  {(Field.Metadata.IsRequired ? " lay-verify=required" : string.Empty)} />
+<input type='hidden' id='{Id}'  {requiredtext} />
 <script>
   var {Id}selected = {initselected};
 {Id}SetValues();
@@ -161,10 +165,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     var f = $('#{Id}').parents('form');
     f.find(""[{Id}hidden='{Id}']"").remove();
     var count = 0;
-    for(x in {Id}selected){{
+    for(count=0; count< {Id}selected.length;count++){{
         var name = ""{Field.Name}["" + count + ""].FileId"";
-        f.append($('<input {Id}hidden=""{Id}"" type=""hidden"" name=""' + name + '"" value=""' + {Id}selected[x] + '"">'));
-        count++;
+        f.append($('<input {Id}hidden=""{Id}"" type=""hidden"" name=""' + name + '"" value=""' + {Id}selected[count] + '"">'));
+    }}
+    if(count > 0){{
+        f.find(""#{Id}"").val(""1"");
+    }}
+    else{{
+        f.find(""#{Id}"").val("""");
     }}
   }}
   function {Id}DoDelete(fileid){{
