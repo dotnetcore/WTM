@@ -29,5 +29,6 @@ namespace WalkingTec.Mvvm.Demo
 
             return state;
         }
+
     }
 }
