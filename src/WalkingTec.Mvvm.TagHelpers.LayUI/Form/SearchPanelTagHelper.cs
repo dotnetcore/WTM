@@ -162,6 +162,7 @@ $('#{SearchBtnId}').on('click', function () {{
   var layer = layui.layer;
     var tempwhere = {{}};
     $.extend(tempwhere,{GridId}defaultfilter.where);
+      {GridId}filterback.where = tempwhere;
   table.reload('{GridId}',{{where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')),
     //done: function(res,curr,count){{
     //  if(this.height == undefined){{
