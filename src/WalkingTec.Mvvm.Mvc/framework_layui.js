@@ -482,10 +482,10 @@ window.ff = {
                     var gridVar = 'wtVar_' + regGridVar.exec(str)[1];
                     var template = $(tempId)[0].innerHTML;
                     template = template.replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
+                    //get old gridid
+                    var oldgridid = /table[.]reload\('(.*)',\s{0,}{/img.exec(template)[1];
                     //替换gridId
-                    template = template.replace(/table[.]reload\('(.*)',\s{0,}{/img, 'table.reload(\'' + gridId + '\',{');
-                    //替换grid参数变量
-                    template = template.replace(/\$.extend\(JSON.parse\(JSON.stringify\((.*)[.]config[.]where\)\),/img, '$.extend(JSON.parse(JSON.stringify(' + gridVar + '.config.where)),');
+                    template = template.replace(new RegExp(oldgridid, "gim"), gridId);
                     str = str.replace('$$SearchPanel$$', template);
                 }
                 layer.close(index);
@@ -682,11 +682,21 @@ window.ff = {
         if (defaultcondition == null) {
             defaultcondition = {};
         }
-        $.extend(defaultcondition, formData);
+        var tempwhere = {};   
+        $.extend(tempwhere, defaultcondition);
+
+        $.extend(tempwhere, formData);
         var form = $('<form method="POST" action="' + url + '">');
-        for (var attr in defaultcondition) {
-            if (defaultcondition[attr] != null) {
-                form.append($('<input type="hidden" name="' + attr + '" value="' + defaultcondition[attr] + '">'));
+        for (var attr in tempwhere) {
+            if (tempwhere[attr] != null) {
+                if (Array.isArray(tempwhere[attr])) {
+                    for (var i = 0; i < tempwhere[attr].length; i++) {
+                        form.append($('<input type="hidden" name="' + attr + '['+i+']" value="' + tempwhere[attr][i] + '">'));
+                    }
+                }
+                else {
+                    form.append($('<input type="hidden" name="' + attr + '" value="' + tempwhere[attr] + '">'));
+                }
             }
         }
         if (ids !== undefined && ids !== null) {
