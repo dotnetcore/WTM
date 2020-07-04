@@ -1,8 +1,8 @@
 @model WalkingTec.Mvvm.Core.BaseVM
 <wt:fieldset field-set-style="Simple" title="TopBasePoco">
-    <p>TopBasePoco is the base class of all models of the framework. It only defines the primary key of one Guid. All other models must inherit TopBasePoco directly or indirectly, otherwise other automation operations of the framework cannot be performed.</p>
+    <p>TopBasePoco is the base class of all models of the framework. It only defines the primary key as Guid. All other models must inherit TopBasePoco directly or indirectly, otherwise automated operations of the framework cannot be performed.</p>
     <wt:quote>
-        <p>SinceV 2.3.5, the framework supports user-defined primary key categories.In addition to the Guid, it also supports auto increment int, long, and string types. Please refer to <a href="/#/Model/CustomKey">user-defined primary key</a></p>
+        <p>SinceV 2.3.5, the framework supports user-defined primary key categories in addition to the Guid. It also supports auto increment int, long, and string types. Please refer to <a href="/#/Model/CustomKey">user-defined primary key</a></p>
     </wt:quote>
 </wt:fieldset>
 
@@ -15,7 +15,7 @@
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="PersistPoco">
-    <p>PersistPoco added isvalid field on the basis of BasePoco ，instruct the framework to make false deletion of such models.</p>
+    <p>PersistPoco adds IsValid field on the basis of BasePoco，8instruct the framework to make false deletion of such models.</p>
     <wt:quote>
         <p>The framework's delete function automatically sets the IsValid field of the model that inherits PersistPoco to’ false’, without actually deleting it.</p>
     </wt:quote>
@@ -31,7 +31,7 @@
 
 <wt:fieldset field-set-style="Simple" title="Model with attachments">
     <p>Attachments are commonly used in the system. The framework has its own attachment table ‘FileAttachment’. Models that need attachments only need to associate this table.</p>
-    <p>In the following example, the attributes of ‘Photo’ and ‘PhotoId’ are associated with theFileAttachmen table. According to this association, the code generator can automatically generate the functions of uploading files and browsing / downloading files for you.</p>
+    <p>In the following example, the attributes of ‘Photo’ and ‘PhotoId’ are associated with theFileAttachment table. According to this association, the code generator can automatically generate the functions of uploading files and browsing / downloading files for you.</p>
     <wt:code title="Student.cs">
 public class Student : BasePoco
 {
@@ -51,7 +51,7 @@ public class Student : BasePoco
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Others">
-    The framework has no additional requirements except that the model must ultimately inherit from TopBasePoco. As long as you follow the EF core way to create model classes.
+    Wtm has no additional requirements except that the model must ultimately inherit from TopBasePoco. As long as you follow the EF core way to create model classes.
 </wt:fieldset>
 
 
