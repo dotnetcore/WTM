@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,12 +58,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         public override IOrderedQueryable<Student_View> GetSearchQuery()
         {
-            var query = DC.Set<Student>().Include(x=>x.StudentMajor)
-                .CheckContain(Searcher.ID, x=>x.ID)
+            var query = DC.Set<Student>()
                 .CheckContain(Searcher.Name, x=>x.Name)
+                .CheckEqual(Searcher.Sex, x=>x.Sex)
+                .CheckContain(Searcher.ZipCode, x=>x.ZipCode)
+                .CheckEqual(Searcher.IsValid, x=>x.IsValid)
                 .CheckBetween(Searcher.EnRollDate?.GetStartTime(), Searcher.EnRollDate?.GetEndTime(), x => x.EnRollDate, includeMax: false)
                 .CheckWhere(Searcher.SelectedStudentMajorIDs,x=>DC.Set<StudentMajor>().Where(y=>Searcher.SelectedStudentMajorIDs.Contains(y.MajorId)).Select(z=>z.StudentId).Contains(x.ID))
-                .DPWhere(LoginUserInfo.DataPrivileges, x=>x.StudentMajor[0].MajorId)
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,

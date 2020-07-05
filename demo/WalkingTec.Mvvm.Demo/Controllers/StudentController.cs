@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using WalkingTec.Mvvm.Core;
@@ -9,7 +9,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.StudentVMs;
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
     
-    [ActionDescription("学生")]
+    [ActionDescription("学生管理")]
     public partial class StudentController : BaseController
     {
         #region Search

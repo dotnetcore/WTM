@@ -483,9 +483,12 @@ window.ff = {
                     var template = $(tempId)[0].innerHTML;
                     template = template.replace(/[$]{2}script[$]{2}/img, "<script>").replace(/[$]{2}#script[$]{2}/img, "</script>");
                     //get old gridid
-                    var oldgridid = /table[.]reload\('(.*)',\s{0,}{/img.exec(template)[1];
-                    //替换gridId
-                    template = template.replace(new RegExp(oldgridid, "gim"), gridId);
+                    try {
+                        var oldgridid = /table[.]reload\('(.*)',\s{0,}{/img.exec(template)[1];
+                        //替换gridId
+                        template = template.replace(new RegExp(oldgridid, "gim"), gridId);
+                    }
+                    catch (e) { }
                     str = str.replace('$$SearchPanel$$', template);
                 }
                 layer.close(index);
