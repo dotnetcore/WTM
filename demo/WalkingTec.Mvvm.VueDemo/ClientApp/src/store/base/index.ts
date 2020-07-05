@@ -4,7 +4,6 @@
  * 目前只创建 state，actions，mutations 部分
  */
 import _request from "@/util/service";
-import { firstUpperCase } from "@/util/string";
 import attributes from "./attributes";
 
 interface StoreType {
@@ -20,7 +19,7 @@ const stoBase = {
   apiKeys: "actionList",
   // 返回命名
   getKeyName: key => {
-    const upperKey = firstUpperCase(key);
+    const upperKey = _.upperFirst(key);
     const mutationsKey = `set${upperKey}_mutations`;
     const stateKey = `${key}Data`;
     return { mutationsKey, stateKey };

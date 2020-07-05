@@ -97,17 +97,22 @@ function mixinFunc(TABLE_HEADER: Array<object> = []) {
         Page: this.pageDate.currentPage,
         Limit: this.pageDate.pageSize
       };
-      for (const key in params) {
-        if (params[key] === "" || params[key] === undefined) {
-          delete params[key];
-        }
-      }
       if (params["isAsc"]) {
         params["SortInfo"] = {
           Direction: params["isAsc"],
           Property: params["orderByColumn"]
         };
       }
+      for (const key in params) {
+        if (params[key] === "" || params[key] === undefined) {
+          delete params[key];
+        }
+        // 删除自定义字段
+        if (["isAsc", "orderByColumn"].includes(key)) {
+          delete params[key];
+        }
+      }
+
       // 组件查询中方法
       this["privateRequest"](params, this.pageDate.currentPage)
         .then(repData => {
