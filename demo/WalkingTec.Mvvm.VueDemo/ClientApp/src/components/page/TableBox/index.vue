@@ -1,7 +1,7 @@
 <template>
     <div v-loading="tableAttrs.loading" class="table-card">
         <div class="table-box">
-            <el-table ref="table" v-el-height-adaptive-table="!height" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents" :height="height || '100px'">
+            <el-table ref="table" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents">
                 <el-table-column v-if="tableAttrs.isSelection" type="selection" align="center" width="55" />
                 <!-- 判断是否需要插槽,自定义列内容 -->
                 <template v-for="(item, index) of Cols">
@@ -33,9 +33,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import CustomColumn from "./CustomColumn.vue";
 import { AppModule } from "@/store/modules/app";
+import { debounce } from "@/util/throttle-debounce.ts";
+const PAUSE = 300;
+const BOTTOM_OFFSET = 68;
 /**
  * table列表&分页 组件组合
  *
@@ -51,6 +54,7 @@ import { AppModule } from "@/store/modules/app";
 })
 export default class TableBox extends Vue {
     /* ---------table 属性--------- */
+    @Ref() readonly table;
     /**
      * loading
      */
@@ -220,6 +224,22 @@ export default class TableBox extends Vue {
      */
     onSetHeader(data) {
         this.selCols = data;
+    }
+
+    debounceFn() {
+        const height =
+            window.innerHeight - this.table.$el.offsetTop - BOTTOM_OFFSET;
+        this.table.layout.setHeight(height);
+    }
+
+    mounted() {
+        if (this.height && this.height !== 0) {
+            this.table.layout.setHeight(this.height);
+        } else {
+            const fn = debounce(this.debounceFn, PAUSE);
+            window.addEventListener("resize", fn);
+            this.debounceFn();
+        }
     }
 }
 </script>

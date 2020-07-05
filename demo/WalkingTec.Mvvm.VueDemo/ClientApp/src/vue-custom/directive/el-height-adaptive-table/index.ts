@@ -19,12 +19,6 @@ const doResize = (el, binding, vnode) => {
   if (scrollHeight === 0) {
     return;
   }
-  const { tableHeight, height : h, headerHeight, bodyHeight, footerHeight } = $table.layout;
-  console.log('tableHeight', tableHeight)
-  console.log('h', h)
-  console.log('bodyHeight', bodyHeight)
-  console.log('height', height)
-  console.log('d', scrollHeight + 2 + $table.layout.headerHeight)
   if (scrollHeight > height) {
     $table.layout.setHeight(height);
   } else {
