@@ -150,7 +150,7 @@ export default class Index extends Vue {
             }
         };
     }
-    mounted() {
+    beforeOpen() {
         this.getFrameworkRoles();
         this.getFrameworkGroups();
     }
