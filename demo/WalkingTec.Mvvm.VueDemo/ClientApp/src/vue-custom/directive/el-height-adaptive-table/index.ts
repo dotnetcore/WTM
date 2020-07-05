@@ -1,5 +1,6 @@
 /**
  * el-table 内容自适应
+ * v-el-height-adaptive-table
  */
 import { DirectiveOptions } from "vue";
 import { debounce } from "@/util/throttle-debounce.ts";
