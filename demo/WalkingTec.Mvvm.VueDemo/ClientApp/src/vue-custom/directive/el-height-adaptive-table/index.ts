@@ -11,11 +11,20 @@ const doResize = (el, binding, vnode) => {
     throw new Error(`el-$table must set the height. Such as height='100px'`);
   }
   const { value } = binding;
-  const bottomOffset = value || BOTTOM_OFFSET;
+  const bottomOffset = _.isNumber(value) ? value : BOTTOM_OFFSET;
   if (!$table) return;
   const height =
     window.innerHeight - el.getBoundingClientRect().top - bottomOffset;
   const scrollHeight = $table.bodyWrapper.scrollHeight;
+  if (scrollHeight === 0) {
+    return;
+  }
+  const { tableHeight, height : h, headerHeight, bodyHeight, footerHeight } = $table.layout;
+  console.log('tableHeight', tableHeight)
+  console.log('h', h)
+  console.log('bodyHeight', bodyHeight)
+  console.log('height', height)
+  console.log('d', scrollHeight + 2 + $table.layout.headerHeight)
   if (scrollHeight > height) {
     $table.layout.setHeight(height);
   } else {
