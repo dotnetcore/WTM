@@ -23,14 +23,14 @@
     (in the default implementation, the refresh time of token is half of the set time, i.e. it will refresh after 3600s)
   </P>
   <br>
-  <P>User information: relevant data of user information are only storage in memory. After the user request arrives  back end, the user information is obtained according to the user ID in the token (user information storage can be customized and configured later) ;</P>
+  <P>User information: relevant data of user information are only stored in memory. After the user request arrives  back end, the user information is obtained according to the user ID in the token (user information storage can be customized and configured later) ;</P>
 
 </p>
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Set authentication method">
 <p>
-  Add[AuthorizeCookie],[AuthorizeJwt],[AuthorizeJwtWithCookie] tags on theControllerr or method
+  Add [AuthorizeCookie],[AuthorizeJwt] or [AuthorizeJwtWithCookie] attributes on the Controller or method in the controller
 </p>
 <table lay-filter="parse-table-demo">
   <thead>

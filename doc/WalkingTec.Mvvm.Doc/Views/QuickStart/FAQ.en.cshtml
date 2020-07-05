@@ -20,29 +20,29 @@ Here is a collection of frequently asked questions, We will keep updating.
 
 <wt:quote>
     <p>Q: Why did I fail to configure MySQL?</p>
-    <p>A: Generally speaking, there are several reasons:</p>
-    <p>MySQL version is too low, please use 5.7 and above</p>
-    <p>MySQL default character set is not utf8 and does not support Chinese</p>
+    <p>A: There could be several reasons:</p>
+    <p>MySQL version is too low, please use 5.7 or above</p>
+    <p>MySQL default character set is not utf8</p>
     <p>The connection string in Appsettings is not written correctly. The general standard format is similar to this: server = 127.0.0.1; database = dbname; port = 3306; uid = root; password = 12345</p>
-    <p>Dbtype in appsettings should be written as MySQL</p>
+    <p>Dbtype in appsettings is not set to MySQL</p>
 </wt:quote>
 
 <wt:quote>
-    <p>Q: The database is not automatically build or the data is not initialized when first time running?</p>
-    <p>A: please check the following:</p>
+    <p>Q: The database is not automatically build or data is not initialized on the first run?</p>
+    <p>A: please check following things:</p>
     <p>Whether the connection string and Dbtype in Appsettings file are filled in correctly</p>
     <p>Whether a library with the same name already exists</p>
-    <p>If there exists library , but no default user is created, it is most likely that the default character set of MySQL is wrong, therefore Chinese cannot be inserted.</p>
+    <p>If library exists , but default user is not created, it is most likely that the default character set of MySQL is wrong, therefore Chinese cannot be inserted.</p>
 </wt:quote>
 
 <wt:quote>
-    <p>Q: what should I do to customize user tables that I need?</p>
-    <p>A: you can extend the user table of the framework through simple inheritance. For details<a href="/#/QuickStart/CustomUser">see here</a></p>
+    <p>Q: how can I customize user table?</p>
+    <p>A: you can extend the user table of the framework through simple inheritance. For details see<a href="/#/QuickStart/CustomUser">/a></p>
 </wt:quote>
 
 <wt:quote>
-    <p>Q:Why there are no new tables in the database after add a new mode?</p>
-    <p>答：EF does not support automatic database update  For  methods of database synchronization<a href="/#/Data/Migration">see here</a></p>
+    <p>Q:Why there are no new tables in the database after I add a new model?</p>
+    <p>答：EF does not support automatic database update for more information visit<a href="/#/Data/Migration"></a></p>
 </wt:quote>
 <script>
   $("#@Model.ViewDivId").parent().css("height", "auto");

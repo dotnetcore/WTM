@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -46,9 +47,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("lay-skin", "switch");
             output.Attributes.Add("value", Value);
-            output.Attributes.Add("lay-text", string.IsNullOrEmpty(LayText) ? "ON|OFF" : LayText);
-
-            Checked = Field.Model == null ? Checked : (Field.Model.ToString().ToLower() == Value.ToLower());
+            output.Attributes.Add("lay-text", string.IsNullOrEmpty(LayText) ? $"{Core.Program._localizer["Yes"]}|{Core.Program._localizer["No"]}" : LayText);
+            bool? Checked = null;
+            if (string.IsNullOrEmpty(DefaultValue))
+            {
+                Checked = Field.Model == null ? Checked : (Field.Model.ToString().ToLower() == Value.ToLower());
+            }
+            else
+            {
+                Checked = DefaultValue.ToLower() == "true" ? true : false;
+            }
             if (Checked.HasValue && Checked.Value)
             {
                 output.Attributes.Add("checked", string.Empty);

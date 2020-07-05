@@ -8,7 +8,7 @@
 <p>At the same time, if the framework needs to operate multiple databases, you can also use the methods described in this chapter</p>
 
 <wt:fieldset field-set-style="Simple" title="Read/Write Splitting">
-    WTM framework will automatically recognize ConnectionStrings of which the key value are ending with ‘underscore + number’.If the key value in this format are recognized, the corresponding database will be set as read-only. Such as the following:
+    WTM framework will automatically recognize ConnectionStrings that are ending with ‘underscore + number’.If the key value in this format are recognized, the corresponding databases will be set as read-only.
     <wt:code>
 "ConnectionStrings": [
     {
@@ -29,11 +29,11 @@
     },
 ]
     </wt:code>
-    <p>This configuration file defines four connectionstrings: default:write database,default? 1/ default? 2/ default? 3 are three read-only database</p>
-    <p>By default, for controller methods marked with HttpPost, the framework selects write database to create DataContext. For other controller methods, the framework will randomly selects a read-only database.</p>
+    <p>This configuration file defines four connectionstrings: default:write database,default_1/ default_2/ default_3 are three read-only databases</p>
+    <p>By default, for controller methods marked with HttpPost, the framework selects write database to create DataContext. For other controller methods, the framework will randomly select a read-only database.</p>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Set Connection string">
-    <p>If the default implementation of the framework can not meet the requirements, you can use the Fixconnection to set the connection string, such as the following controller:</p>
+    <p>If the default implementation of the framework can not meet the requirements, you can use the Fixconnection to set the connection string, as shown in the below example:</p>
     <wt:code>
 [FixConnection(DBOperationEnum.Read, CsName = "test")]
 [HttpPost]
