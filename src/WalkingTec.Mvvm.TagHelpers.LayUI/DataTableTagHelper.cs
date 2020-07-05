@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
-        private string ToolBarId => $"{TABLE_TOOLBAR_PREFIX}{ListVM.UniqueId}";
+        private string ToolBarId => $"{TABLE_TOOLBAR_PREFIX}{(string.IsNullOrEmpty(_gridIdUserSet) ? ListVM.UniqueId : _gridIdUserSet)}";
         /// <summary>
         /// 设定复选框列 默认false
         /// </summary>
