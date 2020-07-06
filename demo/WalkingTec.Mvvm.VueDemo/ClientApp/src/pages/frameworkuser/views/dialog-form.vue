@@ -53,7 +53,8 @@ export default class Index extends Vue {
                         message: this.$t("frameworkuser.pleaseEnterPassword"),
                         trigger: "blur"
                     },
-                    isHidden: (res, status) => status === "edit"
+                    isHidden: (res, status) =>
+                        ["edit", "detail"].includes(status)
                 },
                 "Entity.Email": {
                     type: "input",
@@ -149,7 +150,7 @@ export default class Index extends Vue {
             }
         };
     }
-    mounted() {
+    beforeOpen() {
         this.getFrameworkRoles();
         this.getFrameworkGroups();
     }
