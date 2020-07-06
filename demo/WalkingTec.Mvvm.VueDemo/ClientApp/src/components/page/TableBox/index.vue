@@ -225,21 +225,6 @@ export default class TableBox extends Vue {
     onSetHeader(data) {
         this.selCols = data;
     }
-
-    debounceFn() {
-        const height =
-            window.innerHeight - this.table.$el.offsetTop - BOTTOM_OFFSET;
-        this.table.layout.setHeight(height);
-    }
-    mounted() {
-        if (this.height && this.height !== 0) {
-            this.table.layout.setHeight(this.height);
-        } else {
-            // const fn = debounce(this.debounceFn, PAUSE);
-            // window.addEventListener("resize", fn);
-            this.debounceFn();
-        }
-    }
 }
 </script>
 <style lang="less" scoped>

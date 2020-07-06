@@ -23,7 +23,7 @@ const config = {
   /**
    * debugger调试
    */
-  development: false,
+  development: true,
   /**
    *  cookies 过期时间
    */
