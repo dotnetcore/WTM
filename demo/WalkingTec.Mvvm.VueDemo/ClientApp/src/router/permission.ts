@@ -51,7 +51,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
         RoutesModule.PageList(pageList);
         RoutesModule.GenerateRoutes(UserModule.menus);
         router.addRoutes(RoutesModule.dynamicRoutes);
-        loadI18n(true);
+        loadI18n(UserModule.roles.length > 0);
       } catch (err) {
         Message.error(err || "Has Error");
         location.href = "/login.html";
