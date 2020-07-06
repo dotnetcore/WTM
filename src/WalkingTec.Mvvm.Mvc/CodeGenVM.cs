@@ -960,7 +960,12 @@ namespace WalkingTec.Mvvm.Mvc
                             {
                                 checktype = proType.GetGenericArguments()[0];
                             }
-                            if (checktype == typeof(bool) || checktype.IsEnum())
+                            if(checktype == typeof(bool) && proType.IsNullable() == false)
+                            {
+                                fieldstr.Append($@"<wt:switch field=""{pre}.{item.FieldName}"" />");
+
+                            }
+                            else if (checktype == typeof(bool) || checktype.IsEnum())
                             {
                                 fieldstr.Append($@"<wt:combobox field=""{pre}.{item.FieldName}"" />");
                             }

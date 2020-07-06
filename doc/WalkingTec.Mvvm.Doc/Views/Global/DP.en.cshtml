@@ -4,7 +4,7 @@
         color: #01aaed
     }
 </style>
-<p>WTM framework supports data authority of relational table.</p>
+<p>WTM framework supports data authorization of relational table.</p>
 
 <wt:fieldset field-set-style="Simple" title="Define data permissions">
     The data permission of which tables are supported by the system need to be defined in the code. For example, the following code defines that the system needs to set the user role table as a data permission:
@@ -35,12 +35,12 @@ public class Program
     </wt:code>
 </wt:fieldset>
 <wt:fieldset field-set-style="Simple" title="Configure data permissions">
-    <p>The framework provides a system management module, encapsulated in WalkingTec.Mvvm.Admin, which includes the function of configuring data permissions. For details, please refer to the data permission management function in the framework management module</p>
+    <p>The framework provides a system management module, encapsulated in WalkingTec.Mvvm.Admin, which includes the functionality of configuring data permissions. For details, please refer to the data permission management function in the framework management module</p>
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Use data permission">
-    <p>The configuration of data permissions is recorded in ‘DataPrivileges’ table of the framework. When you write your own query statements or stored procedures, you can directly use the data in the table.</p>
-    <p>If you use lambda to write query statements, you can use ‘DpWhere’ function provided by the system to simplify the validation of data permissions.</p>
+    <p>The configuration of data permissions is stored in ‘DataPrivileges’ table of the framework. When you write your own query statements or stored procedures, you can directly use the data from the table.</p>
+    <p>If you use lambda to write query statements, you can use ‘DpWhere’ method provided by the system to simplify the validation of data permissions.</p>
 </wt:fieldset>
     <script>
     layui.use('code',function(){layui.code({ about: false })})

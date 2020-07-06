@@ -10,7 +10,7 @@ const visible: DirectiveOptions = {
     if (config.development) {
       return;
     }
-    const actions = UserModule.actionList.map((item) => item.toUpperCase());
+    const actions = UserModule.actionList.map((item) => (!!item ? item.toUpperCase() : item));
     if (_.isArray(value)) {
       const fslist = _.filter(
         value,

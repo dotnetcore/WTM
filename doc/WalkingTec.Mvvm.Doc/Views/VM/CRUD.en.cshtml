@@ -4,7 +4,7 @@
     color: #01aaed
   }
 </style>
-<p>BaseCRUDVM is the VM responsible for adding, deleting and modifying in the framework. It inherits from basevm and provides standard DoAdd,DoEdit,DoDelete functions.</p>
+<p>BaseCRUDVM is the VM responsible for adding, deleting and modifying data in the application. It inherits from basevm and provides standard DoAdd,DoEdit,DoDelete functionalities.</p>
 <wt:fieldset field-set-style="Simple" title="Create a BaseCRUDVM">
   <p>Building BaseCRUDVM is very simple. You only need to use the associated model as a generic variable. 
 Take the ‘school’ model as an example. For the definition of the school model, please refer to the<a href="/#/QuickStart/FirstModule"> first module</a></p>
@@ -120,7 +120,7 @@ Take the ‘school’ model as an example. For the definition of the school mode
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Custom validation">
-  <p>BBaseCRUDVM inherits from BaseVM, therefor complex custom validation can be realized by overriding Validate.</p>
+  <p>BaseCRUDVM inherits from BaseVM, therefor complex custom validation can be realized by overriding Validate method.</p>
   <p>At the same time,BaseCRUDVM provides a more convenient way to verify the uniqueness of more fields, overriding the SetDuplicatedCheck</p>
   <p>The following example extends the SchoolVM and adds uniqueness verification. Both fields SchoolCode and SchoolCode can not be duplicate.</p>
   <wt:code title="SchoolVM.cs">
@@ -173,7 +173,7 @@ Take the ‘school’ model as an example. For the definition of the school mode
     </tr>
     <tr>
       <td>DoRealDelete()</td>
-      <td>Delete , no matter inherited from PersistPoco or not</td>
+      <td>Delete, no matter if it is inherited from PersistPoco or not</td>
     </tr>
     <tr>
       <td>GetById(Guid Id)</td>
