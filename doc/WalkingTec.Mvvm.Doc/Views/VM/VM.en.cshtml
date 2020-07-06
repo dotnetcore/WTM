@@ -2,10 +2,10 @@
 <p>BaseVM is the basic VM in the WTM framework. All built-in VMs in the framework inherit from it. At the same time, the framework requires that all VMs customized by developers inherit from it.</p>
 <br />
 <wt:quote>
-    BaseVM provides a place for developers to write logic by connecting controller and view. If you need to add, delete, modify, query, import and export data, please inherit a more specific VM
+    BaseVM provides a place for developers to write logic by connecting controller and view. If you need to add, delete, modify, query, import or export data, please inherit from more specific VM
 </wt:quote>
 <wt:fieldset field-set-style="Simple" title="Build a VM">
-    <p>It's very simple to build a basic VM. You only need to inherit theBaseVM. In the following, we will build a LoginVM to handle user login operations.</p>
+    <p>It's very simple to build a basic VM. You only need to inherit the BaseVM. In the following sample, we will build a LoginVM to handle user login operations.</p>
     <wt:code title="LoginVM.cs">
 using WalkingTec.Mvvm.Core;
 
@@ -15,8 +15,8 @@ public class LoginVM : BaseVM{
     </wt:code>
     <p>The above code defines a LoginVM. What's the use of it?</p>
     <p>In short, when you create this VM in the Controller through the CreateVM method, the framework will automatically transfer a lot of data needed for writing logic to the VM, such as the information of the current login user, the information of form submission, the current database connection, etc</p>
-    <p>At the same time, the properties in VM can also be used to bind the front-end page controls. Such a VM connects the front-end, back-end and database. In VM, you can access all the required information to write the logic you need.</p>
-    <p>Let's improve LoginVM ,here is a demonstration of a simple login operation</p>
+    <p>At the same time, the properties in VM can also be used to bind the front-end page controls. VM connects the front-end, back-end and database. In VM, you can access all the required information to write the logic you need.</p>
+    <p>Let's improve LoginVM, below is a demonstration of a simple login operation</p>
     <wt:code title="LoginVM.cs">
 using WalkingTec.Mvvm.Core;
 
@@ -51,7 +51,7 @@ public class LoginVM : BaseVM{
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Using VM">
-    <p>We encapsulate all the login logic in LoginVM, therefor our code is very simple in such controller.</p>
+    <p>We encapsulate all the login logic in LoginVM, therefore our code is kept at minimum in a controller.</p>
     <wt:code title="LoginController.cs">
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
@@ -83,17 +83,17 @@ public class LoginController : BaseController
     </wt:code>
 
     <wt:quote>
-        Basecontroller is the Controller base class provided by the framework. All application framework controllers should inherit this class. For details, please refer to the document of Controller.<br />
-        [Public],[ActionDescription][Public],[ActionDescription]and other attributes are provided by the framework and applied to the controller and action. Please refer to the document of the Controller for details.<br />
+        Basecontroller is the Controller base class provided by the WTM. All application controllers should inherit from this class. For details, please refer to the Controller documentation.<br />
+        [Public],[ActionDescription][Public],[ActionDescription]and other attributes are provided by the framework and applied to the controller and action. Please refer to the Controller documenation for details.<br />
         In the Controller, CreateVM is used to initialize VM, by doing this we can pass a lot of information of current request to VM, such as database connection, session, etc.
     </wt:quote>
 
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="Custom validation of VM">
-    <p>Simple single field validation can be achieved by adding Attribute to attributes</p>
-    <p>Complex validation logic can be implemented by overriding the Validate in BaseVM</p>
-    <p>The following code demonstrates a VM that modifies a password:</p>
+    <p>Simple single field validation can be achieved by adding Attribute to VM models</p>
+    <p>Complex validation logic can be added by overriding Validate method in BaseVM</p>
+    <p>The following code demonstrates a VM that validates a password:</p>
     <wt:code title="ChangePasswordVM.cs">
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

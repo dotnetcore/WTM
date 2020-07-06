@@ -763,7 +763,7 @@
     <value>Rollback</value>
   </data>
   <data name="RowIndex" xml:space="preserve">
-    <value>Row index</value>
+    <value>Row</value>
   </data>
   <data name="SaveFileMode" xml:space="preserve">
     <value>File saving mode</value>

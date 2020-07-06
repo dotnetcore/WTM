@@ -4,7 +4,7 @@
         color: #01aaed
     }
 </style>
-<p>Like other MVC core program, the WTM framework uses appsettings.json as the configuration file. Here is the content of a default configuration file.</p>
+<p>Like other MVC core applications, the WTM framework uses appsettings.json as the configuration file. Here is the content of a default configuration file.</p>
 <wt:code title="appsettings.json">
   {
     "Logging": {
@@ -121,46 +121,46 @@
           <tr>
             <td>Logging</td>
             <td>
-              Using the default log logic of. NETCORE, the logs will be output to both console and WTM. WTM logs are written to the database.<br />
-              WTM logs are 3 levels:debug, information and error. By setting the’ loglevel’ in WTM, you can control which level of data will be written to the database.<br/>
-              Setting loglevel in WTM to a large value, such as 10, to prevent all logs from being written to the database.
+              WTM uses default .Net Core logging. Logs default output is to the console and WTM. WTM logs are written to the database.<br />
+              WTM logs have 3 levels:debug, information and error. By setting the’ loglevel’ in WTM, you can control which logs will be written to the database.<br/>
+              Set loglevel in WTM to a large value, such as 10, to prevent all logs from being written to the database.
             </td>
           </tr>
 
           <tr>
             <td>ConnectionStrings</td>
             <td>
-              You can configure more than one Connectionstrings.By default, the key value of Connectionstring is ‘default’ in WTM. However, for log function,the default key value of Connectionstring is ‘logdfault’ . If the content of ‘logdfault’ was not previously set , WTM will also use ‘default’.<br />
+              You can configure more than one Connectionstring.By default, the key value of Connectionstring is ‘default’ in WTM. However, for log function,the default key value of Connectionstring is ‘logdfault’ . If the content of ‘logdfault’ was not previously set , WTM will also use ‘default’.<br />
               Starting with versions 2.4.6 and 3.1.3, you can set dbtype and dbcontext values separately
             </td>
           </tr>
           <tr>
             <td>DBType</td>
-            <td>Corresponding DBType of ConnectionStrings: mysql, sqlserver, PgSQL, SQLite, Oracle</td>
+            <td>Supported DBTypes are: mysql, sqlserver, PgSQL, SQLite, Oracle</td>
           </tr>
           <tr>
             <td>IsOldSqlServer</td>
-            <td>Set to ‘true’, if using SQL Server 2008 or older</td>
+            <td>Set to ‘true’, if SQL Server 2008 or older is used</td>
           </tr>
           <tr>
             <td>CookiePre</td>
-            <td>Prefix for generating cookies</td>
+            <td>Prefix for generated cookies</td>
           </tr>
           <tr>
             <td>EnableLog</td>
-            <td>Enable log or not</td>
+            <td>Determinates if log is enabled or not</td>
           </tr>
           <tr>
             <td>PageMode</td>
-            <td>Page display mode: single /tab</td>
+            <td>Page display mode: single / tab</td>
           </tr>
           <tr>
             <td>TabMode</td>
-            <td>Tab page display mode: default/simple</td>
+            <td>Tab page display mode: default /s imple</td>
           </tr>
           <tr>
             <td>LogExceptionOnly</td>
-            <td>Whether Only exceptions are record or not</td>
+            <td>Whether Only exceptions are logged or not</td>
           </tr>
           <tr>
             <td>IsQuickDebug</td>
@@ -180,7 +180,7 @@
           </tr>
           <tr>
             <td>CorsOptions.Policy</td>
-            <td>The name filled in when [enablecors ('']) is used on the controller or controller method.Use ‘domains’ [string] to set the domain names that are allowed to cross domains. If you need to configure multiple domain names, separate them with ‘,’</td>
+            <td>The name filled in when [enablecors ('']) is used on the controller or controller method.Use ‘domains’ [string] to set the domain names that are allowed. If you need to configure multiple domain names, separate them with ‘,’</td>
           </tr>
           <tr>
             <td>FileUploadOptions.SaveFileMode</td>
@@ -196,7 +196,7 @@
           </tr>
           <tr>
             <td>Languages</td>
-            <td>Set languages supported by framework,separated by commas. Exmple： Zh, en</td>
+            <td>Set languages supported by framework,separated by commas. Example： Zh, en</td>
           </tr>
           <tr>
             <td>JwtOptions</td>
@@ -209,7 +209,7 @@
         </tbody>
     </table>
     <wt:quote>
-        <p>These configuration frameworks in the file are automatically read and stored in the ConfigInfo classes of BaseController and BaseVM</p>
+        <p>These configuration settings in the file are automatically readed and stored in the ConfigInfo class which is available in BaseController and BaseVM</p>
     </wt:quote>
 </wt:fieldset>
     <script>

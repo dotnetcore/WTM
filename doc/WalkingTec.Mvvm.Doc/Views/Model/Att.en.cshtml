@@ -1,5 +1,5 @@
 @model WalkingTec.Mvvm.Core.BaseVM
-The framework will read the properties of model fields to automatically perform data validation of front and back end
+Wtm will automatically perform data validation when attributes are aplied to models
 
 <wt:fieldset field-set-style="Simple" title="Required">
     <p>If the field bound by front-end control is marked with the ‘Required’ attribute, the framework will automatically add a red asterisk after the space name to tips the user ‘required’, also generate JS script to verify the required items automatically</p>
@@ -12,11 +12,11 @@ The framework will read the properties of model fields to automatically perform 
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="other attributes">
-    <p>The framework will automatically generate front-end JS script to verify stringlength, range, regex and other attributes</p>
+    <p>Wtm will automatically generate front-end JS script to verify stringlength, range, regex and other attributes</p>
 </wt:fieldset>
 
 <wt:fieldset field-set-style="Simple" title="MiddleTable">
-    <p>In many-to-many cases, we usually use an MiddleTable to implement them. The MiddleTable tag can be added to the Model of the MiddleTable. The code generator of the framework will recognize the many-to-many relationship and generate the correct code according to the tag.</p>
+    <p>In many-to-many cases, we usually use an MiddleTable to implement them. The MiddleTable attribute can be added to the Model of the MiddleTable. The code generator of the framework will recognize the many-to-many relationship and generate the correct code according to the attribute.</p>
 </wt:fieldset>
 <script>
   $("#@Model.ViewDivId").parent().css("height", "auto");

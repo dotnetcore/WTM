@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,18 +21,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
             SetInclude(x => x.StudentMajor);
         }
 
-        public override DuplicatedInfo<Student> SetDuplicatedCheck()
-        {
-            return CreateFieldsInfo(SimpleField(x => x.ID));
-        }
-
         protected override void InitVM()
         {
             AllStudentMajors = DC.Set<Major>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.MajorName);
-            if (SelectedStudentMajorIDs == null)
-            {
-                SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
-            }
+            SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
         }
 
         public override void DoAdd()
