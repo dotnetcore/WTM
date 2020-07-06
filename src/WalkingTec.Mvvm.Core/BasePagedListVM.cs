@@ -963,11 +963,11 @@ namespace WalkingTec.Mvvm.Core
                 var temp = GridHeaders as List<GridColumn<TModel>>;
                 if (temp.Where(x => x.ColumnType == GridColumnTypeEnum.Action).FirstOrDefault() == null)
                 {
-                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "Error").SetForeGroundFunc(x => "ff0000"));
+                    temp.Add(this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.Program._localizer["Error"]).SetForeGroundFunc(x => "ff0000"));
                 }
                 else
                 {
-                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: "Error").SetForeGroundFunc(x => "ff0000"));
+                    temp.Insert(temp.Count - 1, this.MakeGridColumn(x => x.BatchError, Width: 200, Header: Core.Program._localizer["Error"]).SetForeGroundFunc(x => "ff0000"));
                 }
             }
         }

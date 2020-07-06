@@ -12,29 +12,29 @@
 <wt:fieldset field-set-style="Simple" title="Use multiple languages in your own projects">
 </wt:fieldset>
 <p>
-  Since V2.3.9, the framework provides a convenient way for you to quickly configure multiple languages.<br />
+  Since V2.3.9, WTM provides a convenient way for you to quickly configure multiple languages.<br />
   By default, AspnetCore uses a separate resource file for each controller and each view, which is cumbersome.<br />
   In the WTM framework, we simplify this process by using only one resource file named ‘Program’, from which all multi languages such as controller, view, model validation will find.<br />
-   Methods are as follows:<br />
-  1. Set languages in the appsetting.json file, such as languages = ‘Zh, en’;<br />
-  2. In the Resources folder, add the corresponding resource file. Note that the resource file must start with ‘Program’. If you set languages = ‘Zh, en’, in appsetting, you should add ‘Program.zh.resx’and ‘Program.en.resx’ to the Resources folder.<br />
-  3. The [display] in your model layer and the verified attributes, such as [stringlength], [required], etc., will automatically search the resource file according to the current language.<br />
-  4. The [ActionDescription] tag in the controller will also be found in the resource file first.<br />
-  5. There are variables called’Localizer’ in both controller and VM, which can be directly used to obtain multilingual text.<br />
+   You can configure multi language support with following steps:<br />
+  1. Set languages in the appsetting.json file, for example languages = ‘Zh, en’;<br />
+  2. In the Resources folder, add the corresponding resource file. Note that the resource file must start with ‘Program’. If you set languages = ‘Zh, en’, in appsetting, you should add ‘Program.zh.resx’and ‘Program.en.resx’ in the Resources folder.<br />
+  3. Add [Display] attribute in your model layer and the verification attributes if they are needed, such as [stringlength], [required], etc. Attributes will automatically search the resource file according to the current language.<br />
+  4. The [ActionDescription] tag in the controller will also search in the resource file first.<br />
+  5. There are variables called ’Localizer’ in both base controller and VM, which can be directly used to obtain multilingual text.<br />
   6. In ‘View’, if you need multiple languages, call @@Model.localizer directly
 </p>
 
 <wt:quote>
-  Since V2.3.9, project has automatically generated multilingual files for you, and the password modification function uses multilingual. Please refer to the generated code:<br />
+  Since V2.3.9, WTM automatically generated multilingual files for you, and the password modification function uses multilingual. Please refer to the generated code:<br />
   /ViewModels/HomeVMs/ChangePasswordVM.cs  <br />
  /Views/Home/Login/ChangePassword.cshtml <br />
 </wt:quote>
 
 <wt:fieldset field-set-style="Simple" title="Dynamic language modification">
 </wt:fieldset>
-  The rule of AspnetCore is to check whether there is multilingual setting in querystring first. If not then check whether a cookie named ‘. Aspnetcore. Culture’ exist. If not, the current language of the browser will be used.
+  The rule in AspnetCore is to check whether language is set in querystring. If not then it is checked whether a cookie named ‘.Aspnetcore.Culture’ exists. If not, the current language of the browser will be used.
 <br />
-  If we want to add a drop-down menu on the page so that the user can dynamically change the language, we only need to set the cookie ‘. Aspnetcore. Culture’. The following code demonstrates a method in the controller, which modifies the current language by setting cookie.
+  If we want to add a drop-down menu on the page so that the user can dynamically change the language, we only need to set-up cookie ‘.Aspnetcore.Culture’. The following code shows how to set language in the controller.
 <wt:code>
   [Public]
   public string ChangeLanguage(string lan)
