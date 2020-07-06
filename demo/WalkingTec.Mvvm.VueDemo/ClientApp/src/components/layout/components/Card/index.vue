@@ -31,6 +31,7 @@ export default class extends Vue {}
     margin-bottom: 10px;
     border-radius: 3px;
     min-width: 300px;
+    min-height: 98%;
     .title {
         font-size: 16px;
         font-weight: 500;
