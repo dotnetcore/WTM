@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,11 +19,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         public StudentVM()
         {
             SetInclude(x => x.StudentMajor);
-        }
-
-        public override DuplicatedInfo<Student> SetDuplicatedCheck()
-        {
-            return CreateFieldsInfo(SimpleField(x => x.ID));
         }
 
         protected override void InitVM()

@@ -36,6 +36,7 @@ namespace WalkingTec.Mvvm.Demo
 
             return state;
         }
+
     }
     public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {

@@ -37,18 +37,6 @@
         $("#@(ViewBag.SelId)_Display").after(hiddenStrArr.join(''));
     }
 
-    Array.prototype.removeByID = function (val) {
-        var index = -1;
-        for (var i = 0; i < this.length; i++) {
-            if (this[i].ID == val.ID) {
-                index = i;
-                break;
-            }
-        }
-        if (index > -1) {
-            this.splice(index, 1);
-        }
-    };
 
     var @(tempvar) = @Html.Raw(ViewBag.SelectData);
     function gridCheckedFunc(obj) {

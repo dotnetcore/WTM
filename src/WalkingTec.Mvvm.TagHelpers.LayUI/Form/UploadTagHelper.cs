@@ -137,8 +137,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.PreElement.SetHtmlContent($@"
 <label id='{Id}label'></label>
 ");
+            var requiredtext = "";
+            if (Field.Metadata.IsRequired)
+            {
+                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
+            }
+
             output.PostElement.SetHtmlContent($@"
-<input type='hidden' id='{Id}' name='{Field.Name}' value='{Field.Model}' {(Field.Metadata.IsRequired ? " lay-verify=required" : string.Empty)} />
+<input type='hidden' id='{Id}' name='{Field.Name}' value='{Field.Model}' {requiredtext} />
 ");    
             if (ShowProgress != null)
             {

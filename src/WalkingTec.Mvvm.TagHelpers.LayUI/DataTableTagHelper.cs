@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
         }
 
-        private string ToolBarId => $"{TABLE_TOOLBAR_PREFIX}{ListVM.UniqueId}";
+        private string ToolBarId => $"{TABLE_TOOLBAR_PREFIX}{(string.IsNullOrEmpty(_gridIdUserSet) ? ListVM.UniqueId : _gridIdUserSet)}";
         /// <summary>
         /// 设定复选框列 默认false
         /// </summary>
@@ -524,7 +524,6 @@ layui.use(['table'], function(){{
     {toolbardef}
     {righttoolbar}
     {(!NeedShowTotal ? string.Empty : ",totalRow:true")}
-    {(UseLocalData ? string.Empty : $",url: '{Url}'")}
     ,headers: {{layuisearch: 'true'}}
     {(Filter == null || Filter.Count == 0 ? string.Empty : $",where: {JsonSerializer.Serialize(Filter)}")}
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
@@ -551,7 +550,7 @@ layui.use(['table'], function(){{
     {(Even.HasValue && !Even.Value ? $",even: false" : string.Empty)}
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
     ,done: function(res,curr,count){{
-        this.where={Id}defaultfilter.where;
+      {Id}filterback = this;
       if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{Program._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
       if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{Program._localizer["Error"]}'}});}}
      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
@@ -562,17 +561,16 @@ layui.use(['table'], function(){{
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
-  {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
-var tempurl = {Id}option.url;
-{Id}option.url = null;
 {Id}defaultfilter = {{}};
+{Id}filterback = {{}};
 $.extend(true,{Id}defaultfilter ,{Id}option);
-{TableJSVar} = table.render({Id}option);
-  {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
+    {TableJSVar} = table.render({Id}option);
+    {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
+    {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
 setTimeout(function(){{
     var tempwhere = {{}};
     $.extend(tempwhere,{Id}defaultfilter.where);
-    table.reload('{Id}',{{url:tempurl,where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}')),}});
+    table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}')),}});
 }},100);
 ")}
 
@@ -896,7 +894,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                         {
                             if ( (item.Area == string.Empty && item.ControllerName == "_Framework" && item.ActionName == "GetExportExcel") || item.ActionName == "ExportExcel")
                             {
-                                actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{JsonSerializer.Serialize(Filter)},ids);";
+                                actionScript = $"ff.DownloadExcelOrPdf(tempUrl,'{SearchPanelId}',{Id}defaultfilter.where,ids);";
                             }
                             else
                             {
