@@ -1,15 +1,62 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<Layout>
+    <Sider Style="overflow: auto;height: 100vh;position: fixed;left: 0;">
+        <div class="logo" />
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
+            <MenuItem Key="1">
+                <Icon Type="user" Theme="outline" />
+                <span class="nav-text">nav 1</span>
+            </MenuItem>
+            <MenuItem Key="2">
+                <Icon Type="video-camera" Theme="outline" />
+                <span class="nav-text">nav 2</span>
+            </MenuItem>
+            <MenuItem Key="3">
+                <Icon Type="upload" Theme="outline" />
+                <span class="nav-text">nav 3</span>
+            </MenuItem>
+            <MenuItem Key="4">
+                <Icon Type="bar-chart" Theme="outline" />
+                <span class="nav-text">nav 4</span>
+            </MenuItem>
+            <MenuItem Key="5">
+                <Icon Type="cloud" Theme="outline" />
+                <span class="nav-text">nav 5</span>
+            </MenuItem>
+            <MenuItem Key="6">
+                <Icon Type="appstore" Theme="outline" />
+                <span class="nav-text">nav 6</span>
+            </MenuItem>
+            <MenuItem Key="7">
+                <Icon Type="team" Theme="outline" />
+                <span class="nav-text">nav 7</span>
+            </MenuItem>
+            <MenuItem Key="8">
+                <Icon Type="shop" Theme="outline" />
+                <span class="nav-text">nav 8</span>
+            </MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Class="site-layout" Style=" margin-left: 200px">
+        <Header Class="site-layout-background" Style="padding: 0"></Header>
+        <Content Style="margin: 24px 16px 0; overflow: initial; ">
+            <div class="site-layout-background" style="padding: 24px; text-align:center; ">
+                @Body
+            </div>
+        </Content>
+        <Footer Style=" text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
+    </Layout>
+</Layout>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
+<style>
+    #components-layout-demo-fixed-sider .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+    .site-layout .site-layout-background {
+        background: #fff;
+    }
+</style>

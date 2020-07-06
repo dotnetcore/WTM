@@ -1,37 +1,49 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">WalkingTec.Mvvm.BlazorDemo</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+<Sider Style="overflow: auto;height: 100vh;position: fixed;left: 0;" Collapsible Collapsed=@collapsed NoTrigger>
+    <div class="logo" />
+    <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
+        <MenuItem Key="1">
+            <Icon Type="user" Theme="outline" />
+            <NavLink href="counter">
+                <span class="nav-text">nav 1</span>
             </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+        </MenuItem>
+        <MenuItem Key="2">
+            <Icon Type="video-camera" Theme="outline" />
+            <span class="nav-text">nav 2</span>
+        </MenuItem>
+        <MenuItem Key="3">
+            <Icon Type="upload" Theme="outline" />
+            <span class="nav-text">nav 3</span>
+        </MenuItem>
+        <MenuItem Key="4">
+            <Icon Type="bar-chart" Theme="outline" />
+            <span class="nav-text">nav 4</span>
+        </MenuItem>
+        <MenuItem Key="5">
+            <Icon Type="cloud" Theme="outline" />
+            <span class="nav-text">nav 5</span>
+        </MenuItem>
+        <MenuItem Key="6">
+            <Icon Type="appstore" Theme="outline" />
+            <span class="nav-text">nav 6</span>
+        </MenuItem>
+        <MenuItem Key="7">
+            <Icon Type="team" Theme="outline" />
+            <span class="nav-text">nav 7</span>
+        </MenuItem>
+        <MenuItem Key="8">
+            <Icon Type="shop" Theme="outline" />
+            <span class="nav-text">nav 8</span>
+        </MenuItem>
+    </Menu>
+</Sider>
 
-@code {
-    private bool collapseNavMenu = true;
+@code
+{
+    bool collapsed;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    void toggle()
     {
-        collapseNavMenu = !collapseNavMenu;
+        collapsed = !collapsed;
     }
 }
