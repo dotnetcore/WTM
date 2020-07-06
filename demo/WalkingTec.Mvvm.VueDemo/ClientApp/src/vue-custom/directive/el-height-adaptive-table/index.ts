@@ -1,5 +1,6 @@
 /**
  * el-table 内容自适应
+ * v-el-height-adaptive-table
  */
 import { DirectiveOptions } from "vue";
 import { debounce } from "@/util/throttle-debounce.ts";
@@ -11,11 +12,14 @@ const doResize = (el, binding, vnode) => {
     throw new Error(`el-$table must set the height. Such as height='100px'`);
   }
   const { value } = binding;
-  const bottomOffset = value || BOTTOM_OFFSET;
+  const bottomOffset = _.isNumber(value) ? value : BOTTOM_OFFSET;
   if (!$table) return;
   const height =
     window.innerHeight - el.getBoundingClientRect().top - bottomOffset;
   const scrollHeight = $table.bodyWrapper.scrollHeight;
+  if (scrollHeight === 0) {
+    return;
+  }
   if (scrollHeight > height) {
     $table.layout.setHeight(height);
   } else {
