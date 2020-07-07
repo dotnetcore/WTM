@@ -1,12 +1,13 @@
 @inherits LayoutComponentBase
 
 <Layout>
-    <Sider Style="overflow: auto;height: 100vh;position: fixed;left: 0;">
+    <Sider Collapsed=@collapsed Style="overflow-x:hidden; overflow-y: auto;height: 100vh;position: fixed;left: 0;" Collapsible Breakpoint="@BreakpointType.Lg"
+           CollapsedWidth="50">
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
             <MenuItem Key="1">
                 <Icon Type="user" Theme="outline" />
-                <span class="nav-text">nav 1</span>
+                <span class="nav-text">nav adfas</span>
             </MenuItem>
             <MenuItem Key="2">
                 <Icon Type="video-camera" Theme="outline" />
@@ -39,20 +40,45 @@
         </Menu>
     </Sider>
     <Layout Class="site-layout" Style=" margin-left: 200px">
-        <Header Class="site-layout-background" Style="padding: 0"></Header>
+        <Header Class="site-layout-background" Style="padding: 0">
+            @if (collapsed)
+            {
+                <Icon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+            else
+            {
+                <Icon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+        </Header>
         <Content Style="margin: 24px 16px 0; overflow: initial; ">
             <div class="site-layout-background" style="padding: 24px; text-align:center; ">
                 @Body
             </div>
         </Content>
-        <Footer Style=" text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
 </Layout>
 
 <style>
-    #components-layout-demo-fixed-sider .logo {
+    .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+        .trigger:hover {
+            color: #1890ff;
+        }
+
+    .ant-layout-sider .logo {
         height: 32px;
         background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+    .ant-layout-sider-collapsed .logo {
+        height: 32px;
+        background: rgba(255, 0, 0, 0.2);
         margin: 16px;
     }
 
@@ -60,3 +86,13 @@
         background: #fff;
     }
 </style>
+
+@code
+{
+    bool collapsed;
+
+    void toggle()
+    {
+        collapsed = !collapsed;
+    }
+}
