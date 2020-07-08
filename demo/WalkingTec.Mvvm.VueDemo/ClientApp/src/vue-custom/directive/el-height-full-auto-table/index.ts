@@ -43,7 +43,6 @@ const elHeightAdaptiveTable: DirectiveOptions = {
   //   }
   // },
   bind(el, { value }, vnode) {
-    console.log('update')
     if (!value || value === 0) {
       el.resizeListener = () => {
         debounceFn(el, vnode);
@@ -52,7 +51,6 @@ const elHeightAdaptiveTable: DirectiveOptions = {
     }
   },
   update(el, { value }, vnode) {
-    console.log('update')
     if (!value || value === 0) {
       debounceFn(el, vnode);
     }

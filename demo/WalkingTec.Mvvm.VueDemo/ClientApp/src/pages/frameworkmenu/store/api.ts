@@ -18,7 +18,7 @@ const edit = {
 };
 // 详情
 const detail = {
-  url: reqPath + "{id}",
+  url: reqPath + "{ID}",
   method: "get"
 };
 // 批量删除
