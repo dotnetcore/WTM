@@ -1793,6 +1793,7 @@ namespace WalkingTec.Mvvm.Mvc
                 List<string> acts = new List<string>();
                 List<string> enums = new List<string>();
                 var pros2 = FieldInfos.Where(x => x.IsSearcherField == true || x.IsListField).ToList();
+                int searchcount = 0;
                 for (int i = 0; i < pros2.Count; i++)
                 {
 
@@ -1836,6 +1837,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             continue;
                         }
+                        searchcount++;
                         var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
                         string label = property.GetPropertyDisplayName();
                         string rules = "rules: []";
@@ -1929,15 +1931,11 @@ namespace WalkingTec.Mvvm.Mvc
                     }}");
                             }
                         }
-                        if (i > 1)
+                        if (searchcount > 2)
                         {
                             fieldstr2.AppendLine("                    ,isHidden: !this.isActive");
                         }
-                        fieldstr2.Append("            }");
-                        if (i < pros2.Count - 1)
-                        {
-                            fieldstr2.Append(",");
-                        }
+                        fieldstr2.Append("              },");
                         fieldstr2.Append(Environment.NewLine);
                     }
                 }
