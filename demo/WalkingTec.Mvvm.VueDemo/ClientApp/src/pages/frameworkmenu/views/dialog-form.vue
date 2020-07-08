@@ -51,7 +51,7 @@ export default class Index extends Vue {
             PageName: "",
             ParentId: "",
             FolderOnly: false,
-            ShowOnMenu: "",
+            ShowOnMenu: true,
             IsPublic: false,
             DisplayOrder: 0,
             IConType: "",
@@ -132,7 +132,8 @@ export default class Index extends Vue {
                 },
                 "Entity.ShowOnMenu": {
                     type: "switch",
-                    label: this.$t("frameworkmenu.ShowOnMenu")
+                    label: this.$t("frameworkmenu.ShowOnMenu"),
+                    defaultValue: true
                 },
                 "Entity.IsPublic": {
                     type: "switch",
@@ -167,8 +168,12 @@ export default class Index extends Vue {
     afterOpen(data) {
         this.getFolders();
         this.onSelectedAction(data && data.SelectedModule);
-        const icon = _.findLast(fonts, item => item.icons.includes(data.Entity.ICon));
-        this.formData.Entity.IConType = icon ? icon.name : '';
+        if (data) {
+            const icon = _.findLast(fonts, item =>
+                item.icons.includes(data.Entity.ICon)
+            );
+            this.formData.Entity.IConType = icon ? icon.name : "";
+        }
     }
     /**
      * 动作名称
@@ -200,7 +205,7 @@ export default class Index extends Vue {
 </script>
 
 <style lang="less" scoped>
-    .icon-select-type {
-        margin-bottom: 10px;
-    }
+.icon-select-type {
+    margin-bottom: 10px;
+}
 </style>
