@@ -1,7 +1,8 @@
 <template>
     <div v-loading="tableAttrs.loading" class="table-card">
         <div class="table-box">
-            <el-table ref="table" v-el-height-full-auto-table="!height" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents">
+            <!-- v-el-height-full-auto-table="height"  -->
+            <el-table ref="table" v-el-height-full-auto-table="!!height" class="list-table" v-bind="tableAttrs" stripe border element-loading-text="拼命加载中" v-on="tableEvents" :height="autoHeight">
                 <el-table-column v-if="tableAttrs.isSelection" type="selection" align="center" width="55" />
                 <!-- 判断是否需要插槽,自定义列内容 -->
                 <template v-for="(item, index) of Cols">
@@ -205,6 +206,13 @@ export default class TableBox extends Vue {
             return 180;
         }
         return 150;
+    }
+
+    get autoHeight() {
+        if (!!this.height && this.height !== 0) {
+            return this.height;
+        }
+        return 200;
     }
     /**
      * 列文案
