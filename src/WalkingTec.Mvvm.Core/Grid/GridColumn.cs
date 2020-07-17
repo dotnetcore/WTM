@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Newtonsoft.Json;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -386,13 +388,24 @@ namespace WalkingTec.Mvvm.Core
                 {
                     rv = (col as DateTime?).Value.ToString("yyyy-MM-dd");
                 }
-                else if (col is Enum)
+                else if (col.GetType().IsEnumOrNullableEnum())
                 {
                     rv = (int)col;
                 }
+                else if (col.GetType().Namespace.Equals("System") == false)
+                {
+                    if (needFormat == false)
+                    {
+                        rv = JsonConvert.SerializeObject(col);
+                    }
+                    else
+                    {
+                        rv = col.ToString();
+                    }
+                }
                 else
                 {
-                    rv = col?.ToString();
+                    rv = col.ToString();
                 }
             }
             else

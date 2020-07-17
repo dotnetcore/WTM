@@ -117,11 +117,14 @@ class requestBase {
     // 错误类型判断
     if (response) {
       const { Message, Form } = response.data || response;
-      if (Message) {
+      if (Message && Message.length > 0) {
         msg = Message[0];
       } else if (Form && Form["Entity.Import"]) {
         filterError(Form["Entity.ErrorFileId"]);
         return;
+      } else if (Form && Form !== {}) {
+        const cxts = Object.keys(Form).map(key => Form[key]);
+        msg = cxts.join(',');
       } else {
         msg = response.data;
       }
