@@ -41,12 +41,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
 function f_{this.Id}Click(){{
     var check = eval(""{innerclick}"");
-    if(check == false){{return false;}}
+    if(check == undefined || check == false){{return false;}}
     try{{
         {formid}validate = false;
         $('#{formid}hidesubmit').trigger('click');
     }}
-    catch{{ {formid}validate = true;}}
+    catch(e){{ {formid}validate = true;}}
     if({formid}validate == true){{
     ff.PostForm('', '{formid}', '{vm?.ViewDivId}')
     }}

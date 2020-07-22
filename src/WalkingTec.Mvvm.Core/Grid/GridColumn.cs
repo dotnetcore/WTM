@@ -382,11 +382,11 @@ namespace WalkingTec.Mvvm.Core
                 }
                 else if (col is DateTime dateTime)
                 {
-                    rv = dateTime.ToString("yyyy-MM-dd");
+                    rv = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 }
                 else if (col != null && col is DateTime?)
                 {
-                    rv = (col as DateTime?).Value.ToString("yyyy-MM-dd");
+                    rv = (col as DateTime?).Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
                 else if (col.GetType().IsEnumOrNullableEnum())
                 {
