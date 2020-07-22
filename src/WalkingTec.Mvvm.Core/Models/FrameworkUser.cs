@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Core
 
         [Display(Name = "Password")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "{0}required")]
-        [StringLength(32)]
+        [StringLength(32, ErrorMessage = "{0}stringmax{1}")]
         public string Password { get; set; }
 
         [Display(Name = "Email" )]
