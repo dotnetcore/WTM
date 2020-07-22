@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.ActionLogVMs
             header.Add(this.MakeGridHeader(x => x.ActionName, 120));
             header.Add(this.MakeGridHeader(x => x.ITCode, 120));
             header.Add(this.MakeGridHeader(x => x.ActionUrl, 200));
-            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x => x.ActionTime, 200).SetSort(true).SetFormat((a, b) => a.ActionTime.ToString("yyyy-MM-dd HH:mm:ss")));
             header.Add(this.MakeGridHeader(x => x.Duration, 100).SetSort(true).SetForeGroundFunc((entity)=> {
                 if(entity.Duration <= 1)
                 {

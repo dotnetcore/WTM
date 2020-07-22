@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {formid}validate = false;
         $('#{formid}hidesubmit').trigger('click');
     }}
-    catch{{ {formid}validate = true;}}
+    catch(e){{ {formid}validate = true;}}
     if({formid}validate == true){{
     ff.OpenDialog('{Url}', '{windowid}', '{WindowTitle ?? ""}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "null"}, ff.GetPostData('{context.Items["formid"]}'),{Max.ToString().ToLower()})
     }}
@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {formid}validate = false;
         $('#{formid}hidesubmit').trigger('click');
     }}
-    catch{{ {formid}validate = true;}}
+    catch(e){{ {formid}validate = true;}}
     if({formid}validate == true){{
     ff.BgRequest('{Url}',ff.GetPostData('{context.Items["formid"]}'),'{vm?.ViewDivId}')
     }}
