@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Doc
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
-                    EFDesignVersion = "3.1.0";
+                    EFDesignVersion = "3.1.5";
                     version = Utils.GetNugetVersion("3.",true);
                     break;
                 default:

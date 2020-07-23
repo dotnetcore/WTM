@@ -9,13 +9,13 @@ const BOTTOM_OFFSET = 68;
 
 // todo update : 截流
 const getElementTop = (element) => {
-  let actualTop = element.offsetTop
-  let current = element.offsetParent
+  let actualTop = element.offsetTop;
+  let current = element.offsetParent;
   while (current !== null) {
-    actualTop += current.offsetTop
-    current = current.offsetParent
+    actualTop += current.offsetTop;
+    current = current.offsetParent;
   }
-  return actualTop
+  return actualTop;
 }
 
 
@@ -27,23 +27,23 @@ const doResize = (el, vnode) => {
     const height =
         window.innerHeight - offsetTop - BOTTOM_OFFSET;
     $table.layout.setHeight(height - 2);
-    // $table.doLayout();
+    $table.doLayout();
   })
 };
 
 const debounceFn = debounce(doResize, PAUSE);
 
 const elHeightAdaptiveTable: DirectiveOptions = {
-  inserted: (el, { value }, vnode) => {
-    if (value) {
-        const { componentInstance: $table } = vnode;
-        if ($table) {
-          $table.layout.setHeight(value);
-        }
-    }
-  },
+  // inserted: (el, { value }, vnode) => {
+  //   if (value && value !== 0) {
+  //       const { componentInstance: $table } = vnode;
+  //       if ($table) {
+  //         $table.layout.setHeight(value);
+  //       }
+  //   }
+  // },
   bind(el, { value }, vnode) {
-    if (value && value !== 0) {
+    if (!value || value === 0) {
       el.resizeListener = () => {
         debounceFn(el, vnode);
       };
@@ -51,7 +51,7 @@ const elHeightAdaptiveTable: DirectiveOptions = {
     }
   },
   update(el, { value }, vnode) {
-    if (value && value !== 0) {
+    if (!value || value === 0) {
       debounceFn(el, vnode);
     }
   },

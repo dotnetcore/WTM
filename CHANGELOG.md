@@ -2,6 +2,18 @@
 
 ## v3.x.x （2.x.x同步更新）
 
+##3.6.8 以及 2.6.8 (2020-7-6)
+* **修改：**  增强了对oracle的支持，注：3.x版本的oracle仍然是beta版，可跑起框架，但可能有未知问题
+* **修改：**  修复了layui搜索相关的一些bug
+* **修改：**  代码生成器现在对于bool类型的变量在layui下默认使用<wt:switch>控件
+* **修改：**  ListVM中DateTime类型的字段默认使用yyyy-MM-dd的格式
+* **修改：**  appsettings中的UploadLimit修改为long类型，可是指定更大的数字
+* **修改：**  修复VUE中没有角色的用户登录时重复刷新的bug
+* **修改：**  修复VUE中列表没有充满屏幕的bug
+
+##3.6.7 以及 2.6.7 (2020-6-30)
+3.6.6/2.6.6 热更新
+
 ##3.6.6 以及 2.6.6 (2020-6-30)
 * **修改：**  修复sqlserver bulk导入时枚举类型没有正确赋值的问题
 * **修改：**  Layui修复了Combobox，CheckBox，Radio等控件设定default-value无效的问题
