@@ -144,6 +144,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public bool MultiLine { get; set; }
 
+        public int? LineHeight { get; set; }
+
         /// <summary>
         /// 设定容器宽度 默认值：'auto'
         /// table容器的默认宽度是 auto，你可以借助该参数设置一个固定值，当容器中的内容超出了该宽度时，会自动出现横向滚动条。
@@ -316,6 +318,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var config = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
 
+            if (LineHeight.HasValue)
+            {
+                MultiLine = false;
+            }
 
             if (UseLocalData == false)
             {
@@ -422,6 +428,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     UnResize = true,
                     //Width = 45
                 };
+                if(LineHeight != null)
+                {
+                    checkboxHeader.Style = $"height:{LineHeight}px";
+                }
                 tempCols.Add(checkboxHeader);
             }
             // 添加序号列
@@ -435,6 +445,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     UnResize = true,
                     //Width = 45
                 };
+                if (LineHeight != null)
+                {
+                    gridIndex.Style = $"height:{LineHeight}px";
+                }
                 tempCols.Add(gridIndex);
             }
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
@@ -651,6 +665,12 @@ setTimeout(function(){{
                     Hide = item.Hide,
                     ShowTotal = item.ShowTotal
                 };
+
+                if (LineHeight != null && item.Fixed.HasValue)
+                {
+                    tempCol.Style = $"height:{LineHeight}px";
+                }
+
                 // 非编辑状态且有字段名的情况下，设置template
                 if ((string.IsNullOrEmpty(ListVM.DetailGridPrix) == true && string.IsNullOrEmpty(item.Field) == false) || item.Field == "BatchError")
                     tempCol.Templet = getTemplate(item.Field);

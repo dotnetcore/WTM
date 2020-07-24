@@ -386,16 +386,17 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (width == null)
                     {
-                        width = height * oimage.Height / oimage.Width;
+                        width = oimage.Width * height / oimage.Height;
                     }
                     if (height == null)
                     {
-                        height = width * oimage.Width / oimage.Height;
+                        height = oimage.Height * width / oimage.Width;
                     }
                     ms = new MemoryStream();
                     oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                     data = ms.ToArray();
                     oimage.Dispose();
+                    ms.Dispose();
                 }
             }
             catch { }

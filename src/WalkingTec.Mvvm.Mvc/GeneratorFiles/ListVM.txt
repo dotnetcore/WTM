@@ -12,21 +12,7 @@ $othernamespace$
 namespace $vmnamespace$
 {
     public partial class $classname$ListVM : BasePagedListVM<$classname$_View, $classname$Searcher>
-    {
-        protected override List<GridAction> InitGridAction()
-        {
-            return new List<GridAction>
-            {
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Create, Localizer["Create"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Edit, Localizer["Edit"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Delete, Localizer["Delete"], "$area$",dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Details, Localizer["Details"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchEdit, Localizer["BatchEdit"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.BatchDelete, Localizer["BatchDelete"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.Import, Localizer["Import"],"$area$", dialogWidth: 800),
-                this.MakeStandardAction("$modelname$", GridActionStandardTypesEnum.ExportExcel, Localizer["Export"],"$area$"),
-            };
-        }
+    {$actions$
 
         protected override IEnumerable<IGridColumn<$classname$_View>> InitGridHeader()
         {

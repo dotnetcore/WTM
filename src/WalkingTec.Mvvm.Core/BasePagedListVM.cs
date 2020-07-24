@@ -224,8 +224,17 @@ namespace WalkingTec.Mvvm.Core
                         }
 
                         //建立excel单元格
-                        var cell = DR.CreateCell(ColIndex);
-                        cell.SetCellValue(text);
+                        ICell cell;
+                        if (col.FieldType.IsNumber())
+                        {
+                            cell = DR.CreateCell(ColIndex, CellType.Numeric);
+                            cell.SetCellValue(Convert.ToDouble(text));
+                        }
+                        else
+                        {
+                            cell = DR.CreateCell(ColIndex);
+                            cell.SetCellValue(text);
+                        }
                         ColIndex++;
                     }
                 }

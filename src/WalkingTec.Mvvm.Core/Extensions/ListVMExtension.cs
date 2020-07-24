@@ -245,6 +245,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                     html = PropertyHelper.GetEnumDisplayName(ptype, enumvalue);
                                 }
                             }
+                            //If this column is a class or list, html will be set to a json string, sest inner to true to remove the "
+                            if(returnColumnObject == true && ptype?.Namespace.Equals("System") == false && ptype?.IsEnumOrNullableEnum() == false)
+                            {
+                                inner = true;
+                            }
                         }
                     }
                     else

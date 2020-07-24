@@ -585,11 +585,14 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             continue;
                         }
-                        var fname = "All" + pro.FieldName + "s";
-                        prostring += $@"
+                        if (UI == UIEnum.LayUI && IsApi == false)
+                        {
+                            var fname = "All" + pro.FieldName + "s";
+                            prostring += $@"
         public List<ComboSelectListItem> {fname} {{ get; set; }}";
-                        initstr += $@"
+                            initstr += $@"
             {fname} = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.{pro.SubField});";
+                        }
                     }
 
                     //生成普通字段定义
@@ -646,6 +649,28 @@ namespace WalkingTec.Mvvm.Mvc
                 string wherestring = "";
                 string subprostring = "";
                 string formatstring = "";
+                string actionstring = "";
+
+                if (UI == UIEnum.LayUI && IsApi == false)
+                {
+                    actionstring = $@"
+        protected override List<GridAction> InitGridAction()
+        {{
+            return new List<GridAction>
+            {{
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Create, Localizer[""Create""],""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Edit, Localizer[""Edit""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Delete, Localizer[""Delete""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Details, Localizer[""Details""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchEdit, Localizer[""BatchEdit""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.BatchDelete, Localizer[""BatchDelete""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.Import, Localizer[""Import""], ""{Area ?? ""}"", dialogWidth: 800),
+                this.MakeStandardAction(""{ModelName}"", GridActionStandardTypesEnum.ExportExcel, Localizer[""Export""], ""{Area ?? ""}""),
+            }};
+        }}
+";
+                }
+
                 var pros = FieldInfos.Where(x => x.IsListField == true).ToList();
                 Type modelType = Type.GetType(SelectedModel);
                 List<PropertyInfo> existSubPro = new List<PropertyInfo>();
@@ -758,7 +783,7 @@ namespace WalkingTec.Mvvm.Mvc
                             break;
                     }
                 }
-                rv = rv.Replace("$headers$", headerstring).Replace("$where$", wherestring).Replace("$select$", selectstring).Replace("$subpros$", subprostring).Replace("$format$", formatstring);
+                rv = rv.Replace("$headers$", headerstring).Replace("$where$", wherestring).Replace("$select$", selectstring).Replace("$subpros$", subprostring).Replace("$format$", formatstring).Replace("$actions$", actionstring);
                 rv = GetRelatedNamespace(pros, rv);
             }
             if (name == "CrudVM")
@@ -1793,6 +1818,7 @@ namespace WalkingTec.Mvvm.Mvc
                 List<string> acts = new List<string>();
                 List<string> enums = new List<string>();
                 var pros2 = FieldInfos.Where(x => x.IsSearcherField == true || x.IsListField).ToList();
+                int searchcount = 0;
                 for (int i = 0; i < pros2.Count; i++)
                 {
 
@@ -1836,6 +1862,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             continue;
                         }
+                        searchcount++;
                         var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
                         string label = property.GetPropertyDisplayName();
                         string rules = "rules: []";
@@ -1929,15 +1956,11 @@ namespace WalkingTec.Mvvm.Mvc
                     }}");
                             }
                         }
-                        if (i > 1)
+                        if (searchcount > 2)
                         {
                             fieldstr2.AppendLine("                    ,isHidden: !this.isActive");
                         }
-                        fieldstr2.Append("            }");
-                        if (i < pros2.Count - 1)
-                        {
-                            fieldstr2.Append(",");
-                        }
+                        fieldstr2.Append("              },");
                         fieldstr2.Append(Environment.NewLine);
                     }
                 }
