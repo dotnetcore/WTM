@@ -15,6 +15,9 @@ using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Reflection;
+using WalkingTec.Mvvm.Demo.Filters;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -84,6 +87,10 @@ namespace WalkingTec.Mvvm.Demo
                                 }
                             }, new string[] { });
                             c.AddSecurityRequirement(sr);
+                            var _xml_file = Path.Combine (AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                            c.IncludeXmlComments (_xml_file);
+                            //// 取消注释即屏蔽Swagger中的框架模块API
+                            //c.DocumentFilter<SwaggerDocumentFilter> ();
                         });
                     })
                     .Configure(x =>
