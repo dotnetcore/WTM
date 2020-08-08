@@ -114,7 +114,18 @@ namespace WalkingTec.Mvvm.Core
             self.Field = field;
             return self;
         }
-
+        /// <summary>
+        /// 单元格事件名称
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="hide"></param>
+        /// <returns></returns>
+        public static GridColumn<T> SetEvent<T>(this GridColumn<T> self, string eEvent) where T : TopBasePoco
+        {
+            self.Event = eEvent;
+            return self;
+        }
         /// <summary>
         /// 设定标题名称
         /// </summary>

@@ -78,7 +78,10 @@ namespace WalkingTec.Mvvm.Core
         /// 是否允许排序
         /// </summary>
         public bool? Sort { get; set; }
-
+        /// <summary>
+        /// //监听单元格事件
+        /// </summary>
+        public string Event { get; set; }
         /// <summary>
         /// 是否固定列
         /// </summary>

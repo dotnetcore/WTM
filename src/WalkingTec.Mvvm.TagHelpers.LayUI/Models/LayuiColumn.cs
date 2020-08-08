@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using WalkingTec.Mvvm.Core;
@@ -150,7 +150,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         [JsonProperty("hide")]
         public bool? Hide { get; set; }
-
+        /// <summary>
+        /// //监听单元格事件
+        /// </summary>
+        [JsonProperty("event")]
+        public string Event { get; set; }
         [JsonProperty("style")]
         public string Style { get; set; }
 
