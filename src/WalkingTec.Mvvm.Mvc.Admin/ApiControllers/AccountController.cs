@@ -195,9 +195,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var ms = new List<SimpleMenu>();
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
-                var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
-
-                var allowed = DC.Set<FunctionPrivilege>()
+                var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList(); var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
@@ -251,8 +249,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var ms = new List<SimpleMenu>();
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
-                var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
-
+                var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
