@@ -668,6 +668,7 @@ setTimeout(function(){{
                     Sort = item.Sort,
                     Fixed = item.Fixed,
                     Align = item.Align,
+                    Event = item.Event,
                     UnResize = item.UnResize,
                     Hide = item.Hide,
                     ShowTotal = item.ShowTotal
