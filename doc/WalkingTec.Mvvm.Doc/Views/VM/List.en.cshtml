@@ -325,9 +325,72 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         <p>Using stored procedures is cumbersome. You can also use lambda or linq to write most of the requirements. Try not to use stored procedures until you have to.</p>
     </wt:quote>
 
+    <wt:code title="SchoolListVM2.cs">
+    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
+    {
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            var actions = new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+            };
+            return actions;
+        }
+
+        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
+        {
+            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
+
+            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
+            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
+            header.Add(this.MakeGridHeaderAction(width: 120));
+
+            return header;
+        }
+
+        public override DbCommand GetSearchCommand()
+        {
+            cmd.CommandText = "getactionlog";
+            cmd.CommandType = CommandType.StoredProcedure;
+            return cmd;
+        }
+    }
+    </wt:code>
+    <p>In the above code，ListVM will call a stored procedure named 'getactionlog', a example of this stored procedure is:</p>
+<wt:code>
+  CREATE PROCEDURE getactionlog
+	@@SearchMode varchar,
+	@@NeedPage bit,
+	@@CurrentPage int,
+	@@RecordsPerPage int,
+	@@Sort varchar = '',
+	@@SortDir varchar = '',
+	@@IDs varchar = '',
+	@@TotalRecords int output
+AS
+	select @@TotalRecords =  count(*) from ActionLogs;
+	if @@NeedPage = 1 begin
+	select * from ActionLogs order by CreateTime desc
+	offset ((@@CurrentPage-1)*@@RecordsPerPage) rows
+	fetch next @@RecordsPerPage rows only;
+	end
+	else begin
+	select * from ActionLogs order by CreateTime desc
+	end 
+RETURN 0
+</wt:code>
+    <p>The top 8 parameters of stored procedure are added in order by WTM, your own search parameters can be added below those default parameters</p>
 
 
-<wt:fieldset field-set-style="Simple" title="Main attributes">
+<wt:fieldset field-set-style="Simple" title="ListVM attributes">
 </wt:fieldset>
     <table lay-filter="parse-table-demo">
         <thead>
@@ -360,7 +423,7 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
 
         </tbody>
     </table>
-<wt:fieldset field-set-style="Simple" title="Main functions">
+<wt:fieldset field-set-style="Simple" title="ListVM functions">
  </wt:fieldset>
    <table lay-filter="parse-table-demo">
         <thead>
