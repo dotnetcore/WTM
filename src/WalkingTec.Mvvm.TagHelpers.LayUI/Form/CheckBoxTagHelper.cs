@@ -131,12 +131,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             item.Selected = true;
                         }
+                        else
+                        {
+                            item.Selected = false;
+                        }
                     }
                     else
                     {
                         if (item.Value.ToString().ToLower() == item2?.ToString().ToLower())
                         {
                             item.Selected = true;
+                        }
+                        else
+                        {
+                            item.Selected = false;
                         }
                     }
                 }
