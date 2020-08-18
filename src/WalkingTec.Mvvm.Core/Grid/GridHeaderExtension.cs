@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Core
                 ColumnType = GridColumnTypeEnum.Action,
                 Width = width,
                 Fixed = GridColumnFixedEnum.Right,
-                Title = title??Program._localizer["Operation"]
+                Title = title ?? Program._localizer["Operation"]
             };
         }
 
@@ -140,6 +140,18 @@ namespace WalkingTec.Mvvm.Core
             where T : TopBasePoco
         {
             self.Width = width;
+            return self;
+        }
+        /// <summary>
+        /// 单元格事件名称
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <param name="hide"></param>
+        /// <returns></returns>
+        public static GridColumn<T> SetEvent<T>(this GridColumn<T> self, string eEvent) where T : TopBasePoco
+        {
+            self.Event = eEvent;
             return self;
         }
 

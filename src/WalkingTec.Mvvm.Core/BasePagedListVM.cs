@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -11,10 +10,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using NpgsqlTypes;
+using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
@@ -184,21 +186,31 @@ namespace WalkingTec.Mvvm.Core
             headerStyle.FillBackgroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
             headerStyle.FillPattern = FillPattern.SolidForeground;
             headerStyle.FillForegroundColor = ExportTitleBackColor == null ? HSSFColor.LightBlue.Index : ExportTitleBackColor.Value;
+            headerStyle.BorderBottom = BorderStyle.Thin;
+            headerStyle.BorderTop = BorderStyle.Thin;
+            headerStyle.BorderLeft = BorderStyle.Thin;
+            headerStyle.BorderRight = BorderStyle.Thin;
             IFont font = book.CreateFont();
             font.FontName = "Calibri";
             font.FontHeightInPoints = 12;
             font.Color = ExportTitleFontColor == null ? HSSFColor.Black.Index : ExportTitleFontColor.Value;
             headerStyle.SetFont(font);
 
+            ICellStyle cellStyle = book.CreateCellStyle();
+            cellStyle.BorderBottom = BorderStyle.Thin;
+            cellStyle.BorderTop = BorderStyle.Thin;
+            cellStyle.BorderLeft = BorderStyle.Thin;
+            cellStyle.BorderRight = BorderStyle.Thin;
+
             //生成表头
-            MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
+            int max = MakeExcelHeader(sheet, GridHeaders, 0, 0, headerStyle);
 
             //放入数据
             var ColIndex = 0;
             for (int i = 0; i < List.Count; i++)
             {
                 ColIndex = 0;
-                var DR = sheet.CreateRow(i + 1);
+                var DR = sheet.CreateRow(i + max);
                 foreach (var baseCol in GridHeaders)
                 {
                     //处理枚举变量的多语言
@@ -225,7 +237,7 @@ namespace WalkingTec.Mvvm.Core
 
                         //建立excel单元格
                         ICell cell;
-                        if (col.FieldType.IsNumber())
+                        if (col.FieldType?.IsNumber() == true)
                         {
                             cell = DR.CreateCell(ColIndex, CellType.Numeric);
                             cell.SetCellValue(Convert.ToDouble(text));
@@ -235,10 +247,11 @@ namespace WalkingTec.Mvvm.Core
                             cell = DR.CreateCell(ColIndex);
                             cell.SetCellValue(text);
                         }
+                        cell.CellStyle = cellStyle;
                         ColIndex++;
                     }
                 }
-            }
+            }            
             return book;
         }
 
@@ -349,11 +362,17 @@ namespace WalkingTec.Mvvm.Core
                 }
                 var cellRangeAddress = new CellRangeAddress(rowIndex, rowIndex + rowspan, colIndex, colIndex + bcount - 1);
                 sheet.AddMergedRegion(cellRangeAddress);
+                if(rowspan > 0 || bcount > 1)
+                {
+                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                }
                 for (int i = cellRangeAddress.FirstRow; i <= cellRangeAddress.LastRow; i++)
                 {
+                    IRow r = CellUtil.GetRow(i, sheet);
                     for (int j = cellRangeAddress.FirstColumn; j <= cellRangeAddress.LastColumn; j++)
                     {
-                        var c = sheet.GetRow(i).GetCell(j); //HSSFCellUtil.GetCell(HSSFCellUtil.GetRow(i, (HSSFSheet)sheet), j);
+                        ICell c = CellUtil.GetCell(r, (short)j);
                         c.CellStyle = style;
                     }
                 }
@@ -713,6 +732,10 @@ namespace WalkingTec.Mvvm.Core
         {
             object total;
 
+            if (Searcher.Page <= 0)
+            {
+                Searcher.Page = 1;
+            }
             if (DC.Database.IsMySql())
             {
                 List<MySqlParameter> parms = new List<MySqlParameter>();

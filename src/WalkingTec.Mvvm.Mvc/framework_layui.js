@@ -933,6 +933,11 @@ window.ff = {
     },
 
     resetForm: function (formId) {
+
+        $("#" + formId).find('input[type=text],select').each(function () {
+            $(this).val('');
+        });
+
         var hidAreas = [' input[wtm-tag=wtmselector]'];
         // 多选下拉框
         var multiCombos = $('#' + formId + ' select[wtm-combo=MULTI_COMBO]');

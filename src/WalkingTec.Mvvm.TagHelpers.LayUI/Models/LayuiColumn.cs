@@ -87,7 +87,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         [JsonPropertyName("width")]
         public int? Width { get; set; }
-
+        /// <summary>
+        /// //监听单元格事件
+        /// </summary>
+        [JsonProperty("event")]
+        public string Event { get; set; }
         /// <summary>
         /// 即横跨的单元格数，这种情况下不用设置field和width
         /// </summary>

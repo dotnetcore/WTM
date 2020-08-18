@@ -84,6 +84,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     isPublic = true;
                 }
+                if(ad.ControllerTypeInfo.FullName == "WalkingTec.Mvvm.Admin.Api.FileApiController" && (ad.MethodInfo.Name == "GetFileName" || ad.MethodInfo.Name == "GetFile" || ad.MethodInfo.Name == "DownloadFile"))
+                {
+                    isPublic = true;
+
+                }
             }
             if (isDebug)
             {

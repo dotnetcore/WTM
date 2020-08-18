@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Doc
         private string version = "";
         private string SwashbuckleVersion = "";
         private string EFDesignVersion = "";
-
+        private string RazorPackage = "";
         public bool EnableLog { get; set; }
 
         public bool LogExceptionOnly { get; set; }
@@ -138,11 +138,13 @@ namespace WalkingTec.Mvvm.Doc
                     SwashbuckleVersion = "4.0.1";
                     EFDesignVersion = "2.2.4";
                     version = Utils.GetNugetVersion("2.",false);
+                    RazorPackage = "";
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
                     EFDesignVersion = "3.1.5";
                     version = Utils.GetNugetVersion("3.",true);
+                    RazorPackage = "    <PackageReference Include=\"Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation\" Version=\"3.1.5\" />";
                     break;
                 default:
                     break;
@@ -213,6 +215,7 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
     <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""{EFDesignVersion}"" />
+    {RazorPackage}
 </ItemGroup>
 </Project>
 ");
@@ -230,7 +233,8 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
     <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""{EFDesignVersion}"" />
- </ItemGroup>
+    {RazorPackage}
+  </ItemGroup>
   <ItemGroup>
     <Content Remove=""$(SpaRoot)**"" />
     <None Include=""$(SpaRoot)**"" Exclude=""$(SpaRoot)node_modules\**;$(SpaRoot).awcache\**;$(SpaRoot).cache-loader\**"" />
@@ -275,7 +279,8 @@ namespace WalkingTec.Mvvm.Doc
     <PackageReference Include=""WalkingTec.Mvvm.Mvc.Admin"" Version=""{version}"" />
     <PackageReference Include=""Swashbuckle.AspNetCore"" Version=""{SwashbuckleVersion}"" />
     <PackageReference Include=""Microsoft.EntityFrameworkCore.Tools"" Version=""{EFDesignVersion}"" />
- </ItemGroup>
+    {RazorPackage}
+  </ItemGroup>
   <ItemGroup>
     <Compile Remove=""ClientApp\dist\**"" />
     <Content Remove=""$(SpaRoot)**"" />
@@ -545,7 +550,7 @@ module.exports = (app) => {{
         {
             if(fileName == "Proj.txt" || fileName == "TestProj.txt" ||
                 fileName == "React.Program.txt" || fileName == "Vue.Program.txt" || fileName == "layui.Program.txt"
-                || fileName == "DefaultProj.txt" )
+                || fileName == "DefaultProj.txt" || fileName == "Launch.txt")
             {
                 if(DotnetVersion == DotnetVersionEnum.dotnet3_0)
                 {
@@ -616,6 +621,10 @@ module.exports = (app) => {{
             if (UI == UIEnum.React || UI == UIEnum.Vue)
             {
                 File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Spa").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
+            }
+            else
+            {
+                File.WriteAllText($"{MainDir}{Path.DirectorySeparatorChar}Properties{Path.DirectorySeparatorChar}launchSettings.json", GetResource("Launch.txt", "Mvc").Replace("$ns$", MainNs).Replace("$port$", Port.ToString()), Encoding.UTF8);
             }
         }
     }

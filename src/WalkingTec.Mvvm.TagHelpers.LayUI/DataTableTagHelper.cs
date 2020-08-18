@@ -293,7 +293,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
 
-            generateColHeader(rawCols, nextCols, tempCols, maxDepth);
+            generateColHeader(rawCols, nextCols, tempCols, maxDepth, depth);
 
             if (nextCols.Count > 0)
             {
@@ -453,7 +453,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             var nextCols = new List<IGridColumn<TopBasePoco>>();// 下一级列头
 
-            generateColHeader(rawCols, nextCols, tempCols, maxDepth);
+            generateColHeader(rawCols, nextCols, tempCols, maxDepth,0);
 
             if (nextCols.Count > 0)
             {
@@ -568,7 +568,7 @@ layui.use(['table'], function(){{
       if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{Program._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
       if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{Program._localizer["Error"]}'}});}}
      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
-      {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','40px');ff.triggerResize();" : string.Empty)}
+      {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','{maxDepth*38}px');ff.triggerResize();" : string.Empty)}
       {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
        tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{Program._localizer["ColumnFilter"]}');
        tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{Program._localizer["Print"]}');
@@ -630,17 +630,17 @@ setTimeout(function(){{
             IEnumerable<IGridColumn<TopBasePoco>> rawCols,
             List<IGridColumn<TopBasePoco>> nextCols,
             List<LayuiColumn> tempCols,
-            int maxDepth
+            int maxDepth, int depth
         )
         {
             var temp = rawCols.Where(x => x.Fixed == GridColumnFixedEnum.Left).ToArray();
-            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth,depth);
 
             temp = rawCols.Where(x => x.Fixed == null).ToArray();
-            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth, depth);
 
             temp = rawCols.Where(x => x.Fixed == GridColumnFixedEnum.Right).ToArray();
-            generateColHeaderCore(temp, nextCols, tempCols, maxDepth);
+            generateColHeaderCore(temp, nextCols, tempCols, maxDepth, depth);
 
         }
 
@@ -648,7 +648,7 @@ setTimeout(function(){{
             IEnumerable<IGridColumn<TopBasePoco>> rawCols,
             List<IGridColumn<TopBasePoco>> nextCols,
             List<LayuiColumn> tempCols,
-            int maxDepth
+            int maxDepth, int depth
         )
         {
             foreach (var item in rawCols)
@@ -661,6 +661,7 @@ setTimeout(function(){{
                     Sort = item.Sort,
                     Fixed = item.Fixed,
                     Align = item.Align,
+                    Event = item.Event,
                     UnResize = item.UnResize,
                     Hide = item.Hide,
                     ShowTotal = item.ShowTotal
@@ -691,7 +692,10 @@ setTimeout(function(){{
                 }
                 if (maxDepth > 1 && (item.Children == null || !item.Children.Any()))
                 {
-                    tempCol.Rowspan = maxDepth;
+                    if (maxDepth - depth > 1)
+                    {
+                        tempCol.Rowspan = maxDepth - depth;
+                    }
                 }
                 tempCols.Add(tempCol);
                 if (item.Children != null && item.Children.Any())

@@ -1,15 +1,40 @@
 @model WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs.SchoolVM
 
 <wt:form vm="@Model">
-    <wt:row items-per-row="ItemsPerRowEnum.Two">
-        <wt:textbox field="Entity.SchoolCode" />
-        <wt:textbox field="Entity.SchoolName" />
-        <wt:combobox field="Entity.SchoolType" />
-        <wt:textbox field="Entity.Remark" />
-    </wt:row>
-    <wt:grid vm="MajorList" use-local-data="true" hidden-panel="true" hidden-checkbox="true"  height="-400"/>
-    <wt:row align="AlignEnum.Right">
-        <wt:submitbutton />
-        <wt:closebutton />
-    </wt:row>
+  <wt:row items-per-row="ItemsPerRowEnum.Two">
+    <wt:textbox field="Entity.SchoolCode" />
+    <wt:textbox field="Entity.SchoolName" />
+    <wt:combobox field="Entity.SchoolType" />
+    <wt:textbox field="Entity.Remark" />
+  </wt:row>
+  <wt:grid vm="MajorList" use-local-data="true" hidden-panel="true" hidden-checkbox="true" height="-400" id="MajorList"/>
+  <wt:row align="AlignEnum.Right">
+    <wt:submitbutton />
+    <wt:closebutton />
+  </wt:row>
 </wt:form>
+
+<script>
+
+  layui.use('table', function(){
+    var table = layui.table; 
+    //监听单元格事件
+    table.on('tool(MajorList)', function (obj) {
+
+      if (obj.event === 'setSign') {
+
+        layer.open({
+          type: 1
+          , offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+          , id: 'MajorList'+'001' //防止重复弹出
+          ,content: '<div style="padding: 20px 100px;">'+ '单击事情' +'</div>'
+          ,btn: '关闭'
+          ,btnAlign: 'c' //按钮居中
+          ,shade: 0 //不显示遮罩
+          
+        });
+      }
+    });
+  });
+</script>
+
