@@ -81,6 +81,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         {
                             item.Selected = true;
                         }
+                        else
+                        {
+                            item.Selected = false;
+                        }
                     }
                 }
                 else if (Items.Metadata.ModelType.IsList())

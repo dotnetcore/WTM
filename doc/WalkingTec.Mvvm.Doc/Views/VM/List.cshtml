@@ -325,9 +325,71 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
         <p>使用存储过程比较繁琐，绝大部分需求时可以使用lambda或者linq来写的，不到万不得已尽量别用存储过程</p>
     </wt:quote>
 
+    <wt:code title="SchoolListVM2.cs">
+    public class ActionLogListVM : BasePagedListVM&lt;ActionLog,BaseSearcher&gt;
+    {
+        protected override List&lt;GridAction&gt; InitGridAction()
+        {
+            var actions = new List&lt;GridAction&gt;
+            {
+                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.Details, "详细","_Admin", dialogWidth: 800).SetHideOnToolBar(true),
+                this.MakeStandardExportAction(null,false,ExportEnum.Excel)
+            };
+            return actions;
+        }
 
+        protected override IEnumerable&lt;IGridColumn&lt;ActionLog&gt;&gt; InitGridHeader()
+        {
+            var header = new List&lt;GridColumn&lt;ActionLog&gt;&gt;();
 
-<wt:fieldset field-set-style="Simple" title="主要属性">
+            header.Add(this.MakeGridHeader(x =&gt; x.LogType, 80));
+            header.Add(this.MakeGridHeader(x =&gt; x.ModuleName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionName, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ITCode, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionUrl, 200));
+            header.Add(this.MakeGridHeader(x =&gt; x.ActionTime, 200).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.Duration, 100).SetSort(true));
+            header.Add(this.MakeGridHeader(x =&gt; x.IP, 120));
+            header.Add(this.MakeGridHeader(x =&gt; x.Remark));
+            header.Add(this.MakeGridHeaderAction(width: 120));
+
+            return header;
+        }
+
+        public override DbCommand GetSearchCommand()
+        {
+            cmd.CommandText = "getactionlog";
+            cmd.CommandType = CommandType.StoredProcedure;
+            return cmd;
+        }
+    }
+    </wt:code>
+    <p>上面代码中，ListVM会调用名为getactionlog的存储过程，存储过程示例如下</p>
+<wt:code>
+  CREATE PROCEDURE getactionlog
+	@@SearchMode varchar,
+	@@NeedPage bit,
+	@@CurrentPage int,
+	@@RecordsPerPage int,
+	@@Sort varchar = '',
+	@@SortDir varchar = '',
+	@@IDs varchar = '',
+	@@TotalRecords int output
+AS
+	select @@TotalRecords =  count(*) from ActionLogs;
+	if @@NeedPage = 1 begin
+	select * from ActionLogs order by CreateTime desc
+	offset ((@@CurrentPage-1)*@@RecordsPerPage) rows
+	fetch next @@RecordsPerPage rows only;
+	end
+	else begin
+	select * from ActionLogs order by CreateTime desc
+	end 
+RETURN 0
+</wt:code>
+    <p>存储过程的前8个参数都是框架自动按顺序添加的，自己的搜索条件可以在后面继续加</p>
+
+<wt:fieldset field-set-style="Simple" title="ListVM主要属性">
 </wt:fieldset>
     <table lay-filter="parse-table-demo">
         <thead>
@@ -360,7 +422,7 @@ public override IOrderedQueryable&ltSchool&gt GetSearchQuery()
 
         </tbody>
     </table>
-<wt:fieldset field-set-style="Simple" title="主要函数">
+<wt:fieldset field-set-style="Simple" title="ListVM主要函数">
  </wt:fieldset>
    <table lay-filter="parse-table-demo">
         <thead>
