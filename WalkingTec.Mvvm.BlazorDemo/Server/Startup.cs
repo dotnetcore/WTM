@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             services.AddWtmAuthentication(Configuration);
             services.AddWtmHttpClient(Configuration);
             services.AddWtmSwagger();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddWtmMultiLanguages(Configuration);
 
             services.AddMvc(options =>
             {
@@ -88,7 +88,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 };
             });
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(Configuration, DataPrivilegeSettings());
+            services.AddWtmContext(DataPrivilegeSettings());
 
             //services.AddControllersWithViews();
             //services.AddRazorPages();
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseWtmLanguages();
+            app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
 

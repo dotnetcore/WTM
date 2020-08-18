@@ -501,7 +501,7 @@ namespace WalkingTec.Mvvm.Mvc
             FDFSConfig.Trackers = TrackerServers;
         }
 
-        public static IServiceCollection AddWtmContext(this IServiceCollection services, IConfigurationRoot config, List<IDataPrivilege> dps)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services, List<IDataPrivilege> dps)
         {
             var gd = GetGlobalData();
             services.AddHttpContextAccessor();
@@ -510,20 +510,6 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton(dps);
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
-            var con = config.Get<Configs>();
-            List<CultureInfo> supportedCultures = new List<CultureInfo>();
-            var lans = con.Languages.Split(",");
-            foreach (var lan in lans)
-            {
-                supportedCultures.Add(new CultureInfo(lan));
-            }
-
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -684,6 +670,27 @@ namespace WalkingTec.Mvvm.Mvc
             });
             return services;
         }
+
+        public static IServiceCollection AddWtmMultiLanguages(this IServiceCollection services, IConfigurationRoot config)
+        {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            var con = config.Get<Configs>();
+            List<CultureInfo> supportedCultures = new List<CultureInfo>();
+            var lans = con.Languages.Split(",");
+            foreach (var lan in lans)
+            {
+                supportedCultures.Add(new CultureInfo(lan));
+            }
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+            return services;
+        }
+
         public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
@@ -794,7 +801,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             return app;
         }
-        public static IApplicationBuilder UseWtmLanguages(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)
         {
             var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;            
             if (string.IsNullOrEmpty(configs.Languages) == false)

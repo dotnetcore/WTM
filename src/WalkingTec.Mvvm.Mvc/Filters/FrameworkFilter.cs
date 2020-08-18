@@ -29,16 +29,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
-            if (ctrl.WtmContext == null)
-            {
-                ctrl.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
-                try
-                {
-                    ctrl.WtmContext.MSD = new ModelStateServiceProvider(context.ModelState);
-                    ctrl.WtmContext.Session = new SessionServiceProvider(context.HttpContext.Session);
-                }
-                catch { }
-            }
+            context.SetWtmContext();
             if (context.HttpContext.Items.ContainsKey("actionstarttime") == false)
             {
                 context.HttpContext.Items.Add("actionstarttime", DateTime.Now);

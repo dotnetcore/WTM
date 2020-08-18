@@ -115,7 +115,7 @@ namespace WalkingTec.Mvvm.Doc
             });
 
             app.UseRouting();
-            app.UseWtmLanguages();
+            app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
 

@@ -16,6 +16,11 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 {
     public class LoginController : BaseController
     {
+        //public LoginController(WTMContext context)
+        //{
+        //    this.WtmContext = context;
+        //}
+
         [Public]
         [ActionDescription("Login")]
         public IActionResult Login()

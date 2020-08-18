@@ -279,7 +279,7 @@ namespace WalkingTec.Mvvm.Core
             _globaInfo = _gd;
             _httpContext = _http.HttpContext;
             _uiservice = _ui;
-            if(_dp == null)
+            if (_dp == null)
             {
                 _dp = new List<IDataPrivilege>();
             }

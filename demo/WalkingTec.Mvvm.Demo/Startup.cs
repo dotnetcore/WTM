@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo
             services.AddWtmAuthentication(Configuration);
             services.AddWtmHttpClient(Configuration);
             services.AddWtmSwagger();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddWtmMultiLanguages(Configuration);
 
             services.AddMvc(options =>
             {
@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Demo
                 };
             });
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(Configuration, DataPrivilegeSettings());
+            services.AddWtmContext(DataPrivilegeSettings());
 
         }
 
@@ -119,7 +119,7 @@ namespace WalkingTec.Mvvm.Demo
             });
 
             app.UseRouting();
-            app.UseWtmLanguages();
+            app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
             app.UseAuthorization();

@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             services.AddWtmAuthentication(Configuration);
             services.AddWtmHttpClient(Configuration);
             services.AddWtmSwagger();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddWtmMultiLanguages(Configuration);
 
             services.AddMvc(options =>
             {
@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                     }
                 };
             });
-            services.AddWtmContext(Configuration, DataPrivilegeSettings());
+            services.AddWtmContext(DataPrivilegeSettings());
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             });
 
             app.UseRouting();
-            app.UseWtmLanguages();
+            app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
 

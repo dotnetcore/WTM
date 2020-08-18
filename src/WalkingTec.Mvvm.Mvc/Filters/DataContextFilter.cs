@@ -31,18 +31,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuting(context);
                 return;
             }
-            if (controller.WtmContext == null)
-            {
-                controller.WtmContext = context.HttpContext.RequestServices.GetService(typeof(WTMContext)) as WTMContext;
-                try
-                {
-                    controller.WtmContext.MSD = new ModelStateServiceProvider(context.ModelState);
-                    controller.WtmContext.Session = new SessionServiceProvider(context.HttpContext.Session);
-                }
-                catch { }
-
-            }
-
+            context.SetWtmContext();
             string cs = "";
             DBTypeEnum? dbtype = null;
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
