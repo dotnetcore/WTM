@@ -240,7 +240,11 @@ namespace WalkingTec.Mvvm.Core
                         if (col.FieldType?.IsNumber() == true)
                         {
                             cell = DR.CreateCell(ColIndex, CellType.Numeric);
-                            cell.SetCellValue(Convert.ToDouble(text));
+                            try
+                            {
+                                cell.SetCellValue(Convert.ToDouble(text));
+                            }
+                            catch { }
                         }
                         else
                         {
