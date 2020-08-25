@@ -1,0 +1,107 @@
+@model WalkingTec.Mvvm.Doc.ViewModels.MajorVms.MajorVm
+
+<wt:fieldset field-set-style="Simple" title="Textbox">
+ </wt:fieldset>
+   <p>ColorPicker的常用属性有：</p>
+        <table lay-filter="parse-table-demo">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'username', width:200}">属性</th>
+                    <th lay-data="{field:'joinTime', width:600}">描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Id</td>
+                    <td>控件Id，默认根据绑定字段名称生成</td>
+                </tr>
+                <tr>
+                    <td>Field</td>
+                    <td>绑定字段，必填</td>
+                </tr>
+                <tr>
+                    <td>Disabled</td>
+                    <td>是否禁用</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>控件Name，默认根据绑定字段名称生成</td>
+                </tr>
+                <tr>
+                    <td>LabelText</td>
+                    <td>标签内容</td>
+                </tr>
+                <tr>
+                    <td>LabelWidth</td>
+                    <td>标签的长度，默认为80</td>
+                </tr>
+                <tr>
+                    <td>HideLabel</td>
+                    <td>是否隐藏标签</td>
+                </tr>
+                <tr>
+                    <td>EnableAlpha</td>
+                    <td>是否开启透明度编辑</td>
+                </tr>
+                <tr>
+                    <td>PredefinedColors</td>
+                    <td>是否显示预定义颜色</td>
+                </tr>
+            </tbody>
+        </table>
+    <div style="height:10px;">&nbsp;</div>
+        <wt:tab>
+            <wt:tabheaders>
+                <wt:tabheader title="效果" />
+                <wt:tabheader title="代码" />
+            </wt:tabheaders>
+            <wt:tabcontents>
+                <wt:tabcontent>
+                    <wt:form vm="@Model" style="max-width:600px;">
+                        <wt:colorpicker field="Entity.Color1" padding-text="标准模式"/>
+                        <wt:colorpicker enable-alpha="true" field="Entity.Color2" padding-text="开启透明度" />
+                        <wt:colorpicker enable-alpha="true" predefined-colors="" field="Entity.Color3" padding-text="显示默认预设颜色"/>
+                        <wt:colorpicker enable-alpha="true" predefined-colors="#ff000000,#00ff00cc,#0000ffff" field="Entity.Color4" padding-text="显示自定义预设颜色"/>
+                         <wt:colorpicker field="Entity.Color5" change-func="colorchange" padding-text="颜色改变事件"/>
+                       <wt:row align="AlignEnum.Right">
+                            <wt:submitbutton disabled="true" />
+                            <wt:closebutton disabled="true" />
+                        </wt:row>
+                    </wt:form>
+                </wt:tabcontent>
+                <wt:tabcontent>
+                  <wt:code>
+&ltwt:form vm="@Model" style="max-width:600px;"&gt
+  &ltwt:colorpicker field="Entity.Color1" /&gt //标准模式
+  &ltwt:colorpicker enable-alpha="true" field="Entity.Color2" /&gt //开启透明度
+  &ltwt:colorpicker enable-alpha="true" predefined-colors="" field="Entity.Color3" /&gt //显示默认预设颜色
+  &ltwt:colorpicker enable-alpha="true" predefined-colors="#ff000000,#00ff00cc,#0000ffff" field="Entity.Color4" /&gt //显示自定义预设颜色
+  &ltwt:colorpicker field="Entity.Color5" change-func="changecolor" /&gt //颜色改变事件
+  &ltwt:row align="AlignEnum.Right"&gt
+    &ltwt:submitbutton disabled="true" /&gt
+    &ltwt:closebutton disabled="true" /&gt
+  &lt/wt:row&gt
+&lt/wt:form&gt
+&ltscript&gt
+  function colorchange(data) {
+    alert(data);
+  }
+&lt/script&gt
+                  </wt:code>
+                </wt:tabcontent>
+            </wt:tabcontents>
+        </wt:tab>
+
+    <script>
+    layui.use('code',function(){layui.code({ about: false })})
+        layui.table.init('parse-table-demo', {
+        limit: 100, page: false
+        });
+    </script>
+
+<script>
+  $("#@Model.ViewDivId").parent().css("height", "auto");
+  function colorchange(data) {
+    alert(data);
+  }
+</script>
