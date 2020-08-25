@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             if (fixcontroller != null || fixaction != null)
             {
-                cs = fixcontroller?.CsName ?? fixaction?.CsName;
+                cs = fixaction?.CsName ?? fixcontroller?.CsName;
                 var op = fixcontroller?.Operation ?? fixaction?.Operation;
                 if (op != null)
                 {
