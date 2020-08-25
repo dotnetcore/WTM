@@ -30,11 +30,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             string prec = "";
             var cs = PredefinedColors?.Split(",");
-            foreach (var item in cs)
+            if (cs != null)
             {
-                if (item != "")
+                foreach (var item in cs)
                 {
-                    prec += $"'{item}',";
+                    if (item != "")
+                    {
+                        prec += $"'{item}',";
+                    }
                 }
             }
             if(prec.Length > 0)
@@ -65,7 +68,7 @@ layui.use('colorpicker', function(){{
     elem: '#cp_{Id}'
     ,color:'{val}'
     ,alpha : {EnableAlpha.ToString().ToLower()}
-    ,format: 'rgb'
+    ,format: '{(EnableAlpha==true? "rgb":"hex")}'
     ,predefine: {(PredefinedColors == null ? "false" : "true")}
     {(prec == "" ?"":$",colors: [{prec}]")}
     ,done: function(data){{

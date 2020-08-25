@@ -167,6 +167,13 @@ namespace WalkingTec.Mvvm.Doc.Controllers
             return PartialView();
         }
 
+        [ActionDescription("ColorPicker")]
+        public IActionResult ColorPicker()
+        {
+            var vm = CreateVM<MajorVm>();
+            return PartialView(vm);
+        }
+
 
         public IActionResult GetSchool(string keywords)
         {
