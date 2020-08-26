@@ -252,7 +252,7 @@ namespace WalkingTec.Mvvm.Mvc
             #region CookieWithJwtAuth
 
             // services.AddSingleton<UserStore>();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             var jwtOptions = config.GetSection("JwtOptions").Get<JwtOptions>();
             if (jwtOptions == null)
