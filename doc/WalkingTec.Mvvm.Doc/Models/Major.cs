@@ -26,6 +26,13 @@ namespace WalkingTec.Mvvm.Doc.Models
         [Display(Name = "School")]
         public School School { get; set; }
 
+        public string Color1 { get; set; }
+        public string Color2 { get; set; }
+        public string Color3 { get; set; }
+        public string Color4 { get; set; }
+        public string Color5 { get; set; }
+
+
         [Display(Name = "Student")]
         public List<StudentMajor> Students { get; set; }
         [Display(Name = "Student")]

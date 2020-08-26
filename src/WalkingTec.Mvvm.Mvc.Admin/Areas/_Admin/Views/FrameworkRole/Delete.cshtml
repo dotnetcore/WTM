@@ -4,8 +4,8 @@
 
   <wt:form vm="@Model">
     <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
-    <wt:textbox field="Entity.RoleCode" />
-    <wt:textbox field="Entity.RoleName" />
+    <wt:display field="Entity.RoleCode" />
+    <wt:display field="Entity.RoleName" />
     <wt:textarea field="Entity.RoleRemark" disabled="true" />
     <wt:hidden field="Entity.ID" />
     <wt:row align=" AlignEnum.Right">

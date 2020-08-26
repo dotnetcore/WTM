@@ -4,8 +4,8 @@
 
 <wt:form vm="@Model">
   <wt:quote>@Localizer["DeleteConfirm"]</wt:quote>
-  <wt:textbox field="Entity.GroupCode" />
-  <wt:textbox field="Entity.GroupName" />
+  <wt:display field="Entity.GroupCode" />
+  <wt:display field="Entity.GroupName" />
   <wt:textarea field="Entity.GroupRemark" disabled="true" />
   <wt:hidden field="Entity.ID" />
   <wt:row align=" AlignEnum.Right">
