@@ -2,6 +2,14 @@
 
 ## v3.x.x （2.x.x同步更新）
 
+##3.7.1 以及 2.7.1 (2020-8-26)
+* **新增：**  Layui模式下新增<wt:colorpicker>颜色选择器，参考文档 https://wtmdoc.walkingtec.cn/#/UI/ColorPicker
+* **修改：**  修复<wt:checkbox>多选显示的bug
+* **修改：**  修复了一些layui模式下自带的系统管理页面
+* **修改：**  修复了导出excel时数字格式为null值时报错的问题
+* **修改：**  修复了FixConnectionAttribute没有优先检查方法的问题
+* **修改：**  修复了IssueTokenAsync方法并发时报错的问题
+
 ##3.7.0 以及 2.7.0 (2020-8-18)
 
 * **修改：**  导出excel时，如果ListVM中设置了多表头，导出的excel也会显示多表头
