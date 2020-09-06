@@ -360,7 +360,7 @@ namespace WalkingTec.Mvvm.Core
                 cell.SetCellValue(col.Title);
                 var bcount = col.BottomChildren.Count();
                 var rowspan = 0;
-                if (rowIndex == 0)
+                if (rowIndex >= 0)
                 {
                     rowspan = maxLevel - col.MaxLevel;
                 }
