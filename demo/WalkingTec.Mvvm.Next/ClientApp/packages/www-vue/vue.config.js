@@ -1,3 +1,5 @@
+
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
@@ -10,7 +12,10 @@ module.exports = {
     runtimeCompiler: true,
     productionSourceMap: false,
     configureWebpack: {
-        plugins: [createThemeColorReplacerPlugin()]
+        plugins: [
+            new MomentLocalesPlugin({ localesToKeep: ['es-us', 'zh-cn'] }),
+            createThemeColorReplacerPlugin()
+        ]
     },
     chainWebpack: (config) => {
         // 修复 public node_modules 重复
@@ -20,7 +25,10 @@ module.exports = {
     css: {
         loaderOptions: {
             less: {
-                javascriptEnabled: true,
+                lessOptions: {
+                    // modifyVars: modifyVars,
+                    javascriptEnabled: true
+                }
             }
         }
     },

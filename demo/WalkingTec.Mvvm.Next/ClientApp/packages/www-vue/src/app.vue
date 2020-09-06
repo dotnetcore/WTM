@@ -1,5 +1,5 @@
 <template>
-  <a-locale-provider :locale="locale">
+  <a-config-provider :locale="locale">
     <!-- 本地拥有用户信息 待验证 是否 合规 -->
 
     <!-- <transition name="fade"> -->
@@ -20,7 +20,7 @@
     <!-- 未登录 -->
     <Login v-else key="login" class="fadeIn" />
     <!-- </transition> -->
-  </a-locale-provider>
+  </a-config-provider>
 </template>
 
 <script lang="ts">

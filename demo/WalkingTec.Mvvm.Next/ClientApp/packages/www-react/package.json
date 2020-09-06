@@ -24,23 +24,23 @@
     ]
   },
   "dependencies": {
-    "ag-grid-react": "23.0.3",
-    "@ant-design/icons": "^4.1.0",
-    "@ant-design/pro-layout": "^5.0.10",
-    "antd": "^4.2.0",
-    "mobx-react": "^6.2.2",
+    "ag-grid-react": "23.2.1",
+    "@ant-design/icons": "^4.2.2",
+    "@ant-design/pro-layout": "^6.4.14",
+    "antd": "^4.6.2",
+    "mobx-react": "^6.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-config": "^5.1.1",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
-    "@types/react": "^16.9.34",
-    "@types/react-dom": "^16.9.7",
-    "customize-cra": "^0.9.1",
-    "react-app-rewired": "^2.1.5",
-    "react-scripts": "^3.4.1"
+    "@types/jest": "^26.0.13",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.6",
+    "react-scripts": "^3.4.3"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
