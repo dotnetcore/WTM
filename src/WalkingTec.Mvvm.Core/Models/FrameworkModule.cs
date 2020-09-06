@@ -18,21 +18,29 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
+                string rv = "";
                 if (ActionDes?._localizer != null && string.IsNullOrEmpty(ActionDes?.Description) == false)
                 {
                     if (ActionDes._localizer[ActionDes.Description].ResourceNotFound == true)
                     {
-                        return Core.Program._localizer[ActionDes.Description];
+                        rv =  Core.Program._localizer[ActionDes.Description];
                     }
                     else
                     {
-                        return ActionDes._localizer[ActionDes.Description];
+                        rv = ActionDes._localizer[ActionDes.Description];
                     }
                 }
                 else
                 {
-                    return _name ?? "";
+                    rv = _name ?? "";
                 }
+
+                if (IsApi == true)
+                {
+                    rv += "(api)";
+                }
+                return rv;
+
             }
             set
             {
