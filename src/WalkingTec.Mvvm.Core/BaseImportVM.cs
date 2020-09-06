@@ -107,6 +107,11 @@ namespace WalkingTec.Mvvm.Core
         protected bool HasSubTable { get; set; }
 
         /// <summary>
+        /// 是否在sqlserver时使用bulk导入
+        /// </summary>
+        public bool UseBulkSave { get; set; }
+
+        /// <summary>
         /// 是否覆盖已有数据
         /// </summary>
         public bool IsOverWriteExistData { get; set; } = true;
@@ -888,7 +893,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
-                if (ConfigInfo.DbType == DBTypeEnum.SqlServer && !HasSubTable)
+                if (ConfigInfo.DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
                 {
                     ListAdd.Add(item);
                 }
