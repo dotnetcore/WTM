@@ -31,14 +31,7 @@
     <wt:switch field="Entity.FolderOnly" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
     <wt:switch field="Entity.IsPublic" lay-text="@Localizer["Yes"]|@Localizer["No"]" />
   </wt:row>
-  <wt:selector list-vm="RoleListVM" field="SelectedRolesIDs" text-bind="RoleListVM.EntityList[0].RoleName">
-    <wt:searchpanel vm="RoleListVM">
-      <wt:row items-per-row=" ItemsPerRowEnum.Two">
-        <wt:textbox field="RoleListVM.Searcher.RoleCode" />
-        <wt:textbox field="RoleListVM.Searcher.RoleName" />
-      </wt:row>
-    </wt:searchpanel>
-  </wt:selector>
+  <wt:hidden field="SelectedRolesIDs" />
   <wt:hidden field="Entity.ID" />
   <wt:row align="AlignEnum.Right">
     <wt:submitbutton />
