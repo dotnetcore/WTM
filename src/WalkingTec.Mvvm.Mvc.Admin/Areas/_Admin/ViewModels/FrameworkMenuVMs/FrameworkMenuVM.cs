@@ -105,17 +105,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     toRemove.Add(item);
                 }
-                else
-                {
-                    if (!item.IsApi) continue;
-                    if (item.NameSpace == "WalkingTec.Mvvm.Admin.Api")
-                    {
-                        if (!item.ModuleName.EndsWith($"({Program._localizer["BuildinApi"]})"))
-                            item.ModuleName += $"({Program._localizer["BuildinApi"]})";
-                    }
-                    else if (!item.ModuleName.EndsWith("(api)"))
-                        item.ModuleName += "(api)";
-                }
             }
             var m = modules.ToList();
             toRemove.ForEach(x => m.Remove(x));

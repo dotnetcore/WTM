@@ -14,6 +14,7 @@ using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
+    [AllRights]
     public class LoginController : BaseController
     {
         [Public]
