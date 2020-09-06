@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
                 this.MakeAction("ActionLog","Details","详情(Dialog)","Details dialog", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetShowInRow(true).SetQueryString("a=1"),
                 this.MakeAction("ActionLog","Details","详情(新窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(true).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=2"),
                 this.MakeAction("ActionLog","Details","详情(本窗口)","Details new window", GridActionParameterTypesEnum.SingleId,"_Admin").SetShowDialog(false).SetIsRedirect(true).SetShowInRow(true).SetQueryString("a=3"),
-                this.MakeStandardAction("ActionLog", GridActionStandardTypesEnum.ExportExcel, "导出","_Admin")
+                this.MakeStandardAction("DataTable", GridActionStandardTypesEnum.ExportExcel, "导出","")
             };
             return actions;
         }
@@ -25,8 +25,16 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
         {
             var header = new List<GridColumn<CustomView>>();
             var topheader = this.MakeGridHeaderParent("父表头");
+            var secondheader = this.MakeGridHeaderParent("父表头2");
+
+            secondheader.SetChildren(
+                this.MakeGridHeader(x => x.test3, 120),
+                this.MakeGridHeader(x => x.test4, 120)
+            );
+
             topheader.SetChildren(
                 this.MakeGridHeader(x => x.test1, 120),
+                secondheader,
                 this.MakeGridHeader(x => x.test2, 120)
             );
             header.Add(topheader);
@@ -77,5 +85,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
     {
         public string test1 { get; set; }
         public string test2 { get; set; }
+        public string test3 { get; set; }
+        public string test4 { get; set; }
     }
 }
