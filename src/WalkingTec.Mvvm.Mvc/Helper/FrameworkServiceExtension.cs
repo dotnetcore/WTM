@@ -141,11 +141,10 @@ namespace WalkingTec.Mvvm.Mvc
                     options.AddPolicy("_donotusedefault",
                         builder =>
                         {
-                            builder.WithOrigins("http://localhost",
-                                                "https://localhost")
-                                                .AllowAnyHeader()
-                                                .AllowAnyMethod()
-                                                .AllowCredentials();
+                            builder.SetIsOriginAllowed((a) => true)
+                                              .AllowAnyHeader()
+                                              .AllowAnyMethod()
+                                              .AllowCredentials();
                         });
                 }
             });
