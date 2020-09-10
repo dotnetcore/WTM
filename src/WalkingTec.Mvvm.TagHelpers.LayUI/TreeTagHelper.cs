@@ -74,7 +74,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         last{Id}.find('.layui-tree-txt').css('color','');
                     }}
                     $('#tree{Id}hidden').html('');
-                    if(last{Id} === ele){{
+                    if(last{Id} != null && last{Id}.is(ele)){{
                         last{Id} = null;
                     }}
                     else{{
