@@ -22,6 +22,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             return PartialView(vm);
         }
 
+        [HttpPost]
+        public ActionResult Index(DataPrivilegeListVM vm)
+        {
+            vm.Searcher.TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            return PartialView(vm);
+        }
+
+
         [ActionDescription("Search")]
         [HttpPost]
         public string Search(DataPrivilegeListVM vm)
@@ -30,9 +38,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Create")]
-        public ActionResult Create()
+        public ActionResult Create(DpTypeEnum Type)
         {
-            var vm = CreateVM<DataPrivilegeVM>();
+            var vm = CreateVM<DataPrivilegeVM>(values:x=>x.DpType == Type);
             return PartialView(vm);
         }
 

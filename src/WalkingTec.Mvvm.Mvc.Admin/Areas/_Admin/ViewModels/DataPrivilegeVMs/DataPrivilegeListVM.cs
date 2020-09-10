@@ -12,9 +12,19 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         protected override List<GridAction> InitGridAction()
         {
-            return new List<GridAction>
+            string tp = "";
+            if (Searcher.DpType == DpTypeEnum.User)
             {
-                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800),
+                tp = "User";
+            }
+            if (Searcher.DpType == DpTypeEnum.UserGroup)
+            {
+                tp = "UserGroup";
+            }
+
+                return new List<GridAction>
+            {
+                this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.Create, "","_Admin", dialogWidth: 800).SetQueryString($"Type={tp}"),
                 this.MakeStandardAction("DataPrivilege", GridActionStandardTypesEnum.ExportExcel, "","_Admin"),
             };
         }
