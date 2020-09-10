@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
-    <wt:hidden field=" DpType" />
+    <wt:hidden field="DpType" />
     <wt:combobox field="Entity.TableName" items="TableNames" disabled="true" />
     <wt:combobox field="IsAll" change-func="IsAllChange" />
     <wt:row id="selector">

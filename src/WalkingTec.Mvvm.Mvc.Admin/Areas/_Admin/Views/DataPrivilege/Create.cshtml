@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
 <wt:form vm="@Model">
-    <wt:radio field=" DpType" change-func="DbTypeChange" />
+    <wt:radio field="DpType" change-func="DbTypeChange" />
     <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
     <wt:combobox field="IsAll" change-func="IsAllChange" />
     <wt:row id="selector">
@@ -20,10 +20,10 @@
     </wt:row>
 </wt:form>
 <script>
-  DbTypeChange({ value: $('#DataPrivilegeVM_DpType[checked]').val() });
+  DbTypeChange({ value: $("[name='DpType'][checked]").val() });
     IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
     var selectedtablename = "";
-    function DbTypeChange(data) {
+  function DbTypeChange(data) {
         if (data.value == 0) {
             $('#userrow').css('display', 'none');
             $('#grouprow').css('display', 'block');
