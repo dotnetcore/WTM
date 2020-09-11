@@ -431,8 +431,14 @@ namespace WalkingTec.Mvvm.Mvc
                     var cs = configs.ConnectionStrings;
                     foreach (var item in cs)
                     {
-                        var dc = item.CreateDC();
-                        dc.DataInit(gd.AllModule, test != null).Wait();
+                        try
+                        {
+                            var dc = item.CreateDC();
+                            dc.DataInit(gd.AllModule, test != null).Wait();
+                        }
+                        catch {
+                            int a = 0;
+                        }
                     }
                     GlobalServices.SetServiceProvider(app.ApplicationServices);
                     InitDataBase = true;
