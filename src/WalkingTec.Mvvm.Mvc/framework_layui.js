@@ -302,7 +302,6 @@ window.ff = {
                 alert(ff.DONOTUSE_Text_SubmitFailed);
             },
             success: function (data, textStatus, request) {
-                layer.close(index);
                 if (request.getResponseHeader('IsScript') === 'true') {
                     eval(data);
                 }
@@ -310,7 +309,8 @@ window.ff = {
                     data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
                     $("#" + divid).parent().html(data);
                 }
-            }
+                layer.close(index);
+     }
         });
     },
 
