@@ -461,7 +461,7 @@ namespace WalkingTec.Mvvm.Core
             //获取源类型
             var checkType = GetDCModel(expression);
 
-            if (checkType != null)
+            if (checkType != null && checkType.IsSubclassOf(typeof(PersistPoco)))
             {
                 _modelType = checkType;
                 //先调用一次Visit，删除所有的where表达式

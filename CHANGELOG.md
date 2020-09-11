@@ -2,6 +2,13 @@
 
 ## v3.x.x （2.x.x同步更新）
 
+##3.7.2 以及 2.7.2 (2020-9-7)
+* **修改：**  修改默认跨域逻辑，不配置跨域信息会默认允许所有跨域
+* **修改：**  修复RefreshToken方法在pgsql中报错的问题
+* **修改：**  修复菜单管理模块显示的bug，以及修改菜单会造成其他角色都有权限的bug
+* **修改：**  修复多表头导出时表头显示的问题
+* **修改：**  修改导入逻辑，默认不启用sqlserver的bulkcopy，可以通过在ImportVM中设置UseBulkSave属性来启用
+
 ##3.7.1 以及 2.7.1 (2020-8-26)
 * **新增：**  Layui模式下新增<wt:colorpicker>颜色选择器，参考文档 https://wtmdoc.walkingtec.cn/#/UI/ColorPicker
 * **修改：**  修复<wt:checkbox>多选显示的bug

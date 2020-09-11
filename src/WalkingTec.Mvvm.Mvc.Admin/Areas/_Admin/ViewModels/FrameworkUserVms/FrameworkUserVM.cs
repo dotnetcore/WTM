@@ -88,6 +88,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
             {
+                FC.TryAdd("Entity.UserRoles", 0);
+                FC.TryAdd("Entity.UserGroups", 0);
                 Entity.UserRoles = new List<FrameworkUserRole>();
                 Entity.UserGroups = new List<FrameworkUserGroup>();
                 if (SelectedRolesIDs != null)

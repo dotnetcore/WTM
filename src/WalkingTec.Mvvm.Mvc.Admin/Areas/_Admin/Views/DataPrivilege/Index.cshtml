@@ -1,6 +1,6 @@
 @model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeListVM
 
-<wt:searchpanel vm="@Model" reset-btn="true">
+<wt:searchpanel vm="@Model" reset-btn="true" old-post ="true">
     <wt:row items-per-row="ItemsPerRowEnum.Three">
         <wt:combobox field="Searcher.TableName" items="Searcher.TableNames" />
         <wt:combobox field="Searcher.DpType" />
