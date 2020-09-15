@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
 namespace WalkingTec.Mvvm.Core
@@ -485,5 +486,17 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
+
+        public string HostRoot { get; set; }
+
+        public IDataContext CreateDC(string csName = null)
+        {
+            if (string.IsNullOrEmpty(csName))
+            {
+                csName = "default";
+            }
+            var cs = ConnectionStrings.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
+            return cs?.CreateDC();
+        }
     }
 }

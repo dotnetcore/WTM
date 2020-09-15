@@ -23,31 +23,25 @@ namespace WalkingTec.Mvvm.Demo
 {
     public class Startup
     {
+        public IConfigurationRoot ConfigRoot { get; }
+
         public Startup(IWebHostEnvironment env)
         {
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.WTM_SetCurrentDictionary()
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddEnvironmentVariables();
-
-            var config = configBuilder.Build();
-            Configuration = config;
+            ConfigRoot = configBuilder.WTMConfig(env).Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Configs>(Configuration);
-           // services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(Configuration, 3600);
-            services.AddWtmCrossDomain(Configuration);
-            services.AddWtmAuthentication(Configuration);
-            services.AddWtmHttpClient(Configuration);
+            services.AddWtmSession(ConfigRoot, 3600);
+            services.AddWtmCrossDomain(ConfigRoot);
+            services.AddWtmAuthentication(ConfigRoot);
+            services.AddWtmHttpClient(ConfigRoot);
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages(Configuration);
+            services.AddWtmMultiLanguages(ConfigRoot);
 
             services.AddMvc(options =>
             {
@@ -92,7 +86,7 @@ namespace WalkingTec.Mvvm.Demo
                 };
             });
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(DataPrivilegeSettings());
+            services.AddWtmContext(ConfigRoot, DataPrivilegeSettings());
 
         }
 

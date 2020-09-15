@@ -1,22 +1,22 @@
-using Microsoft.EntityFrameworkCore;
-using NPOI.HSSF.UserModel;
-using NPOI.HSSF.Util;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using WalkingTec.Mvvm.Core.Extensions;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NPOI.HSSF.Util;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Core
         /// 上传文件的Id，方便导入等操作中进行绑定，这类操作需要上传文件但不需要记录在数据库中，所以Model层中没有文件Id的字段
         /// </summary>
         [Display(Name = "UploadFile")]
-        public Guid? UploadFileId { get; set; }
+        public string UploadFileId { get; set; }
 
         /// <summary>
         /// 下载模板显示名称
@@ -202,15 +202,17 @@ namespace WalkingTec.Mvvm.Core
                     return;
                 }
 
-                //【CHECK】数据库中不存在附件ID对应的数据信息
-                var UploadFileInfo = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).FirstOrDefault();
-                if (UploadFileInfo == null)
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+                var file = fh.GetFile(UploadFileId);
+                if (file == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
                     return;
                 }
 
-                xssfworkbook = FileHelper.GetXSSFWorkbook(xssfworkbook, (FileAttachment)UploadFileInfo, ConfigInfo);
+                xssfworkbook = new XSSFWorkbook(file.DataStream);
+
                 Template.InitExcelData();
                 Template.InitCustomFormat();
 
@@ -885,7 +887,6 @@ namespace WalkingTec.Mvvm.Core
                 {
                     (item as PersistPoco).IsValid = true;
                 }
-
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
                 if (DC.DBType == DBTypeEnum.SqlServer && !HasSubTable)
                 {
@@ -1206,8 +1207,10 @@ namespace WalkingTec.Mvvm.Core
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
-                var fa = DC.Set<FileAttachment>().Where(x => x.ID == UploadFileId).SingleOrDefault();
-                xssfworkbook = FileHelper.GetXSSFWorkbook(xssfworkbook, (FileAttachment)fa, ConfigInfo);
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+                var fa = fh.GetFile(UploadFileId);
+                xssfworkbook = new XSSFWorkbook(fa.DataStream);
 
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();
                 List<ExcelPropety> excelPropetys = new List<ExcelPropety>();
@@ -1241,23 +1244,13 @@ namespace WalkingTec.Mvvm.Core
                 MemoryStream ms = new MemoryStream();
                 xssfworkbook.Write(ms);
                 ms.Position = 0;
-                FileAttachmentVM vm = new FileAttachmentVM();
-                vm.CopyContext(this);
-                vm.Entity.FileName = "Error-" + fa.FileName;
-                vm.Entity.Length = ms.Length;
-                vm.Entity.UploadTime = DateTime.Now;
-                vm.Entity.SaveFileMode = ConfigInfo.FileUploadOptions.SaveFileMode;
-                vm = FileHelper.GetFileByteForUpload(vm, ms, ConfigInfo, vm.Entity.FileName, null, null);
-                vm.Entity.IsTemprory = true;
-                if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
-                {
-                    vm.DoAdd();
-                }
+
+                var newfile = fh.Upload("Error-" + fa.FileName, ms.Length, ms);
                 ms.Close();
                 ms.Dispose();
                 err = "导入时发生错误";
                 mse.Form.Add("Entity.Import", err);
-                mse.Form.Add("Entity.ErrorFileId", vm.Entity.ID.ToString());
+                mse.Form.Add("Entity.ErrorFileId", newfile.GetID());
             }
             else
             {

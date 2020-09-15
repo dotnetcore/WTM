@@ -2,10 +2,9 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-
 using Microsoft.AspNetCore.Mvc;
-
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Admin.Api
@@ -19,45 +18,24 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload()
+        public IActionResult Upload([FromServices] WtmFileProvider fp)
         {
+            var fh = fp.CreateFileHandler();
             var FileData = Request.Form.Files[0];
-            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
-            var vm = CreateVM<FileAttachmentVM>();
-            vm.Entity.FileName = FileData.FileName;
-            vm.Entity.Length = FileData.Length;
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
-            vm.Entity.IsTemprory = true;
-
-            if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.Local)
-            {
-                return BadRequest(Core.Program._localizer["UploadFailed"]);
-            }
-            if (string.IsNullOrEmpty(vm.Entity.Path) && vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)
-            {
-                return BadRequest(Core.Program._localizer["UploadFailed"]);
-            }
-            if (vm.Entity.FileData == null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database)
-            {
-                return BadRequest(Core.Program._localizer["UploadFailed"]);
-            }
-            vm.DoAdd();
-            return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
+            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream());
+            return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage(int? width = null, int? height = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null)
         {
             if (width == null && height == null)
             {
-                return Upload();
+                return Upload(fp);
             }
+            var fh = fp.CreateFileHandler();
             var FileData = Request.Form.Files[0];
-            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
-            var vm = CreateVM<FileAttachmentVM>();
 
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
@@ -75,18 +53,13 @@ namespace WalkingTec.Mvvm.Admin.Api
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            vm.Entity.FileName = FileData.FileName.Replace(".", "") + ".jpg";
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, ms, ConfigInfo, FileData.FileName.Replace(".", "") + ".jpg", sm);
-            vm.Entity.Length = ms.Length;
-            vm.Entity.IsTemprory = true;
+            var file = fh.Upload(FileData.FileName, FileData.Length, ms);
             oimage.Dispose();
+            ms.Dispose();
 
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            if (file != null)
             {
-                vm.DoAdd();
-                return Ok(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
+                return Ok(new { Id = file.GetID(), Name = file.FileName });
             }
             return BadRequest(Core.Program._localizer["UploadFailed"]);
 
@@ -94,45 +67,39 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFileName")]
-        public IActionResult GetFileName(Guid id)
+        public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id)
         {
-            FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
-            return Ok(vm.Entity.FileName);
+            var fh = fp.CreateFileHandler();
+            return Ok(fh.GetFileName(id));
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public IActionResult GetFile(Guid id)
+        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id)
         {
-            if (id == Guid.Empty)
+            var fh = fp.CreateFileHandler();
+            var file = fh.GetFile(id);
+
+
+            if (file == null)
             {
                 return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
-            var vm = CreateVM<FileAttachmentVM>(id);
-            var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
-            if (data == null)
-            {
-                data = new byte[0];
-            }
-            Response.Body.WriteAsync(data, 0, data.Count());
+            file.DataStream?.CopyToAsync(Response.Body);
             return new EmptyResult();
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
-        public IActionResult DownloadFile(Guid id)
+        public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id)
         {
-            if (id == Guid.Empty)
+            var fh = fp.CreateFileHandler();
+            var file = fh.GetFile(id);
+            if (file == null)
             {
                 return BadRequest(Core.Program._localizer["FileNotFound"]);
             }
-            var vm = CreateVM<FileAttachmentVM>(id);
-            var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
-            if (data == null)
-            {
-                data = new byte[0];
-            }
-            var ext = vm.Entity.FileExt.ToLower();
+            var ext = file.FileExt.ToLower();
             var contenttype = "application/octet-stream";
             if (ext == "pdf")
             {
@@ -142,19 +109,15 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 contenttype = $"image/{ext}";
             }
-            return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));
+            return File(file.DataStream, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DeleteFile")]
-        public IActionResult DeletedFile(Guid id)
+        public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id)
         {
-            if (id == Guid.Empty)
-            {
-                return BadRequest(Core.Program._localizer["FileNotFound"]);
-            }
-            var vm = CreateVM<FileAttachmentVM>(id);
-            vm.DoDelete();
+            var fh = fp.CreateFileHandler();
+            fh.DeleteFile(id);
             return Ok();
         }
     }

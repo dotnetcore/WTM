@@ -36,7 +36,7 @@ using Microsoft.OpenApi.Models;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core.FDFS;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Auth;
 using WalkingTec.Mvvm.Mvc.Filters;
@@ -46,6 +46,16 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public static class FrameworkServiceExtension
     {
+
+        public static IConfigurationBuilder WTMConfig(this IConfigurationBuilder configBuilder, IHostEnvironment env)
+        {
+            configBuilder.WTM_SetCurrentDictionary()
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", env.ContentRootPath } })
+                        .AddEnvironmentVariables();
+            return configBuilder;
+        }
+
 
         public static IConfigurationBuilder WTM_SetCurrentDictionary(this IConfigurationBuilder cb)
         {
@@ -138,28 +148,6 @@ namespace WalkingTec.Mvvm.Mvc
                 catch { }
             }
             return menus;
-        }
-
-        /// <summary>
-        /// 获取所有继承 BaseController 控制器
-        /// </summary>
-        /// <param name="allAssemblies"></param>
-        /// <returns></returns>
-        private static List<Type> GetAllControllers(List<Assembly> allAssemblies)
-        {
-            var controllers = new List<Type>();
-            foreach (var ass in allAssemblies)
-            {
-                var types = new List<Type>();
-                try
-                {
-                    types.AddRange(ass.GetExportedTypes());
-                }
-                catch { }
-
-                controllers.AddRange(types.Where(x => typeof(IBaseController).IsAssignableFrom(x)).ToList());
-            }
-            return controllers;
         }
 
         /// <summary>
@@ -480,29 +468,9 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
 
-        private static void SetupDFS(Configs con)
+        public static IServiceCollection AddWtmContext(this IServiceCollection services,IConfigurationRoot config, List<IDataPrivilege> dps)
         {
-            FDFSConfig.ConnectionTimeout = con.DFSServer.ConnectionTimeout ?? 100;
-            FDFSConfig.Connection_LifeTime = con.DFSServer.ConnectionLifeTime ?? 3600;
-            FDFSConfig.Storage_MaxConnection = con.DFSServer.StorageMaxConnection ?? 100;
-            FDFSConfig.Tracker_MaxConnection = con.DFSServer.TrackerMaxConnection ?? 100;
-            List<IPEndPoint> TrackerServers = new List<IPEndPoint>();
-            if (con.DFSServer?.Trackers != null)
-            {
-                foreach (var tracker in con.DFSServer.Trackers)
-                {
-                    if (string.IsNullOrEmpty(tracker.IP) == false)
-                    {
-                        var point = new IPEndPoint(IPAddress.Parse(tracker.IP), tracker.Port);
-                        TrackerServers.Add(point);
-                    }
-                }
-            }
-            FDFSConfig.Trackers = TrackerServers;
-        }
-
-        public static IServiceCollection AddWtmContext(this IServiceCollection services, List<IDataPrivilege> dps)
-        {
+            services.Configure<Configs>(config);
             var gd = GetGlobalData();
             services.AddHttpContextAccessor();
             services.AddSingleton(gd);
@@ -510,6 +478,7 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton(dps);
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();
+            services.AddSingleton<WtmFileProvider>();
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
@@ -734,7 +703,7 @@ namespace WalkingTec.Mvvm.Mvc
             coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
 
 
-            var controllers = GetAllControllers(gd.AllAssembly);
+            var controllers = gd.GetTypesAssignableFrom <IBaseController>();
             gd.AllModule = GetAllModules(controllers);
             gd.AllAccessUrls = GetAllAccessUrls(controllers);
 
@@ -781,6 +750,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
+            var test2 = app.ApplicationServices.GetRequiredService<WtmFileProvider>();
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();

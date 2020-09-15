@@ -69,5 +69,12 @@ namespace WalkingTec.Mvvm.Core
             var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
             return idpro.PropertyType;
         }
+
+        public void SetID(object id)
+        {
+            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            idpro.SetValue(this, id.ConvertValue(idpro.PropertyType));
+
+        }
     }
 }

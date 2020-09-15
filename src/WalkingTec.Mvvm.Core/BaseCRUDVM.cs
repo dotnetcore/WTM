@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -178,22 +180,11 @@ namespace WalkingTec.Mvvm.Core
             foreach (var f in fa)
             {
                 var fname = DC.GetFKName2<TModel>(f.Name);
-                var fid = typeof(TModel).GetProperty(fname).GetValue(rv) as Guid?;
-                var file = DC.Set<FileAttachment>().Where(x => x.ID == fid).Select(x => new FileAttachment {
-                    ID = x.ID,
-                    CreateBy = x.CreateBy,
-                    CreateTime = x.CreateTime,
-                    UpdateBy = x.UpdateBy,
-                    UpdateTime = x.UpdateTime,
-                    UploadTime = x.UploadTime,
-                    FileExt = x.FileExt,
-                    FileName = x.FileName,
-                    Length = x.Length,
-                    GroupName = x.GroupName,
-                    IsTemprory = x.IsTemprory,
-                    Path = x.Path,
-                    SaveFileMode = x.SaveFileMode
-                }).FirstOrDefault();
+                var fid = typeof(TModel).GetProperty(fname).GetValue(rv);
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+
+                var file = fh.GetFile(fid?.ToString(),false);
                 rv.SetPropertyValue(f.Name, file);
             }
 
@@ -209,12 +200,12 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null)
             {
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+
                 foreach (var item in DeletedFileIds)
                 {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    ofa.DoDelete();
+                    fh.DeleteFile(item.ToString());
                 }
             }
             DC.SaveChanges();
@@ -226,12 +217,12 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null)
             {
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+
                 foreach (var item in DeletedFileIds)
                 {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    await ofa.DoDeleteAsync();
+                    fh.DeleteFile(item.ToString());
                 }
             }
             await DC.SaveChangesAsync();
@@ -350,12 +341,12 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null)
             {
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
+
                 foreach (var item in DeletedFileIds)
                 {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    ofa.DoDelete();
+                    fh.DeleteFile(item.ToString());
                 }
             }
 
@@ -367,15 +358,12 @@ namespace WalkingTec.Mvvm.Core
 
             await DC.SaveChangesAsync();
             //删除不需要的附件
-            if (DeletedFileIds != null)
+            var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+            var fh = fp.CreateFileHandler();
+          
+            foreach (var item in DeletedFileIds)
             {
-                foreach (var item in DeletedFileIds)
-                {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    await ofa.DoDeleteAsync();
-                }
+                fh.DeleteFile(item.ToString());
             }
         }
 
@@ -719,12 +707,11 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
                 foreach (var item in fileids)
                 {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    ofa.DoDelete();
+                    fh.DeleteFile(item.ToString());
                 }
             }
             catch (Exception)
@@ -774,12 +761,11 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fh = fp.CreateFileHandler();
                 foreach (var item in fileids)
                 {
-                    FileAttachmentVM ofa = new FileAttachmentVM();
-                    ofa.CopyContext(this);
-                    ofa.SetEntityById(item);
-                    await ofa.DoDeleteAsync();
+                    fh.DeleteFile(item.ToString());
                 }
             }
             catch (Exception)

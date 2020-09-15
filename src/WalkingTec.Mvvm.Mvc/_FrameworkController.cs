@@ -7,16 +7,16 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Models;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Support.Json;
 using WalkingTec.Mvvm.Mvc.Model;
 
@@ -267,43 +267,28 @@ namespace WalkingTec.Mvvm.Mvc
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult Upload(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
+        public IActionResult Upload([FromServices] WtmFileProvider fp, SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
+            var fh = fp.CreateFileHandler(sm?.ToString(), _DONOT_USE_CS);
             var FileData = Request.Form.Files[0];
-            sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
-            var vm = CreateVM<FileAttachmentVM>();
-            vm.Entity.FileName = FileData.FileName;
-            vm.Entity.Length = FileData.Length;
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm, groupName);
-            vm.Entity.IsTemprory = IsTemprory;
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
-            {
-                vm.DoAdd();
-                return Json(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
-            }
-            return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
+            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream());
+            return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
         }
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult UploadImage(SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp, SaveFileModeEnum? sm = null, string groupName = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             if (width == null && height == null)
             {
-                return Upload(sm, groupName, IsTemprory, _DONOT_USE_CS);
+                return Upload(fp, sm, groupName, IsTemprory, _DONOT_USE_CS);
             }
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var FileData = Request.Form.Files[0];
-            sm = sm == null ? ConfigInfo.FileUploadOptions.SaveFileMode : sm;
-            var vm = CreateVM<FileAttachmentVM>();
 
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
+                return Json(new {Code=404, Data = new { Id = string.Empty, Name = string.Empty } });
             }
             if (width == null)
             {
@@ -316,72 +301,52 @@ namespace WalkingTec.Mvvm.Mvc
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            vm.Entity.FileName = FileData.FileName.Replace(".", "") + ".jpg";
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, ms, ConfigInfo, FileData.FileName.Replace(".", "") + ".jpg", sm, groupName);
-            vm.Entity.Length = ms.Length;
-            vm.Entity.IsTemprory = IsTemprory;
-            oimage.Dispose();
 
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
-            {
-                vm.DoAdd();
-                return Json(new { Id = vm.Entity.ID.ToString(), Name = vm.Entity.FileName });
-            }
-            return Json(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
+            var fh = fp.CreateFileHandler(sm?.ToString(), _DONOT_USE_CS);
+            var file = fh.Upload(FileData.FileName, ms.Length, ms);
+            oimage.Dispose();
+            ms.Dispose();
+            return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
         }
 
         [HttpPost]
         [ActionDescription("UploadForLayUIRichTextBox")]
-        public IActionResult UploadForLayUIRichTextBox(string _DONOT_USE_CS = "default")
+        public IActionResult UploadForLayUIRichTextBox([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
+            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
             var FileData = Request.Form.Files[0];
-            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
-            var vm = CreateVM<FileAttachmentVM>();
-            vm.Entity.FileName = FileData.FileName;
-            vm.Entity.Length = FileData.Length;
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
-            vm.Entity.IsTemprory = false;
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream());
+            if(file != null)
             {
-                vm.DoAdd();
-                string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
+                string url = $"/_Framework/GetFile?id={file.GetID()}&stream=true&_DONOT_USE_CS={CurrentCS}";
                 return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
+
             }
-            return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+            else
+            {
+                return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+
+            }
+
         }
 
         [ActionDescription("GetFileName")]
-        public IActionResult GetFileName(Guid id, string _DONOT_USE_CS = "default")
+        public IActionResult GetFileName([FromServices] WtmFileProvider fp, Guid id, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
-            FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
-            return Ok(vm.Entity.FileName);
+            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            return Ok(fh.GetFileName(id.ToString()));
         }
 
         [ActionDescription("GetFile")]
-        public IActionResult GetFile(Guid id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
+        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
-            if (id == Guid.Empty)
-            {
-                return new StatusCodeResult(StatusCodes.Status404NotFound);
-            }
-            var vm = CreateVM<FileAttachmentVM>(id);
-            var data = FileHelper.GetFileByteForDownLoadByVM(vm, ConfigInfo);
-            if (data == null)
-            {
-                data = new byte[0];
-            }
+            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            var file = fh.GetFile(id);
+            Stream rv = null;
+            rv = file.DataStream;
             try
             {
-                MemoryStream ms = new MemoryStream(data);
-                Image oimage = Image.FromStream(ms);
-                ms.Close();
+                Image oimage = Image.FromStream(rv);
                 if (oimage != null && (width != null || height != null))
                 {
                     if (width == null)
@@ -392,15 +357,18 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         height = oimage.Height * width / oimage.Width;
                     }
-                    ms = new MemoryStream();
+                    var ms = new MemoryStream();
                     oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    data = ms.ToArray();
-                    oimage.Dispose();
-                    ms.Dispose();
+                    rv.Dispose();
+                    rv = ms;
+                }
+                else
+                {
+
                 }
             }
             catch { }
-            var ext = vm.Entity.FileExt.ToLower();
+            var ext = file.FileExt.ToLower();
             var contenttype = "application/octet-stream";
             if (ext == "pdf")
             {
@@ -414,24 +382,25 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 contenttype = $"video/mpeg4";
             }
+            rv.Position = 0;
             if (stream == false)
             {
-                return File(data, contenttype, vm.Entity.FileName ?? (Guid.NewGuid().ToString() + ext));
+                return File(rv, contenttype, file.FileName ?? (Guid.NewGuid().ToString() + ext));
             }
             else
             {
-                Response.Body.WriteAsync(data, 0, data.Count());
+                rv.CopyToAsync(Response.Body);
                 return new EmptyResult();
             }
         }
 
         [ActionDescription("ViewFile")]
-        public IActionResult ViewFile(Guid id, string width, string _DONOT_USE_CS = "default")
+        public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
+            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            var file = fh.GetFile(id);
             string html = string.Empty;
-            FileAttachmentVM vm = CreateVM<FileAttachmentVM>(id);
-            if (vm.Entity.FileExt.ToLower() == "pdf")
+            if (file.FileExt.ToLower() == "pdf")
             {
                 html = $@"
             <object  classid=""clsid:CA8A9780-280D-11CF-A24D-444553540000"" width=""100%"" height=""100%"" border=""0""
@@ -784,39 +753,40 @@ namespace WalkingTec.Mvvm.Mvc
         [AllRights]
         [HttpPost]
         [ActionDescription("UploadForLayUIUEditor")]
-        public IActionResult UploadForLayUIUEditor(string _DONOT_USE_CS = "default")
+        public IActionResult UploadForLayUIUEditor([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
-            var sm = ConfigInfo.FileUploadOptions.SaveFileMode;
-            var vm = CreateVM<FileAttachmentVM>();
-
+            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            IWtmFile file = null;
             if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
             {
                 //通过文件流方式上传附件
                 var FileData = Request.Form.Files[0];
-                vm.Entity.FileName = FileData.FileName;
-                vm.Entity.Length = FileData.Length;
-                vm = FileHelper.GetFileByteForUpload(vm, FileData.OpenReadStream(), ConfigInfo, FileData.FileName, sm);
+                file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream());
             }
             else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
             {
                 //通过Base64方式上传附件
                 var FileData = Convert.FromBase64String(Request.Form["FileID"]);
-                vm.Entity.FileName = "SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg";
-                vm.Entity.Length = FileData.Length;
                 MemoryStream MS = new MemoryStream(FileData);
-                vm = FileHelper.GetFileByteForUpload(vm, MS, ConfigInfo, vm.Entity.FileName, sm);
+                file = fh.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS);
+                MS.Dispose();
             }
-            vm.Entity.UploadTime = DateTime.Now;
-            vm.Entity.SaveFileMode = sm;
-            vm.Entity.IsTemprory = false;
-            if ((!string.IsNullOrEmpty(vm.Entity.Path) && (vm.Entity.SaveFileMode == SaveFileModeEnum.Local || vm.Entity.SaveFileMode == SaveFileModeEnum.DFS)) || (vm.Entity.FileData != null && vm.Entity.SaveFileMode == SaveFileModeEnum.Database))
+
+
+
+            if (file != null)
             {
-                vm.DoAdd();
-                string url = $"/_Framework/GetFile?id={vm.Entity.ID}&stream=true&_DONOT_USE_CS={CurrentCS}";
-                return Content($"{{\"Code\": 200 , \"Msg\": \"success\", \"Data\": {{\"src\": \"{url}\",\"FileName\":\"{vm.Entity.FileName}\"}}}}");
+                string url = $"/_Framework/GetFile?id={file.GetID()}&stream=true&_DONOT_USE_CS={CurrentCS}";
+                return Content($"{{\"Code\": 200 , \"Msg\": \"success\", \"Data\": {{\"src\": \"{url}\",\"FileName\":\"{file.FileName}\"}}}}");
+
             }
-            return Content($"{{\"Code\": 1 , \"Msg\": \"上传失败\", \"Data\": {{\"src\": \"\"}}}}");
+            else
+            {
+                return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+
+            }
+
+
         }
 
         [Public]

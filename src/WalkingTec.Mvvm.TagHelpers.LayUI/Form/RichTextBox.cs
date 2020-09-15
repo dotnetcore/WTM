@@ -15,6 +15,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
         public new int? Height { get; set; }
         public string ConnectionString { get; set; }
+        public string ExtraQuery { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -53,6 +54,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             {
                 url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
+            url = url.AppendQuery(ExtraQuery);
 
 
             output.PostElement.AppendHtml($@"
