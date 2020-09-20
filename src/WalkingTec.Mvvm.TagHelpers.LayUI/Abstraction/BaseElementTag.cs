@@ -76,6 +76,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             switch (this)
             {
                 case ComboBoxTagHelper item:
+                    if(item.MultiSelect == true)
+                    {
+                        break;
+                    }
                     if (item.LinkField != null)
                     {
                         if (!string.IsNullOrEmpty(item.TriggerUrl))

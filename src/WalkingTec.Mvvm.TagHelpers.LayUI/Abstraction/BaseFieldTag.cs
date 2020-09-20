@@ -65,6 +65,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var preHtml = string.Empty;
             var postHtml = string.Empty;
             var requiredDot = string.Empty;
+            var layfilter = string.Empty;
             if (output.Attributes.TryGetAttribute("id", out TagHelperAttribute a) == false)
             {
                 output.Attributes.SetAttribute("id", Id ?? string.Empty);
@@ -78,6 +79,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.Attributes.SetAttribute("readonly", string.Empty);
                 output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
                 output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
+            }
+            if (output.Attributes.ContainsName("lay-filter") == false && output.Attributes.ContainsName("id") == true)
+            {
+                layfilter = $"{output.Attributes["id"].Value}filter";
+                output.Attributes.SetAttribute("lay-filter", layfilter);
+            }
+            else
+            {
+                layfilter = output.Attributes["lay-filter"].Value.ToString();
             }
 
             if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired)
@@ -125,7 +135,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
 
                 preHtml += $@"
-<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
+<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item layui-form"" lay-filter=""{layfilter}div"">
     <label for=""{Id}"" class=""layui-form-label"" {(LabelWidth == null ? string.Empty : "style='width:" + LabelWidth + "px'")}>{lb}</label>
     <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" {(LabelWidth == null || string.IsNullOrEmpty(PaddingText)==false ? "" : "style='margin-left:" + (LabelWidth + 30) + "px'")}>
 ";
@@ -133,7 +143,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             else
             {
                 preHtml += $@"
-<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item"">
+<div {(this is DisplayTagHelper ? "style=\"margin-bottom:0px;\"" : "")} class=""layui-form-item layui-form"" lay-filter=""{layfilter}div"">
     <div class=""{ (string.IsNullOrEmpty(PaddingText) ? "layui-input-block" : "layui-input-inline")}"" style=""margin-left:0px"">
 ";
             }
