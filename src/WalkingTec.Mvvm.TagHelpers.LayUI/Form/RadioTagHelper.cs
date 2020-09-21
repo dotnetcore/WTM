@@ -34,6 +34,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Clear();
             output.Attributes.Add("div-for", "radio");
+            output.Attributes.Add("wtm-ctype", "radio");
 
             var modeltype = Field.Metadata.ModelType;
             var listItems = new List<ComboSelectListItem>();

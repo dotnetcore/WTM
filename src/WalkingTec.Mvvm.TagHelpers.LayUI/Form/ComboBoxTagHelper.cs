@@ -69,7 +69,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("name", Field.Name);
             output.Attributes.Add("lay-filter", Field.Name);
             output.Attributes.Add("wtm-name", Field.Name);
-            if(Disabled == true)
+            output.Attributes.Add("wtm-ctype", "combo");
+            if (Disabled == true)
             {
                 output.Attributes.Add("disabled", "disabled");
 
@@ -87,10 +88,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (MultiSelect.Value)
             {
                 output.Attributes.Add("wtm-combo", "MULTI_COMBO");
-                if (string.IsNullOrEmpty(ChangeFunc) == false)
-                {
-                    output.Attributes.Add("changefunc", FormatFuncName(ChangeFunc,false));
-                }
             }
             if (!MultiSelect.Value && EnableSearch)
             {
@@ -100,9 +97,18 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.Add("lay-verify", MultiSelect.Value ? "selectRequired" : "required");
             }
-            if(LinkField != null)
+            if (string.IsNullOrEmpty(ChangeFunc) == false)
             {
-                output.Attributes.Add("linkto", $"{Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name)}");
+                output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
+            }
+            if (LinkField != null)
+            {
+                output.Attributes.Add("wtm-linkto", $"{Core.Utils.GetIdByName(LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name)}");
+                output.Attributes.Add("wtm-tname", $"{LinkField.Name}");
+            }
+            if (TriggerUrl != null)
+            {
+                output.Attributes.Add("wtm-turl", TriggerUrl);
             }
             var contentBuilder = new StringBuilder();
             if (string.IsNullOrEmpty(EmptyText) == false)

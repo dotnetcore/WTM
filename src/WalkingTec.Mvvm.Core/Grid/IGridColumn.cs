@@ -213,7 +213,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="source">源数据</param>
         /// <returns>背景色</returns>
         string GetBackGroundColor(object source);
-
+        bool HasFormat();
         #endregion
     }
 
