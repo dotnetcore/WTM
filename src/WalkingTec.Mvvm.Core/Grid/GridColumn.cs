@@ -367,6 +367,19 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+
+        public bool HasFormat()
+        {
+            if(Format != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// 获取单元格要输出的内容
         /// </summary>
