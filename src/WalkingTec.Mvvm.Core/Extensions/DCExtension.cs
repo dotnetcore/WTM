@@ -834,27 +834,8 @@ where S : struct
         public static string GetFieldName<T>(this IDataContext self, string fieldname)
         {
             var rv = self.Model.FindEntityType(typeof(T)).FindProperty(fieldname);
-            if (rv == null)
-            {
-                return "";
-            }
-            switch (self.DBType)
-            {
-                case DBTypeEnum.SqlServer:
-                    return rv.SqlServer().ColumnName;
-                case DBTypeEnum.MySql:
-                    return rv.MySql().ColumnName;
-                case DBTypeEnum.PgSql:
-                    return rv.Npgsql().ColumnName;
-                case DBTypeEnum.Memory:
-                    return rv.SqlServer().ColumnName;
-                case DBTypeEnum.SQLite:
-                    return rv.Sqlite().ColumnName;
-                case DBTypeEnum.Oracle:
-                    return rv.Oracle().ColumnName;
-                default:
-                    return rv.SqlServer().ColumnName;
-            }
+            return rv?.GetColumnName();
+        }
 
         public static string GetPropertyNameByFk(this IDataContext self, Type sourceType, string fkname)
         {
