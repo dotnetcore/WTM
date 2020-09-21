@@ -114,6 +114,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Logout")]
         public async Task Logout()
         {
+            await LoginUserInfo.RemoveUserCache(LoginUserInfo.Id.ToString());
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Response.Redirect("/");

@@ -209,11 +209,15 @@ namespace WalkingTec.Mvvm.Mvc
                     Guid userId = Guid.Parse(userIdStr);
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
+                    if (User?.Identity?.AuthenticationType != AuthConstants.AuthenticationType)
                     {
-                        _loginUserInfo = this.GetLoginUserInfo(userId);
-                        if(_loginUserInfo != null) { 
-                            Cache.Add(cacheKey, _loginUserInfo);
+                        if (_loginUserInfo == null || _loginUserInfo.Id != userId)
+                        {
+                            _loginUserInfo = this.GetLoginUserInfo(userId);
+                            if (_loginUserInfo != null)
+                            {
+                                Cache.Add(cacheKey, _loginUserInfo);
+                            }
                         }
                     }
                 }

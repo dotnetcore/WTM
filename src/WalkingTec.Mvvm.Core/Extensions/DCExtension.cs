@@ -371,7 +371,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 var fullname = IdField.GetPropertyName();
                 string[] splits = fullname.Split('.');
                 int leftindex = splits[0].IndexOf('[');
-                if(leftindex > 0)
+                if (leftindex > 0)
                 {
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
@@ -465,7 +465,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                                      "Any",
                                      new Type[] { middletype },
                                      queryable,
-                                     Expression.Lambda(typeof(Func<,>).MakeGenericType(middletype,typeof(bool)), ids.GetContainIdExpression(middletype,midpe, middleid).Body, new ParameterExpression[] { midpe }));
+                                     Expression.Lambda(typeof(Func<,>).MakeGenericType(middletype, typeof(bool)), ids.GetContainIdExpression(middletype, midpe, middleid).Body, new ParameterExpression[] { midpe }));
 
                             }
                             else
@@ -661,27 +661,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             else
             {
-                BinaryExpression exp1 = null;
-                BinaryExpression exp2 = null;
-                BinaryExpression exp = null;
+                IQueryable<T> rv = baseQuery;
                 if (valMin != null)
                 {
-                    exp1 = !includeMin ? Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin)) : Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
+                    BinaryExpression exp1 = !includeMin ? Expression.GreaterThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin)) : Expression.GreaterThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMin));
+                    rv = rv.Where(Expression.Lambda<Func<T, bool>>(exp1, field.Parameters[0]));
                 }
                 if (valMax != null)
                 {
-                    exp2 = !includeMax ? Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax)) : Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
+                    BinaryExpression exp2 = !includeMax ? Expression.LessThan(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax)) : Expression.LessThanOrEqual(Expression.PropertyOrField(field.Body, "Value"), Expression.Constant(valMax));
+                    rv = rv.Where(Expression.Lambda<Func<T, bool>>(exp2, field.Parameters[0]));
                 }
-                if (exp1 != null && exp2 != null)
-                {
-                    exp = Expression.And(exp1, exp2);
-                }
-                else
-                {
-                    exp = exp1 ?? exp2;
-                }
-                var where = Expression.Lambda<Func<T, bool>>(exp, field.Parameters[0]);
-                return baseQuery.Where(where);
+                return rv;
             }
         }
 
@@ -843,8 +834,27 @@ where S : struct
         public static string GetFieldName<T>(this IDataContext self, string fieldname)
         {
             var rv = self.Model.FindEntityType(typeof(T)).FindProperty(fieldname);
-            return rv?.GetColumnName();
-        }
+            if (rv == null)
+            {
+                return "";
+            }
+            switch (self.DBType)
+            {
+                case DBTypeEnum.SqlServer:
+                    return rv.SqlServer().ColumnName;
+                case DBTypeEnum.MySql:
+                    return rv.MySql().ColumnName;
+                case DBTypeEnum.PgSql:
+                    return rv.Npgsql().ColumnName;
+                case DBTypeEnum.Memory:
+                    return rv.SqlServer().ColumnName;
+                case DBTypeEnum.SQLite:
+                    return rv.Sqlite().ColumnName;
+                case DBTypeEnum.Oracle:
+                    return rv.Oracle().ColumnName;
+                default:
+                    return rv.SqlServer().ColumnName;
+            }
 
         public static string GetPropertyNameByFk(this IDataContext self, Type sourceType, string fkname)
         {
@@ -889,11 +899,11 @@ where S : struct
             //Expression dpleft3 = Expression.Call(typeof(Enumerable), "ToList", new Type[] { peid.Type }, dpleft2);
             //Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft3, peid);
             ParameterExpression pe = Expression.Parameter(typeof(TModel));
-            var rv = Ids.GetContainIdExpression(typeof(TModel), pe,peid) as Expression<Func<TModel, bool>>;
+            var rv = Ids.GetContainIdExpression(typeof(TModel), pe, peid) as Expression<Func<TModel, bool>>;
             return rv;
         }
 
-        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression peid = null )
+        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression peid = null)
         {
             if (Ids == null)
             {
