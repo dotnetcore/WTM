@@ -63,7 +63,6 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-
         /// <summary>
         /// 判断某URL是否有权限访问
         /// </summary>
