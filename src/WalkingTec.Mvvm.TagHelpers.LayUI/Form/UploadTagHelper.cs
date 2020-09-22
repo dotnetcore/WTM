@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -55,6 +57,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public string ConnectionString { get; set; }
 
         public string ButtonText { get; set; }
+
+        public string ExtraQuery { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -133,7 +137,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
-
+            url = url.AppendQuery(ExtraQuery);
             output.PreElement.SetHtmlContent($@"
 <label id='{Id}label'></label>
 ");

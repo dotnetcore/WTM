@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Support.Json;
 
@@ -36,6 +37,23 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="func"></param>
         public void SetMenuGetFunc(Func<List<SimpleMenu>> func) => MenuGetFunc = func;
+
+        public List<Type> GetTypesAssignableFrom<T>()
+        {
+            var rv = new List<Type>();
+            foreach (var ass in AllAssembly)
+            {
+                var types = new List<Type>();
+                try
+                {
+                    types.AddRange(ass.GetExportedTypes());
+                }
+                catch { }
+
+                rv.AddRange(types.Where(x => typeof(T).IsAssignableFrom(x) && x != typeof(T) && x.IsAbstract == false).ToList());
+            }
+            return rv;
+        }
 
     }
 }

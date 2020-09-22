@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
+using WalkingTec.Mvvm.Core.Models;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -9,29 +13,51 @@ namespace WalkingTec.Mvvm.Core
     /// FileAttachment
     /// </summary>
     [Table("FileAttachments")]
-    public class FileAttachment : BasePoco
+    public class FileAttachment : TopBasePoco, IWtmFile, IDisposable
     {
         [Display(Name = "FileName")]
         [Required(ErrorMessage = "{0}required")]
         public string FileName { get; set; }
+
         [Display(Name = "FileExt")]
         [Required(ErrorMessage = "{0}required")]
         [StringLength(10)]
         public string FileExt { get; set; }
+
         [Display(Name = "Path")]
         public string Path { get; set; }
+
         [Display(Name = "Length")]
         public long Length { get; set; }
+
         public DateTime UploadTime { get; set; }
+
         public bool IsTemprory { get; set; }
 
-        #region 组名，FastDFS服务器用
-        [Display(Name = "SaveFileMode")]
-        public SaveFileModeEnum? SaveFileMode { get; set; }
-        [Display(Name = "GroupName")]
-        [StringLength(50,ErrorMessage = "{0}stringmax{1}")]
-        public string GroupName { get; set; }
-        #endregion
+        public string SaveMode { get; set; }
+
         public byte[] FileData { get; set; }
+
+        public string ExtraInfo { get; set; }
+
+        [NotMapped]
+        public string Url { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public Stream DataStream { get; set; }
+
+        public void Dispose()
+        {
+            if(DataStream != null)
+            {
+                DataStream.Dispose();
+            }
+        }
+
+        string IWtmFile.GetID()
+        {
+            return ID.ToString();
+        }
     }
 }
