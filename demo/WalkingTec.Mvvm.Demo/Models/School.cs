@@ -49,7 +49,6 @@ namespace WalkingTec.Mvvm.Demo.Models
         [Display(Name = "专业")]
         public List<Major> Majors { get; set; }
 
-        [Required]
         [Display(Name = "照片")]
         public List<SchoolPhoto> Photos { get; set; }
     }

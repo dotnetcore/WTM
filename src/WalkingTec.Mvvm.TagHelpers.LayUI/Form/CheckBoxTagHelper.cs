@@ -99,6 +99,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Clear();
             output.Attributes.Add("div-for", "checkbox");
+            output.Attributes.Add("wtm-ctype", "checkbox");
+            if (string.IsNullOrEmpty(ChangeFunc) == false)
+            {
+                output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
+            }
             for (int i = 0; i < listitems.Count; i++)
             {
                 var item = listitems[i];
@@ -130,6 +135,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if (item.Value.ToString().ToLower() == (item2 as ComboSelectListItem).Value.ToString().ToLower())
                         {
                             item.Selected = true;
+                            break;
                         }
                         else
                         {
@@ -141,6 +147,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         if (item.Value.ToString().ToLower() == item2?.ToString().ToLower())
                         {
                             item.Selected = true;
+                            break;
                         }
                         else
                         {

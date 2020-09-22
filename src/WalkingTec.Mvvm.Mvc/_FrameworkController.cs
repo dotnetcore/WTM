@@ -272,11 +272,11 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
-                rv = ex.Error.ToString().Replace(Environment.NewLine, "</br>");
+                rv = ex.Error.ToString().Replace(Environment.NewLine, "<br />");
             }
             else
             {
-                rv = ex.Error.Message.Replace(Environment.NewLine, "</br>"); ;
+                rv = ex.Error.Message.Replace(Environment.NewLine, "<br />"); ;
             }
             return BadRequest(rv);
         }

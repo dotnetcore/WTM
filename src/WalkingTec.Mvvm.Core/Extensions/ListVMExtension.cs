@@ -115,6 +115,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 foreach (var col in baseCol.BottomChildren)
                 {
+                    inner = false;
                     if (col.ColumnType != GridColumnTypeEnum.Normal)
                     {
                         continue;

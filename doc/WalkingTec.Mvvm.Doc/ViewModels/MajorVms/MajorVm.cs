@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +12,6 @@ namespace WalkingTec.Mvvm.Doc.ViewModels.MajorVms
     public class MajorVm : BaseCRUDVM<Major>
     {
         public string SchoolName { get; set; }
-
         public StudentListVm StudentList { get; set; }
 
         public MajorVm()

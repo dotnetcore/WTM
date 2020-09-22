@@ -109,9 +109,10 @@
                                 { "name": "/DateTime", "title": "DateTime", "jump": "/UI/DateTime" },
                                 { "name": "/Upload", "title": "Upload", "jump": "/UI/Upload" },
                                 { "name": "/Upload", "title": "MultiUpload", "jump": "/UI/UploadMulti" },
-                               { "name": "/Selector", "title": "Selector", "jump": "/UI/Selector" },
+                                { "name": "/Selector", "title": "Selector", "jump": "/UI/Selector" },
                                 { "name": "/Rich", "title": "RichTextBox", "jump": "/UI/Rich" },
-                                { "name": "/UEditor", "title": "UEditor", "jump": "/UI/UEditor" }
+                                { "name": "/UEditor", "title": "UEditor", "jump": "/UI/UEditor" },
+                                { "name": "/ColorPicker", "title": "ColorPicker", "jump": "/UI/ColorPicker" }
                             ]
                         },
                         { "name": "/Grid", "title": "Grid", "jump": "/UI/Grid" },

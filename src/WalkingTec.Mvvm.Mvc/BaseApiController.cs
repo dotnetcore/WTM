@@ -104,12 +104,15 @@ namespace WalkingTec.Mvvm.Mvc
                     Guid userId = Guid.Parse(userIdStr);
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
+                    if (User?.Identity?.AuthenticationType != AuthConstants.AuthenticationType)
                     {
-                        _loginUserInfo = this.GetLoginUserInfo(userId);
-                        if (_loginUserInfo != null)
+                        if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                         {
-                            Cache.Add(cacheKey, _loginUserInfo);
+                            _loginUserInfo = this.GetLoginUserInfo(userId);
+                            if (_loginUserInfo != null)
+                            {
+                                Cache.Add(cacheKey, _loginUserInfo);
+                            }
                         }
                     }
                 }
@@ -378,7 +381,7 @@ namespace WalkingTec.Mvvm.Mvc
         [NonAction]
         public virtual IDataContext CreateDC(bool isLog = false)
         {
-            string cs = CurrentCS;
+            string cs = CurrentCS ?? "default";
             if (isLog == true && ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
             {
                 cs = "defaultlog";
