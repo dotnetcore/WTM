@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
+    [AllRights]
     public class LoginController : BaseController
     {
         //public LoginController(WTMContext context)
@@ -121,6 +122,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Logout")]
         public async Task Logout()
         {
+            await LoginUserInfo.RemoveUserCache(LoginUserInfo.Id.ToString());
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Response.Redirect("/");

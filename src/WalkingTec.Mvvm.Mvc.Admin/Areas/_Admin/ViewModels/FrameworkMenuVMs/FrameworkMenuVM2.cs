@@ -59,6 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public override void DoEdit(bool updateAllFields = false)
         {
+            List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != "")
@@ -110,6 +111,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             {
                                 aid = adb.ID;
                             }
+                            else
+                            {
+                                guids.Add(aid);
+                            }
                             FrameworkMenu menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -139,13 +144,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.Url = null;
                 }
             }
-            base.DoEdit(updateAllFields);
-            List<Guid> guids = new List<Guid>();
-            guids.Add(Entity.ID);
-            if (Entity.Children != null)
+            if(FC.ContainsKey("Entity.Children") == false)
             {
-                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+                FC.Add("Entity.Children", 0);
             }
+            base.DoEdit(updateAllFields);
             AddPrivilege(guids);
         }
 
@@ -236,18 +239,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public void AddPrivilege(List<Guid> menuids)
         {
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
+            //var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
             var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
-            foreach (var oldid in oldIDs)
-            {
-                try
-                {
-                    FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
-                    DC.Set<FunctionPrivilege>().Attach(fp);
-                    DC.DeleteEntity(fp);
-                }
-                catch { }
-            }
+            //foreach (var oldid in oldIDs)
+            //{
+            //    try
+            //    {
+            //        FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
+            //        DC.Set<FunctionPrivilege>().Attach(fp);
+            //        DC.DeleteEntity(fp);
+            //    }
+            //    catch { }
+            //}
             if (admin != null && SelectedRolesIDs.Contains(admin.ID) == false)
             {
                 SelectedRolesIDs.Add(admin.ID);

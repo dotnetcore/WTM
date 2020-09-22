@@ -99,6 +99,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Clear();
             output.Attributes.Add("div-for", "checkbox");
+            output.Attributes.Add("wtm-ctype", "checkbox");
+            if (string.IsNullOrEmpty(ChangeFunc) == false)
+            {
+                output.Attributes.Add("wtm-cf", FormatFuncName(ChangeFunc, false));
+            }
             for (int i = 0; i < listitems.Count; i++)
             {
                 var item = listitems[i];

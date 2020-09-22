@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 
 using WalkingTec.Mvvm.Core;
@@ -22,6 +23,14 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public string Search(ActionLogListVM vm)
         {
             return vm.GetJson(false);
+        }
+        [ActionDescription("Export")]
+        [HttpPost]
+        public IActionResult ExportExcel(ActionLogListVM vm)
+        {
+            vm.SearcherMode = vm.Ids != null && vm.Ids.Count > 0 ? ListVMSearchModeEnum.CheckExport : ListVMSearchModeEnum.Export;
+            var data = vm.GenerateExcel();
+            return File(data, "application/vnd.ms-excel", $"Export_City_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
         }
 
     }

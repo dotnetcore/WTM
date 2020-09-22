@@ -274,11 +274,45 @@ window.ff = {
                             arr.push({ name: names[a], val: values[a] });
                         }
                     }
-                    var changefunc = null;
-                    try { changefunc = comboxs[i].attributes['changefunc'].value } catch (e){ }
+                    var changefunc = "1==1";
+                    var chainchange = "";
+                    var linkto = false;
+                    var url = "";
+                    var targetname = "";
+                    var changefuncattr = comboxs[i].attributes['wtm-cf'];
+                    var linktoattr = comboxs[i].attributes['wtm-linkto'];
+                    var urlattr = comboxs[i].attributes['wtm-turl'];
+                    var targetnameattr = comboxs[i].attributes['wtm-tname'];
+                    if (changefuncattr != undefined) {
+                        changefunc = changefuncattr.value + "(a)";
+                    }
+                    if (urlattr != undefined) {
+                        url = urlattr.value;
+                    }
+                    if (targetnameattr != undefined) {
+                        targetname = targetnameattr.value;
+                    }
+                    if (linktoattr != undefined) {
+                        linkto = true;
+                    }
                     formSelects.on({
                         layFilter: filter, left: '', right: '', separator: ',', arr: arr,
-                        selectFunc: eval(changefunc)
+                        url: url, self: comboxs[i], targetname: targetname, linkto: linkto, cf: changefunc,
+                        selectFunc: function (a) {
+                            try {
+                                if (eval(this.cf) && this.linkto == true) {
+                                    var u = this.url;
+                                    if (u.indexOf("?") == -1) {
+                                        u += "?t=" + new Date().getTime();
+                                    }
+                                    for (var i = 0; i < a.length; i++) {
+                                        u += "&id=" + a[i].val;
+                                    }
+                                    ff.ChainChange(u, this.self, this.targetname)
+                                }
+                            }
+                            catch(e){ }
+                        }
                     });
                 }
             });
@@ -302,7 +336,6 @@ window.ff = {
                 alert(ff.DONOTUSE_Text_SubmitFailed);
             },
             success: function (data, textStatus, request) {
-                layer.close(index);
                 if (request.getResponseHeader('IsScript') === 'true') {
                     eval(data);
                 }
@@ -310,6 +343,7 @@ window.ff = {
                     data = "<div id='" + $.cookie("divid") + "' class='layui-card-body donotuse_pdiv'>" + data + "</div>";
                     $("#" + divid).parent().html(data);
                 }
+                layer.close(index);
             }
         });
     },
@@ -639,6 +673,110 @@ window.ff = {
 
     },
 
+    ChainChange: function (url, self, targetname) {
+        var form = layui.form;
+        var linkto = self.attributes["wtm-linkto"];
+        if (linkto == undefined) {
+            return;
+        }
+        var target = $('#' + linkto.value);
+        if (target.length == 0) {
+            return;
+        }
+        var controltype = target.attr("wtm-ctype");
+        var targetfilter = target.attr("lay-filter")
+        if (controltype == undefined) {
+            controltype = "";
+        }
+        if (targetfilter == undefined) {
+            targetfilter = "";
+        }
+        targetfilter += "div";
+        //clear
+        switch (controltype) {
+            case "combo":
+                target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+                form.render('select', targetfilter);
+                break;
+            case "checkbox":
+                target.html('');
+                form.render('checkbox', targetfilter);
+                break;
+            case "radio":
+                target.html('');
+                form.render('radio', targetfilter);
+                break;
+            case "tree":
+                layui.tree.reload('tree' + target.id, {
+                    data: []
+                });
+                break;
+            default:
+        }
+        if (url != "") {
+            $.get(url, {}, function (data, status) {
+                if (status === "success") {
+                    var i = 0;
+                    var item = null;
+
+                    if (controltype === "tree") {
+                        layui.tree.reload('tree' + target.id, {
+                            data: ff.getTreeItems(data.Data)
+                        });
+                    }
+
+                    if (controltype === "combo") {
+                        target.html('<option value = ""  selected>' + ff.DONOTUSE_Text_PleaseSelect + '</option>');
+                        if (data.Data !== undefined && data.Data !== null) {
+                            for (i = 0; i < data.Data.length; i++) {
+                                item = data.Data[i];
+                                var icon = item.ICon !== undefined && item.ICon != null && item.ICon.length > 0 ? ' icon="' + item.ICon + '"' : '';
+                                if (item.Selected === true) {
+                                    target.append('<option value = "' + item.Value + '"' + icon + ' selected>' + item.Text + '</option>');
+                                }
+                                else {
+                                    target.append('<option value = "' + item.Value + '" ' + icon + '>' + item.Text + '</option>');
+                                }
+                            }
+                        }
+                        form.render('select', targetfilter);
+                    }
+                    if (controltype === "checkbox") {
+                        for (i = 0; i < data.Data.length; i++) {
+                            item = data.Data[i];
+                            if (item.Selected === true) {
+                                target.append("<input type='checkbox'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                            }
+                            else {
+                                target.append("<input type='checkbox' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                            }
+                        }
+                        form.render('checkbox', targetfilter);
+                    }
+                    if (controltype === "radio") {
+                        for (i = 0; i < data.Data.length; i++) {
+                            item = data.Data[i];
+                            if (item.Selected === true) {
+                                target.append("<input type='radio'  name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "' checked />");
+                            }
+                            else {
+                                target.append("<input type='radio' name = '" + targetname + "' value = '" + item.Value + "' title = '" + item.Text + "'  />");
+                            }
+                        }
+                        form.render('radio', targetfilter);
+                    }
+
+                }
+                else {
+                    layer.alert(ff.DONOTUSE_Text_FailedLoadData);
+                }
+            });
+        }
+
+        ff.ChainChange("", target[0], "");
+    },
+
+
     GetFormArray: function (formId) {
         var searchForm = $('#' + formId), filter = [], fieldElem = searchForm.find('input,select,textarea');
         layui.each(fieldElem, function (_, item) {
@@ -685,7 +823,7 @@ window.ff = {
         if (defaultcondition == null) {
             defaultcondition = {};
         }
-        var tempwhere = {};   
+        var tempwhere = {};
         $.extend(tempwhere, defaultcondition);
 
         $.extend(tempwhere, formData);
@@ -694,7 +832,7 @@ window.ff = {
             if (tempwhere[attr] != null) {
                 if (Array.isArray(tempwhere[attr])) {
                     for (var i = 0; i < tempwhere[attr].length; i++) {
-                        form.append($('<input type="hidden" name="' + attr + '['+i+']" value="' + tempwhere[attr][i] + '">'));
+                        form.append($('<input type="hidden" name="' + attr + '[' + i + ']" value="' + tempwhere[attr][i] + '">'));
                     }
                 }
                 else {

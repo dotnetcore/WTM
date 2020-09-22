@@ -106,17 +106,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 {
                     toRemove.Add(item);
                 }
-                else
-                {
-                    if (!item.IsApi) continue;
-                    if (item.NameSpace == "WalkingTec.Mvvm.Admin.Api")
-                    {
-                        if (!item.ModuleName.EndsWith($"({Program._localizer["BuildinApi"]})"))
-                            item.ModuleName += $"({Program._localizer["BuildinApi"]})";
-                    }
-                    else if (!item.ModuleName.EndsWith("(api)"))
-                        item.ModuleName += "(api)";
-                }
             }
             var m = modules.ToList();
             toRemove.ForEach(x => m.Remove(x));
@@ -155,6 +144,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             Entity.ICon = $"{IconFont} {IconFontItem}";
             FC.Add("Entity.ICon", " ");
+            List<Guid> guids = new List<Guid>();
             if (Entity.IsInside == false)
             {
                 if (Entity.Url != null && Entity.Url != ""  && Entity.Url.StartsWith("/") == false)
@@ -175,8 +165,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                    List<SimpleAction> otherActions = null;
-                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
+                    List<FrameworkAction> otherActions = null;
+                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
                         MSD.AddModelError("Entity.ModuleId", Program._localizer["NoIndexInModule"]);
@@ -214,6 +204,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             {
                                 aid = adb.ID;
                             }
+                            else
+                            {
+                                guids.Add(aid);
+                            }
                             var menu = new FrameworkMenu();
                             menu.FolderOnly = false;
                             menu.IsPublic = false;
@@ -242,13 +236,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                     Entity.Url = null;
                 }
             }
-            base.DoEdit();
-            List<Guid> guids = new List<Guid>();
-            guids.Add(Entity.ID);
-            if (Entity.Children != null)
+            if (FC.ContainsKey("Entity.Children") == false)
             {
-                guids.AddRange(Entity.Children?.Select(x => x.ID).ToList());
+                FC.Add("Entity.Children", 0);
             }
+            base.DoEdit();
             AddPrivilege(guids);
         }
 
@@ -276,8 +268,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
                     var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
-                    List<SimpleAction> otherActions = null;
-                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").SingleOrDefault();
+                    List<FrameworkAction> otherActions = null;
+                    var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
                     {
                         MSD.AddModelError("Entity.ModuleId", Program._localizer["NoIndexInModule"]);
@@ -344,18 +336,18 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public void AddPrivilege(List<Guid> menuids)
         {
-            var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
-            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").SingleOrDefault();
-            foreach (var oldid in oldIDs)
-            {
-                try
-                {
-                    FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
-                    DC.Set<FunctionPrivilege>().Attach(fp);
-                    DC.DeleteEntity(fp);
-                }
-                catch { }
-            }
+            //var oldIDs = DC.Set<FunctionPrivilege>().Where(x => menuids.Contains(x.MenuItemId)).Select(x => x.ID).ToList();
+            var admin = DC.Set<FrameworkRole>().Where(x => x.RoleCode == "001").FirstOrDefault();
+            //foreach (var oldid in oldIDs)
+            //{
+            //    try
+            //    {
+            //        FunctionPrivilege fp = new FunctionPrivilege { ID = oldid };
+            //        DC.Set<FunctionPrivilege>().Attach(fp);
+            //        DC.DeleteEntity(fp);
+            //    }
+            //    catch { }
+            //}
             if (admin != null && SelectedRolesIDs.Contains(admin.ID) == false)
             {
                 SelectedRolesIDs.Add(admin.ID);
