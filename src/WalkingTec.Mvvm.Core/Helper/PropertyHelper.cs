@@ -567,6 +567,11 @@ namespace WalkingTec.Mvvm.Core
             if (enumType.IsEnum())
             {
                 ename = enumType.GetEnumName(value);
+                if (string.IsNullOrEmpty(ename))
+                {
+                    return rv;
+                }
+                
                 field = enumType.GetField(ename);
             }
             //如果是nullable的枚举
