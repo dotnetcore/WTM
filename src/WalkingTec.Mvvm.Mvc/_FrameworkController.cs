@@ -52,6 +52,9 @@ namespace WalkingTec.Mvvm.Mvc
             , bool _DONOT_USE_MULTI_SEL
             , string _DONOT_USE_SEL_ID
             , string _DONOT_USE_SUBMIT
+            , string _DONOT_USE_LINK_FIELD_MODEL
+            , string _DONOT_USE_LINK_FIELD
+            , string _DONOT_USE_TRIGGER_URL
         )
         {
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
@@ -71,6 +74,9 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.MultiSel = _DONOT_USE_MULTI_SEL;
             ViewBag.SelId = _DONOT_USE_SEL_ID;
             ViewBag.SubmitFunc = _DONOT_USE_SUBMIT;
+            ViewBag.LinkFieldModel = _DONOT_USE_LINK_FIELD_MODEL;
+            ViewBag.LinkField = _DONOT_USE_LINK_FIELD;
+            ViewBag.TriggerUrl = _DONOT_USE_TRIGGER_URL;
 
             #region 获取选中的数据
             ViewBag.SelectData = "[]";
