@@ -29,37 +29,37 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             string strHeight = Height == null ? "200px" : (Height + "px");
             output.Attributes.Add("style", $"width:{strWidth};height:{strHeight};");
             output.Attributes.Add("isrich", "1");
-            //var vm = context.Items["model"] as BaseVM;
-            //string url = "UploadForLayUIUEditor";
-            //if (string.IsNullOrEmpty(ConnectionString) == true)
-            //{
-            //    if (vm != null)
-            //    {
-            //        url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
-            //    }
-            //}
-            //else
-            //{
-            //    url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
-            //}
-            //if (string.IsNullOrEmpty(UploadGroupName) == false)
-            //{
-            //    url = url.AppendQuery($"groupName={UploadGroupName}");
-            //}
-            //if (string.IsNullOrEmpty(UploadSubdir) == false)
-            //{
-            //    url = url.AppendQuery($"subdir={UploadSubdir}");
-            //}
+            var vm = context.Items["model"] as BaseVM;
+            string url = "UploadForLayUIUEditor";
+            if (string.IsNullOrEmpty(ConnectionString) == true)
+            {
+                if (vm != null)
+                {
+                    url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
+                }
+            }
+            else
+            {
+                url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
+            }
+            if (string.IsNullOrEmpty(UploadGroupName) == false)
+            {
+                url = url.AppendQuery($"groupName={UploadGroupName}");
+            }
+            if (string.IsNullOrEmpty(UploadSubdir) == false)
+            {
+                url = url.AppendQuery($"subdir={UploadSubdir}");
+            }
 
 
-            //if (vm != null)
-            //{
-            //    //vm.ConfigInfo.UEditorOptions.FileActionName = url;
-            //    //vm.ConfigInfo.UEditorOptions.ImageActionName = url;
-            //    //vm.ConfigInfo.UEditorOptions.ScrawlActionName = url;
-            //    //vm.ConfigInfo.UEditorOptions.SnapscreenActionName = url;
-            //    //vm.ConfigInfo.UEditorOptions.VideoActionName = url;
-            //}
+            if (vm != null)
+            {
+                vm.ConfigInfo.UEditorOptions.FileActionName = url;
+                vm.ConfigInfo.UEditorOptions.ImageActionName = url;
+                vm.ConfigInfo.UEditorOptions.ScrawlActionName = url;
+                vm.ConfigInfo.UEditorOptions.SnapscreenActionName = url;
+                vm.ConfigInfo.UEditorOptions.VideoActionName = url;
+            }
             output.PostElement.AppendHtml($@"
 <script>
   layui.use(['ueditorconfig'], function () {{

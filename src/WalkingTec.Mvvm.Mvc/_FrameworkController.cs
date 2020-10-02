@@ -797,7 +797,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             if (ConfigInfo.UEditorOptions == null)
                 throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
-            return Json(ConfigInfo.UEditorOptions);
+            return Json(new { Code = 200, Data = ConfigInfo.UEditorOptions, Msg = "success" });
         }
 
         [Public]
