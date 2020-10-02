@@ -8,7 +8,7 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
         /// <summary>
         /// 默认上传路径
         /// </summary>
-        public const string DEFAULT_UPLOAD_DIR = "c:\\upload";
+        public const string DEFAULT_UPLOAD_DIR = ".\\upload";
 
         /// <summary>
         /// 默认列表行数

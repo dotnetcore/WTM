@@ -5,9 +5,9 @@
     <wt:textbox field="Entity.SchoolCode" default-value="123"/>
     <wt:textbox field="Entity.SchoolName" default-value="345"/>
     <wt:combobox field="Entity.SchoolType" default-value="1"  />
-    <wt:multiupload field="Entity.Photos" />
+    <wt:multiupload field="Entity.Photos" upload-group-name="test" upload-subdir="aaa" />
     <wt:datetime field="Entity.Duration" format="HH:mm:ss" type="Time" default-value="1:1:1" />
-    <wt:ueditor field="Entity.Remark" height="300" />
+    <wt:richtextbox field="Entity.Remark" height="300" upload-group-name="test" />
   </wt:row>
   <wt:row align="AlignEnum.Right">
     <wt:submitbutton click="test()" text="运行js并提交" submit-url="/School/Create2" />

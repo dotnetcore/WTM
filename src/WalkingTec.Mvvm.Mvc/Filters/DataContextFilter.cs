@@ -11,16 +11,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 {
     public class DataContextFilter : ActionFilterAttribute
     {
-        private Func<ActionExecutingContext, string> _csfunc;
+        public static Func<ActionExecutingContext, string> _csfunc;
 
         public DataContextFilter()
         {
 
-        }
-
-        public DataContextFilter(Func<ActionExecutingContext, string> CsSelector)
-        {
-            this._csfunc = CsSelector;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

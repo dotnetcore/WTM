@@ -181,11 +181,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 var fname = DC.GetFKName2<TModel>(f.Name);
                 var fid = typeof(TModel).GetProperty(fname).GetValue(rv);
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
-
-                var file = fh.GetFile(fid?.ToString(),false);
-                rv.SetPropertyValue(f.Name, file);
+                if (fid != null)
+                {
+                    var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                    var fh = fp.CreateFileHandler();
+                    var file = fh.GetFile(fid?.ToString(), false);
+                    rv.SetPropertyValue(f.Name, file);
+                }
             }
 
             return rv;

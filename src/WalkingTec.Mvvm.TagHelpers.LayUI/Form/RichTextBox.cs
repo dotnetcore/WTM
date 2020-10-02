@@ -12,7 +12,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
     {
         public string EmptyText { get; set; }
         public string UploadUrl { get; set; }
-
+        public string UploadGroupName { get; set; }
+        public string UploadSubdir { get; set; }
         public new int? Height { get; set; }
         public string ConnectionString { get; set; }
         public string ExtraQuery { get; set; }
@@ -38,7 +39,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             {
                 url = "/_framework/UploadForLayUIRichTextBox";
             }
-
+            if(string.IsNullOrEmpty(UploadGroupName) == false)
+            {
+                url = url.AppendQuery($"groupName={UploadGroupName}");
+            }
+            if (string.IsNullOrEmpty(UploadSubdir) == false)
+            {
+                url = url.AppendQuery($"subdir={UploadSubdir}");
+            }
             if (string.IsNullOrEmpty(ConnectionString) == true)
             {
                 if (context.Items.ContainsKey("model") == true)

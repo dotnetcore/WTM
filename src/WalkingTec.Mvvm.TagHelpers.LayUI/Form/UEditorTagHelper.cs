@@ -1,4 +1,7 @@
+using System.Web;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 {
@@ -13,6 +16,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
         //定义宽度
         public new int? Width { get; set; }
+        public string UploadGroupName { get; set; }
+        public string UploadSubdir { get; set; }
+        public string ConnectionString { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -23,7 +29,37 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             string strHeight = Height == null ? "200px" : (Height + "px");
             output.Attributes.Add("style", $"width:{strWidth};height:{strHeight};");
             output.Attributes.Add("isrich", "1");
+            //var vm = context.Items["model"] as BaseVM;
+            //string url = "UploadForLayUIUEditor";
+            //if (string.IsNullOrEmpty(ConnectionString) == true)
+            //{
+            //    if (vm != null)
+            //    {
+            //        url = url.AppendQuery($"_DONOT_USE_CS={vm.CurrentCS}");
+            //    }
+            //}
+            //else
+            //{
+            //    url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
+            //}
+            //if (string.IsNullOrEmpty(UploadGroupName) == false)
+            //{
+            //    url = url.AppendQuery($"groupName={UploadGroupName}");
+            //}
+            //if (string.IsNullOrEmpty(UploadSubdir) == false)
+            //{
+            //    url = url.AppendQuery($"subdir={UploadSubdir}");
+            //}
 
+
+            //if (vm != null)
+            //{
+            //    //vm.ConfigInfo.UEditorOptions.FileActionName = url;
+            //    //vm.ConfigInfo.UEditorOptions.ImageActionName = url;
+            //    //vm.ConfigInfo.UEditorOptions.ScrawlActionName = url;
+            //    //vm.ConfigInfo.UEditorOptions.SnapscreenActionName = url;
+            //    //vm.ConfigInfo.UEditorOptions.VideoActionName = url;
+            //}
             output.PostElement.AppendHtml($@"
 <script>
   layui.use(['ueditorconfig'], function () {{

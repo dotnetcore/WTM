@@ -9,6 +9,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.TagHelpers.LayUI.Common;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Test.Mock
 {

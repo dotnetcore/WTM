@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public ActionResult Index(DataPrivilegeListVM vm)
         {
-            vm.Searcher.TableNames = ConfigInfo.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            vm.Searcher.TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
 

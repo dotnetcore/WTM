@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Implement;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Mvc;
 
 namespace WalkingTec.Mvvm.Test.Mock
@@ -16,12 +17,18 @@ namespace WalkingTec.Mvvm.Test.Mock
     {
         public static WTMContext CreateWtmContext(IDataContext dataContext= null, string usercode = null)
         {
+            GlobalData gd = new GlobalData();
+            gd.AllAccessUrls = new List<string>();
+            gd.AllAssembly = new List<System.Reflection.Assembly>();
+            gd.AllModule = new List<Core.Support.Json.SimpleModule>();
+
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
             Mock<HttpRequest> mockHttpRequest = new Mock<HttpRequest>();
             Mock<IServiceProvider> mockService = new Mock<IServiceProvider>();
             MockHttpSession mockSession = new MockHttpSession();
             mockHttpRequest.Setup(x => x.Cookies).Returns(new MockCookie());
             mockService.Setup(x => x.GetService(typeof(IDistributedCache))).Returns(new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions())));
+            mockService.Setup(x => x.GetService(typeof(WtmFileProvider))).Returns(new WtmFileProvider(Options.Create<Configs>(new Configs()), gd));
             mockHttpContext.Setup(x => x.Request).Returns(mockHttpRequest.Object);
             mockHttpContext.Setup(x => x.RequestServices).Returns(mockService.Object);
             var httpa = new HttpContextAccessor();

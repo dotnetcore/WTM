@@ -893,7 +893,7 @@ namespace WalkingTec.Mvvm.Core
                     (item as PersistPoco).IsValid = true;
                 }
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
-                if (ConfigInfo.DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
+                if (ConfigInfo.ConnectionStrings.Where(x=>x.Key == (CurrentCS??"default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
                 {
                     ListAdd.Add(item);
                 }

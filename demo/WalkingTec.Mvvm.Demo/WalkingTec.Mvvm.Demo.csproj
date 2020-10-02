@@ -5,9 +5,7 @@
     <Description>WalkingTec.Mvvm</Description>
     <AssemblyName>WalkingTec.Mvvm.Demo</AssemblyName>
     <Title>$(AssemblyName)</Title>
-    <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
   </PropertyGroup>
 
   <Import Project="..\..\common.props" />

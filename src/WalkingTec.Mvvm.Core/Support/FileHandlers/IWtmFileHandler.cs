@@ -8,10 +8,10 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
 {
     public interface IWtmFileHandler
     {
-        IWtmFile Upload(string fileName, long fileLength, Stream data, string subdir=null, string extra=null);
+        IWtmFile Upload(string fileName, long fileLength, Stream data, string group=null, string subdir=null, string extra=null);
         IWtmFile GetFile(string id, bool withData = true);
 
-        void DeleteFile(string id);
+        string DeleteFile(string id);
         string GetFileName(string id);
     }
 }

@@ -14,6 +14,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         private ConstructorInfo _defaultHandler;
         private Configs _configs;
         private GlobalData _gd;
+        public static Func<IWtmFileHandler, string> _subDirFunc;
 
         public WtmFileProvider(IOptions<Configs> configs, GlobalData gd)
         {
@@ -67,7 +68,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (ci == null)
             {
-                return null;
+                return new WtmDataBaseFileHandler(_configs,csName);
             }
             else
             {

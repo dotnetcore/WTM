@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string subdir = null, string extra = null)
+        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string groupName= null, string subdir = null, string extra = null)
         {
             FileAttachment file = new FileAttachment();
             file.FileName = fileName;

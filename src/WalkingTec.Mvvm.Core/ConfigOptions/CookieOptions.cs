@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace WalkingTec.Mvvm.Mvc.Auth
+namespace WalkingTec.Mvvm.Core
 {
-    public class CookieOptions
+    public class CookieOption
     {
         public string Issuer { get; set; } = "http://localhost";
         public string Audience { get; set; } = "http://localhost";

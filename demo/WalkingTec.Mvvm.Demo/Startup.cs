@@ -18,6 +18,7 @@ using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
 using System.Text.Json;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -36,12 +37,12 @@ namespace WalkingTec.Mvvm.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(ConfigRoot, 3600);
-            services.AddWtmCrossDomain(ConfigRoot);
-            services.AddWtmAuthentication(ConfigRoot);
-            services.AddWtmHttpClient(ConfigRoot);
+            services.AddWtmSession(3600);
+            services.AddWtmCrossDomain();
+            services.AddWtmAuthentication();
+            services.AddWtmHttpClient();
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages(ConfigRoot);
+            services.AddWtmMultiLanguages();
 
             services.AddMvc(options =>
             {
@@ -49,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
-                options.Filters.Add(new DataContextFilter(CSSelector));
+                options.Filters.Add(new DataContextFilter());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
                 options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor", x]);
@@ -86,7 +87,8 @@ namespace WalkingTec.Mvvm.Demo
                 };
             });
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(ConfigRoot, DataPrivilegeSettings());
+            
+            services.AddWtmContext(ConfigRoot);
 
         }
 
@@ -136,20 +138,44 @@ namespace WalkingTec.Mvvm.Demo
 
         }
 
+        /// <summary>
+        /// Wtm will call this function to dynamiclly set connection string
+        /// 框架会调用这个函数来动态设定每次访问需要链接的数据库
+        /// </summary>
+        /// <param name="context">ActionContext</param>
+        /// <returns>Connection string key name</returns>
         public string CSSelector(ActionExecutingContext context)
         {
             //To override the default logic of choosing connection string,
-            //change this function to return different connection string key            
+            //change this function to return different connection string key
+            //根据context返回不同的连接字符串的名称
             return null;
         }
 
+        /// <summary>
+        /// Set data privileges that system supports
+        /// 设置系统支持的数据权限
+        /// </summary>
+        /// <returns>data privileges list</returns>
         public List<IDataPrivilege> DataPrivilegeSettings()
         {
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
+            //指定哪些模型需要数据权限
             //pris.Add(new DataPrivilegeInfo<typea>("aaaPrivilege", m => m.Name));
             //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
             return pris;
+        }
+
+        /// <summary>
+        /// Set sub directory of uploaded files
+        /// 动态设置上传文件的子目录
+        /// </summary>
+        /// <param name="fh">IWtmFileHandler</param>
+        /// <returns>subdir name</returns>
+        public string SubDirSelector(IWtmFileHandler fh)
+        {
+            return null;
         }
     }
 }

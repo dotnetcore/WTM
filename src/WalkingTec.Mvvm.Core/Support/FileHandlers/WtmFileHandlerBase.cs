@@ -25,16 +25,21 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public virtual void DeleteFile(string id)
+        public virtual string DeleteFile(string id)
         {
             FileAttachment del = new FileAttachment();
-            del.SetID(id);
+            string rv = "";
             using (var dc = _config.CreateDC(_cs))
             {
-                dc.Set<FileAttachment>().Attach(del);
-                dc.Set<FileAttachment>().Remove(del);
-                dc.SaveChanges();
+                var file = dc.Set<FileAttachment>().CheckID(id).FirstOrDefault();
+                if (file != null)
+                {
+                    rv = file.Path;
+                    dc.Set<FileAttachment>().Remove(file);
+                    dc.SaveChanges();
+                }
             }
+            return rv;
         }
 
         public virtual IWtmFile GetFile(string id,bool widhData = true)
@@ -68,7 +73,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             return rv;
         }
 
-        public virtual IWtmFile Upload(string fileName, long fileLength, Stream data, string subdir = null, string extra = null)
+        public virtual IWtmFile Upload(string fileName, long fileLength, Stream data, string group=null, string subdir = null, string extra = null)
         {
             return null;
         }

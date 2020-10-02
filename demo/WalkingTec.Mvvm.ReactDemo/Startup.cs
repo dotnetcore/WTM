@@ -30,16 +30,17 @@ namespace WalkingTec.Mvvm.ReactDemo
             var configBuilder = new ConfigurationBuilder();
             ConfigRoot = configBuilder.WTMConfig(env).Build();
         }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(ConfigRoot, 3600);
-            services.AddWtmCrossDomain(ConfigRoot);
-            services.AddWtmAuthentication(ConfigRoot);
-            services.AddWtmHttpClient(ConfigRoot);
+            services.AddWtmSession(3600);
+            services.AddWtmCrossDomain();
+            services.AddWtmAuthentication();
+            services.AddWtmHttpClient();
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages(ConfigRoot);
+            services.AddWtmMultiLanguages();
 
             services.AddMvc(options =>
             {
@@ -81,7 +82,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                     }
                 };
             });
-            services.AddWtmContext(ConfigRoot,DataPrivilegeSettings());
+            services.AddWtmContext(ConfigRoot);
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";

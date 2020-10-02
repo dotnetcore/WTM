@@ -22,15 +22,6 @@ namespace WalkingTec.Mvvm.Core
         Html
     }
 
-    /// <summary>
-    /// 上传图片存储方式
-    /// </summary>
-    public enum SaveFileModeEnum
-    {
-        Local = 0,//本地
-        Database = 1,//数据库
-        DFS = 2 //DFS
-    };
 
     /// <summary>
     /// 数据库类型

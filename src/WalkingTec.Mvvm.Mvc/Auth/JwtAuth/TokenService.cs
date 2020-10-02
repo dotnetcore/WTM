@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
     public class TokenService : ITokenService
     {
         private readonly ILogger _logger;
-        private readonly JwtOptions _jwtOptions;
+        private readonly JwtOption _jwtOptions;
 
         private const Token _emptyToken = null;
 
@@ -27,11 +28,11 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
         public TokenService(
             ILogger<TokenService> logger,
-            IOptions<JwtOptions> jwtOptions
+            IOptions<Configs> configs
         )
         {
-            _configs = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
-            _jwtOptions = jwtOptions.Value;
+            _configs = configs.Value;
+            _jwtOptions = _configs.JwtOption;
             _logger = logger;
             _dc = CreateDC();
         }
@@ -41,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
             if (loginUserInfo == null)
                 throw new ArgumentNullException(nameof(loginUserInfo));
 
-            var signinCredentials = new SigningCredentials(_jwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+            var signinCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecurityKey)), SecurityAlgorithms.HmacSha256);
 
             var tokeOptions = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,

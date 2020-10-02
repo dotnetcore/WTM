@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string subdir = null, string extra = null)
+        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string group = null, string subdir = null, string extra = null)
         {
             FileAttachment file = new FileAttachment();
             file.FileName = fileName;
@@ -52,11 +52,32 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             file.FileExt = ext;
 
+            var groupdir = _config.FileUploadOptions.Groups.First().Value; ;
+            if (string.IsNullOrEmpty(group) == false && _config.FileUploadOptions?.Groups.ContainsKey(group) == true)
+            {
+                groupdir = _config.FileUploadOptions.Groups[group];
+            }
+            else
+            {
 
-            string pathHeader = _config.FileUploadOptions.UploadDir;
+            }
+
+            string pathHeader = groupdir;
             if (pathHeader.StartsWith("."))
             {
                 pathHeader = Path.Combine(_config.HostRoot, pathHeader); 
+            }
+            if (string.IsNullOrEmpty(subdir) == false)
+            {
+                pathHeader = Path.Combine(pathHeader, subdir);
+            }
+            else
+            {
+                var sub = WtmFileProvider._subDirFunc?.Invoke(this);
+                if(string.IsNullOrEmpty(sub)== false)
+                {
+                    pathHeader = Path.Combine(pathHeader, sub);
+                }
             }
             if (!Directory.Exists(pathHeader))
             {
@@ -74,6 +95,16 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 dc.SaveChanges();
             }
             return file;
+        }
+
+        public override string DeleteFile(string id)
+        {
+            var path = base.DeleteFile(id);
+            if (string.IsNullOrEmpty(path) == false)
+            {
+                File.Delete(path);
+            }
+            return path;
         }
     }
 

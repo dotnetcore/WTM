@@ -58,6 +58,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public string ButtonText { get; set; }
 
+        public string UploadGroupName { get; set; }
+        public string UploadSubdir { get; set; }
         public string ExtraQuery { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -137,6 +139,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 url = url.AppendQuery($"_DONOT_USE_CS={ConnectionString}");
             }
+            if (string.IsNullOrEmpty(UploadGroupName) == false)
+            {
+                url = url.AppendQuery($"groupName={UploadGroupName}");
+            }
+            if (string.IsNullOrEmpty(UploadSubdir) == false)
+            {
+                url = url.AppendQuery($"subdir={UploadSubdir}");
+            }
+
             url = url.AppendQuery(ExtraQuery);
             output.PreElement.SetHtmlContent($@"
 <label id='{Id}label'></label>

@@ -15,6 +15,16 @@ namespace WalkingTec.Mvvm.Doc
 
     public enum DotnetVersionEnum { dotnet2_2, dotnet3_0}
 
+    /// <summary>
+    /// 上传图片存储方式
+    /// </summary>
+    public enum SaveModeEnum
+    {
+        Local = 0,//本地
+        Database = 1,//数据库
+        DFS = 2 //DFS
+    };
+
     public class SetupVM : BaseVM
     {
         private string version = "";
@@ -31,7 +41,7 @@ namespace WalkingTec.Mvvm.Doc
 
         public string CookiePre { get; set; }
 
-        public SaveFileModeEnum? FileMode { get; set; }
+        public SaveModeEnum? FileMode { get; set; }
 
         public string UploadDir { get; set; }
 
@@ -121,7 +131,7 @@ namespace WalkingTec.Mvvm.Doc
             UI = UIEnum.LayUI;
             DbType = DBTypeEnum.SqlServer;
             CookiePre = "WTM";
-            FileMode = SaveFileModeEnum.Database;
+            FileMode = SaveModeEnum.Database;
             UploadDir = "";
             Rpp = 20;
         }

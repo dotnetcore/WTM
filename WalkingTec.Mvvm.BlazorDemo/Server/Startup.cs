@@ -20,32 +20,27 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfigurationRoot ConfigRoot { get; }
+
+        public Startup(IWebHostEnvironment env)
         {
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.WTM_SetCurrentDictionary()
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddEnvironmentVariables();
-
-            var config = configBuilder.Build();
-            Configuration = config;
+            ConfigRoot = configBuilder.WTMConfig(env).Build();
         }
-
-        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Configs>(Configuration);
+            services.Configure<Configs>(ConfigRoot);
             // services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(Configuration, 3600);
-            services.AddWtmCrossDomain(Configuration);
-            services.AddWtmAuthentication(Configuration);
-            services.AddWtmHttpClient(Configuration);
+            services.AddWtmSession(3600);
+            services.AddWtmCrossDomain();
+            services.AddWtmAuthentication();
+            services.AddWtmHttpClient();
             services.AddWtmSwagger();
-            services.AddWtmMultiLanguages(Configuration);
+            services.AddWtmMultiLanguages();
 
             services.AddMvc(options =>
             {
@@ -53,7 +48,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
-                options.Filters.Add(new DataContextFilter(CSSelector));
+                options.Filters.Add(new DataContextFilter());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
                 options.EnableEndpointRouting = true;
@@ -88,7 +83,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.Server
                 };
             });
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
-            services.AddWtmContext(DataPrivilegeSettings());
+            services.AddWtmContext(ConfigRoot);
 
             //services.AddControllersWithViews();
             //services.AddRazorPages();

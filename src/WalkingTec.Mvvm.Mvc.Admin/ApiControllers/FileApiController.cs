@@ -18,23 +18,23 @@ namespace WalkingTec.Mvvm.Admin.Api
     {
         [HttpPost("[action]")]
         [ActionDescription("UploadFile")]
-        public IActionResult Upload([FromServices] WtmFileProvider fp)
+        public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string csName= null)
         {
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm,csName);
             var FileData = Request.Form.Files[0];
-            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream());
+            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir);
             return Ok(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost("[action]")]
         [ActionDescription("UploadPic")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp,int? width = null, int? height = null, string sm = null, string groupName = null, string subdir = null, string csName = null)
         {
             if (width == null && height == null)
             {
-                return Upload(fp);
+                return Upload(fp,sm,groupName,csName);
             }
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm,csName);
             var FileData = Request.Form.Files[0];
 
             Image oimage = Image.FromStream(FileData.OpenReadStream());
@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             MemoryStream ms = new MemoryStream();
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
-            var file = fh.Upload(FileData.FileName, FileData.Length, ms);
+            var file = fh.Upload(FileData.FileName, FileData.Length, ms, groupName,subdir);
             oimage.Dispose();
             ms.Dispose();
 
@@ -67,17 +67,17 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFileName")]
-        public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id)
+        public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
         {
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm,csName);
             return Ok(fh.GetFileName(id));
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id)
+        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
         {
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm, csName);
             var file = fh.GetFile(id);
 
 
@@ -91,9 +91,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
-        public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id)
+        public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
         {
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm, csName);
             var file = fh.GetFile(id);
             if (file == null)
             {
@@ -114,9 +114,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DeleteFile")]
-        public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id)
+        public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
         {
-            var fh = fp.CreateFileHandler();
+            var fh = fp.CreateFileHandler(sm, csName);
             fh.DeleteFile(id);
             return Ok();
         }

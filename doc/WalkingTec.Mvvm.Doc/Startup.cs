@@ -35,10 +35,10 @@ namespace WalkingTec.Mvvm.Doc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-            services.AddWtmSession(ConfigRoot, 3600);
-            services.AddWtmCrossDomain(ConfigRoot);
-            services.AddWtmAuthentication(ConfigRoot);
-            services.AddWtmHttpClient(ConfigRoot);
+            services.AddWtmSession(3600);
+            services.AddWtmCrossDomain();
+            services.AddWtmAuthentication();
+            services.AddWtmHttpClient();
             services.AddWtmSwagger();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Doc
                 options.ModelBinderProviders.Insert(0, new StringBinderProvider());
 
                 // Filters
-                options.Filters.Add(new DataContextFilter(CSSelector));
+                options.Filters.Add(new DataContextFilter());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
                 options.EnableEndpointRouting = true;
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Doc
                     }
                 };
             });
-            services.AddWtmContext(ConfigRoot, DataPrivilegeSettings());
+            services.AddWtmContext(ConfigRoot);
 
         }
 
