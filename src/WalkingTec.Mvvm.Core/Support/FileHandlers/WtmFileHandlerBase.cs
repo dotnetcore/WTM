@@ -25,21 +25,32 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         }
 
 
-        public virtual string DeleteFile(string id)
+        public virtual FileAttachment DeleteFile(string id)
         {
-            FileAttachment del = new FileAttachment();
-            string rv = "";
+            FileAttachment file = null;
             using (var dc = _config.CreateDC(_cs))
             {
-                var file = dc.Set<FileAttachment>().CheckID(id).FirstOrDefault();
+                file = dc.Set<FileAttachment>().CheckID(id)
+                    .Select(x=> new FileAttachment
+                    {
+                        ID = x.ID,
+                        ExtraInfo = x.ExtraInfo,
+                        FileExt = x.FileExt,
+                        FileName = x.FileName,
+                        IsTemprory = x.IsTemprory,
+                        Path = x.Path,
+                        SaveMode = x.SaveMode,
+                        Length = x.Length,
+                        UploadTime = x.UploadTime
+                    })
+                    .FirstOrDefault();
                 if (file != null)
                 {
-                    rv = file.Path;
                     dc.Set<FileAttachment>().Remove(file);
                     dc.SaveChanges();
                 }
             }
-            return rv;
+            return file;
         }
 
         public virtual IWtmFile GetFile(string id,bool widhData = true)

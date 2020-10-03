@@ -12,7 +12,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     [Display(Name = "database")]
     public class WtmDataBaseFileHandler : WtmFileHandlerBase
     {
-        private static string _modeName = "DataBase";
+        private static string _modeName = "database";
 
         public WtmDataBaseFileHandler(Configs config, string csName) : base(config, csName)
         {

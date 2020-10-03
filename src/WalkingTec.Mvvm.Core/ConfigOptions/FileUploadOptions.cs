@@ -18,7 +18,17 @@ namespace WalkingTec.Mvvm.Core.ConfigOptions
         public long UploadLimit { get; set; }
 
 
-        public Dictionary<string, string> Groups { get; set; }
+        public Dictionary<string, List<FileHandlerOptions>> Settings { get; set; }
 
+    }
+
+    public class FileHandlerOptions
+    {
+        public string GroupName { get; set; }
+        public string GroupLocation { get; set; }
+        public string ServerUrl { get; set; }
+
+        public string Key { get; set; }
+        public string Secret { get; set; }
     }
 }

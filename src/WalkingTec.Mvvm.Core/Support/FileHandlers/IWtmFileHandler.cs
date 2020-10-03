@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         IWtmFile Upload(string fileName, long fileLength, Stream data, string group=null, string subdir=null, string extra=null);
         IWtmFile GetFile(string id, bool withData = true);
 
-        string DeleteFile(string id);
+        FileAttachment DeleteFile(string id);
         string GetFileName(string id);
     }
 }

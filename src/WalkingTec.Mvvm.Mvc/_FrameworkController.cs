@@ -342,10 +342,14 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
             var file = fh.GetFile(id);
+            if(file == null)
+            {
+                return new EmptyResult();
+            }
             Stream rv = null;
-            rv = file.DataStream;
             try
             {
+                rv = file.DataStream;
                 Image oimage = Image.FromStream(rv);
                 if (oimage != null && (width != null || height != null))
                 {

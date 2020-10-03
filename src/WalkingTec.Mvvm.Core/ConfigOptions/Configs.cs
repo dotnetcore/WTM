@@ -231,32 +231,6 @@ namespace WalkingTec.Mvvm.Core
 
         #endregion
 
-
-        #region DFS Config
-
-        private DFS _dfsServer;
-
-        /// <summary>
-        /// DFS Config
-        /// </summary>
-        public DFS DFSServer
-        {
-            get
-            {
-                if (_dfsServer == null)
-                {
-                    _dfsServer = new DFS();
-                }
-                return _dfsServer;
-            }
-            set
-            {
-                _dfsServer = value;
-            }
-        }
-
-        #endregion
-
         #region FileOptions
 
         private FileUploadOptions _fileUploadOptions;
@@ -274,10 +248,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         UploadLimit = DefaultConfigConsts.DEFAULT_UPLOAD_LIMIT,
                         SaveFileMode = "database",
-                        Groups = new Dictionary<string, string>
-                        {
-                            {"default","./upload" }
-                        }
+                        Settings = new Dictionary<string, List<FileHandlerOptions>>()                        
                     };
                 }
                 return _fileUploadOptions;

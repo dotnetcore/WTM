@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     [Display(Name = "local")]
     public class WtmLocalFileHandler : WtmFileHandlerBase
     {
-        private static string _modeName = "DataBase";
+        private static string _modeName = "local";
 
         public WtmLocalFileHandler(Configs config, string csName) : base(config, csName)
         {
@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             {
                 rv = dc.Set<FileAttachment>().CheckID(id).Where(x => x.SaveMode == _modeName).FirstOrDefault();
             }
-            if(withData == true)
+            if (withData == true && rv != null)
             {
                 rv.DataStream = File.OpenRead(rv.Path);
             }
@@ -52,16 +52,20 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             file.FileExt = ext;
 
-            var groupdir = _config.FileUploadOptions.Groups.First().Value; ;
-            if (string.IsNullOrEmpty(group) == false && _config.FileUploadOptions?.Groups.ContainsKey(group) == true)
-            {
-                groupdir = _config.FileUploadOptions.Groups[group];
-            }
-            else
-            {
+            var localSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "local").Select(x => x.Value).FirstOrDefault();
 
+            var groupdir = "";
+            if (string.IsNullOrEmpty(group))
+            {
+                groupdir = localSettings?.FirstOrDefault().GroupLocation;
             }
-
+            else {
+               groupdir = localSettings?.Where(x => x.GroupName.ToLower() == group.ToLower()).FirstOrDefault().GroupLocation;
+            }
+            if (string.IsNullOrEmpty(group))
+            {
+                groupdir = "./uploads";
+            }
             string pathHeader = groupdir;
             if (pathHeader.StartsWith("."))
             {
@@ -97,14 +101,18 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             return file;
         }
 
-        public override string DeleteFile(string id)
+        public override FileAttachment DeleteFile(string id)
         {
-            var path = base.DeleteFile(id);
-            if (string.IsNullOrEmpty(path) == false)
+            var old = base.DeleteFile(id);
+            if (string.IsNullOrEmpty(old?.Path) == false)
             {
-                File.Delete(path);
+                try
+                {
+                    File.Delete(old?.Path);
+                }
+                catch { }
             }
-            return path;
+            return old;
         }
     }
 
