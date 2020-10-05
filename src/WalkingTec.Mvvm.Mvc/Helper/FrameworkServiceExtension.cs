@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
@@ -668,6 +669,25 @@ namespace WalkingTec.Mvvm.Mvc
                 options.SupportedUICultures = supportedCultures;
             });
             return services;
+        }
+
+        public static IMvcBuilder AddWtmDataAnnotationsLocalization(this IMvcBuilder builder, Type programType)
+        {
+            builder.AddDataAnnotationsLocalization(options =>
+             {
+                 options.DataAnnotationLocalizerProvider = (type, factory) =>
+                 {
+                     if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
+                     {
+                         return factory.Create(typeof(WalkingTec.Mvvm.Core.Program));
+                     }
+                     else
+                     {
+                         return factory.Create(programType);
+                     }
+                 };
+             });
+            return builder;
         }
 
         public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)

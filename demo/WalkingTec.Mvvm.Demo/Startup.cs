@@ -72,20 +72,7 @@ namespace WalkingTec.Mvvm.Demo
                 };
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization(options => 
-            {
-                options.DataAnnotationLocalizerProvider = (type, factory) =>
-                {
-                    if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
-                    {
-                        return factory.Create(typeof(WalkingTec.Mvvm.Core.Program));
-                    }
-                    else
-                    {
-                        return factory.Create(typeof(Program));
-                    }
-                };
-            });
+            .AddWtmDataAnnotationsLocalization(typeof(Program));
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
             
             services.AddWtmContext(ConfigRoot);

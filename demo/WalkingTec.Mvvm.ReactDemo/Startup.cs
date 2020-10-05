@@ -68,20 +68,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                 };
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization(options => 
-            {
-                options.DataAnnotationLocalizerProvider = (type, factory) =>
-                {
-                    if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
-                    {
-                        return factory.Create(typeof(WalkingTec.Mvvm.Core.Program));
-                    }
-                    else
-                    {
-                        return factory.Create(typeof(Program));
-                    }
-                };
-            });
+            .AddWtmDataAnnotationsLocalization(typeof(Program));
             services.AddWtmContext(ConfigRoot);
             services.AddSpaStaticFiles(configuration =>
             {
