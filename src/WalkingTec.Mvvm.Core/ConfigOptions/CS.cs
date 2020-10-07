@@ -21,11 +21,11 @@ namespace WalkingTec.Mvvm.Core
         {
             if (DcConstructor == null)
             {
-                GlobalData _gd = GlobalServices.GetRequiredService<GlobalData>();
+                var AllAssembly = Utils.GetAllAssembly();
                 List<ConstructorInfo> cis = new List<ConstructorInfo>();
-                if (_gd.AllAssembly != null)
+                if (AllAssembly != null)
                 {
-                    foreach (var ass in _gd.AllAssembly)
+                    foreach (var ass in AllAssembly)
                     {
                         try
                         {

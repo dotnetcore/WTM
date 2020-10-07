@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Test.Mock
             var httpa = new HttpContextAccessor();
             httpa.HttpContext = mockHttpContext.Object;
             var wtmcontext = new WTMContext(Options.Create<Configs>(new Configs()), new GlobalData(), httpa, new DefaultUIService(), null,dataContext);
-            wtmcontext.MSD = new MockMSD();
+            wtmcontext.MSD = new BasicMSD();
             wtmcontext.Session = new SessionServiceProvider(mockSession);
             if (dataContext == null)
             {

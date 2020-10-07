@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
@@ -184,8 +187,7 @@ namespace WalkingTec.Mvvm.Core
                 if (fid != null)
                 {
                     var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                    var fh = fp.CreateFileHandler();
-                    var file = fh.GetFile(fid?.ToString(), false);
+                    var file = fp.GetFile(fid?.ToString(), false, DC);
                     rv.SetPropertyValue(f.Name, file);
                 }
             }
@@ -200,14 +202,13 @@ namespace WalkingTec.Mvvm.Core
         {
             DoAddPrepare();
             //删除不需要的附件
-            if (DeletedFileIds != null)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fh.DeleteFile(item.ToString());
+                    fp.DeleteFile(item.ToString(),DC);
                 }
             }
             DC.SaveChanges();
@@ -217,14 +218,13 @@ namespace WalkingTec.Mvvm.Core
         {
             DoAddPrepare();
             //删除不需要的附件
-            if (DeletedFileIds != null)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fh.DeleteFile(item.ToString());
+                    fp.DeleteFile(item.ToString(),DC.ReCreate());
                 }
             }
             await DC.SaveChangesAsync();
@@ -341,14 +341,13 @@ namespace WalkingTec.Mvvm.Core
 
             DC.SaveChanges();
             //删除不需要的附件
-            if (DeletedFileIds != null)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
 
                 foreach (var item in DeletedFileIds)
                 {
-                    fh.DeleteFile(item.ToString());
+                    fp.DeleteFile(item.ToString(),DC.ReCreate());
                 }
             }
 
@@ -360,12 +359,14 @@ namespace WalkingTec.Mvvm.Core
 
             await DC.SaveChangesAsync();
             //删除不需要的附件
-            var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-            var fh = fp.CreateFileHandler();
-          
-            foreach (var item in DeletedFileIds)
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                fh.DeleteFile(item.ToString());
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+
+                foreach (var item in DeletedFileIds)
+                {
+                    fp.DeleteFile(item.ToString(),DC.ReCreate());
+                }
             }
         }
 
@@ -710,10 +711,9 @@ namespace WalkingTec.Mvvm.Core
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
                 foreach (var item in fileids)
                 {
-                    fh.DeleteFile(item.ToString());
+                    fp.DeleteFile(item.ToString(),DC.ReCreate());
                 }
             }
             catch (Exception)
@@ -764,10 +764,9 @@ namespace WalkingTec.Mvvm.Core
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
                 foreach (var item in fileids)
                 {
-                    fh.DeleteFile(item.ToString());
+                    fp.DeleteFile(item.ToString(),DC.ReCreate());
                 }
             }
             catch (Exception)
@@ -816,9 +815,59 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>验证结果</returns>
         public override void Validate()
         {
-            //验证多语言数据
             if (ByPassBaseValidation == false)
             {
+                base.Validate();
+                //如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
+                //那么手动验证模型
+                if (WtmContext?.MSD is BasicMSD)
+                {
+                    var valContext = new ValidationContext(this.Entity);
+                    List<ValidationResult> error = new List<ValidationResult>();
+                    if (!Validator.TryValidateObject(Entity, valContext, error, true))
+                    {
+                        foreach (var item in error)
+                        {
+                            string key = item.MemberNames.FirstOrDefault();
+                            if (MSD.Keys.Contains(key) == false)
+                            {
+                                MSD.AddModelError($"Entity.{key}", item.ErrorMessage);
+                            }
+                        }
+                    }
+                    var list = typeof(TModel).GetProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
+                    foreach (var item in list)
+                    {
+                        var it = item.GetValue(Entity) as IEnumerable;
+                        if(it == null)
+                        {
+                            continue;
+                        }
+                        var contextset = false;
+                        foreach (var e in it)
+                        {
+                            if(contextset == false)
+                            {
+                                valContext = new ValidationContext(e);
+                                contextset = true;
+                            }
+
+                            if (!Validator.TryValidateObject(e, valContext, error, true))
+                            {
+                                foreach (var err in error)
+                                {
+                                    string key = err.MemberNames.FirstOrDefault();
+                                    if (MSD.Keys.Contains(key) == false)
+                                    {
+                                        MSD.AddModelError($"Entity.{item.Name}.{key}", err.ErrorMessage);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+
                 //验证重复数据
                 ValidateDuplicateData();
             }

@@ -19,6 +19,7 @@ using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
 using System.Text.Json;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Demo
 {

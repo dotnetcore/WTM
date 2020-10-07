@@ -17,43 +17,35 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     {
         private static string _modeName = "oss";
 
-        public WtmOssFileHandler(Configs config, string csName) : base(config, csName)
+        public WtmOssFileHandler(Configs config, IDataContext dc) : base(config, dc)
         {
         }
 
-        public override IWtmFile GetFile(string id, bool withData)
+        public override Stream GetFileData(IWtmFile file)
         {
-            IWtmFile rv;
-            using (var dc = _config.CreateDC(_cs))
+            var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
+            FileHandlerOptions groupInfo = null;
+            if (string.IsNullOrEmpty(file.ExtraInfo))
             {
-                rv = dc.Set<FileAttachment>().CheckID(id).Where(x => x.SaveMode == _modeName).FirstOrDefault();
+                groupInfo = ossSettings?.FirstOrDefault();
             }
-            if(withData == true && rv != null)
+            else
             {
-                var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
-                FileHandlerOptions groupInfo = null;
-                if (string.IsNullOrEmpty(rv.ExtraInfo))
+                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.ExtraInfo.ToLower()).FirstOrDefault();
+                if (groupInfo == null)
                 {
                     groupInfo = ossSettings?.FirstOrDefault();
                 }
-                else
-                {
-                    groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == rv.ExtraInfo.ToLower()).FirstOrDefault();
-                    if (groupInfo == null)
-                    {
-                        groupInfo = ossSettings?.FirstOrDefault();
-                    }
-                }
-                if (groupInfo == null)
-                {
-                    return rv;
-                }
-
-                OssClient client = new OssClient(groupInfo.ServerUrl, groupInfo.Key, groupInfo.Secret);
-                rv.DataStream = new MemoryStream();
-                client.GetObject(new GetObjectRequest(groupInfo.GroupLocation, rv.Path), rv.DataStream);
-                rv.DataStream.Position = 0;
             }
+            if (groupInfo == null)
+            {
+                return null;
+            }
+
+            OssClient client = new OssClient(groupInfo.ServerUrl, groupInfo.Key, groupInfo.Secret);
+            var rv = new MemoryStream();
+            client.GetObject(new GetObjectRequest(groupInfo.GroupLocation, file.Path), rv);
+            rv.Position = 0;
             return rv;
 
         }
@@ -67,7 +59,6 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
-            file.IsTemprory = true;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
@@ -76,7 +67,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             file.FileExt = ext;
 
-            var ossSettings = _config.FileUploadOptions.Settings.Where(x=>x.Key.ToLower() == "oss").Select(x=>x.Value).FirstOrDefault();
+            var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
             FileHandlerOptions groupInfo = null;
             if (string.IsNullOrEmpty(group))
             {
@@ -85,7 +76,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             else
             {
                 groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == group.ToLower()).FirstOrDefault();
-                if(groupInfo == null)
+                if (groupInfo == null)
                 {
                     groupInfo = ossSettings?.FirstOrDefault();
                 }
@@ -104,7 +95,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             else
             {
                 var sub = WtmFileProvider._subDirFunc?.Invoke(this);
-                if(string.IsNullOrEmpty(sub)== false)
+                if (string.IsNullOrEmpty(sub) == false)
                 {
                     pathHeader = Path.Combine(pathHeader, sub);
                 }
@@ -117,11 +108,8 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             {
                 file.Path = fullPath;
                 file.ExtraInfo = groupInfo.GroupName;
-                using (var dc = _config.CreateDC(_cs))
-                {
-                    dc.AddEntity(file);
-                    dc.SaveChanges();
-                }
+                _dc.AddEntity(file);
+                _dc.SaveChanges();
                 return file;
             }
             else
@@ -130,18 +118,17 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
         }
 
-        public override FileAttachment DeleteFile(string id)
+        public override void DeleteFile(IWtmFile file)
         {
-            var old = base.DeleteFile(id);
             var ossSettings = _config.FileUploadOptions.Settings.Where(x => x.Key.ToLower() == "oss").Select(x => x.Value).FirstOrDefault();
             FileHandlerOptions groupInfo = null;
-            if (string.IsNullOrEmpty(old.ExtraInfo))
+            if (string.IsNullOrEmpty(file.ExtraInfo))
             {
                 groupInfo = ossSettings?.FirstOrDefault();
             }
             else
             {
-                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == old.ExtraInfo.ToLower()).FirstOrDefault();
+                groupInfo = ossSettings?.Where(x => x.GroupName.ToLower() == file.ExtraInfo.ToLower()).FirstOrDefault();
                 if (groupInfo == null)
                 {
                     groupInfo = ossSettings?.FirstOrDefault();
@@ -149,15 +136,15 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             }
             if (groupInfo == null)
             {
-                return old;
+                return;
             }
             try
             {
                 OssClient client = new OssClient(groupInfo.ServerUrl, groupInfo.Key, groupInfo.Secret);
-                client.DeleteObject(groupInfo.GroupLocation, old.Path);
+                client.DeleteObject(groupInfo.GroupLocation, file.Path);
             }
             catch { }
-            return old;
+            return;
         }
     }
 

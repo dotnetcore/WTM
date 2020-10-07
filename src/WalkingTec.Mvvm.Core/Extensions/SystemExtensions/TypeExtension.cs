@@ -50,6 +50,24 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return self.IsGeneric(typeof(List<>));
         }
 
+        /// <summary>
+        /// 判断是否为List<>类型
+        /// </summary>
+        /// <param name="self">Type类</param>
+        /// <returns>判断结果</returns>
+        public static bool IsListOf<T>(this Type self)
+        {
+            if (self.IsGeneric(typeof(List<>)) && typeof(T).IsAssignableFrom(self.GenericTypeArguments[0]))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
         #region 判断是否为枚举
 
         /// <summary>
@@ -150,7 +168,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         #endregion
 
-        public static Dictionary<string,string> GetRandomValues(this Type self)
+        public static Dictionary<string, string> GetRandomValues(this Type self)
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
             string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
@@ -160,8 +178,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 string key = pro.Name;
                 string val = "";
                 var notmapped = pro.GetCustomAttribute<NotMappedAttribute>();
-                if (pro.IsPropertyRequired() && notmapped == null && 
-                    pro.PropertyType.IsBoolOrNullableBool() == false && 
+                if (pro.IsPropertyRequired() && notmapped == null &&
+                    pro.PropertyType.IsBoolOrNullableBool() == false &&
                     pro.PropertyType.IsEnumOrNullableEnum() == false &&
                     pro.PropertyType.IsList() == false &&
                     pro.PropertyType.IsSubclassOf(typeof(TopBasePoco)) == false)
@@ -181,17 +199,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             catch { }
                         }
                         Random r = new Random();
-                        val = r.Next(start,end).ToString();
+                        val = r.Next(start, end).ToString();
                     }
                     else if (pro.PropertyType == typeof(string))
                     {
                         var length = pro.GetCustomAttribute<StringLengthAttribute>();
-                        var l = new Random().Next(3,10);
+                        var l = new Random().Next(3, 10);
                         if (length != null && l > length.MaximumLength)
                         {
                             l = length.MaximumLength;
                         }
-                        Random r = new Random();                        
+                        Random r = new Random();
                         for (int i = 0; i < l; i++)
                         {
                             int index = r.Next(pat.Length);
@@ -199,10 +217,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
                         }
                         val = "\"" + val + "\"";
                     }
-                        if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
-                        {
-                            val = "$fk$";
-                        }
+                    if (pros.Where(x => x.Name.ToLower() + "id" == key.ToLower()).Any())
+                    {
+                        val = "$fk$";
+                    }
                     if (val != "")
                     {
                         rv.Add(key, val);

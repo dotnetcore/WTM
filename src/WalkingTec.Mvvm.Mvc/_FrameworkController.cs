@@ -269,7 +269,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadFileRoute")]
         public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, bool IsTemprory = true, string _DONOT_USE_CS = "default")
         {
-            var fh = fp.CreateFileHandler(sm, _DONOT_USE_CS);
+            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
             var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName, subdir);
             return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
@@ -302,7 +302,7 @@ namespace WalkingTec.Mvvm.Mvc
             oimage.GetThumbnailImage(width.Value, height.Value, null, IntPtr.Zero).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             ms.Position = 0;
 
-            var fh = fp.CreateFileHandler(sm?.ToString(), _DONOT_USE_CS);
+            var fh = fp.CreateFileHandler(sm?.ToString(), ConfigInfo.CreateDC(_DONOT_USE_CS));
             var file = fh.Upload(FileData.FileName, ms.Length, ms);
             oimage.Dispose();
             ms.Dispose();
@@ -313,7 +313,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIRichTextBox")]
         public IActionResult UploadForLayUIRichTextBox([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
         {
-            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            var fh = fp.CreateFileHandler(null, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
             var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
             if(file != null)
@@ -333,15 +333,13 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFileName")]
         public IActionResult GetFileName([FromServices] WtmFileProvider fp, Guid id, string _DONOT_USE_CS = "default")
         {
-            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
-            return Ok(fh.GetFileName(id.ToString()));
+            return Ok(fp.GetFileName(id.ToString(), ConfigInfo.CreateDC(_DONOT_USE_CS)));
         }
 
         [ActionDescription("GetFile")]
         public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
-            var file = fh.GetFile(id);
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(_DONOT_USE_CS));
             if(file == null)
             {
                 return new EmptyResult();
@@ -401,8 +399,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
-            var file = fh.GetFile(id);
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(_DONOT_USE_CS));
             string html = string.Empty;
             if (file.FileExt.ToLower() == "pdf")
             {
@@ -759,7 +756,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("UploadForLayUIUEditor")]
         public IActionResult UploadForLayUIUEditor([FromServices] WtmFileProvider fp, string _DONOT_USE_CS = "default", string groupName = null, string subdir = null)
         {
-            var fh = fp.CreateFileHandler(null, _DONOT_USE_CS);
+            var fh = fp.CreateFileHandler(null, ConfigInfo.CreateDC(_DONOT_USE_CS));
             IWtmFile file = null;
             if (Request.Form.Files != null && Request.Form.Files.Count() > 0)
             {

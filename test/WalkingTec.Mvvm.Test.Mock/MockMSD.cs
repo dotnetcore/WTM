@@ -59,6 +59,8 @@ namespace WalkingTec.Mvvm.Test.Mock
         public int Count => _states.Count;
 
         public IEnumerable<string> Keys => _states.Keys;
+
+        bool IModelStateService.IsValid => _states.Count>0?true:false;
     }
 
 }

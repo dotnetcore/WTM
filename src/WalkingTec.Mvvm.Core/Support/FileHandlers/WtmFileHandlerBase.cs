@@ -12,76 +12,26 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     public abstract class WtmFileHandlerBase : IWtmFileHandler
     {
         protected Configs _config;
-        protected string _cs;
+        protected IDataContext _dc;
 
-        public WtmFileHandlerBase(Configs config, string csName)
+        public WtmFileHandlerBase(Configs config, IDataContext dc)
         {
             _config = config;
-            _cs = csName;
-            if (string.IsNullOrEmpty(_cs))
+            _dc = dc;
+            if (_dc == null)
             {
-                _cs = "default";
+                _dc = _config.CreateDC();
             }
         }
 
 
-        public virtual FileAttachment DeleteFile(string id)
+        public virtual void DeleteFile(IWtmFile file)
         {
-            FileAttachment file = null;
-            using (var dc = _config.CreateDC(_cs))
-            {
-                file = dc.Set<FileAttachment>().CheckID(id)
-                    .Select(x=> new FileAttachment
-                    {
-                        ID = x.ID,
-                        ExtraInfo = x.ExtraInfo,
-                        FileExt = x.FileExt,
-                        FileName = x.FileName,
-                        IsTemprory = x.IsTemprory,
-                        Path = x.Path,
-                        SaveMode = x.SaveMode,
-                        Length = x.Length,
-                        UploadTime = x.UploadTime
-                    })
-                    .FirstOrDefault();
-                if (file != null)
-                {
-                    dc.Set<FileAttachment>().Remove(file);
-                    dc.SaveChanges();
-                }
-            }
-            return file;
         }
 
-        public virtual IWtmFile GetFile(string id,bool widhData = true)
+        public virtual Stream GetFileData(IWtmFile file)
         {
-            IWtmFile rv;
-            using (var dc = _config.CreateDC(_cs))
-            {
-                rv = dc.Set<FileAttachment>().CheckID(id).Select(x => new FileAttachment
-                {
-                    ID = x.ID,
-                    IsTemprory = x.IsTemprory,
-                    ExtraInfo = x.ExtraInfo,
-                    FileExt = x.FileExt,
-                    FileName = x.FileName,
-                    Length = x.Length,
-                    Path = x.Path,
-                    SaveMode = x.SaveMode,
-                    UploadTime = x.UploadTime
-                }).FirstOrDefault();
-            }
-            return rv;
-        }
-
-        public virtual string GetFileName(string id)
-        {
-            string rv;
-            using (var dc = _config.CreateDC(_cs))
-            {
-                rv = dc.Set<FileAttachment>().CheckID(id).Select(x => x.FileName).FirstOrDefault();
-            }
-            return rv;
+            return null;
         }
 
         public virtual IWtmFile Upload(string fileName, long fileLength, Stream data, string group=null, string subdir = null, string extra = null)
@@ -89,17 +39,5 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             return null;
         }
 
-        public void SetTemp(string id, bool isTemp)
-        {
-            using (var dc = _config.CreateDC(_cs))
-            {
-                FileAttachment upd = new FileAttachment();
-                upd.SetID(id);
-                upd.IsTemprory = isTemp;
-                dc.UpdateProperty(upd, x => x.IsTemprory);
-                dc.SaveChanges();
-            }
-
-        }
     }
 }

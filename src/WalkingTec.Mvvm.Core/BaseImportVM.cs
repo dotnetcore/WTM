@@ -208,8 +208,7 @@ namespace WalkingTec.Mvvm.Core
                 }
 
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
-                var fh = fp.CreateFileHandler();
-                var file = fh.GetFile(UploadFileId);
+                var file = fp.GetFile(UploadFileId, true, DC);
                 if (file == null)
                 {
                     ErrorListVM.EntityList.Add(new ErrorMessage { Message = Program._localizer["WrongTemplate"] });
@@ -820,6 +819,17 @@ namespace WalkingTec.Mvvm.Core
         /// <returns>成功返回True，失败返回False</returns>
         public virtual bool BatchSaveData()
         {
+            //删除不必要的附件
+            if (DeletedFileIds != null && DeletedFileIds.Count > 0)
+            {
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+
+                foreach (var item in DeletedFileIds)
+                {
+                    fp.DeleteFile(item.ToString(), DC.ReCreate());
+                }
+            }
+
             //进行赋值
             SetEntityList();
             if (ErrorListVM.EntityList.Count > 0)
@@ -893,7 +903,7 @@ namespace WalkingTec.Mvvm.Core
                     (item as PersistPoco).IsValid = true;
                 }
                 //如果是SqlServer数据库，而且没有主子表功能，进行Bulk插入
-                if (ConfigInfo.ConnectionStrings.Where(x=>x.Key == (CurrentCS??"default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
+                if (ConfigInfo.ConnectionStrings.Where(x => x.Key == (CurrentCS ?? "default")).FirstOrDefault().DbType == DBTypeEnum.SqlServer && !HasSubTable && UseBulkSave == true)
                 {
                     ListAdd.Add(item);
                 }
@@ -922,6 +932,12 @@ namespace WalkingTec.Mvvm.Core
                     return false;
                 }
             }
+            if (string.IsNullOrEmpty(UploadFileId) == false)
+            {
+                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                fp.DeleteFile(UploadFileId, DC.ReCreate());
+            }
+
             return true;
         }
 
@@ -949,7 +965,7 @@ namespace WalkingTec.Mvvm.Core
                     var notobject = propertyInfo.PropertyType.Namespace.Equals("System") || propertyInfo.PropertyType.IsEnumOrNullableEnum();
                     if (notmapped == null && notobject)
                     {
-                        string Name = dc.GetFieldName<K>( propertyInfo.Name);
+                        string Name = dc.GetFieldName<K>(propertyInfo.Name);
                         bulkCopy.ColumnMappings.Add(Name, Name);
                         table.Columns.Add(Name, Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType);
                     }
@@ -1214,7 +1230,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 var fh = fp.CreateFileHandler();
-                var fa = fh.GetFile(UploadFileId);
+                var fa = fp.GetFile(UploadFileId, true, DC);
                 xssfworkbook = new XSSFWorkbook(fa.DataStream);
 
                 var propetys = Template.GetType().GetFields().Where(x => x.FieldType == typeof(ExcelPropety)).ToList();

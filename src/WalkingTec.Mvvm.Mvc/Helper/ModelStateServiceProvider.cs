@@ -55,6 +55,8 @@ namespace WalkingTec.Mvvm.Mvc
 
         public IEnumerable<string> Keys => _states.Keys;
 
+        bool IModelStateService.IsValid => _states.IsValid;
+
         public string GetFirstError()
         {
             string rv = "";

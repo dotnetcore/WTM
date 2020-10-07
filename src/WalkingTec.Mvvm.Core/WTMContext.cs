@@ -294,6 +294,23 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public WTMContext(Configs _config, IDataContext dc=null)
+        {
+            _configInfo = _config;
+            _globaInfo = new GlobalData();
+            _dps = new List<IDataPrivilege>();
+            MSD = new BasicMSD();
+            if (dc is NullContext)
+            {
+                _dc = null;
+            }
+            else
+            {
+                _dc = dc;
+            }
+        }
+
+
         public T ReadFromCache<T>(string key, Func<T> setFunc, int? timeout = null)
         {
             if (Cache.TryGetValue(key, out T rv) == false || rv == null)

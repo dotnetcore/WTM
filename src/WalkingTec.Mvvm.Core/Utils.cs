@@ -20,6 +20,8 @@ namespace WalkingTec.Mvvm.Core
     public class Utils
     {
 
+        private static List<Assembly> _allAssemblies;
+
         public static string GetCurrentComma()
         {
             if (CultureInfo.CurrentUICulture.Name == "zh-cn")
@@ -34,13 +36,16 @@ namespace WalkingTec.Mvvm.Core
 
         public static List<Assembly> GetAllAssembly()
         {
-            var rv = new List<Assembly>();
-            var path = Assembly.GetEntryAssembly().Location;
-            var dir = new DirectoryInfo(Path.GetDirectoryName(path));
-
-            var dlls = dir.GetFiles("*.dll", SearchOption.AllDirectories);
-            string[] systemdll = new string[]
+            if (_allAssemblies == null)
             {
+
+                _allAssemblies = new List<Assembly>();
+                var path = Assembly.GetEntryAssembly().Location;
+                var dir = new DirectoryInfo(Path.GetDirectoryName(path));
+
+                var dlls = dir.GetFiles("*.dll", SearchOption.AllDirectories);
+                string[] systemdll = new string[]
+                {
                 "Microsoft.",
                 "System.",
                 "Swashbuckle.",
@@ -49,20 +54,21 @@ namespace WalkingTec.Mvvm.Core
                 "Oracle.",
                 "Pomelo.",
                 "SQLitePCLRaw."
-            };
+                };
 
-            foreach (var dll in dlls)
-            {
-                try
+                foreach (var dll in dlls)
                 {
-                    if (systemdll.Any(x=> dll.Name.StartsWith(x)) == false)
+                    try
                     {
-                        rv.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
+                        if (systemdll.Any(x => dll.Name.StartsWith(x)) == false)
+                        {
+                            _allAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
+                        }
                     }
+                    catch { }
                 }
-                catch { }
             }
-            return rv;
+            return _allAssemblies;
         }
 
         public static SimpleMenu FindMenu(string url)

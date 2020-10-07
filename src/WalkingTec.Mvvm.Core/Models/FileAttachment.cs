@@ -32,8 +32,6 @@ namespace WalkingTec.Mvvm.Core
 
         public DateTime UploadTime { get; set; }
 
-        public bool IsTemprory { get; set; }
-
         public string SaveMode { get; set; }
 
         public byte[] FileData { get; set; }

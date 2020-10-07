@@ -19,6 +19,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         public string UploadGroupName { get; set; }
         public string UploadSubdir { get; set; }
         public string ConnectionString { get; set; }
+        public string UploadMode { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -49,6 +50,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             if (string.IsNullOrEmpty(UploadSubdir) == false)
             {
                 url = url.AppendQuery($"subdir={UploadSubdir}");
+            }
+            if (string.IsNullOrEmpty(UploadMode) == false)
+            {
+                url = url.AppendQuery($"sm={UploadMode}");
             }
 
 

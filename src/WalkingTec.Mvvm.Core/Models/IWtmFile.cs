@@ -15,8 +15,6 @@ namespace WalkingTec.Mvvm.Core.Models
 
         DateTime UploadTime { get; set; }
 
-        bool IsTemprory { get; set; }
-
         string SaveMode { get; set; }
         string ExtraInfo { get; set; }
         string Url { get; set; }

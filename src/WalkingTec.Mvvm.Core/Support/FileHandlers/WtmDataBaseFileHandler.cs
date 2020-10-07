@@ -14,42 +14,22 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     {
         private static string _modeName = "database";
 
-        public WtmDataBaseFileHandler(Configs config, string csName) : base(config, csName)
+        public WtmDataBaseFileHandler(Configs config, IDataContext dc) : base(config, dc)
         {
         }
 
-        public override IWtmFile GetFile(string id, bool withData = true)
+        public override Stream GetFileData(IWtmFile file)
         {
-            IWtmFile rv;
-            using (var dc = _config.CreateDC(_cs))
+            var rv = _dc.Set<FileAttachment>().CheckID(file.GetID()).FirstOrDefault();
+            if (rv != null)
             {
-                if (withData == true)
-                {
-                    rv = dc.Set<FileAttachment>().CheckID(id).Where(x => x.SaveMode == _modeName).FirstOrDefault();
-                    rv.DataStream = new MemoryStream((rv as FileAttachment).FileData);
-                }
-                else
-                {
-                    rv = dc.Set<FileAttachment>().CheckID(id).Where(x => x.SaveMode == _modeName).Select(x=> new FileAttachment {
-                        ID = x.ID,
-                        IsTemprory = x.IsTemprory,
-                        ExtraInfo = x.ExtraInfo,
-                        FileExt = x.FileExt,
-                        FileName = x.FileName,
-                        Length = x.Length,
-                        Path = x.Path,
-                        SaveMode = x.SaveMode,
-                        UploadTime = x.UploadTime
-                    }).FirstOrDefault();
-
-                }
+                return new MemoryStream((rv as FileAttachment).FileData);
             }
-            return rv;
-
+            return null;
         }
 
 
-        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string groupName= null, string subdir = null, string extra = null)
+        public override IWtmFile Upload(string fileName, long fileLength, Stream data, string groupName = null, string subdir = null, string extra = null)
         {
             FileAttachment file = new FileAttachment();
             file.FileName = fileName;
@@ -57,7 +37,6 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
-            file.IsTemprory = true;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
@@ -70,11 +49,8 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 data.CopyTo(dataStream);
                 file.FileData = dataStream.ToArray();
             }
-            using (var dc = _config.CreateDC(_cs))
-            {
-                dc.AddEntity(file);
-                dc.SaveChanges();
-            }
+                _dc.AddEntity(file);
+                _dc.SaveChanges();
             return file;
         }
     }

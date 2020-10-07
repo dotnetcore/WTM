@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public SchoolTypeEnum? SchoolType { get; set; }
 
         [Display(Name = "备注")]
-        [Required]
+        [Required(ErrorMessage = "{0}required")]
         public string Remark { get; set; }
 
         [Display(Name = "时间")]

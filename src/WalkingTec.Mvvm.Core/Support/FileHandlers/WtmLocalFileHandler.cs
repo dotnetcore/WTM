@@ -15,23 +15,13 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
     {
         private static string _modeName = "local";
 
-        public WtmLocalFileHandler(Configs config, string csName) : base(config, csName)
+        public WtmLocalFileHandler(Configs config, IDataContext dc) : base(config, dc)
         {
         }
 
-        public override IWtmFile GetFile(string id, bool withData)
+        public override Stream GetFileData(IWtmFile file)
         {
-            IWtmFile rv;
-            using (var dc = _config.CreateDC(_cs))
-            {
-                rv = dc.Set<FileAttachment>().CheckID(id).Where(x => x.SaveMode == _modeName).FirstOrDefault();
-            }
-            if (withData == true && rv != null)
-            {
-                rv.DataStream = File.OpenRead(rv.Path);
-            }
-            return rv;
-
+            return File.OpenRead(file.Path);          
         }
 
 
@@ -43,7 +33,6 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             file.UploadTime = DateTime.Now;
             file.SaveMode = _modeName;
             file.ExtraInfo = extra;
-            file.IsTemprory = true;
             var ext = string.Empty;
             if (string.IsNullOrEmpty(fileName) == false)
             {
@@ -62,7 +51,7 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
             else {
                groupdir = localSettings?.Where(x => x.GroupName.ToLower() == group.ToLower()).FirstOrDefault().GroupLocation;
             }
-            if (string.IsNullOrEmpty(group))
+            if (string.IsNullOrEmpty(groupdir))
             {
                 groupdir = "./uploads";
             }
@@ -88,31 +77,26 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
                 Directory.CreateDirectory(pathHeader);
             }
             var fullPath = Path.Combine(pathHeader, $"{Guid.NewGuid().ToNoSplitString()}.{file.FileExt}");
-            file.Path = fullPath;
+            file.Path = Path.GetFullPath(fullPath);
             using (var fileStream = File.Create(fullPath))
             {
                 data.CopyTo(fileStream);
             }
-            using (var dc = _config.CreateDC(_cs))
-            {
-                dc.AddEntity(file);
-                dc.SaveChanges();
-            }
+                _dc.AddEntity(file);
+                _dc.SaveChanges();
             return file;
         }
 
-        public override FileAttachment DeleteFile(string id)
+        public override void DeleteFile(IWtmFile file)
         {
-            var old = base.DeleteFile(id);
-            if (string.IsNullOrEmpty(old?.Path) == false)
+            if (string.IsNullOrEmpty(file?.Path) == false)
             {
                 try
                 {
-                    File.Delete(old?.Path);
+                    File.Delete(file?.Path);
                 }
                 catch { }
             }
-            return old;
         }
     }
 

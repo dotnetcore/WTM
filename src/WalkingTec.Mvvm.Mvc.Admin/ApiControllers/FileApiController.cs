@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("UploadFile")]
         public IActionResult Upload([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir=null,string csName= null)
         {
-            var fh = fp.CreateFileHandler(sm,csName);
+            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(csName));
             var FileData = Request.Form.Files[0];
             var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir);
             return Ok(new { Id = file.GetID(), Name = file.FileName });
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Upload(fp,sm,groupName,csName);
             }
-            var fh = fp.CreateFileHandler(sm,csName);
+            var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(csName));
             var FileData = Request.Form.Files[0];
 
             Image oimage = Image.FromStream(FileData.OpenReadStream());
@@ -67,18 +67,16 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFileName")]
-        public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
+        public IActionResult GetFileName([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var fh = fp.CreateFileHandler(sm,csName);
-            return Ok(fh.GetFileName(id));
+            return Ok(fp.GetFileName(id, ConfigInfo.CreateDC(csName)));
         }
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("GetFile")]
-        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
+        public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var fh = fp.CreateFileHandler(sm, csName);
-            var file = fh.GetFile(id);
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
 
 
             if (file == null)
@@ -91,10 +89,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DownloadFile")]
-        public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
+        public IActionResult DownloadFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var fh = fp.CreateFileHandler(sm, csName);
-            var file = fh.GetFile(id);
+            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
             if (file == null)
             {
                 return BadRequest(Core.Program._localizer["FileNotFound"]);
@@ -114,10 +111,9 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [HttpGet("[action]/{id}")]
         [ActionDescription("DeleteFile")]
-        public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string sm = null, string csName = null)
+        public IActionResult DeletedFile([FromServices] WtmFileProvider fp, string id, string csName = null)
         {
-            var fh = fp.CreateFileHandler(sm, csName);
-            fh.DeleteFile(id);
+            fp.DeleteFile(id, ConfigInfo.CreateDC(csName));
             return Ok();
         }
     }
