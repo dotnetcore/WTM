@@ -273,11 +273,15 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd, IHttpContextAccessor _http, IUIService _ui, List<IDataPrivilege> _dp,IDataContext dc)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null)
         {
             _configInfo = _config.Value;
-            _globaInfo = _gd;
-            _httpContext = _http.HttpContext;
+            _globaInfo = _gd ?? new GlobalData();
+            _httpContext = _http?.HttpContext;
+            if(_httpContext == null)
+            {
+                MSD = new BasicMSD();
+            }
             _uiservice = _ui;
             if (_dp == null)
             {
@@ -430,7 +434,7 @@ namespace WalkingTec.Mvvm.Core
 
 
 
-        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Debug)
+        public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
         {
             var log = this.Log.GetActionLog();
             log.LogType = logtype;
@@ -451,7 +455,17 @@ namespace WalkingTec.Mvvm.Core
                 default:
                     break;
             }
-            GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+
+            ILogger logger = null;
+            if(HttpContext != null)
+            {
+                logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
+            }
+            else
+            {
+
+            }
+            logger.Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
                 return $@"
 ===WTM Log===
 内容:{a.Remark}

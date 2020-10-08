@@ -24,8 +24,9 @@ namespace WalkingTec.Mvvm.Core
     public class WTMLoggerProvider : ILoggerProvider
     {
         private CS cs = null;
+        private LoggerFilterOptions logConfig;
 
-        public WTMLoggerProvider(IOptions<Configs> _configs)
+        public WTMLoggerProvider(IOptions<Configs> _configs, IOptions<LoggerFilterOptions> _logConfig)
         {
             if (_configs.Value != null)
             {
@@ -38,12 +39,13 @@ namespace WalkingTec.Mvvm.Core
                 {
                     cs = _configs.Value.ConnectionStrings.FirstOrDefault();
                 }
+                logConfig = _logConfig.Value;
             }
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new WTMLogger(categoryName, cs);
+            return new WTMLogger(categoryName, cs, logConfig);
         }
         public void Dispose() { }
     }
@@ -52,17 +54,22 @@ namespace WalkingTec.Mvvm.Core
     {
         private readonly string categoryName;
         private CS cs;
+        private LoggerFilterOptions logConfig;
 
-        public WTMLogger(string categoryName, CS cs)
+        public WTMLogger(string categoryName, CS cs, LoggerFilterOptions logConfig)
         {
             this.categoryName = categoryName;
             this.cs = cs;
+            this.logConfig = logConfig;
         }
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            var levels = GlobalServices.GetRequiredService<IOptionsMonitor<LoggerFilterOptions>>();
-            var l = levels.CurrentValue.Rules.Where(x =>
+            if(logConfig == null)
+            {
+                return false;
+            }
+            var level = logConfig.Rules.Where(x =>
                 x.ProviderName == "WTM" &&
                     (
                       (x.CategoryName != null &&  categoryName.ToLower().StartsWith(x.CategoryName.ToLower()) ) ||
@@ -70,11 +77,11 @@ namespace WalkingTec.Mvvm.Core
                     )
                 )
                 .Select(x => x.LogLevel).FirstOrDefault();
-            if (l == null)
+            if (level == null)
             {
-                l = LogLevel.Error;
+                level = LogLevel.Error;
             }
-            if (logLevel >= l)
+            if (logLevel >= level)
             {
                 return true;
             }
@@ -106,8 +113,8 @@ namespace WalkingTec.Mvvm.Core
                         Remark = formatter?.Invoke(state, exception),
                         CreateTime = DateTime.Now,
                         ActionTime = DateTime.Now,
-                        ActionName = this.categoryName,
-                        ModuleName = "System",
+                        ActionName = "WtmLog",
+                        ModuleName = "WtmLog",
                         LogType = ll
                     };
                 }
@@ -118,13 +125,11 @@ namespace WalkingTec.Mvvm.Core
 
                 if (cs != null)
                 {
-                    using (var dc = cs.CreateDC())
+                    using var dc = cs.CreateDC();
+                    if (dc != null)
                     {
-                        if (dc != null)
-                        {
-                            dc.AddEntity<ActionLog>(log);
-                            dc.SaveChanges();
-                        }
+                        dc.AddEntity<ActionLog>(log);
+                        dc.SaveChanges();
                     }
                 }
             }

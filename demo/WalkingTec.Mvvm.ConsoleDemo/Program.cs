@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
@@ -12,24 +14,46 @@ namespace WalkingTec.Mvvm.ConsoleDemo
 {
     class Program
     {
+        public static ServiceProvider Provider { get; set; }
+
         static void Main(string[] args)
         {
             var configBuilder = new ConfigurationBuilder();
             IConfigurationRoot ConfigRoot = configBuilder.WTMConfig(null).Build();
-            Configs config = ConfigRoot.Get<Configs>();
-            WTMContext wtmContext = new WTMContext(config);
+            var services = new ServiceCollection();
+            services.Configure<Configs>(ConfigRoot);
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddConfiguration(ConfigRoot.GetSection("Logging")).AddConsole()
+                       .AddDebug()
+                       .AddWTMLogger();
+            });
+            services.AddScoped<WTMContext>();
+            Provider = services.BuildServiceProvider();
 
-            AddSchool(wtmContext);
+            AddSchool();
+
+            var logger = Provider.GetRequiredService<ILogger<ActionLog>>();
+            logger.LogInformation("School Added");
         }
 
-        static void AddSchool(WTMContext context)
+        static T CreateVM<T>() where T : IBaseVM, new()
         {
-            WtmFileProvider fp = new WtmFileProvider(context.ConfigInfo);
+            T rv = new T();
+            rv.WtmContext = Provider.GetRequiredService<WTMContext>();
+            return rv;
+        }
+
+        static void AddSchool()
+        {
+            SchoolVM vm = CreateVM<SchoolVM>();
+
+            WtmFileProvider fp = new WtmFileProvider(vm.WtmContext.ConfigInfo);
             var fh = fp.CreateFileHandler();
             var fs = File.OpenRead("C:\\Users\\michael\\Pictures\\vue1.png");
             var file = fh.Upload("vue1.png", fs.Length, fs);
-            SchoolVM vm = new SchoolVM();
-            vm.WtmContext = context;
+
             vm.Entity = new Demo.Models.School
             {
                 SchoolCode = "111",

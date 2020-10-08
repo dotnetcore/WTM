@@ -33,8 +33,8 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 vm.ITCode = "admin";
                 vm.Password = "000000";
             }
-            //WtmContext.DoLog("LogTest");
-            var logger = GlobalServices.GetRequiredService<ILogger<Program>>();
+           // WtmContext.DoLog("LogTest");
+            var logger = GlobalServices.GetRequiredService<ILogger<ActionLog>>();
             logger.LogInformation("test");
             return View(vm);
         }

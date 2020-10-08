@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.ConfigOptions;
 
 namespace WalkingTec.Mvvm.Core
@@ -458,7 +459,6 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #endregion
-
 
         public IDataContext CreateDC(string csName = null)
         {

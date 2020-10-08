@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -227,32 +228,37 @@ namespace WalkingTec.Mvvm.Mvc
             log.ActionTime = DateTime.Now;
             log.ITCode = WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
 
-                var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
-                var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
-                //给日志的多语言属性赋值
-                log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
-                log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
-                if (postDes != null)
+            var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+            var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
+            var postDes = ex.Error.TargetSite.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
+            //给日志的多语言属性赋值
+            log.ModuleName = controllerDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.DeclaringType.Name.Replace("Controller", string.Empty);
+            log.ActionName = actionDes?.GetDescription(ex.Error.TargetSite.DeclaringType) ?? ex.Error.TargetSite.Name;
+            if (postDes != null)
+            {
+                log.ActionName += "[P]";
+            }
+            log.ActionUrl = ex.Path;
+            log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
+            log.Remark = ex.Error.ToString();
+            if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
+            {
+                log.Remark = log.Remark.Substring(0, 2000);
+            }
+            DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
+            if (starttime != null)
+            {
+                log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
+            }
+            var logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
+            if (logger != null)
+            {
+                logger.Log<ActionLog>(LogLevel.Error, new EventId(), log, null, (a, b) =>
                 {
-                    log.ActionName += "[P]";
-                }
-                log.ActionUrl = ex.Path;
-                log.IP = HttpContext.Connection.RemoteIpAddress.ToString();
-                log.Remark = ex.Error.ToString();
-                if (string.IsNullOrEmpty(log.Remark) == false && log.Remark.Length > 2000)
-                {
-                    log.Remark = log.Remark.Substring(0, 2000);
-                }
-                DateTime? starttime = HttpContext.Items["actionstarttime"] as DateTime?;
-                if (starttime != null)
-                {
-                    log.Duration = DateTime.Now.Subtract(starttime.Value).TotalSeconds;
-                }
-                GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>( LogLevel.Error, new EventId(), log, null, (a, b) => {
                     return a.GetLogString();
                 });
-            
+            }
+
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
@@ -271,13 +277,13 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
-            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName, subdir);
+            var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
             return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
         }
 
         [HttpPost]
         [ActionDescription("UploadFileRoute")]
-        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null,string subdir=null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
+        public IActionResult UploadImage([FromServices] WtmFileProvider fp, string sm = null, string groupName = null, string subdir = null, bool IsTemprory = true, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
             if (width == null && height == null)
             {
@@ -288,7 +294,7 @@ namespace WalkingTec.Mvvm.Mvc
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return Json(new {Code=404, Data = new { Id = string.Empty, Name = string.Empty } });
+                return Json(new { Code = 404, Data = new { Id = string.Empty, Name = string.Empty } });
             }
             if (width == null)
             {
@@ -316,7 +322,7 @@ namespace WalkingTec.Mvvm.Mvc
             var fh = fp.CreateFileHandler(null, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
             var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
-            if(file != null)
+            if (file != null)
             {
                 string url = $"/_Framework/GetFile?id={file.GetID()}&stream=true&_DONOT_USE_CS={CurrentCS}";
                 return Content($"{{\"code\": 0 , \"msg\": \"\", \"data\": {{\"src\": \"{url}\"}}}}");
@@ -339,8 +345,8 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetFile")]
         public IActionResult GetFile([FromServices] WtmFileProvider fp, string id, bool stream = false, string _DONOT_USE_CS = "default", int? width = null, int? height = null)
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(_DONOT_USE_CS));
-            if(file == null)
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            if (file == null)
             {
                 return new EmptyResult();
             }
@@ -399,7 +405,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("ViewFile")]
         public IActionResult ViewFile([FromServices] WtmFileProvider fp, string id, string width, string _DONOT_USE_CS = "default")
         {
-            var file = fp.GetFile(id,true, ConfigInfo.CreateDC(_DONOT_USE_CS));
+            var file = fp.GetFile(id, true, ConfigInfo.CreateDC(_DONOT_USE_CS));
             string html = string.Empty;
             if (file.FileExt.ToLower() == "pdf")
             {
@@ -648,7 +654,7 @@ namespace WalkingTec.Mvvm.Mvc
             return WtmContext.ReadFromCache<string>("githubstar", () =>
             {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
-                return s==null? "" :s.stargazers_count.ToString();
+                return s == null ? "" : s.stargazers_count.ToString();
             }, 1800);
         }
 
@@ -657,7 +663,7 @@ namespace WalkingTec.Mvvm.Mvc
         public ActionResult GetGithubInfo()
         {
             var rv = WtmContext.ReadFromCache<string>("githubinfo", () =>
-            {               
+            {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return JsonSerializer.Serialize(s);
             }, 1800);
@@ -762,14 +768,14 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 //通过文件流方式上传附件
                 var FileData = Request.Form.Files[0];
-                file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(),groupName,subdir);
+                file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
             }
             else if (Request.Form.Keys != null && Request.Form.ContainsKey("FileID"))
             {
                 //通过Base64方式上传附件
                 var FileData = Convert.FromBase64String(Request.Form["FileID"]);
                 MemoryStream MS = new MemoryStream(FileData);
-                file = fh.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS,groupName,subdir);
+                file = fh.Upload("SCRAWL_" + DateTime.Now.ToString("yyyyMMddHHmmssttt") + ".jpg", FileData.Length, MS, groupName, subdir);
                 MS.Dispose();
             }
 

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using WalkingTec.Mvvm.Core.Support.Json;
 using System.Text.Json;
 using WalkingTec.Mvvm.Core.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WalkingTec.Mvvm.Mvc.Filters
 {
@@ -366,9 +367,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                     try
                     {
-                        GlobalServices.GetRequiredService<ILogger<ActionLog>>().Log<ActionLog>(LogLevel.Information, new EventId(), log, null, (a,b)=> {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
+                    if (logger != null)
+                    {
+                        logger.Log<ActionLog>(LogLevel.Information, new EventId(), log, null, (a, b) =>
+                        {
                             return a.GetLogString();
                         });
+                    }
                     }
                     catch { }
             }
