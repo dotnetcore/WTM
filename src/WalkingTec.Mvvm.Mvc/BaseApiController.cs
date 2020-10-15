@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -325,6 +326,11 @@ namespace WalkingTec.Mvvm.Mvc
             }
         }
         #endregion
+
+        public JsonResult JsonMore(object data, int statusCode = StatusCodes.Status200OK, string msg = "success")
+        {
+            return new JsonResult(new JsonResultT<object> { Msg = msg, Code = statusCode, Data = data });
+        }
 
     }
 

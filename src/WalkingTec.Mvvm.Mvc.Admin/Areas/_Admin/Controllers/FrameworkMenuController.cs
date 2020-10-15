@@ -174,7 +174,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             var m = modules.Where(x => x.FullName == Id).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
             var AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
             AllActions.ForEach(x => x.Selected = true);
-            return Json(AllActions);
+            return JsonMore(AllActions);
         }
 
         /// <summary>
@@ -188,9 +188,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public IActionResult GetIconFontItems(string id)
         {
             if (!string.IsNullOrEmpty(id) && IconFontsHelper.IconFontDicItems.ContainsKey(id))
-                return Json(IconFontsHelper.IconFontDicItems[id]);
+                return JsonMore(IconFontsHelper.IconFontDicItems[id]);
             else
-                return Json(null);
+                return JsonMore(null);
         }
 
     }

@@ -145,7 +145,7 @@ namespace WalkingTec.Mvvm.Mvc
             var vm = CreateVM(_DONOT_USE_VMNAME, id, null, true) as IBaseCRUDVM<TopBasePoco>;
             vm.Entity.SetPropertyValue(field, value);
             DC.SaveChanges();
-            return Json("Success");
+            return JsonMore("Success");
         }
 
         #region Import/Export Excel
@@ -278,7 +278,7 @@ namespace WalkingTec.Mvvm.Mvc
             var fh = fp.CreateFileHandler(sm, ConfigInfo.CreateDC(_DONOT_USE_CS));
             var FileData = Request.Form.Files[0];
             var file = fh.Upload(FileData.FileName, FileData.Length, FileData.OpenReadStream(), groupName, subdir);
-            return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
+            return JsonMore(new { Id = file.GetID(), Name = file.FileName});
         }
 
         [HttpPost]
@@ -294,7 +294,7 @@ namespace WalkingTec.Mvvm.Mvc
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return Json(new { Code = 404, Data = new { Id = string.Empty, Name = string.Empty } });
+                return JsonMore(new { Id = string.Empty, Name = string.Empty }, StatusCodes.Status404NotFound);
             }
             if (width == null)
             {
@@ -312,7 +312,7 @@ namespace WalkingTec.Mvvm.Mvc
             var file = fh.Upload(FileData.FileName, ms.Length, ms);
             oimage.Dispose();
             ms.Dispose();
-            return Json(new { Code = 200, Data = new { Id = file.GetID(), Name = file.FileName } });
+            return JsonMore(new { Id = file.GetID(), Name = file.FileName });
         }
 
         [HttpPost]
@@ -804,7 +804,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             if (ConfigInfo.UEditorOptions == null)
                 throw new Exception($"Unregistered service: {nameof(ConfigInfo.UEditorOptions)}");
-            return Json(new { Code = 200, Data = ConfigInfo.UEditorOptions, Msg = "success" });
+            return JsonMore(ConfigInfo.UEditorOptions);
         }
 
         [Public]

@@ -99,10 +99,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 var unprotectedData = _dataProtector.Unprotect(protectedData);
 
                 string cookieData = Encoding.UTF8.GetString(unprotectedData);
-                return Json(cookieData);
+                return JsonMore(cookieData);
             }
             else
-                return Json("No Data");
+                return JsonMore("No Data");
         }
 
         [AllowAnonymous]

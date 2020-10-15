@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             {
                 AllItems = dps.GetItemList(DC, WtmContext);
             }
-            return Json(AllItems);
+            return JsonMore(AllItems);
         }
 
         [ActionDescription("Export")]
