@@ -265,7 +265,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 {
                     Filter.Add("_DONOT_USE_SUBMIT", SubmitFunc);
                 }
-                if (!string.IsNullOrEmpty(TriggerUrl) && (!MultiSelect.HasValue || !MultiSelect.Value))
+                if (!string.IsNullOrEmpty(TriggerUrl) && LinkField != null)
                 {
                     Filter.Add("_DONOT_USE_LINK_FIELD_MODEL", LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
                     Filter.Add("_DONOT_USE_LINK_FIELD", LinkField.Name);
