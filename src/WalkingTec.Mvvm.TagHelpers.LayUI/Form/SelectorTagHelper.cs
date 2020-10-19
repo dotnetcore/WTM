@@ -21,6 +21,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
         /// </summary>
         public string EmptyText { get; set; }
 
+        public ModelExpression LinkField { get; set; }
+
+        public string TriggerUrl { get; set; }
+
         /// <summary>
         /// 按钮文本
         /// </summary>
@@ -260,6 +264,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 if (!string.IsNullOrEmpty(SubmitFunc))
                 {
                     Filter.Add("_DONOT_USE_SUBMIT", SubmitFunc);
+                }
+                if (!string.IsNullOrEmpty(TriggerUrl) && LinkField != null)
+                {
+                    Filter.Add("_DONOT_USE_LINK_FIELD_MODEL", LinkField.ModelExplorer.Container.ModelType.Name + "." + LinkField.Name);
+                    Filter.Add("_DONOT_USE_LINK_FIELD", LinkField.Name);
+                    Filter.Add("_DONOT_USE_TRIGGER_URL", TriggerUrl);
                 }
                 if (listVM.Searcher != null)
                 {

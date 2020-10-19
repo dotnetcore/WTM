@@ -3,9 +3,11 @@
 @using Newtonsoft.Json;
 @{
     var tempvar = $"var_{Guid.NewGuid().ToNoSplitString()}";
+    var linkscript = "";
+
 }
 
-  <script>
+<script>
     function submitSelect() {
         var res = []
             ,multiSel = @(ViewBag.MultiSel.ToString().ToLower())
@@ -35,6 +37,18 @@
         }
         $("#@(ViewBag.SelId)_Display").val(displayStrArr.join(","));
         $("#@(ViewBag.SelId)_Display").after(hiddenStrArr.join(''));
+        @if (ViewBag.TriggerUrl != null)
+        {
+         
+           linkscript = $@"   
+            var url = '{ViewBag.TriggerUrl}?t=' + new Date().getTime();
+            for (var i = 0; i < selected.length; i++) {{
+              url += '&id=' +selected[i]['{ViewBag.ValName}'];
+              }}
+            ff.LinkedChange(url, '{WalkingTec.Mvvm.Core.Utils.GetIdByName(ViewBag.LinkFieldModel)}', '{ViewBag.LinkField}');
+  ";
+          }
+      @Html.Raw(linkscript);
     }
 
 
@@ -78,7 +92,7 @@
         }
         wtVar_@(Model.UniqueId).config.where.Ids = ids;
     }
-  </script>
+</script>
 
 <wt:container style="margin:0px 10px 0px 10px" class='donotuse_pdiv'>
     <div style="height:10px">&nbsp;</div>

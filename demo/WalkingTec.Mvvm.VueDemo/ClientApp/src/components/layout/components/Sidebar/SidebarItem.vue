@@ -140,14 +140,11 @@ export default class extends Vue {
 
         .el-submenu {
             overflow: hidden;
-
             & > .el-submenu__title {
                 padding: 0px !important;
-
                 .el-submenu__icon-arrow {
                     display: none;
                 }
-
                 & > span {
                     visibility: hidden;
                 }
@@ -166,6 +163,19 @@ export default class extends Vue {
         display: inline-block;
         font-size: 18px;
         min-width: 24px;
+    }
+}
+.el-menu--collapse .el-menu-item span,
+.el-menu--collapse .el-submenu > .el-submenu__title span {
+    &.i-icon {
+        width: 1em;
+        height: 1em;
+        margin-right: 5px;
+        color: #909399;
+        font-size: 18px;
+        overflow: inherit;
+        visibility: inherit;
+        vertical-align: baseline;
     }
 }
 </style>
