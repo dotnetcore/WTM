@@ -35,6 +35,10 @@
         }
         $("#@(ViewBag.SelId)_Display").val(displayStrArr.join(","));
         $("#@(ViewBag.SelId)_Display").after(hiddenStrArr.join(''));
+        @if (ViewBag.TriggerUrl != null)
+        {
+          @: ff.LinkedChange('@ViewBag.TriggerUrl/'+selected[0]['@ViewBag.ValName'], '@WalkingTec.Mvvm.Core.Utils.GetIdByName(@ViewBag.LinkFieldModel)', '@ViewBag.LinkField');
+        }
     }
 
 
