@@ -11,6 +11,7 @@ using WalkingTec.Mvvm.Demo.ViewModels.HomeVMs;
 using WalkingTec.Mvvm.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -36,6 +37,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
            // WtmContext.DoLog("LogTest");
             var logger = GlobalServices.GetRequiredService<ILogger<ActionLog>>();
             logger.LogInformation("test");
+            var test = WtmContext.FreeSql.Select<City>().CheckEqual("abc", x => x.Name).ToList();
             return View(vm);
         }
 

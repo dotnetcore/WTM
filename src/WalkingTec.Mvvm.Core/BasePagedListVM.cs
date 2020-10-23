@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Extensions;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using NpgsqlTypes;

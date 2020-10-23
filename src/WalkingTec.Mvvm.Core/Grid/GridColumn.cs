@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Newtonsoft.Json;
+using System.Text.Json;
 using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
@@ -412,7 +412,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     if (needFormat == false)
                     {
-                        rv = JsonConvert.SerializeObject(col);
+                        rv = JsonSerializer.Serialize(col);
                     }
                     else
                     {

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
 {
+    [Table("Cities")]
     public class City : TopBasePoco, ITreeData<City>
     {
         [Display(Name = "名称")]
@@ -20,6 +22,9 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "父级")]
         public Guid? ParentId { get; set; }
+
+        [Display(Name = "test")]
+        public string Test { get; set; }
 
     }
 }

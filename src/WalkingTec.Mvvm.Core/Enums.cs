@@ -38,6 +38,7 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public enum TabModeEnum { Default, Simple }
 
+    public enum OrmTypeEnum { EF,FreeSql}
     /// <summary>
     /// Notification出现的位置
     /// </summary>

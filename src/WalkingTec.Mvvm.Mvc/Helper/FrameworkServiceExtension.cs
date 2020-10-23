@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,6 +10,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
+using FreeSql;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -466,6 +468,32 @@ namespace WalkingTec.Mvvm.Mvc
             DataContextFilter._csfunc = op.CsSelector;
             WtmFileProvider._subDirFunc = op.FileSubDirSelector;
             services.TryAddScoped<IDataContext, NullContext>();
+            IdleBus<IFreeSql> ib = new IdleBus<IFreeSql>(TimeSpan.FromMinutes(10));
+            foreach (var item in WtmConfigs?.ConnectionStrings)
+            {
+                switch (item.DbType)
+                {
+                    case DBTypeEnum.SqlServer:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.SqlServer, item.Value).UseAutoSyncStructure(true).Build());
+                        break;
+                    case DBTypeEnum.MySql:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.MySql, item.Value).Build());
+                        break;
+                    case DBTypeEnum.PgSql:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.PostgreSQL, item.Value).Build());
+                        break;
+                    case DBTypeEnum.Oracle:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.Oracle, item.Value).Build());
+                        break;
+                    case DBTypeEnum.SQLite:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.Sqlite, item.Value).Build());
+                        break;
+                    default:
+                        ib.Register(item.Key, () => new FreeSqlBuilder().UseConnectionString(DataType.SqlServer, item.Value).UseAutoSyncStructure(true).Build());
+                        break;
+                }
+            }
+            services.AddSingleton(ib);
             services.AddScoped<WTMContext>();
             services.AddSingleton<WtmFileProvider>();
             GlobalServices.SetServiceProvider(services.BuildServiceProvider());
@@ -516,7 +544,6 @@ namespace WalkingTec.Mvvm.Mvc
                 y.ValueLengthLimit = int.MaxValue - 20480;
                 y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
             });
-
             return services;
         }
         public static IServiceCollection AddWtmAuthentication(this IServiceCollection services)

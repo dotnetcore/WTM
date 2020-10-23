@@ -134,6 +134,15 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        private IdleBus<IFreeSql> _freesqlib;
+
+        public IFreeSql FreeSql
+        {
+            get
+            {
+                return CreateFreeSql();
+            }
+        }
         #endregion
 
         #region Current User
@@ -273,7 +282,7 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd ?? new GlobalData();
@@ -296,9 +305,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 _dc = dc;
             }
+            _freesqlib = ib;
         }
 
-        public WTMContext(Configs _config, IDataContext dc=null)
+        public WTMContext(Configs _config, IDataContext dc=null, IdleBus<IFreeSql> ib =null)
         {
             _configInfo = _config;
             _globaInfo = new GlobalData();
@@ -312,6 +322,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 _dc = dc;
             }
+            _freesqlib = ib;
         }
 
 
@@ -340,9 +351,9 @@ namespace WalkingTec.Mvvm.Core
         }
 
         #region CreateDC
-        public virtual IDataContext CreateDC(bool isLog = false)
+        public virtual IDataContext CreateDC(bool isLog = false, string cskey = null)
         {
-            string cs = CurrentCS;
+            string cs =  cskey??CurrentCS;
             if (isLog == true)
             {
                 if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
@@ -360,6 +371,28 @@ namespace WalkingTec.Mvvm.Core
             }
             return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
         }
+
+        public virtual IFreeSql CreateFreeSql(bool isLog = false, string cskey = null)
+        {
+            string cs = cskey?? CurrentCS;
+            if (isLog == true)
+            {
+                if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
+                {
+                    cs = "defaultlog";
+                }
+                else
+                {
+                    cs = "default";
+                }
+            }
+            if (cs == null)
+            {
+                cs = "default";
+            }
+            return _freesqlib?.Get(cs);
+        }
+
 
         #endregion
 

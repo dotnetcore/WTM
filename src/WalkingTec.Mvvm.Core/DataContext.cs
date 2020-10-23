@@ -68,6 +68,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
             //用户和用户搜索条件级联删除
@@ -75,7 +76,6 @@ namespace WalkingTec.Mvvm.Core
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
-            base.OnModelCreating(modelBuilder);
         }
 
 
@@ -537,7 +537,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            if(DBType == DBTypeEnum.Oracle)
+            if (DBType == DBTypeEnum.Oracle)
             {
                 modelBuilder.Model.SetMaxIdentifierLength(30);
             }
@@ -555,13 +555,7 @@ namespace WalkingTec.Mvvm.Core
                     optionsBuilder.UseSqlServer(CSName);
                     break;
                 case DBTypeEnum.MySql:
-                    optionsBuilder.UseMySql(CSName, mySqlOptions =>
-                    {
-                        if (string.IsNullOrEmpty(Version) == false)
-                        {
-                            mySqlOptions.ServerVersion(Version);
-                        }
-                    });
+                    optionsBuilder.UseMySQL(CSName);
                     break;
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);

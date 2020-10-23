@@ -182,6 +182,32 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
+
+        #region OrmTypeMode
+
+        private OrmTypeEnum? _ormtype;
+
+        /// <summary>
+        /// TabMode
+        /// </summary>
+        public OrmTypeEnum OrmType
+        {
+            get
+            {
+                if (_ormtype == null)
+                {
+                    _ormtype = OrmTypeEnum.EF;
+                }
+                return _ormtype.Value;
+            }
+            set
+            {
+                _ormtype = value;
+            }
+        }
+        #endregion
+
+
         #region EncryptKey
 
         private string _encryptKey;
@@ -469,5 +495,6 @@ namespace WalkingTec.Mvvm.Core
             var cs = ConnectionStrings.Where(x => x.Key.ToLower() == csName.ToLower()).SingleOrDefault();
             return cs?.CreateDC();
         }
+
     }
 }

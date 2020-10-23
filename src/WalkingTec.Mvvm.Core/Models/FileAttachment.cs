@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
+using System.Text.Json.Serialization;
 using WalkingTec.Mvvm.Core.Models;
 
 namespace WalkingTec.Mvvm.Core
