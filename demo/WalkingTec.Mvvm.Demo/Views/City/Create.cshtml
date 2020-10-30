@@ -2,8 +2,8 @@
 
 <wt:form vm="@Model">
 <wt:row items-per-row="ItemsPerRowEnum.Two">
-<wt:combobox field="Entity.ParentId" items="AllParents"/>
-  <wt:colorpicker field="Entity.Name"  predefined-colors=""/>
+<wt:tree field="Entity.ParentId" items="AllParents"/>
+  <wt:textbox field="Entity.Name"  />
 </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />
