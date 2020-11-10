@@ -251,7 +251,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [AllRights]
         public ActionResult GetUserById(string keywords)
         {
-            var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(WtmContext,null, x=>x.CodeAndName, x => x.ITCode);
+            var users = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().StartsWith(keywords.ToLower())).GetSelectListItems(WtmContext,null, x=>$"{x.ITCode}({x.Name})", x => x.ITCode);
             return JsonMore(users);
 
         }

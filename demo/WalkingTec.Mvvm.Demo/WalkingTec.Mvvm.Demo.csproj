@@ -20,7 +20,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc.Admin\WalkingTec.Mvvm.Mvc.Admin.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.Mvc\WalkingTec.Mvvm.Mvc.csproj" />
     <ProjectReference Include="..\..\src\WalkingTec.Mvvm.TagHelpers.LayUI\WalkingTec.Mvvm.TagHelpers.LayUI.csproj" />
   </ItemGroup>

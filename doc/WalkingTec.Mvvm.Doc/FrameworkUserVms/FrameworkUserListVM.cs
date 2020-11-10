@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
         {
             AllRoles = DC.Set<FrameworkRole>().ToList();
             AllGroups = DC.Set<FrameworkGroup>().ToList();
-            var query = DC.Set<FrameworkUserBase>().Include(x => x.UserRoles).Include(x=>x.UserGroups)
+            var query = DC.Set<FrameworkUser>().Include(x => x.UserRoles).Include(x=>x.UserGroups)
                 .CheckContain(Searcher.ITCode,x=>x.ITCode)
                 .CheckContain(Searcher.Name, x=>x.Name)
                 .CheckEqual(Searcher.IsValid, x=>x.IsValid)
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
 
     }
 
-    public class FrameworkUser_View : FrameworkUserBase
+    public class FrameworkUser_View : FrameworkUser
     {
         [Display(Name = "角色")]
         public string Roles { get; set; }

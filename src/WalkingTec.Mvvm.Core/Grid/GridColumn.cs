@@ -390,13 +390,22 @@ namespace WalkingTec.Mvvm.Core
         {
             object rv = null;
             var col = CompiledCol?.Invoke(source as T);
-            if (Format == null || (needFormat == false && Format.Method.ReturnType != typeof(string)))
+            if(col == null)
             {
-                if (col == null)
+                return "";
+            }
+            if(needFormat == false && Format != null)
+            {
+                var test = Format.Invoke(source as T, col);
+                if(test is ColumnFormatInfo == false && test is List<ColumnFormatInfo> == false)
                 {
-                    rv = null;
+                    return test??"";
                 }
-                else if (col is DateTime dateTime)
+            }
+
+            if (Format == null || needFormat == false)
+            {
+                if (col is DateTime dateTime)
                 {
                     rv = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 }

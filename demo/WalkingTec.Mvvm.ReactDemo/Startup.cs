@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +18,7 @@ using WalkingTec.Mvvm.Mvc.Binders;
 using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Extensions;
+using System.Text.Json.Serialization;
 
 namespace WalkingTec.Mvvm.ReactDemo
 {
@@ -57,6 +57,8 @@ namespace WalkingTec.Mvvm.ReactDemo
             })
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -104,7 +106,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             app.UseWtmMultiLanguages();
             app.UseWtmCrossDomain();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.UseSession();
             app.UseWtmSwagger();
             app.UseWtm();

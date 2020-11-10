@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 return false;
             }
 
-            FrameworkUserBase user = new FrameworkUserBase
+            FrameworkUser user = new FrameworkUser
             {
                 ITCode = ITCode,
                 Name = Name,

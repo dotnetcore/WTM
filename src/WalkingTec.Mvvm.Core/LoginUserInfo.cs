@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
+using NPOI.SS.Formula.Functions;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core
 {
+
     /// <summary>
     /// 用户登录信息，需要保存在Session中，所以使用Serializable标记
     /// </summary>
@@ -38,7 +40,5 @@ namespace WalkingTec.Mvvm.Core
         /// 用户的数据权限列表
         /// </summary>
         public List<SimpleDataPri> DataPrivileges { get; set; }
-
-
     }
 }

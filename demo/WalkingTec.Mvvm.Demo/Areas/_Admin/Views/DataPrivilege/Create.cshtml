@@ -1,0 +1,51 @@
+@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs.DataPrivilegeVM
+<wt:form vm="@Model">
+    <wt:radio field="DpType" change-func="DbTypeChange" />
+    <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
+    <wt:combobox field="IsAll" change-func="IsAllChange" />
+    <wt:row id="selector">
+        <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="">
+        </wt:selector>
+    </wt:row>
+    <wt:row id="userrow">
+        <wt:textbox field="UserItCode" search-url="/_Admin/FrameworkUser/GetUserById" />
+    </wt:row>
+    <wt:row id="grouprow">
+        <wt:combobox field="Entity.GroupId" items="AllGroups" />
+    </wt:row>
+    <br /><br />
+    <wt:row align="AlignEnum.Right">
+        <wt:submitbutton />
+        <wt:closebutton />
+    </wt:row>
+</wt:form>
+<script>
+  DbTypeChange({ value: $("[name='DpType'][checked]").val() });
+    IsAllChange({ value: '@Model.IsAll.ToString().ToLower()' });
+    var selectedtablename = "";
+  function DbTypeChange(data) {
+        if (data.value == 0) {
+            $('#userrow').css('display', 'none');
+            $('#grouprow').css('display', 'block');
+        }
+        else {
+            $('#userrow').css('display', 'block');
+            $('#grouprow').css('display', 'none');
+        }
+    }
+    function IsAllChange(data) {
+        if (data.value == 'true') {
+            $('#selector').css('display', 'none');
+        }
+        else {
+            $('#selector').css('display', 'block');
+        }
+    }
+    function PriTypeChange(data) {
+        selectedtablename = data.value;
+        ff.clearSelector("DataPrivilegeVM_SelectedItemsID");
+    }
+    function SetTableName() {
+        ff.setSelectorPara("DataPrivilegeVM_SelectedItemsID", { "Searcher.TableName": selectedtablename})
+    }
+</script>

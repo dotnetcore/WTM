@@ -31,7 +31,6 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<FunctionPrivilege> BaseFunctionPrivileges { get; set; }
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
         public DbSet<FileAttachment> BaseFileAttachments { get; set; }
-        public DbSet<FrameworkUserBase> BaseFrameworkUsers { get; set; }
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
@@ -104,14 +103,6 @@ namespace WalkingTec.Mvvm.Core
                 {
                     new FrameworkRole{ RoleCode = "001", RoleName = Program._localizer["Admin"]}
                 };
-                var users = new FrameworkUserBase[]
-                {
-                    new FrameworkUserBase{ITCode = "admin", Password = Utils.GetMD5String("000000"), IsValid = true, Name=Program._localizer["Admin"]}
-                };
-                var userroles = new FrameworkUserRole[]
-                {
-                    new FrameworkUserRole{ User = users[0], Role = roles[0]}
-                };
 
                 var adminRole = roles[0];
                 if (Set<FrameworkMenu>().Any() == false)
@@ -181,8 +172,6 @@ namespace WalkingTec.Mvvm.Core
 
                 }
                 Set<FrameworkRole>().AddRange(roles);
-                Set<FrameworkUserBase>().AddRange(users);
-                Set<FrameworkUserRole>().AddRange(userroles);
                 await SaveChangesAsync();
             }
             return rv;

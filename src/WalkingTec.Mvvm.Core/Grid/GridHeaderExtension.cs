@@ -147,7 +147,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="self"></param>
-        /// <param name="hide"></param>
+        /// <param name="eEvent"></param>
         /// <returns></returns>
         public static GridColumn<T> SetEvent<T>(this GridColumn<T> self, string eEvent) where T : TopBasePoco
         {

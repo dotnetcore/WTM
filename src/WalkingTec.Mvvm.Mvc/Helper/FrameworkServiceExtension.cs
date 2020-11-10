@@ -39,6 +39,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -686,11 +687,6 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
-            var admin = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc.Admin");
-            if (admin != null && gd.AllAssembly.Contains(admin) == false)
-            {
-                gd.AllAssembly.Add(admin);
-            }
             var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
             if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
             {

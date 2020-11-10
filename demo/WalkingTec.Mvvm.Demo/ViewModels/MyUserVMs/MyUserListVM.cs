@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                 this.MakeGridHeader(x => x.Password),
                 this.MakeGridHeader(x => x.Email),
                 this.MakeGridHeader(x => x.Name),
-                this.MakeGridHeader(x => x.Sex),
+                this.MakeGridHeader(x => x.Gender),
                 this.MakeGridHeader(x => x.CellPhone),
                 this.MakeGridHeader(x => x.HomePhone),
                 this.MakeGridHeader(x => x.Address),
@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x => "你111").SetFormat((a,b)=>"asdf"),
                 this.MakeGridHeader(x=>"CanEdit").SetHide().SetFormat((e,v)=>{
-                    if (e.Sex == SexEnum.Male){
+                    if (e.Gender == GenderEnum.Male){
                         return "true";
                     }
                     else {
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                     Password = x.Password,
                     Email = x.Email,
                     Name = x.Name,
-                    Sex = x.Sex,
+                    Gender = x.Gender,
                     CellPhone = x.CellPhone,
                     HomePhone = x.HomePhone,
                     Address = x.Address,

@@ -1,0 +1,17 @@
+﻿@model WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs.FrameworkMenuVM
+    <wt:form vm="@Model">
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:display field="Entity.PageName" />
+            <wt:display field="Entity.ModuleName" />
+        </wt:row>
+        <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:display field="Entity.ShowOnMenu" />
+            <wt:display field="Entity.FolderOnly" />
+        </wt:row>
+        <wt:row items-per-row=" ItemsPerRowEnum.One">
+            <wt:checkbox field="SelectedActionIDs" items="AllActions" disabled=true />
+        </wt:row>
+        <wt:row align="AlignEnum.Right">
+            <wt:closebutton />
+        </wt:row>
+    </wt:form>

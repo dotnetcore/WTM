@@ -6,7 +6,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.ViewModels.DataTableVMs
 {
-    public class ActionLogListVM : BasePagedListVM<CustomView, BaseSearcher>
+    public class DatatableListVM : BasePagedListVM<CustomView, BaseSearcher>
     {
         protected override List<GridAction> InitGridAction()
         {

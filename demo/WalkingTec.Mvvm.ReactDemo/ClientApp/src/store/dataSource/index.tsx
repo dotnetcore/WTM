@@ -204,7 +204,7 @@ class PageObservable {
    */
   onSearch(params): Promise<{ Count: number, Data: any[], Page: number, PageCount: number, Limit: number }> {
     params = {
-      SortInfo: "",
+      SortInfo: null,
       Page: 1,
       Limit: this.PageStore.DataSource.tableList.Limit,
       ...this.PageStore.DataSource.searchParams,

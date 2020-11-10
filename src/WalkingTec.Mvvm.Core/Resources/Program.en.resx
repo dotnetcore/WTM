@@ -802,7 +802,7 @@
     <value>Select privileges</value>
   </data>
   <data name="SetupSuccess" xml:space="preserve">
-    <value>Setup finished, please stop debug and rebuild the solution止调试，重新编译代码</value>
+    <value>Setup finished, please stop debug and rebuild the solution</value>
   </data>
   <data name="Sex" xml:space="preserve">
     <value>Gender</value>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         [Display(Name = "Name")]
         public ExcelPropety Name_Excel = ExcelPropety.CreateProperty<MyUser>(x => x.Name);
         [Display(Name = "Sex")]
-        public ExcelPropety Sex_Excel = ExcelPropety.CreateProperty<MyUser>(x => x.Sex);
+        public ExcelPropety Sex_Excel = ExcelPropety.CreateProperty<MyUser>(x => x.Gender);
         [Display(Name = "CellPhone")]
         public ExcelPropety CellPhone_Excel = ExcelPropety.CreateProperty<MyUser>(x => x.CellPhone);
         [Display(Name = "HomePhone")]

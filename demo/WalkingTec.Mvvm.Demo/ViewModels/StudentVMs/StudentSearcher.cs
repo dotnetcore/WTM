@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
         [Display(Name = "姓名")]
         public String Name { get; set; }
         [Display(Name = "性别")]
-        public SexEnum? Sex { get; set; }
+        public GenderEnum? Sex { get; set; }
         [Display(Name = "邮编")]
         public String ZipCode { get; set; }
         [Display(Name = "是否有效")]

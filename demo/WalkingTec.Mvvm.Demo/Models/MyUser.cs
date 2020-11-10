@@ -6,7 +6,7 @@ using WalkingTec.Mvvm.Core;
 namespace WalkingTec.Mvvm.Demo.Models
 {
     [Table("FrameworkUsers")]
-    public class MyUser : FrameworkUserBase
+    public class MyUser : FrameworkUser
     {
 
         [Display(Name = "附加信息1")]

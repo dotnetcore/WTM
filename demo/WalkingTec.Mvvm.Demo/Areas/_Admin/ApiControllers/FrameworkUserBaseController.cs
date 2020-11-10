@@ -1,28 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Mvc;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
-using WalkingTec.Mvvm.Core.Extensions;
-using WalkingTec.Mvvm.Core;
-using Microsoft.AspNetCore.Authorization;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace WalkingTec.Mvvm.ReactDemo.Controllers
+namespace WalkingTec.Mvvm.Admin.Api
 {
-    /// <summary>
-    /// 用户
-    /// </summary>
+    [AuthorizeJwtWithCookie]
+    [ActionDescription("UserManagement")]
     [ApiController]
-    [Route("api/FrameworkUser")]
-    [AllowAnonymous]
-    public class UserController : BaseApiController
+    [Route("api/_FrameworkUserBase")]
+    public class FrameworkUserController : BaseApiController
     {
-
-        // GET: api/<controller>
-        [HttpPost("Search")]
+        [ActionDescription("Search")]
+        [HttpPost("[action]")]
         public string Search(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
@@ -30,17 +26,17 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             return vm.GetJson();
         }
 
-        // GET api/<controller>/5
+        [ActionDescription("Get")]
         [HttpGet("{id}")]
-        public FrameworkUserBase Get(Guid id)
+        public FrameworkUserVM Get(Guid id)
         {
             var vm = CreateVM<FrameworkUserVM>(id);
-            return vm.Entity;
+            return vm;
         }
 
-        // POST api/<controller>
-        [HttpPost("Add")]
-        public IActionResult Add(FrameworkUserVM vm)
+        [ActionDescription("Create")]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Add(FrameworkUserVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +44,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
-                vm.DoAdd();
+                await vm.DoAddAsync();
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -61,17 +57,18 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
 
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("Edit")]
-        public IActionResult Edit(FrameworkUserVM vm)
+        [ActionDescription("Edit")]
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Edit(FrameworkUserVM vm)
         {
+            ModelState.Remove("Entity.Password");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorJson());
             }
             else
             {
-                vm.DoEdit(true);
+                await vm.DoEditAsync(false);
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState.GetErrorJson());
@@ -81,28 +78,11 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                     return Ok(vm.Entity);
                 }
             }
-        }
-
-        // DELETE api/<controller>/5
-        [HttpGet("Delete/{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            var vm = CreateVM<FrameworkUserVM>(id);
-            vm.DoDelete();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorJson());
-            }
-            else
-            {
-                return Ok(vm.Entity);
-            }
-
         }
 
         [HttpPost("BatchDelete")]
-        [ActionDescription("批量删除")]
-        public IActionResult BatchDelete(string[] ids)
+        [ActionDescription("Delete")]
+        public async Task<IActionResult> BatchDelete(string[] ids)
         {
             var vm = CreateVM<FrameworkUserBatchVM>();
             if (ids != null && ids.Count() > 0)
@@ -119,24 +99,29 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
             else
             {
+                List<Guid?> tempids = new List<Guid?>();
+                foreach (var item in vm?.Ids)
+                {
+                    tempids.Add(Guid.Parse(item));
+                }
+                var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
+                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }
 
-
-        [HttpPost("ExportExcel")]
-        [ActionDescription("导出")]
+        [ActionDescription("Export")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkUserSearcher searcher)
         {
             var vm = CreateVM<FrameworkUserListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [HttpPost("ExportExcelByIds")]
-        [ActionDescription("导出")]
+        [ActionDescription("ExportByIds")]
+        [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
             var vm = CreateVM<FrameworkUserListVM>();
@@ -145,26 +130,29 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
                 vm.Ids = new List<string>(ids);
                 vm.SearcherMode = ListVMSearchModeEnum.CheckExport;
             }
-            var data = vm.GenerateExcel();
-            return File(data, "application/vnd.ms-excel", $"Export_FrameworkUser_{DateTime.Now.ToString("yyyy-MM-dd")}.xls");
+            return vm.GetExportData();
         }
 
-        [HttpGet("GetExcelTemplate")]
+        [ActionDescription("DownloadTemplate")]
+        [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
             var vm = CreateVM<FrameworkUserImportVM>();
             var qs = new Dictionary<string, string>();
-            foreach (var item in Request.Query.Keys)
+            if (Request != null)
             {
-                qs.Add(item, Request.Query[item]);
+                foreach (var item in Request.Query.Keys)
+                {
+                    qs.Add(item, Request.Query[item]);
+                }
             }
             vm.SetParms(qs);
             var data = vm.GenerateTemplate(out string fileName);
             return File(data, "application/vnd.ms-excel", fileName);
         }
 
-        [HttpPost("Import")]
-        [ActionDescription("导入")]
+        [ActionDescription("Import")]
+        [HttpPost("[action]")]
         public ActionResult Import(FrameworkUserImportVM vm)
         {
 
@@ -178,29 +166,19 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
             }
         }
 
-        [HttpGet("GetUserRoles")]
-        [ActionDescription("获取角色")]
-        public ActionResult GetUserRoles()
+        [HttpGet("GetFrameworkRoles")]
+        [ActionDescription("GetRoles")]
+        public ActionResult GetFrameworkRoles()
         {
-            var test = DC.Set<FrameworkRole>().GetSelectListItems(WtmContext, null, x => x.RoleName);
             return Ok(DC.Set<FrameworkRole>().GetSelectListItems(WtmContext, null, x => x.RoleName));
         }
 
-        [HttpGet("GetUserGroups")]
-        [ActionDescription("获取角色")]
-        public ActionResult GetUserGroups()
+        [HttpGet("GetFrameworkGroups")]
+        [ActionDescription("GetGroups")]
+        public ActionResult GetFrameworkGroups()
         {
             return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext, null, x => x.GroupName));
         }
-
-        [HttpGet("GetSex")]
-        [ActionDescription("获取性别")]
-        public ActionResult GetSex()
-        {
-            var test = typeof(SexEnum).ToListItems();
-            return Ok(test);
-        }
-
 
     }
 }

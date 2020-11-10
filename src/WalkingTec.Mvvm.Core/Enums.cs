@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WalkingTec.Mvvm.Core
 {
     public enum HttpMethodEnum
@@ -221,5 +223,13 @@ namespace WalkingTec.Mvvm.Core
         Yellow,
         Red
     };
+
+    public enum GenderEnum
+    {
+        [Display(Name = "Male")]
+        Male = 0,
+        [Display(Name = "Female")]
+        Female = 1
+    }
 
 }

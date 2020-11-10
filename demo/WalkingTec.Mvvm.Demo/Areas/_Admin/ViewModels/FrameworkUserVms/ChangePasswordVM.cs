@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
 
-namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
+namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 {
     public class ChangePasswordVM : BaseVM
     {

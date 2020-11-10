@@ -12,6 +12,7 @@ using WalkingTec.Mvvm.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Demo.Models;
+using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
