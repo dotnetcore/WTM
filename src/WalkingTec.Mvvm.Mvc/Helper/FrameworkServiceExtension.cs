@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
@@ -18,14 +16,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -39,7 +34,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -687,21 +681,21 @@ namespace WalkingTec.Mvvm.Mvc
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             //获取所有程序集
             gd.AllAssembly = Utils.GetAllAssembly();
-            var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
-            if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
-            {
-                gd.AllAssembly.Add(mvc);
-            }
-            var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
-            if (core != null && gd.AllAssembly.Contains(core) == false)
-            {
-                gd.AllAssembly.Add(core);
-            }
-            var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
-            if (layui != null && gd.AllAssembly.Contains(layui) == false)
-            {
-                gd.AllAssembly.Add(layui);
-            }
+            //var mvc = GetRuntimeAssembly("WalkingTec.Mvvm.Mvc");
+            //if (mvc != null && gd.AllAssembly.Contains(mvc) == false)
+            //{
+            //    gd.AllAssembly.Add(mvc);
+            //}
+            //var core = GetRuntimeAssembly("WalkingTec.Mvvm.Core");
+            //if (core != null && gd.AllAssembly.Contains(core) == false)
+            //{
+            //    gd.AllAssembly.Add(core);
+            //}
+            //var layui = GetRuntimeAssembly("WalkingTec.Mvvm.TagHelpers.LayUI");
+            //if (layui != null && gd.AllAssembly.Contains(layui) == false)
+            //{
+            //    gd.AllAssembly.Add(layui);
+            //}
 
             //set Core's _Callerlocalizer to use localizer point to the EntryAssembly's Program class
             var programType = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
@@ -844,13 +838,13 @@ namespace WalkingTec.Mvvm.Mvc
             var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
             if (env.IsDevelopment())
             {
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = false,
-                    ConfigFile = "config/webpack.dev.js",
-                    ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
+                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                //{
+                //    HotModuleReplacement = false,
+                //    ConfigFile = "config/webpack.dev.js",
+                //    ProjectPath = System.IO.Path.Combine(env.ContentRootPath, "ClientApp/")
 
-                });
+                //});
             }
             app.UseSpaStaticFiles();
 

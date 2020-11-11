@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 try
                 {
-                    if (Request.QueryString != null)
+                    if (Request.QueryString != QueryString.Empty)
                     {
                         foreach (var key in Request.Query.Keys)
                         {
@@ -327,7 +327,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         #endregion
 
-        public JsonResult JsonMore(object data, int statusCode = StatusCodes.Status200OK, string msg = "success")
+        protected JsonResult JsonMore(object data, int statusCode = StatusCodes.Status200OK, string msg = "success")
         {
             return new JsonResult(new JsonResultT<object> { Msg = msg, Code = statusCode, Data = data });
         }

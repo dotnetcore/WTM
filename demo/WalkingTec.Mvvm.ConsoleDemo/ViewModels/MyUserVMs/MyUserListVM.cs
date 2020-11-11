@@ -35,26 +35,12 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                 this.MakeGridHeader(x => x.Extra2),
                 this.MakeGridHeader(x => x.ITCode),
                 this.MakeGridHeader(x => x.Password),
-                this.MakeGridHeader(x => x.Email),
                 this.MakeGridHeader(x => x.Name),
-                this.MakeGridHeader(x => x.Sex),
-                this.MakeGridHeader(x => x.CellPhone),
-                this.MakeGridHeader(x => x.HomePhone),
-                this.MakeGridHeader(x => x.Address),
-                this.MakeGridHeader(x => x.ZipCode),
                 this.MakeGridHeader(x => x.PhotoId).SetFormat(PhotoIdFormat),
                 this.MakeGridHeader(x => x.IsValid),
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x => "你111").SetFormat((a,b)=>"asdf"),
-                this.MakeGridHeader(x=>"CanEdit").SetHide().SetFormat((e,v)=>{
-                    if (e.Sex == SexEnum.Male){
-                        return "true";
-                    }
-                    else {
-                        return "false";
-                    }
-                }),
                 this.MakeGridHeaderAction(width: 200)
             };
         }
@@ -72,8 +58,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         {
             var query = DC.Set<MyUser>()
                 .CheckContain(Searcher.Extra2, x=>x.Extra2)
-                .CheckContain(Searcher.Email, x=>x.Email)
-                .CheckContain(Searcher.CellPhone, x=>x.CellPhone)
                 .CheckEqual(Searcher.IsValid, x=>x.IsValid)
                 .CheckWhere(Searcher.SelectedUserRolesIDs,x=>DC.Set<FrameworkUserRole>().Where(y=>Searcher.SelectedUserRolesIDs.Contains(y.RoleId)).Select(z=>z.UserId).Contains(x.ID))
                 .CheckWhere(Searcher.SelectedUserGroupsIDs,x=>DC.Set<FrameworkUserGroup>().Where(y=>Searcher.SelectedUserGroupsIDs.Contains(y.GroupId)).Select(z=>z.UserId).Contains(x.ID))
@@ -84,13 +68,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
                     Extra2 = x.Extra2,
                     ITCode = x.ITCode,
                     Password = x.Password,
-                    Email = x.Email,
                     Name = x.Name,
-                    Sex = x.Sex,
-                    CellPhone = x.CellPhone,
-                    HomePhone = x.HomePhone,
-                    Address = x.Address,
-                    ZipCode = x.ZipCode,
                     PhotoId = x.PhotoId,
                     IsValid = x.IsValid,
                     RoleName_view = x.UserRoles.Select(y=>y.Role.RoleName).ToSepratedString(null,","), 

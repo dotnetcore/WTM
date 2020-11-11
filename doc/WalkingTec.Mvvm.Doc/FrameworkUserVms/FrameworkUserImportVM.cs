@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
 
     }
 
-    public class FrameworkUserImportVM : BaseImportVM<FrameworkUserTemplateVM, FrameworkUserBase>
+    public class FrameworkUserImportVM : BaseImportVM<FrameworkUserTemplateVM, FrameworkUser>
     {
         public override bool BatchSaveData()
         {

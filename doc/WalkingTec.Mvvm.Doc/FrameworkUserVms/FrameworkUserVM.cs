@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
 {
-    public class FrameworkUserVM : BaseCRUDVM<FrameworkUserBase>
+    public class FrameworkUserVM : BaseCRUDVM<FrameworkUser>
     {
         public List<ComboSelectListItem> AllRoles { get; set; }
         [Display(Name = "角色")]
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Doc.FrameworkUserVms
         /// 验证重复字段
         /// </summary>
         /// <returns></returns>
-        public override DuplicatedInfo<FrameworkUserBase> SetDuplicatedCheck()
+        public override DuplicatedInfo<FrameworkUser> SetDuplicatedCheck()
         {
             var rv = CreateFieldsInfo(SimpleField(x => x.ITCode));
             return rv;

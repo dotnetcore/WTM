@@ -36,7 +36,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         {
 
             FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
 
             v.ITCode = "itcode";
             v.Name = "name";
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void EditTest()
         {
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";
@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
             var oldID = v.ID;
-            v = new FrameworkUserBase();
+            v = new FrameworkUser();
             v.ID = oldID;
             v.ITCode = "itcode1";
             v.Name = "name1";

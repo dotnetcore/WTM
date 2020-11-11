@@ -67,8 +67,6 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 Name = Name,
                 Password = Utils.GetMD5String(Password),
                 IsValid = true,
-                CellPhone = CellPhone,
-                Email = Email
             };
 
             DC.Set<FrameworkUserBase>().Add(user);

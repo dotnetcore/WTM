@@ -50,13 +50,13 @@ namespace WalkingTec.Mvvm.Admin.Test
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserVM));
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
 
             v.ITCode = "itcode";
             v.Name = "name";
             v.Password = "password";
             vm.Entity = v;
-            _controller.Create(vm);
+            _controller.Create(vm).Wait();
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void EditTest()
         {
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";
@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserVM));
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
-            v = new FrameworkUserBase();
+            v = new FrameworkUser();
             v.ID = vm.Entity.ID;
             v.ITCode = "itcode1";
             v.Name = "name1";
@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Admin.Test
             vm.FC = new Dictionary<string, object>();
             vm.FC.Add("Entity.ITCode", "");
             vm.FC.Add("Entity.Name", "");
-            _controller.Edit(vm);
+            _controller.Edit(vm).Wait();
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void DeleteTest()
         {
-            FrameworkUserBase v = new FrameworkUserBase();
+            FrameworkUser v = new FrameworkUser();
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";
@@ -126,10 +126,10 @@ namespace WalkingTec.Mvvm.Admin.Test
             Assert.IsInstanceOfType(rv.Model, typeof(FrameworkUserVM));
 
             FrameworkUserVM vm = rv.Model as FrameworkUserVM;
-            v = new FrameworkUserBase();
+            v = new FrameworkUser();
             v.ID = vm.Entity.ID;
             vm.Entity = v;
-            _controller.Delete(v.ID,null);
+            _controller.Delete(v.ID,null).Wait();
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Admin.Test
 
             FrameworkUserBatchVM vm = rv.Model as FrameworkUserBatchVM;
             vm.Ids = new string[] { v1.ID.ToString(), v2.ID.ToString() };
-            _controller.DoBatchDelete(vm, null);
+            _controller.DoBatchDelete(vm, null).Wait();
 
             using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
             {

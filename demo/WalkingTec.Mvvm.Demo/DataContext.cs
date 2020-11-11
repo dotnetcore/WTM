@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Demo
                         User = user,
                         Role = Set<FrameworkRole>().Where(x=>x.RoleCode == "001").FirstOrDefault()
                 };
-                Set<FrameworkUserBase>().Add(user);
+                Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);
                 await SaveChangesAsync();
             }

@@ -53,7 +53,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
 
 
             //检查itcode是否重复
-            var exist = DC.Set<FrameworkUserBase>().Any(x => x.ITCode.ToLower() == ITCode.ToLower());
+            var exist = DC.Set<FrameworkUser>().Any(x => x.ITCode.ToLower() == ITCode.ToLower());
 
             if (exist == true)
             {
@@ -71,7 +71,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                 Email = Email
             };
 
-            DC.Set<FrameworkUserBase>().Add(user);
+            DC.Set<FrameworkUser>().Add(user);
             DC.SaveChanges();
             return true;
         }

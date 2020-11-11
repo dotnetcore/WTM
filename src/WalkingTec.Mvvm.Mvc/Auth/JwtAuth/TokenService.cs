@@ -103,33 +103,10 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 _dc.DeleteEntity(persistedGrant);
                 await _dc.SaveChangesAsync();
 
-                //var user = await _dc.Set<FrameworkUserBase>()
-                //                    .Where(x => x.ID == persistedGrant.UserId)
-                //                    .SingleAsync();
-
-                //var roleIDs = user.UserRoles.Select(x => x.RoleId).ToList();
-                //var groupIDs = usesr.UserGroups.Select(x => x.GroupId).ToList();
-                ////查找登录用户的数据权限
-                //var dpris = await _dc.Set<DataPrivilege>()
-                //                .Where(x => x.UserId == user.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
-                //                .ToListAsync();
-
-                ////查找登录用户的页面权限
-                //var funcPrivileges = await _dc.Set<FunctionPrivilege>()
-                //                        .Where(x => x.UserId == user.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
-                //                        .ToListAsync();
-
                 //生成并返回登录用户信息
                 var loginUserInfo = new LoginUserInfo()
                 {
                     Id = persistedGrant.UserId
-                    //ITCode = user.ITCode,
-                    //Name = user.Name,
-                    //PhotoId = user.PhotoId,
-                    //Roles = await _dc.Set<FrameworkRole>().Where(x => user.UserRoles.Select(y => y.RoleId).Contains(x.ID)).ToListAsync(),
-                    //Groups = await _dc.Set<FrameworkGroup>().Where(x => user.UserGroups.Select(y => y.GroupId).Contains(x.ID)).ToListAsync(),
-                    //DataPrivileges = dpris,
-                    //FunctionPrivileges = funcPrivileges
                 };
 
                 // 清理过期 refreshtoken

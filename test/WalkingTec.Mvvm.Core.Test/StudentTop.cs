@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core.Test
         public string Name { get; set; }
 
         [Display(Name = "性别")]
-        public SexEnum? Sex { get; set; }
+        public GenderEnum? Sex { get; set; }
 
         [Display(Name = "手机")]
         [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]

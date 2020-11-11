@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.Core
                 var path = Assembly.GetEntryAssembly().Location;
                 var dir = new DirectoryInfo(Path.GetDirectoryName(path));
 
-                var dlls = dir.GetFiles("*.dll", SearchOption.AllDirectories);
+                var dlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
                 string[] systemdll = new string[]
                 {
                 "Microsoft.",
@@ -53,17 +53,25 @@ namespace WalkingTec.Mvvm.Core
                 "Newtonsoft.",
                 "Oracle.",
                 "Pomelo.",
-                "SQLitePCLRaw."
+                "SQLitePCLRaw.",
+                "Aliyun.OSS",
+                "BouncyCastle.",
+                "FreeSql.",
+                "Google.Protobuf.dll",
+                "Humanizer.dll",
+                "IdleBus.dll",
+                "K4os.",
+                "MySql.Data.",
+                "Npgsql.",
+                "NPOI.",
                 };
 
-                foreach (var dll in dlls)
+                var filtered = dlls.Where(x => systemdll.Any(y => x.Name.StartsWith(y)) == false);
+                foreach (var dll in filtered)
                 {
                     try
                     {
-                        if (systemdll.Any(x => dll.Name.StartsWith(x)) == false)
-                        {
-                            _allAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
-                        }
+                        _allAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(dll.FullName));
                     }
                     catch { }
                 }
