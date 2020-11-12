@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public ActionLogControllerTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateController<ActionLogController>(new FrameworkContext(_seed, DBTypeEnum.Memory), "user");
+            _controller = MockController.CreateController<ActionLogController>(new Demo.DataContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public void DetailsTest()
         {
             ActionLog l = new ActionLog();
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 context.Set<ActionLog>().Add(l);
                 context.SaveChanges();

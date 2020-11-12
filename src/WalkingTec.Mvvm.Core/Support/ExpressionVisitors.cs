@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
@@ -64,32 +65,6 @@ namespace WalkingTec.Mvvm.Core
         }
 
         /// <summary>
-        /// 获取表达式的源数据类
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <returns>表达式的源数据类型</returns>
-        private Type GetDCModel(Expression expression)
-        {
-            //如果表达式是方法调用的类型，则一直向上寻找，知道找到参数为ObjectQuery<>的表达式，它的类型就是整个表达式的源数据类型
-            if (expression.NodeType == ExpressionType.Call)
-            {
-                var exp = (expression as MethodCallExpression).Arguments[0];
-                if (exp.Type.IsGeneric(typeof(EntityQueryable<>)))
-                {
-                    return exp.Type.GenericTypeArguments[0];
-                }
-                else
-                {
-                    return GetDCModel(exp);
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// 修改where
         /// </summary>
         /// <param name="expression">表达式</param>
@@ -98,23 +73,20 @@ namespace WalkingTec.Mvvm.Core
         {
             //先调用一次Visit，删除所有的where表达式
             var rv = Visit(expression);
-            if (rv.NodeType == ExpressionType.Constant)
+            if ((rv is QueryRootExpression) || rv.Type.IsGeneric(typeof(EnumerableQuery<>)))
             {
-                if ((rv.Type.IsGeneric(typeof(EntityQueryable<>)) || rv.Type.IsGeneric(typeof(EnumerableQuery<>))))
-                {
-                    var modelType = rv.Type.GenericTypeArguments[0];
-                    ParameterExpression pe = Expression.Parameter(modelType, "x");
-                    Expression left1 = Expression.Constant(1);
-                    Expression right1 = Expression.Constant(1);
-                    Expression trueExp = Expression.Equal(left1, right1);
-                    rv = Expression.Call(
- typeof(Queryable),
- "Where",
- new Type[] { modelType },
- rv,
- Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
+                var modelType = rv.Type.GenericTypeArguments[0];
+                ParameterExpression pe = Expression.Parameter(modelType, "x");
+                Expression left1 = Expression.Constant(1);
+                Expression right1 = Expression.Constant(1);
+                Expression trueExp = Expression.Equal(left1, right1);
+                rv = Expression.Call(
+typeof(Queryable),
+"Where",
+new Type[] { modelType },
+rv,
+Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
 
-                }
             }
             //将模式设为addMode，再调用一次Visit来添加新的表达式
             _addMode = true;
@@ -259,7 +231,7 @@ namespace WalkingTec.Mvvm.Core
             if (expression.NodeType == ExpressionType.Call)
             {
                 var exp = (expression as MethodCallExpression).Arguments[0];
-                if (exp.Type.IsGeneric(typeof(EntityQueryable<>)))
+                if (exp is QueryRootExpression)
                 {
                     return exp.Type.GenericTypeArguments[0];
                 }
@@ -270,7 +242,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (expression.NodeType == ExpressionType.Constant)
             {
-                if (expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
+                if (expression is QueryRootExpression || expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
                 {
                     return expression.Type.GenericTypeArguments[0];
                 }
@@ -332,11 +304,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        protected override Expression VisitConstant(ConstantExpression node)
+        protected override Expression VisitExtension(Expression node)
         {
-            if (_addMode == true)
+            if (_addMode == true && node is QueryRootExpression)
             {
-                if ((node.Type.IsGeneric(typeof(EntityQueryable<>)) || node.Type.IsGeneric(typeof(EnumerableQuery<>))) && node.Type.GenericTypeArguments[0] == _modelType)
+                if (node.Type.GenericTypeArguments[0] == _modelType)
                 {
                     ParameterExpression pe = Expression.Parameter(_modelType);
                     ChangePara cp = new ChangePara();
@@ -352,7 +324,7 @@ namespace WalkingTec.Mvvm.Core
                     return rv;
                 }
             }
-            return base.VisitConstant(node);
+            return base.VisitExtension(node);
         }
 
         /// <summary>
@@ -378,7 +350,7 @@ namespace WalkingTec.Mvvm.Core
                     Type gType = aType.GetGenericTypeDefinition();
                     Type argType = aType.GenericTypeArguments[0];
                     //使用上面不是where的节点直接拼接本节点，从而删除了中间的where
-                    if ((gType == typeof(IQueryable<>) || gType == typeof(EntityQueryable<>)) && argType == _modelType)
+                    if ((gType == typeof(IQueryable<>) || gType == typeof(QueryRootExpression)) && argType == _modelType)
                     {
                         var paras = new List<Expression>
                         {
@@ -425,7 +397,7 @@ namespace WalkingTec.Mvvm.Core
             if (expression.NodeType == ExpressionType.Call)
             {
                 var exp = (expression as MethodCallExpression).Arguments[0];
-                if (exp.Type.IsGeneric(typeof(EntityQueryable<>)))
+                if (exp is QueryRootExpression)
                 {
                     return exp.Type.GenericTypeArguments[0];
                 }
@@ -436,7 +408,7 @@ namespace WalkingTec.Mvvm.Core
             }
             else if (expression.NodeType == ExpressionType.Constant)
             {
-                if (expression.Type.IsGeneric(typeof(EntityQueryable<>)) || expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
+                if (expression is QueryRootExpression || expression.Type.IsGeneric(typeof(EnumerableQuery<>)))
                 {
                     return expression.Type.GenericTypeArguments[0];
                 }
@@ -501,11 +473,11 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        protected override Expression VisitConstant(ConstantExpression node)
+        protected override Expression VisitExtension(Expression node)
         {
-            if (_mode == 1)
+            if (_mode == 1 && node is QueryRootExpression)
             {
-                if ((node.Type.IsGeneric(typeof(EntityQueryable<>)) || node.Type.IsGeneric(typeof(EnumerableQuery<>))) && node.Type.GenericTypeArguments[0] == _modelType)
+                if (node.Type.GenericTypeArguments[0] == _modelType)
                 {
                     ParameterExpression pe = Expression.Parameter(_modelType);
                     ChangePara cp = new ChangePara();
@@ -521,7 +493,7 @@ namespace WalkingTec.Mvvm.Core
                     return rv;
                 }
             }
-            return base.VisitConstant(node);
+            return base.VisitExtension(node);
         }
 
         /// <summary>

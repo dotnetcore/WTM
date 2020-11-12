@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public FrameworkUserApiTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _controller = MockController.CreateApi<FrameworkUserController>(new FrameworkContext(_seed, DBTypeEnum.Memory), "user");
+            _controller = MockController.CreateApi<FrameworkUserController>(new Demo.DataContext(_seed, DBTypeEnum.Memory), "user");
         }
 
         [TestMethod]
@@ -45,9 +45,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             var rv = _controller.Add(vm);
             Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<FrameworkUserBase>().FirstOrDefault();
+                var data = context.Set<FrameworkUser>().FirstOrDefault();
                 Assert.AreEqual(data.ITCode, "itcode");
                 Assert.AreEqual(data.Name, "name");
                 Assert.AreEqual(data.Password, Utils.GetMD5String("password"));
@@ -61,12 +61,12 @@ namespace WalkingTec.Mvvm.Admin.Test
         public void EditTest()
         {
             FrameworkUser v = new FrameworkUser();
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";
                 v.Name = "name";
                 v.Password = "password";
-                context.Set<FrameworkUserBase>().Add(v);
+                context.Set<FrameworkUser>().Add(v);
                 context.SaveChanges();
             }
 
@@ -83,9 +83,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             var rv = _controller.Edit(vm);
             Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
-                var data = context.Set<FrameworkUserBase>().FirstOrDefault();
+                var data = context.Set<FrameworkUser>().FirstOrDefault();
                 Assert.AreEqual(data.ITCode, "itcode1");
                 Assert.AreEqual(data.Name, "name1");
                 Assert.AreEqual(data.UpdateBy, "user");
@@ -97,13 +97,13 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void GetTest()
         {
-            FrameworkUserBase v = new FrameworkUserBase();
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            FrameworkUser v = new FrameworkUser();
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 v.ITCode = "itcode";
                 v.Name = "name";
                 v.Password = "password";
-                context.Set<FrameworkUserBase>().Add(v);
+                context.Set<FrameworkUser>().Add(v);
                 context.SaveChanges();
             }
             var rv = _controller.Get(v.ID);
@@ -114,9 +114,9 @@ namespace WalkingTec.Mvvm.Admin.Test
         [TestMethod]
         public void BatchDeleteTest()
         {
-            FrameworkUserBase v1 = new FrameworkUserBase();
-            FrameworkUserBase v2 = new FrameworkUserBase();
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            FrameworkUser v1 = new FrameworkUser();
+            FrameworkUser v2 = new FrameworkUser();
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
                 v1.ITCode = "itcode";
                 v1.Name = "name";
@@ -124,8 +124,8 @@ namespace WalkingTec.Mvvm.Admin.Test
                 v2.ITCode = "itcode2";
                 v2.Name = "name2";
                 v2.Password = "password2";
-                context.Set<FrameworkUserBase>().Add(v1);
-                context.Set<FrameworkUserBase>().Add(v2);
+                context.Set<FrameworkUser>().Add(v1);
+                context.Set<FrameworkUser>().Add(v2);
                 context.SaveChanges();
             }
 
@@ -133,9 +133,9 @@ namespace WalkingTec.Mvvm.Admin.Test
             var rv = _controller.BatchDelete(new string[] { v1.ID.ToString(), v2.ID.ToString() });
             Assert.IsInstanceOfType(rv.Result, typeof(OkObjectResult));
 
-            using (var context = new FrameworkContext(_seed, DBTypeEnum.Memory))
+            using (var context = new Demo.DataContext(_seed, DBTypeEnum.Memory))
             {
-                Assert.AreEqual(context.Set<FrameworkUserBase>().Count(), 0);
+                Assert.AreEqual(context.Set<FrameworkUser>().Count(), 0);
             }
 
             rv = _controller.BatchDelete(new string[] {});

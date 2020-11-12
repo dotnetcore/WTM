@@ -618,7 +618,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
 
             OptMajorvm.MSD.Clear();
-            OptMajorvm.Entity = new OptMajor { MajorCode = "not111", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
+            OptMajorvm.Entity = new OptMajor { MajorCode = "222", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
             OptMajorvm.Validate();
             Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
 

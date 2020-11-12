@@ -411,6 +411,9 @@
   <data name="GenApi" xml:space="preserve">
     <value>生成Api</value>
   </data>
+  <data name="Gender" xml:space="preserve">
+    <value>性别</value>
+  </data>
   <data name="Get" xml:space="preserve">
     <value>获取</value>
   </data>
@@ -800,9 +803,6 @@
   </data>
   <data name="SetupSuccess" xml:space="preserve">
     <value>初始化已完成，请停止调试，重新编译代码</value>
-  </data>
-  <data name="Sex" xml:space="preserve">
-    <value>性别</value>
   </data>
   <data name="ShowOnMenu" xml:space="preserve">
     <value>菜单显示</value>

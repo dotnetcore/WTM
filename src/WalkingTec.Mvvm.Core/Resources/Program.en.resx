@@ -414,6 +414,9 @@
   <data name="GenApi" xml:space="preserve">
     <value>Generate Api</value>
   </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
   <data name="Get" xml:space="preserve">
     <value>Get</value>
   </data>
@@ -803,9 +806,6 @@
   </data>
   <data name="SetupSuccess" xml:space="preserve">
     <value>Setup finished, please stop debug and rebuild the solution</value>
-  </data>
-  <data name="Sex" xml:space="preserve">
-    <value>Gender</value>
   </data>
   <data name="ShowOnMenu" xml:space="preserve">
     <value>Menu</value>
