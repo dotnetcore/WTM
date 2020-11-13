@@ -311,7 +311,7 @@ window.ff = {
                                     ff.ChainChange(u, this.self, this.targetname)
                                 }
                             }
-                            catch(e){ }
+                            catch (e) { }
                         }
                     });
                 }

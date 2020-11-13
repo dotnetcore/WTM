@@ -104,7 +104,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             "TreeMode",
             "IsPostBack",
             "DC",
-            "LoginUserInfo"
+            "LoginUserInfo",
+            "MSD",
+            "Session",
+            "WtmContext"
+
         };
 
         /// <summary>
