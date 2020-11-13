@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -376,7 +377,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
-                Expression peid = Expression.PropertyOrField(pe, splits[0]);
+                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetProperty(splits[0], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly));
                 Type middletype = null;
                 if (mtm)
                 {
@@ -387,7 +388,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     for (int i = 1; i < splits.Length; i++)
                     {
-                        peid = Expression.PropertyOrField(peid, splits[i]);
+                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetProperty(splits[i], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public)); 
                     }
                     middletype = (peid as MemberExpression).Member.DeclaringType;
                 }
