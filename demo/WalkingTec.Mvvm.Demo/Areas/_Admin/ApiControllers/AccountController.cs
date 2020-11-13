@@ -123,14 +123,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 if (menu.Text?.StartsWith("MenuKey.") == true)
                 {
-                    if (Core.Program._Callerlocalizer[menu.Text].ResourceNotFound == true)
-                    {
-                        menu.Text = Core.Program._localizer[menu.Text];
-                    }
-                    else
-                    {
-                        menu.Text = Core.Program._Callerlocalizer[menu.Text];
-                    }
+                    menu.Text = Localizer[menu.Text];
                 }
             }
         }

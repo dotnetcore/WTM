@@ -58,7 +58,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         {
             if (EmptyText == null)
             {
-                EmptyText = Program._localizer["PleaseSelect"];
+                EmptyText = THProgram._localizer["PleaseSelect"];
             }
             EnableSearch = GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.ComboBox.DefaultEnableSearch;
         }

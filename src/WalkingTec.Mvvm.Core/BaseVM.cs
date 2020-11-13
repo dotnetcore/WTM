@@ -197,7 +197,7 @@ namespace WalkingTec.Mvvm.Core
         public string ControllerName { get; set; }
 
         [JsonIgnore]
-        public IStringLocalizer Localizer { get; set; }
+        public IStringLocalizer Localizer { get => WtmContext?.Localizer; }
         #endregion
 
         #region Event

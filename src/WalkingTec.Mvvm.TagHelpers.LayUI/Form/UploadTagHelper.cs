@@ -73,7 +73,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.TagMode = TagMode.StartTagAndEndTag;
             if (string.IsNullOrEmpty(ButtonText))
             {
-                output.Content.SetHtmlContent(Program._localizer["Select"]);
+                output.Content.SetHtmlContent(THProgram._localizer["Select"]);
             }
             else
             {
@@ -160,7 +160,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var requiredtext = "";
             if (Field.Metadata.IsRequired)
             {
-                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
+                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{THProgram._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
             }
 
             output.PostElement.SetHtmlContent($@"
@@ -211,7 +211,7 @@ layui.use(['upload'],function(){{
       layui.layer.close(index);
       if(res.Data.Id == ''){{
           $('#{Id}label').html('');
-          layui.layer.msg('{Program._localizer["UploadFailed"]}');
+          layui.layer.msg('{THProgram._localizer["UploadFailed"]}');
       }}
       else{{
             $('#{Id}label').html('');
@@ -225,7 +225,7 @@ layui.use(['upload'],function(){{
             }});
           }});
       " : $@"
-          $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  {Program._localizer["Delete"]}</button>"");
+          $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+res.Data.Name +""  {THProgram._localizer["Delete"]}</button>"");
           $('#{Id}del').on('click',function(){{
             $('.layui-progress .layui-progress-bar').css('width', '0%');
             {Id}DoDelete(res.Data.Id);
@@ -282,7 +282,7 @@ $.ajax({{
         {Id}DoDelete('{Field.Model}');
       }});
     " : $@"
-        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  {Program._localizer["Delete"]}</button>"");
+        $('#{Id}label').append(""<button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='{Id}del' style='color:white'>""+data+""  {THProgram._localizer["Delete"]}</button>"");
         $('#{Id}del').on('click',function(){{
           {Id}DoDelete('{Field.Model}');
         }});

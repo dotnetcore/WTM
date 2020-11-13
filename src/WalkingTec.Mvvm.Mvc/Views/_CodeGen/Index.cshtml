@@ -30,14 +30,14 @@
           <wt:hidden field="UI" />
           <wt:combobox field="SelectedModel" items="AllModels" />
           <wt:textbox field="Area" />
-          <wt:textbox field="ModuleName" placeholder="@WalkingTec.Mvvm.Core.Program._localizer["Codegen.InputModuleName"]" />
+          <wt:textbox field="ModuleName" placeholder="@WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.InputModuleName"]" />
           @if (Model.UI == WalkingTec.Mvvm.Core.UIEnum.LayUI)
           {
-            <wt:checkbox field="IsApi" padding-text="(@WalkingTec.Mvvm.Core.Program._localizer["Codegen.ApiOnly"])"  />
+            <wt:checkbox field="IsApi" padding-text="(@WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.ApiOnly"])"  />
           }
           <wt:combobox field="AuthMode" />
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.Program._localizer["Codegen.gen"]" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.gen"]" />
             <wt:closebutton />
           </wt:row>
 

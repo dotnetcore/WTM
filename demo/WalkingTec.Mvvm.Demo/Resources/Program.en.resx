@@ -243,27 +243,6 @@
   <data name="CodeGen" xml:space="preserve">
     <value>CodeGen</value>
   </data>
-  <data name="Codegen.ApiOnly" xml:space="preserve">
-    <value>Generate api only, no frontend code</value>
-  </data>
-  <data name="Codegen.confirm" xml:space="preserve">
-    <value>This will generate following files, are you sure?</value>
-  </data>
-  <data name="Codegen.gen" xml:space="preserve">
-    <value>Generate code</value>
-  </data>
-  <data name="Codegen.InputModuleName" xml:space="preserve">
-    <value>Please input module name, such as xxx management</value>
-  </data>
-  <data name="Codegen.setup" xml:space="preserve">
-    <value>Please setup fields</value>
-  </data>
-  <data name="Codegen.start" xml:space="preserve">
-    <value>Start generation</value>
-  </data>
-  <data name="CodeGenSuccess" xml:space="preserve">
-    <value>Code has been generated, please close the debug and rebuild the solution.</value>
-  </data>
   <data name="ColumnFilter" xml:space="preserve">
     <value>Filters</value>
   </data>
@@ -417,9 +396,6 @@
   <data name="FieldName" xml:space="preserve">
     <value>Field name</value>
   </data>
-  <data name="FieldRequired" xml:space="preserve">
-    <value>The required field can not be empty</value>
-  </data>
   <data name="FileExt" xml:space="preserve">
     <value>File ext</value>
   </data>
@@ -511,9 +487,6 @@
     <value>IconFont</value>
   </data>
   <data name="Import" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="Import1" xml:space="preserve">
     <value>Import</value>
   </data>
   <data name="ImportSuccess" xml:space="preserve">

@@ -60,12 +60,6 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
                     model.Controller = ctrl;
                     model.ControllerName = ctrl.GetType().FullName;
-                    model.Localizer = ctrl.Localizer;
-                    var programtype = ctrl.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                    if (programtype != null)
-                    {
-                        model.Localizer = context.HttpContext.RequestServices.GetService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
-                    }
                     //if (ctrl is BaseController c)
                     //{
                     //    model.WtmContext.WindowIds = c.WindowIds;
@@ -281,7 +275,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             {
                                 if (ctrl.Localizer[pmenu.PageName].ResourceNotFound == true)
                                 {
-                                    pmenu.PageName = Core.Program._localizer[pmenu.PageName];
+                                    pmenu.PageName = Core.CoreProgram._localizer[pmenu.PageName];
                                 }
                                 else
                                 {
@@ -293,7 +287,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         }
                         if (ctrl.Localizer[menu.PageName].ResourceNotFound == true)
                         {
-                            menu.PageName = Core.Program._localizer[menu.PageName];
+                            menu.PageName = Core.CoreProgram._localizer[menu.PageName];
                         }
                         else
                         {
@@ -387,7 +381,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
                 else
                 {
-                    context.HttpContext.Response.WriteAsync(Program._localizer["PageError"]);
+                    context.HttpContext.Response.WriteAsync(MvcProgram._localizer["PageError"]);
                 }
             }
             base.OnResultExecuted(context);

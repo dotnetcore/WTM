@@ -95,7 +95,7 @@ namespace WalkingTec.Mvvm.Core
                 ColumnType = GridColumnTypeEnum.Action,
                 Width = width,
                 Fixed = GridColumnFixedEnum.Right,
-                Title = title ?? Program._localizer["Operation"]
+                Title = title ?? CoreProgram._localizer["Operation"]
             };
         }
 

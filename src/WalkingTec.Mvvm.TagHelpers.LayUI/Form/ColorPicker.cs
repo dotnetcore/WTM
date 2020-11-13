@@ -56,7 +56,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var requiredtext = "";
             if (Field.Metadata.IsRequired)
             {
-                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
+                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{THProgram._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
             }
 
             var content = $@"

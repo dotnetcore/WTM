@@ -57,32 +57,9 @@ namespace WalkingTec.Mvvm.Mvc
         [JsonIgnore]
         [BindNever]
         public string BaseUrl { get => WtmContext?.BaseUrl; }
-        private IStringLocalizer _localizer;
         [JsonIgnore]
         [BindNever]
-        public IStringLocalizer Localizer
-        {
-            get
-            {
-                if (_localizer == null)
-                {
-                    var programtype = this.GetType().Assembly.GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
-                    if (programtype != null)
-                    {
-                        try
-                        {
-                            _localizer = GlobalServices.GetRequiredService(typeof(IStringLocalizer<>).MakeGenericType(programtype)) as IStringLocalizer;
-                        }
-                        catch { }
-                    }
-                    if (_localizer == null)
-                    {
-                        _localizer = WalkingTec.Mvvm.Core.Program._localizer;
-                    }
-                }
-                return _localizer;
-            }
-        }
+        public IStringLocalizer Localizer { get => WtmContext?.Localizer; }
 
 
         //-------------------------------------------方法------------------------------------//
@@ -107,7 +84,6 @@ namespace WalkingTec.Mvvm.Mvc
             rv.FC = new Dictionary<string, object>();
             rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
             rv.ControllerName = this.GetType().FullName;
-            rv.Localizer = this.Localizer;
             if (HttpContext != null && HttpContext.Request != null)
             {
                 try

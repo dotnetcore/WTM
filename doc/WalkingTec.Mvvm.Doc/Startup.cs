@@ -73,9 +73,9 @@ namespace WalkingTec.Mvvm.Doc
             {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
                 {
-                    if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
+                    if (Core.CoreProgram.Buildindll.Any(x => type.FullName.StartsWith(x)))
                     {
-                        return factory.Create(typeof(WalkingTec.Mvvm.Core.Program));
+                        return factory.Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
                     }
                     else
                     {

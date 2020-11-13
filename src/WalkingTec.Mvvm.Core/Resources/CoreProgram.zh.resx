@@ -159,6 +159,9 @@
   <data name="AllPris" xml:space="preserve">
     <value>全部权限</value>
   </data>
+  <data name="ApiDoc" xml:space="preserve">
+    <value>Api Doc</value>
+  </data>
   <data name="Area" xml:space="preserve">
     <value>区域</value>
   </data>

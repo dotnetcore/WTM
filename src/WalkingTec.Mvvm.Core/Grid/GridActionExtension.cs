@@ -55,62 +55,62 @@ namespace WalkingTec.Mvvm.Core
             {
                 case GridActionStandardTypesEnum.Create:
                     iconcls = "layui-icon layui-icon-add-1";
-                    gridname = Program._localizer["Create"];
+                    gridname = CoreProgram._localizer["Create"];
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
                 case GridActionStandardTypesEnum.AddRow:
                     iconcls = "layui-icon layui-icon-add-1";
-                    gridname = Program._localizer["Create"];
+                    gridname = CoreProgram._localizer["Create"];
                     paraType = GridActionParameterTypesEnum.AddRow;
                     break;
                 case GridActionStandardTypesEnum.Edit:
                     iconcls = "layui-icon layui-icon-edit";
-                    gridname = Program._localizer["Edit"];
+                    gridname = CoreProgram._localizer["Edit"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Delete:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = Program._localizer["Delete"];
+                    gridname = CoreProgram._localizer["Delete"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.RemoveRow:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = Program._localizer["Delete"];
+                    gridname = CoreProgram._localizer["Delete"];
                     paraType = GridActionParameterTypesEnum.RemoveRow;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.Details:
                     iconcls = "layui-icon layui-icon-form";
-                    gridname = Program._localizer["Details"];
+                    gridname = CoreProgram._localizer["Details"];
                     paraType = GridActionParameterTypesEnum.SingleId;
                     showInRow = true;
                     hideOnToolBar = true;
                     break;
                 case GridActionStandardTypesEnum.BatchEdit:
                     iconcls = "layui-icon layui-icon-edit";
-                    gridname = Program._localizer["BatchEdit"];
+                    gridname = CoreProgram._localizer["BatchEdit"];
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.BatchDelete:
                     iconcls = "layui-icon layui-icon-delete";
-                    gridname = Program._localizer["BatchDelete"];
+                    gridname = CoreProgram._localizer["BatchDelete"];
                     paraType = GridActionParameterTypesEnum.MultiIds;
                     break;
                 case GridActionStandardTypesEnum.Import:
                     iconcls = "layui-icon layui-icon-templeate-1";
-                    gridname = Program._localizer["Import"];
+                    gridname = CoreProgram._localizer["Import"];
                     paraType = GridActionParameterTypesEnum.NoId;
                     break;
                 case GridActionStandardTypesEnum.ExportExcel:
                     iconcls = "layui-icon layui-icon-download-circle";
-                    gridname = Program._localizer["Export"];
+                    gridname = CoreProgram._localizer["Export"];
                     paraType = GridActionParameterTypesEnum.MultiIdWithNull;
-                    name = Program._localizer["ExportExcel"];
+                    name = CoreProgram._localizer["ExportExcel"];
                     showInRow = false;
                     showDialog = false;
                     hideOnToolBar = false;
@@ -273,8 +273,8 @@ namespace WalkingTec.Mvvm.Core
 
             var action = new GridAction
             {
-                Name = Program._localizer["ExportExcel"],
-                DialogTitle = Program._localizer["ExportExcel"],
+                Name = CoreProgram._localizer["ExportExcel"],
+                DialogTitle = CoreProgram._localizer["ExportExcel"],
                 Area = string.Empty,
                 ControllerName = "_Framework",
                 ActionName = "GetExportExcel",

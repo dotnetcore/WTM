@@ -330,7 +330,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
 
             }
 
@@ -456,7 +456,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                throw new Exception(Program._localizer["NoPrivilege"]);
+                throw new Exception(MvcProgram._localizer["NoPrivilege"]);
             }
         }
 
@@ -540,13 +540,13 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                 LocalizeMenu(menu.Children);
-                if (Core.Program._Callerlocalizer[menu.Title].ResourceNotFound == true)
+                if (Core.CoreProgram._Callerlocalizer[menu.Title].ResourceNotFound == true)
                 {
-                    menu.Title = Core.Program._localizer[menu.Title];
+                    menu.Title = Core.CoreProgram._localizer[menu.Title];
                 }
                 else
                 {
-                    menu.Title = Core.Program._Callerlocalizer[menu.Title];
+                    menu.Title = Core.CoreProgram._Callerlocalizer[menu.Title];
                 }
             }
         }
@@ -750,10 +750,10 @@ namespace WalkingTec.Mvvm.Mvc
         public Dictionary<string, string> GetScriptLanguage()
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
-            rv.Add("DONOTUSE_Text_LoadFailed", Program._localizer["LoadFailed"]);
-            rv.Add("DONOTUSE_Text_SubmitFailed", Program._localizer["SubmitFailed"]);
-            rv.Add("DONOTUSE_Text_PleaseSelect", Program._localizer["PleaseSelect"]);
-            rv.Add("DONOTUSE_Text_FailedLoadData", Program._localizer["FailedLoadData"]);
+            rv.Add("DONOTUSE_Text_LoadFailed", MvcProgram._localizer["LoadFailed"]);
+            rv.Add("DONOTUSE_Text_SubmitFailed", MvcProgram._localizer["SubmitFailed"]);
+            rv.Add("DONOTUSE_Text_PleaseSelect", MvcProgram._localizer["PleaseSelect"]);
+            rv.Add("DONOTUSE_Text_FailedLoadData", MvcProgram._localizer["FailedLoadData"]);
             return rv;
         }
 
@@ -789,7 +789,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             else
             {
-                return Content($"{{\"code\": 1 , \"msg\": \"{Program._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
+                return Content($"{{\"code\": 1 , \"msg\": \"{MvcProgram._localizer["UploadFailed"]}\", \"data\": {{\"src\": \"\"}}}}");
 
             }
 

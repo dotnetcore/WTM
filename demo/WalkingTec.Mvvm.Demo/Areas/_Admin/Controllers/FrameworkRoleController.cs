@@ -162,7 +162,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             }
             else
             {
-                return FFResult().CloseDialog().RefreshGrid().Alert(Program._localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
+                return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["ImportSuccess", vm.EntityList.Count.ToString()]);
             }
         }
         #endregion
@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public async Task<ActionResult> PageFunction(FrameworkRoleMDVM vm, IFormCollection noUse)
         {
             await vm.DoChangeAsync();
-            return FFResult().CloseDialog().Alert(Program._localizer["OprationSuccess"]);
+            return FFResult().CloseDialog().Alert(Localizer["OprationSuccess"]);
         }
         #endregion
 

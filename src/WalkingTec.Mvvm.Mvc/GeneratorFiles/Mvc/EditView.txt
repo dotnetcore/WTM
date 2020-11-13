@@ -1,5 +1,5 @@
 @model $vmnamespace$.$modelname$VM
-@inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
+@inject IStringLocalizer<Program> Localizer;
 
 <wt:form vm="@Model">$fields$
     <wt:hidden field="Entity.ID" />

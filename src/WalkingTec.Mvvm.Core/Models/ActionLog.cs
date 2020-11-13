@@ -61,14 +61,14 @@ namespace WalkingTec.Mvvm.Core
         public string GetLogString()
         {
             return $@"
-|-{Core.Program._localizer["ActionTime"]}：{this.ActionTime}
-|-{Core.Program._localizer["Account"]}：{this.ITCode??""}
+|-{Core.CoreProgram._localizer["ActionTime"]}：{this.ActionTime}
+|-{Core.CoreProgram._localizer["Account"]}：{this.ITCode??""}
 |-IP：{this.IP??""}
-|-{Core.Program._localizer["Module"]}：{this.ModuleName??""}
-|-{Core.Program._localizer["MethodName"]}：{this.ActionName ?? ""}
+|-{Core.CoreProgram._localizer["Module"]}：{this.ModuleName??""}
+|-{Core.CoreProgram._localizer["MethodName"]}：{this.ActionName ?? ""}
 |-Url：{this.ActionUrl ?? ""}
-|-{Core.Program._localizer["Duration"]}：{this.Duration.ToString("F2")+" s"}
-|-{Core.Program._localizer["Remark"]}：{this.Remark}
+|-{Core.CoreProgram._localizer["Duration"]}：{this.Duration.ToString("F2")+" s"}
+|-{Core.CoreProgram._localizer["Remark"]}：{this.Remark}
 ";
         }
     }

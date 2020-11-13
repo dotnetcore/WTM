@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             var check = DC.Set<FrameworkUserRole>().Any(x => x.RoleId == checkid);
             if (check == true)
             {
-                errorMessage = Program._localizer["CannotDelete", Program._localizer["Role"]];
+                errorMessage = Localizer["CannotDelete", Localizer["Role"]];
                 return false;
             }
             else

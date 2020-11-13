@@ -39,14 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             {
                 if (item.Name?.StartsWith("MenuKey.") == true)
                 {
-                    if (Core.Program._Callerlocalizer[item.Name].ResourceNotFound == true)
-                    {
-                        item.Name = Core.Program._localizer[item.Name];
-                    }
-                    else
-                    {
-                        item.Name = Core.Program._Callerlocalizer[item.Name];
-                    }
+                        item.Name = Localizer[item.Name];
                 }
                 if (item.AllActions == null)
                 {
@@ -54,16 +47,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
                 }
                 foreach (var act in item.AllActions)
                 {
-                    if (Core.Program._Callerlocalizer[act.Text].ResourceNotFound == true)
-                    {
-                        act.Text = Core.Program._localizer[act.Text];
-                    }
-                    else
-                    {
-                        act.Text = Core.Program._Callerlocalizer[act.Text];
-                    }
+                        act.Text = Localizer[act.Text];
                 }
-                item.AllActions.Insert(0, new ComboSelectListItem { Text = Program._localizer["MainPage"], Value = item.ID.ToString() });
+                item.AllActions.Insert(0, new ComboSelectListItem { Text = Localizer["MainPage"], Value = item.ID.ToString() });
                 var ids = item.AllActions.Select(x => Guid.Parse(x.Value.ToString()));
                 item.Actions = ids.Where(x => allowedids.Contains(x)).ToList();
             }

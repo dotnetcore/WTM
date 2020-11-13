@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.ReactDemo
                     ITCode = "admin",
                     Password = Utils.GetMD5String("000000"),
                     IsValid = true,
-                    Name = Core.Program._localizer["Admin"]
+                    Name = Core.CoreProgram._localizer["Admin"]
                 };
 
                 var userrole = new FrameworkUserRole

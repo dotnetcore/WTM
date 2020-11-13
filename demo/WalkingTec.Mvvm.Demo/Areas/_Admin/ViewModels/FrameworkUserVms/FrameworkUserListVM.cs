@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             {
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Create, "", "_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Edit, "", "_Admin",dialogWidth: 800),
-                this.MakeAction("FrameworkUser","Password",Program._localizer?["ChangePassword"],Program._localizer?["ChangePassword"], GridActionParameterTypesEnum.SingleId,"_Admin",400).SetShowInRow(true),
+                this.MakeAction("FrameworkUser","Password",Localizer?["ChangePassword"],Localizer?["ChangePassword"], GridActionParameterTypesEnum.SingleId,"_Admin",400).SetShowInRow(true),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Delete, "","_Admin",dialogWidth: 800),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.Details, "", "_Admin",dialogWidth: 600),
                 this.MakeStandardAction("FrameworkUser", GridActionStandardTypesEnum.BatchDelete, "","_Admin", dialogWidth: 800),
@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x=> x.PhotoId,170).SetFormat(PhotoIdFormat),
-                this.MakeGridHeader(x => x.IsValid).SetHeader(Program._localizer?["Enable"]).SetWidth(80),
+                this.MakeGridHeader(x => x.IsValid).SetHeader(Localizer["Enable"]).SetWidth(80),
                 this.MakeGridHeaderAction(width: 280)
             };
         }

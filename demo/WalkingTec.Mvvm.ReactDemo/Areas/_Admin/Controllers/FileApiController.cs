@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             Image oimage = Image.FromStream(FileData.OpenReadStream());
             if (oimage == null)
             {
-                return BadRequest(Core.Program._localizer["UploadFailed"]);
+                return BadRequest(Localizer["UploadFailed"]);
             }
             if (width == null)
             {
@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 return Ok(new { Id = file.GetID(), Name = file.FileName });
             }
-            return BadRequest(Core.Program._localizer["UploadFailed"]);
+            return BadRequest(Localizer["UploadFailed"]);
 
         }
 
@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
             if (file == null)
             {
-                return BadRequest(Core.Program._localizer["FileNotFound"]);
+                return BadRequest(Localizer["FileNotFound"]);
             }
             file.DataStream?.CopyToAsync(Response.Body);
             return new EmptyResult();
@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var file = fp.GetFile(id,true, ConfigInfo.CreateDC(csName));
             if (file == null)
             {
-                return BadRequest(Core.Program._localizer["FileNotFound"]);
+                return BadRequest(Localizer["FileNotFound"]);
             }
             var ext = file.FileExt.ToLower();
             var contenttype = "application/octet-stream";

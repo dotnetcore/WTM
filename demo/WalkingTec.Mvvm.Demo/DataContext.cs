@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo
                     ITCode = "admin",
                     Password = Utils.GetMD5String("000000"),
                     IsValid = true,
-                    Name = Core.Program._localizer["Admin"]
+                    Name = "Admin"
                 };
 
                 var userrole = new FrameworkUserRole

@@ -44,27 +44,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             {
                 if (item.PageName?.StartsWith("MenuKey.") == true)
                 {
-                    if (Core.Program._Callerlocalizer[item.PageName].ResourceNotFound == true)
-                    {
-                        item.PageName = Core.Program._localizer[item.PageName];
-                    }
-                    else
-                    {
-                        item.PageName = Core.Program._Callerlocalizer[item.PageName];
-                    }
+                    item.PageName = Localizer[item.PageName];
                 }
                 if (item.ModuleName?.StartsWith("MenuKey.") == true)
                 {
-                    if (Core.Program._Callerlocalizer[item.ModuleName].ResourceNotFound == true)
-                    {
-                        item.ModuleName = Core.Program._localizer[item.ModuleName];
-                    }
-                    else
-                    {
-                        item.ModuleName = Core.Program._Callerlocalizer[item.ModuleName];
-                    }
+                    item.ModuleName = Localizer[item.ModuleName];
                 }
-
             }
             int order = 0;
             var data2 = topdata.Select(x => new FrameworkMenu_ListView

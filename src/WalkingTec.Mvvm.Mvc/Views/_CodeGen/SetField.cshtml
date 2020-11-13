@@ -31,7 +31,7 @@ Layout = null;
 
         <wt:form vm="@Model" url="/_CodeGen/Gen" label-width="150" class="donotuse_pdiv donotuse_fill" old-post="true">
           <wt:quote>
-            @WalkingTec.Mvvm.Core.Program._localizer["Codegen.setup"]<br />
+            @WalkingTec.Mvvm.Core.CoreProgram._localizer["Codegen.setup"]<br />
           </wt:quote>
           <wt:hidden field="SelectedModel" />
           <wt:hidden field="Area" />
@@ -42,7 +42,7 @@ Layout = null;
           <wt:hidden field="AuthMode" />
           <wt:grid vm="FieldList" use-local-data="true" hidden-checkbox="true" hidden-panel="true" />
           <wt:row align="AlignEnum.Right">
-            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.Program._localizer["Continue"]" />
+            <wt:submitbutton theme=" ButtonThemeEnum.Warm" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer["Continue"]" />
             <wt:closebutton />
           </wt:row>
         </wt:form>

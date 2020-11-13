@@ -128,11 +128,11 @@ namespace WalkingTec.Mvvm.Mvc
                         if (checktype == typeof(FileAttachment))
                         {
                             view.IsImportField = false;
-                            view.FieldDes += $"({Program._localizer["Attachment"]})";
+                            view.FieldDes += $"({MvcProgram._localizer["Attachment"]})";
                         }
                         else
                         {
-                            view.FieldDes += $"({Program._localizer["OneToMany"]})";
+                            view.FieldDes += $"({MvcProgram._localizer["OneToMany"]})";
                         }
                         view.LinkedType = checktype.AssemblyQualifiedName;
                     }
@@ -146,7 +146,7 @@ namespace WalkingTec.Mvvm.Mvc
                         var middletable = checktype.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
                         if (middletable != null)
                         {
-                            view.FieldDes += $"({Program._localizer["ManyToMany"]})";
+                            view.FieldDes += $"({MvcProgram._localizer["ManyToMany"]})";
                             view.IsImportField = false;
                             var subpros = checktype.GetProperties();
                             foreach (var spro in subpros)

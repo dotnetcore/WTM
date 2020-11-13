@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("class", "layui-btn layui-btn-sm");
             output.Attributes.Add("type", "button");
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Content.SetHtmlContent(WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Select"]);
+            output.Content.SetHtmlContent(WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["Select"]);
             string ext = "";
             if (string.IsNullOrEmpty(CustomType))
             {
@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var requiredtext = "";
             if (Field.Metadata.IsRequired)
             {
-                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
+                requiredtext = $" lay-verify=\"required\" lay-reqText=\"{THProgram._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}\"";
             }
             output.PostElement.SetHtmlContent($@"
 <input type='hidden' id='{Id}'  {requiredtext} />
@@ -221,7 +221,7 @@ layui.use(['upload'],function(){{
     ,done: function(res){{
       layui.layer.close(index);
       if(res.Data.Id == ''){{
-          layui.layer.msg('{WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["UploadFailed"]}');
+          layui.layer.msg('{WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["UploadFailed"]}');
       }}
       else{{
         {Id}selected.push(res.Data.Id);
@@ -232,7 +232,7 @@ layui.use(['upload'],function(){{
               {Id}DoDelete(res.Data.Id);
             }});
       " : $@"
-           $('#{Id}label').append(""<label id='label""+res.Data.Id+""'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del""+res.Data.Id+""' style='color:white;margin-left:0px;'>""+res.Data.Name +""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/></label>"");
+           $('#{Id}label').append(""<label id='label""+res.Data.Id+""'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del""+res.Data.Id+""' style='color:white;margin-left:0px;'>""+res.Data.Name +""  {WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["Delete"]}</button><br/></label>"");
            $('#del'+res.Data.Id).on('click',function(){{
               {Id}DoDelete(res.Data.Id);
           }});
@@ -275,7 +275,7 @@ $.ajax({{
               {Id}DoDelete('{fileId}');
             }});
     " : $@"
-        $('#{Id}label').append(""<label id='label{fileId}'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.Program._localizer["Delete"]}</button><br/></label>"");
+        $('#{Id}label').append(""<label id='label{fileId}'><button class='layui-btn layui-btn-sm layui-btn-danger' type='button' id='del{fileId}' style='color:white'>""+data+""  {WalkingTec.Mvvm.TagHelpers.LayUI.THProgram._localizer["Delete"]}</button><br/></label>"");
         $('#del{fileId}').on('click',function(){{
           {Id}DoDelete('{fileId}');
         }});

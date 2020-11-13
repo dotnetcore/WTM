@@ -20,6 +20,7 @@ using WalkingTec.Mvvm.Core.Json;
 using System.Text.Json;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Demo.Models;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -55,9 +56,9 @@ namespace WalkingTec.Mvvm.Demo
                 options.Filters.Add(new DataContextFilter());
                 options.Filters.Add(new PrivilegeFilter());
                 options.Filters.Add(new FrameworkFilter());
-                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor", x]);
-                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.Program._localizer["AttemptedValueIsInvalidAccessor", x, y]);
-                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.Program._localizer["ValueIsInvalidAccessor", x]);
+                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
+                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.CoreProgram._localizer["AttemptedValueIsInvalidAccessor", x, y]);
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
                 options.EnableEndpointRouting = true;
             })
             .AddJsonOptions(options => {
@@ -77,7 +78,7 @@ namespace WalkingTec.Mvvm.Demo
             .AddWtmDataAnnotationsLocalization(typeof(Program));
             //services.AddScoped<IDataContext>(x => Configuration.Get<Configs>().ConnectionStrings[1].CreateDC());
             
-            services.AddWtmContext(ConfigRoot);
+            services.AddWtmContext(ConfigRoot, x=> x.DataPrivileges = DataPrivilegeSettings());
 
         }
 
@@ -151,8 +152,8 @@ namespace WalkingTec.Mvvm.Demo
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
             //指定哪些模型需要数据权限
-            //pris.Add(new DataPrivilegeInfo<typea>("aaaPrivilege", m => m.Name));
-            //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
+            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
             return pris;
         }
 

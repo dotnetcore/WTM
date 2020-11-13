@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             if (pleaseSelect == true)
             {
-                rv.Insert(0, new ComboSelectListItem { Text = Program._localizer["PleaseSelect"], Value = "" });
+                rv.Insert(0, new ComboSelectListItem { Text = CoreProgram._localizer["PleaseSelect"], Value = "" });
             }
             return rv;
         }

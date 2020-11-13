@@ -99,7 +99,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     if (output.Attributes["isrich"] == null)
                     {
                         output.Attributes.Add("lay-verify", "required");
-                        output.Attributes.Add("lay-reqText", $"{Program._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
+                        output.Attributes.Add("lay-reqText", $"{THProgram._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
                     }
                 }
             }

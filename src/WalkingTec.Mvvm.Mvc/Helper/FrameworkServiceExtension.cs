@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc
         private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule)
         {
             var ConfigInfo = GlobalServices.GetService<IOptions<Configs>>().Value;
-            var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.Program));
+            var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
             var menus = new List<SimpleMenu>();
 
             if (ConfigInfo.IsQuickDebug)
@@ -661,9 +661,9 @@ namespace WalkingTec.Mvvm.Mvc
              {
                  options.DataAnnotationLocalizerProvider = (type, factory) =>
                  {
-                     if (Core.Program.Buildindll.Any(x => type.FullName.StartsWith(x)))
+                     if (Core.CoreProgram.Buildindll.Any(x => type.FullName.StartsWith(x)))
                      {
-                         return factory.Create(typeof(WalkingTec.Mvvm.Core.Program));
+                         return factory.Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
                      }
                      else
                      {
@@ -709,7 +709,7 @@ namespace WalkingTec.Mvvm.Mvc
                                             , new Microsoft.Extensions.Logging.LoggerFactory()
                                         )
                                         .Create(programType);
-            coredll.GetType("WalkingTec.Mvvm.Core.Program").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
+            coredll.GetType("WalkingTec.Mvvm.Core.CoreProgram").GetProperty("_Callerlocalizer").SetValue(null, programLocalizer);
 
 
             var controllers = gd.GetTypesAssignableFrom <IBaseController>();

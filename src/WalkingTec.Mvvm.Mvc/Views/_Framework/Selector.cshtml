@@ -18,7 +18,7 @@
         }
         if (selected.length > 0) {
             if (!multiSel && selected.length > 1) {
-                layui.layer.msg('@WalkingTec.Mvvm.Core.Program._localizer["SelectOneRowMax"]');
+                layui.layer.msg('@WalkingTec.Mvvm.Core.CoreProgram._localizer["SelectOneRowMax"]');
                 return;
             }
             for (var i = 0; i < selected.length; i++) {
@@ -85,6 +85,6 @@
     $$SearchPanel$$
     <wt:grid vm="@Model" hidden-panel="true" checked-func="gridCheckedFunc" url="/_Framework/GetPagingData" need-show-filter="false" need-show-print="false"/>
     <wt:row align="AlignEnum.Right">
-        <wt:button click="submitSelect();" text="@WalkingTec.Mvvm.Core.Program._localizer["OK"]" size="ButtonSizeEnum.Normal" />
+        <wt:button click="submitSelect();" text="@WalkingTec.Mvvm.Core.CoreProgram._localizer["OK"]" size="ButtonSizeEnum.Normal" />
     </wt:row>
 </wt:container>

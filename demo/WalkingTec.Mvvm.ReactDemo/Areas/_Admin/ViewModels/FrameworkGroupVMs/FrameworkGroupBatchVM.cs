@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
             var check = DC.Set<FrameworkUserGroup>().Any(x => x.GroupId == checkid);
             if (check == true)
             {
-                errorMessage = Program._localizer["CannotDelete", Program._localizer["Group"]];
+                errorMessage = Localizer["CannotDelete", Localizer["Group"]];
                 return false;
             }
             else

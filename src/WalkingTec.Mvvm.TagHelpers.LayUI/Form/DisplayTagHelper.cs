@@ -43,7 +43,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         output.Attributes.Add("href", $"/_Framework/GetFile/{Field.Model}");
                     }
-                    output.Content.AppendHtml(Program._localizer["Download"]);
+                    output.Content.AppendHtml(THProgram._localizer["Download"]);
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     output.TagMode = TagMode.StartTagAndEndTag;
                     output.Attributes.Add("class", "layui-form-label");
                     output.Attributes.Add("style", "text-align:left;padding:9px 0;width:unset");
-                    output.Content.AppendHtml(Program._localizer["None"]);
+                    output.Content.AppendHtml(THProgram._localizer["None"]);
                 }
             }
             else
@@ -82,11 +82,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {
                         if ((bool?)Field.Model == true)
                         {
-                            val = Program._localizer["Yes"];
+                            val = THProgram._localizer["Yes"];
                         }
                         else
                         {
-                            val = Program._localizer["No"];
+                            val = THProgram._localizer["No"];
                         }
                     }
                     else if (Field.Model.GetType() == typeof(int) || Field.Model.GetType() == typeof(int?))

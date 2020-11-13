@@ -91,11 +91,11 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 {
                     if (controller is BaseController c)
                     {
-                        context.Result = c.Content(Program._localizer["DebugOnly"]);
+                        context.Result = c.Content(MvcProgram._localizer["DebugOnly"]);
                     }
                     else if (controller is ControllerBase c2)
                     {
-                        context.Result = c2.BadRequest(Program._localizer["DebugOnly"]);
+                        context.Result = c2.BadRequest(MvcProgram._localizer["DebugOnly"]);
                     }
                 }
                 return;
@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     {
                         ContentResult cr = new ContentResult()
                         {
-                            Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\"" + Program._localizer["NeedLogin"] + "\",\"Code\":401}",
+                            Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\"" + MvcProgram._localizer["NeedLogin"] + "\",\"Code\":401}",
                             ContentType = "application/json",
                             StatusCode = 200
                         };
@@ -134,7 +134,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             {
                                 ContentResult cr = new ContentResult()
                                 {
-                                    Content = Program._localizer["NeedLogin"],
+                                    Content = MvcProgram._localizer["NeedLogin"],
                                     ContentType = "text/html",
                                     StatusCode = 401
                                 };
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             {
                                 ContentResult cr = new ContentResult()
                                 {
-                                    Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\""+ Program._localizer["NoPrivilege"] + "\",\"Code\":403}",
+                                    Content = "{\"Data\":[],\"Count\":0,\"Page\":1,\"PageCount\":0,\"Msg\":\""+ MvcProgram._localizer["NoPrivilege"] + "\",\"Code\":403}",
                                     ContentType = "application/json",
                                     StatusCode = 200
                                 };
@@ -196,7 +196,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                                 {
                                     ContentResult cr = new ContentResult()
                                     {
-                                        Content = Program._localizer["NoPrivilege"],
+                                        Content = MvcProgram._localizer["NoPrivilege"],
                                         ContentType = "text/html",
                                         StatusCode = 403
                                     };

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 this.MakeGridHeader(x => x.RoleName_view),
                 this.MakeGridHeader(x => x.GroupName_view),
                 this.MakeGridHeader(x=> x.PhotoId),
-                this.MakeGridHeader(x => x.IsValid).SetHeader(Program._localizer?["Enable"]).SetWidth(80),
+                this.MakeGridHeader(x => x.IsValid).SetHeader(Localizer["Enable"]).SetWidth(80),
                 this.MakeGridHeaderAction()
             };
         }

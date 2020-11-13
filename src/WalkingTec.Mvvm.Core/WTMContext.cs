@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
@@ -185,6 +186,20 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        private IStringLocalizerFactory _stringLocalizerFactory;
+        private IStringLocalizer _localizer;
+        public IStringLocalizer Localizer
+        {
+            get
+            {
+                if(_localizer == null && _stringLocalizerFactory != null)
+                {
+                    var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
+                    _localizer = _stringLocalizerFactory.Create(programtype);
+                }
+                return _localizer ?? WalkingTec.Mvvm.Core.CoreProgram._localizer;
+            }
+        }
         /// <summary>
         /// 从数据库读取用户
         /// </summary>
@@ -278,11 +293,12 @@ namespace WalkingTec.Mvvm.Core
         public SimpleLog Log { get; set; }
 
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null, IStringLocalizerFactory stringLocalizer = null)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
+            _stringLocalizerFactory = stringLocalizer;
             if(_httpContext == null)
             {
                 MSD = new BasicMSD();

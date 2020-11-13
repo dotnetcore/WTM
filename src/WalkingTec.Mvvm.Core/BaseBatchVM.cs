@@ -168,7 +168,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (!ErrorMessage.ContainsKey(id))
                         {
-                            ErrorMessage.Add(id, Program._localizer["Rollback"]);
+                            ErrorMessage.Add(id, CoreProgram._localizer["Rollback"]);
                         }
                     }
                 }
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Core
                         item.BatchError = ErrorMessage.Where(x => x.Key == item.GetID().ToString()).Select(x => x.Value).FirstOrDefault();
                     }
                 }
-                MSD.AddModelError("", Program._localizer["DataCannotDelete"]);
+                MSD.AddModelError("", CoreProgram._localizer["DataCannotDelete"]);
             }
             return rv;
         }
@@ -218,7 +218,7 @@ namespace WalkingTec.Mvvm.Core
                     }
                     if (entity == null)
                     {
-                        ErrorMessage.Add(idsData[i], Program._localizer["DataNotExist"]);
+                        ErrorMessage.Add(idsData[i], CoreProgram._localizer["DataNotExist"]);
                         rv = false;
                         break;
                     }
@@ -313,7 +313,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         if (!ErrorMessage.ContainsKey(id))
                         {
-                            ErrorMessage.Add(id, Program._localizer["Rollback"]);
+                            ErrorMessage.Add(id, CoreProgram._localizer["Rollback"]);
                         }
                     }
                 }

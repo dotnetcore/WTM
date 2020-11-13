@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Mvc
                 Type modeltype = Type.GetType(vm.SelectedModel);
                 if(modeltype.IsSubclassOf(typeof(TopBasePoco)) == false)
                 {
-                    ModelState.AddModelError("SelectedModel", Program._localizer["SelectedModelMustBeBasePoco"]);
+                    ModelState.AddModelError("SelectedModel", MvcProgram._localizer["SelectedModelMustBeBasePoco"]);
                 }
             }
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult DoGen(CodeGenVM vm)
         {
             vm.DoGen();
-            return FFResult().Alert(Program._localizer["CodeGenSuccess"]);
+            return FFResult().Alert(MvcProgram._localizer["CodeGenSuccess"]);
         }
 
         [ActionDescription("预览")]

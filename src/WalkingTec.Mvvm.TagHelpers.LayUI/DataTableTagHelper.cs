@@ -533,7 +533,7 @@ layui.use(['table'], function(){{
     elem: '#{Id}'
     ,id: '{Id}'
     ,text:{{
-        none:'{Program._localizer["NoData"]}'
+        none:'{THProgram._localizer["NoData"]}'
     }}
     {toolbardef}
     {righttoolbar}
@@ -543,12 +543,12 @@ layui.use(['table'], function(){{
     {(Method == null ? ",method:'post'" : $",method: '{Method.Value.ToString().ToLower()}'")}
     {(Loading ?? true ? string.Empty : ",loading:false")}
     {(page ? $@",page:{{
-        rpptext:'{Program._localizer["RecordsPerPage"]}',
-        totaltext:'{Program._localizer["Total"]}',
-        recordtext:'{Program._localizer["Record"]}',
-        gototext:'{Program._localizer["Goto"]}',
-        pagetext:'{Program._localizer["Page"]}',
-        oktext:'{Program._localizer["GotoButtonText"]}',
+        rpptext:'{THProgram._localizer["RecordsPerPage"]}',
+        totaltext:'{THProgram._localizer["Total"]}',
+        recordtext:'{THProgram._localizer["Record"]}',
+        gototext:'{THProgram._localizer["Goto"]}',
+        pagetext:'{THProgram._localizer["Page"]}',
+        oktext:'{THProgram._localizer["GotoButtonText"]}',
     }}":",page:false")}
     {(page ? $",limit:{Limit}" : $",limit:{(UseLocalData ? ListVM.GetEntityList().Count().ToString() : "0")}")}
     {(page
@@ -565,13 +565,13 @@ layui.use(['table'], function(){{
     {(!Size.HasValue ? string.Empty : $",size: '{Size.Value.ToString().ToLower()}'")}
     ,done: function(res,curr,count){{
       {Id}filterback = this;
-      if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{Program._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
-      if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{Program._localizer["Error"]}'}});}}
+      if(res.Code == 401){{ layui.layer.confirm(res.Msg,{{title:'{THProgram._localizer["Error"]}'}}, function(index){{window.location.reload();layer.close(index);}});}}
+      if(res.Code != undefined && res.Code != 200){{ layui.layer.alert(res.Msg,{{title:'{THProgram._localizer["Error"]}'}});}}
      var tab = $('#{Id} + .layui-table-view');tab.find('table').css('border-collapse','separate');
       {(Height == null ? $"tab.css('overflow','hidden').addClass('donotuse_fill donotuse_pdiv');tab.children('.layui-table-box').addClass('donotuse_fill donotuse_pdiv').css('height','100px');tab.find('.layui-table-main').addClass('donotuse_fill');tab.find('.layui-table-header').css('min-height','{maxDepth*38}px');ff.triggerResize();" : string.Empty)}
       {(MultiLine == true ? $"tab.find('.layui-table-cell').css('height','auto').css('white-space','normal');" : string.Empty)}
-       tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{Program._localizer["ColumnFilter"]}');
-       tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{Program._localizer["Print"]}');
+       tab.find('div [lay-event=\'LAYTABLE_COLS\']').attr('title','{THProgram._localizer["ColumnFilter"]}');
+       tab.find('div [lay-event=\'LAYTABLE_PRINT\']').attr('title','{THProgram._localizer["Print"]}');
       {(string.IsNullOrEmpty(DoneFunc) ? string.Empty : $"{DoneFunc}(res,curr,count)")}
     }}
     }}
@@ -591,7 +591,7 @@ setTimeout(function(){{
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
       var data = {{_DONOT_USE_VMNAME:'{vmName}',id:o.data.ID,field:o.field,value:o.value}};
       $.post(""/_Framework/UpdateModelProperty"",data,function(a,b,c){{
-          if(a.code == 200){{ff.Msg('{Program._localizer["UpdateDone"]}');}}else{{ff.Msg(a.msg);}}
+          if(a.code == 200){{ff.Msg('{THProgram._localizer["UpdateDone"]}');}}else{{ff.Msg(a.msg);}}
       }});
   }}")}
   table.on('tool({Id})',wtToolBarFunc_{Id});
@@ -814,10 +814,10 @@ setTimeout(function(){{
 if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
     ids = ff.GetSelections('{Id}');
     if(ids.length == 0){{
-        layui.layer.msg('{Program._localizer["SelectOneRow"]}');
+        layui.layer.msg('{THProgram._localizer["SelectOneRow"]}');
         return;
     }}else if(ids.length > 1){{
-        layui.layer.msg('{Program._localizer["SelectOneRowMax"]}');
+        layui.layer.msg('{THProgram._localizer["SelectOneRowMax"]}');
         return;
     }}else{{
         tempUrl = tempUrl + '&id=' + ids[0];
@@ -839,7 +839,7 @@ if(data==undefined||data==null||data.ID==undefined||data.ID==null){{
 isPost = true;
 var ids = ff.GetSelections('{Id}');
 if(ids.length == 0){{
-    layui.layer.msg('{Program._localizer["SelectOneRowMin"]}');
+    layui.layer.msg('{THProgram._localizer["SelectOneRowMin"]}');
     return;
 }}
 ");
@@ -859,7 +859,7 @@ if(data != null && data.ID != null){{
     }}
 }}
 if(ids.length > 1){{
-    layui.layer.msg('{Program._localizer["SelectOneRowMax"]}');
+    layui.layer.msg('{THProgram._localizer["SelectOneRowMax"]}');
     return;
 }}else if(ids.length == 1){{
     tempUrl = tempUrl + '&id=' + ids[0];
@@ -940,7 +940,7 @@ case '{item.Area + item.ControllerName + item.ActionName + item.QueryString}':{{
                     if (string.IsNullOrEmpty(item.PromptMessage) == false)
                     {
                         actionScript = $@"
-        layer.confirm('{item.PromptMessage}', {{title:'{Program._localizer["Info"]}'}},function(index){{
+        layer.confirm('{item.PromptMessage}', {{title:'{THProgram._localizer["Info"]}'}},function(index){{
             {actionScript}
         layer.close(index);
       }});";
