@@ -66,6 +66,7 @@ namespace WalkingTec.Mvvm.Core
         public string ICon { get; set; }
         public string Tag { get; set; }
         public bool Leaf => Children == null || Children.Count == 0;
+        public bool Selected { get; set; }
         public List<TreeSelectListItem> Children { get; set; }
     }
 }

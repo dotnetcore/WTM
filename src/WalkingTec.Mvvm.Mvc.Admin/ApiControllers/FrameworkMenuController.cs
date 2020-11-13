@@ -142,8 +142,8 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<ActionResult> RefreshMenu()
         {
             Cache.Delete("FFMenus");
-            var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString().ToLower()).ToArray();
-            await LoginUserInfo.RemoveUserCache(userids);
+            //var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString().ToLower()).ToArray();
+            //await LoginUserInfo.RemoveUserCache(userids);
             return Ok(Mvc.Admin.Program._localizer["OprationSuccess"]);
         }
         #endregion

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WalkingTec.Mvvm.Core;
@@ -108,7 +109,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 List<LayuiTreeItem> treeitems = GetLayuiTree(mm);
                 var onclick = $@"
                 ,click: function(data){{
-                    var ele = data.elem.find('.layui-tree-entry:first');
+                    var ele = null;
+                    if(data.elem != undefined){{
+                        ele = data.elem.find('.layui-tree-entry:first');
+                    }}
+                    else{{
+                        ele = $('#div{Id}').find(""div[data-id='""+data.data.id+""']"").find('.layui-tree-entry:first');
+                    }}
                     if(last{Id} != null){{
                         last{Id}.css('background-color','');
                         last{Id}.find('.layui-tree-txt').css('color','');
@@ -124,6 +131,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     {cusmtomclick}
                   }}";
 
+                var selecteditem = GetSelectedItem(treeitems);
+                
+
                 var script = $@"
 <div id=""div{Id}outer"" class=""layui-col-md2 donotuse_pdiv"" style=""padding-right:10px;border-right:solid 1px #aaa;"">
 <div id=""div{Id}"" class=""donotuse_fill"" style=""overflow:auto;height:10px;"">
@@ -133,12 +143,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 <script>
 layui.use(['tree'],function(){{
   var last{Id} = null;
-  layui.tree.render({{
+  var treecontainer{Id} = layui.tree.render({{
     id:'tree{Id}',elem: '#div{Id}',onlyIconControl:true, showCheckbox:false,showLine:{ShowLine.ToString().ToLower()}
     {onclick}
     ,data: {JsonConvert.SerializeObject(treeitems)}
   }});
-  {(string.IsNullOrEmpty(AutoLoadUrl) ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
+  {(selecteditem == null ? string.Empty : $@"treecontainer{Id}.config.click({{
+     data: {JsonConvert.SerializeObject(selecteditem)}
+    }});")}
+  {(string.IsNullOrEmpty(AutoLoadUrl)  || selecteditem != null ? string.Empty : $"ff.LoadPage1('{AutoLoadUrl}','div_{Id}');")}
 }})
 </script>
 ";
@@ -151,7 +164,7 @@ layui.use(['tree'],function(){{
             base.Process(context, output);
         }
 
-        private List<LayuiTreeItem> GetLayuiTree(List<TreeSelectListItem> tree, int level = 0)
+        private List<LayuiTreeItem> GetLayuiTree(List<TreeSelectListItem> tree, int level=0)
         {
             List<LayuiTreeItem> rv = new List<LayuiTreeItem>();
             foreach (var s in tree)
@@ -162,7 +175,8 @@ layui.use(['tree'],function(){{
                     Title = s.Text,
                     Url = s.Url,
                     Expand = s.Expended,
-                    Level = level
+                    Level = level,
+                    Checked = s.Selected
                     //Children = new List<LayuiTreeItem>()
                 };
                 if (s.Children != null && s.Children.Count > 0)
@@ -178,7 +192,28 @@ layui.use(['tree'],function(){{
             return rv;
         }
 
-
+        private LayuiTreeItem GetSelectedItem(List<LayuiTreeItem> tree)
+        {
+            foreach (var item in tree)
+            {
+                if(item.Checked == true)
+                {
+                    return item;
+                }
+                else
+                {
+                    if(item.Children?.Count > 0)
+                    {
+                        var rv = GetSelectedItem(item.Children);
+                        if(rv != null)
+                        {
+                            return rv;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
     }
 }
