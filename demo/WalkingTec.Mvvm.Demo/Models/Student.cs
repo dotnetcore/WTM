@@ -47,7 +47,6 @@ namespace WalkingTec.Mvvm.Demo.Models
         public string ZipCode { get; set; }
 
         [Display(Name = "照片")]
-        [Required]
         public Guid? PhotoId { get; set; }
 
         [Display(Name = "照片")]

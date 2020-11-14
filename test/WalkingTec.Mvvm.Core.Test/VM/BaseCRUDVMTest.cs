@@ -40,18 +40,20 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataRow("222","test2", SchoolTypeEnum.PUB,"remark2")]
         public void SingleTableDoAdd(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            School s = new School();
-            s.SchoolCode = code;
-            s.SchoolName = name;
-            s.SchoolType = schooltype;
-            s.Remark = remark;
+            School s = new School
+            {
+                SchoolCode = code,
+                SchoolName = name,
+                SchoolType = schooltype,
+                Remark = remark
+            };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var rv = context.Set<School>().ToList();
-                Assert.AreEqual(1, rv.Count());
+                Assert.AreEqual(1, rv.Count);
                 Assert.AreEqual(code, rv[0].SchoolCode);
                 Assert.AreEqual(name, rv[0].SchoolName);
                 Assert.AreEqual(schooltype, rv[0].SchoolType);
@@ -69,22 +71,26 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "remark2")]
         public void SingleTableDoEdit(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            School s = new School();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = null;
-            s.Remark = "default";
+            School s = new School
+            {
+                SchoolCode = "000",
+                SchoolName = "default",
+                SchoolType = null,
+                Remark = "default"
+            };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                School s2 = new School();
-                s2.SchoolCode = code;
-                s2.SchoolName = name;
-                s2.SchoolType = schooltype;
-                s2.Remark = remark;
-                s2.ID = s.ID;
+                School s2 = new School
+                {
+                    SchoolCode = code,
+                    SchoolName = name,
+                    SchoolType = schooltype,
+                    Remark = remark,
+                    ID = s.ID
+                };
                 _schoolvm.DC = context;
                 _schoolvm.Entity = s2;
                 _schoolvm.DoEdit(true);
@@ -93,7 +99,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var rv = context.Set<School>().ToList();
-                Assert.AreEqual(1, rv.Count());
+                Assert.AreEqual(1, rv.Count);
                 Assert.AreEqual(code, rv[0].SchoolCode);
                 Assert.AreEqual(name, rv[0].SchoolName);
                 Assert.AreEqual(schooltype, rv[0].SchoolType);
@@ -111,22 +117,26 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [DataRow("222", "test2", SchoolTypeEnum.PUB, "remark2")]
         public void SingleTableDoEditFields(string code, string name, SchoolTypeEnum schooltype, string remark)
         {
-            School s = new School();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = null;
-            s.Remark = "default";
+            School s = new School
+            {
+                SchoolCode = "000",
+                SchoolName = "default",
+                SchoolType = null,
+                Remark = "default"
+            };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
-                School s2 = new School();
-                s2.SchoolCode = code;
-                s2.SchoolName = name;
-                s2.SchoolType = schooltype;
-                s2.Remark = remark;
-                s2.ID = s.ID;
+                School s2 = new School
+                {
+                    SchoolCode = code,
+                    SchoolName = name,
+                    SchoolType = schooltype,
+                    Remark = remark,
+                    ID = s.ID
+                };
                 _schoolvm.DC = context;
                 _schoolvm.Entity = s2;
                 _schoolvm.FC.Add("Entity.SchoolName", name);
@@ -136,7 +146,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             using (var context = new DataContext(_seed, DBTypeEnum.Memory))
             {
                 var rv = context.Set<School>().ToList();
-                Assert.AreEqual(1, rv.Count());
+                Assert.AreEqual(1, rv.Count);
                 Assert.AreEqual("000", rv[0].SchoolCode);
                 Assert.AreEqual(name, rv[0].SchoolName);
                 Assert.AreEqual(null, rv[0].SchoolType);
@@ -151,11 +161,13 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [Description("单表删除")]
         public void SingleTableDelete()
         {
-            School s = new School();
-            s.SchoolCode = "000";
-            s.SchoolName = "default";
-            s.SchoolType = null;
-            s.Remark = "default";
+            School s = new School
+            {
+                SchoolCode = "000",
+                SchoolName = "default",
+                SchoolType = null,
+                Remark = "default"
+            };
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
@@ -177,10 +189,12 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [Description("Persist单表删除")]
         public void SingleTablePersistDelete()
         {
-            Student s = new Student();
-            s.LoginName = "a";
-            s.Password = "b";
-            s.Name = "ab";
+            Student s = new Student
+            {
+                LoginName = "a",
+                Password = "b",
+                Name = "ab"
+            };
             _studentvm.Entity = s;
             _studentvm.DoAdd();
 
@@ -217,11 +231,13 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _goodsvm.DC.AddEntity(gc);
             _goodsvm.DC.SaveChanges();
 
-            GoodsSpecification g = new GoodsSpecification();
-            g.Name = "g1";
-            g.OrderNum = 1;
-            g.IsValid = true;
-            g.CatalogId = gc.ID;
+            GoodsSpecification g = new GoodsSpecification
+            {
+                Name = "g1",
+                OrderNum = 1,
+                IsValid = true,
+                CatalogId = gc.ID
+            };
             _goodsvm.Entity = g;
             _goodsvm.DoAdd();
 
@@ -313,10 +329,12 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [Description("Persist单表物理删除")]
         public void SingleTablePersistRealDelete()
         {
-            Student s = new Student();
-            s.LoginName = "a";
-            s.Password = "b";
-            s.Name = "ab";
+            Student s = new Student
+            {
+                LoginName = "a",
+                Password = "b",
+                Name = "ab"
+            };
             _studentvm.Entity = s;
             _studentvm.DoAdd();
 
@@ -339,11 +357,13 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         [Description("一对多添加")]
         public void One2ManyDoAdd()
         {
-            School s = new School();
-            s.SchoolCode = "000";
-            s.SchoolName = "school";
-            s.SchoolType = SchoolTypeEnum.PRI;
-            s.Majors = new List<Major>();
+            School s = new School
+            {
+                SchoolCode = "000",
+                SchoolName = "school",
+                SchoolType = SchoolTypeEnum.PRI,
+                Majors = new List<Major>()
+            };
             s.Majors.Add(new Major
             {
                 MajorCode = "111",
@@ -359,26 +379,23 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _schoolvm.Entity = s;
             _schoolvm.DoAdd();
 
-            using (var context = new DataContext(_seed, DBTypeEnum.Memory))
-            {
-                Assert.AreEqual(1, context.Set<School>().Count());
-                Assert.AreEqual(2, context.Set<Major>().Count());
-                var rv = context.Set<Major>().ToList();
-                Assert.AreEqual("111", rv[0].MajorCode);
-                Assert.AreEqual("major1", rv[0].MajorName);
-                Assert.AreEqual(MajorTypeEnum.Optional, rv[0].MajorType);
-                Assert.AreEqual("222", rv[1].MajorCode);
-                Assert.AreEqual("major2", rv[1].MajorName);
-                Assert.AreEqual(MajorTypeEnum.Required, rv[1].MajorType);
+            using var context = new DataContext(_seed, DBTypeEnum.Memory);
+            Assert.AreEqual(1, context.Set<School>().Count());
+            Assert.AreEqual(2, context.Set<Major>().Count());
+            var rv = context.Set<Major>().ToList();
+            Assert.AreEqual("111", rv[0].MajorCode);
+            Assert.AreEqual("major1", rv[0].MajorName);
+            Assert.AreEqual(MajorTypeEnum.Optional, rv[0].MajorType);
+            Assert.AreEqual("222", rv[1].MajorCode);
+            Assert.AreEqual("major2", rv[1].MajorName);
+            Assert.AreEqual(MajorTypeEnum.Required, rv[1].MajorType);
 
-                Assert.AreEqual("schooluser", context.Set<School>().First().CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(context.Set<School>().First().CreateTime.Value).Seconds < 10);
-                Assert.AreEqual("schooluser", rv[0].CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv[0].CreateTime.Value).Seconds < 10);
-                Assert.AreEqual("schooluser", rv[1].CreateBy);
-                Assert.IsTrue(DateTime.Now.Subtract(rv[1].CreateTime.Value).Seconds < 10);
-
-            }
+            Assert.AreEqual("schooluser", context.Set<School>().First().CreateBy);
+            Assert.IsTrue(DateTime.Now.Subtract(context.Set<School>().First().CreateTime.Value).Seconds < 10);
+            Assert.AreEqual("schooluser", rv[0].CreateBy);
+            Assert.IsTrue(DateTime.Now.Subtract(rv[0].CreateTime.Value).Seconds < 10);
+            Assert.AreEqual("schooluser", rv[1].CreateBy);
+            Assert.IsTrue(DateTime.Now.Subtract(rv[1].CreateTime.Value).Seconds < 10);
         }
 
 
@@ -415,10 +432,14 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             _majorvm.Entity = m2;
             _majorvm.DoAdd();
 
-            s1.StudentMajor = new List<StudentMajor>();
-            s1.StudentMajor.Add(new StudentMajor { MajorId = m1.ID });
-            s2.StudentMajor = new List<StudentMajor>();
-            s2.StudentMajor.Add(new StudentMajor { MajorId = m2.ID });
+            s1.StudentMajor = new List<StudentMajor>
+            {
+                new StudentMajor { MajorId = m1.ID }
+            };
+            s2.StudentMajor = new List<StudentMajor>
+            {
+                new StudentMajor { MajorId = m2.ID }
+            };
             _studentvm.Entity = s1;
             _studentvm.DoAdd();
             _studentvm.Entity = s2;
@@ -449,14 +470,16 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<School>().Select(x=>x.ID).First();
                 var mid = context.Set<Major>().Select(x => x.ID).First();
                 School s = new School { ID = id };
-                s.Majors = new List<Major>();
-                s.Majors.Add(new Major
+                s.Majors = new List<Major>
                 {
-                    MajorCode = "333",
-                    MajorName = "major3",
-                    MajorType = MajorTypeEnum.Optional
-                });
-                s.Majors.Add(new Major { ID = mid, MajorCode = "111update" });
+                    new Major
+                    {
+                        MajorCode = "333",
+                        MajorName = "major3",
+                        MajorType = MajorTypeEnum.Optional
+                    },
+                    new Major { ID = mid, MajorCode = "111update" }
+                };
                 _schoolvm.Entity = s;
                 _schoolvm.DC = context;
                 _schoolvm.DoEdit(true);
@@ -499,18 +522,22 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 var id = context.Set<School>().Select(x => x.ID).First();
                 var mid = context.Set<Major>().Select(x => x.ID).First();
                 School s = new School { ID = id };
-                s.Majors = new List<Major>();
-                s.Majors.Add(new Major
+                s.Majors = new List<Major>
                 {
-                    MajorCode = "333",
-                    MajorName = "major3",
-                    MajorType = MajorTypeEnum.Optional
-                });
-                s.Majors.Add(new Major { ID = mid, MajorCode = "111update" });
+                    new Major
+                    {
+                        MajorCode = "333",
+                        MajorName = "major3",
+                        MajorType = MajorTypeEnum.Optional
+                    },
+                    new Major { ID = mid, MajorCode = "111update" }
+                };
                 _schoolvm.Entity = s;
                 _schoolvm.DC = context;
-                _schoolvm.FC = new Dictionary<string, object>();
-                _schoolvm.FC.Add("Entity.Majors[0].MajorCode",null);
+                _schoolvm.FC = new Dictionary<string, object>
+                {
+                    { "Entity.Majors[0].MajorCode", null }
+                };
                 _schoolvm.DoEdit();
             }
 
@@ -755,9 +782,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 context.SaveChanges();
             }
 
-            _majorvm = new MajorVM1();
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
-            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
+            _majorvm = new MajorVM1
+            {
+                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required }
+            };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
         }
@@ -772,9 +801,11 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 context.SaveChanges();
             }
 
-            _majorvm = new MajorVM2();
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
-            _majorvm.Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
+            _majorvm = new MajorVM2
+            {
+                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required }
+            };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
             Assert.IsTrue(_majorvm.MSD["Entity.MajorName"].Count > 0);
@@ -793,21 +824,23 @@ namespace WalkingTec.Mvvm.Core.Test.VM
                 context.SaveChanges();
             }
 
-            var OptMajorvm = new MajorVM3();
-            OptMajorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
-            OptMajorvm.Entity = new OptMajor { MajorCode = "111", MajorName = "not222", SchoolId=null, MajorType = MajorTypeEnum.Required };
+            var OptMajorvm = new MajorVM3
+            {
+                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Entity = new OptMajor { MajorCode = "111", MajorName = "not222", SchoolId = null, MajorType = MajorTypeEnum.Required }
+            };
             OptMajorvm.Validate();
-            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
+            Assert.IsFalse(OptMajorvm.MSD.Keys.Any());
 
             OptMajorvm.MSD.Clear();
             OptMajorvm.Entity = new OptMajor { MajorCode = "222", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
             OptMajorvm.Validate();
-            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() == 0);
+            Assert.IsFalse(OptMajorvm.MSD.Keys.Any());
 
             OptMajorvm.MSD.Clear();
             OptMajorvm.Entity = new OptMajor { MajorCode = "111", MajorName = "222", SchoolId = s.ID, MajorType = MajorTypeEnum.Required };
             OptMajorvm.Validate();
-            Assert.IsTrue(OptMajorvm.MSD.Keys.Count() > 0);
+            Assert.IsTrue(OptMajorvm.MSD.Keys.Any());
 
         }
 

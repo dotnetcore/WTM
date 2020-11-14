@@ -390,10 +390,6 @@ namespace WalkingTec.Mvvm.Core
         {
             object rv = null;
             var col = CompiledCol?.Invoke(source as T);
-            if(col == null)
-            {
-                return "";
-            }
             if(needFormat == false && Format != null)
             {
                 var test = Format.Invoke(source as T, col);
@@ -405,7 +401,11 @@ namespace WalkingTec.Mvvm.Core
 
             if (Format == null || needFormat == false)
             {
-                if (col is DateTime dateTime)
+                if (col == null)
+                {
+                    rv = "";
+                }
+                else if (col is DateTime dateTime)
                 {
                     rv = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
                 }

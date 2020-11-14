@@ -19,6 +19,7 @@ using WalkingTec.Mvvm.Mvc.Filters;
 using WalkingTec.Mvvm.Core.Json;
 using WalkingTec.Mvvm.Core.Extensions;
 using System.Text.Json.Serialization;
+using WalkingTec.Mvvm.ReactDemo.Models;
 
 namespace WalkingTec.Mvvm.ReactDemo
 {
@@ -72,7 +73,7 @@ namespace WalkingTec.Mvvm.ReactDemo
             })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddWtmDataAnnotationsLocalization(typeof(Program));
-            services.AddWtmContext(ConfigRoot);
+            services.AddWtmContext(ConfigRoot, x => x.DataPrivileges = DataPrivilegeSettings());
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
@@ -138,8 +139,8 @@ namespace WalkingTec.Mvvm.ReactDemo
         {
             List<IDataPrivilege> pris = new List<IDataPrivilege>();
             //Add data privilege to specific type
-            //pris.Add(new DataPrivilegeInfo<typea>("aaaPrivilege", m => m.Name));
-            //pris.Add(new DataPrivilegeInfo<typeb>("bbbPrivilege", m => m.Name));
+            pris.Add(new DataPrivilegeInfo<School>("学校权限", m => m.SchoolName));
+            pris.Add(new DataPrivilegeInfo<Major>("专业权限", m => m.MajorName));
             return pris;
         }
 
