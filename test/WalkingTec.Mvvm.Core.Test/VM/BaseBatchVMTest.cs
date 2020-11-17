@@ -18,8 +18,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public BaseBatchVMTest()
         {
             _seed = Guid.NewGuid().ToString();
-            _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
+            _schoolvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
+            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
 
         }
 

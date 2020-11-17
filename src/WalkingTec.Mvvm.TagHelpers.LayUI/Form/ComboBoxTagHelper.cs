@@ -54,13 +54,13 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public string ChangeFunc { get; set; }
 
-        public ComboBoxTagHelper()
+        public ComboBoxTagHelper(IOptions<Configs> configs)
         {
             if (EmptyText == null)
             {
                 EmptyText = THProgram._localizer["PleaseSelect"];
             }
-            EnableSearch = GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.ComboBox.DefaultEnableSearch;
+            EnableSearch = configs.Value.UiOptions.ComboBox.DefaultEnableSearch;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)

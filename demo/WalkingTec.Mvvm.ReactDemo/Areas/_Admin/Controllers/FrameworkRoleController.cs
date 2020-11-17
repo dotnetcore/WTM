@@ -134,7 +134,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     roleids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }

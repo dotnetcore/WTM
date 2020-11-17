@@ -157,12 +157,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             await DC.SaveChangesAsync();
             if (DpType == DpTypeEnum.User)
             {
-                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+                await Wtm.RemoveUserCache(Entity.UserId.ToString());
             }
             else
             {
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
             }
 
         }
@@ -240,12 +240,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             await DC.SaveChangesAsync();
             if (DpType == DpTypeEnum.User)
             {
-                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+                await Wtm.RemoveUserCache(Entity.UserId.ToString());
             }
             else
             {
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
             }
         }
 
@@ -270,12 +270,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             await DC.SaveChangesAsync();
             if (DpType == DpTypeEnum.User)
             {
-                await LoginUserInfo.RemoveUserCache(Entity.UserId.ToString());
+                await Wtm.RemoveUserCache(Entity.UserId.ToString());
             }
             else
             {
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == Entity.GroupId).Select(x => x.UserId.ToString()).ToArray();
-                await LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
             }
         }
     }

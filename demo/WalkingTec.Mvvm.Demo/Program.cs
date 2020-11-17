@@ -29,7 +29,6 @@ namespace WalkingTec.Mvvm.Demo
                  {
                      webBuilder.UseStartup<Startup>();
                  });
-
         }
 
     }

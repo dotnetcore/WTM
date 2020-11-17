@@ -143,7 +143,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             Cache.Delete("FFMenus");
             var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString().ToLower()).ToArray();
-            await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+            await Wtm.RemoveUserCache(userids);
             return Ok(Localizer["OprationSuccess"]);
         }
         #endregion
@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFolders")]
         public ActionResult GetFolders()
         {
-            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(WtmContext, null, x => x.PageName);
+            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, null, x => x.PageName);
             foreach (var p in AllParents)
             {
                 if (p.Text.StartsWith("MenuKey."))

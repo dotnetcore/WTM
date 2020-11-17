@@ -169,7 +169,7 @@ namespace WalkingTec.Mvvm.Core
         public void CopyContext(IBaseVM vm)
         {
             FC = vm.FC;
-            this.WtmContext = vm.WtmContext;
+            this.WtmContext = vm.Wtm;
         }
 
         #endregion

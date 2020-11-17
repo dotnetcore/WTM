@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +20,8 @@ namespace WalkingTec.Mvvm.Core
         /// IsFake
         /// </summary>
         bool IsFake { get; set; }
+
+        bool IsDebug { get; set; }
 
         DBTypeEnum DBType { get; set; }
         /// <summary>
@@ -134,5 +137,7 @@ namespace WalkingTec.Mvvm.Core
         DataTable Run(string sql, CommandType commandType, params object[] paras);
         IEnumerable<TElement> Run<TElement>(string sql, CommandType commandType, params object[] paras);
         object CreateCommandParameter(string name, object value, ParameterDirection dir);
+
+        void SetLoggerFactory(ILoggerFactory factory);
     }
 }

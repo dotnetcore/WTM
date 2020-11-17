@@ -186,7 +186,7 @@ namespace WalkingTec.Mvvm.Core
                 var fid = typeof(TModel).GetProperty(fname).GetValue(rv);
                 if (fid != null)
                 {
-                    var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                    var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                     var file = fp.GetFile(fid?.ToString(), false, DC);
                     rv.SetPropertyValue(f.Name, file);
                 }
@@ -204,7 +204,7 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -220,7 +220,7 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -343,7 +343,7 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -361,7 +361,7 @@ namespace WalkingTec.Mvvm.Core
             //删除不需要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -710,7 +710,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 DC.SaveChanges();
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 foreach (var item in fileids)
                 {
                     fp.DeleteFile(item.ToString(),DC.ReCreate());
@@ -763,7 +763,7 @@ namespace WalkingTec.Mvvm.Core
                 }
                 DC.DeleteEntity(Entity);
                 await DC.SaveChangesAsync();
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 foreach (var item in fileids)
                 {
                     fp.DeleteFile(item.ToString(),DC.ReCreate());
@@ -820,7 +820,7 @@ namespace WalkingTec.Mvvm.Core
                 base.Validate();
                 //如果msd是BasicMSD，则认为他是手动创建的，也就是说并没有走asp.net core默认的模型验证
                 //那么手动验证模型
-                if (WtmContext?.MSD is BasicMSD)
+                if (Wtm?.MSD is BasicMSD)
                 {
                     var valContext = new ValidationContext(this.Entity);
                     List<ValidationResult> error = new List<ValidationResult>();

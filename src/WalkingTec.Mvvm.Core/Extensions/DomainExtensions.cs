@@ -9,10 +9,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
 {
     public static class DomainExtensions
     {
+        public static IHttpClientFactory factory;
 
         public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url, HttpMethodEnum method ,HttpContent content,  ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
         {
-            var factory = GlobalServices.GetRequiredService<IHttpClientFactory>();
             try
             {
                 if (string.IsNullOrEmpty(url))
@@ -148,7 +148,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static async Task<string> CallAPI(this FrameworkDomain self, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
-            var factory = GlobalServices.GetRequiredService<IHttpClientFactory>();
             try
             {
                 if (string.IsNullOrEmpty(url))

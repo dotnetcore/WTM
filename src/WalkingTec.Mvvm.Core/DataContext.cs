@@ -301,6 +301,8 @@ namespace WalkingTec.Mvvm.Core
 
     public partial class EmptyContext : DbContext, IDataContext
     {
+        private ILoggerFactory _loggerFactory;
+
         /// <summary>
         /// Commited
         /// </summary>
@@ -311,6 +313,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         public bool IsFake { get; set; }
 
+        public bool IsDebug { get; set; }
         /// <summary>
         /// CSName
         /// </summary>
@@ -556,24 +559,23 @@ namespace WalkingTec.Mvvm.Core
                 default:
                     break;
             }
-            try
-            {
-                var Configs = GlobalServices.GetRequiredService<IOptions<Configs>>()?.Value;//如果是debug模式,将EF生成的sql语句输出到debug输出
-                if (Configs?.IsQuickDebug == true)
+                if (IsDebug == true)
                 {
                     optionsBuilder.EnableDetailedErrors();
                     optionsBuilder.EnableSensitiveDataLogging();
-                    optionsBuilder.UseLoggerFactory(LoggerFactory);
+                if (_loggerFactory != null)
+                {
+                    optionsBuilder.UseLoggerFactory(_loggerFactory);
                 }
-            }
-            catch { }
+                }
             base.OnConfiguring(optionsBuilder);
         }
 
-        public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new ILoggerProvider[] {
-            new DebugLoggerProvider(),
-            new ConsoleLoggerProvider(GlobalServices.GetRequiredService<IOptionsMonitor<ConsoleLoggerOptions>>())
-        }, GlobalServices.GetRequiredService<IOptionsMonitor<LoggerFilterOptions>>());
+        public void SetLoggerFactory(ILoggerFactory factory)
+        {
+            this._loggerFactory = factory;
+        }
+
 
         /// <summary>
         /// 数据初始化
@@ -770,6 +772,7 @@ namespace WalkingTec.Mvvm.Core
 
         public string CSName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public DBTypeEnum DBType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsDebug { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void AddEntity<T>(T entity) where T : TopBasePoco
         {
@@ -862,6 +865,11 @@ namespace WalkingTec.Mvvm.Core
         }
 
         public DbSet<T> Set<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetLoggerFactory(ILoggerFactory factory)
         {
             throw new NotImplementedException();
         }

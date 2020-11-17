@@ -147,13 +147,13 @@ namespace WalkingTec.Mvvm.Doc
                 case DotnetVersionEnum.dotnet2_2:
                     SwashbuckleVersion = "4.0.1";
                     EFDesignVersion = "2.2.4";
-                    version = Utils.GetNugetVersion("2.",false);
+                    version = Utils.GetNugetVersion(Wtm, "2.",false);
                     RazorPackage = "";
                     break;
                 case DotnetVersionEnum.dotnet3_0:
                     SwashbuckleVersion = "5.0.0-rc4";
                     EFDesignVersion = "3.1.5";
-                    version = Utils.GetNugetVersion("3.",true);
+                    version = Utils.GetNugetVersion(Wtm,"3.",true);
                     RazorPackage = "    <PackageReference Include=\"Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation\" Version=\"3.1.5\" />";
                     break;
                 default:

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,8 +19,18 @@ namespace WalkingTec.Mvvm.ConsoleDemo
 
         static void Main(string[] args)
         {
+            StartUp();
+            var context = GetWtmContext();
+            var test = context.ConfigInfo.Domains["baidu"].CallAPI("/").Result;
+            AddSchool();
+            Console.ReadLine();
+        }
+
+        static void StartUp()
+        {
             var configBuilder = new ConfigurationBuilder();
             IConfigurationRoot ConfigRoot = configBuilder.WTMConfig(null).Build();
+            var configs = ConfigRoot.Get<Configs>();
             var services = new ServiceCollection();
             services.Configure<Configs>(ConfigRoot);
             services.AddLogging(builder =>
@@ -29,19 +40,22 @@ namespace WalkingTec.Mvvm.ConsoleDemo
                        .AddDebug()
                        .AddWTMLogger();
             });
-            services.AddScoped<WTMContext>();
+            services.AddWtmContextForConsole(configs);
             Provider = services.BuildServiceProvider();
-
-            AddSchool();
-
-            var logger = Provider.GetRequiredService<ILogger<ActionLog>>();
-            logger.LogInformation("School Added");
+            DomainExtensions.factory = Provider.GetRequiredService<IHttpClientFactory>();
         }
 
         static T CreateVM<T>() where T : IBaseVM, new()
         {
             T rv = new T();
-            rv.WtmContext = Provider.GetRequiredService<WTMContext>();
+            rv.Wtm = GetWtmContext();
+            return rv;
+        }
+
+        static WTMContext GetWtmContext()
+        {
+            var rv = Provider.GetRequiredService<WTMContext>();
+            rv.SetServiceProvider(Provider);
             return rv;
         }
 
@@ -49,9 +63,9 @@ namespace WalkingTec.Mvvm.ConsoleDemo
         {
             SchoolVM vm = CreateVM<SchoolVM>();
 
-            WtmFileProvider fp = new WtmFileProvider(vm.WtmContext.ConfigInfo);
+            WtmFileProvider fp = new WtmFileProvider(vm.Wtm.ConfigInfo);
             var fh = fp.CreateFileHandler();
-            var fs = File.OpenRead("C:\\Users\\michael\\Pictures\\vue1.png");
+            var fs = File.OpenRead("C:\\Users\\michael\\Pictures\\QQ截图20201104025651.png");
             var file = fh.Upload("vue1.png", fs.Length, fs);
 
             vm.Entity = new Demo.Models.School
@@ -83,6 +97,7 @@ namespace WalkingTec.Mvvm.ConsoleDemo
             if(vm.MSD.IsValid == true)
             {
                 vm.DoAdd();
+                vm.Wtm.DoLog("lalala");
                 Console.WriteLine($"添加成功");
             }
             else

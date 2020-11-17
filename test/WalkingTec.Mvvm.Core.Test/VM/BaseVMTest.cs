@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public BaseVMTest()
         {
             _vm = new BaseVM();
-            _vm.WtmContext = MockWtmContext.CreateWtmContext();
+            _vm.Wtm = MockWtmContext.CreateWtmContext();
         }
 
         [TestMethod]
@@ -33,8 +33,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public void GetCurrentWindowId(string windowids, string expectedValue)
         {
             Guid windowguid = Guid.NewGuid();
-            (_vm.WtmContext.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.WtmContext.ConfigInfo?.CookiePre}windowguid", windowguid.ToString());
-            (_vm.WtmContext.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.WtmContext.ConfigInfo?.CookiePre}{windowguid}windowids", windowids);
+            (_vm.Wtm.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.Wtm.ConfigInfo?.CookiePre}windowguid", windowguid.ToString());
+            (_vm.Wtm.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.Wtm.ConfigInfo?.CookiePre}{windowguid}windowids", windowids);
             Assert.AreEqual(_vm.CurrentWindowId, expectedValue);
         }
 
@@ -47,8 +47,8 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public void GetParentWindowId(string windowids, string expectedValue)
         {
             Guid windowguid = Guid.NewGuid();
-            (_vm.WtmContext.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.WtmContext.ConfigInfo?.CookiePre}windowguid", windowguid.ToString());
-            (_vm.WtmContext.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.WtmContext.ConfigInfo?.CookiePre}{windowguid}windowids", windowids);
+            (_vm.Wtm.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.Wtm.ConfigInfo?.CookiePre}windowguid", windowguid.ToString());
+            (_vm.Wtm.HttpContext.Request.Cookies as MockCookie).Add($"{_vm.Wtm.ConfigInfo?.CookiePre}{windowguid}windowids", windowids);
             Assert.AreEqual(_vm.ParentWindowId, expectedValue);
         }
 

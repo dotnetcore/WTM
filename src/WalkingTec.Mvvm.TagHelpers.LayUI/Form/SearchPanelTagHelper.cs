@@ -111,9 +111,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// Is expanded
         /// </summary>
         public bool? Expanded { get; set; }
+
+        private Configs _configs;
+        public SearchPanelTagHelper(IOptions<Configs> configs)
+        {
+            _configs = configs.Value;
+        }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var baseVM = Vm?.Model as BaseVM;
             var tempSearchTitleId = Guid.NewGuid().ToNoSplitString();
             bool show = false;
             if(ListVM?.Searcher?.IsExpanded != null)
@@ -126,7 +132,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             else
             {
-                show = GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.SearchPanel.DefaultExpand;
+                show =_configs.UiOptions.SearchPanel.DefaultExpand;
             }
             var layuiShow = show ? " layui-show" : string.Empty;
             output.PreContent.AppendHtml($@"

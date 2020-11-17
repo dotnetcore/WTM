@@ -18,14 +18,14 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult Index()
         {
             var vm = CreateVM<DataPrivilegeListVM>();
-            vm.Searcher.TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            vm.Searcher.TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
 
         [HttpPost]
         public ActionResult Index(DataPrivilegeListVM vm)
         {
-            vm.Searcher.TableNames = WtmContext.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
+            vm.Searcher.TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
 
@@ -119,10 +119,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         public ActionResult GetPrivilegeByTableName(string table)
         {
             var AllItems = new List<ComboSelectListItem>();
-            var dps = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
+            var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, WtmContext);
+                AllItems = dps.GetItemList(DC, Wtm);
             }
             return JsonMore(AllItems);
         }

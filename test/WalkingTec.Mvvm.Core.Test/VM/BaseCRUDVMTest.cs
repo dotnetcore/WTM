@@ -26,10 +26,10 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         {
             _seed = Guid.NewGuid().ToString();
 
-            _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
-            _studentvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
-            _goodsvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "goodsuser");
+            _schoolvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
+            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
+            _studentvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
+            _goodsvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "goodsuser");
 
         }
 
@@ -784,7 +784,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             _majorvm = new MajorVM1
             {
-                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
                 Entity = new Major { MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required }
             };
             _majorvm.Validate();
@@ -803,7 +803,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             _majorvm = new MajorVM2
             {
-                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
                 Entity = new Major { MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required }
             };
             _majorvm.Validate();
@@ -826,7 +826,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
 
             var OptMajorvm = new MajorVM3
             {
-                WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
+                Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory)),
                 Entity = new OptMajor { MajorCode = "111", MajorName = "not222", SchoolId = null, MajorType = MajorTypeEnum.Required }
             };
             OptMajorvm.Validate();

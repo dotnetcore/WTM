@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var data = DC.Set<FrameworkMenu>().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
             var pids = Entity.GetAllChildrenIDs(DC);
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var modules = Wtm.GlobaInfo.AllModule;
 
             if (Entity.Url != null && Entity.IsInside == true)
             {
@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                var modules = Wtm.GlobaInfo.AllModule;
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && string.IsNullOrEmpty(x.MethodName) && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
-                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                    var modules = Wtm.GlobaInfo.AllModule;
                     var ndc = DC.ReCreate();
                     var actionsInDB = DC.Set<FrameworkMenu>().AsNoTracking().Where(x => x.ParentId == Entity.ID).ToList();
                     var mo = modules.Where(x => x.FullName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
@@ -184,7 +184,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
-                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                    var modules = Wtm.GlobaInfo.AllModule;
 
                     var mo = modules.Where(x => x.FullName == this.SelectedModule && x.IsApi == true).FirstOrDefault();
                     Entity.ModuleName = mo.ModuleName;

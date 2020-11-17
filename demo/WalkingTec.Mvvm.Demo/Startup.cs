@@ -40,7 +40,6 @@ namespace WalkingTec.Mvvm.Demo
         {
             services.AddDistributedMemoryCache();
             services.AddWtmSession(3600);
-            services.AddDataProtection();
             services.AddWtmCrossDomain();
             services.AddWtmAuthentication();
             services.AddWtmHttpClient();

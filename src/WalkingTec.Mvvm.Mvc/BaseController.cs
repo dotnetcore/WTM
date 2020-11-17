@@ -26,62 +26,62 @@ namespace WalkingTec.Mvvm.Mvc
     {
         [JsonIgnore]
         [BindNever]
-        public WTMContext WtmContext { get; set; }
+        public WTMContext Wtm { get; set; }
 
 
         [JsonIgnore]
         [BindNever]
-        public Configs ConfigInfo { get => WtmContext?.ConfigInfo; }
+        public Configs ConfigInfo { get => Wtm?.ConfigInfo; }
 
         [JsonIgnore]
         [BindNever]
-        public GlobalData GlobaInfo { get => WtmContext?.GlobaInfo; }
+        public GlobalData GlobaInfo { get => Wtm?.GlobaInfo; }
 
         [JsonIgnore]
         [BindNever]
-        public IUIService UIService { get => WtmContext?.UIService; }
+        public IUIService UIService { get => Wtm?.UIService; }
 
         [JsonIgnore]
         [BindNever]
-        public IDistributedCache Cache { get => WtmContext?.Cache; }
+        public IDistributedCache Cache { get => Wtm?.Cache; }
 
         [JsonIgnore]
         [BindNever]
-        public string CurrentCS { get => WtmContext?.CurrentCS; }
+        public string CurrentCS { get => Wtm?.CurrentCS; }
 
         [JsonIgnore]
         [BindNever]
-        public DBTypeEnum? CurrentDbType { get => WtmContext?.CurrentDbType; }
+        public DBTypeEnum? CurrentDbType { get => Wtm?.CurrentDbType; }
 
         [JsonIgnore]
         [BindNever]
-        public string ParentWindowId { get => WtmContext?.ParentWindowId; }
+        public string ParentWindowId { get => Wtm?.ParentWindowId; }
 
         [JsonIgnore]
         [BindNever]
-        public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
+        public string CurrentWindowId { get => Wtm?.CurrentWindowId; }
 
         [JsonIgnore]
         [BindNever]
-        public string WindowIds { get => WtmContext?.WindowIds; }
+        public string WindowIds { get => Wtm?.WindowIds; }
 
         #region DataContext
 
         [JsonIgnore]
         [BindNever]
-        public IDataContext DC { get => WtmContext?.DC; }
+        public IDataContext DC { get => Wtm?.DC; }
 
         #endregion
 
         #region URL
         [JsonIgnore]
         [BindNever]
-        public string BaseUrl { get => WtmContext?.BaseUrl; }
+        public string BaseUrl { get => Wtm?.BaseUrl; }
         #endregion
 
         [JsonIgnore]
         [BindNever]
-        public IStringLocalizer Localizer { get => WtmContext?.Localizer; }
+        public IStringLocalizer Localizer { get => Wtm?.Localizer; }
 
 
         //-------------------------------------------方法------------------------------------//
@@ -101,7 +101,7 @@ namespace WalkingTec.Mvvm.Mvc
             //Use reflection to create viewmodel
             var ctor = VMType.GetConstructor(Type.EmptyTypes);
             BaseVM rv = ctor.Invoke(null) as BaseVM;
-            rv.WtmContext = this.WtmContext;
+            rv.Wtm = this.Wtm;
 
             rv.FC = new Dictionary<string, object>();
             rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;

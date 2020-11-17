@@ -60,10 +60,10 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                     type = "bar",
                     data = new int[] {
                         10,
-                        WtmContext.GlobaInfo.AllAssembly.Count(),
-                        WtmContext.DataPrivilegeSettings.Count(),
-                        WtmContext.ConfigInfo.ConnectionStrings.Count(),
-                        WtmContext.ConfigInfo.AppSettings.Count()
+                        Wtm.GlobaInfo.AllAssembly.Count(),
+                        Wtm.DataPrivilegeSettings.Count(),
+                        Wtm.ConfigInfo.ConnectionStrings.Count(),
+                        Wtm.ConfigInfo.AppSettings.Count()
                     },
                 }
             };
@@ -80,7 +80,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Layout")]
         public IActionResult Layout()
         {
-            ViewData["debug"] = WtmContext.ConfigInfo.IsQuickDebug;
+            ViewData["debug"] = Wtm.ConfigInfo.IsQuickDebug;
             return PartialView();
         }
 
@@ -109,9 +109,9 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ResponseCache(Duration = 3600)]
         public github GetGithubInfo()
         {
-            var rv = WtmContext.ReadFromCache<github>("githubinfo", () =>
+            var rv = Wtm.ReadFromCache<github>("githubinfo", () =>
             {
-                var s = WtmContext.ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
+                var s = Wtm.ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
                 return s;
             }, 1800);
 

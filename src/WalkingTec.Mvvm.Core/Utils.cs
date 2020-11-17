@@ -79,14 +79,13 @@ namespace WalkingTec.Mvvm.Core
             return _allAssemblies;
         }
 
-        public static SimpleMenu FindMenu(string url)
+        public static SimpleMenu FindMenu(string url, List<SimpleMenu> menus)
         {
             if(url == null)
             {
                 return null;
             }
             url = url.ToLower();
-            var menus = GlobalServices.GetRequiredService<GlobalData>()?.AllMenus;
             if(menus == null)
             {
                 return null;
@@ -721,10 +720,10 @@ namespace WalkingTec.Mvvm.Core
         }
         #endregion
 
-        public static string GetNugetVersion(string start = null, bool pre = false)
+        public static string GetNugetVersion(WTMContext context, string start = null, bool pre = false)
         {
-            var Cache = GlobalServices.GetRequiredService<IDistributedCache>();
-            var config = GlobalServices.GetRequiredService<Configs>();
+            var Cache = context.Cache;
+            var config = context.ConfigInfo;
             if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
             {
                 NugetInfo v = config.Domains["nuget"].CallAPI<NugetInfo>($"/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;

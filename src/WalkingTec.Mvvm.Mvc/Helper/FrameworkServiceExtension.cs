@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
@@ -73,9 +74,8 @@ namespace WalkingTec.Mvvm.Mvc
             return gd;
         }
 
-        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule)
+        private static List<SimpleMenu> GetAllMenus(List<SimpleModule> allModule, Configs ConfigInfo)
         {
-            var ConfigInfo = GlobalServices.GetService<IOptions<Configs>>().Value;
             var localizer = new ResourceManagerStringLocalizerFactory(Options.Create<LocalizationOptions>(new LocalizationOptions { ResourcesPath = "Resources" }), new Microsoft.Extensions.Logging.LoggerFactory()).Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
             var menus = new List<SimpleMenu>();
 
@@ -491,7 +491,6 @@ namespace WalkingTec.Mvvm.Mvc
             services.AddSingleton(ib);
             services.AddScoped<WTMContext>();
             services.AddSingleton<WtmFileProvider>();
-            GlobalServices.SetServiceProvider(services.BuildServiceProvider());
             return services;
         }
         public static IServiceCollection AddWtmCrossDomain(this IServiceCollection services)
@@ -719,11 +718,11 @@ namespace WalkingTec.Mvvm.Mvc
             gd.SetMenuGetFunc(() =>
             {
                 var menus = new List<SimpleMenu>();
-                var cache = GlobalServices.GetService<IDistributedCache>();
+                var cache = app.ApplicationServices.GetRequiredService<IDistributedCache>();
                 var menuCacheKey = "FFMenus";
                 if (cache.TryGetValue(menuCacheKey, out List<SimpleMenu> rv) == false)
                 {
-                    var data = GetAllMenus(gd.AllModule);
+                    var data = GetAllMenus(gd.AllModule, configs);
                     cache.Add(menuCacheKey, data,new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = new TimeSpan(1, 0, 0) });
                     menus = data;
                 }
@@ -759,7 +758,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
             }
             var test = app.ApplicationServices.GetService<ISpaStaticFileProvider>();
-            var test2 = app.ApplicationServices.GetRequiredService<WtmFileProvider>();
+            var test2 = app.ApplicationServices.GetService<WtmFileProvider>();
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var fixdc = scope.ServiceProvider.GetRequiredService<IDataContext>();
@@ -778,6 +777,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
             }
+            DomainExtensions.factory = app.ApplicationServices.GetRequiredService<IHttpClientFactory>();
             return app;
         }
         public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)

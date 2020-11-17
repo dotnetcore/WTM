@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.CityVMs
 	    protected override void InitVM()
         {
             Parent_Excel.DataType = ColumnDataType.ComboBox;
-            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(WtmContext, null, y => y.Name);
+            Parent_Excel.ListItems = DC.Set<City>().GetSelectListItems(Wtm, null, y => y.Name);
         }
 
     }

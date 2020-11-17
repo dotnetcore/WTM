@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         {
             _seed = Guid.NewGuid().ToString();
             _studentListVM = new BasePagedListVM<Student, BaseSearcher>();
-            _studentListVM.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
+            _studentListVM.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             for (int i = 1; i <= 20; i++)
             {
                 _studentListVM.DC.Set<Student>().Add(new Student

@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
         public LoginUserInfo DoLogin(bool ignorePris = false)
         {
             //根据用户名和密码查询用户
-            var user = WtmContext.LoadUserFromDB(null, ITCode, Password).Result;
+            var user = Wtm.LoadUserFromDB(null, ITCode, Password).Result;
 
             //如果没有找到则输出错误
             if (user == null)

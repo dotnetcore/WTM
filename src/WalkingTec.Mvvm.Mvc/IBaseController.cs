@@ -9,7 +9,7 @@ namespace WalkingTec.Mvvm.Mvc
 {
     public interface IBaseController
     {
-        WTMContext WtmContext { get; set; }
+        WTMContext Wtm { get; set; }
 
         Configs ConfigInfo { get; }
         GlobalData GlobaInfo { get; }

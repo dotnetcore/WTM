@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     tempids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserBase>().Where(x => tempids.Contains(x.ID)).Select(x => x.ID.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }
         }
@@ -170,14 +170,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("GetRoles")]
         public ActionResult GetFrameworkRoles()
         {
-            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(WtmContext, null, x => x.RoleName));
+            return Ok(DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, x => x.RoleName));
         }
 
         [HttpGet("GetFrameworkGroups")]
         [ActionDescription("GetGroups")]
         public ActionResult GetFrameworkGroups()
         {
-            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(WtmContext, null, x => x.GroupName));
+            return Ok(DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, x => x.GroupName));
         }
 
     }

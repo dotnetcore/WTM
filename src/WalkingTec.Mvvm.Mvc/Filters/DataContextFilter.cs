@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     }
                 }
                 dbtype = fixcontroller?.DbType ?? fixaction?.DbType;
-                cs = Utils.GetCS(cs, mode, controller.WtmContext.ConfigInfo);
+                cs = Utils.GetCS(cs, mode, controller.Wtm.ConfigInfo);
             }
             else
             {
@@ -66,12 +66,12 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                         mode = "Write";
                     }
                     cs = context.HttpContext.Request.Query["DONOTUSECSName"];
-                    cs = Utils.GetCS(cs, mode, controller.WtmContext.ConfigInfo);
+                    cs = Utils.GetCS(cs, mode, controller.Wtm.ConfigInfo);
                 }
             }
 
-            controller.WtmContext.CurrentCS = cs;
-            controller.WtmContext.CurrentDbType = dbtype;
+            controller.Wtm.CurrentCS = cs;
+            controller.Wtm.CurrentDbType = dbtype;
             base.OnActionExecuting(context);
         }
     }

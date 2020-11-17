@@ -162,7 +162,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         {
             Cache.Delete("FFMenus");
             var userids = DC.Set<FrameworkUserBase>().Select(x => x.ID.ToString().ToLower()).ToArray();
-            await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+            await Wtm.RemoveUserCache(userids);
             return FFResult().Alert(Localizer["OprationSuccess"]);
         }
         #endregion
@@ -170,7 +170,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("GetActionsByModelId")]
         public JsonResult GetActionsByModelId(string Id)
         {
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var modules = Wtm.GlobaInfo.AllModule;
             var m = modules.Where(x => x.FullName == Id).SelectMany(x => x.Actions).Where(x => x.MethodName != "Index" && x.IgnorePrivillege == false).ToList();
             var AllActions = m.ToListItems(y => y.ActionName, y => y.Url);
             AllActions.ForEach(x => x.Selected = true);

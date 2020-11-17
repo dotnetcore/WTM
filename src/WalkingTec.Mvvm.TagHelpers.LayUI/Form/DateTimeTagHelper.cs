@@ -166,6 +166,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             { DateTimeTypeEnum.Month,"yyyy-MM"},
             { DateTimeTypeEnum.Time,"HH:mm:ss"},
         };
+
+        private Configs _configInfo;
+
+        public DateTimeTagHelper(IOptions<Configs> configs)
+        {
+            _configInfo = configs.Value;
+        }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             string Value = null;
@@ -221,7 +229,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }
             output.Attributes.Add("value", Value);
             output.Attributes.Add("class", "layui-input");
-            if (GlobalServices.GetRequiredService<IOptions<Configs>>().Value.UiOptions.DateTime.DefaultReadonly)
+            if (_configInfo.UiOptions.DateTime.DefaultReadonly)
                 output.Attributes.Add("readonly", "readonly");
 
             if (!string.IsNullOrEmpty(Min))

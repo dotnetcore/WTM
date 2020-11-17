@@ -12,30 +12,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
 {
     public static class LoginUserInfoExtension
     {
-        private static IDistributedCache _cache;
-        private static IDistributedCache Cache
-        {
-            get
-            {
-                if (_cache == null)
-                {
-                    _cache = GlobalServices.GetRequiredService<WTMContext>().Cache;
-                }
-                return _cache;
-            }
-        }
-
-        public static async Task RemoveUserCache(
-                    this LoginUserInfo userInfo,
-                    params string[] userIds)
-        {
-            foreach (var userId in userIds)
-            {
-                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId}";
-                await Cache.DeleteAsync(key);
-            }
-        }
-
         public static ClaimsPrincipal CreatePrincipal(this LoginUserInfo self)
         {
             if (self.Id == Guid.Empty) throw new ArgumentException("Id is mandatory", nameof(self.Id));

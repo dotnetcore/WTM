@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == id).Select(x => x.UserId.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                     groupids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["OprationSuccess"]);
             }
         }

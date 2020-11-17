@@ -207,7 +207,7 @@ namespace WalkingTec.Mvvm.Core
                     return;
                 }
 
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 var file = fp.GetFile(UploadFileId, true, DC);
                 if (file == null)
                 {
@@ -822,7 +822,7 @@ namespace WalkingTec.Mvvm.Core
             //删除不必要的附件
             if (DeletedFileIds != null && DeletedFileIds.Count > 0)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
 
                 foreach (var item in DeletedFileIds)
                 {
@@ -934,7 +934,7 @@ namespace WalkingTec.Mvvm.Core
             }
             if (string.IsNullOrEmpty(UploadFileId) == false)
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 fp.DeleteFile(UploadFileId, DC.ReCreate());
             }
 
@@ -1228,7 +1228,7 @@ namespace WalkingTec.Mvvm.Core
             var err = ErrorListVM?.EntityList?.Where(x => x.Index == 0).FirstOrDefault()?.Message;
             if (string.IsNullOrEmpty(err))
             {
-                var fp = WtmContext.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
                 var fh = fp.CreateFileHandler();
                 var fa = fp.GetFile(UploadFileId, true, DC);
                 xssfworkbook = new XSSFWorkbook(fa.DataStream);

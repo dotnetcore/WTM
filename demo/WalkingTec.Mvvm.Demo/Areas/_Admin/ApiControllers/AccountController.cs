@@ -40,14 +40,14 @@ namespace WalkingTec.Mvvm.Admin.Api
         public async Task<IActionResult> Login([FromForm]string userid, [FromForm]string password, [FromForm]bool rememberLogin = false, [FromForm]bool cookie = true)
         {
 
-            var user = await WtmContext.LoadUserFromDB(null, userid, password);
+            var user = await Wtm.LoadUserFromDB(null, userid, password);
 
             //如果没有找到则输出错误
             if (user == null)
             {
                 return BadRequest(Localizer["LoginFailed"].Value);
             }
-            WtmContext.LoginUserInfo = user;
+            Wtm.LoginUserInfo = user;
 
             if (cookie) // cookie auth
             {
@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                     };
                 }
 
-                var principal = WtmContext.LoginUserInfo.CreatePrincipal();
+                var principal = Wtm.LoginUserInfo.CreatePrincipal();
                 // 在上面注册AddAuthentication时，指定了默认的Scheme，在这里便可以不再指定Scheme。
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 List<SimpleMenu> ms = new List<SimpleMenu>();
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             {
                 var authService = HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
 
-                var token = await authService.IssueTokenAsync(WtmContext.LoginUserInfo);
+                var token = await authService.IssueTokenAsync(Wtm.LoginUserInfo);
                 return Content(JsonSerializer.Serialize(token), "application/json");
             }
         }
@@ -141,27 +141,27 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult CheckUserInfo()
         {
-            if (WtmContext.LoginUserInfo == null)
+            if (Wtm.LoginUserInfo == null)
             {
                 return BadRequest();
             }
             else
             {
                 var forapi = new LoginUserInfo();
-                forapi.Id = WtmContext.LoginUserInfo.Id;
-                forapi.ITCode = WtmContext.LoginUserInfo.ITCode;
-                forapi.Name = WtmContext.LoginUserInfo.Name;
-                forapi.Roles = WtmContext.LoginUserInfo.Roles;
-                forapi.Groups = WtmContext.LoginUserInfo.Groups;
-                forapi.PhotoId = WtmContext.LoginUserInfo.PhotoId;
+                forapi.Id = Wtm.LoginUserInfo.Id;
+                forapi.ITCode = Wtm.LoginUserInfo.ITCode;
+                forapi.Name = Wtm.LoginUserInfo.Name;
+                forapi.Roles = Wtm.LoginUserInfo.Roles;
+                forapi.Groups = Wtm.LoginUserInfo.Groups;
+                forapi.PhotoId = Wtm.LoginUserInfo.PhotoId;
 
                 var ms = new List<SimpleMenu>();
-                var roleIDs = WtmContext.LoginUserInfo.Roles.Select(x => x.ID).ToList();
+                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.ID).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
-                                .Where(x => x.UserId == WtmContext.LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .Where(x => x.UserId == Wtm.LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
                                 .ToList();
 

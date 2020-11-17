@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Auth;
@@ -30,14 +31,14 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             }
             context.SetWtmContext();
 
-            if (controller.WtmContext.ConfigInfo.IsQuickDebug && controller is BaseApiController)
+            if (controller.Wtm.ConfigInfo.IsQuickDebug && controller is BaseApiController)
             {
                 base.OnActionExecuting(context);
                 return;
             }
             ControllerActionDescriptor ad = context.ActionDescriptor as ControllerActionDescriptor;
 
-            var lg = GlobalServices.GetRequiredService<LinkGenerator>();
+            var lg = context.HttpContext.RequestServices.GetRequiredService<LinkGenerator>();
 
             string u = null;
             if (ad.Parameters.Any(x=>x.Name.ToLower() == "id"))
@@ -57,7 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
-            controller.WtmContext.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent();
+            controller.Wtm.BaseUrl = u + context.HttpContext.Request.QueryString.ToUriComponent();
 
 
             //如果是QuickDebug模式，或者Action或Controller上有AllRightsAttribute标记都不需要判断权限
@@ -69,7 +70,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
             var isAllRights = ad.MethodInfo.IsDefined(typeof(AllRightsAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(AllRightsAttribute), false);
             var isDebug = ad.MethodInfo.IsDefined(typeof(DebugOnlyAttribute), false) || ad.ControllerTypeInfo.IsDefined(typeof(DebugOnlyAttribute), false);
-            if (controller.WtmContext.ConfigInfo.IsFilePublic == true)
+            if (controller.Wtm.ConfigInfo.IsFilePublic == true)
             {
                 if (ad.ControllerName == "_Framework" && (ad.MethodInfo.Name == "GetFile" || ad.MethodInfo.Name == "ViewFile"))
                 {
@@ -107,7 +108,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 return;
             }
 
-            if (controller.WtmContext.LoginUserInfo == null)
+            if (controller.Wtm.LoginUserInfo == null)
             {
                 if (controller is ControllerBase ctrl)
                 {
@@ -142,7 +143,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                             }
                             else
                             {
-                                string lp = controller.WtmContext.ConfigInfo.CookieOption.LoginPath;
+                                string lp = controller.Wtm.ConfigInfo.CookieOption.LoginPath;
                                 if (lp.StartsWith("/"))
                                 {
                                     lp = "~" + lp;
@@ -170,7 +171,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             {
                 if (isAllRights == false)
                 {
-                    bool canAccess = controller.WtmContext.IsAccessable(controller.BaseUrl);
+                    bool canAccess = controller.Wtm.IsAccessable(controller.BaseUrl);
                     if (canAccess == false && controller.ConfigInfo.IsQuickDebug == false)
                     {
                         if (controller is ControllerBase ctrl)

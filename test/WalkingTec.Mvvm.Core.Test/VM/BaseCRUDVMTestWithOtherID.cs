@@ -24,9 +24,9 @@ namespace WalkingTec.Mvvm.Core.Test.VM
         public BaseCRUDVMTestWithOtherID()
         {
             _seed = Guid.NewGuid().ToString();
-            _schoolvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
-            _studentvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
+            _schoolvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "schooluser");
+            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "majoruser");
+            _studentvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory), "studentuser");
         }
 
         [TestMethod]
@@ -579,7 +579,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
 
             _majorvm = new MajorVM1WithOtherID();
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
+            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             _majorvm.Entity = new MajorWithOtherID {ID="id2", MajorCode = "111", MajorName = "not222", MajorType = MajorTypeEnum.Required };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);
@@ -596,7 +596,7 @@ namespace WalkingTec.Mvvm.Core.Test.VM
             }
 
             _majorvm = new MajorVM2WithOtherID();
-            _majorvm.WtmContext = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
+            _majorvm.Wtm = MockWtmContext.CreateWtmContext(new DataContext(_seed, DBTypeEnum.Memory));
             _majorvm.Entity = new MajorWithOtherID {ID="id2", MajorCode = "111", MajorName = "222", MajorType = MajorTypeEnum.Required };
             _majorvm.Validate();
             Assert.IsTrue(_majorvm.MSD["Entity.MajorCode"].Count > 0);

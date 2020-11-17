@@ -24,10 +24,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
         public override IOrderedQueryable<DpView> GetSearchQuery()
         {
 
-            var dps = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
+            var dps = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == Searcher.TableName).SingleOrDefault();
             if (dps != null)
             {
-                return dps.GetItemList(DC, WtmContext).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
+                return dps.GetItemList(DC, Wtm).Select(x => new DpView { ID = x.Value.ToString(), Name = x.Text }).AsQueryable().OrderBy(x => x.Name);
             }
             else
             {

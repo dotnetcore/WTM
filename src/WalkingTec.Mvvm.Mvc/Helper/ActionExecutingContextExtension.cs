@@ -17,14 +17,14 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 return;
             }
-            if (controller.WtmContext == null)
+            if (controller.Wtm == null)
             {
-                controller.WtmContext = self.HttpContext.RequestServices.GetRequiredService<WTMContext>();
+                controller.Wtm = self.HttpContext.RequestServices.GetRequiredService<WTMContext>();
             }
             try
             {
-                controller.WtmContext.MSD = new ModelStateServiceProvider(self.ModelState);
-                controller.WtmContext.Session = new SessionServiceProvider(self.HttpContext.Session);
+                controller.Wtm.MSD = new ModelStateServiceProvider(self.ModelState);
+                controller.Wtm.Session = new SessionServiceProvider(self.HttpContext.Session);
             }
             catch { }
         }

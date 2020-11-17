@@ -61,7 +61,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.StudentVMs
             var query = DC.Set<Student>()
                 .CheckContain(Searcher.Name, x => x.Name)
                 .CheckEqual(Searcher.IsValid, x => x.IsValid)
-                .DPWhere(WtmContext, x => x.StudentMajor[0].MajorId)
+                .DPWhere(Wtm, x => x.StudentMajor[0].MajorId)
                 .Select(x => new Student_View
                 {
 				    ID = x.ID,

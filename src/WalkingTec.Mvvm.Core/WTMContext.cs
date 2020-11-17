@@ -10,6 +10,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Core.Auth;
 using WalkingTec.Mvvm.Core.Extensions;
@@ -22,6 +24,8 @@ namespace WalkingTec.Mvvm.Core
         private HttpContext _httpContext;
         public HttpContext HttpContext { get => _httpContext; }
 
+        private IServiceProvider _serviceProvider;
+        public IServiceProvider ServiceProvider { get => _serviceProvider ??  _httpContext?.RequestServices; }
         private List<IDataPrivilege> _dps;
         public List<IDataPrivilege> DataPrivilegeSettings { get => _dps; }
 
@@ -292,13 +296,15 @@ namespace WalkingTec.Mvvm.Core
 
         public SimpleLog Log { get; set; }
 
+        protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null, IStringLocalizerFactory stringLocalizer = null)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null, IStringLocalizerFactory stringLocalizer = null, ILogger<ActionLog> logger=null)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
             _stringLocalizerFactory = stringLocalizer;
+            this.Logger = logger;
             if(_httpContext == null)
             {
                 MSD = new BasicMSD();
@@ -320,21 +326,9 @@ namespace WalkingTec.Mvvm.Core
             _freesqlib = ib;
         }
 
-        public WTMContext(Configs _config, IDataContext dc=null, IdleBus<IFreeSql> ib =null)
+        public void SetServiceProvider(IServiceProvider sp)
         {
-            _configInfo = _config;
-            _globaInfo = new GlobalData();
-            _dps = new List<IDataPrivilege>();
-            MSD = new BasicMSD();
-            if (dc is NullContext)
-            {
-                _dc = null;
-            }
-            else
-            {
-                _dc = dc;
-            }
-            _freesqlib = ib;
+            this._serviceProvider = sp;
         }
 
 
@@ -362,6 +356,17 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public  async Task RemoveUserCache(
+            params string[] userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var key = $"{GlobalConstants.CacheKey.UserInfo}:{userId}";
+                await Cache.DeleteAsync(key);
+            }
+        }
+
+
         #region CreateDC
         public virtual IDataContext CreateDC(bool isLog = false, string cskey = null)
         {
@@ -381,7 +386,10 @@ namespace WalkingTec.Mvvm.Core
             {
                 cs = "default";
             }
-            return ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            var rv = ConfigInfo.ConnectionStrings.Where(x => x.Key.ToLower() == cs).FirstOrDefault().CreateDC();
+            rv.IsDebug = ConfigInfo.IsQuickDebug;
+            rv.SetLoggerFactory(ServiceProvider.GetRequiredService<ILoggerFactory>());
+            return rv;
         }
 
         public virtual IFreeSql CreateFreeSql(bool isLog = false, string cskey = null)
@@ -446,7 +454,7 @@ namespace WalkingTec.Mvvm.Core
                 return true;
             }
             var menus = _globaInfo.AllMenus;
-            var menu = Utils.FindMenu(url);
+            var menu = Utils.FindMenu(url,GlobaInfo.AllMenus);
             //如果最终没有找到，说明系统菜单中并没有配置这个url，返回false
             if (menu == null)
             {
@@ -481,7 +489,11 @@ namespace WalkingTec.Mvvm.Core
 
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
         {
-            var log = this.Log.GetActionLog();
+            var log = this.Log?.GetActionLog();
+            if(log == null)
+            {
+                log = new ActionLog();
+            }
             log.LogType = logtype;
             log.ActionTime = DateTime.Now;
             log.Remark = msg;
@@ -501,16 +513,7 @@ namespace WalkingTec.Mvvm.Core
                     break;
             }
 
-            ILogger logger = null;
-            if(HttpContext != null)
-            {
-                logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
-            }
-            else
-            {
-
-            }
-            logger.Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+            Logger?.Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
                 return $@"
 ===WTM Log===
 内容:{a.Remark}

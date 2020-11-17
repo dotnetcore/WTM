@@ -316,7 +316,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Attributes.Add("lay-filter", Id);
             output.TagMode = TagMode.StartTagAndEndTag;
 
-            var config = GlobalServices.GetRequiredService<IOptions<Configs>>().Value;
+            var config = ListVM.ConfigInfo;
 
             if (LineHeight.HasValue)
             {
@@ -723,7 +723,7 @@ setTimeout(function(){{
             bool isSub = false
         )
         {
-            if (string.IsNullOrEmpty(item.Url) || vm.WtmContext?.IsAccessable(item.Url) == true ||
+            if (string.IsNullOrEmpty(item.Url) || vm.Wtm?.IsAccessable(item.Url) == true ||
                 item.ParameterType == GridActionParameterTypesEnum.AddRow ||
                 item.ParameterType == GridActionParameterTypesEnum.RemoveRow                 
             )

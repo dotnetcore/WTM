@@ -42,20 +42,20 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             var postDes = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(HttpPostAttribute), false).Cast<HttpPostAttribute>().FirstOrDefault();
             var validpostonly = ctrlActDesc.MethodInfo.GetCustomAttributes(typeof(ValidateFormItemOnlyAttribute), false).Cast<ValidateFormItemOnlyAttribute>().FirstOrDefault();
 
-            log.ITCode = ctrl.WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
+            log.ITCode = ctrl.Wtm.LoginUserInfo?.ITCode ?? string.Empty;
             //给日志的多语言属性赋值
             log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
             log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
             log.ActionUrl = ctrl.BaseUrl;
             log.IP = context.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            ctrl.WtmContext.Log = log;
+            ctrl.Wtm.Log = log;
             foreach (var item in context.ActionArguments)
             {
                 if (item.Value is BaseVM)
                 {
                     var model = item.Value as BaseVM;
-                    model.WtmContext = ctrl.WtmContext;
+                    model.Wtm = ctrl.Wtm;
                     model.FC = new Dictionary<string, object>();
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
                     model.Controller = ctrl;
@@ -220,7 +220,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if(item.Value is BaseSearcher se)
                 {
                     se.FC = new Dictionary<string, object>();
-                    se.WtmContext = ctrl.WtmContext;
+                    se.WtmContext = ctrl.Wtm;
                     se.Validate();
                 }
             }
@@ -238,7 +238,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 base.OnActionExecuted(context);
                 return;
             }
-            ctrl.ViewData["DONOTUSE_COOKIEPRE"] = ctrl.WtmContext.ConfigInfo.CookiePre;
+            ctrl.ViewData["DONOTUSE_COOKIEPRE"] = ctrl.Wtm.ConfigInfo.CookiePre;
             var ctrlActDesc = context.ActionDescriptor as ControllerActionDescriptor;
             if (context.Result is PartialViewResult)
             {
@@ -252,7 +252,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if (model != null)
                 {
                     string pagetitle = string.Empty;
-                    var menu = Utils.FindMenu(context.HttpContext.Request.Path);
+                    var menu = Utils.FindMenu(context.HttpContext.Request.Path,ctrl.GlobaInfo.AllMenus);
                     if (menu == null)
                     {
                         var ctrlDes = ctrlActDesc.ControllerTypeInfo.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
@@ -343,7 +343,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
 
                     log.LogType = context.Exception == null ? ActionLogTypesEnum.Normal : ActionLogTypesEnum.Exception;
                     log.ActionTime = DateTime.Now;
-                    log.ITCode = ctrl.WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
+                    log.ITCode = ctrl.Wtm.LoginUserInfo?.ITCode ?? string.Empty;
                     // 给日志的多语言属性赋值
                     log.ModuleName = ctrlDes?.GetDescription(ctrl) ?? ctrlActDesc.ControllerName;
                     log.ActionName = actDes?.GetDescription(ctrl) ?? ctrlActDesc.ActionName + (postDes == null ? string.Empty : "[P]");
@@ -375,7 +375,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
             if (context.Exception != null)
             {
                 context.ExceptionHandled = true;
-                if (ctrl.WtmContext.ConfigInfo.IsQuickDebug == true)
+                if (ctrl.Wtm.ConfigInfo.IsQuickDebug == true)
                 {
                     context.HttpContext.Response.WriteAsync(context.Exception.ToString());
                 }

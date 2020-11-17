@@ -89,7 +89,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
             }
 
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var modules = Wtm.GlobaInfo.AllModule;
 
             var toRemove = new List<SimpleModule>();
             foreach (var item in modules)
@@ -121,7 +121,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         {
             if (Entity.IsInside == true && Entity.FolderOnly == false)
             {
-                var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                var modules = Wtm.GlobaInfo.AllModule;
                 var test = DC.Set<FrameworkMenu>().Where(x => x.ClassName == this.SelectedModule && (x.MethodName == null || x.MethodName == "Index") && x.ID != Entity.ID).FirstOrDefault();
                 if (test != null)
                 {
@@ -156,7 +156,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
-                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                    var modules = Wtm.GlobaInfo.AllModule;
                     List<SimpleAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)
@@ -259,7 +259,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                 }
                 if (string.IsNullOrEmpty(SelectedModule) == false && Entity.FolderOnly == false)
                 {
-                    var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+                    var modules = Wtm.GlobaInfo.AllModule;
                     List<SimpleAction> otherActions = null;
                     var mainAction = modules.Where(x => x.FullName == this.SelectedModule).SelectMany(x => x.Actions).Where(x => x.MethodName == "Index").FirstOrDefault();
                     if (mainAction == null && Entity.ShowOnMenu == true)

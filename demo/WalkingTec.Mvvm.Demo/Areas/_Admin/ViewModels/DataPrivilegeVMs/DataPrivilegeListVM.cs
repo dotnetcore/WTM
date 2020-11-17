@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
 
         public string GetPrivilegeName(DataPrivilege_ListView item)
         {
-            var temp = WtmContext.DataPrivilegeSettings.Where(x => x.ModelName == item.TableName).SingleOrDefault();
+            var temp = Wtm.DataPrivilegeSettings.Where(x => x.ModelName == item.TableName).SingleOrDefault();
             if (temp == null)
             {
                 return "";

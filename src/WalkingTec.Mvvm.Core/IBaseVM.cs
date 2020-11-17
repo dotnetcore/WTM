@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Core
     {
         #region Property
 
-        WTMContext WtmContext { get; set; }
+        WTMContext Wtm { get; set; }
 
         /// <summary>
         /// UniqueId

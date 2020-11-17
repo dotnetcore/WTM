@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == id).Select(x => x.UserId.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
             else
@@ -138,7 +138,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                     roleids.Add(Guid.Parse(item));
                 }
                 var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
-                await WtmContext.LoginUserInfo.RemoveUserCache(userids);
+                await Wtm.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid();
             }
         }

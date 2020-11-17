@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Core
         #region Property
 
         [JsonIgnore]
-        public WTMContext WtmContext { get; set; }
+        public WTMContext Wtm { get; set; }
 
         private Guid _uniqueId;
         /// <summary>
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Core
         /// 前台传递过来的弹出窗口ID，多层弹出窗口用逗号分隔
         /// </summary>
         [JsonIgnore]
-        public string WindowIds { get => WtmContext?.WindowIds; }
+        public string WindowIds { get => Wtm?.WindowIds; }
 
         private string _viewdivid;
         /// <summary>
@@ -87,7 +87,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_dc == null)
                 {
-                    return WtmContext?.DC;
+                    return Wtm?.DC;
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.Core
         /// 获取当前使用的连接字符串
         /// </summary>
         [JsonIgnore]
-        public string CurrentCS { get => WtmContext?.CurrentCS; }
+        public string CurrentCS { get => Wtm?.CurrentCS; }
 
         /// <summary>
         /// 记录Controller中传递过来的表单数据
@@ -139,53 +139,53 @@ namespace WalkingTec.Mvvm.Core
         /// 获取配置文件的信息
         /// </summary>
         [JsonIgnore]
-        public Configs ConfigInfo { get=> WtmContext?.ConfigInfo; }
+        public Configs ConfigInfo { get=> Wtm?.ConfigInfo; }
 
 
         [JsonIgnore]
-        public IUIService UIService { get=> WtmContext?.UIService; }
+        public IUIService UIService { get=> Wtm?.UIService; }
 
         /// <summary>
         /// 当前弹出层ID
         /// </summary>
         [JsonIgnore]
-        public string CurrentWindowId { get => WtmContext?.CurrentWindowId; }
+        public string CurrentWindowId { get => Wtm?.CurrentWindowId; }
 
         /// <summary>
         /// 父级弹出层ID
         /// </summary>
         [JsonIgnore]
-        public string ParentWindowId { get => WtmContext?.ParentWindowId; }
+        public string ParentWindowId { get => Wtm?.ParentWindowId; }
 
         [JsonIgnore]
         public object Controller { get; set; }
 
         [JsonIgnore]
-        public IDistributedCache Cache { get => WtmContext?.Cache; }
+        public IDistributedCache Cache { get => Wtm?.Cache; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get=> WtmContext?.LoginUserInfo;}
+        public LoginUserInfo LoginUserInfo { get=> Wtm?.LoginUserInfo;}
 
         /// <summary>
         /// 当前Url
         /// </summary>
         [JsonIgnore]
-        public string CurrentUrl { get => WtmContext?.BaseUrl; }
+        public string CurrentUrl { get => Wtm?.BaseUrl; }
 
         /// <summary>
         /// Session信息
         /// </summary>
         [JsonIgnore]
-        public ISessionService Session { get => WtmContext?.Session; }
+        public ISessionService Session { get => Wtm?.Session; }
 
         /// <summary>
         /// Controller传递过来的ModelState信息
         /// </summary>
         [JsonIgnore]
-        public IModelStateService MSD { get => WtmContext?.MSD; }
+        public IModelStateService MSD { get => Wtm?.MSD; }
 
         /// <summary>
         /// 用于保存删除的附件ID
@@ -197,7 +197,7 @@ namespace WalkingTec.Mvvm.Core
         public string ControllerName { get; set; }
 
         [JsonIgnore]
-        public IStringLocalizer Localizer { get => WtmContext?.Localizer; }
+        public IStringLocalizer Localizer { get => Wtm?.Localizer; }
         #endregion
 
         #region Event
@@ -265,7 +265,7 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="vm">复制的源</param>
         public void CopyContext(BaseVM vm)
         {
-            WtmContext = vm.WtmContext;
+            Wtm = vm.Wtm;
             FC = vm.FC;
             CreatorAssembly = vm.CreatorAssembly;
         }

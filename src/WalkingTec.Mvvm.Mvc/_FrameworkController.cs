@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Mvc
             //var vmType = Type.GetType(_DONOT_USE_VMNAME);
             //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
             //var listVM = vmCreater.Invoke(null) as BaseVM;
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
+            Wtm.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Mvc
             }
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
-            WtmContext.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
+            Wtm.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
             var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
@@ -209,7 +209,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("DownloadTemplate")]
         public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
-            WtmContext.CurrentCS = _DONOT_USE_CS ?? "default";
+            Wtm.CurrentCS = _DONOT_USE_CS ?? "default";
             var importVM = CreateVM(_DONOT_USE_VMNAME) as IBaseImport<BaseTemplateVM>;
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
@@ -232,7 +232,7 @@ namespace WalkingTec.Mvvm.Mvc
             ActionLog log = new ActionLog();
             log.LogType = ActionLogTypesEnum.Exception;
             log.ActionTime = DateTime.Now;
-            log.ITCode = WtmContext.LoginUserInfo?.ITCode ?? string.Empty;
+            log.ITCode = Wtm.LoginUserInfo?.ITCode ?? string.Empty;
 
             var controllerDes = ex.Error.TargetSite.DeclaringType.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
             var actionDes = ex.Error.TargetSite.GetCustomAttributes(typeof(ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
@@ -439,7 +439,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             url = HttpUtility.UrlDecode(url);
             string pagetitle = string.Empty;
-            var menu = Utils.FindMenu(url);
+            var menu = Utils.FindMenu(url, Wtm.GlobaInfo.AllMenus);
             if (menu == null)
             {
             }
@@ -455,7 +455,7 @@ namespace WalkingTec.Mvvm.Mvc
                 }
                 pagetitle += menu.PageName;
             }
-            if (WtmContext.IsAccessable(url))
+            if (Wtm.IsAccessable(url))
             {
                 return Content($@"<title>{pagetitle}</title>
 <iframe src='{url}' frameborder='0' class='layadmin-iframe'></iframe>");
@@ -482,7 +482,7 @@ namespace WalkingTec.Mvvm.Mvc
             //如果没有指定用户信息，则用当前用户的登录信息
             if (info == null)
             {
-                info = WtmContext.LoginUserInfo;
+                info = Wtm.LoginUserInfo;
             }
             //循环所有菜单项
             foreach (var menu in menus)
@@ -493,7 +493,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     url = url.Replace("/_framework/outside?url=", "");
                 }
-                if (!string.IsNullOrEmpty(url) && WtmContext.IsAccessable(url) == false)
+                if (!string.IsNullOrEmpty(url) && Wtm.IsAccessable(url) == false)
                 {
                     toRemove.Add(menu);
                 }
@@ -613,7 +613,7 @@ namespace WalkingTec.Mvvm.Mvc
         [HttpGet]
         public IActionResult Menu()
         {
-            if (WtmContext.ConfigInfo.IsQuickDebug == true)
+            if (Wtm.ConfigInfo.IsQuickDebug == true)
             {
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(GlobaInfo.AllMenus, resultMenus, true);
@@ -628,7 +628,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 var resultMenus = new List<Menu>();
                 GenerateMenuTree(GlobaInfo.AllMenus.Where(x => x.ShowOnMenu == true).ToList(), resultMenus);
-                RemoveUnAccessableMenu(resultMenus, WtmContext.LoginUserInfo);
+                RemoveUnAccessableMenu(resultMenus, Wtm.LoginUserInfo);
                 RemoveEmptyMenu(resultMenus);
                 LocalizeMenu(resultMenus);
                 return Content(JsonSerializer.Serialize(new { Code = 200, Msg = string.Empty, Data = resultMenus }, new JsonSerializerOptions()
@@ -642,13 +642,13 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult IsAccessable(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            if (WtmContext.LoginUserInfo == null)
+            if (Wtm.LoginUserInfo == null)
             {
                 return Unauthorized();
             }
             else
             {
-                bool canAccess = WtmContext.IsAccessable(url);
+                bool canAccess = Wtm.IsAccessable(url);
                 return Ok(canAccess);
             }
         }
@@ -657,7 +657,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public string GetGithubStarts()
         {
-            return WtmContext.ReadFromCache<string>("githubstar", () =>
+            return Wtm.ReadFromCache<string>("githubstar", () =>
             {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return s == null ? "" : s.stargazers_count.ToString();
@@ -668,7 +668,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ResponseCache(Duration = 3600)]
         public ActionResult GetGithubInfo()
         {
-            var rv = WtmContext.ReadFromCache<string>("githubinfo", () =>
+            var rv = Wtm.ReadFromCache<string>("githubinfo", () =>
             {
                 var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
                 return JsonSerializer.Serialize(s);

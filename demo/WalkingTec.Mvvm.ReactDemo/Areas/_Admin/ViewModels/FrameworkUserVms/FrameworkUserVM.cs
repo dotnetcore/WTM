@@ -48,13 +48,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         public override async Task DoEditAsync(bool updateAllFields = false)
         {
             await base.DoEditAsync(updateAllFields);
-            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
+            await Wtm.RemoveUserCache(Entity.ID.ToString());
         }
 
         public override async Task DoDeleteAsync()
         {
             await base.DoDeleteAsync();
-            await LoginUserInfo.RemoveUserCache(Entity.ID.ToString());
+            await Wtm.RemoveUserCache(Entity.ID.ToString());
         }
 
         public void ChangePassword()

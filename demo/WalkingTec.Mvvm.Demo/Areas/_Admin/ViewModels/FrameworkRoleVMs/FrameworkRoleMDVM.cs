@@ -47,7 +47,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkRoleVMs
             }
             await DC.SaveChangesAsync();
             var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == Entity.ID).Select(x => x.UserId.ToString()).ToArray();
-            await LoginUserInfo.RemoveUserCache(userids);
+            await Wtm.RemoveUserCache(userids);
             return true;
         }
 

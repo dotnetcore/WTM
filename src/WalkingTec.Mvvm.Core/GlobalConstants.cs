@@ -4,7 +4,7 @@ namespace WalkingTec.Mvvm.Core
     {
         public static class CacheKey
         {
-            public const string UserInfo = "UserInfo";
+            public const string UserInfo = "WtmUserInfo";
         }
     }
 }

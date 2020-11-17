@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -30,15 +31,15 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             LoginVM vm = CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
-            if (WtmContext.ConfigInfo.IsQuickDebug == true)
+            if (Wtm.ConfigInfo.IsQuickDebug == true)
             {
                 vm.ITCode = "admin";
                 vm.Password = "000000";
             }
-           // WtmContext.DoLog("LogTest");
-            var logger = GlobalServices.GetRequiredService<ILogger<ActionLog>>();
+           Wtm.DoLog("LogTest");
+            var logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
             logger.LogInformation("test");
-            var test = WtmContext.FreeSql.Select<City>().CheckEqual("abc", x => x.Name).ToList();
+            var test = Wtm.FreeSql.Select<City>().CheckEqual("abc", x => x.Name).ToList();
             return View(vm);
         }
 
@@ -46,7 +47,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(LoginVM vm)
         {
-            if (WtmContext.ConfigInfo.IsQuickDebug == false)
+            if (Wtm.ConfigInfo.IsQuickDebug == false)
             {
                 var verifyCode = HttpContext.Session.Get<string>("verify_code");
                 if (string.IsNullOrEmpty(verifyCode) || verifyCode.ToLower() != vm.VerifyCode.ToLower())
@@ -63,7 +64,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
             else
             {
-                WtmContext.LoginUserInfo = user;
+                Wtm.LoginUserInfo = user;
                 string url = string.Empty;
                 if (!string.IsNullOrEmpty(vm.Redirect))
                 {
@@ -125,7 +126,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Logout")]
         public async Task Logout()
         {
-            await WtmContext.LoginUserInfo.RemoveUserCache(WtmContext.LoginUserInfo.Id.ToString());
+            await Wtm.RemoveUserCache(Wtm.LoginUserInfo.Id.ToString());
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Response.Redirect("/");
@@ -136,7 +137,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         public ActionResult ChangePassword()
         {
             var vm = CreateVM<ChangePasswordVM>();
-            vm.ITCode = WtmContext.LoginUserInfo.ITCode;
+            vm.ITCode = Wtm.LoginUserInfo.ITCode;
             return PartialView(vm);
         }
 

@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var newdc = DC as FrameworkContext;
             List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
             var urls = newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().ToList();
-            actions = GlobalServices.GetRequiredService<GlobalData>().AllModule.SelectMany(x => x.Actions)
+            actions = Wtm.GlobaInfo.AllModule.SelectMany(x => x.Actions)
                .Where(x => x.Module.IsApi == true && urls.Contains(x.Url) == false)
                .Select(x => new FrameworkAction_ListView
                {
@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                    AreaName = x.Module.Area?.AreaName
                }).ToList();
 
-            var modules = GlobalServices.GetRequiredService<GlobalData>().AllModule;
+            var modules = Wtm.GlobaInfo.AllModule;
             List<FrameworkAction_ListView> toremove = new List<FrameworkAction_ListView>();
             foreach (var item in actions)
             {
