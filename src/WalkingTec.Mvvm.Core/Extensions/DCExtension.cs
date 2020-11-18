@@ -10,9 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using FreeSql;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using WalkingTec.Mvvm.Core.Support.Json;
 
 namespace WalkingTec.Mvvm.Core.Extensions
@@ -637,21 +635,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 return baseQuery.Where(where);
             }
         }
-
-        public static ISelect<T> CheckEqual<T>(this ISelect<T> baseQuery, string val, Expression<Func<T, string>> field) where T:class
-        {
-            if (val == null || val == "")
-            {
-                return baseQuery;
-            }
-            else
-            {
-                var equal = Expression.Equal(field.Body, Expression.Constant(val));
-                var where = Expression.Lambda<Func<T, bool>>(equal, field.Parameters[0]);
-                return baseQuery.Where(where);
-            }
-        }
-
 
         public static IQueryable<T> CheckEqual<T, S>(this IQueryable<T> baseQuery, S? val, Expression<Func<T, S?>> field)
             where S : struct

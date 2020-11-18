@@ -135,15 +135,6 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        private IdleBus<IFreeSql> _freesqlib;
-
-        public IFreeSql FreeSql
-        {
-            get
-            {
-                return CreateFreeSql();
-            }
-        }
         #endregion
 
         #region Current User
@@ -298,7 +289,7 @@ namespace WalkingTec.Mvvm.Core
 
         protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IdleBus<IFreeSql> ib = null, IStringLocalizerFactory stringLocalizer = null, ILogger<ActionLog> logger=null)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILogger<ActionLog> logger=null)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd ?? new GlobalData();
@@ -323,7 +314,6 @@ namespace WalkingTec.Mvvm.Core
             {
                 _dc = dc;
             }
-            _freesqlib = ib;
         }
 
         public void SetServiceProvider(IServiceProvider sp)
@@ -391,28 +381,6 @@ namespace WalkingTec.Mvvm.Core
             rv.SetLoggerFactory(ServiceProvider.GetRequiredService<ILoggerFactory>());
             return rv;
         }
-
-        public virtual IFreeSql CreateFreeSql(bool isLog = false, string cskey = null)
-        {
-            string cs = cskey?? CurrentCS;
-            if (isLog == true)
-            {
-                if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
-                {
-                    cs = "defaultlog";
-                }
-                else
-                {
-                    cs = "default";
-                }
-            }
-            if (cs == null)
-            {
-                cs = "default";
-            }
-            return _freesqlib?.Get(cs);
-        }
-
 
         #endregion
 

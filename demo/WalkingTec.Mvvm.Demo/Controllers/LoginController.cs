@@ -39,7 +39,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
            Wtm.DoLog("LogTest");
             var logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
             logger.LogInformation("test");
-            var test = Wtm.FreeSql.Select<City>().CheckEqual("abc", x => x.Name).ToList();
             return View(vm);
         }
 

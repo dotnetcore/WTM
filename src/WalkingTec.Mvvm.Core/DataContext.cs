@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.Extensions.Options;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -532,7 +532,16 @@ namespace WalkingTec.Mvvm.Core
                     optionsBuilder.UseSqlServer(CSName);
                     break;
                 case DBTypeEnum.MySql:
-                    optionsBuilder.UseMySQL(CSName);
+                    ServerVersion sv = null;
+                    if (string.IsNullOrEmpty(Version) == false)
+                    {
+                        ServerVersion.TryFromString(Version, out sv);
+                    }
+                    if (sv == null)
+                    {
+                        sv = ServerVersion.AutoDetect(CSName);
+                    }
+                    optionsBuilder.UseMySql(CSName, sv);
                     break;
                 case DBTypeEnum.PgSql:
                     optionsBuilder.UseNpgsql(CSName);
