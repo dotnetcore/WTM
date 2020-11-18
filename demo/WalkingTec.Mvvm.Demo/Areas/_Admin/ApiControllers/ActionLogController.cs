@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         {
             if (ModelState.IsValid)
             {
-                var vm = CreateVM<ActionLogListVM>(passInit:true);
+                var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -37,7 +37,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public ActionLogVM Get(Guid id)
         {
-            var vm = CreateVM<ActionLogVM>(id);
+            var vm = Wtm.CreateVM<ActionLogVM>(id);
             return vm;
         }
 
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<ActionLogBatchVM>();
+            var vm = Wtm.CreateVM<ActionLogBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -69,7 +69,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(ActionLogSearcher searcher)
         {
-            var vm = CreateVM<ActionLogListVM>();
+            var vm = Wtm.CreateVM<ActionLogListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -79,7 +79,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<ActionLogListVM>();
+            var vm = Wtm.CreateVM<ActionLogListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);

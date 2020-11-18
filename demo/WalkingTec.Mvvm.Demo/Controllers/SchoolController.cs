@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<SchoolListVM>();
             return PartialView(vm);
         }
 
@@ -42,7 +42,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索并修改某字段")]
         public ActionResult EditIndex()
         {
-            var vm = CreateVM<SchoolListVM2>();
+            var vm = Wtm.CreateVM<SchoolListVM2>();
             return PartialView(vm);
         }
 
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("新建")]
         public ActionResult Create()
         {
-            var vm = CreateVM<SchoolVM>();
+            var vm = Wtm.CreateVM<SchoolVM>();
             return PartialView(vm);
         }
 
@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         public ActionResult Edit(string id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
         }
 
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("删除")]
         public ActionResult Delete(int id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
         }
 
@@ -141,7 +141,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(int id, IFormCollection nouse)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -158,7 +158,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("详细")]
         public ActionResult Details(int id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -168,7 +168,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量修改")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<SchoolBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -192,7 +192,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量删除")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<SchoolBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<SchoolBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -215,7 +215,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("导入")]
         public ActionResult Import()
         {
-            var vm = CreateVM<SchoolImportVM>();
+            var vm = Wtm.CreateVM<SchoolImportVM>();
             return PartialView(vm);
         }
 
@@ -239,7 +239,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("主子表新建")]
         public ActionResult Create2()
         {
-            var vm = CreateVM<SchoolVM>();
+            var vm = Wtm.CreateVM<SchoolVM>();
             vm.MajorList.DetailGridPrix = "Entity.Majors";
             return PartialView(vm);
         }
@@ -279,7 +279,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("主子表修改")]
         public ActionResult Edit2(long id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             vm.MajorList.DetailGridPrix = "Entity.Majors";
             vm.MajorList.Searcher.SchoolId = id;
             return PartialView(vm);

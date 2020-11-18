@@ -158,9 +158,6 @@ namespace WalkingTec.Mvvm.Core
         public string ParentWindowId { get => Wtm?.ParentWindowId; }
 
         [JsonIgnore]
-        public object Controller { get; set; }
-
-        [JsonIgnore]
         public IDistributedCache Cache { get => Wtm?.Cache; }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace WalkingTec.Mvvm.Mvc
             , string _DONOT_USE_TRIGGER_URL
         )
         {
-            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
+            var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
             {
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("GetEmptyData")]
         public IActionResult GetEmptyData(string _DONOT_USE_VMNAME)
         {
-            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
+            var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             string data = listVM.GetSingleDataJson(null, false);
             var rv = new ContentResult
             {
@@ -114,7 +114,7 @@ namespace WalkingTec.Mvvm.Mvc
             //var vmCreater = vmType.GetConstructor(Type.EmptyTypes);
             //var listVM = vmCreater.Invoke(null) as BaseVM;
             Wtm.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
-            var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
+            var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, BaseSearcher>;
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
             {
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 value = string.Empty;
             }
-            var vm = CreateVM(_DONOT_USE_VMNAME, id, null, true) as IBaseCRUDVM<TopBasePoco>;
+            var vm = Wtm.CreateVM(_DONOT_USE_VMNAME, id, null, true) as IBaseCRUDVM<TopBasePoco>;
             vm.Entity.SetPropertyValue(field, value);
             DC.SaveChanges();
             return JsonMore("Success");
@@ -181,7 +181,7 @@ namespace WalkingTec.Mvvm.Mvc
             var instanceType = Type.GetType(_DONOT_USE_VMNAME);
 
             Wtm.CurrentCS = (string.IsNullOrEmpty(_DONOT_USE_CS) == true) ? "default" : _DONOT_USE_CS;
-            var listVM = CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
+            var listVM = Wtm.CreateVM(_DONOT_USE_VMNAME) as IBasePagedListVM<TopBasePoco, ISearcher>;
 
             listVM.FC = qs;
             if (listVM is IBasePagedListVM<TopBasePoco, ISearcher>)
@@ -210,7 +210,7 @@ namespace WalkingTec.Mvvm.Mvc
         public IActionResult GetExcelTemplate(string _DONOT_USE_VMNAME, string _DONOT_USE_CS = "default")
         {
             Wtm.CurrentCS = _DONOT_USE_CS ?? "default";
-            var importVM = CreateVM(_DONOT_USE_VMNAME) as IBaseImport<BaseTemplateVM>;
+            var importVM = Wtm.CreateVM(_DONOT_USE_VMNAME) as IBaseImport<BaseTemplateVM>;
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {
@@ -659,7 +659,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             return Wtm.ReadFromCache<string>("githubstar", () =>
             {
-                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
+                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result;
                 return s == null ? "" : s.stargazers_count.ToString();
             }, 1800);
         }
@@ -670,7 +670,7 @@ namespace WalkingTec.Mvvm.Mvc
         {
             var rv = Wtm.ReadFromCache<string>("githubinfo", () =>
             {
-                var s = ConfigInfo.Domains["github"].CallAPI<github>("/repos/dotnetcore/wtm").Result;
+                var s = Wtm.CallAPI<github>("github", "/repos/dotnetcore/wtm").Result;
                 return JsonSerializer.Serialize(s);
             }, 1800);
             return Content(rv, "application/json");

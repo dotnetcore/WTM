@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public string Search(DataPrivilegeSearcher searcher)
         {
-            var vm = CreateVM<DataPrivilegeListVM>();
+            var vm = Wtm.CreateVM<DataPrivilegeListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -33,12 +33,12 @@ namespace WalkingTec.Mvvm.Admin.Api
             DataPrivilegeVM vm = null;
             if (DpType == DpTypeEnum.User)
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserId == TargetId && x.DpType == DpType);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserId == TargetId && x.DpType == DpType);
                 vm.UserItCode = DC.Set<FrameworkUserBase>().Where(x => x.ID == TargetId).Select(x => x.ITCode).FirstOrDefault();
             }
             else
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.GroupId == TargetId && x.DpType == DpType);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.GroupId == TargetId && x.DpType == DpType);
             }
             return vm;
         }
@@ -96,11 +96,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             DataPrivilegeVM vm = null;
             if (dp.Type == DpTypeEnum.User)
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.UserId == dp.Id && x.DpType == dp.Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.UserId == dp.Id && x.DpType == dp.Type);
             }
             else
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupId == dp.Id && x.DpType == dp.Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupId == dp.Id && x.DpType == dp.Type);
             }
             await vm.DoDeleteAsync();
             return Ok(1);

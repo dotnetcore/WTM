@@ -22,70 +22,70 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("Intro")]
         public IActionResult Intro()
         {
-            var vm = CreateVM<FrameworkAllVM>();
+            var vm = Wtm.CreateVM<FrameworkAllVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("Layout")]
         public IActionResult Layout()
         {
-            var vm = CreateVM<FrameworkAllVM>();
+            var vm = Wtm.CreateVM<FrameworkAllVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("Form")]
         public IActionResult Form()
         {
-            var vm = CreateVM<SchoolVm>();
+            var vm = Wtm.CreateVM<SchoolVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("TextBox")]
         public IActionResult TextBox()
         {
-            var vm = CreateVM<MajorVm>();
+            var vm = Wtm.CreateVM<MajorVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("ComboBox")]
         public IActionResult ComboBox()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("CheckBox")]
         public IActionResult CheckBox()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Radio")]
         public IActionResult Radio()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("DateTime")]
         public IActionResult DateTime()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Upload")]
         public IActionResult Upload()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("UploadMulti")]
         public IActionResult UploadMulti()
         {
-            var vm = CreateVM<SchoolVm>();
+            var vm = Wtm.CreateVM<SchoolVm>();
             return PartialView(vm);
         }
 
@@ -93,7 +93,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("Selector")]
         public IActionResult Selector()
         {
-            var vm = CreateVM<MajorVm>();
+            var vm = Wtm.CreateVM<MajorVm>();
             return PartialView(vm);
         }
 
@@ -101,28 +101,28 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("Rich")]
         public IActionResult Rich()
         {
-            var vm = CreateVM<MajorVm>();
+            var vm = Wtm.CreateVM<MajorVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("UEditor")]
         public IActionResult UEditor()
         {
-            var vm = CreateVM<MajorVm>();
+            var vm = Wtm.CreateVM<MajorVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Others")]
         public IActionResult Others()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Grid")]
         public IActionResult Grid()
         {
-            var vm = CreateVM<StudentListVm>();
+            var vm = Wtm.CreateVM<StudentListVm>();
             return PartialView(vm);
         }
 
@@ -136,28 +136,28 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("Transfer")]
         public IActionResult Transfer()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Slider")]
         public IActionResult Slider()
         {
-            var vm = CreateVM<StudentVm>();
+            var vm = Wtm.CreateVM<StudentVm>();
             return PartialView(vm);
         }
 
         [ActionDescription("Tree")]
         public IActionResult Tree()
         {
-            var vm = CreateVM<DepartmentVM>();
+            var vm = Wtm.CreateVM<DepartmentVM>();
             return PartialView(vm);
         }
 
         [ActionDescription("TreeContainer")]
         public IActionResult TreeContainer()
         {
-            var vm = CreateVM<StudentListVm3>();
+            var vm = Wtm.CreateVM<StudentListVm3>();
             return PartialView(vm);
         }
 
@@ -170,7 +170,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [ActionDescription("ColorPicker")]
         public IActionResult ColorPicker()
         {
-            var vm = CreateVM<MajorVm>();
+            var vm = Wtm.CreateVM<MajorVm>();
             return PartialView(vm);
         }
 

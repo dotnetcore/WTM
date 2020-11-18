@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpPost("Search")]
 		public string Search(SchoolSearcher searcher)
         {
-            var vm = CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpGet("{id}")]
         public SchoolVM Get(string id)
         {
-            var vm = CreateVM<SchoolVM>(id);
+            var vm = Wtm.CreateVM<SchoolVM>(id);
             return vm;
         }
 
@@ -82,7 +82,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [ActionDescription("删除")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<SchoolBatchVM>();
+            var vm = Wtm.CreateVM<SchoolBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(SchoolSearcher searcher)
         {
-            var vm = CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<SchoolListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<SchoolListVM>();
+            var vm = Wtm.CreateVM<SchoolListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.VueDemo.Controllers
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<SchoolImportVM>();
+            var vm = Wtm.CreateVM<SchoolImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

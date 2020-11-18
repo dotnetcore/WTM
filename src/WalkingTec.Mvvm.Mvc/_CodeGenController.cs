@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc
         [ActionDescription("代码生成器")]
         public IActionResult Index(UIEnum ui)
         {
-            var vm = CreateVM<CodeGenVM>();
+            var vm = Wtm.CreateVM<CodeGenVM>();
             vm.UI = ui;
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
             vm.AllModels = GetAllModels().ToListItems(x => x.Name, x => x.AssemblyQualifiedName);

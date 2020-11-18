@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<StudentListVM>();
+            var vm = Wtm.CreateVM<StudentListVM>();
             return PartialView(vm);
         }
 
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Create")]
         public ActionResult Create()
         {
-            var vm = CreateVM<StudentVM>();
+            var vm = Wtm.CreateVM<StudentVM>();
             return PartialView(vm);
         }
 
@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Edit")]
         public ActionResult Edit(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
 
@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Delete")]
         public ActionResult Delete(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
 
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<StudentVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -130,7 +130,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Details")]
         public ActionResult Details(string id)
         {
-            var vm = CreateVM<StudentVM>(id);
+            var vm = Wtm.CreateVM<StudentVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -164,7 +164,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<StudentBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<StudentBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -187,7 +187,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("Import")]
         public ActionResult Import()
         {
-            var vm = CreateVM<StudentImportVM>();
+            var vm = Wtm.CreateVM<StudentImportVM>();
             return PartialView(vm);
         }
 

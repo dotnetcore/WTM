@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public string Search(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkRoleListVM>();
+            var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkRoleVM Get(Guid id)
         {
-            var vm = CreateVM<FrameworkRoleVM>(id);
+            var vm = Wtm.CreateVM<FrameworkRoleVM>(id);
             return vm;
         }
 
@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]/{id}")]
         public FrameworkRoleMDVM2 GetPageActions(Guid id)
         {
-            var vm = CreateVM<FrameworkRoleMDVM2>(id);
+            var vm = Wtm.CreateVM<FrameworkRoleMDVM2>(id);
             return vm;
         }
 
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            var vm = CreateVM<FrameworkRoleBatchVM>();
+            var vm = Wtm.CreateVM<FrameworkRoleBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -143,7 +143,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkRoleSearcher searcher)
         {
-            var vm = CreateVM<FrameworkRoleListVM>();
+            var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -153,7 +153,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<FrameworkRoleListVM>();
+            var vm = Wtm.CreateVM<FrameworkRoleListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -166,7 +166,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkRoleImportVM>();
+            var vm = Wtm.CreateVM<FrameworkRoleImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

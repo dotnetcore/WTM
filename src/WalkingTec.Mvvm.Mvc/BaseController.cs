@@ -86,262 +86,262 @@ namespace WalkingTec.Mvvm.Mvc
 
         //-------------------------------------------方法------------------------------------//
 
-        #region CreateVM
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <param name="VMType">The type of the viewmodel</param>
-        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">properties of the viewmodel that you want to assign values</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
-        {
-            //Use reflection to create viewmodel
-            var ctor = VMType.GetConstructor(Type.EmptyTypes);
-            BaseVM rv = ctor.Invoke(null) as BaseVM;
-            rv.Wtm = this.Wtm;
+        //#region CreateVM
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <param name="VMType">The type of the viewmodel</param>
+        ///// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">properties of the viewmodel that you want to assign values</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //private BaseVM CreateVM(Type VMType, object Id = null, object[] Ids = null, Dictionary<string, object> values = null, bool passInit = false)
+        //{
+        //    //Use reflection to create viewmodel
+        //    var ctor = VMType.GetConstructor(Type.EmptyTypes);
+        //    BaseVM rv = ctor.Invoke(null) as BaseVM;
+        //    rv.Wtm = this.Wtm;
 
-            rv.FC = new Dictionary<string, object>();
-            rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
-            rv.Controller = this;
-            rv.ControllerName = this.GetType().FullName;
-            if (HttpContext != null && HttpContext.Request != null)
-            {
-                try
-                {
-                    if (Request.QueryString != QueryString.Empty)
-                    {
-                        foreach (var key in Request.Query.Keys)
-                        {
-                            if (rv.FC.Keys.Contains(key) == false)
-                            {
-                                rv.FC.Add(key, Request.Query[key]);
-                            }
-                        }
-                    }
-                    if (HttpContext.Request.HasFormContentType)
-                    {
-                        var f = HttpContext.Request.Form;
-                        foreach (var key in f.Keys)
-                        {
-                            if (rv.FC.Keys.Contains(key) == false)
-                            {
-                                rv.FC.Add(key, f[key]);
-                            }
-                        }
-                    }
-                }
-                catch { }
-            }
-            //try to set values to the viewmodel's matching properties
-            if (values != null)
-            {
-                foreach (var v in values)
-                {
-                    PropertyHelper.SetPropertyValue(rv, v.Key, v.Value, null, false);
-                }
-            }
-            //if viewmodel is derrived from BaseCRUDVM<> and Id has value, call ViewModel's GetById method
-            if (Id != null && rv is IBaseCRUDVM<TopBasePoco> cvm)
-            {
-                cvm.SetEntityById(Id);
-            }
-            //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
-            if (rv is IBaseBatchVM<BaseVM> temp)
-            {
-                temp.Ids = new string[] { };
-                if (Ids != null)
-                {
-                    var tempids = new List<string>();
-                    foreach (var iid in Ids)
-                    {
-                        tempids.Add(iid.ToString());
-                    }
-                    temp.Ids = tempids.ToArray();
-                }
-                if (temp.ListVM != null)
-                {
-                    temp.ListVM.CopyContext(rv);
-                    temp.ListVM.Ids = Ids == null ? new List<string>() : temp.Ids.ToList();
-                    temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
-                    temp.ListVM.NeedPage = false;
-                }
-                if (temp.LinkedVM != null)
-                {
-                    temp.LinkedVM.CopyContext(rv);
-                }
-                if (temp.ListVM != null)
-                {
-                    //Remove the action columns from list
-                    temp.ListVM.OnAfterInitList += (self) =>
-                    {
-                        self.RemoveActionColumn();
-                        self.RemoveAction();
-                        if (temp.ErrorMessage.Count > 0)
-                        {
-                            self.AddErrorColumn();
-                        }
-                    };
-                    temp.ListVM.DoInitListVM();
-                    if (temp.ListVM.Searcher != null)
-                    {
-                        var searcher = temp.ListVM.Searcher;
-                        searcher.CopyContext(rv);
-                        if (passInit == false)
-                        {
-                            searcher.DoInit();
-                        }
-                    }
-                }
-                temp.LinkedVM?.DoInit();
-                //temp.ListVM.DoSearch();
-            }
-            //if the viewmodel is a ListVM, Init it's searcher
-            if (rv is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
-            {
-                var searcher = lvm.Searcher;
-                searcher.CopyContext(rv);
-                if (passInit == false)
-                {
-                    searcher.DoInit();
-                }
-                lvm.DoInitListVM();
+        //    rv.FC = new Dictionary<string, object>();
+        //    rv.CreatorAssembly = this.GetType().AssemblyQualifiedName;
+        //    rv.Controller = this;
+        //    rv.ControllerName = this.GetType().FullName;
+        //    if (HttpContext != null && HttpContext.Request != null)
+        //    {
+        //        try
+        //        {
+        //            if (Request.QueryString != QueryString.Empty)
+        //            {
+        //                foreach (var key in Request.Query.Keys)
+        //                {
+        //                    if (rv.FC.Keys.Contains(key) == false)
+        //                    {
+        //                        rv.FC.Add(key, Request.Query[key]);
+        //                    }
+        //                }
+        //            }
+        //            if (HttpContext.Request.HasFormContentType)
+        //            {
+        //                var f = HttpContext.Request.Form;
+        //                foreach (var key in f.Keys)
+        //                {
+        //                    if (rv.FC.Keys.Contains(key) == false)
+        //                    {
+        //                        rv.FC.Add(key, f[key]);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch { }
+        //    }
+        //    //try to set values to the viewmodel's matching properties
+        //    if (values != null)
+        //    {
+        //        foreach (var v in values)
+        //        {
+        //            PropertyHelper.SetPropertyValue(rv, v.Key, v.Value, null, false);
+        //        }
+        //    }
+        //    //if viewmodel is derrived from BaseCRUDVM<> and Id has value, call ViewModel's GetById method
+        //    if (Id != null && rv is IBaseCRUDVM<TopBasePoco> cvm)
+        //    {
+        //        cvm.SetEntityById(Id);
+        //    }
+        //    //if viewmodel is derrived from IBaseBatchVM<>，set ViewMode's Ids property,and init it's ListVM and EditModel properties
+        //    if (rv is IBaseBatchVM<BaseVM> temp)
+        //    {
+        //        temp.Ids = new string[] { };
+        //        if (Ids != null)
+        //        {
+        //            var tempids = new List<string>();
+        //            foreach (var iid in Ids)
+        //            {
+        //                tempids.Add(iid.ToString());
+        //            }
+        //            temp.Ids = tempids.ToArray();
+        //        }
+        //        if (temp.ListVM != null)
+        //        {
+        //            temp.ListVM.CopyContext(rv);
+        //            temp.ListVM.Ids = Ids == null ? new List<string>() : temp.Ids.ToList();
+        //            temp.ListVM.SearcherMode = ListVMSearchModeEnum.Batch;
+        //            temp.ListVM.NeedPage = false;
+        //        }
+        //        if (temp.LinkedVM != null)
+        //        {
+        //            temp.LinkedVM.CopyContext(rv);
+        //        }
+        //        if (temp.ListVM != null)
+        //        {
+        //            //Remove the action columns from list
+        //            temp.ListVM.OnAfterInitList += (self) =>
+        //            {
+        //                self.RemoveActionColumn();
+        //                self.RemoveAction();
+        //                if (temp.ErrorMessage.Count > 0)
+        //                {
+        //                    self.AddErrorColumn();
+        //                }
+        //            };
+        //            temp.ListVM.DoInitListVM();
+        //            if (temp.ListVM.Searcher != null)
+        //            {
+        //                var searcher = temp.ListVM.Searcher;
+        //                searcher.CopyContext(rv);
+        //                if (passInit == false)
+        //                {
+        //                    searcher.DoInit();
+        //                }
+        //            }
+        //        }
+        //        temp.LinkedVM?.DoInit();
+        //        //temp.ListVM.DoSearch();
+        //    }
+        //    //if the viewmodel is a ListVM, Init it's searcher
+        //    if (rv is IBasePagedListVM<TopBasePoco, ISearcher> lvm)
+        //    {
+        //        var searcher = lvm.Searcher;
+        //        searcher.CopyContext(rv);
+        //        if (passInit == false)
+        //        {
+        //            searcher.DoInit();
+        //        }
+        //        lvm.DoInitListVM();
 
-            }
-            if (rv is IBaseImport<BaseTemplateVM> tvm)
-            {
-                var template = tvm.Template;
-                template.CopyContext(rv);
-                template.DoInit();
-            }
+        //    }
+        //    if (rv is IBaseImport<BaseTemplateVM> tvm)
+        //    {
+        //        var template = tvm.Template;
+        //        template.CopyContext(rv);
+        //        template.DoInit();
+        //    }
 
-            //if passinit is not set, call the viewmodel's DoInit method
-            if (passInit == false)
-            {
-                rv.DoInit();
-            }
-            return rv;
-        }
+        //    //if passinit is not set, call the viewmodel's DoInit method
+        //    if (passInit == false)
+        //    {
+        //        rv.DoInit();
+        //    }
+        //    return rv;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, new object[] { }, dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, new object[] { }, dir, passInit) as T;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
-        /// <param name="values">properties of the viewmodel that you want to assign values</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(object Id, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), Id, new object[] { }, dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        ///// <param name="values">properties of the viewmodel that you want to assign values</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(object Id, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), Id, new object[] { }, dir, passInit) as T;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(object[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, Ids, dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(object[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, Ids, dir, passInit) as T;
+        //}
 
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(Guid[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(int[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(int[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(long[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
-        }
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public T CreateVM<T>(string[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
-        {
-            SetValuesParser p = new SetValuesParser();
-            var dir = p.Parse(values);
-            return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
-        }
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(long[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        //}
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <typeparam name="T">The type of the viewmodelThe type of the viewmodel</typeparam>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="values">use Lambda to set viewmodel's properties,use && for multiply properties, for example Wtm.CreateVM<Test>(values: x=>x.Field1=='a' && x.Field2 == 'b'); will set viewmodel's Field1 to 'a' and Field2 to 'b'</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public T Wtm.CreateVM<T>(string[] Ids, Expression<Func<T, object>> values = null, bool passInit = false) where T : BaseVM
+        //{
+        //    SetValuesParser p = new SetValuesParser();
+        //    var dir = p.Parse(values);
+        //    return CreateVM(typeof(T), null, Ids.Cast<object>().ToArray(), dir, passInit) as T;
+        //}
 
-        /// <summary>
-        /// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
-        /// </summary>
-        /// <param name="VmFullName">the fullname of the viewmodel's type</param>
-        /// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
-        /// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
-        /// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
-        /// <returns>ViewModel</returns>
-        public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
-        {
-            return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
-        }
-        #endregion
+        ///// <summary>
+        ///// Create a ViewModel, and pass Session,cache,dc...etc to the viewmodel
+        ///// </summary>
+        ///// <param name="VmFullName">the fullname of the viewmodel's type</param>
+        ///// <param name="Id">If the viewmodel is a BaseCRUDVM, the data having this id will be fetched</param>
+        ///// <param name="Ids">If the viewmodel is a BatchVM, the BatchVM's Ids property will be assigned</param>
+        ///// <param name="passInit">if true, the viewmodel will not call InitVM internally</param>
+        ///// <returns>ViewModel</returns>
+        //public BaseVM CreateVM(string VmFullName, object Id = null, object[] Ids = null, bool passInit = false)
+        //{
+        //    return CreateVM(Type.GetType(VmFullName), Id, Ids, null, passInit);
+        //}
+        //#endregion
 
         #region ReInit model
         private void SetReInit(ModelStateDictionary msd, BaseVM model)

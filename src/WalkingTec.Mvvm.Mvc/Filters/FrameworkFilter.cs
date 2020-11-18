@@ -58,8 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                     model.Wtm = ctrl.Wtm;
                     model.FC = new Dictionary<string, object>();
                     model.CreatorAssembly = this.GetType().Assembly.FullName;
-                    model.Controller = ctrl;
-                    model.ControllerName = ctrl.GetType().FullName;
+                    model.ControllerName = context.HttpContext.Request.Path;
                     //if (ctrl is BaseController c)
                     //{
                     //    model.WtmContext.WindowIds = c.WindowIds;
@@ -245,7 +244,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 var model = (context.Result as PartialViewResult).ViewData?.Model as BaseVM;
                 if (model == null && (context.Result as PartialViewResult).Model == null && (context.Result as PartialViewResult).ViewData != null)
                 {
-                    model = ctrl.CreateVM<BaseVM>();
+                    model = ctrl.Wtm.CreateVM<BaseVM>();
                     (context.Result as PartialViewResult).ViewData.Model = model;
                 }
                 // 为所有 PartialView 加上最外层的 Div
@@ -307,7 +306,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 var model = (context.Result as ViewResult).ViewData?.Model as BaseVM;
                 if (model == null && (context.Result as ViewResult).Model == null && (context.Result as ViewResult).ViewData != null)
                 {
-                    model = ctrl.CreateVM<BaseVM>();
+                    model = ctrl.Wtm.CreateVM<BaseVM>();
                     (context.Result as ViewResult).ViewData.Model = model;
                 }
                if (model != null)

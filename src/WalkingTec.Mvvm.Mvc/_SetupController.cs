@@ -11,7 +11,7 @@
 //    {
 //        public IActionResult Index()
 //        {
-//            var vm = CreateVM<SetupVM>();
+//            var vm = Wtm.CreateVM<SetupVM>();
 //            vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
 //            var rv = vm.GetIndex();
 //            return  Content(rv, "text/html", Encoding.UTF8);

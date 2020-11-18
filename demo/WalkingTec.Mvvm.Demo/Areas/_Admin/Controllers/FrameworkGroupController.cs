@@ -19,7 +19,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             return PartialView(vm);
         }
 
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(FrameworkGroupSearcher searcher)
         {
-            var vm = CreateVM<FrameworkGroupListVM>(passInit: true);
+            var vm = Wtm.CreateVM<FrameworkGroupListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -44,7 +44,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Create")]
         public ActionResult Create()
         {
-            var vm = CreateVM<FrameworkGroupVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupVM>();
             return PartialView(vm);
         }
 
@@ -68,7 +68,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Edit")]
         public ActionResult Edit(Guid id)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             return PartialView(vm);
         }
 
@@ -92,7 +92,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Delete")]
         public ActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             return PartialView(vm);
         }
 
@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Delete")]
         public async Task<ActionResult> Delete(Guid id, IFormCollection noUse)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -120,7 +120,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(Guid[] ids)
         {
-            var vm = CreateVM<FrameworkGroupBatchVM>(Ids: ids);
+            var vm = Wtm.CreateVM<FrameworkGroupBatchVM>(Ids: ids);
             return PartialView(vm);
         }
 
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Import")]
         public ActionResult Import()
         {
-            var vm = CreateVM<FrameworkGroupImportVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
             return PartialView(vm);
         }
 
@@ -174,7 +174,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("DataPrivilege")]
         public PartialViewResult DataFunction(Guid id)
         {
-            var role = CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupId == id);
+            var role = Wtm.CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupId == id);
             return PartialView(role);
         }
 

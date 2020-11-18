@@ -242,11 +242,11 @@ namespace WalkingTec.Mvvm.Core
                     }
 
                     //调用controller方法验证model
-                    try
-                    {
-                        Controller.GetType().GetMethod("RedoValidation").Invoke(Controller, new object[] { entity });
-                    }
-                    catch { }
+                    //try
+                    //{
+                    //    Controller.GetType().GetMethod("RedoValidation").Invoke(Controller, new object[] { entity });
+                    //}
+                    //catch { }
                     //如果有对应的BaseCRUDVM则使用其进行数据验证
                     if (vm != null)
                     {

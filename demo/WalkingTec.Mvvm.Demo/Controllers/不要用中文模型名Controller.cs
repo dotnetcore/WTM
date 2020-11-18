@@ -16,7 +16,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索")]
         public ActionResult Index()
         {
-            var vm = CreateVM<不要用中文模型名ListVM>();
+            var vm = Wtm.CreateVM<不要用中文模型名ListVM>();
             return PartialView(vm);
         }
 
@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("新建")]
         public ActionResult Create()
         {
-            var vm = CreateVM<不要用中文模型名VM>();
+            var vm = Wtm.CreateVM<不要用中文模型名VM>();
             return PartialView(vm);
         }
 
@@ -65,7 +65,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         public ActionResult Edit(string id)
         {
-            var vm = CreateVM<不要用中文模型名VM>(id);
+            var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
 
@@ -98,7 +98,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("删除")]
         public ActionResult Delete(string id)
         {
-            var vm = CreateVM<不要用中文模型名VM>(id);
+            var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
 
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = CreateVM<不要用中文模型名VM>(id);
+            var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("详细")]
         public ActionResult Details(string id)
         {
-            var vm = CreateVM<不要用中文模型名VM>(id);
+            var vm = Wtm.CreateVM<不要用中文模型名VM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量修改")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -157,7 +157,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量删除")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<不要用中文模型名BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -180,7 +180,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("导入")]
         public ActionResult Import()
         {
-            var vm = CreateVM<不要用中文模型名ImportVM>();
+            var vm = Wtm.CreateVM<不要用中文模型名ImportVM>();
             return PartialView(vm);
         }
 

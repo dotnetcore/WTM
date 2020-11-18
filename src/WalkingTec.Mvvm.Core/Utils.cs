@@ -726,7 +726,7 @@ namespace WalkingTec.Mvvm.Core
             var config = context.ConfigInfo;
             if (Cache.TryGetValue("nugetversion", out NugetInfo rv) == false || rv == null)
             {
-                NugetInfo v = config.Domains["nuget"].CallAPI<NugetInfo>($"/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
+                NugetInfo v = context.CallAPI<NugetInfo>("nuget",$"/query?q=WalkingTec.Mvvm.Mvc&prerelease={pre.ToString().ToLower()}").Result;
                 var data = v;
                     Cache.Add("nugetversion", data, new DistributedCacheEntryOptions()
                     {

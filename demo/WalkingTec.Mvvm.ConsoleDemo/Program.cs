@@ -21,47 +21,28 @@ namespace WalkingTec.Mvvm.ConsoleDemo
         {
             StartUp();
             var context = GetWtmContext();
-            var test = context.ConfigInfo.Domains["baidu"].CallAPI("/").Result;
+            var test = context.CallAPI("baidu","/").Result;
             AddSchool();
             Console.ReadLine();
         }
 
         static void StartUp()
         {
-            var configBuilder = new ConfigurationBuilder();
-            IConfigurationRoot ConfigRoot = configBuilder.WTMConfig(null).Build();
-            var configs = ConfigRoot.Get<Configs>();
             var services = new ServiceCollection();
-            services.Configure<Configs>(ConfigRoot);
-            services.AddLogging(builder =>
-            {
-                builder.ClearProviders();
-                builder.AddConfiguration(ConfigRoot.GetSection("Logging")).AddConsole()
-                       .AddDebug()
-                       .AddWTMLogger();
-            });
-            services.AddWtmContextForConsole(configs);
+            services.AddWtmContextForConsole();
             Provider = services.BuildServiceProvider();
-            DomainExtensions.factory = Provider.GetRequiredService<IHttpClientFactory>();
-        }
-
-        static T CreateVM<T>() where T : IBaseVM, new()
-        {
-            T rv = new T();
-            rv.Wtm = GetWtmContext();
-            return rv;
         }
 
         static WTMContext GetWtmContext()
         {
             var rv = Provider.GetRequiredService<WTMContext>();
-            rv.SetServiceProvider(Provider);
+            //rv.SetServiceProvider(Provider);
             return rv;
         }
 
         static void AddSchool()
         {
-            SchoolVM vm = CreateVM<SchoolVM>();
+            SchoolVM vm = GetWtmContext().CreateVM<SchoolVM>();
 
             WtmFileProvider fp = new WtmFileProvider(vm.Wtm.ConfigInfo);
             var fh = fp.CreateFileHandler();

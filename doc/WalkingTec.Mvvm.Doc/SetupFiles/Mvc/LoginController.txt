@@ -17,7 +17,7 @@ namespace $ns$.Controllers
         [ActionDescription("Login")]
         public IActionResult Login()
         {
-            LoginVM vm = CreateVM<LoginVM>();
+            LoginVM vm = Wtm.CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
             if (ConfigInfo.IsQuickDebug == true)
             {
@@ -79,7 +79,7 @@ namespace $ns$.Controllers
         [Public]
         public IActionResult Reg()
         {
-            var vm = CreateVM<RegVM>();
+            var vm = Wtm.CreateVM<RegVM>();
             return PartialView(vm);
         }
 
@@ -119,7 +119,7 @@ namespace $ns$.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword()
         {
-            var vm = CreateVM<ChangePasswordVM>();
+            var vm = Wtm.CreateVM<ChangePasswordVM>();
             vm.ITCode = LoginUserInfo.ITCode;
             return PartialView(vm);
         }

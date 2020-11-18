@@ -42,9 +42,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             var newdc = DC as FrameworkContext;
             List<FrameworkAction_ListView> actions = new List<FrameworkAction_ListView>();
             var urls = newdc.BaseFrameworkMenus.Where(y => y.IsInside == true && y.FolderOnly == false).Select(y => y.Url).Distinct().ToList();
-            if (ControllerName == "WalkingTec.Mvvm.Mvc.Admin.Controllers.FrameworkMenuController")
+            if (ControllerName.Contains("/api") == false)
             {
-                 actions = Wtm.GlobaInfo.AllModule.SelectMany(x=>x.Actions)
+                actions = Wtm.GlobaInfo.AllModule.SelectMany(x=>x.Actions)
                     .Where(x => urls.Contains(x.Url) == false)
                     .Select(x => new FrameworkAction_ListView
                     {

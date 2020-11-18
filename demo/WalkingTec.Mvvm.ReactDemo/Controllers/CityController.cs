@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpPost("Search")]
 		public string Search(CitySearcher searcher)
         {
-            var vm = CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("{id}")]
         public CityVM Get(Guid id)
         {
-            var vm = CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<CityVM>(id);
             return vm;
         }
 
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("Delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-            var vm = CreateVM<CityVM>(id);
+            var vm = Wtm.CreateVM<CityVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [ActionDescription("批量删除")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<CityBatchVM>();
+            var vm = Wtm.CreateVM<CityBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -124,7 +124,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(CitySearcher searcher)
         {
-            var vm = CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<CityListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<CityListVM>();
+            var vm = Wtm.CreateVM<CityListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -149,7 +149,7 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<CityImportVM>();
+            var vm = Wtm.CreateVM<CityImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

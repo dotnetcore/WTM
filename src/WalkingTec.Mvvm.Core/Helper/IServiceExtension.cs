@@ -1,14 +1,29 @@
 using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Core
 {
     public static class IServiceExtension
     {
-        public static IServiceCollection AddWtmContextForConsole(this IServiceCollection services, Configs WtmConfigs, Func<IWtmFileHandler, string> fileSubDirSelector = null)
+        public static IServiceCollection AddWtmContextForConsole(this IServiceCollection services, string jsonFileDir = null, string jsonFileName = null, Func<IWtmFileHandler, string> fileSubDirSelector = null)
         {
+            var configBuilder = new ConfigurationBuilder();
+            IConfigurationRoot ConfigRoot = configBuilder.WTMConfig(null,jsonFileDir,jsonFileName).Build();
+            var WtmConfigs = ConfigRoot.Get<Configs>();
+            services.Configure<Configs>(ConfigRoot);
+            services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddConfiguration(ConfigRoot.GetSection("Logging"))
+                       .AddConsole()
+                       .AddDebug()
+                       .AddWTMLogger();
+            });
             WtmFileProvider._subDirFunc = fileSubDirSelector;
             services.TryAddScoped<IDataContext, NullContext>();
             services.AddScoped<WTMContext>();

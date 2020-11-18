@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public string Search(FrameworkGroupSearcher searcher)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkGroupVM Get(Guid id)
         {
-            var vm = CreateVM<FrameworkGroupVM>(id);
+            var vm = Wtm.CreateVM<FrameworkGroupVM>(id);
             return vm;
         }
 
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Delete")]
         public async Task<IActionResult> BatchDelete(string[] ids)
         {
-            var vm = CreateVM<FrameworkGroupBatchVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkGroupSearcher searcher)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -123,7 +123,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<FrameworkGroupListVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -136,7 +136,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<FrameworkGroupImportVM>();
+            var vm = Wtm.CreateVM<FrameworkGroupImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索")]
         public ActionResult Index()
         {
-            var vm = CreateVM<MajorListVM>();
+            var vm = Wtm.CreateVM<MajorListVM>();
             return PartialView(vm);
         }
 
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("新建")]
         public ActionResult Create()
         {
-            var vm = CreateVM<MajorVM>();
+            var vm = Wtm.CreateVM<MajorVM>();
             return PartialView(vm);
         }
 
@@ -72,7 +72,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("修改")]
         public ActionResult Edit(Guid id)
         {
-            var vm = CreateVM<MajorVM>(id);
+            var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
         }
 
@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("删除")]
         public ActionResult Delete(Guid id)
         {
-            var vm = CreateVM<MajorVM>(id);
+            var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
         }
 
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost]
         public ActionResult Delete(Guid id, IFormCollection nouse)
         {
-            var vm = CreateVM<MajorVM>(id);
+            var vm = Wtm.CreateVM<MajorVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -129,7 +129,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("详细")]
         public ActionResult Details(Guid id)
         {
-            var vm = CreateVM<MajorVM>(id);
+            var vm = Wtm.CreateVM<MajorVM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -139,7 +139,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量修改")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<MajorBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -163,7 +163,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("批量删除")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<MajorBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<MajorBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -186,7 +186,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
 		[ActionDescription("导入")]
         public ActionResult Import()
         {
-            var vm = CreateVM<MajorImportVM>();
+            var vm = Wtm.CreateVM<MajorImportVM>();
             return PartialView(vm);
         }
 

@@ -1,26 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WalkingTec.Mvvm.Core.Extensions
 {
-    public static class DomainExtensions
+    public static class WtmExtensions
     {
-        public static IHttpClientFactory factory;
 
-        public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url, HttpMethodEnum method ,HttpContent content,  ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
+        public static async Task<T> CallAPI<T>(this WTMContext self, string domainName,string url, HttpMethodEnum method ,HttpContent content,  ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
         {
             try
             {
+                var factory = self.ServiceProvider.GetRequiredService<IHttpClientFactory>();
                 if (string.IsNullOrEmpty(url))
                 {
                     return default(T);
                 }
                 //新建http请求
-                var client = factory.CreateClient(self.Name);
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
                 //如果配置了代理，则使用代理
                 //设置超时
                 if (timeout.HasValue)
@@ -87,11 +95,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url,ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
+        public static async Task<T> CallAPI<T>(this WTMContext self, string domainName, string url,ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
-            return await CallAPI<T>(self, url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
+            return await CallAPI<T>(self, domainName,url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
         }
 
 
@@ -108,7 +116,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url, HttpMethodEnum method,IDictionary<string, string> postdata, ErrorObj error=null, string errormsg=null,int? timeout = null, string proxy = null)
+        public static async Task<T> CallAPI<T>(this WTMContext self, string domainName, string url, HttpMethodEnum method,IDictionary<string, string> postdata, ErrorObj error=null, string errormsg=null,int? timeout = null, string proxy = null)
         {
                 HttpContent content = null;
                 //填充表单数据
@@ -121,7 +129,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     }
                     content = new FormUrlEncodedContent(paras);
                 }
-                return await CallAPI<T>(self,url,method,content,error,errormsg,timeout,proxy);
+                return await CallAPI<T>(self, domainName, url, method,content,error,errormsg,timeout,proxy);
         }
 
         /// <summary>
@@ -137,25 +145,34 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<T> CallAPI<T>(this FrameworkDomain self, string url, HttpMethodEnum method, object postdata, ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
+        public static async Task<T> CallAPI<T>(this WTMContext self, string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error=null, string errormsg=null, int? timeout = null, string proxy = null)
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
-            return await CallAPI<T>(self, url, method, content, error, errormsg, timeout, proxy);
+            return await CallAPI<T>(self, domainName,url, method, content, error, errormsg, timeout, proxy);
         }
 
 
 
 
-        public static async Task<string> CallAPI(this FrameworkDomain self, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public static async Task<string> CallAPI(this WTMContext self, string domainName, string url, HttpMethodEnum method, HttpContent content, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             try
             {
+                var factory = self.ServiceProvider.GetRequiredService<IHttpClientFactory>();
                 if (string.IsNullOrEmpty(url))
                 {
                     return "";
                 }
                 //新建http请求
-                var client = factory.CreateClient(self.Name);
+                HttpClient client = null;
+                if (string.IsNullOrEmpty(domainName))
+                {
+                    client = factory.CreateClient();
+                }
+                else
+                {
+                    client = factory.CreateClient(domainName);
+                }
                 //如果配置了代理，则使用代理
                 //设置超时
                 if (timeout.HasValue)
@@ -221,11 +238,11 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<string> CallAPI(this FrameworkDomain self, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public static async Task<string> CallAPI(this WTMContext self, string domainName, string url, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
-            return await CallAPI(self, url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
+            return await CallAPI(self, domainName, url, HttpMethodEnum.GET, content, error, errormsg, timeout, proxy);
         }
 
 
@@ -241,7 +258,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<string> CallAPI(this FrameworkDomain self, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public static async Task<string> CallAPI(this WTMContext self, string domainName, string url, HttpMethodEnum method, IDictionary<string, string> postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = null;
             //填充表单数据
@@ -254,7 +271,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 content = new FormUrlEncodedContent(paras);
             }
-            return await CallAPI(self, url, method, content, error, errormsg, timeout, proxy);
+            return await CallAPI(self, domainName, url, method, content, error, errormsg, timeout, proxy);
         }
 
         /// <summary>
@@ -269,10 +286,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="timeout">超时时间，单位秒</param>
         /// <param name="proxy">代理地址</param>
         /// <returns></returns>
-        public static async Task<string> CallAPI(this FrameworkDomain self, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
+        public static async Task<string> CallAPI(this WTMContext self, string domainName, string url, HttpMethodEnum method, object postdata, ErrorObj error = null, string errormsg = null, int? timeout = null, string proxy = null)
         {
             HttpContent content = new StringContent(JsonSerializer.Serialize(postdata), System.Text.Encoding.UTF8, "application/json");
-            return await CallAPI(self, url, method, content, error, errormsg, timeout, proxy);
+            return await CallAPI(self, domainName, url, method, content, error, errormsg, timeout, proxy);
         }
 
     }

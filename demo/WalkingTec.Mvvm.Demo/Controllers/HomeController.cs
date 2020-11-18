@@ -111,7 +111,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         {
             var rv = Wtm.ReadFromCache<github>("githubinfo", () =>
             {
-                var s = Wtm.ConfigInfo.Domains["github"].CallAPI<github>("repos/dotnetcore/wtm", null, null, 60).Result;
+                var s = Wtm.CallAPI<github>("github", "repos/dotnetcore/wtm", null, null, 60).Result;
                 return s;
             }, 1800);
 

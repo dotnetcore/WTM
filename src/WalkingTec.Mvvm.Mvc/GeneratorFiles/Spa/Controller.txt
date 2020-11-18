@@ -24,7 +24,7 @@ namespace $namespace$
         {
             if (ModelState.IsValid)
             {
-                var vm = CreateVM<$controllername$ListVM>();
+                var vm = Wtm.CreateVM<$controllername$ListVM>();
                 vm.Searcher = searcher;
                 return Content(vm.GetJson());
             }
@@ -38,7 +38,7 @@ namespace $namespace$
         [HttpGet("{id}")]
         public $controllername$VM Get(string id)
         {
-            var vm = CreateVM<$controllername$VM>(id);
+            var vm = Wtm.CreateVM<$controllername$VM>(id);
             return vm;
         }
 
@@ -91,7 +91,7 @@ namespace $namespace$
         [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<$controllername$BatchVM>();
+            var vm = Wtm.CreateVM<$controllername$BatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -115,7 +115,7 @@ namespace $namespace$
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel($controllername$Searcher searcher)
         {
-            var vm = CreateVM<$controllername$ListVM>();
+            var vm = Wtm.CreateVM<$controllername$ListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -125,7 +125,7 @@ namespace $namespace$
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<$controllername$ListVM>();
+            var vm = Wtm.CreateVM<$controllername$ListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -138,7 +138,7 @@ namespace $namespace$
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<$controllername$ImportVM>();
+            var vm = Wtm.CreateVM<$controllername$ImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

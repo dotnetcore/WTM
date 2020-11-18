@@ -10,16 +10,43 @@ namespace WalkingTec.Mvvm.Core.Extensions
 {
     public static class ConfigExtension
     {
-        public static IConfigurationBuilder WTMConfig(this IConfigurationBuilder configBuilder, IHostEnvironment env)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configBuilder"></param>
+        /// <param name="env"></param>
+        /// <param name="jsonFileDir"></param>
+        /// <param name="jsonFileName"></param>
+        /// <returns></returns>
+        public static IConfigurationBuilder WTMConfig(this IConfigurationBuilder configBuilder, IHostEnvironment env, string jsonFileDir=null, string jsonFileName = null)
         {
-            configBuilder.WTM_SetCurrentDictionary()
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddEnvironmentVariables();
+            IConfigurationBuilder rv = configBuilder;
+            if (string.IsNullOrEmpty(jsonFileDir))
+            {
+                rv = rv.WTM_SetCurrentDictionary();
+            }
+            else
+            {
+                rv = rv.SetBasePath(jsonFileDir);
+            }
+            if (string.IsNullOrEmpty(jsonFileName))
+            {
+                rv = rv.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            }
+            else
+            {
+                rv = rv.AddJsonFile(jsonFileName, optional: true, reloadOnChange: true);
+            }
+            rv = rv.AddEnvironmentVariables();
             if (env != null)
             {
-                configBuilder.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", env.ContentRootPath } });
+                rv = rv.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", env.ContentRootPath } });
             }
-            return configBuilder;
+            else
+            {
+                rv = rv.AddInMemoryCollection(new Dictionary<string, string> { { "HostRoot", Directory.GetCurrentDirectory() } });
+            }
+            return rv;
         }
 
 

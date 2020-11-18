@@ -16,7 +16,7 @@ namespace $namespace$
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<$modelname$ListVM>();
+            var vm = Wtm.CreateVM<$modelname$ListVM>();
             return PartialView(vm);
         }
 
@@ -24,7 +24,7 @@ namespace $namespace$
         [HttpPost]
         public string Search($modelname$Searcher searcher)
         {
-            var vm = CreateVM<$modelname$ListVM>(passInit: true);
+            var vm = Wtm.CreateVM<$modelname$ListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -42,7 +42,7 @@ namespace $namespace$
         [ActionDescription("Create")]
         public ActionResult Create()
         {
-            var vm = CreateVM<$modelname$VM>();
+            var vm = Wtm.CreateVM<$modelname$VM>();
             return PartialView(vm);
         }
 
@@ -74,7 +74,7 @@ namespace $namespace$
         [ActionDescription("Edit")]
         public ActionResult Edit(string id)
         {
-            var vm = CreateVM<$modelname$VM>(id);
+            var vm = Wtm.CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
@@ -107,7 +107,7 @@ namespace $namespace$
         [ActionDescription("Delete")]
         public ActionResult Delete(string id)
         {
-            var vm = CreateVM<$modelname$VM>(id);
+            var vm = Wtm.CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
 
@@ -115,7 +115,7 @@ namespace $namespace$
         [HttpPost]
         public ActionResult Delete(string id, IFormCollection nouse)
         {
-            var vm = CreateVM<$modelname$VM>(id);
+            var vm = Wtm.CreateVM<$modelname$VM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -132,7 +132,7 @@ namespace $namespace$
         [ActionDescription("Details")]
         public ActionResult Details(string id)
         {
-            var vm = CreateVM<$modelname$VM>(id);
+            var vm = Wtm.CreateVM<$modelname$VM>(id);
             return PartialView(vm);
         }
         #endregion
@@ -142,7 +142,7 @@ namespace $namespace$
         [ActionDescription("BatchEdit")]
         public ActionResult BatchEdit(string[] IDs)
         {
-            var vm = CreateVM<$modelname$BatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<$modelname$BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -166,7 +166,7 @@ namespace $namespace$
         [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<$modelname$BatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<$modelname$BatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -189,7 +189,7 @@ namespace $namespace$
 		[ActionDescription("Import")]
         public ActionResult Import()
         {
-            var vm = CreateVM<$modelname$ImportVM>();
+            var vm = Wtm.CreateVM<$modelname$ImportVM>();
             return PartialView(vm);
         }
 

@@ -750,7 +750,6 @@ namespace WalkingTec.Mvvm.Mvc
                 }
 
             }
-            DomainExtensions.factory = app.ApplicationServices.GetRequiredService<IHttpClientFactory>();
             return app;
         }
         public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)

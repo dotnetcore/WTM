@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("搜索")]
         public IActionResult Index()
         {
-            var vm = CreateVM<DatatableListVM>();
+            var vm = Wtm.CreateVM<DatatableListVM>();
             return PartialView(vm);
         }
 

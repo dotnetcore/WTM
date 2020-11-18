@@ -34,7 +34,7 @@ namespace $tns$
         [TestMethod]
         public void CreateTest()
         {
-            $classnamel$VM vm = _controller.CreateVM<$classnamel$VM>();
+            $classnamel$VM vm = _controller.Wtm.CreateVM<$classnamel$VM>();
             $model$ v = new $model$();
             $cpros$
             vm.Entity = v;
@@ -61,7 +61,7 @@ namespace $tns$
                 context.SaveChanges();
             }
 
-            $classnamel$VM vm = _controller.CreateVM<$classnamel$VM>();
+            $classnamel$VM vm = _controller.Wtm.CreateVM<$classnamel$VM>();
             var oldID = v.ID;
             v = new $model$();
             v.ID = oldID;

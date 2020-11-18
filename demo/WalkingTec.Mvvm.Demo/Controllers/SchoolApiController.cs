@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost("Search")]
 		public string Search(SchoolApiSearcher searcher)
         {
-            var vm = CreateVM<SchoolApiListVM>();
+            var vm = Wtm.CreateVM<SchoolApiListVM>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpGet("{id}")]
         public SchoolApiVM Get(string id)
         {
-            var vm = CreateVM<SchoolApiVM>(id);
+            var vm = Wtm.CreateVM<SchoolApiVM>(id);
             return vm;
         }
 
@@ -83,7 +83,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("删除")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<SchoolApiBatchVM>();
+            var vm = Wtm.CreateVM<SchoolApiBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost("ExportExcel")]
         public IActionResult ExportExcel(SchoolApiSearcher searcher)
         {
-            var vm = CreateVM<SchoolApiListVM>();
+            var vm = Wtm.CreateVM<SchoolApiListVM>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             var data = vm.GenerateExcel();
@@ -118,7 +118,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpPost("ExportExcelByIds")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<SchoolApiListVM>();
+            var vm = Wtm.CreateVM<SchoolApiListVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -132,7 +132,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [HttpGet("GetExcelTemplate")]
         public IActionResult GetExcelTemplate()
         {
-            var vm = CreateVM<SchoolApiImportVM>();
+            var vm = Wtm.CreateVM<SchoolApiImportVM>();
             var qs = new Dictionary<string, string>();
             foreach (var item in Request.Query.Keys)
             {

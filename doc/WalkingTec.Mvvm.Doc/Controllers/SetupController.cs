@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
     {
         public IActionResult Index()
         {
-            var vm = CreateVM<SetupVM>();
+            var vm = Wtm.CreateVM<SetupVM>();
             var requestCulture = HttpContext.Features.Get<IRequestCultureFeature>();
             string rv = "";
             if (requestCulture.RequestCulture.Culture.Name.ToLower().StartsWith("zh"))
@@ -33,7 +33,7 @@ namespace WalkingTec.Mvvm.Doc.Controllers
         [HttpPost]
         public IActionResult Index(string ns)
         {
-            var vm = CreateVM<SetupVM>();
+            var vm = Wtm.CreateVM<SetupVM>();
             vm.EntryDir = AppDomain.CurrentDomain.BaseDirectory;
             Guid g = Guid.NewGuid();
             string newdir = vm.EntryDir + Path.DirectorySeparatorChar + g.ToString();

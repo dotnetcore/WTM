@@ -17,7 +17,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<DataPrivilegeListVM>();
+            var vm = Wtm.CreateVM<DataPrivilegeListVM>();
             vm.Searcher.TableNames = Wtm.DataPrivilegeSettings.ToListItems(x => x.PrivillegeName, x => x.ModelName);
             return PartialView(vm);
         }
@@ -34,7 +34,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(DataPrivilegeSearcher searcher)
         {
-            var vm = CreateVM<DataPrivilegeListVM>(passInit: true);
+            var vm = Wtm.CreateVM<DataPrivilegeListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Create")]
         public ActionResult Create(DpTypeEnum Type)
         {
-            var vm = CreateVM<DataPrivilegeVM>(values:x=>x.DpType == Type);
+            var vm = Wtm.CreateVM<DataPrivilegeVM>(values:x=>x.DpType == Type);
             return PartialView(vm);
         }
 
@@ -74,12 +74,12 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
                 vm.UserItCode = DC.Set<FrameworkUserBase>().Where(x => x.ID == Id).Select(x => x.ITCode).FirstOrDefault();
             }
             else
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
             }
             return PartialView(vm);
         }
@@ -105,11 +105,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
             }
             else
             {
-                vm = CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
             }
             await vm.DoDeleteAsync();
             return FFResult().RefreshGrid();

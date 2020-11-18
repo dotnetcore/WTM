@@ -586,14 +586,14 @@ namespace WalkingTec.Mvvm.Core
             }
 
             //调用controller方法验证model
-            var vmethod = Controller?.GetType().GetMethod("RedoValidation");
+            //var vmethod = Controller?.GetType().GetMethod("RedoValidation");
             foreach (var entity in EntityList)
             {
-                try
-                {
-                    vmethod.Invoke(Controller, new object[] { entity });
-                }
-                catch { }
+                //try
+                //{
+                //    vmethod.Invoke(Controller, new object[] { entity });
+                //}
+                //catch { }
 
                 if (vm != null)
                 {

@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<FrameworkUserListVM>();
+            var vm = Wtm.CreateVM<FrameworkUserListVM>();
             vm.Searcher.IsValid = true;
             return PartialView(vm);
         }
@@ -27,7 +27,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(FrameworkUserSearcher searcher)
         {
-            var vm = CreateVM<FrameworkUserListVM>(passInit: true);
+            var vm = Wtm.CreateVM<FrameworkUserListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Create")]
         public ActionResult Create()
         {
-            var vm = CreateVM<FrameworkUserVM>();
+            var vm = Wtm.CreateVM<FrameworkUserVM>();
             return PartialView(vm);
         }
 
@@ -77,7 +77,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Edit")]
         public ActionResult Edit(string id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             vm.Entity.Password = null;
             return PartialView(vm);
         }
@@ -112,7 +112,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult Password(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id,passInit:true);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id,passInit:true);
             vm.Entity.Password = null;
             return PartialView(vm);
         }
@@ -154,7 +154,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Delete")]
         public ActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             return PartialView(vm);
         }
 
@@ -162,7 +162,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(Guid id, IFormCollection nouse)
         {
-            var vm = CreateVM<FrameworkUserVM>(id);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
             await vm.DoDeleteAsync();
             if (!ModelState.IsValid)
             {
@@ -179,7 +179,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Details")]
         public PartialViewResult Details(Guid id)
         {
-            var v = CreateVM<FrameworkUserVM>(id);
+            var v = Wtm.CreateVM<FrameworkUserVM>(id);
             return PartialView("Details", v);
         }
         #endregion
@@ -189,7 +189,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("BatchDelete")]
         public ActionResult BatchDelete(string[] IDs)
         {
-            var vm = CreateVM<FrameworkUserBatchVM>(Ids: IDs);
+            var vm = Wtm.CreateVM<FrameworkUserBatchVM>(Ids: IDs);
             return PartialView(vm);
         }
 
@@ -219,7 +219,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Import")]
         public ActionResult Import()
         {
-            var vm = CreateVM<FrameworkUserImportVM>();
+            var vm = Wtm.CreateVM<FrameworkUserImportVM>();
             return PartialView(vm);
         }
 

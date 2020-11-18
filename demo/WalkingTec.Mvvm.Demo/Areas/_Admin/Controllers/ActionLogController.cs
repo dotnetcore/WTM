@@ -15,7 +15,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Search")]
         public IActionResult Index()
         {
-            var vm = CreateVM<ActionLogListVM>();
+            var vm = Wtm.CreateVM<ActionLogListVM>();
             return PartialView(vm);
         }
 
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(ActionLogSearcher searcher)
         {
-            var vm = CreateVM<ActionLogListVM>(passInit:true);
+            var vm = Wtm.CreateVM<ActionLogListVM>(passInit:true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Details")]
         public IActionResult Details(string id)
         {
-            var vm = CreateVM<ActionLogVM>(id);
+            var vm = Wtm.CreateVM<ActionLogVM>(id);
             return PartialView(vm);
         }
 

@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Search")]
         public ActionResult Index()
         {
-            var vm = CreateVM<FrameworkMenuListVM>();
+            var vm = Wtm.CreateVM<FrameworkMenuListVM>();
             return PartialView(vm);
         }
 
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public string Search(FrameworkMenuSearcher searcher)
         {
-            var vm = CreateVM<FrameworkMenuListVM>(passInit: true);
+            var vm = Wtm.CreateVM<FrameworkMenuListVM>(passInit: true);
             if (ModelState.IsValid)
             {
                 vm.Searcher = searcher;
@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Create")]
         public ActionResult Create(Guid? id)
         {
-            var vm = CreateVM<FrameworkMenuVM>();
+            var vm = Wtm.CreateVM<FrameworkMenuVM>();
             if (id != null)
             {
                 vm.Entity.ParentId = id;
@@ -85,7 +85,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Edit")]
         public ActionResult Edit(Guid id)
         {
-            var vm = CreateVM<FrameworkMenuVM>(id);
+            var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView(vm);
         }
 
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Delete")]
         public ActionResult Delete(Guid id)
         {
-            var vm = CreateVM<FrameworkMenuVM>(id);
+            var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView(vm);
         }
 
@@ -125,7 +125,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(Guid id, IFormCollection noUser)
         {
-            var vm = CreateVM<FrameworkMenuVM>(id);
+            var vm = Wtm.CreateVM<FrameworkMenuVM>(id);
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
@@ -142,7 +142,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("Details")]
         public PartialViewResult Details(Guid id)
         {
-            var v = CreateVM<FrameworkMenuVM>(id);
+            var v = Wtm.CreateVM<FrameworkMenuVM>(id);
             return PartialView("Details", v);
         }
         #endregion
@@ -151,7 +151,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         [ActionDescription("UnsetPages")]
         public ActionResult UnsetPages()
         {
-            var vm = CreateVM<FrameworkActionListVM>();
+            var vm = Wtm.CreateVM<FrameworkActionListVM>();
             return PartialView(vm);
         }
         #endregion

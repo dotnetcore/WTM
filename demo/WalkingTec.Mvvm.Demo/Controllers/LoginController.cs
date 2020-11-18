@@ -29,7 +29,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Login")]
         public IActionResult Login()
         {
-            LoginVM vm = CreateVM<LoginVM>();
+            LoginVM vm = Wtm.CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
             if (Wtm.ConfigInfo.IsQuickDebug == true)
             {
@@ -38,7 +38,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
             }
            Wtm.DoLog("LogTest");
             var logger = HttpContext.RequestServices.GetRequiredService<ILogger<ActionLog>>();
-            logger.LogInformation("test");
+            logger.LogInformation("test=======================test");
             return View(vm);
         }
 
@@ -94,7 +94,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [Public]
         public IActionResult Reg()
         {
-            var vm = CreateVM<RegVM>();
+            var vm = Wtm.CreateVM<RegVM>();
             return PartialView(vm);
         }
 
@@ -135,7 +135,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("ChangePassword")]
         public ActionResult ChangePassword()
         {
-            var vm = CreateVM<ChangePasswordVM>();
+            var vm = Wtm.CreateVM<ChangePasswordVM>();
             vm.ITCode = Wtm.LoginUserInfo.ITCode;
             return PartialView(vm);
         }

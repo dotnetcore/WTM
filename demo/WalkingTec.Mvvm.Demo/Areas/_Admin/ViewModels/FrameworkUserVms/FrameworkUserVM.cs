@@ -39,7 +39,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            if (ControllerName.Contains("/api") == false)
             {
                 SelectedRolesIDs = Entity.UserRoles.Select(x => x.RoleId).ToList();
                 AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, y => y.RoleName);
@@ -51,7 +51,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void ReInitVM()
         {
-            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            if (ControllerName.Contains("/api") == false)
             {
                 AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, y => y.RoleName);
                 AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, y => y.GroupName);
@@ -60,7 +60,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoAddAsync()
         {
-            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            if (ControllerName.Contains("/api") == false)
             {
                 Entity.UserRoles = new List<FrameworkUserRole>();
                 Entity.UserGroups = new List<FrameworkUserGroup>();
@@ -86,7 +86,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoEditAsync(bool updateAllFields = false)
         {
-            if (ControllerName.Contains("WalkingTec.Mvvm.Mvc.Admin.Controllers"))
+            if (ControllerName.Contains("/api") == false)
             {
                 FC.TryAdd("Entity.UserRoles", 0);
                 FC.TryAdd("Entity.UserGroups", 0);

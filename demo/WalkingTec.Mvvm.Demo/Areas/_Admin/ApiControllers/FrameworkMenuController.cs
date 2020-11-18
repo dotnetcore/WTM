@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public string Search(FrameworkMenuSearcher searcher)
         {
-            var vm = CreateVM<FrameworkMenuListVM2>();
+            var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
             return vm.GetJson();
         }
@@ -31,7 +31,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkMenuVM2 Get(Guid id)
         {
-            var vm = CreateVM<FrameworkMenuVM2>(id);
+            var vm = Wtm.CreateVM<FrameworkMenuVM2>(id);
             return vm;
         }
 
@@ -84,7 +84,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [ActionDescription("Delete")]
         public IActionResult BatchDelete(string[] ids)
         {
-            var vm = CreateVM<FrameworkMenuBatchVM>();
+            var vm = Wtm.CreateVM<FrameworkMenuBatchVM>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = ids;
@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcel(FrameworkMenuSearcher searcher)
         {
-            var vm = CreateVM<FrameworkMenuListVM2>();
+            var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             vm.Searcher = searcher;
             vm.SearcherMode = ListVMSearchModeEnum.Export;
             return vm.GetExportData();
@@ -117,7 +117,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpPost("[action]")]
         public IActionResult ExportExcelByIds(string[] ids)
         {
-            var vm = CreateVM<FrameworkMenuListVM2>();
+            var vm = Wtm.CreateVM<FrameworkMenuListVM2>();
             if (ids != null && ids.Count() > 0)
             {
                 vm.Ids = new List<string>(ids);
@@ -131,7 +131,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public string UnsetPages()
         {
-            var vm = CreateVM<FrameworkActionListVM>();
+            var vm = Wtm.CreateVM<FrameworkActionListVM>();
             return vm.GetJson();
         }
         #endregion

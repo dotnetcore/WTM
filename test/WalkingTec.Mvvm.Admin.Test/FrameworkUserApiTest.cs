@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Admin.Test
         public void CreateTest()
         {
 
-            FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
+            FrameworkUserVM vm = _controller.Wtm.CreateVM<FrameworkUserVM>();
             FrameworkUser v = new FrameworkUser();
 
             v.ITCode = "itcode";
@@ -70,7 +70,7 @@ namespace WalkingTec.Mvvm.Admin.Test
                 context.SaveChanges();
             }
 
-            FrameworkUserVM vm = _controller.CreateVM<FrameworkUserVM>();
+            FrameworkUserVM vm = _controller.Wtm.CreateVM<FrameworkUserVM>();
             var oldID = v.ID;
             v = new FrameworkUser();
             v.ID = oldID;
