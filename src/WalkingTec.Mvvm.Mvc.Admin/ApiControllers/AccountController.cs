@@ -313,9 +313,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]/{id}")]
         public async Task Logout(Guid? id)
         {
+            await LoginUserInfo.RemoveUserCache(LoginUserInfo.Id.ToString());
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Response.Redirect("/");
         }
 
 
