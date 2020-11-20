@@ -4,8 +4,13 @@
     <wt:combobox field="Entity.TableName" items="TableNames" change-func="PriTypeChange" />
     <wt:combobox field="IsAll" change-func="IsAllChange" />
     <wt:row id="selector">
-        <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="">
-        </wt:selector>
+      <wt:selector list-vm="DpList" field="SelectedItemsID" text-bind="DpList.EntityList[0].Name" before-onpen-dialog-func="SetTableName" label-text="" window-height="800">
+        <wt:searchpanel vm="DpList">
+          <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:textbox field="DpList.Searcher.Filter" />
+          </wt:row>
+        </wt:searchpanel>
+      </wt:selector>
     </wt:row>
     <wt:row id="userrow">
         <wt:textbox field="UserItCode" search-url="/_Admin/FrameworkUser/GetUserById" />

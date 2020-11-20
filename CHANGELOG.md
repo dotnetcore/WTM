@@ -2,6 +2,11 @@
 
 ## v3.x.x （2.x.x同步更新）
 
+##3.7.6 以及 2.7.6 (2020-11-15)
+* **修改：**  TreeContainer现在可以设置默认选中的项目，通过设置TreeSelectListItem中的Selected属性
+* **修改：**  修复了数据权限在过滤自定义主键的模型时的bug
+* **修改：**  修复若干小问题
+
 ##3.7.5 以及 2.7.5 (2020-10-19)
 * **修改：**  Layui模式下Selector控件也可以使用trigger-url和link-field来联动其他控件了（鸣谢AaronLucas)
 * **修改：**  修复了多表头列表导出excel时表头显示错误的问题

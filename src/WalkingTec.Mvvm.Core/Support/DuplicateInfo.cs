@@ -311,10 +311,10 @@ namespace WalkingTec.Mvvm.Core
             }
             if (allExp.Count > 1)
             {
-                rv = Expression.Or(allExp[0], allExp[1]);
+                rv = Expression.OrElse(allExp[0], allExp[1]);
                 for (int i = 2; i < allExp.Count; i++)
                 {
-                    rv = Expression.Or(rv, allExp[i]);
+                    rv = Expression.OrElse(rv, allExp[i]);
                 }
             }
             return rv;

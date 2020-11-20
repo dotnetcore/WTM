@@ -48,6 +48,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
         {
             var query = DC.Set<City>()
                 .CheckEqual(Searcher.ParentId, x=>x.ParentId)
+                .DPWhere(LoginUserInfo.DataPrivileges,x=>x.ID)
                 .Select(x => new City_View
                 {
 				    ID = x.ID,
