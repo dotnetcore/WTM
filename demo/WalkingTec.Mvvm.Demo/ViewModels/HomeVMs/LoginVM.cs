@@ -98,8 +98,13 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
                                 tempids.Add(g);
                             }
                         }
+
+                        var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
+                        var skipids = basequery.Cast<ITreeData>().Where(x =>tempids.Contains(x.ID) && x.ParentId != null).Select(x => x.ParentId.Value).ToList();
+
+
                         List<Guid> subids = new List<Guid>();
-                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
+                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType, skipids));
                         subids = subids.Distinct().ToList();
                         subids.ForEach(x => dps.Add(new DataPrivilege {
                           TableName = ds.ModelName,
@@ -110,13 +115,14 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.HomeVMs
             }
         }
 
-        private IEnumerable<Guid> GetSubIds(List<Guid> p_id,Type modelType)
+        private IEnumerable<Guid> GetSubIds(List<Guid> p_id,Type modelType, List<Guid> skipids)
         {
             var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
-            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
+            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
+            var subids = basequery.Cast<ITreeData>().Where(x => ids.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
             if (subids.Count > 0)
             {
-                return subids.Concat(GetSubIds(subids, modelType));
+                return subids.Concat(GetSubIds(subids, modelType, skipids));
             }
             else
             {

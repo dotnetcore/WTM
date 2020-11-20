@@ -359,7 +359,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression trueExp = Expression.Equal(left1, right1);
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
-
+            var pePros = pe.Type.GetProperties();
             //循环所有关联外键
             foreach (var IdField in IdFields)
             {
@@ -374,7 +374,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
-                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetProperty(splits[0], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly));
+                PropertyInfo pi = pePros.Where(x => x.Name == splits[0]).FirstOrDefault();
+                Expression peid = Expression.MakeMemberAccess(pe, pi);
                 Type middletype = null;
                 if (mtm)
                 {
