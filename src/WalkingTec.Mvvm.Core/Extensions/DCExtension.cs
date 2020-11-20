@@ -480,7 +480,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 else
                 {
-                    finalExp = Expression.Or(finalExp, exp);
+                    finalExp = Expression.OrElse(finalExp, exp);
                 }
             }
             //如果没有进行任何修改，则还返回baseQuery

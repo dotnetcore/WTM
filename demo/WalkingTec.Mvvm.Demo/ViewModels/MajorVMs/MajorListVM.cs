@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
                 .CheckContain(Searcher.MajorCode, x => x.MajorCode)
                 .CheckContain(Searcher.MajorName, x => x.MajorName)
                 .CheckEqual(Searcher.SchoolId, x => x.SchoolId)
-                .DPWhere(LoginUserInfo.DataPrivileges, x => x.SchoolId)
+                .DPWhere(LoginUserInfo.DataPrivileges, x => x.SchoolId, x=>x.ID)
                 .Select(x => new Major_View
                 {
                     ID = x.ID,
