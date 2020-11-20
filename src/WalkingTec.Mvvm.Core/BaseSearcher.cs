@@ -37,6 +37,7 @@ namespace WalkingTec.Mvvm.Core
         [JsonIgnore]
         public Dictionary<string, object> FC { get; set; }
 
+        [JsonIgnore]
         public IModelStateService MSD { get; set; }
 
         /// <summary>
