@@ -370,6 +370,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression finalExp = null;
 
             //循环所有关联外键
+            var pePros = pe.Type.GetProperties();
             foreach (var IdField in IdFields)
             {
                 bool mtm = false;
@@ -383,7 +384,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
-                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetProperty(splits[0], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly));
+                PropertyInfo pi = pePros.Where(x => x.Name == splits[0]).FirstOrDefault();
+                Expression peid = Expression.MakeMemberAccess(pe, pi);
                 Type middletype = null;
                 if (mtm)
                 {
@@ -394,7 +396,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     for (int i = 1; i < splits.Length; i++)
                     {
-                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetProperty(splits[i], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public));
+                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetProperties().Where(x=>x.Name == splits[i]).FirstOrDefault());
                     }
                     middletype = (peid as MemberExpression).Member.DeclaringType;
                 }
@@ -489,7 +491,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
                 else
                 {
-                    finalExp = Expression.Or(finalExp, exp);
+                    finalExp = Expression.OrElse(finalExp, exp);
                 }
             }
             //如果没有进行任何修改，则还返回baseQuery

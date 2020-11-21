@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core
 
         Type ModelType { get; set; }
         //获取数据权限的下拉菜单
-        List<ComboSelectListItem> GetItemList(IDataContext dc, WTMContext wtmcontext);
+        List<ComboSelectListItem> GetItemList(IDataContext dc, WTMContext wtmcontext, string filter = null);
     }
 
     /// <summary>
@@ -51,18 +51,39 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="dc">dc</param>
         /// <param name="wtmcontext">wtm context</param>
+        /// <param name="filter">filter</param>
         /// <returns>数据权限关联表的下拉菜单</returns>
-        public List<ComboSelectListItem> GetItemList(IDataContext dc,WTMContext wtmcontext)
+        public List<ComboSelectListItem> GetItemList(IDataContext dc,WTMContext wtmcontext, string filter = null)
         {
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
             var user = wtmcontext?.LoginUserInfo;
-            if (user.Roles?.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges?.Where(x=>x.RelateId == null).FirstOrDefault() == null)
+            Expression<Func<T, bool>> where = null;
+            if (string.IsNullOrEmpty(filter) == false)
             {
-                rv = dc.Set<T>().Where(x=>user.DataPrivileges.Select(y=>y.RelateId).Contains(x.ID.ToString())).GetSelectListItems(wtmcontext, _where, _displayField, null, ignorDataPrivilege: true);
+                ChangePara cp = new ChangePara();
+                ParameterExpression pe = Expression.Parameter(typeof(T));
+                var toString = Expression.Call(cp.Change(_displayField.Body, pe), "ToString", new Type[] { });
+                var tolower = Expression.Call(toString, "ToLower", new Type[] { });
+                var exp = Expression.Call(tolower, "Contains", null, Expression.Constant(filter.ToLower()));
+                where = Expression.Lambda<Func<T, bool>>(exp, pe);
+                if (_where != null)
+                {
+                    var temp = cp.Change(_where.Body, pe);
+                    var together = Expression.And(where.Body, temp);
+                    where = Expression.Lambda<Func<T, bool>>(together, pe);
+                }
             }
             else
             {
-                rv = dc.Set<T>().GetSelectListItems(wtmcontext, _where, _displayField, null, ignorDataPrivilege: true);
+                where = _where;
+            }
+            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
+            if (user.Roles?.Where(x => x.RoleCode == "001").FirstOrDefault() == null && user.DataPrivileges?.Where(x => x.RelateId == null).FirstOrDefault() == null)
+            {
+                rv = dc.Set<T>().Where(x => user.DataPrivileges.Select(y => y.RelateId).Contains(x.ID.ToString())).GetSelectListItems(null, where, _displayField, null, ignorDataPrivilege: true);
+            }
+            else
+            {
+                rv = dc.Set<T>().GetSelectListItems(null, where, _displayField, null, ignorDataPrivilege: true);
             }
             return rv;
         }

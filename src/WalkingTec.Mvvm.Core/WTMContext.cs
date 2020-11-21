@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.Core
         public HttpContext HttpContext { get => _httpContext; }
 
         private IServiceProvider _serviceProvider;
-        public IServiceProvider ServiceProvider { get => _serviceProvider ??  _httpContext?.RequestServices; }
+        public IServiceProvider ServiceProvider { get => _serviceProvider ?? _httpContext?.RequestServices; }
 
 
         private List<IDataPrivilege> _dps;
@@ -155,7 +155,7 @@ namespace WalkingTec.Mvvm.Core
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                     {
-                        _loginUserInfo = LoadUserFromDB(userId).Result; 
+                        _loginUserInfo = LoadUserFromDB(userId).Result;
                         if (_loginUserInfo != null)
                         {
                             Cache.Add(cacheKey, _loginUserInfo);
@@ -191,7 +191,7 @@ namespace WalkingTec.Mvvm.Core
         {
             get
             {
-                if(_localizer == null && _stringLocalizerFactory != null)
+                if (_localizer == null && _stringLocalizerFactory != null)
                 {
                     var programtype = Assembly.GetEntryAssembly().GetTypes().Where(x => x.Name == "Program").FirstOrDefault();
                     _localizer = _stringLocalizerFactory.Create(programtype);
@@ -206,10 +206,10 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="itcode">用户名</param>
         /// <param name="password">密码</param>
         /// <returns>用户信息</returns>
-        public virtual async Task<LoginUserInfo> LoadUserFromDB(Guid? userId, string itcode=null, string password=null)
+        public virtual async Task<LoginUserInfo> LoadUserFromDB(Guid? userId, string itcode = null, string password = null)
         {
             FrameworkUserBase userInfo = null;
-            if(DC == null)
+            if (DC == null)
             {
                 return null;
             }
@@ -249,7 +249,7 @@ namespace WalkingTec.Mvvm.Core
                     .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                     .Distinct()
                     .ToListAsync();
-                
+
                 var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.ID)).ToList();
                 var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.ID)).ToList();
 
@@ -259,10 +259,10 @@ namespace WalkingTec.Mvvm.Core
                     ITCode = userInfo.ITCode,
                     Name = userInfo.Name,
                     PhotoId = userInfo.PhotoId,
-                    Roles = roles.Select(x=> new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName}).ToList(),
-                    Groups =groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList(),
-                    DataPrivileges = dataPris.Select(x=> new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserId = x.UserId, GroupId = x.GroupId }).ToList(),
-                    FunctionPrivileges = funcPrivileges.Select(x=> new SimpleFunctionPri { ID = x.ID, UserId = x.UserId, RoleId = x.RoleId, Allowed = x.Allowed, MenuItemId = x.MenuItemId}).ToList()
+                    Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList(),
+                    Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList(),
+                    DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserId = x.UserId, GroupId = x.GroupId }).ToList(),
+                    FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, UserId = x.UserId, RoleId = x.RoleId, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList()
                 };
             }
             return rv;
@@ -293,7 +293,7 @@ namespace WalkingTec.Mvvm.Core
 
         protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd=null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory=null)
+        public WTMContext(IOptions<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
         {
             _configInfo = _config.Value;
             _globaInfo = _gd ?? new GlobalData();
@@ -301,7 +301,7 @@ namespace WalkingTec.Mvvm.Core
             _stringLocalizerFactory = stringLocalizer;
             _loggerFactory = loggerFactory;
             this.Logger = loggerFactory?.CreateLogger<ActionLog>();
-            if(_httpContext == null)
+            if (_httpContext == null)
             {
                 MSD = new BasicMSD();
             }
@@ -311,7 +311,7 @@ namespace WalkingTec.Mvvm.Core
                 _dp = new List<IDataPrivilege>();
             }
             _dps = _dp;
-            if(dc is NullContext)
+            if (dc is NullContext)
             {
                 _dc = null;
             }
@@ -351,7 +351,7 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
-        public  async Task RemoveUserCache(
+        public async Task RemoveUserCache(
             params string[] userIds)
         {
             foreach (var userId in userIds)
@@ -365,7 +365,7 @@ namespace WalkingTec.Mvvm.Core
         #region CreateDC
         public virtual IDataContext CreateDC(bool isLog = false, string cskey = null)
         {
-            string cs =  cskey??CurrentCS;
+            string cs = cskey ?? CurrentCS;
             if (isLog == true)
             {
                 if (ConfigInfo.ConnectionStrings?.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault() != null)
@@ -377,7 +377,7 @@ namespace WalkingTec.Mvvm.Core
                     cs = "default";
                 }
             }
-            if(cs == null)
+            if (cs == null)
             {
                 cs = "default";
             }
@@ -427,7 +427,7 @@ namespace WalkingTec.Mvvm.Core
                 return true;
             }
             var menus = _globaInfo.AllMenus;
-            var menu = Utils.FindMenu(url,GlobaInfo.AllMenus);
+            var menu = Utils.FindMenu(url, GlobaInfo.AllMenus);
             //如果最终没有找到，说明系统菜单中并没有配置这个url，返回false
             if (menu == null)
             {
@@ -463,7 +463,7 @@ namespace WalkingTec.Mvvm.Core
         public void DoLog(string msg, ActionLogTypesEnum logtype = ActionLogTypesEnum.Normal)
         {
             var log = this.Log?.GetActionLog();
-            if(log == null)
+            if (log == null)
             {
                 log = new ActionLog();
             }
@@ -486,7 +486,8 @@ namespace WalkingTec.Mvvm.Core
                     break;
             }
 
-            Logger?.Log<ActionLog>(ll, new EventId(), log, null, (a, b) => {
+            Logger?.Log<ActionLog>(ll, new EventId(), log, null, (a, b) =>
+            {
                 return $@"
 ===WTM Log===
 内容:{a.Remark}
@@ -773,8 +774,13 @@ namespace WalkingTec.Mvvm.Core
                                 tempids.Add(g);
                             }
                         }
+
+                        var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
+                        var skipids = basequery.Cast<ITreeData>().Where(x => tempids.Contains(x.ID) && x.ParentId != null).Select(x => x.ParentId.Value).ToList();
+
+
                         List<Guid> subids = new List<Guid>();
-                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType));
+                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType, skipids));
                         subids = subids.Distinct().ToList();
                         subids.ForEach(x => dps.Add(new DataPrivilege
                         {
@@ -783,15 +789,17 @@ namespace WalkingTec.Mvvm.Core
                         }));
                     }
                 }
+
             }
         }
-        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType)
+        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType, List<Guid> skipids)
         {
             var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
-            var subids = basequery.Cast<ITreeData>().Where(x => p_id.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
+            var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
+            var subids = basequery.Cast<ITreeData>().Where(x => ids.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
             if (subids.Count > 0)
             {
-                return subids.Concat(GetSubIds(subids, modelType));
+                return subids.Concat(GetSubIds(subids, modelType, skipids));
             }
             else
             {

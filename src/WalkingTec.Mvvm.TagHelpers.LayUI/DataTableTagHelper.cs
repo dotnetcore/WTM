@@ -151,6 +151,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// table容器的默认宽度是 auto，你可以借助该参数设置一个固定值，当容器中的内容超出了该宽度时，会自动出现横向滚动条。
         /// </summary>
         public int? Width { get; set; }
+        public bool AutoSearch { get; set; } = true;
 
         /// <summary>
         /// 接口地址
@@ -577,15 +578,23 @@ layui.use(['table'], function(){{
     }}
 {Id}defaultfilter = {{}};
 {Id}filterback = {{}};
+{Id}url = '{Url}';
 $.extend(true,{Id}defaultfilter ,{Id}option);
     {TableJSVar} = table.render({Id}option);
     {(UseLocalData ? $@"ff.LoadLocalData(""{Id}"",{Id}option,{ListVM.GetDataJson().Replace("<script>", "$$script$$").Replace("</script>", "$$#script$$")},{string.IsNullOrEmpty(ListVM.DetailGridPrix).ToString().ToLower()}); " : $@"
-    {(page ?  $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} ":"")}
+    {(page ? $"if (document.body.clientWidth< 500) {{ {Id}option.page.layout = ['count', 'prev', 'page', 'next']; {Id}option.page.groups= 1;}} " : "")}
+{(AutoSearch ? $@"
 setTimeout(function(){{
     var tempwhere = {{}};
     $.extend(tempwhere,{Id}defaultfilter.where);
     table.reload('{Id}',{{url:'{Url}',where: $.extend(tempwhere,ff.GetSearchFormData('{SearchPanelId}','{Vm.Name}')),}});
 }},100);
+" : $@"
+        var {Id}optionempty =  Object.assign({{}}, {Id}option);
+        {Id}optionempty.url = null;
+        {Id}optionempty.data = [];
+        layui.table.render({Id}optionempty);
+")}
 ")}
 
   {(VMType == null || string.IsNullOrEmpty(vmName) ? string.Empty : $@"function wtEditFunc_{Id}(o){{
