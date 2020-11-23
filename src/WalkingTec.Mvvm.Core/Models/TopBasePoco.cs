@@ -19,18 +19,7 @@ namespace WalkingTec.Mvvm.Core
         [Key]
         public Guid ID
         {
-            get
-            {
-                if (_id == Guid.Empty)
-                {
-                    _id = Guid.NewGuid();
-                }
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
+            get;set;
         }
 
         /// <summary>
