@@ -233,7 +233,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var parentMI = typeof(ComboSelectListItem).GetMember("ParentId")[0];
             if (typeof(ITreeData<T>).IsAssignableFrom(typeof(T)))
             {
-                var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetProperty("ParentId"));
+                var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetSingleProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
                 var p1 = Expression.Call(p, "ToLower", new Type[] { });
                 parentBind = Expression.Bind(parentMI, p1);
@@ -329,7 +329,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (fieldName.ToLower() != "id")
                 {
                     fieldName = fieldName.Remove(fieldName.Length - 2);
-                    typename = IdField.GetPropertyInfo().DeclaringType.GetProperty(fieldName).PropertyType.Name;
+                    typename = IdField.GetPropertyInfo().DeclaringType.GetSingleProperty(fieldName).PropertyType.Name;
                 }
                 //如果是 Id，则本身就是关联的类
                 else
@@ -362,7 +362,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression trueExp = Expression.Equal(left1, right1);
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
-            var pePros = pe.Type.GetProperties();
             //循环所有关联外键
             foreach (var IdField in IdFields)
             {
@@ -377,8 +376,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
-                PropertyInfo pi = pePros.Where(x => x.Name == splits[0]).FirstOrDefault();
-                Expression peid = Expression.MakeMemberAccess(pe, pi);
+                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetSingleProperty(splits[0]));
                 Type middletype = null;
                 if (mtm)
                 {
@@ -389,7 +387,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     for (int i = 1; i < splits.Length; i++)
                     {
-                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetProperty(splits[i], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public)); 
+                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetSingleProperty(splits[i])); 
                     }
                     middletype = (peid as MemberExpression).Member.DeclaringType;
                 }
@@ -405,7 +403,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     if (fieldName.ToLower() != "id")
                     {
                         fieldName = fieldName.Remove(fieldName.Length - 2);
-                        var typeinfo = middletype.GetProperty(fieldName);
+                        var typeinfo = middletype.GetSingleProperty(fieldName);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
                         var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.PropertyType.Name.ToLower()).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
@@ -537,7 +535,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 ParameterExpression pe = Expression.Parameter(typeof(T));
                 var idproperty = typeof(T).GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
                 Expression pro = Expression.Property(pe, idproperty);
-                Type proType = typeof(T).GetProperty(item.Property).PropertyType;
+                Type proType = typeof(T).GetSingleProperty(item.Property).PropertyType;
                 if (item.Direction == SortDir.Asc)
                 {
                     if (rv == null)

@@ -225,7 +225,7 @@ namespace WalkingTec.Mvvm.Core
                     //如果能找到，则循环LinkedVM中的属性，给entity中同名属性赋值
                     foreach (var pro in pros)
                     {
-                        var proToSet = entity.GetType().GetProperty(pro.Name);
+                        var proToSet = entity.GetType().GetSingleProperty(pro.Name);
                         var val = FC.ContainsKey("LinkedVM." + pro.Name) ? FC["LinkedVM." + pro.Name] : null;
                         if (proToSet != null && val != null)
                         {

@@ -569,7 +569,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     var modelmenu = new FrameworkMenu
                     {
-                        //ID = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         PageName = area ?? localizer["DefaultArea"]
                     };
                     menus.Add(modelmenu);

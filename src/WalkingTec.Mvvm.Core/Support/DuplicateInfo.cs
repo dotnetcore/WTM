@@ -247,7 +247,7 @@ namespace WalkingTec.Mvvm.Core
                     //如果值为空字符串且没要求必填，则跳过
                     if (vv is string && vv.ToString() == "")
                     {
-                        var requiredAttrs = li.GetType().GetProperty(SubFieldExp.GetPropertyName()).GetCustomAttributes(typeof(RequiredAttribute), false).ToList();
+                        var requiredAttrs = li.GetType().GetSingleProperty(SubFieldExp.GetPropertyName()).GetCustomAttributes(typeof(RequiredAttribute), false).ToList();
 
                         if (requiredAttrs == null || requiredAttrs.Count == 0)
                         {
