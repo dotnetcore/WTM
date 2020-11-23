@@ -12,6 +12,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
     /// </summary>
     public static class TypeExtension
     {
+        public static Dictionary<string, List<PropertyInfo>> _propertyCache { get; set; } = new Dictionary<string, List<PropertyInfo>>();
+
         /// <summary>
         /// 判断是否是泛型
         /// </summary>
@@ -210,6 +212,15 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 }
             }
             return rv;
+        }
+
+        public static PropertyInfo GetSingleProperty(this Type self, string name)
+        {
+            if(_propertyCache.ContainsKey(self.FullName) == false)
+            {
+                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+            }
+            return _propertyCache[self.FullName].Where(x => x.Name == name).FirstOrDefault();
         }
     }
 }

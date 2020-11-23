@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 var entityList = listVM.GetEntityList().ToList();
                 foreach (var item in entityList)
                 {
-                    value.Add(item.GetType().GetProperty(TextBind?.Metadata.PropertyName)?.GetValue(item).ToString());
+                    value.Add(item.GetType().GetSingleProperty(TextBind?.Metadata.PropertyName)?.GetValue(item).ToString());
                 }
             }
 

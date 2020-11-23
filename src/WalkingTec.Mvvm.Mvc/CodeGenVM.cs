@@ -724,7 +724,7 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             else
                             {
-                                var middleType = modelType.GetProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
+                                var middleType = modelType.GetSingleProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
                                 var middlename = DC.GetPropertyNameByFk(middleType, pro.SubIdField);
                                 selectstring += $@"
                     {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.Select(y=>y.{middlename}.{pro.SubField}).ToSpratedString(null,"",""), ";

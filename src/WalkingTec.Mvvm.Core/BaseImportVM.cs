@@ -471,7 +471,7 @@ namespace WalkingTec.Mvvm.Core
                             if (gtype == sub.Key)
                             {
                                 //子表
-                                var subList = entity.GetType().GetProperty(pro.Name).GetValue(entity);
+                                var subList = entity.GetType().GetSingleProperty(pro.Name).GetValue(entity);
                                 string fk = DC.GetFKName<P>(pro.Name);
 
                                 //如果子表不为空
