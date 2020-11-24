@@ -170,7 +170,7 @@ $('#{SearchBtnId}').on('click', function () {{
     var tempwhere = {{}};
     $.extend(tempwhere,{GridId}defaultfilter.where);
       {GridId}filterback.where = tempwhere;
-  table.reload('{GridId}',{{url:{GridId}url,where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')),
+  table.reload('{GridId}',{{url:{GridId}url,where: $.extend(tempwhere,ff.GetSearchFormData('{Id}','{Vm.Name}')),page:{{curr:1}}
   }})
 }});
     ")}
