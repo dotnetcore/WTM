@@ -97,7 +97,7 @@ namespace WalkingTec.Mvvm.Core
             var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
             Entity = ctor.Invoke(null) as TModel;
             //初始化VM中所有List<>的类
-            var lists = typeof(TModel).GetProperties().Where(x => x.PropertyType.IsGeneric(typeof(List<>)));
+            var lists = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsGeneric(typeof(List<>)));
             foreach (var li in lists)
             {
                 var gs = li.PropertyType.GetGenericArguments();
@@ -179,11 +179,11 @@ namespace WalkingTec.Mvvm.Core
                 throw new Exception("数据不存在");
             }
             //如果TopBasePoco有关联的附件，则自动Include 附件名称
-            var fa = typeof(TModel).GetProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
+            var fa = typeof(TModel).GetAllProperties().Where(x => x.PropertyType == typeof(FileAttachment)).ToList();
             foreach (var f in fa)
             {
                 var fname = DC.GetFKName2<TModel>(f.Name);
-                var fid = typeof(TModel).GetProperty(fname).GetValue(rv);
+                var fid = typeof(TModel).GetSingleProperty(fname).GetValue(rv);
                 if (fid != null)
                 {
                     var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
@@ -232,7 +232,7 @@ namespace WalkingTec.Mvvm.Core
 
         private void DoAddPrepare()
         {
-            var pros = typeof(TModel).GetProperties();
+            var pros = typeof(TModel).GetAllProperties();
             //将所有TopBasePoco的属性赋空值，防止添加关联的重复内容
             if (typeof(TModel) != typeof(FileAttachment))
             {
@@ -279,7 +279,7 @@ namespace WalkingTec.Mvvm.Core
                         if (list != null && list.Count() > 0)
                         {
                             string fkname = DC.GetFKName<TModel>(pro.Name);
-                            PropertyInfo[] itemPros = ftype.GetProperties();
+                            var itemPros = ftype.GetAllProperties();
 
                             bool found = false;
                             foreach (var newitem in list)
@@ -384,7 +384,7 @@ namespace WalkingTec.Mvvm.Core
                     ent.UpdateBy = LoginUserInfo?.ITCode;
                 }
             }
-            var pros = typeof(TModel).GetProperties();
+            var pros = typeof(TModel).GetAllProperties();
 
             #region 更新子表
             foreach (var pro in pros)
@@ -403,7 +403,7 @@ namespace WalkingTec.Mvvm.Core
                         {
                             //获取外键字段名称
                             string fkname = DC.GetFKName<TModel>(pro.Name);
-                            PropertyInfo[] itemPros = ftype.GetProperties();
+                            var itemPros = ftype.GetAllProperties();
 
                             bool found = false;
                             foreach (var newitem in list)
@@ -454,7 +454,7 @@ namespace WalkingTec.Mvvm.Core
                             //比较子表原数据和新数据的区别
                             IEnumerable<TopBasePoco> toadd = null;
                             IEnumerable<TopBasePoco> toremove = null;
-                            IEnumerable<TopBasePoco> data = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
+                            IEnumerable<TopBasePoco> data = _entity.GetType().GetSingleProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
                             Utils.CheckDifference(data, list, out toremove, out toadd);
                             //设定子表应该更新的字段
                             List<string> setnames = new List<string>();
@@ -542,11 +542,11 @@ namespace WalkingTec.Mvvm.Core
                         }
                         else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (FC.ContainsKey("Entity."+pro.Name) && pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
-                            PropertyInfo[] itemPros = ftype.GetProperties();
+                            var itemPros = ftype.GetAllProperties();
                             var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();
                             if (_entity != null)
                             {
-                                IEnumerable<TopBasePoco> removeData = _entity.GetType().GetProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
+                                IEnumerable<TopBasePoco> removeData = _entity.GetType().GetSingleProperty(pro.Name).GetValue(_entity) as IEnumerable<TopBasePoco>;
                                 //如果是PersistPoco，则把IsValid设为false，并不进行物理删除
                                 if (removeData is IEnumerable<PersistPoco> removePersistPocoData)
                                 {
@@ -672,7 +672,7 @@ namespace WalkingTec.Mvvm.Core
             try
             {
                 List<Guid> fileids = new List<Guid>();
-                var pros = typeof(TModel).GetProperties();
+                var pros = typeof(TModel).GetAllProperties();
 
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
@@ -728,7 +728,7 @@ namespace WalkingTec.Mvvm.Core
             try
             {
                 List<Guid> fileids = new List<Guid>();
-                var pros = typeof(TModel).GetProperties();
+                var pros = typeof(TModel).GetAllProperties();
 
                 //如果包含附件，则先删除附件
                 var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
@@ -835,7 +835,7 @@ namespace WalkingTec.Mvvm.Core
                             }
                         }
                     }
-                    var list = typeof(TModel).GetProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
+                    var list = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsListOf<TopBasePoco>());
                     foreach (var item in list)
                     {
                         var it = item.GetValue(Entity) as IEnumerable;
@@ -891,7 +891,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    var idproperty = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    var idproperty = typeof(TModel).GetSingleProperty("ID");
                     MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(Entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);

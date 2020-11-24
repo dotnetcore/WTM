@@ -20,7 +20,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (Field?.Name?.ToLower().EndsWith("id") == true)
             {
-                var file = Field.Metadata.ContainerType.GetProperties().Where(x => x.Name.ToLower() + "id" == Field.Metadata.PropertyName.ToLower()).FirstOrDefault();
+                var file = Field.Metadata.ContainerType.GetSingleProperty(x => x.Name.ToLower() + "id" == Field.Metadata.PropertyName.ToLower()); 
                 if (file != null && file.PropertyType == typeof(FileAttachment))
                 {
                     isFile = true;

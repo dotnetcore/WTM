@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -79,7 +80,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                             int count = 0;
                             foreach (var item in list)
                             {
-                                var pros = itemtype.GetProperties();
+                                var pros = itemtype.GetAllProperties();
                                 foreach (var pro in pros)
                                 {
                                     string name = Name;

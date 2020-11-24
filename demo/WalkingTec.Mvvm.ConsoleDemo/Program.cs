@@ -8,6 +8,7 @@ using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Demo;
+using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Demo.ViewModels.CityVMs;
 using WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs;
 

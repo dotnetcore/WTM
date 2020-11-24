@@ -142,14 +142,14 @@ Expression.Lambda(trueExp, new ParameterExpression[] { pe }));
                 Expression rv = null;
                 foreach (var item in info)
                 {
-                    var idproperty = modelType.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                    var idproperty = modelType.GetSingleProperty(item.Property);
                     if (idproperty == null)
                     {
                         return node;
                     }
                     var reftype = idproperty.DeclaringType;
                     ParameterExpression pe = Expression.Parameter(modelType, "x");
-                    Expression pro = Expression.Property(pe, reftype.GetProperties().Where(x => x.Name == item.Property).FirstOrDefault());
+                    Expression pro = Expression.Property(pe, reftype.GetSingleProperty(item.Property));
                     Type proType = idproperty.PropertyType;
                     if (item.Direction == SortDir.Asc)
                     {

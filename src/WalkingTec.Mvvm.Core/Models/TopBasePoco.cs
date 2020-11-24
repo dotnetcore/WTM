@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -48,20 +49,20 @@ namespace WalkingTec.Mvvm.Core
 
         public object GetID()
         {
-            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            var idpro = this.GetType().GetSingleProperty("ID");
             var id = idpro.GetValue(this);
             return id;
         }
 
         public Type GetIDType()
         {
-            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            var idpro = this.GetType().GetSingleProperty("ID");
             return idpro.PropertyType;
         }
 
         public void SetID(object id)
         {
-            var idpro = this.GetType().GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            var idpro = this.GetType().GetSingleProperty("ID");
             idpro.SetValue(this, id.ConvertValue(idpro.PropertyType));
 
         }

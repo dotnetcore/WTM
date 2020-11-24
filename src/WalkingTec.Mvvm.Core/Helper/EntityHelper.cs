@@ -22,7 +22,7 @@ namespace WalkingTec.Mvvm.Core
         {
             IList<T> entityList = new List<T>();
 
-            var properties = typeof(T).GetProperties().ToLookup(property => property.Name, property => property).ToDictionary(i => i.Key, i => i.First()).Values;
+            var properties = typeof(T).GetAllProperties().ToLookup(property => property.Name, property => property).ToDictionary(i => i.Key, i => i.First()).Values;
 
             //循环Datable中的每一行
             foreach (DataRow row in table.Rows)
@@ -108,7 +108,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 DataRow dataRow = dt.NewRow();
                 //循环实体类所有属性，给对应的DataTable字段赋值
-                foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+                foreach (PropertyInfo propertyInfo in typeof(T).GetAllProperties())
                 {
                     var res = propertyInfo.GetValue(model);
                     dataRow[propertyInfo.Name] = res ?? DBNull.Value;
@@ -126,8 +126,7 @@ namespace WalkingTec.Mvvm.Core
         private static DataTable CreateData<T>(T model) where T : new()
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
-            var types = typeof(T).GetProperties();
-            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+            foreach (PropertyInfo propertyInfo in typeof(T).GetAllProperties())
             {
                 if (propertyInfo.PropertyType.IsGenericType)
                 {

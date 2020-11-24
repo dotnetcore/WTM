@@ -958,7 +958,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 var aroot = root as List<GridColumn<TModel>>;
                 List<GridColumn<TModel>> remove = null;
-                var idpro = typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
+                var idpro = typeof(TModel).GetSingleProperty("ID")?.PropertyType;
                 if (idpro == typeof(string))
                 {
                     remove = aroot.Where(x => x.ColumnType == GridColumnTypeEnum.Action || x.Hide == true || x.DisableExport).ToList();
@@ -1066,7 +1066,7 @@ namespace WalkingTec.Mvvm.Core
             if (EntityList != null)
             {
                 var ftype = EntityList.GetType().GenericTypeArguments.First();
-                PropertyInfo[] itemPros = ftype.GetProperties();
+                var itemPros = ftype.GetAllProperties();
 
                 foreach (var newitem in EntityList)
                 {

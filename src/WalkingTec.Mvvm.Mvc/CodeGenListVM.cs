@@ -76,7 +76,7 @@ namespace WalkingTec.Mvvm.Mvc
         public override IOrderedQueryable<CodeGenListView> GetSearchQuery()
         {
             Type modeltype =  Type.GetType(ModelFullName);
-            var pros = modeltype.GetProperties();
+            var pros = modeltype.GetAllProperties();
             List<CodeGenListView> lv = new List<CodeGenListView>();
             int count = 0;
             Type[] basetype = new Type[] { typeof(BasePoco), typeof(TopBasePoco), typeof(PersistPoco) };
@@ -148,7 +148,7 @@ namespace WalkingTec.Mvvm.Mvc
                         {
                             view.FieldDes += $"({MvcProgram._localizer["ManyToMany"]})";
                             view.IsImportField = false;
-                            var subpros = checktype.GetProperties();
+                            var subpros = checktype.GetAllProperties();
                             foreach (var spro in subpros)
                             {
                                 if (basetype.Contains(spro.DeclaringType) == false)

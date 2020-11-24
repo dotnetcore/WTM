@@ -175,7 +175,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 var entityList = listVM.GetEntityList().ToList();
                 foreach (var item in entityList)
                 {
-                    value.Add(item.GetType().GetProperty(TextBind?.Metadata.PropertyName)?.GetValue(item).ToString());
+                    value.Add(item.GetType().GetSingleProperty(TextBind?.Metadata.PropertyName)?.GetValue(item).ToString());
                 }
             }
 
@@ -277,8 +277,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                 }
                 if (listVM.Searcher != null)
                 {
-                    var props = listVM.Searcher.GetType().GetProperties();
-                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToArray();
+                    var props = listVM.Searcher.GetType().GetAllProperties();
+                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToList();
                     foreach (var prop in props)
                     {
                         if (!_excludeParams.Contains(prop.Name))

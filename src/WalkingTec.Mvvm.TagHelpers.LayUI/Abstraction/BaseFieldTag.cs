@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Linq;
 using WalkingTec.Mvvm.Core;
+using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.TagHelpers.LayUI
 {
@@ -107,7 +108,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             if (LabelText == null)
             {
-                var pro = Field?.Metadata.ContainerType.GetProperties().Where(x => x.Name == Field?.Metadata.PropertyName).FirstOrDefault();
+                var pro = Field?.Metadata.ContainerType.GetSingleProperty(Field?.Metadata.PropertyName);
                 if (pro != null)
                 {
                     LabelText = pro.GetPropertyDisplayName();

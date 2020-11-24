@@ -337,7 +337,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     var dc = item.CreateDC();
                     Type t = typeof(DbSet<>).MakeGenericType(Type.GetType(SelectedModel));
-                    var exist = dc.GetType().GetProperties().Where(x => x.PropertyType == t).FirstOrDefault();
+                    var exist = dc.GetType().GetSingleProperty(x => x.PropertyType == t);
                     if (exist != null)
                     {
                         this.DC = dc;
@@ -537,7 +537,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if ((item.InfoType == FieldInfoType.One2Many || item.InfoType == FieldInfoType.Many2Many) && item.SubField != "`file")
                     {
                         var subtype = Type.GetType(item.RelatedField);
-                        var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
+                        var subpro = subtype.GetSingleProperty(item.SubField);
                         var key = subtype.FullName + ":" + subpro.Name;
                         existSubPro.Add(key);
                         int count = existSubPro.Where(x => x == key).Count();
@@ -596,7 +596,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
 
                     //生成普通字段定义
-                    var proType = modelType.GetProperties().Where(x => x.Name == pro.FieldName).FirstOrDefault();
+                    var proType = modelType.GetSingleProperty(pro.FieldName);
                     var display = proType.GetCustomAttribute<DisplayAttribute>();
                     if (display != null)
                     {
@@ -700,7 +700,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            var subpro = subtype.GetProperties().Where(x => x.Name == pro.SubField).FirstOrDefault();
+                            var subpro = subtype.GetSingleProperty(pro.SubField);
                             existSubPro.Add(subpro);
                             string prefix = "";
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
@@ -724,7 +724,7 @@ namespace WalkingTec.Mvvm.Mvc
                             }
                             else
                             {
-                                var middleType = modelType.GetProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
+                                var middleType = modelType.GetSingleProperty(pro.FieldName).PropertyType.GenericTypeArguments[0];
                                 var middlename = DC.GetPropertyNameByFk(middleType, pro.SubIdField);
                                 selectstring += $@"
                     {pro.SubField + "_view" + prefix} = x.{pro.FieldName}.Select(y=>y.{middlename}.{pro.SubField}).ToSepratedString(null,"",""), ";
@@ -747,7 +747,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         continue;
                     }
-                    var proType = modelType.GetProperties().Where(x => x.Name == pro.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                    var proType = modelType.GetSingleProperty(pro.FieldName)?.PropertyType;
 
                     switch (pro.InfoType)
                     {
@@ -812,7 +812,7 @@ namespace WalkingTec.Mvvm.Mvc
                     if (pro.InfoType == FieldInfoType.Many2Many)
                     {
                         Type modelType = Type.GetType(SelectedModel);
-                        var protype = modelType.GetProperties().Where(x => x.Name == pro.FieldName).FirstOrDefault();
+                        var protype = modelType.GetSingleProperty(pro.FieldName);
                         prostr += $@"
         [Display(Name = ""{protype.GetPropertyDisplayName()}"")]
         public List<{pro.GetFKType(DC, modelType)}> Selected{pro.FieldName}IDs {{ get; set; }}";
@@ -871,7 +871,7 @@ namespace WalkingTec.Mvvm.Mvc
             {pro.FieldName + "_Excel"}.DataType = ColumnDataType.ComboBox;
             {pro.FieldName + "_Excel"}.ListItems = DC.Set<{subtype.Name}>().GetSelectListItems(LoginUserInfo?.DataPrivileges, null, y => y.{pro.SubField});";
                     }
-                    var proType = modelType.GetProperties().Where(x => x.Name == pro.FieldName).FirstOrDefault();
+                    var proType = modelType.GetSingleProperty(pro.FieldName);
                     var display = proType.GetCustomAttribute<DisplayAttribute>();
                     var filefk = DC.GetFKName2(modelType, pro.FieldName);
                     if (display != null)
@@ -979,7 +979,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                            var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                             Type checktype = proType;
                             if (proType.IsNullable())
                             {
@@ -1039,7 +1039,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                         Type checktype = proType;
                         if (proType.IsNullable())
                         {
@@ -1117,7 +1117,7 @@ namespace WalkingTec.Mvvm.Mvc
                 {
                     if (pro.Value == "$fk$")
                     {
-                        var fktype = modelType.GetProperties().Where(x => x.Name == pro.Key.Substring(0, pro.Key.Length - 2)).Select(x => x.PropertyType).FirstOrDefault();
+                        var fktype = modelType.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
                         add += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
                     }
                 }
@@ -1199,7 +1199,7 @@ namespace WalkingTec.Mvvm.Mvc
             {
                 if (pro.Value == "$fk$")
                 {
-                    var fktype = t.GetProperties().Where(x => x.Name == pro.Key.Substring(0, pro.Key.Length - 2)).Select(x => x.PropertyType).FirstOrDefault();
+                    var fktype = t.GetSingleProperty(pro.Key.Substring(0, pro.Key.Length - 2))?.PropertyType;
                     rv += GenerateAddFKModel(pro.Key.Substring(0, pro.Key.Length - 2), fktype);
                 }
             }
@@ -1218,7 +1218,7 @@ namespace WalkingTec.Mvvm.Mvc
                 v.{pro.Key} = {pro.Value};";
                 }
             }
-            var idpro = t.GetProperties().Where(x => x.Name.ToLower() == "id").Select(x => x.PropertyType).FirstOrDefault();
+            var idpro = t.GetSingleProperty("ID");
             rv += $@"
         private {idpro.Name} Add{keyname}()
         {{
@@ -1250,7 +1250,7 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    var mpro = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                    var mpro = modelType.GetSingleProperty(item.FieldName);
                     string label = mpro.GetPropertyDisplayName();
                     string render = "";
                     string newname = item.FieldName;
@@ -1278,7 +1278,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
+                            var subpro = subtype.GetSingleProperty(item.SubField);
                             existSubPro.Add(subpro);
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                             if (count > 1)
@@ -1319,13 +1319,13 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                    var property = modelType.GetSingleProperty(item.FieldName);
                     string label = property.GetPropertyDisplayName();
                     bool isrequired = property.IsPropertyRequired();
                     var fktest = DC.GetFKName2(modelType, item.FieldName);
                     if (string.IsNullOrEmpty(fktest) == false)
                     {
-                        isrequired = modelType.GetProperties().Where(x => x.Name == fktest).FirstOrDefault().IsPropertyRequired();
+                        isrequired = modelType.GetSingleProperty(fktest).IsPropertyRequired();
                     }
                     string rules = "rules: []";
                     if (isrequired == true)
@@ -1372,7 +1372,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                         Type checktype = proType;
                         if (proType.IsNullable())
                         {
@@ -1427,7 +1427,7 @@ namespace WalkingTec.Mvvm.Mvc
                     {
                         continue;
                     }
-                    var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                    var property = modelType.GetSingleProperty(item.FieldName);
                     string label = property.GetPropertyDisplayName();
                     string rules = "rules: []";
 
@@ -1469,7 +1469,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                         Type checktype = proType;
                         if (proType.IsNullable())
                         {
@@ -1580,7 +1580,7 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    var mpro = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                    var mpro = modelType.GetSingleProperty(item.FieldName);
                     string label = mpro.GetPropertyDisplayName();
                     string render = "";
                     string newname = item.FieldName;
@@ -1608,7 +1608,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            var subpro = subtype.GetProperties().Where(x => x.Name == item.SubField).FirstOrDefault();
+                            var subpro = subtype.GetSingleProperty(item.SubField);
                             existSubPro.Add(subpro);
                             int count = existSubPro.Where(x => x.Name == subpro.Name).Count();
                             if (count > 1)
@@ -1621,7 +1621,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                     else
                     {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                         Type checktype = proType;
                         if (proType.IsNullable())
                         {
@@ -1675,13 +1675,13 @@ namespace WalkingTec.Mvvm.Mvc
                 for (int i = 0; i < pros.Count; i++)
                 {
                     var item = pros[i];
-                    var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                    var property = modelType.GetSingleProperty(item.FieldName);
                     string label = property.GetPropertyDisplayName();
                     bool isrequired = property.IsPropertyRequired();
                     var fktest = DC.GetFKName2(modelType, item.FieldName);
                     if (string.IsNullOrEmpty(fktest) == false)
                     {
-                        isrequired = modelType.GetProperties().Where(x => x.Name == fktest).FirstOrDefault().IsPropertyRequired();
+                        isrequired = modelType.GetSingleProperty(fktest).IsPropertyRequired();
                     }
                     string rules = "rules: []";
                     if (isrequired == true)
@@ -1751,7 +1751,7 @@ namespace WalkingTec.Mvvm.Mvc
                     }
                     else
                     {
-                        var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                        var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                         Type checktype = proType;
                         if (proType.IsNullable())
                         {
@@ -1825,7 +1825,7 @@ namespace WalkingTec.Mvvm.Mvc
                     var item = pros2[i];
                     if (item.IsListField == true)
                     {
-                        var mpro = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                        var mpro = modelType.GetSingleProperty(item.FieldName);
                         if (mpro.PropertyType.IsBoolOrNullableBool())
                         {
                             actions.AppendLine($@"      <template #{item.FieldName}=""rowData"">
@@ -1863,7 +1863,7 @@ namespace WalkingTec.Mvvm.Mvc
                             continue;
                         }
                         searchcount++;
-                        var property = modelType.GetProperties().Where(x => x.Name == item.FieldName).FirstOrDefault();
+                        var property = modelType.GetSingleProperty(item.FieldName);
                         string label = property.GetPropertyDisplayName();
                         string rules = "rules: []";
 
@@ -1914,7 +1914,7 @@ namespace WalkingTec.Mvvm.Mvc
                         }
                         else
                         {
-                            var proType = modelType.GetProperties().Where(x => x.Name == item.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                            var proType = modelType.GetSingleProperty(item.FieldName)?.PropertyType;
                             Type checktype = proType;
                             if (proType.IsNullable())
                             {
@@ -2035,7 +2035,7 @@ namespace WalkingTec.Mvvm.Mvc
 
                 if (string.IsNullOrEmpty(pro.RelatedField))
                 {
-                    proType = modelType.GetProperties().Where(x => x.Name == pro.FieldName).Select(x => x.PropertyType).FirstOrDefault();
+                    proType = modelType.GetSingleProperty(pro.FieldName)?.PropertyType;
                 }
                 else
                 {
@@ -2125,12 +2125,12 @@ namespace WalkingTec.Mvvm.Mvc
             if (this.InfoType == FieldInfoType.One2Many)
             {
                 var fk = this.GetField(DC, modelType);
-                fktype = modelType.GetProperties().Where(x => x.Name == fk).Select(x => x.PropertyType).FirstOrDefault();
+                fktype = modelType.GetSingleProperty(fk)?.PropertyType;
             }
             if (this.InfoType == FieldInfoType.Many2Many)
             {
-                var middletype = modelType.GetProperties().Where(x => x.Name == this.FieldName).Select(x => x.PropertyType).FirstOrDefault();
-                fktype = middletype.GetGenericArguments()[0].GetProperties().Where(x => x.Name == this.SubIdField).Select(x => x.PropertyType).FirstOrDefault();
+                var middletype = modelType.GetSingleProperty(this.FieldName)?.PropertyType;
+                fktype = middletype.GetGenericArguments()[0].GetSingleProperty(this.SubIdField)?.PropertyType;
             }
             var typename = "string";
 

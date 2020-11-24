@@ -235,7 +235,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var parentMI = typeof(ComboSelectListItem).GetMember("ParentId")[0];
             if (typeof(ITreeData<T>).IsAssignableFrom(typeof(T)))
             {
-                var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetProperty("ParentId"));
+                var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetSingleProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
                 var p1 = Expression.Call(p, "ToLower", new Type[] { });
                 parentBind = Expression.Bind(parentMI, p1);
@@ -280,7 +280,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             var dpsSetting = wtmcontext?.DataPrivilegeSettings;
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            Expression peid = Expression.Property(pe, typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+            Expression peid = Expression.Property(pe, typeof(T).GetSingleProperty("ID"));
             //循环数据权限，加入到where条件中，达到自动过滤的效果
             if (dpsSetting?.Where(x => x.ModelName == query.ElementType.Name).SingleOrDefault() != null)
             {
@@ -333,7 +333,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (fieldName.ToLower() != "id")
                 {
                     fieldName = fieldName.Remove(fieldName.Length - 2);
-                    typename = IdField.GetPropertyInfo().DeclaringType.GetProperty(fieldName).PropertyType.Name;
+                    typename = IdField.GetPropertyInfo().DeclaringType.GetSingleProperty(fieldName).PropertyType.Name;
                 }
                 //如果是 Id，则本身就是关联的类
                 else
@@ -370,7 +370,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression finalExp = null;
 
             //循环所有关联外键
-            var pePros = pe.Type.GetProperties();
             foreach (var IdField in IdFields)
             {
                 bool mtm = false;
@@ -384,8 +383,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     mtm = true;
                     splits[0] = splits[0].Substring(0, leftindex);
                 }
-                PropertyInfo pi = pePros.Where(x => x.Name == splits[0]).FirstOrDefault();
-                Expression peid = Expression.MakeMemberAccess(pe, pi);
+                Expression peid = Expression.MakeMemberAccess(pe, pe.Type.GetSingleProperty(splits[0]));
                 Type middletype = null;
                 if (mtm)
                 {
@@ -396,7 +394,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     for (int i = 1; i < splits.Length; i++)
                     {
-                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetProperties().Where(x=>x.Name == splits[i]).FirstOrDefault());
+                        peid = Expression.MakeMemberAccess(peid, peid.Type.GetSingleProperty(splits[i]));
                     }
                     middletype = (peid as MemberExpression).Member.DeclaringType;
                 }
@@ -412,7 +410,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     if (fieldName.ToLower() != "id")
                     {
                         fieldName = fieldName.Remove(fieldName.Length - 2);
-                        var typeinfo = middletype.GetProperty(fieldName);
+                        var typeinfo = middletype.GetSingleProperty(fieldName);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
                         var IsTableName = tableName?.Where(x => x.ToLower() == typeinfo.PropertyType.Name.ToLower()).FirstOrDefault();
                         if (string.IsNullOrEmpty(IsTableName))
@@ -517,7 +515,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 if (defaultSorts == null || defaultSorts.Length == 0)
                 {
                     ParameterExpression pe = Expression.Parameter(typeof(T));
-                    var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    var idproperty = typeof(T).GetSingleProperty("ID");
                     Expression pro = Expression.Property(pe, idproperty);
                     Type proType = typeof(Guid);
                     Expression final = Expression.Call(
@@ -542,9 +540,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             foreach (var item in info)
             {
                 ParameterExpression pe = Expression.Parameter(typeof(T));
-                var idproperty = typeof(T).GetProperties().Where(x => x.Name == item.Property).FirstOrDefault();
+                var idproperty = typeof(T).GetSingleProperty(item.Property);
                 Expression pro = Expression.Property(pe, idproperty);
-                Type proType = typeof(T).GetProperty(item.Property).PropertyType;
+                Type proType = typeof(T).GetSingleProperty(item.Property).PropertyType;
                 if (item.Direction == SortDir.Asc)
                 {
                     if (rv == null)
@@ -598,7 +596,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            var idproperty = typeof(T).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+            var idproperty = typeof(T).GetSingleProperty("ID");
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
@@ -901,7 +899,7 @@ where S : struct
             }
             if (peid == null)
             {
-                peid = Expression.Property(pe, modeltype.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
+                peid = Expression.Property(pe, modeltype.GetSingleProperty("ID"));
             }
             List<object> newids = new List<object>();
             foreach (var item in Ids)

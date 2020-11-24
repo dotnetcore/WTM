@@ -471,7 +471,7 @@ namespace WalkingTec.Mvvm.Core
                             if (gtype == sub.Key)
                             {
                                 //子表
-                                var subList = entity.GetType().GetProperty(pro.Name).GetValue(entity);
+                                var subList = entity.GetType().GetSingleProperty(pro.Name).GetValue(entity);
                                 string fk = DC.GetFKName<P>(pro.Name);
 
                                 //如果子表不为空
@@ -683,7 +683,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    var idproperty = modelType.GetSingleProperty("ID");
                     MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
@@ -745,7 +745,7 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    var idproperty = modelType.GetSingleProperty("ID");
                     MemberExpression idLeft = Expression.Property(para, idproperty);
                     ConstantExpression idRight = Expression.Constant(entity.GetID());
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
@@ -862,7 +862,7 @@ namespace WalkingTec.Mvvm.Core
                         foreach (var pro in tempPros)
                         {
                             var excelProp = Template.GetType().GetField(pro.Name).GetValue(Template) as ExcelPropety;
-                            var proToSet = typeof(P).GetProperties().Where(x => x.Name == excelProp.FieldName).FirstOrDefault();
+                            var proToSet = typeof(P).GetSingleProperty(excelProp.FieldName);
                             if (proToSet != null)
                             {
                                 var val = proToSet.GetValue(item);
@@ -956,7 +956,7 @@ namespace WalkingTec.Mvvm.Core
                 bulkCopy.DestinationTableName = tableName;
 
                 var table = new DataTable();
-                var props = typeof(K).GetProperties().Distinct(x => x.Name);
+                var props = typeof(K).GetAllProperties().Distinct(x => x.Name);
 
                 //生成Table的列
                 foreach (var propertyInfo in props)

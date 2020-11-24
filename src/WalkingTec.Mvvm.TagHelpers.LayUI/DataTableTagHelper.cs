@@ -388,8 +388,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 // 为首次加载添加Searcher查询参数
                 if (ListVM.Searcher != null)
                 {
-                    var props = ListVM.Searcher.GetType().GetProperties();
-                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToArray();
+                    var props = ListVM.Searcher.GetType().GetAllProperties();
+                    props = props.Where(x => !_excludeTypes.Contains(x.PropertyType)).ToList();
                     foreach (var prop in props)
                     {
                         if (!_excludeParams.Contains(prop.Name))

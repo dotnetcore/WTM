@@ -12,6 +12,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
     /// </summary>
     public static class TypeExtension
     {
+        public static Dictionary<string, List<PropertyInfo>> _propertyCache { get; set; } = new Dictionary<string, List<PropertyInfo>>();
         /// <summary>
         /// 判断是否是泛型
         /// </summary>
@@ -172,7 +173,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             Dictionary<string, string> rv = new Dictionary<string, string>();
             string pat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-            var pros = self.GetProperties();
+            var pros = self.GetAllProperties();
             foreach (var pro in pros)
             {
                 string key = pro.Name;
@@ -229,5 +230,33 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             return rv;
         }
+
+        public static PropertyInfo GetSingleProperty(this Type self, string name)
+        {
+            if (_propertyCache.ContainsKey(self.FullName) == false)
+            {
+                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+            }
+            return _propertyCache[self.FullName].Where(x => x.Name == name).FirstOrDefault();
+        }
+
+        public static PropertyInfo GetSingleProperty(this Type self, Func<PropertyInfo,bool> where)
+        {
+            if (_propertyCache.ContainsKey(self.FullName) == false)
+            {
+                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+            }
+            return _propertyCache[self.FullName].Where(where).FirstOrDefault();
+        }
+
+        public static List<PropertyInfo> GetAllProperties(this Type self)
+        {
+            if (_propertyCache.ContainsKey(self.FullName) == false)
+            {
+                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+            }
+            return _propertyCache[self.FullName];
+        }
+
     }
 }
