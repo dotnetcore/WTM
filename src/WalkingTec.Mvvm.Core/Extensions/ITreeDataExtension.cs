@@ -18,7 +18,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="order">排序字段，可为空</param>
         /// <returns>树形结构列表，包含所有子节点</returns>
         public static List<T> GetAllChildren<T>(this T self, Func<T, object> order = null)
-            where T : TopBasePoco, ITreeData<T>
+            where T : TreePoco<T>
         {
             List<T> rv = new List<T>();
             var children = self.Children;
@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         }
 
         public static int GetLevel<T>(this T self)
-            where T : TopBasePoco, ITreeData<T>
+            where T : TreePoco<T>
         {
             int level = 0;
             while (self.Parent != null)
@@ -62,7 +62,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         public static List<Guid> GetAllChildrenIDs<T>(this T self
             , IDataContext dc
             , List<Guid> subids = null)
-            where T : TopBasePoco, ITreeData<T>
+            where T : TreePoco<T>
         {
             List<Guid> rv = new List<Guid>();
             List<Guid> ids = null;
@@ -90,7 +90,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <param name="order">排序字段，可以为空</param>
         /// <returns>返回标准列表，所有节点都在同一级上</returns>
         public static List<T> FlatTree<T>(this List<T> self, Func<T,object> order = null)
-            where T : TopBasePoco, ITreeData<T>
+            where T :TreePoco<T>
         {
             List<T> rv = new List<T>();
             if(order != null)

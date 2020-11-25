@@ -188,7 +188,6 @@ namespace WalkingTec.Mvvm.Core
                 IsInside = true,
                 FolderOnly = true,
                 IsPublic = false,
-                CreateTime = DateTime.Now,
                 DisplayOrder = 1
             };
 
@@ -271,7 +270,6 @@ namespace WalkingTec.Mvvm.Core
                 IsPublic = false,
                 IsInside = true,
                 DisplayOrder = displayOrder,
-                CreateTime = DateTime.Now
             };
             if (isMainLink)
             {
@@ -459,7 +457,7 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
-        public void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>
+        public void CascadeDelete<T>(T entity) where T : TreePoco
         {
             if (entity != null && entity.ID != Guid.Empty)
             {
@@ -788,7 +786,7 @@ namespace WalkingTec.Mvvm.Core
             throw new NotImplementedException();
         }
 
-        public void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>
+        public void CascadeDelete<T>(T entity) where T : TreePoco
         {
             throw new NotImplementedException();
         }

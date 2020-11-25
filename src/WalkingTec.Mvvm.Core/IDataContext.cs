@@ -54,7 +54,7 @@ namespace WalkingTec.Mvvm.Core
         /// <summary>
         /// CascadeDelete
         /// </summary>
-        void CascadeDelete<T>(T entity) where T : TopBasePoco, ITreeData<T>;
+        void CascadeDelete<T>(T entity) where T : TreePoco;
 
         /// <summary>
         /// Set

@@ -10,7 +10,7 @@ namespace WalkingTec.Mvvm.Core
     /// FrameworkMenu
     /// </summary>
     [Table("FrameworkMenus")]
-    public class FrameworkMenu : BasePoco, ITreeData<FrameworkMenu>
+    public class FrameworkMenu : TreePoco<FrameworkMenu>
     {
 
         [Display(Name = "PageName")]
@@ -78,19 +78,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "ICon")]
         [StringLength(50)]
         public string ICon { get; set; }
-
-        #region ITreeData成员
-
-        [Display(Name = "ParentFolder")]
-        public Guid? ParentId { get; set; }
-        [Display(Name = "ParentFolder")]
-        [JsonIgnore]
-        public FrameworkMenu Parent { get; set; }
-        [Display(Name = "Children")]
-        [JsonIgnore]
-        public List<FrameworkMenu> Children { get; set; }
-
-        #endregion
 
     }
 }

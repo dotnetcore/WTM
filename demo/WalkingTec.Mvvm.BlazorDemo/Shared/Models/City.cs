@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.BlazorDemo.Models
 {
-    public class City : TopBasePoco, ITreeData<City>
+    public class City : TreePoco<City>
     {
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]

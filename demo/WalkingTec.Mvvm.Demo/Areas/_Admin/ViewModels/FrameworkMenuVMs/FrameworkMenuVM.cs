@@ -207,8 +207,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;
                             menu.Privileges = new List<FunctionPrivilege>();
-                            menu.CreateBy = LoginUserInfo.ITCode;
-                            menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
@@ -294,8 +292,6 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.ShowOnMenu = false;
                             menu.DisplayOrder = order++;
                             menu.Privileges = new List<FunctionPrivilege>();
-                            menu.CreateBy = LoginUserInfo.ITCode;
-                            menu.CreateTime = DateTime.Now;
                             menu.IsInside = true;
                             menu.DomainId = Entity.DomainId;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;

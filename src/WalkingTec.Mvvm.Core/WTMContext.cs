@@ -761,26 +761,18 @@ namespace WalkingTec.Mvvm.Core
             var dpsSetting = DataPrivilegeSettings;
             foreach (var ds in dpsSetting)
             {
-                if (typeof(ITreeData).IsAssignableFrom(ds.ModelType))
+                if (typeof(TreePoco).IsAssignableFrom(ds.ModelType))
                 {
                     var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
                     if (ids.Count > 0 && ids.Contains(null) == false)
                     {
-                        List<Guid> tempids = new List<Guid>();
-                        foreach (var item in ids)
-                        {
-                            if (Guid.TryParse(item, out Guid g))
-                            {
-                                tempids.Add(g);
-                            }
-                        }
-
                         var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
-                        var skipids = basequery.Cast<ITreeData>().Where(x => tempids.Contains(x.ID) && x.ParentId != null).Select(x => x.ParentId.Value).ToList();
+                        var idscheck = ids.GetContainIdExpression<TreePoco>();
+                        var skipids = basequery.Cast<TreePoco>().Where(idscheck).CheckNotNull(x=>x.ParentId).DynamicSelect("ParentId").ToList();
 
 
-                        List<Guid> subids = new List<Guid>();
-                        subids.AddRange(GetSubIds(tempids.ToList(), ds.ModelType, skipids));
+                        List<string> subids = new List<string>();
+                        subids.AddRange(GetSubIds(ids, ds.ModelType, skipids));
                         subids = subids.Distinct().ToList();
                         subids.ForEach(x => dps.Add(new DataPrivilege
                         {
@@ -792,18 +784,18 @@ namespace WalkingTec.Mvvm.Core
 
             }
         }
-        private IEnumerable<Guid> GetSubIds(List<Guid> p_id, Type modelType, List<Guid> skipids)
+        private IEnumerable<string> GetSubIds(List<string> p_id, Type modelType, List<string> skipids)
         {
             var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
             var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = basequery.Cast<ITreeData>().Where(x => ids.Contains(x.ParentId.Value)).Select(x => x.ID).ToList();
+            var subids = basequery.Cast<TreePoco>().Where(ids.GetContainIdExpression<TreePoco>(x=>x.ParentId)).DynamicSelect<TreePoco>("ID").ToList();
             if (subids.Count > 0)
             {
                 return subids.Concat(GetSubIds(subids, modelType, skipids));
             }
             else
             {
-                return new List<Guid>();
+                return new List<string>();
             }
         }
 

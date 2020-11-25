@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,16 +8,10 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.ReactDemo.Models
 {
-    public class City : TopBasePoco,ITreeData<City>
+    public class City : TreePoco<City>
     {
         [Display(Name = "名称")]
         public string Name { get; set; }
-
-        public List<City> Children { get; set; }
-
-        public City Parent { get; set; }
-
-        public Guid? ParentId { get; set; }
 
         public int Level { get; set; }
 

@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             , Expression<Func<T, bool>> expandField = null
             , bool ignorDataPrivilege = false
             , bool SortByName = true)
-            where T : TopBasePoco, ITreeData<T>
+            where T : TreePoco
         {
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             var query = baseQuery;
@@ -233,9 +233,9 @@ namespace WalkingTec.Mvvm.Core.Extensions
             //如果是树形结构，给ParentId赋值
             MemberBinding parentBind = null;
             var parentMI = typeof(ComboSelectListItem).GetMember("ParentId")[0];
-            if (typeof(ITreeData<T>).IsAssignableFrom(typeof(T)))
+            if (typeof(TreePoco<>).IsAssignableFrom(typeof(T)))
             {
-                var parentMember = Expression.MakeMemberAccess(pe, typeof(ITreeData).GetSingleProperty("ParentId"));
+                var parentMember = Expression.MakeMemberAccess(pe, typeof(TreePoco<>).GetSingleProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
                 var p1 = Expression.Call(p, "ToLower", new Type[] { });
                 parentBind = Expression.Bind(parentMI, p1);
@@ -477,7 +477,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             }
                             else
                             {
-                                exp = ids.GetContainIdExpression<T>(peid).Body;
+                                exp = ids.GetContainIdExpression<T>(peid as Expression<Func<T,object>>).Body;
                             }
                         }
                     }
@@ -593,15 +593,31 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return rv;
         }
 
-        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val)
+        public static IQueryable<T> CheckID<T>(this IQueryable<T> baseQuery, object val, MemberExpression member = null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            var idproperty = typeof(T).GetSingleProperty("ID");
+            PropertyInfo idproperty = null;
+            if (member == null)
+            {
+                idproperty = typeof(T).GetSingleProperty("ID");
+            }
+            else
+            {
+                idproperty = typeof(T).GetSingleProperty(member.Member.Name);
+            }
             Expression peid = Expression.Property(pe, idproperty);
             var convertid = PropertyHelper.ConvertValue(val, idproperty.PropertyType);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
-
         }
+
+        public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T,object>> member)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            PropertyInfo idproperty = typeof(T).GetSingleProperty(member.GetPropertyName());
+            Expression peid = Expression.Property(pe, idproperty);
+            return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(peid, Expression.Constant(null)), pe));
+        }
+
 
         public static IQueryable<T> CheckWhere<T, S>(this IQueryable<T> baseQuery, S val, Expression<Func<T, bool>> where)
         {
@@ -747,6 +763,24 @@ where S : struct
             }
         }
 
+        public static IQueryable<string> DynamicSelect<T>(this IQueryable<T> baseQuery, string fieldName)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            var idproperty = typeof(T).GetSingleProperty(fieldName);
+            Expression pro = Expression.Property(pe, idproperty);
+            Expression tostring = Expression.Call(pro, "ToString", new Type[] { });
+            Type proType = typeof(string);
+            Expression final = Expression.Call(
+                                           typeof(Queryable),
+                                           "Select",
+                                           new Type[] { typeof(T), proType },
+                                           baseQuery.Expression,
+                                           Expression.Lambda(tostring, new ParameterExpression[] { pe }));
+            var rv = baseQuery.Provider.CreateQuery<string>(final) as IOrderedQueryable<string>;
+            return rv;
+        }
+
+
         public static string GetTableName<T>(this IDataContext self)
         {
             return self.Model.FindEntityType(typeof(T)).GetTableName();
@@ -865,41 +899,27 @@ where S : struct
         }
 
 
-        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression<Func<TModel,object>> member = null)
         {
-            //if (Ids == null)
-            //{
-            //    Ids = new List<string>();
-            //}
-
-            //ParameterExpression pe = Expression.Parameter(typeof(TModel));
-            //if (peid == null)
-            //{
-            //    peid = Expression.Property(pe, typeof(TModel).GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
-            //}
-            //List<object> newids = new List<object>();
-            //foreach (var item in Ids)
-            //{
-            //    newids.Add(PropertyHelper.ConvertValue(item, peid.Type));
-            //}
-            //Expression dpleft = Expression.Constant(newids, typeof(IEnumerable<object>));
-            //Expression dpleft2 = Expression.Call(typeof(Enumerable), "Cast", new Type[] { peid.Type }, dpleft);
-            //Expression dpleft3 = Expression.Call(typeof(Enumerable), "ToList", new Type[] { peid.Type }, dpleft2);
-            //Expression dpcondition = Expression.Call(typeof(Enumerable), "Contains", new Type[] { peid.Type }, dpleft3, peid);
             ParameterExpression pe = Expression.Parameter(typeof(TModel));
-            var rv = Ids.GetContainIdExpression(typeof(TModel), pe, peid) as Expression<Func<TModel, bool>>;
+            var rv = Ids.GetContainIdExpression(typeof(TModel), pe, member) as Expression<Func<TModel, bool>>;
             return rv;
         }
 
-        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression peid = null)
+        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression member  = null)
         {
             if (Ids == null)
             {
                 Ids = new List<string>();
             }
-            if (peid == null)
+            Expression peid = null;
+            if (member == null)
             {
                 peid = Expression.Property(pe, modeltype.GetSingleProperty("ID"));
+            }
+            else
+            {
+                peid = Expression.Property(pe, modeltype.GetSingleProperty(member.GetPropertyName()));
             }
             List<object> newids = new List<object>();
             foreach (var item in Ids)

@@ -7,19 +7,11 @@ using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Demo.Models
 {
-    public class City : TopBasePoco, ITreeData<City>
+    public class City :TreePoco<City>
     {
         [Display(Name = "名称")]
         [Required(ErrorMessage = "名称是必填项")]
         public string Name { get; set; }
-
-        public List<City> Children { get; set; }
-
-        [Display(Name = "父级")]
-        public City Parent { get; set; }
-
-        [Display(Name = "父级")]
-        public Guid? ParentId { get; set; }
 
     }
 }
