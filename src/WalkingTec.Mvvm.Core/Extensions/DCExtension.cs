@@ -360,6 +360,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
             //循环所有关联外键
+            int index = 0;
             foreach (var IdField in IdFields)
             {
                 bool mtm = false;
@@ -399,6 +400,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果外键名称不是‘id’，则根据model层的命名规则，它应该是xxxId，所以抹掉最后的 Id 应该是关联的类名
                     if (fieldName.ToLower() != "id")
                     {
+                        
                         fieldName = fieldName.Remove(fieldName.Length - 2);
                         var typeinfo = middletype.GetSingleProperty(fieldName);
                         //var IsTableName = tableName?.Where(x => x == fieldName).FirstOrDefault();
@@ -413,7 +415,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果是Id，则本身就是关联的类
                     else
                     {
-                        fieldName = tableName[0];
+                        fieldName = tableName[index];
                     }
                     var dpsSetting = GlobalServices.GetService<Configs>().DataPrivilegeSettings;
 
@@ -481,6 +483,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     finalExp = Expression.OrElse(finalExp, exp);
                 }
+                index++;
             }
             //如果没有进行任何修改，则还返回baseQuery
             if (finalExp == null)
