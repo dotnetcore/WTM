@@ -155,7 +155,11 @@ namespace WalkingTec.Mvvm.Core
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
                     if (_loginUserInfo == null || _loginUserInfo.Id != userId)
                     {
-                        _loginUserInfo = LoadUserFromDB(userId).Result;
+                        try
+                        {
+                            _loginUserInfo = LoadUserFromDB(userId).Result;
+                        }
+                        catch { }
                         if (_loginUserInfo != null)
                         {
                             Cache.Add(cacheKey, _loginUserInfo);
@@ -766,7 +770,7 @@ namespace WalkingTec.Mvvm.Core
                     var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
                     if (ids.Count > 0 && ids.Contains(null) == false)
                     {
-                        var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
+                        var basequery = DC.GetType().GetTypeInfo().GetMethod("Set",Type.EmptyTypes).MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
                         var idscheck = ids.GetContainIdExpression<TreePoco>();
                         var skipids = basequery.Cast<TreePoco>().Where(idscheck).CheckNotNull(x=>x.ParentId).DynamicSelect("ParentId").ToList();
 
@@ -786,9 +790,10 @@ namespace WalkingTec.Mvvm.Core
         }
         private IEnumerable<string> GetSubIds(List<string> p_id, Type modelType, List<string> skipids)
         {
-            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set").MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
+            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set",Type.EmptyTypes).MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
             var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            var subids = basequery.Cast<TreePoco>().Where(ids.GetContainIdExpression<TreePoco>(x=>x.ParentId)).DynamicSelect<TreePoco>("ID").ToList();
+            Expression<Func<TreePoco, object>> parentid = x => x.ParentId;
+            var subids = basequery.Cast<TreePoco>().Where(ids.GetContainIdExpression<TreePoco>(parentid.Body)).DynamicSelect<TreePoco>("ID").ToList();
             if (subids.Count > 0)
             {
                 return subids.Concat(GetSubIds(subids, modelType, skipids));

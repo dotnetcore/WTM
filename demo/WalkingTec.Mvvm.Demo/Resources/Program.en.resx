@@ -708,6 +708,9 @@
   <data name="Parameter" xml:space="preserve">
     <value>Parameter</value>
   </data>
+  <data name="Parent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
   <data name="ParentFolder" xml:space="preserve">
     <value>Parent folder</value>
   </data>

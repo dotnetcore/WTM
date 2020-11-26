@@ -633,14 +633,14 @@ namespace WalkingTec.Mvvm.Mvc
              {
                  options.DataAnnotationLocalizerProvider = (type, factory) =>
                  {
-                     if (Core.CoreProgram.Buildindll.Any(x => type.FullName.StartsWith(x)))
-                     {
-                         return factory.Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
-                     }
-                     else
-                     {
+                     //if (Core.CoreProgram.Buildindll.Any(x => type.FullName.StartsWith(x)))
+                     //{
+                     //    return factory.Create(typeof(WalkingTec.Mvvm.Core.CoreProgram));
+                     //}
+                     //else
+                     //{
                          return factory.Create(programType);
-                     }
+                     //}
                  };
              });
             return builder;

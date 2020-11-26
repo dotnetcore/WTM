@@ -237,8 +237,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
             {
                 var parentMember = Expression.MakeMemberAccess(pe, typeof(TreePoco<>).GetSingleProperty("ParentId"));
                 var p = Expression.Call(parentMember, "ToString", new Type[] { });
-                var p1 = Expression.Call(p, "ToLower", new Type[] { });
-                parentBind = Expression.Bind(parentMI, p1);
+                //var p1 = Expression.Call(p, "ToLower", new Type[] { });
+                parentBind = Expression.Bind(parentMI, p);
             }
             else
             {
@@ -368,7 +368,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
             Expression trueExp = Expression.Equal(left1, right1);
             Expression falseExp = Expression.NotEqual(left1, right1);
             Expression finalExp = null;
-
+            int tindex = 0;
             //循环所有关联外键
             foreach (var IdField in IdFields)
             {
@@ -423,7 +423,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                     //如果是Id，则本身就是关联的类
                     else
                     {
-                        fieldName = tableName[0];
+                        fieldName = tableName[tindex];
                     }
                     var dpsSetting = wtmcontext.DataPrivilegeSettings;
 
@@ -477,7 +477,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                             }
                             else
                             {
-                                exp = ids.GetContainIdExpression<T>(peid as Expression<Func<T,object>>).Body;
+                                exp = ids.GetContainIdExpression(typeof(T), pe, peid).Body;
                             }
                         }
                     }
@@ -491,6 +491,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
                 {
                     finalExp = Expression.OrElse(finalExp, exp);
                 }
+                tindex++;
             }
             //如果没有进行任何修改，则还返回baseQuery
             if (finalExp == null)
@@ -899,27 +900,27 @@ where S : struct
         }
 
 
-        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression<Func<TModel,object>> member = null)
+        public static Expression<Func<TModel, bool>> GetContainIdExpression<TModel>(this List<string> Ids, Expression peid = null)
         {
             ParameterExpression pe = Expression.Parameter(typeof(TModel));
-            var rv = Ids.GetContainIdExpression(typeof(TModel), pe, member) as Expression<Func<TModel, bool>>;
+            var rv = Ids.GetContainIdExpression(typeof(TModel), pe, peid) as Expression<Func<TModel, bool>>;
             return rv;
         }
 
-        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression member  = null)
+        public static LambdaExpression GetContainIdExpression(this List<string> Ids, Type modeltype, ParameterExpression pe, Expression peid = null)
         {
             if (Ids == null)
             {
                 Ids = new List<string>();
             }
-            Expression peid = null;
-            if (member == null)
+            if (peid == null)
             {
-                peid = Expression.Property(pe, modeltype.GetSingleProperty("ID"));
+                peid = Expression.Property(pe, modeltype.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault());
             }
             else
             {
-                peid = Expression.Property(pe, modeltype.GetSingleProperty(member.GetPropertyName()));
+                ChangePara cp = new ChangePara();
+                peid = cp.Change(peid, pe);
             }
             List<object> newids = new List<object>();
             foreach (var item in Ids)
@@ -933,7 +934,6 @@ where S : struct
             var rv = Expression.Lambda(typeof(Func<,>).MakeGenericType(modeltype, typeof(bool)), dpcondition, pe);
             return rv;
         }
-
 
         /// <summary>
         /// 开始一个事务，当使用同一IDataContext时，嵌套的两个事务不会引起冲突，当嵌套的事务执行时引起的异常会通过回滚方法向上层抛出异常

@@ -675,6 +675,9 @@
   <data name="Parameter" xml:space="preserve">
     <value>参数</value>
   </data>
+  <data name="Parent" xml:space="preserve">
+    <value>父级</value>
+  </data>
   <data name="ParentFolder" xml:space="preserve">
     <value>父目录</value>
   </data>
