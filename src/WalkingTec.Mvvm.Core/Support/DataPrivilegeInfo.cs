@@ -59,14 +59,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 ChangePara cp = new ChangePara();
                 ParameterExpression pe = Expression.Parameter(typeof(T));
-                var toString = Expression.Call(cp.Change(_displayField.Body, pe), "ToString", new Type[] { });
-                var tolower = Expression.Call(toString, "ToLower", new Type[] { });
+                var tolower = Expression.Call(cp.Change(_displayField.Body, pe), "ToLower", new Type[] { });
                 var exp = Expression.Call(tolower, "Contains", null, Expression.Constant(filter.ToLower()));
                 where = Expression.Lambda<Func<T, bool>>(exp, pe);
-                if(_where != null)
+                if (_where != null)
                 {
                     var temp = cp.Change(_where.Body, pe);
-                    var together = Expression.And(where.Body,temp );
+                    var together = Expression.And(where.Body, temp);
                     where = Expression.Lambda<Func<T, bool>>(together, pe);
                 }
             }
