@@ -116,7 +116,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             var dps =Wtm.DataPrivilegeSettings.Where(x => x.ModelName == table).SingleOrDefault();
             if (dps != null)
             {
-                AllItems = dps.GetItemList(DC, Wtm);
+                AllItems = dps.GetItemList(Wtm).ToList();
             }
             return Ok(AllItems);
         }

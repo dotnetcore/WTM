@@ -219,7 +219,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 if(item.Value is BaseSearcher se)
                 {
                     se.FC = new Dictionary<string, object>();
-                    se.WtmContext = ctrl.Wtm;
+                    se.Wtm = ctrl.Wtm;
                     se.Validate();
                 }
             }

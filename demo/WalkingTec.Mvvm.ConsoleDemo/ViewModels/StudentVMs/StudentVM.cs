@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.StudentVMs
 
         protected override void InitVM()
         {
-            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, null, y => y.MajorName);
+            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
             SelectedStudentMajorIDs = Entity.StudentMajor?.Select(x => x.MajorId).ToList();
         }
 

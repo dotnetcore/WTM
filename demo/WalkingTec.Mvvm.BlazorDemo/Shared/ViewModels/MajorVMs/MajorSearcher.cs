@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.BlazorDemo.Models;
-
+using System.Linq;
 
 namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
 {
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.MajorVMs
 
         protected override void InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(WtmContext, null, y => y.SchoolName);
+            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

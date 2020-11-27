@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 using WalkingTec.Mvvm.Core;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
@@ -21,7 +21,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MajorVMs
 
         protected override void InitVM()
         {
-            AllSchools = DC.Set<School>().GetSelectListItems(WtmContext, null, y => y.SchoolName);
+            AllSchools = DC.Set<School>().GetSelectListItems(Wtm, y => y.SchoolName);
         }
 
     }

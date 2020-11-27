@@ -177,7 +177,7 @@ layui.use(['tree'],function(){{
             base.Process(context, output);
         }
 
-        private List<LayuiTreeItem> GetLayuiTree(List<TreeSelectListItem> tree, List<object> values)
+        private List<LayuiTreeItem> GetLayuiTree(IEnumerable<TreeSelectListItem> tree, List<object> values)
         {
             List<LayuiTreeItem> rv = new List<LayuiTreeItem>();
             foreach (var s in tree)
@@ -194,7 +194,7 @@ layui.use(['tree'],function(){{
                 {
                     news.Checked = true;
                 }
-                if (s.Children != null && s.Children.Count > 0)
+                if (s.Children != null && s.Children.Count() > 0)
                 {
                     news.Children = GetLayuiTree(s.Children, values);
                     if(news.Children.Where(x=>x.Checked == true || x.Expand == true).Count() > 0)

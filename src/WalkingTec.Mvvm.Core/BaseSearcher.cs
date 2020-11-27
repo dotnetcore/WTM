@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.Core
         public Dictionary<string, object> FC { get; set; }
 
         [JsonIgnore]
-        public IModelStateService MSD { get => WtmContext?.MSD; }
+        public IModelStateService MSD { get => Wtm?.MSD; }
 
         /// <summary>
         /// 获取VM的全名
@@ -67,7 +67,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (_dc == null)
                 {
-                    return WtmContext?.DC;
+                    return Wtm?.DC;
                 }
                 else
                 {
@@ -84,13 +84,13 @@ namespace WalkingTec.Mvvm.Core
         /// Session信息
         /// </summary>
         [JsonIgnore]
-        public ISessionService Session { get => WtmContext?.Session; }
+        public ISessionService Session { get => Wtm?.Session; }
 
         /// <summary>
         /// 当前登录人信息
         /// </summary>
         [JsonIgnore]
-        public LoginUserInfo LoginUserInfo { get => WtmContext?.LoginUserInfo; }
+        public LoginUserInfo LoginUserInfo { get => Wtm?.LoginUserInfo; }
 
         #region 未使用
         /// <summary>
@@ -105,7 +105,7 @@ namespace WalkingTec.Mvvm.Core
         public bool? IsExpanded { get; set; }
 
         [JsonIgnore]
-        public WTMContext WtmContext { get; set; }
+        public WTMContext Wtm { get; set; }
         #endregion
 
         #endregion
@@ -169,7 +169,7 @@ namespace WalkingTec.Mvvm.Core
         public void CopyContext(IBaseVM vm)
         {
             FC = vm.FC;
-            this.WtmContext = vm.Wtm;
+            this.Wtm = vm.Wtm;
         }
 
         #endregion

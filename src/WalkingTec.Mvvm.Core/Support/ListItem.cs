@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -65,7 +66,7 @@ namespace WalkingTec.Mvvm.Core
         public string Url { get; set; }
         public string ICon { get; set; }
         public string Tag { get; set; }
-        public bool Leaf => Children == null || Children.Count == 0;
+        public bool Leaf => Children == null || Children.Count() == 0;
         public bool Selected { get; set; }
         public List<TreeSelectListItem> Children { get; set; }
     }

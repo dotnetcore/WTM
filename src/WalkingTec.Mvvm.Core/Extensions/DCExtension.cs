@@ -39,7 +39,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>SelectListItem列表</returns>
         public static List<TreeSelectListItem> GetTreeSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
-            , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
             , Expression<Func<T, string>> valueField = null
             , Expression<Func<T, string>> iconField = null
@@ -53,15 +52,10 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             var query = baseQuery;
 
-            //如果条件不为空，则拼上条件
-            if (whereCondition != null)
-            {
-                query = query.Where(whereCondition);
-            }
             //如果没有指定忽略权限，则拼接权限过滤的where条件
             if (ignorDataPrivilege == false)
             {
-                query = AppendSelfDPWhere(query, wtmcontext,dps);
+                query = AppendSelfDPWhere(query, wtmcontext, dps);
             }
 
             //处理后面要使用的expression
@@ -180,7 +174,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>SelectListItem列表</returns>
         public static List<ComboSelectListItem> GetSelectListItems<T>(this IQueryable<T> baseQuery
             , WTMContext wtmcontext
-            , Expression<Func<T, bool>> whereCondition
             , Expression<Func<T, string>> textField
             , Expression<Func<T, object>> valueField = null
             , bool ignorDataPrivilege = false
@@ -190,11 +183,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var dps = wtmcontext?.LoginUserInfo?.DataPrivileges;
             var query = baseQuery;
 
-            //如果条件不为空，则拼上条件
-            if (whereCondition != null)
-            {
-                query = query.Where(whereCondition);
-            }
             //如果value字段为空，则默认使用Id字段作为value值
             if (valueField == null)
             {
@@ -252,18 +240,18 @@ namespace WalkingTec.Mvvm.Core.Extensions
             var lambda = Expression.Lambda<Func<T, ComboSelectListItem>>(init, pe);
 
 
-            List<ComboSelectListItem> rv = new List<ComboSelectListItem>();
+            IQueryable<ComboSelectListItem> rv = null;
             //根据Text对下拉菜单数据排序
             if (SortByName == true)
             {
-                rv = query.AsEnumerable().Select(lambda.Compile()).OrderBy(x => x.Text).ToList();
+                rv = query.Select(lambda).OrderBy(x => x.Text);
             }
             else
             {
-                rv = query.AsEnumerable().Select(lambda.Compile()).ToList();
+                rv = query.Select(lambda);
             }
 
-            return rv;
+            return rv.ToList();
         }
 
         #endregion
@@ -617,6 +605,14 @@ namespace WalkingTec.Mvvm.Core.Extensions
             PropertyInfo idproperty = typeof(T).GetSingleProperty(member.GetPropertyName());
             Expression peid = Expression.Property(pe, idproperty);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(peid, Expression.Constant(null)), pe));
+        }
+
+        public static IQueryable<T> CheckNull<T>(this IQueryable<T> baseQuery, Expression<Func<T, object>> member)
+        {
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            PropertyInfo idproperty = typeof(T).GetSingleProperty(member.GetPropertyName());
+            Expression peid = Expression.Property(pe, idproperty);
+            return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(null)), pe));
         }
 
 

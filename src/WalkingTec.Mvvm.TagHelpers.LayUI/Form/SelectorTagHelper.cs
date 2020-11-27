@@ -107,7 +107,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             "LoginUserInfo",
             "MSD",
             "Session",
-            "WtmContext"
+            "Wtm"
 
         };
 
@@ -168,7 +168,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
                         {
                             listVM.SetPropertyValue(s[0], s[1]);
                         }
-
                     }
                 }
 

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using WalkingTec.Mvvm.Demo.Models;
 using WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace WalkingTec.Mvvm.Demo.Controllers
 {
@@ -29,6 +30,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Login")]
         public IActionResult Login()
         {
+
             LoginVM vm = Wtm.CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
             if (Wtm.ConfigInfo.IsQuickDebug == true)
@@ -87,6 +89,7 @@ namespace WalkingTec.Mvvm.Demo.Controllers
                 var principal = user.CreatePrincipal();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
 
+                var test = DC.Set<City>().OrderByDescending(x=>x.ID).GetTreeSelectListItems(Wtm, x => x.Name,SortByName:false).ToList();
                 return Redirect(HttpUtility.UrlDecode(url));
             }
         }

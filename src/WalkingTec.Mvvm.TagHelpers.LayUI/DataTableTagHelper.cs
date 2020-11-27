@@ -273,7 +273,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             "LoginUserInfo",
             "MSD",
             "Session",
-            "WtmContext"
+            "Wtm"
         };
 
         private bool hasButtonGroup = false;

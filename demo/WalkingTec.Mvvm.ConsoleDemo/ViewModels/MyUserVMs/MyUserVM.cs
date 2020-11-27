@@ -32,9 +32,9 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
 
         protected override void InitVM()
         {
-            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, y => y.RoleName);
+            AllUserRoless = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName);
             SelectedUserRolesIDs = Entity.UserRoles?.Select(x => x.RoleId).ToList();
-            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, y => y.GroupName);
+            AllUserGroupss = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName);
             SelectedUserGroupsIDs = Entity.UserGroups?.Select(x => x.GroupId).ToList();
         }
 

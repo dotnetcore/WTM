@@ -35,7 +35,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
                 this.MakeGridHeader(x => x.Name, 200),
                 this.MakeGridHeader(x => x.TableName).SetFormat((entity,val)=>GetPrivilegeName(entity)),
                 this.MakeGridHeader(x => x.RelateIDs),
-                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Operation"]),
+                this.MakeGridHeader(x=>x.Edit,200).SetFormat((entity,val)=>GetOperation(entity)).SetHeader(Localizer["Operation"]).SetDisableExport(),
                 this.MakeGridHeader(x => x.DpType).SetHide(true),
                 this.MakeGridHeader(x => x.TargetId).SetHide(true)
            };

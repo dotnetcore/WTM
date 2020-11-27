@@ -23,7 +23,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
             }
             var el = self.GetEntityList().ToList();
             //如果列表主键都为0，则生成自增主键，避免主键重复
-            if (el.All(x => x.ID == Guid.Empty))
+            if (el.All(x => {
+                var id = x.GetID();
+                if(id == null || (id is Guid gid && gid == Guid.Empty) || (id is int iid && iid==0) || (id is long lid && lid == 0))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } ))
             {
                 el.ForEach(x => x.ID = Guid.NewGuid());
             }

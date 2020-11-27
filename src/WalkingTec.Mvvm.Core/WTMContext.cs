@@ -772,8 +772,7 @@ namespace WalkingTec.Mvvm.Core
                     {
                         var basequery = DC.GetType().GetTypeInfo().GetMethod("Set",Type.EmptyTypes).MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
                         var idscheck = ids.GetContainIdExpression<TreePoco>();
-                        var skipids = basequery.Cast<TreePoco>().Where(idscheck).CheckNotNull(x=>x.ParentId).DynamicSelect("ParentId").ToList();
-
+                        var skipids = basequery.Cast<TreePoco>().Where(idscheck).CheckNotNull(x=>x.ParentId).DynamicSelect("ParentId").Select(x=>x.ToLower()).ToList();
 
                         List<string> subids = new List<string>();
                         subids.AddRange(GetSubIds(ids, ds.ModelType, skipids));

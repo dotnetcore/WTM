@@ -42,9 +42,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
             if (ControllerName.Contains("/api") == false)
             {
                 SelectedRolesIDs = Entity.UserRoles.Select(x => x.RoleId).ToList();
-                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, y => y.RoleName);
+                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName);
                 SelectedGroupIDs = Entity.UserGroups.Select(x => x.GroupId).ToList();
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, y => y.GroupName);
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName);
             }
 
         }
@@ -53,8 +53,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
         {
             if (ControllerName.Contains("/api") == false)
             {
-                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, null, y => y.RoleName);
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, y => y.GroupName);
+                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName);
+                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName);
             }
         }
 

@@ -45,15 +45,15 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public ModelExpression LevelField { get; set; }
 
 
-        private string GetFirstNodeUrl(List<TreeSelectListItem> nodes)
+        private string GetFirstNodeUrl(IEnumerable<TreeSelectListItem> nodes)
         {
-            if (nodes == null || nodes.Count == 0)
+            if (nodes == null || nodes.Count() == 0)
             {
                 return string.Empty;
             }
 
             var node = nodes.FirstOrDefault();
-            if (node.Children != null && node.Children.Count > 0)
+            if (node.Children != null && node.Children.Count() > 0)
             {
                 return GetFirstNodeUrl(node.Children);
             }
@@ -163,7 +163,7 @@ layui.use(['tree'],function(){{
             base.Process(context, output);
         }
 
-        private List<LayuiTreeItem> GetLayuiTree(List<TreeSelectListItem> tree, int level = 0)
+        private List<LayuiTreeItem> GetLayuiTree(IEnumerable<TreeSelectListItem> tree, int level = 0)
         {
             List<LayuiTreeItem> rv = new List<LayuiTreeItem>();
             foreach (var s in tree)
@@ -178,7 +178,7 @@ layui.use(['tree'],function(){{
                     Checked = s.Selected
                     //Children = new List<LayuiTreeItem>()
                 };
-                if (s.Children != null && s.Children.Count > 0)
+                if (s.Children != null && s.Children.Count() > 0)
                 {
                     news.Children = GetLayuiTree(s.Children, level + 1);
                     if (news.Children.Where(x => x.Checked == true || x.Expand == true).Count() > 0)

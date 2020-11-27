@@ -26,7 +26,7 @@ namespace WalkingTec.Mvvm.BlazorDemo.ViewModels.StudentVMs
 
         protected override void InitVM()
         {
-            AllStudentMajors = DC.Set<Major>().GetSelectListItems(WtmContext, null, y => y.MajorName);
+            AllStudentMajors = DC.Set<Major>().GetSelectListItems(Wtm, y => y.MajorName);
         }
 
     }
