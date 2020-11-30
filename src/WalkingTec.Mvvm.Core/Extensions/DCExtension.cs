@@ -601,11 +601,17 @@ namespace WalkingTec.Mvvm.Core.Extensions
 
         public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T,object>> member)
         {
+            return baseQuery.CheckNotNull<T>(member.GetPropertyName());
+        }
+
+        public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, string member)
+        {
             ParameterExpression pe = Expression.Parameter(typeof(T));
-            PropertyInfo idproperty = typeof(T).GetSingleProperty(member.GetPropertyName());
+            PropertyInfo idproperty = typeof(T).GetSingleProperty(member);
             Expression peid = Expression.Property(pe, idproperty);
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.NotEqual(peid, Expression.Constant(null)), pe));
         }
+
 
         public static IQueryable<T> CheckNull<T>(this IQueryable<T> baseQuery, Expression<Func<T, object>> member)
         {

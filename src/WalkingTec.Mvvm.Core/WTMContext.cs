@@ -763,23 +763,20 @@ namespace WalkingTec.Mvvm.Core
         private void ProcessTreeDp(List<DataPrivilege> dps)
         {
             var dpsSetting = DataPrivilegeSettings;
-            foreach (var ds in dpsSetting)
+            foreach (var dp in dpsSetting)
             {
-                if (typeof(TreePoco).IsAssignableFrom(ds.ModelType))
-                {
-                    var ids = dps.Where(x => x.TableName == ds.ModelName).Select(x => x.RelateId).ToList();
+                if (typeof(TreePoco).IsAssignableFrom(dp.ModelType))
+                {                    
+                    var ids = dps.Where(x => x.TableName == dp.ModelName).Select(x => x.RelateId).ToList();
                     if (ids.Count > 0 && ids.Contains(null) == false)
                     {
-                        var basequery = DC.GetType().GetTypeInfo().GetMethod("Set",Type.EmptyTypes).MakeGenericMethod(ds.ModelType).Invoke(DC, null) as IQueryable;
-                        var idscheck = ids.GetContainIdExpression<TreePoco>();
-                        var skipids = basequery.Cast<TreePoco>().Where(idscheck).CheckNotNull(x=>x.ParentId).DynamicSelect("ParentId").Select(x=>x.ToLower()).ToList();
-
+                        var skipids = dp.GetTreeParentIds(this, dps);
                         List<string> subids = new List<string>();
-                        subids.AddRange(GetSubIds(ids, ds.ModelType, skipids));
+                        subids.AddRange(GetSubIds(dp,ids, dp.ModelType, skipids));
                         subids = subids.Distinct().ToList();
                         subids.ForEach(x => dps.Add(new DataPrivilege
                         {
-                            TableName = ds.ModelName,
+                            TableName = dp.ModelName,
                             RelateId = x.ToString()
                         }));
                     }
@@ -787,15 +784,13 @@ namespace WalkingTec.Mvvm.Core
 
             }
         }
-        private IEnumerable<string> GetSubIds(List<string> p_id, Type modelType, List<string> skipids)
+        private IEnumerable<string> GetSubIds(IDataPrivilege dp, List<string> p_id, Type modelType, List<string> skipids)
         {
-            var basequery = DC.GetType().GetTypeInfo().GetMethod("Set",Type.EmptyTypes).MakeGenericMethod(modelType).Invoke(DC, null) as IQueryable;
             var ids = p_id.Where(x => skipids.Contains(x) == false).ToList();
-            Expression<Func<TreePoco, object>> parentid = x => x.ParentId;
-            var subids = basequery.Cast<TreePoco>().Where(ids.GetContainIdExpression<TreePoco>(parentid.Body)).DynamicSelect<TreePoco>("ID").ToList();
+            var subids = dp.GetTreeSubIds(this, ids);
             if (subids.Count > 0)
             {
-                return subids.Concat(GetSubIds(subids, modelType, skipids));
+                return subids.Concat(GetSubIds(dp,subids, modelType, skipids));
             }
             else
             {

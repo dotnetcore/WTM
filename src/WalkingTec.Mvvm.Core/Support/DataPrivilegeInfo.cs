@@ -19,6 +19,8 @@ namespace WalkingTec.Mvvm.Core
         Type ModelType { get; set; }
         //获取数据权限的下拉菜单
         List<ComboSelectListItem> GetItemList (WTMContext wtmcontext, string filter = null, List<string> ids = null);
+        List<string> GetTreeParentIds(WTMContext wtmcontext, List<DataPrivilege> dps);
+        List<string> GetTreeSubIds(WTMContext wtmcontext, List<string> pids);
     }
 
     /// <summary>
@@ -97,6 +99,21 @@ namespace WalkingTec.Mvvm.Core
                 rv = wtmcontext.DC.Set<T>().Where(where).GetSelectListItems(null, _displayField, null, ignorDataPrivilege: true);
             }
             return rv;
+        }
+
+        public List<string> GetTreeParentIds(WTMContext wtmcontext, List<DataPrivilege> dps)
+        {
+            var ids = dps.Where(x => x.TableName == this.ModelName).Select(x => x.RelateId).ToList();
+            var idscheck = ids.GetContainIdExpression<T>();
+            var modified = wtmcontext.DC.Set<T>().Where(idscheck).CheckNotNull("ParentId").DynamicSelect("ParentId").Select(x => x.ToLower());
+            var skipids = modified.ToList();
+            return skipids;
+        }
+
+        public List<string> GetTreeSubIds(WTMContext wtmcontext, List<string> pids)
+        {
+            Expression<Func<TreePoco, object>> parentid = x => x.ParentId;
+            return wtmcontext.DC.Set<T>().Where(pids.GetContainIdExpression<T>(parentid.Body)).DynamicSelect("ID").ToList();
         }
     }
 

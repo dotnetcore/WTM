@@ -14,7 +14,7 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.CityVMs
     {
         public List<ComboSelectListItem> AllParents { get; set; }
         [Display(Name = "父级")]
-        public Guid? ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         protected override void InitVM()
         {
