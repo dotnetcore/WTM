@@ -213,16 +213,16 @@ namespace WalkingTec.Mvvm.Core
                 var DR = sheet.CreateRow(i + max);
                 foreach (var baseCol in GridHeaders)
                 {
-                    //处理枚举变量的多语言
-                    bool IsEmunBoolParp = false;
-                    var proType = baseCol.FieldType;
-                    if (proType.IsEnumOrNullableEnum())
-                    {
-                        IsEmunBoolParp = true;
-                    }
 
                     foreach (var col in baseCol.BottomChildren)
                     {
+                        //处理枚举变量的多语言
+                        bool IsEmunBoolParp = false;
+                        var proType = col.FieldType;
+                        if (proType.IsEnumOrNullableEnum())
+                        {
+                            IsEmunBoolParp = true;
+                        }
                         //获取数据，并过滤特殊字符
                         string text = Regex.Replace(col.GetText(List[i]).ToString(), @"<[^>]*>", String.Empty);
 
