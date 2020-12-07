@@ -166,7 +166,6 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <typeparam name="T">数据源类型</typeparam>
         /// <param name="baseQuery">基础查询</param>
         /// <param name="wtmcontext">Wtm Context</param>
-        /// <param name="whereCondition">条件语句</param>
         /// <param name="textField">SelectListItem中Text字段对应的值</param>
         /// <param name="valueField">SelectListItem中Value字段对应的值，默认为Id列</param>
         /// <param name="ignorDataPrivilege">忽略数据权限判断</param>
