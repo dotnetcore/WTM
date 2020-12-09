@@ -329,7 +329,7 @@ window.ff = {
             cache: false,
             type: "POST",
             url: url,
-            data: ff.GetPostData(formId),
+            data: ff.GetFormData(formId),
             async: true,
             error: function (request) {
                 layer.close(index);
@@ -790,10 +790,21 @@ window.ff = {
 
     GetFormData: function (formId) {
         var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
+        var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            if (filter.hasOwnProperty(item.name)) {
+            if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
+                var name1 = RegExp.$1;
+                var name2 = RegExp.$2;
+                if (check.hasOwnProperty(name1) == false) {
+                    check[name1] = 0;
+                }
+                var newname = name1 + "[" + check[name1] + "]." + name2;
+                filter[newname] = item.value;
+                check[name1] = check[name1] + 1;
+            }
+            else if (filter.hasOwnProperty(item.name)) {
                 var temp = filter[item.name];
                 if (!(temp instanceof Array))
                     temp = [temp];

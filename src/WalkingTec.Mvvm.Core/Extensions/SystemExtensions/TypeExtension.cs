@@ -48,7 +48,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
         /// <returns>判断结果</returns>
         public static bool IsList(this Type self)
         {
-            return self.IsGeneric(typeof(List<>));
+            return self.IsGeneric(typeof(List<>)) || self.IsGeneric(typeof(IEnumerable<>));
         }
 
         /// <summary>

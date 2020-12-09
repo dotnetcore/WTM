@@ -256,6 +256,47 @@ namespace WalkingTec.Mvvm.Core
             }
         }
 
+        public static List<string> GetPropertySiblingValues(this object obj, string propertyName)
+        {
+            Regex reg = new Regex("(.*?)\\[\\d?\\]\\.(.*?)$");
+            var match = reg.Match(propertyName);
+            if (match.Success)
+            {
+                var name1 = match.Groups[1].Value;
+                var name2 = match.Groups[2].Value;
+
+                var levels = name1.Split('.');
+                var objtype = obj.GetType();
+                var pe = Expression.Parameter(objtype);
+                var member = Expression.Property(pe, objtype.GetSingleProperty(levels[0]));
+                for (int i = 1; i < levels.Length; i++)
+                {
+                    member = Expression.Property(member, member.Type.GetSingleProperty(levels[i]));
+                }
+                var pe2 = Expression.Parameter(member.Type.GetGenericArguments()[0]);
+                var cast = Expression.Call(typeof(Enumerable), "Cast", new Type[] { pe2.Type }, member);
+
+                var name2exp = Expression.Property(pe2, pe2.Type.GetSingleProperty(name2));
+                var selectexp = Expression.Call(name2exp, "ToString", Type.EmptyTypes);
+
+                Expression select = Expression.Call(
+                               typeof(Enumerable),
+                               "Select",
+                               new Type[] { pe2.Type, typeof(string) },
+                               cast,
+                               Expression.Lambda(selectexp, pe2));
+
+
+                var lambda = Expression.Lambda(select, pe);
+                var rv = (lambda.Compile().DynamicInvoke(obj) as IEnumerable<string>)?.ToList();
+                return rv;
+            }
+            else
+            {
+                return new List<string>();
+            }
+        }
+
         /// <summary>
         /// 判断属性是否必填
         /// </summary>

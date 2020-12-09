@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
     [HtmlTargetElement("wt:checkbox", Attributes = REQUIRED_ATTR_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class CheckBoxTagHelper : BaseFieldTag
     {
+
         /// <summary>
         /// 选项
         /// </summary>
@@ -39,15 +41,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             var modelType = Field.Metadata.ModelType;
             var listitems = new List<ComboSelectListItem>();
             List<string> values = null;
-            if(DefaultValue != null)
+            if (DefaultValue != null)
             {
                 values = DefaultValue.Split(',').ToList();
-            }
-            var middleTable = modelType.GetCustomAttributes(typeof(MiddleTableAttribute), false).FirstOrDefault();
-            //如果指向多对多中间表
-            if(middleTable != null)
-            {
-
             }
             if (Items?.Model == null)
             {
@@ -83,15 +79,25 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                         });
                     }
                 }
-                List<string> checkvalue = null;
-                if (Field.Model is IList == false && Field.Model != null)
+                try
                 {
-                    checkvalue = new List<string> { Field.Model.ToString() };
-                    SetSelected(listitems, values ?? checkvalue);
+                    List<string> checkvalue = null;
+                    //如果是Entity.xxList[0].xxxid的格式，使用GetPropertySiblingValues方法获取Entity.xxxList.Select(x=>x.xxxid).ToList()的结果
+                    if (Field.Name.Contains("["))
+                    {
+                        SetSelected(listitems, values ?? Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                    }
+                    else if (Field.Model is IList == false && Field.Model != null)
+                    {
+                        checkvalue = new List<string> { Field.Model.ToString() };
+                        SetSelected(listitems, values ?? checkvalue);
+                    }
+                    else
+                    {
+                        SetSelected(listitems, values ?? Field.Model as IList);
+                    }
                 }
-                else
-                {
-                    SetSelected(listitems, values ?? Field.Model as IList);
+                catch {
                 }
             }
 
