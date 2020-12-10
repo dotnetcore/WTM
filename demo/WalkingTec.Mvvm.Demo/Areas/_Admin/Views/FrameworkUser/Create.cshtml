@@ -19,7 +19,7 @@
           <wt:upload field="Entity.PhotoId" upload-type="ImageFile" thumb-width="128" />
         </wt:row>
         <wt:checkbox field="Entity.UserRoles[0].RoleId" items="AllRoles" />
-        <wt:checkbox field="SelectedGroupIDs" items="AllGroups" />
+        <wt:checkbox field="Entity.UserGroups[0].GroupId" items="AllGroups" />
       </wt:tabcontent>
       <wt:tabcontent>
         <wt:row items-per-row="ItemsPerRowEnum.Two">

@@ -789,11 +789,20 @@ window.ff = {
     },
 
     GetFormData: function (formId) {
-        var searchForm = $('#' + formId), filter = {}, fieldElem = searchForm.find('input,select,textarea');
+        var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select,textarea');
         var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
-            if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
+            if (/^checkbox|radio$/.test(item.type) && !item.checked) {
+                if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
+                    var name1 = RegExp.$1;
+                    var name2 = RegExp.$2;
+                    if (filterback.hasOwnProperty(name1) == false) {
+                        filterback[name1] = 1;
+                    }
+                }
+                return;
+            }
             if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
                 var name1 = RegExp.$1;
                 var name2 = RegExp.$2;
@@ -814,7 +823,13 @@ window.ff = {
             else {
                 filter[item.name] = item.value;
             }
-        });
+            });
+
+        for (item in filterback) {
+            if (filter.hasOwnProperty(item) == false) {
+                filter[item] = "";
+            }
+        }
         return filter;
     },
 
