@@ -789,15 +789,25 @@ window.ff = {
     },
 
     GetFormData: function (formId) {
-        var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select,textarea');
+        var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select');
         var check = {};
+
+        var richtextbox = $("#" + formId + " textarea");
+        for (var i = 0; i < richtextbox.length; i++) {
+            var ra = richtextbox[i].attributes['layeditindex'];
+            if (ra !== undefined && ra != null) {
+                var rindex = ra.value;
+                layui.layedit.sync(rindex);
+            }
+        }
+
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) {
                 if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
                     var name1 = RegExp.$1;
                     var name2 = RegExp.$2;
-                    if (filterback.hasOwnProperty(name1) == false) {
+                    if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1+"[0]."+name2) == false) {
                         filterback[name1] = 1;
                     }
                 }
@@ -806,12 +816,16 @@ window.ff = {
             if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
                 var name1 = RegExp.$1;
                 var name2 = RegExp.$2;
-                if (check.hasOwnProperty(name1) == false) {
-                    check[name1] = 0;
+                var checkname = name1 + "`" + name2;
+                if (check.hasOwnProperty(checkname) == false) {
+                    check[checkname] = 0;
                 }
-                var newname = name1 + "[" + check[name1] + "]." + name2;
+                if (filterback.hasOwnProperty(name1) == true) {
+                    filterback[name1] = undefined;
+                }
+                var newname = name1 + "[" + check[checkname] + "]." + name2;
                 filter[newname] = item.value;
-                check[name1] = check[name1] + 1;
+                check[checkname] = check[checkname] + 1;
             }
             else if (filter.hasOwnProperty(item.name)) {
                 var temp = filter[item.name];
@@ -826,7 +840,7 @@ window.ff = {
             });
 
         for (item in filterback) {
-            if (filter.hasOwnProperty(item) == false) {
+            if (filterback[item] !== undefined) {
                 filter[item] = "";
             }
         }

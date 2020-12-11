@@ -85,6 +85,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     //如果是Entity.xxList[0].xxxid的格式，使用GetPropertySiblingValues方法获取Entity.xxxList.Select(x=>x.xxxid).ToList()的结果
                     if (Field.Name.Contains("["))
                     {
+                        //默认多对多不必填
+                        if(Required == null)
+                        {
+                            Required = false;
+                        }
                         SetSelected(listitems, values ?? Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
                     }
                     else if (Field.Model is IList == false && Field.Model != null)

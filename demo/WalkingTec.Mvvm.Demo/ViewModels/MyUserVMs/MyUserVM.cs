@@ -14,10 +14,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
     {
         public List<ComboSelectListItem> AllUserRoless { get; set; }
         [Display(Name = "角色")]
-        public List<Guid> SelectedUserRolesIDs { get; set; }
+        public List<Guid?> SelectedUserRolesIDs { get; set; }
         public List<ComboSelectListItem> AllUserGroupss { get; set; }
         [Display(Name = "用户组")]
-        public List<Guid> SelectedUserGroupsIDs { get; set; }
+        public List<Guid?> SelectedUserGroupsIDs { get; set; }
 
         public MyUserVM()
         {

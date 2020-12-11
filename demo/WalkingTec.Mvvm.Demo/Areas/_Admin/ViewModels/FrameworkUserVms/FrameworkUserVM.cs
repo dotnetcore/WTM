@@ -35,22 +35,10 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         protected override void InitVM()
         {
-            if (ControllerName.Contains("/api") == false)
-            {
                 AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName);
                 AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName);
-            }
-
         }
 
-        protected override void ReInitVM()
-        {
-            if (ControllerName.Contains("/api") == false)
-            {
-                AllRoles = DC.Set<FrameworkRole>().GetSelectListItems(Wtm, y => y.RoleName);
-                AllGroups = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, y => y.GroupName);
-            }
-        }
 
         public override async Task DoAddAsync()
         {

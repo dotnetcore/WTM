@@ -30,7 +30,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("{id}")]
         public FrameworkUserVM Get(Guid id)
         {
-            var vm = Wtm.CreateVM<FrameworkUserVM>(id);
+            var vm = Wtm.CreateVM<FrameworkUserVM>(id, passInit:true);
             return vm;
         }
 

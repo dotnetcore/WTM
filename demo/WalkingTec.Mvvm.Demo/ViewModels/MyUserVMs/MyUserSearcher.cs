@@ -22,10 +22,10 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.MyUserVMs
         public Boolean? IsValid { get; set; }
         public List<ComboSelectListItem> AllUserRoless { get; set; }
         [Display(Name = "Role")]
-        public List<Guid> SelectedUserRolesIDs { get; set; }
+        public List<Guid?> SelectedUserRolesIDs { get; set; }
         public List<ComboSelectListItem> AllUserGroupss { get; set; }
         [Display(Name = "Group")]
-        public List<Guid> SelectedUserGroupsIDs { get; set; }
+        public List<Guid?> SelectedUserGroupsIDs { get; set; }
 
         protected override void InitVM()
         {

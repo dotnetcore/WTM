@@ -22,6 +22,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         public int? LabelWidth { get; set; }
 
+        public bool? Required { get; set; }
         public bool HideLabel { get; set; }
         private string _id;
         public new string Id
@@ -92,7 +93,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 layfilter = output.Attributes["lay-filter"].Value.ToString();
             }
 
-            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired)
+            if (!(this is DisplayTagHelper) && Field.Metadata.IsRequired && Required != false)
             {
                 requiredDot = "<font color='red'>*</font>";
                 if (!(this is UploadTagHelper || this is RadioTagHelper || this is CheckBoxTagHelper || this is MultiUploadTagHelper || this is ColorPickerTagHelper)) // 上传组件自定义验证
