@@ -122,6 +122,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.PostContent.AppendHtml($@"
 <input type=""checkbox"" name=""{Field.Name}"" value=""{item.Value}"" title=""{item.Text}"" {selected} {(Disabled ? "disabled=\"\"" : string.Empty)}/>");
             }
+            output.PostContent.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
             base.Process(context, output);
 
         }

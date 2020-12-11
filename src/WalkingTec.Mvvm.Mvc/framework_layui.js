@@ -804,15 +804,24 @@ window.ff = {
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) {
-                if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
-                    var name1 = RegExp.$1;
-                    var name2 = RegExp.$2;
-                    if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1+"[0]."+name2) == false) {
-                        filterback[name1] = 1;
-                    }
+                return;
+            }
+            if (/_DONOTUSE_(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
+                var name1 = RegExp.$1;
+                var name2 = RegExp.$2;
+                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1 + "[0]." + name2) == false) {
+                    filterback[name1] = 1;
                 }
                 return;
             }
+            if (/_DONOTUSE_(.*?)$/.test(item.name)) {
+                var name1 = RegExp.$1;
+                if (filterback.hasOwnProperty(name1) == false && filter.hasOwnProperty(name1) == false) {
+                    filterback[name1] = 1;
+                }
+                return;
+            }
+
             if (/(.*?)\[\d?\]\.(.*?)$/.test(item.name)) {
                 var name1 = RegExp.$1;
                 var name2 = RegExp.$2;
@@ -836,6 +845,9 @@ window.ff = {
             }
             else {
                 filter[item.name] = item.value;
+                if (filterback.hasOwnProperty(item.name) == true) {
+                    filterback[item.name] = undefined;
+                }
             }
             });
 

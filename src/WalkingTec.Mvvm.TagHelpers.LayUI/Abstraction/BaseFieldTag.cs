@@ -101,7 +101,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     //richtextbox不需要进行必填验证
                     if (output.Attributes["isrich"] == null)
                     {
-                        output.Attributes.Add("lay-verify", "required");
+                        if (this is ComboBoxTagHelper combo && combo.MultiSelect.Value == true)
+                        {
+                            output.Attributes.Add("lay-verify", "selectRequired");
+                        }
+                        else
+                        {
+                            output.Attributes.Add("lay-verify", "required");
+                        }
                         output.Attributes.Add("lay-reqText", $"{THProgram._localizer["{0}required", Field?.Metadata?.DisplayName ?? Field?.Metadata?.Name]}");
                     }
                 }

@@ -97,13 +97,13 @@ namespace WalkingTec.Mvvm.Core
             var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
             Entity = ctor.Invoke(null) as TModel;
             //初始化VM中所有List<>的类
-            var lists = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsGeneric(typeof(List<>)));
-            foreach (var li in lists)
-            {
-                var gs = li.PropertyType.GetGenericArguments();
-                var newObj = Activator.CreateInstance(typeof(List<>).MakeGenericType(gs[0]));
-                li.SetValue(Entity, newObj, null);
-            }
+            //var lists = typeof(TModel).GetAllProperties().Where(x => x.PropertyType.IsGeneric(typeof(List<>)));
+            //foreach (var li in lists)
+            //{
+            //    var gs = li.PropertyType.GetGenericArguments();
+            //    var newObj = Activator.CreateInstance(typeof(List<>).MakeGenericType(gs[0]));
+            //    li.SetValue(Entity, newObj, null);
+            //}
         }
 
         public IQueryable<TModel> GetBaseQuery()
@@ -540,7 +540,7 @@ namespace WalkingTec.Mvvm.Core
                                 DC.AddEntity(item);
                             }
                         }
-                        else if (FC.Keys.Contains("Entity." + pro.Name + ".DONOTUSECLEAR") || (FC.ContainsKey("Entity."+pro.Name) && pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
+                        else if ( (pro.GetValue(Entity) is IEnumerable<TopBasePoco> list2 && list2?.Count() == 0))
                         {
                             var itemPros = ftype.GetAllProperties();
                             var _entity = DC.Set<TModel>().Include(pro.Name).AsNoTracking().CheckID(Entity.GetID()).FirstOrDefault();

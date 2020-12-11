@@ -81,7 +81,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 MultiSelect = false;
                 var type = Field.Metadata.ModelType;
-                if (type.IsArray || (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition())))// Array or List
+                if (Field.Name.Contains("[") || type.IsArray || (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition())))// Array or List
                 {
                     MultiSelect = true;
                 }
@@ -93,10 +93,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             if (!MultiSelect.Value && EnableSearch)
             {
                 output.Attributes.Add("lay-search", string.Empty);
-            }
-            if (Field.Metadata.IsRequired)
-            {
-                output.Attributes.Add("lay-verify", MultiSelect.Value ? "selectRequired" : "required");
             }
             if (string.IsNullOrEmpty(ChangeFunc) == false)
             {
@@ -116,6 +112,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 contentBuilder.Append($"<option value=''>{(Disabled == true ? "" : EmptyText)}</option>");
             }
+
+            output.PostContent.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
+
 
             #region 添加下拉数据 并 设置默认选中
 
@@ -149,7 +148,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var selectVal = new List<string>();
                 if (DefaultValue == null)
                 {
-                    if (Field.Model != null)
+                    if (Field.Name.Contains("["))
+                    {
+                        //默认多对多不必填
+                        if (Required == null)
+                        {
+                            Required = false;
+                        }
+                        selectVal.AddRange( Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                    }
+                    else if (Field.Model != null)
                     {
                         if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                         {
@@ -233,6 +241,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             output.Content.SetHtmlContent(contentBuilder.ToString());
 
             #endregion
+
 
             base.Process(context, output);
         }

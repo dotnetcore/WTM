@@ -127,7 +127,17 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
             var modelType = Field.Metadata.ModelType;
             var list = new List<string>();
-            if (Field.Model != null)
+            if (Field.Name.Contains("["))
+            {
+                //默认多对多不必填
+                if (Required == null)
+                {
+                    Required = false;
+                }
+                list.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                output.PostContent.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
+            }
+            else if (Field.Model != null)
             {
                 // 数组 or 泛型集合
                 if (modelType.IsArray || (modelType.IsGenericType && typeof(List<>).IsAssignableFrom(modelType.GetGenericTypeDefinition())))
