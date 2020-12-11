@@ -126,6 +126,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         public bool HiddenCheckbox { get; set; }
         /// <summary>
+        /// 设定列类型是否Radio类型 默认false
+        /// </summary>
+        public bool RadioType { get; set; }
+        /// <summary>
         /// 设定复选框列 默认false
         /// </summary>
         public bool HiddenGridIndex { get; set; }
@@ -439,7 +443,8 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     UnResize = true,
                     //Width = 45
                 };
-                if(LineHeight != null)
+                if (RadioType) checkboxHeader.Type = LayuiColumnTypeEnum.Radio;
+                if (LineHeight != null)
                 {
                     checkboxHeader.Style = $"height:{LineHeight}px";
                 }

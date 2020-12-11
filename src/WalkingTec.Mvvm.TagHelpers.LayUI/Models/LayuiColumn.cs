@@ -19,6 +19,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         /// </summary>
         Checkbox,
         /// <summary>
+        /// 单选框列
+        /// </summary>
+        Radio,
+        /// <summary>
         /// 空列
         /// </summary>
         Space,
