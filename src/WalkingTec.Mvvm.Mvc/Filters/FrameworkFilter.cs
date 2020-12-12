@@ -224,6 +224,7 @@ namespace WalkingTec.Mvvm.Mvc.Filters
                 }
             }
 
+            //忽略绑定List<xxx>由于前台传递空字符串造成的错误
             base.OnActionExecuting(context);
         }
 

@@ -15,8 +15,9 @@
 <wt:textbox field="Entity.ZipCode" />
 <wt:upload field="Entity.PhotoId" />
 <wt:combobox field="Entity.IsValid" />
-<wt:checkbox field="SelectedUserRolesIDs" items="AllUserRoless"/>
-<wt:checkbox field="SelectedUserGroupsIDs" items="AllUserGroupss"/>
+  <wt:container></wt:container>
+<wt:transfer field="Entity.UserRoles[0].RoleId" items="AllUserRoless"/>
+<wt:transfer field="Entity.UserGroups[0].GroupId" items="AllUserGroupss"/>
 </wt:row>
     <wt:row align="AlignEnum.Right">
         <wt:submitbutton />

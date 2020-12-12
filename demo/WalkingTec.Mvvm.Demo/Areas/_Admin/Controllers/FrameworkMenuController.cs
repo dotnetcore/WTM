@@ -58,6 +58,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [HttpPost]
+        [Public]
         [ActionDescription("Create")]
         public ActionResult Create(FrameworkMenuVM vm)
         {

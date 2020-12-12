@@ -21,6 +21,11 @@ using System.Text.Json;
 using WalkingTec.Mvvm.Core.Support.FileHandlers;
 using WalkingTec.Mvvm.Core.Extensions;
 using WalkingTec.Mvvm.Demo.Models;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Localization;
 
 namespace WalkingTec.Mvvm.Demo
 {
@@ -48,20 +53,11 @@ namespace WalkingTec.Mvvm.Demo
 
             services.AddMvc(options =>
             {
-                // ModelBinderProviders
-                options.ModelBinderProviders.Insert(0, new StringBinderProvider());
-
-                // Filters
-                options.Filters.Add(new DataContextFilter());
-                options.Filters.Add(new PrivilegeFilter());
-                options.Filters.Add(new FrameworkFilter());
-                options.ModelBindingMessageProvider.SetValueIsInvalidAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
-                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => Core.CoreProgram._localizer["AttemptedValueIsInvalidAccessor", x, y]);
-                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor((x) => Core.CoreProgram._localizer["ValueIsInvalidAccessor", x]);
-                options.EnableEndpointRouting = true;
+                options.UseWtmDefaultOptions();
             })
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.Converters.Add(new DateRangeConverter());
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)

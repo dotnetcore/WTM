@@ -113,7 +113,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 contentBuilder.Append($"<option value=''>{(Disabled == true ? "" : EmptyText)}</option>");
             }
 
-            output.PostContent.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
+            output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
 
 
             #region 添加下拉数据 并 设置默认选中

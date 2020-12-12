@@ -77,12 +77,12 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             {
                 output.Attributes.SetAttribute("name", string.IsNullOrEmpty(Name) ? Field?.Name : Name);
             }
-            if (Disabled && (Field?.Model != null || (this is ComboBoxTagHelper)==false))
-            {
-                output.Attributes.SetAttribute("readonly", string.Empty);
-                output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
-                output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
-            }
+                if (Disabled )
+                {
+                    output.Attributes.SetAttribute("readonly", string.Empty);
+                    output.Attributes.TryGetAttribute("class", out TagHelperAttribute oldclass);
+                    output.Attributes.SetAttribute("class", "layui-disabled " + (oldclass?.Value ?? string.Empty));
+                }
             if (output.Attributes.ContainsName("lay-filter") == false && output.Attributes.ContainsName("id") == true)
             {
                 layfilter = $"{output.Attributes["id"].Value}filter";

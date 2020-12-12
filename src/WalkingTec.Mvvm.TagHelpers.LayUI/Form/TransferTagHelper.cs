@@ -95,11 +95,20 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
             }).ToArray();
 
             #endregion
+            var selectVal = new List<string>();
+            if (Field.Name.Contains("["))
+            {
+                //默认多对多不必填
+                if (Required == null)
+                {
+                    Required = false;
+                }
+                selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+            }
 
             // 赋默认值
-            if (string.IsNullOrEmpty(DefaultValue) && Field.Model != null)
+            else if (string.IsNullOrEmpty(DefaultValue) && Field.Model != null)
             {
-                var selectVal = new List<string>();
                 if (modeltype.IsArray || (modeltype.IsGenericType && typeof(List<>).IsAssignableFrom(modeltype.GetGenericTypeDefinition())))
                 {
                     foreach (var item in Field.Model as dynamic)
@@ -111,11 +120,10 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 {
                     selectVal.Add(Field.Model.ToString().ToLower());
                 }
-                DefaultValue = $"[{string.Join(",", selectVal)}]";
             }
+            DefaultValue = $"[{string.Join(",", selectVal.Select(x=> "'"+x+"'"))}]";
 
             var title = $"['{(string.IsNullOrEmpty(LeftTitle) ? THProgram._localizer["ForSelect"] : LeftTitle)}','{(string.IsNullOrEmpty(RightTitle) ? THProgram._localizer["Selected"] : RightTitle)}']";
-
             var content = $@"
 <script>
 layui.use(['transfer'],function(){{
@@ -142,7 +150,7 @@ layui.use(['transfer'],function(){{
   var transferIns = transfer.render({{
     elem: '#'+_id
     ,title:{title}
-    ,data:{JsonSerializer.Serialize(data)}
+    ,data:{JsonSerializer.Serialize(data,new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase})}
     {(string.IsNullOrEmpty(DefaultValue) ? string.Empty : $",value:defaultVal")}
     ,id:'{Id}'
     ,text:{{none:'{NonePlaceholder}',searchNone:'{SearchNonePlaceholder}'}}
@@ -167,6 +175,7 @@ layui.use(['transfer'],function(){{
 </script>
 ";
             output.PostElement.AppendHtml(content);
+            output.PostElement.AppendHtml($@"<input type=""hidden"" name=""_DONOTUSE_{Field.Name}"" value=""1"" />");
             base.Process(context, output);
         }
     }

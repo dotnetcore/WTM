@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System;
+using System.Collections;
 using WalkingTec.Mvvm.Core;
 
 namespace WalkingTec.Mvvm.Mvc.Binders
@@ -29,7 +30,6 @@ namespace WalkingTec.Mvvm.Mvc.Binders
             {
                 return new BinderTypeModelBinder(typeof(StringIgnoreLTGTBinder));
             }
-
             return null;
         }
     }

@@ -853,7 +853,7 @@ window.ff = {
 
         for (item in filterback) {
             if (filterback[item] !== undefined) {
-                filter[item] = "";
+                filter[item+".length"] = "0";
             }
         }
         return filter;
