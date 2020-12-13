@@ -3,6 +3,7 @@ import { Button, Form, Icon, Input, Popconfirm } from 'antd';
 import { DesForm } from 'components/decorators';
 import { default as GlobalConfig, default as globalConfig } from 'global.config';
 import * as React from 'react';
+import lodash from 'lodash';
 import store from 'store/index';
 import ImgCode from './imgCode';
 import { LayoutLogin } from './layout';
@@ -38,12 +39,19 @@ export default class LoginDemo extends React.Component<any, any>{
     this.setState({ notCode: false })
   }
   componentDidMount() {
-    // To disabled submit button at the beginning.
     try {
       this.props.form.validateFields();
     } catch (error) {
 
     }
+    lodash.delay(() => {
+      // To disabled submit button at the beginning.
+      try {
+        this.props.form.validateFields();
+      } catch (error) {
+
+      }
+    }, 500)
   }
   render() {
     const { getFieldDecorator, getFieldsError, isFieldTouched, getFieldError } = this.props.form;
@@ -73,7 +81,7 @@ export default class LoginDemo extends React.Component<any, any>{
               rules: [{ required: true, message: '请输入 密码!' }],
               initialValue: globalConfig.development ? "000000" : ""
             })(
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" size="large"/>
+              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" size="large" />
             )}
           </Form.Item>
           <div

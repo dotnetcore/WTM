@@ -61,7 +61,7 @@ class Store {
     @action.bound
     setSubMenu(subMenu) {
         this.ParallelMenu = subMenu.map(data => {
-            return lodash.merge(data, {
+            return lodash.merge({ ParentId: null }, data, {
                 key: data.Id,
                 path: data.Url || '',
                 name: getLocalesValue(data.Text, data.Text),
