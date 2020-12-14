@@ -24,7 +24,6 @@ export default class Utils {
   public wtmFormItem = this.generateWtmFormItemComponent;
   public wtmUploadImg = this.generateWtmUploadImgComponent;
   public wtmSlot = this.generateWtmSlotComponent;
-  public wtmSlotRender = this.generateWtmSlotRenderComponent;
   public input = this.generateInputComponent;
   public select = this.generateSelectComponent;
   public button = this.generateButtonComponent;
