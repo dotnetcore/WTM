@@ -133,7 +133,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]")]
         public ActionResult GetUserGroups()
         {
-            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, null, x => x.GroupName);
+            var rv = DC.Set<FrameworkGroup>().GetSelectListItems(Wtm, x => x.GroupName);
             return Ok(rv);
         }
     }

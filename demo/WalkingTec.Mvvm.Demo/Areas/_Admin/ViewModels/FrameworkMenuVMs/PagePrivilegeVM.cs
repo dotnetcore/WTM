@@ -45,7 +45,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public List<ComboSelectListItem> GetUsers(string text)
         {
-            var d = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().Contains(text.ToLower())).GetSelectListItems(Wtm, null, x => x.ITCode);
+            var d = DC.Set<FrameworkUserBase>().Where(x => x.ITCode.ToLower().Contains(text.ToLower())).GetSelectListItems(Wtm, x => x.ITCode);
             return d;
         }
 

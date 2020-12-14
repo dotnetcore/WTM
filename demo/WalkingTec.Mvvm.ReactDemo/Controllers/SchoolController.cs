@@ -178,13 +178,13 @@ namespace WalkingTec.Mvvm.ReactDemo.Controllers
         [HttpGet("GetCitys")]
         public ActionResult GetCitys()
         {
-            return Ok(DC.Set<City>().GetSelectListItems(Wtm, null, x => x.Name));
+            return Ok(DC.Set<City>().GetSelectListItems(Wtm, x => x.Name));
         }
 
         [HttpGet("GetSubCities")]
         public ActionResult GetSubCities(Guid? parentid)
         {
-            var city = DC.Set<City>().Where(x => x.ParentId == parentid).GetSelectListItems(Wtm, null, x => x.Name);
+            var city = DC.Set<City>().Where(x => x.ParentId == parentid).GetSelectListItems(Wtm, x => x.Name);
             return Ok(city);
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace WalkingTec.Mvvm.Core.Extensions
     /// </summary>
     public static class TypeExtension
     {
-        public static Dictionary<string, List<PropertyInfo>> _propertyCache { get; set; } = new Dictionary<string, List<PropertyInfo>>();
+        public static ImmutableDictionary<string, List<PropertyInfo>> _propertyCache { get; set; } = new Dictionary<string, List<PropertyInfo>>().ToImmutableDictionary();
         /// <summary>
         /// 判断是否是泛型
         /// </summary>
@@ -235,27 +236,42 @@ namespace WalkingTec.Mvvm.Core.Extensions
         {
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
-                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+                var properties = self.GetProperties().ToList();
+                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                return properties.Where(x => x.Name == name).FirstOrDefault();
             }
-            return _propertyCache[self.FullName].Where(x => x.Name == name).FirstOrDefault();
+            else
+            {
+                return _propertyCache[self.FullName].Where(x => x.Name == name).FirstOrDefault();
+            }
         }
 
         public static PropertyInfo GetSingleProperty(this Type self, Func<PropertyInfo,bool> where)
         {
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
-                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+                var properties = self.GetProperties().ToList();
+                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                return properties.Where(where).FirstOrDefault();
             }
-            return _propertyCache[self.FullName].Where(where).FirstOrDefault();
+            else
+            {
+                return _propertyCache[self.FullName].Where(where).FirstOrDefault();
+            }
         }
 
         public static List<PropertyInfo> GetAllProperties(this Type self)
         {
             if (_propertyCache.ContainsKey(self.FullName) == false)
             {
-                _propertyCache.Add(self.FullName, self.GetProperties().ToList());
+                var properties = self.GetProperties().ToList();
+                _propertyCache = _propertyCache.Add(self.FullName, properties);
+                return properties;
             }
-            return _propertyCache[self.FullName];
+            else
+            {
+                return _propertyCache[self.FullName];
+            }
         }
 
     }

@@ -171,7 +171,7 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("GetFolders")]
         public ActionResult GetFolders()
         {
-            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, null, x => x.PageName);
+            var AllParents = DC.Set<FrameworkMenu>().Where(x => x.FolderOnly == true).OrderBy(x => x.DisplayOrder).GetSelectListItems(Wtm, x => x.PageName);
             foreach (var p in AllParents)
             {
                 if (p.Text.StartsWith("MenuKey."))
