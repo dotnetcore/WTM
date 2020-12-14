@@ -22,6 +22,8 @@ import { actionApi, fileApi } from "@/service/modules/upload";
 export default class Utils {
   constructor() {}
   public wtmFormItem = this.generateWtmFormItemComponent;
+  public wtmUploadImg = this.generateWtmUploadImgComponent;
+  public wtmSlot = this.generateWtmSlotComponent;
   public input = this.generateInputComponent;
   public select = this.generateSelectComponent;
   public button = this.generateButtonComponent;
@@ -31,8 +33,6 @@ export default class Utils {
   public checkboxGroup = this.generateCheckboxGroupComponent;
   public switch = this.generateSwitchComponent;
   public upload = this.generateUploadComponent;
-  public wtmUploadImg = this.generateWtmUploadImgComponent;
-  public wtmSlot = this.generateWtmSlotComponent;
   public label = this.generateLabelComponent;
   public datePicker = this.generateDatePickerComponent;
   public transfer = this.generateTransferComponent;

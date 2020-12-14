@@ -100,7 +100,6 @@ class requestBase {
   requestError(res) {
     let msg: string = i18n.t('errorMsg.error').toString();
     const { response, message } = res;
-    console.log('response, message', response, message)
     // 导入文件错误信息
     const filterError = (ID?: string) => {
       let notifyMsg: string = i18n.t('errorMsg.template').toString();
