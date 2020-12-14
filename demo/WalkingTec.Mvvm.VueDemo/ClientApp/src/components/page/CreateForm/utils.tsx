@@ -24,6 +24,7 @@ export default class Utils {
   public wtmFormItem = this.generateWtmFormItemComponent;
   public wtmUploadImg = this.generateWtmUploadImgComponent;
   public wtmSlot = this.generateWtmSlotComponent;
+  public wtmSlotRender = this.generateWtmSlotRenderComponent;
   public input = this.generateInputComponent;
   public select = this.generateSelectComponent;
   public button = this.generateButtonComponent;
@@ -36,6 +37,8 @@ export default class Utils {
   public label = this.generateLabelComponent;
   public datePicker = this.generateDatePickerComponent;
   public transfer = this.generateTransferComponent;
+  public timeSelect = this.generateTimeSelectComponent;
+
 
   /**
    * formItem 继承vue组件this
@@ -309,7 +312,8 @@ export default class Utils {
 
   private generateUploadComponent(h, option, vm?) {
     const _t = vm || this;
-    const { style, props, slot, directives, key, events, label, mapKey } = option;
+    const { style, props, directives, key, events, label, mapKey } = option;
+    let { slot }= option;
     const compData = {
       directives,
       on: events || {},
@@ -453,7 +457,40 @@ export default class Utils {
     const value = getMapKeyModel(_t, key, mapKey);
     return <el-transfer value={value} {...compData}></el-transfer>;
   }
+
+  private generateTimeSelectComponent(h, option, vm?) {
+    const _t = vm || this;
+    const { directives, props, style, key } = option;
+    const on = translateEvents(option.events, _t);
+    const compData = {
+      directives: [...(directives || []), vEdit(_t)],
+      on,
+      props: { ...displayProp(_t), ...props },
+      style,
+    };
+    let vmodelData = sourceItem(_t.sourceFormData || _t.formData, key);
+    return (
+      <el-time-select v-model={vmodelData[key]} {...compData}></el-time-select>
+    );
+  }
+
+  // private generateWtmSlotRenderComponent(h, option, vm?) {
+  //   const _t = vm || this;
+  //   const { directives, props, style, key } = option;
+  //   const on = translateEvents(option.events, _t);
+  //   const compData = {
+  //     directives: [...(directives || []), vEdit(_t)],
+  //     on,
+  //     props: { ...displayProp(_t), ...props },
+  //     style,
+  //   };
+  //   let vmodelData = sourceItem(_t.sourceFormData || _t.formData, key);
+  //   return (<wtm-render-view hml={hml} params={{ "v-model": vmodelData[key], ...params }} ></wtm-render-view>)
+  // }
+
 }
+
+
 
 /**
  * 事件
@@ -511,7 +548,7 @@ export const sourceItem = (formData, keyPath) => {
  * @param hml
  * @param params
  */
-export const slotRender = (h, hml, params) => {
+export const slotRender = (h, hml, params = {}) => {
     let slot: any = undefined;
     if (_.isString(hml)) {
         slot = (

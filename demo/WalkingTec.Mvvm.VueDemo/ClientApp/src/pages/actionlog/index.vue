@@ -1,6 +1,6 @@
 <template>
     <card>
-        <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" :needCollapse="true" :isActive.sync="isActive" />
+        <wtm-search-box :ref="searchRefName" :events="searchEvent" :formOptions="SEARCH_DATA" :needCollapse="true" collapseShowSpan="12" />
         <!-- 操作按钮 -->
         <wtm-but-box :assembly="assembly" :action-list="actionList" :selected-data="selectData" :events="actionEvent" />
         <!-- 列表 -->
@@ -31,7 +31,6 @@ import { ASSEMBLIES, TABLE_HEADER, logTypes } from "./config";
     }
 })
 export default class Index extends Vue {
-    isActive: boolean = false;
     get SEARCH_DATA() {
         return {
             formProps: {
@@ -59,13 +58,11 @@ export default class Index extends Vue {
                             "actionlog.StartPlaceholder"
                         ),
                         "end-placeholder": this.$t("actionlog.EndPlaceholder")
-                    },
-                    isHidden: !this.isActive
+                    }
                 },
                 IP: {
                     type: "input",
-                    label: "IP",
-                    isHidden: !this.isActive
+                    label: "IP"
                 },
                 LogType: {
                     type: "select",
@@ -74,8 +71,7 @@ export default class Index extends Vue {
                     props: {
                         multiple: true,
                         "collapse-tags": true
-                    },
-                    isHidden: !this.isActive
+                    }
                 }
             }
         };

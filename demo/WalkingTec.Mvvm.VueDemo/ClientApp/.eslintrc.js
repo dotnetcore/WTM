@@ -19,6 +19,8 @@ module.exports = {
   extends: ["plugin:vue/recommended", "standard"],
   plugins: ["html"],
   rules: {
+    // tab缩进大小,默认为2
+    "tabWidth": 4,
     semi: 0,
     "no-spaced-func": 0, // 函数调用时 函数名与()之间不能有空格
     "space-before-function-paren": [0, "always"], //函数定义时括号前面要不要有空格

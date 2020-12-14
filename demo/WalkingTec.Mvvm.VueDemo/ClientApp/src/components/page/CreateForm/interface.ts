@@ -63,7 +63,13 @@ export interface FormItem {
    */
   events?: object;
   /**
-   * 是否隐藏组件
+   * 是否隐藏组件（v-if）
    */
   isHidden?: boolean | HiddenFun;
+
+  /**
+   * 是否隐藏组件 (v-show)
+   */
+  isShow?: boolean;
+
 }

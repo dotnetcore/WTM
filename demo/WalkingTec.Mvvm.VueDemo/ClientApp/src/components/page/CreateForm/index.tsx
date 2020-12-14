@@ -152,9 +152,8 @@ export default class CreateForm extends Vue {
         return;
       }
       const itemComp = componentObj[item.type];
-      const option = { ...item, key };
-      const contentComp = itemComp ? itemComp.call(this, h, option) : null;
-      return componentObj.wtmFormItem.call(this, h, option, contentComp);
+      const contentComp = itemComp ? itemComp.call(this, h, { ...item, key }) : null;
+      return componentObj.wtmFormItem.call(this, h, { ...item, key }, contentComp);
     });
     const props = {
       ...this.options.formProps,

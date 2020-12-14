@@ -9,23 +9,29 @@ import { Component, Prop, Vue, Provide } from "vue-property-decorator";
 export default class CreateForm extends Vue {
   @Provide()
   componentName = "wtmSearch";
+
   // 请求表单
   @Prop({ type: Object, default: () => {} })
   formOptions;
+
   // source 数据
   @Prop() sourceFormData?: object;
+
   // 是否需要折叠面板
   @Prop({ type: Boolean, default: false })
   needCollapse!: boolean;
-  // 是否展开折叠
-  @Prop({ type: Boolean, default: false })
-  isActive!: boolean;
+
+  @Prop({ type: [Number, String], default: 24 })
+  collapseShowSpan;
+
   // 是否需要重置按钮
   @Prop({ default: true })
   needResetBtn!: boolean;
+
   // 禁用input，通常是在加载的时候禁用
   @Prop({ default: false })
   disabledInput!: boolean;
+
   // 执行事件集合
   @Prop({ type: Object, default: null })
   events!: object;
@@ -35,6 +41,12 @@ export default class CreateForm extends Vue {
    * 异步验证, 失败组件集合(form-item类型是error需要)
    */
   asynValidateEl: Array<any> = [];
+
+  /**
+   * 是否展开折叠
+   */
+  isActive: boolean = false;
+
   /**
    * 返回表单组件, this.$refs，get监听不到，改为方法
    */
@@ -77,7 +89,8 @@ export default class CreateForm extends Vue {
     }
   }
   toggleCollapse() {
-    this.$emit("update:isActive", !this.isActive);
+    this.isActive = !this.isActive;
+    this.$emit("update:isActive", this.isActive);
   }
   onReset() {
     this.FormComp().resetFields();
@@ -93,13 +106,23 @@ export default class CreateForm extends Vue {
     return arr;
   }
   render(h) {
+    // slot 集合
     let arr: Array<any> = [];
-    _.mapValues(this.formOptions.formItem, item => {
+    let firstRowSpan = 0;
+    for (const key in this.formOptions.formItem) {
+      const item = this.formOptions.formItem[key];
+      // slot
       if (item.slotKey) {
         const fn = this.$scopedSlots[item.slotKey] || (() => {});
         arr.push({ key: item.slotKey, value: fn({}) });
       }
-    });
+      // 隐藏 一行row 大小
+      firstRowSpan += item.span || 6;
+      if (this.needCollapse && firstRowSpan > this.collapseShowSpan) {
+        item.isShow = this.isActive;
+      }
+    }
+
     return (
       <el-card class="search-box" shadow="never">
         <wtm-create-form
@@ -111,6 +134,7 @@ export default class CreateForm extends Vue {
           {arr.map(item => {
             return <span slot={item.key}>{item.value}</span>;
           })}
+
           <wtm-form-item class="search-but-box">
             <el-button-group class="button-group">
               <el-button
@@ -141,6 +165,7 @@ export default class CreateForm extends Vue {
                 ""
               )}
             </el-button-group>
+
             {this.needResetBtn ? (
               <el-button
                 style="position: relative;margin-left: 10px;"
@@ -155,6 +180,7 @@ export default class CreateForm extends Vue {
               ""
             )}
           </wtm-form-item>
+
         </wtm-create-form>
       </el-card>
     );

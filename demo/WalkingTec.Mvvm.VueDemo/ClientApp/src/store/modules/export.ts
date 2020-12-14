@@ -6,7 +6,7 @@ import {
   getDownloadInfo
 } from "@/service/modules/export";
 
-import service from "@/util/service";
+import service from "@/util/service/index.ts";
 Vue.use(Vuex);
 type serviceType = {
   method: string;

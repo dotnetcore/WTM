@@ -39,6 +39,16 @@ const imported = {
   url: reqPath + "Import",
   method: "post"
 };
+
+
+
+const testApi = {
+  url: reqPath + "Searchss",
+  method: "get",
+  dataType: "array"
+};
+
+
 export default {
   search,
   batchDelete,
@@ -46,5 +56,6 @@ export default {
   exportExcel,
   exportExcelByIds,
   getExcelTemplate,
-  imported
+  imported,
+  testApi
 };

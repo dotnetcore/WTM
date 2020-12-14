@@ -4,12 +4,11 @@ import {
   Action,
   Mutation,
   getModule,
-  MutationAction
 } from "vuex-module-decorators";
 import { getToken, setToken, removeToken } from "@/util/cookie";
 import { resetRouter } from "@/router";
 import store from "@/store/modules/index";
-import _request from "@/util/service";
+import _request from "@/util/service/index.ts";
 import serviceUrl from "@/service/modules/user";
 
 export interface IUserState {
