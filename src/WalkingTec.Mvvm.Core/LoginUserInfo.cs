@@ -14,8 +14,6 @@ namespace WalkingTec.Mvvm.Core
     /// </summary>
     public class LoginUserInfo
     {
-        public Guid Id { get; set; }
-
         /// <summary>
         /// 登录用户
         /// </summary>

@@ -11,7 +11,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
     public class FrameworkGroupMDVM : BaseVM
     {
 
-        public Guid? GroupId { get; set; }
+        public string GroupCode { get; set; }
         public List<GroupDp> DpLists { get; set; }
 
         public FrameworkGroupMDVM()
@@ -28,7 +28,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 list.Searcher.TableName = item.ModelName;
                 DpLists.Add(new GroupDp { DpName = item.PrivillegeName, List = list, SelectedIds = new List<string>() });
             }
-            var alldp = DC.Set<DataPrivilege>().Where(x => x.GroupId == GroupId).ToList();
+            var alldp = DC.Set<DataPrivilege>().Where(x => x.GroupCode == GroupCode).ToList();
             foreach (var item in DpLists)
             {
                 var select = alldp.Where(x => x.TableName == item.List.Searcher.TableName).Select(x => x.RelateId).ToList();
@@ -50,7 +50,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
 
         public bool DoChange()
         {
-            List<Guid> oldIDs =  DC.Set<DataPrivilege>().Where(x => x.GroupId == GroupId).Select(x => x.ID).ToList();
+            List<Guid> oldIDs =  DC.Set<DataPrivilege>().Where(x => x.GroupCode == GroupCode).Select(x => x.ID).ToList();
             
             foreach (var oldid in oldIDs)
             {
@@ -64,9 +64,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                 {
                     DataPrivilege dp = new DataPrivilege();
                     dp.RelateId = null;
-                    dp.GroupId = GroupId;
+                    dp.GroupCode = GroupCode;
                     dp.TableName = item.List.Searcher.TableName;
-                    dp.DomainId = null;
                     DC.Set<DataPrivilege>().Add(dp);
                 }
                 if (item.IsAll == false)
@@ -75,9 +74,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkGroupVMs
                     {
                         DataPrivilege dp = new DataPrivilege();
                         dp.RelateId = id;
-                        dp.GroupId = GroupId;
+                        dp.GroupCode = GroupCode;
                         dp.TableName = item.List.Searcher.TableName;
-                        dp.DomainId = null;
                         DC.Set<DataPrivilege>().Add(dp);
                     }
 

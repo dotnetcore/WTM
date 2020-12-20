@@ -7,8 +7,8 @@ namespace WalkingTec.Mvvm.Core.Support.Json
     {
         public Guid ID { get; set; }
 
-        public Guid? UserId { get; set; }
-        public Guid? GroupId { get; set; }
+        public string UserCode { get; set; }
+        public string GroupCode { get; set; }
 
         public string TableName { get; set; }
 

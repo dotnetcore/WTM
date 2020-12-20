@@ -85,13 +85,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             if (Searcher.DpType == DpTypeEnum.User)
             {
                 query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserId, ik => ik.ID, (dp, user) => new { dp = dp, user = user })
+                    .Join(DC.Set<FrameworkUserBase>(), ok => ok.UserCode, ik => ik.ITCode, (dp, user) => new { dp = dp, user = user })
                     .CheckContain(Searcher.Name, x => x.user.Name)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                    .GroupBy(x => new { x.user.Name, x.user.ID, x.dp.TableName }, x => x.dp.RelateId)
+                    .GroupBy(x => new { x.user.Name, x.user.ITCode, x.dp.TableName }, x => x.dp.RelateId)
                     .Select(x => new DataPrivilege_ListView
                     {
-                        TargetId = x.Key.ID,
+                        TargetId = x.Key.ITCode,
                         Name = x.Key.Name,
                         TableName = x.Key.TableName,
                         RelateIDs = x.Count(),
@@ -102,13 +102,13 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
             else
             {
                 query = DC.Set<DataPrivilege>()
-                    .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupId, ik => ik.ID, (dp, group) => new { dp = dp, group = group })
+                    .Join(DC.Set<FrameworkGroup>(), ok => ok.GroupCode, ik => ik.GroupCode, (dp, group) => new { dp = dp, group = group })
                     .CheckContain(Searcher.Name, x => x.group.GroupName)
                     .CheckContain(Searcher.TableName, x => x.dp.TableName)
-                       .GroupBy(x => new { x.group.GroupName, x.group.ID, x.dp.TableName }, x => x.dp.RelateId)
+                       .GroupBy(x => new { x.group.GroupName, x.group.GroupCode, x.dp.TableName }, x => x.dp.RelateId)
                        .Select(x => new DataPrivilege_ListView
                        {
-                           TargetId = x.Key.ID,
+                           TargetId = x.Key.GroupCode,
                            Name = x.Key.GroupName,
                            TableName = x.Key.TableName,
                            RelateIDs = x.Count(),
@@ -128,7 +128,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.DataPrivilegeVMs
     {
         [Display(Name = "DpTargetName")]
         public string Name { get; set; }
-        public Guid TargetId { get; set; }
+        public string TargetId { get; set; }
         [Display(Name = "DataPrivilegeName")]
         public string TableName { get; set; }
         [Display(Name = "DataPrivilegeCount")]

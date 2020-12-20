@@ -102,7 +102,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
-                var userids = DC.Set<FrameworkUserRole>().Where(x => x.RoleId == id).Select(x => x.UserId.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUserRole>().Where(x => DC.Set<FrameworkRole>().Where(y => y.ID == id).Select(y => y.RoleCode).FirstOrDefault() == x.RoleCode).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
@@ -137,7 +137,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 {
                     roleids.Add(Guid.Parse(item));
                 }
-                var userids = DC.Set<FrameworkUserRole>().Where(x => roleids.Contains(x.RoleId)).Select(x => x.UserId.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUserRole>().Where(x => DC.Set<FrameworkRole>().Where(y => roleids.Contains(y.ID)).Select(y => y.RoleCode).Contains(x.RoleCode)).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid();
             }

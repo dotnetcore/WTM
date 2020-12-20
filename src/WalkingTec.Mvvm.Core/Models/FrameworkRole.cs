@@ -26,9 +26,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "Remark")]
         public string RoleRemark { get; set; }
 
-        [JsonIgnore]
-        public List<FrameworkUserRole> UserRoles { get; set; }
-
         [NotMapped]
         [Display(Name = "UserCount")]
         public int UserCount { get; set; }

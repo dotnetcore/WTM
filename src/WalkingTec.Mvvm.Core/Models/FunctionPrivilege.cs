@@ -11,10 +11,7 @@ namespace WalkingTec.Mvvm.Core
     public class FunctionPrivilege : BasePoco
     {
         [Display(Name = "Role")]
-        public Guid? RoleId { get; set; }
-
-        [Display(Name = "User")]
-        public Guid? UserId { get; set; }
+        public string RoleCode { get; set; }
 
         [Display(Name = "MenuItem")]
         public Guid MenuItemId { get; set; }

@@ -598,6 +598,28 @@ namespace WalkingTec.Mvvm.Core.Extensions
             return baseQuery.Where(Expression.Lambda<Func<T, bool>>(Expression.Equal(peid, Expression.Constant(convertid)), pe));
         }
 
+        public static IQueryable<T> CheckIDs<T>(this IQueryable<T> baseQuery, List<string> val, MemberExpression member = null)
+        {
+            if(val == null)
+            {
+                return baseQuery;
+            }
+            ParameterExpression pe = Expression.Parameter(typeof(T));
+            PropertyInfo idproperty = null;
+            if (member == null)
+            {
+                idproperty = typeof(T).GetSingleProperty("ID");
+            }
+            else
+            {
+                idproperty = typeof(T).GetSingleProperty(member.Member.Name);
+            }
+            Expression peid = Expression.Property(pe, idproperty);
+            var exp = val.GetContainIdExpression(typeof(T), pe, peid).Body;
+            return baseQuery.Where(Expression.Lambda<Func<T, bool>>(exp, pe));
+        }
+
+
         public static IQueryable<T> CheckNotNull<T>(this IQueryable<T> baseQuery, Expression<Func<T,object>> member)
         {
             return baseQuery.CheckNotNull<T>(member.GetPropertyName());

@@ -14,8 +14,8 @@ namespace WalkingTec.Mvvm.Core.Extensions
     {
         public static ClaimsPrincipal CreatePrincipal(this LoginUserInfo self)
         {
-            if (self.Id == Guid.Empty) throw new ArgumentException("Id is mandatory", nameof(self.Id));
-            var claims = new List<Claim> { new Claim(AuthConstants.JwtClaimTypes.Subject, self.Id.ToString()) };
+            if (string.IsNullOrEmpty(self.ITCode)) throw new ArgumentException("Id is mandatory", nameof(self.ITCode));
+            var claims = new List<Claim> { new Claim(AuthConstants.JwtClaimTypes.Subject, self.ITCode) };
 
             if (!string.IsNullOrEmpty(self.Name))
             {

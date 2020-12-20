@@ -35,12 +35,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "IsValid")]
         public bool IsValid { get; set; }
 
-        [Display(Name = "Role")]
-        public List<FrameworkUserRole> UserRoles { get; set; }
-
-        [Display(Name = "Group")]
-        public List<FrameworkUserGroup> UserGroups { get; set; }
-
         [Display(Name = "Photo")]
         public Guid? PhotoId { get; set; }
 

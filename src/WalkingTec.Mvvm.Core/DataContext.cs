@@ -32,6 +32,8 @@ namespace WalkingTec.Mvvm.Core
         public DbSet<DataPrivilege> BaseDataPrivileges { get; set; }
         public DbSet<FileAttachment> BaseFileAttachments { get; set; }
         public DbSet<FrameworkRole> BaseFrameworkRoles { get; set; }
+        public DbSet<FrameworkUserRole> BaseFrameworkUserRoles { get; set; }
+        public DbSet<FrameworkUserGroup> BaseFrameworkUserGroups { get; set; }
         public DbSet<FrameworkGroup> BaseFrameworkGroups { get; set; }
         public DbSet<ActionLog> BaseActionLogs { get; set; }
         //public DbSet<FrameworkArea> BaseFrameworkAreas { get; set; }
@@ -70,10 +72,6 @@ namespace WalkingTec.Mvvm.Core
             base.OnModelCreating(modelBuilder);
             //菜单和菜单权限的级联删除
             modelBuilder.Entity<FunctionPrivilege>().HasOne(x => x.MenuItem).WithMany(x => x.Privileges).HasForeignKey(x => x.MenuItemId).OnDelete(DeleteBehavior.Cascade);
-            //用户和用户搜索条件级联删除
-            //modelBuilder.Entity<SearchCondition>().HasOne(x => x.User).WithMany(x => x.SearchConditions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<DataPrivilege>().HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<DataPrivilege>().HasOne(x => x.Group).WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<FrameworkUserBase>().HasIndex(x => x.ITCode).IsUnique();
         }
 
@@ -195,7 +193,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var role in allowedRoles)
                 {
-                    menu.Privileges.Add(new FunctionPrivilege { RoleId = role.ID, Allowed = true });
+                    menu.Privileges.Add(new FunctionPrivilege { RoleCode = role.RoleCode, Allowed = true });
 
                 }
             }
@@ -288,7 +286,7 @@ namespace WalkingTec.Mvvm.Core
             {
                 foreach (var role in allowedRoles)
                 {
-                    menu.Privileges.Add(new FunctionPrivilege { RoleId = role.ID, Allowed = true });
+                    menu.Privileges.Add(new FunctionPrivilege { RoleCode = role.RoleCode, Allowed = true });
 
                 }
             }

@@ -69,17 +69,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Edit")]
-        public ActionResult Edit(string ModelName, Guid Id, DpTypeEnum Type)
+        public ActionResult Edit(string ModelName, string Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
-                vm.UserItCode = DC.Set<FrameworkUserBase>().Where(x => x.ID == Id).Select(x => x.ITCode).FirstOrDefault();
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserCode == Id && x.DpType == Type);
             }
             else
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupCode == Id && x.DpType == Type);
             }
             return PartialView(vm);
         }
@@ -100,16 +99,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
         }
 
         [ActionDescription("Delete")]
-        public async Task<ActionResult> Delete(string ModelName, Guid Id, DpTypeEnum Type)
+        public async Task<ActionResult> Delete(string ModelName, string Id, DpTypeEnum Type)
         {
             DataPrivilegeVM vm = null;
             if (Type == DpTypeEnum.User)
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.UserCode == Id && x.DpType == Type);
             }
             else
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupId == Id && x.DpType == Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == ModelName && x.Entity.GroupCode == Id && x.DpType == Type);
             }
             await vm.DoDeleteAsync();
             return FFResult().RefreshGrid();

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using WalkingTec.Mvvm.Core.Extensions;
+using WalkingTec.Mvvm.Core.Support.FileHandlers;
 
 namespace WalkingTec.Mvvm.Core
 {
@@ -107,6 +109,14 @@ namespace WalkingTec.Mvvm.Core
             bool rv = true;
             //循环所有数据Id
             List<string> idsData = Ids.ToList();
+            var modelType = typeof(TModel);
+            var pros = modelType.GetAllProperties();
+            //如果包含附件，则先删除附件
+            List<Guid> fileids = new List<Guid>();
+            var fa = pros.Where(x => x.PropertyType == typeof(FileAttachment) || typeof(TopBasePoco).IsAssignableFrom(x.PropertyType)).ToList();
+            var isPersist = modelType.IsSubclassOf(typeof(PersistPoco));
+
+
             for (int i = 0; i < idsData.Count; i++)
             {
                 string checkErro = null;
@@ -120,24 +130,52 @@ namespace WalkingTec.Mvvm.Core
                 //进行删除
                 try
                 {
-                    var ctor = typeof(TModel).GetConstructor(Type.EmptyTypes);
-                    if (typeof(TModel).IsSubclassOf(typeof(PersistPoco)))
+                    var Entity = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
+                    if (isPersist)
                     {
-                        var pp = DC.Set<TModel>().CheckID(idsData[i]).FirstOrDefault();
-                        (pp as PersistPoco).IsValid = false;
-                        (pp as PersistPoco).UpdateTime = DateTime.Now;
-                        (pp as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
-                        DC.UpdateProperty(pp, "IsValid");
-                        DC.UpdateProperty(pp, "UpdateTime");
-                        DC.UpdateProperty(pp, "UpdateBy");
+                        (Entity as PersistPoco).IsValid = false;
+                        (Entity as PersistPoco).UpdateTime = DateTime.Now;
+                        (Entity as PersistPoco).UpdateBy = LoginUserInfo.ITCode;
+                        DC.UpdateProperty(Entity, "IsValid");
+                        DC.UpdateProperty(Entity, "UpdateTime");
+                        DC.UpdateProperty(Entity, "UpdateBy");
                     }
                     else
                     {
-                        TModel m = ctor.Invoke(null) as TModel;
 
-                        m.SetPropertyValue("ID", idsData[i]);
-                        DC.Set<TModel>().Attach(m);
-                        DC.DeleteEntity(m);
+                        foreach (var f in fa)
+                        {
+                            if (f.GetValue(Entity) is FileAttachment file)
+                            {
+                                fileids.Add(file.ID);
+                            }
+                            f.SetValue(Entity, null);
+                        }
+
+                        var fas = pros.Where(x => typeof(IEnumerable<ISubFile>).IsAssignableFrom(x.PropertyType)).ToList();
+                        foreach (var f in fas)
+                        {
+                            var subs = f.GetValue(Entity) as IEnumerable<ISubFile>;
+                            if (subs != null)
+                            {
+                                foreach (var sub in subs)
+                                {
+                                    fileids.Add(sub.FileId);
+                                }
+                                f.SetValue(Entity, null);
+                            }
+                        }
+                        if (typeof(TModel) != typeof(FileAttachment))
+                        {
+                            foreach (var pro in pros)
+                            {
+                                if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                                {
+                                    pro.SetValue(Entity, null);
+                                }
+                            }
+                        }
+                        DC.DeleteEntity(Entity);
                     }
                 }
                 catch (Exception e)
@@ -152,6 +190,11 @@ namespace WalkingTec.Mvvm.Core
                 try
                 {
                     DC.SaveChanges();
+                    var fp = Wtm.HttpContext.RequestServices.GetRequiredService<WtmFileProvider>();
+                    foreach (var item in fileids)
+                    {
+                        fp.DeleteFile(item.ToString(), DC.ReCreate());
+                    }
                 }
                 catch (Exception e)
                 {

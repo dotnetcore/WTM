@@ -104,7 +104,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
             vm.DoDelete();
             if (!ModelState.IsValid)
             {
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => x.GroupId == id).Select(x => x.UserId.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => y.ID == id).Select(y => y.GroupCode).FirstOrDefault() == x.GroupCode).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return PartialView(vm);
             }
@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
                 {
                     groupids.Add(Guid.Parse(item));
                 }
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => groupids.Contains(y.ID)).Select(y => y.GroupCode).Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return FFResult().CloseDialog().RefreshGrid().Alert(Localizer["OprationSuccess"]);
             }
@@ -172,9 +172,9 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         #region 页面权限
         [ActionDescription("DataPrivilege")]
-        public PartialViewResult DataFunction(Guid id)
+        public PartialViewResult DataFunction(string groupcode)
         {
-            var role = Wtm.CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupId == id);
+            var role = Wtm.CreateVM<FrameworkGroupMDVM>(values: x=>x.GroupCode == groupcode);
             return PartialView(role);
         }
 

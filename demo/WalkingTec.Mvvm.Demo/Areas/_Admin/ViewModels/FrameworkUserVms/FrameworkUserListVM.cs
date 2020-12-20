@@ -55,7 +55,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 .CheckContain(Searcher.ITCode,x=>x.ITCode)
                 .CheckContain(Searcher.Name, x=>x.Name)
                 .CheckEqual(Searcher.IsValid, x=>x.IsValid)
-                .Select(x => new FrameworkUser_View
+               .Select(x => new FrameworkUser_View
                 {
                     ID = x.ID,
                     ITCode = x.ITCode,
@@ -63,9 +63,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                     PhotoId = x.PhotoId,
                     CellPhone = x.CellPhone,
                     IsValid = x.IsValid,
-                    RoleName_view = x.UserRoles.Select(y => y.Role.RoleName).ToSepratedString(null, ","),
-                    GroupName_view = x.UserGroups.Select(y => y.Group.GroupName).ToSepratedString(null, ","),
-                    Gender = x.Gender
+                    RoleName_view = DC.Set<FrameworkUserRole>().Where(y => y.UserCode == x.ITCode)
+                        .Join(DC.Set<FrameworkRole>(), ur => ur.RoleCode, role => role.RoleCode, (ur, role) => role.RoleName).ToSepratedString(null, ","),
+                    GroupName_view = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode)
+                        .Join(DC.Set<FrameworkGroup>(), ug => ug.GroupCode, group => group.GroupCode, (ug, group) => group.GroupName).ToSepratedString(null, ","),
+                   Gender = x.Gender
                 })
                 .OrderBy(x => x.ITCode);
             return query;

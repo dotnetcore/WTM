@@ -6,9 +6,7 @@ namespace WalkingTec.Mvvm.Core.Support.Json
     public class SimpleFunctionPri
     {
         public Guid ID { get; set; }
-        public Guid? RoleId { get; set; }
-
-        public Guid? UserId { get; set; }
+        public string RoleCode{ get; set; }
 
         public Guid MenuItemId { get; set; }
 

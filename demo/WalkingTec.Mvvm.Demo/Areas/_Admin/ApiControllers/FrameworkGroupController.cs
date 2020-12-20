@@ -103,7 +103,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 {
                     groupids.Add(Guid.Parse(item));
                 }
-                var userids = DC.Set<FrameworkUserGroup>().Where(x => groupids.Contains(x.GroupId)).Select(x => x.UserId.ToString()).ToArray();
+                var userids = DC.Set<FrameworkUserGroup>().Where(x => DC.Set<FrameworkGroup>().Where(y => groupids.Contains(y.ID)).Select(y => y.GroupCode).Contains(x.GroupCode)).Select(x => x.UserCode).ToArray();
                 await Wtm.RemoveUserCache(userids);
                 return Ok(ids.Count());
             }

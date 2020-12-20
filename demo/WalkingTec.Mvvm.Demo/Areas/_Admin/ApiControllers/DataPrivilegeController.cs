@@ -28,17 +28,16 @@ namespace WalkingTec.Mvvm.Admin.Api
 
         [ActionDescription("Get")]
         [HttpGet("[action]")]
-        public DataPrivilegeVM Get(string TableName, Guid TargetId, DpTypeEnum DpType)
+        public DataPrivilegeVM Get(string TableName, string TargetId, DpTypeEnum DpType)
         {
             DataPrivilegeVM vm = null;
             if (DpType == DpTypeEnum.User)
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserId == TargetId && x.DpType == DpType);
-                vm.UserItCode = DC.Set<FrameworkUserBase>().Where(x => x.ID == TargetId).Select(x => x.ITCode).FirstOrDefault();
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.UserCode == TargetId && x.DpType == DpType);
             }
             else
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.GroupId == TargetId && x.DpType == DpType);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == TableName && x.Entity.GroupCode == TargetId && x.DpType == DpType);
             }
             return vm;
         }
@@ -96,11 +95,11 @@ namespace WalkingTec.Mvvm.Admin.Api
             DataPrivilegeVM vm = null;
             if (dp.Type == DpTypeEnum.User)
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.UserId == dp.Id && x.DpType == dp.Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.UserCode == dp.Id && x.DpType == dp.Type);
             }
             else
             {
-                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupId == dp.Id && x.DpType == dp.Type);
+                vm = Wtm.CreateVM<DataPrivilegeVM>(values: x => x.Entity.TableName == dp.ModelName && x.Entity.GroupCode == dp.Id && x.DpType == dp.Type);
             }
             await vm.DoDeleteAsync();
             return Ok(1);
@@ -141,7 +140,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     public class SimpleDpModel
     {
         public string ModelName { get; set; }
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public DpTypeEnum Type { get; set; }
     }
 }

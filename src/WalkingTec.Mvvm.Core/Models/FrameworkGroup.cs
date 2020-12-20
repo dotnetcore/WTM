@@ -24,10 +24,6 @@ namespace WalkingTec.Mvvm.Core
         [Display(Name = "Remark")]
         public string GroupRemark { get; set; }
 
-        [Display(Name = "User")]
-        [JsonIgnore]
-        public List<FrameworkUserGroup> UserGroups { get; set; }
-
         [NotMapped]
         [Display(Name = "UsersCount")]
         public int UsersCount { get; set; }

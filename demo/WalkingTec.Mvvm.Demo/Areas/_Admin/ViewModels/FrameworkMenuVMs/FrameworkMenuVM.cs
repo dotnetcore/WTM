@@ -34,10 +34,8 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
         public string SelectedModule { get; set; }
 
         [Display(Name = "AllowedRole")]
-        public List<Guid> SelectedRolesIDs { get; set; }
+        public List<string> SelectedRolesCodes { get; set; }
 
-        [JsonIgnore]
-        public FrameworkUserBaseListVM UserListVM { get; set; }
         [JsonIgnore]
         public FrameworkRoleListVM RoleListVM { get; set; }
 
@@ -45,12 +43,11 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 
         public FrameworkMenuVM()
         {
-            UserListVM = new FrameworkUserBaseListVM();
             RoleListVM = new FrameworkRoleListVM();
             AllActions = new List<ComboSelectListItem>();
             AllModules = new List<ComboSelectListItem>();
 
-            SelectedRolesIDs = new List<Guid>();
+            SelectedRolesCodes = new List<string>();
         }
 
         protected override void InitVM()
@@ -74,7 +71,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                                     }).ToList()
                                 : new List<ComboSelectListItem>();
 
-            SelectedRolesIDs.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleId != null && x.Allowed == true).Select(x => x.RoleId.Value).ToList());
+            SelectedRolesCodes.AddRange(DC.Set<FunctionPrivilege>().Where(x => x.MenuItemId == Entity.ID && x.RoleCode != null && x.Allowed == true).Select(x => x.RoleCode).ToList());
 
             var data = DC.Set<FrameworkMenu>().AsNoTracking().ToList();
             var topMenu = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder);
@@ -336,21 +333,20 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
             //    }
             //    catch { }
             //}
-            if (admin != null && SelectedRolesIDs.Contains(admin.ID) == false)
+            if (admin != null && SelectedRolesCodes.Contains(admin.RoleCode) == false)
             {
-                SelectedRolesIDs.Add(admin.ID);
+                SelectedRolesCodes.Add(admin.RoleCode);
             }
             foreach (var menuid in menuids)
             {
 
-                if (SelectedRolesIDs != null)
+                if (SelectedRolesCodes != null)
                 {
-                    foreach (var id in SelectedRolesIDs)
+                    foreach (var code in SelectedRolesCodes)
                     {
                         FunctionPrivilege fp = new FunctionPrivilege();
                         fp.MenuItemId = menuid;
-                        fp.RoleId = id;
-                        fp.UserId = null;
+                        fp.RoleCode = code;
                         fp.Allowed = true;
                         DC.Set<FunctionPrivilege>().Add(fp);
                     }

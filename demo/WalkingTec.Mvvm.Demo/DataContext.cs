@@ -27,7 +27,6 @@ namespace WalkingTec.Mvvm.Demo
         public DbSet<Major> Majors { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<MyUser> MyUsers { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<不要用中文模型名> 不要中文 { get; set; }
 
@@ -47,8 +46,8 @@ namespace WalkingTec.Mvvm.Demo
 
                 var userrole = new FrameworkUserRole
                 {
-                        User = user,
-                        Role = Set<FrameworkRole>().Where(x=>x.RoleCode == "001").FirstOrDefault()
+                        UserCode = user.ITCode,
+                        RoleCode = "001"
                 };
                 Set<FrameworkUser>().Add(user);
                 Set<FrameworkUserRole>().Add(userrole);

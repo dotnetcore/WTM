@@ -49,7 +49,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 audience: _jwtOptions.Audience,
                 claims: new List<Claim>()
                 {
-                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.Id.ToString())
+                    new Claim(AuthConstants.JwtClaimTypes.Subject, loginUserInfo.ITCode.ToString())
                     //new Claim(AuthConstants.JwtClaimTypes.Name, loginUserInfo.Name)
                 },
                 expires: DateTime.Now.AddSeconds(_jwtOptions.Expires),
@@ -59,7 +59,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
             var refreshToken = new PersistedGrant()
             {
-                UserId = loginUserInfo.Id,
+                UserCode = loginUserInfo.ITCode,
                 Type = "refresh_token",
                 CreationTime = DateTime.Now,
                 RefreshToken = Guid.NewGuid().ToString("N"),
@@ -106,7 +106,7 @@ namespace WalkingTec.Mvvm.Mvc.Auth
                 //生成并返回登录用户信息
                 var loginUserInfo = new LoginUserInfo()
                 {
-                    Id = persistedGrant.UserId
+                    ITCode = persistedGrant.UserCode
                 };
 
                 // 清理过期 refreshtoken

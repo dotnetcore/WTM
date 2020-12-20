@@ -66,14 +66,13 @@ namespace WalkingTec.Mvvm.Admin.Api
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 List<SimpleMenu> ms = new List<SimpleMenu>();
                 LoginUserInfo forapi = new LoginUserInfo();
-                forapi.Id = user.Id;
                 forapi.ITCode = user.ITCode;
                 forapi.Name = user.Name;
                 forapi.Roles = user.Roles;
                 forapi.Groups = user.Groups;
                 forapi.PhotoId = user.PhotoId;
                 var menus = DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == user.Id || (x.RoleId != null && user.Roles.Select(x=>x.ID).Contains(x.RoleId.Value)))
+                    .Where(x => x.RoleCode != null && user.Roles.Select(x=>x.RoleCode).Contains(x.RoleCode))
                     .Select(x => x.MenuItem)
                     .Where(x => x.MethodName == null)
                     .OrderBy(x=>x.DisplayOrder)
@@ -90,7 +89,7 @@ namespace WalkingTec.Mvvm.Admin.Api
 
                 List<string> urls = new List<string>();
                 urls.AddRange(DC.Set<FunctionPrivilege>()
-                    .Where(x => x.UserId == user.Id || (x.RoleId != null && user.Roles.Select(x => x.ID).Contains(x.RoleId.Value)))
+                    .Where(x => x.RoleCode != null && user.Roles.Select(x => x.RoleCode).Contains(x.RoleCode))
                     .Select(x => x.MenuItem)
                     .Where(x => x.MethodName != null)
                     .Select(x => x.Url)
@@ -148,7 +147,6 @@ namespace WalkingTec.Mvvm.Admin.Api
             else
             {
                 var forapi = new LoginUserInfo();
-                forapi.Id = Wtm.LoginUserInfo.Id;
                 forapi.ITCode = Wtm.LoginUserInfo.ITCode;
                 forapi.Name = Wtm.LoginUserInfo.Name;
                 forapi.Roles = Wtm.LoginUserInfo.Roles;
@@ -156,12 +154,12 @@ namespace WalkingTec.Mvvm.Admin.Api
                 forapi.PhotoId = Wtm.LoginUserInfo.PhotoId;
 
                 var ms = new List<SimpleMenu>();
-                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.ID).ToList();
+                var roleIDs = Wtm.LoginUserInfo.Roles.Select(x => x.RoleCode).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
                 var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
-                                .Where(x => x.UserId == Wtm.LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                                .Where(x => x.RoleCode != null && roleIDs.Contains(x.RoleCode))
                                 .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
                                 .ToList();
 

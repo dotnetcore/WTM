@@ -13,7 +13,7 @@ namespace WalkingTec.Mvvm.Core
         [StringLength(50)]
         public string Type { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserCode { get; set; }
 
         /// <summary>
         /// 创建时间

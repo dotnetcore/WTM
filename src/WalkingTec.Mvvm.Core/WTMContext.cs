@@ -149,10 +149,10 @@ namespace WalkingTec.Mvvm.Core
                 if (HttpContext?.User?.Identity?.IsAuthenticated == true && _loginUserInfo == null) // 用户认证通过后，当前上下文不包含用户数据
                 {
                     var userIdStr = HttpContext.User.Claims.SingleOrDefault(x => x.Type == AuthConstants.JwtClaimTypes.Subject).Value;
-                    Guid userId = Guid.Parse(userIdStr);
+                    string usercode = userIdStr;
                     var cacheKey = $"{GlobalConstants.CacheKey.UserInfo}:{userIdStr}";
                     _loginUserInfo = Cache.Get<LoginUserInfo>(cacheKey);
-                    if (_loginUserInfo == null || _loginUserInfo.Id != userId)
+                    if (_loginUserInfo == null || _loginUserInfo.ITCode != usercode)
                     {
                         //try
                         //{
@@ -176,13 +176,13 @@ namespace WalkingTec.Mvvm.Core
             {
                 if (value == null)
                 {
-                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.Id}");
+                    Cache.Delete($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo?.ITCode}");
                     _loginUserInfo = value;
                 }
                 else
                 {
                     _loginUserInfo = value;
-                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.Id}", value);
+                    Cache.Add($"{GlobalConstants.CacheKey.UserInfo}:{_loginUserInfo.ITCode}", value);
                 }
             }
         }
@@ -225,65 +225,51 @@ namespace WalkingTec.Mvvm.Core
             {
                 return null;
             }
-            FrameworkUserBase userInfo = await DC.Set<FrameworkUserBase>()
-                                    .Include(x => x.UserRoles)
-                                    .Include(x => x.UserGroups)
-                                    .Where(x => x.ITCode.ToLower() == itcode.ToLower() && x.IsValid)
-                                    .SingleOrDefaultAsync();
+            var userInfo = await DC.Set<FrameworkUserBase>()
+                                        .Where(x => x.ITCode.ToLower() == itcode.ToLower() && x.IsValid)
+                                        .Select(x=> new {
+                                            user = x,
+                                            UserRoles = DC.Set<FrameworkUserRole>().Where(y=>y.UserCode == x.ITCode).ToList(),
+                                            UserGroups = DC.Set<FrameworkUserGroup>().Where(y => y.UserCode == x.ITCode).ToList(),
+                                        })
+                                        .SingleOrDefaultAsync();
 
             LoginUserInfo rv = null;
             if (userInfo != null)
             {
                 // 初始化用户信息
-                var roleIDs = userInfo.UserRoles.Select(x => x.RoleId).ToList();
-                var groupIDs = userInfo.UserGroups.Select(x => x.GroupId).ToList();
+                var roleIDs = userInfo.UserRoles.Select(x => x.RoleCode).ToList();
+                var groupIDs = userInfo.UserGroups.Select(x => x.GroupCode).ToList();
 
 
                 var dataPris = await DC.Set<DataPrivilege>().AsNoTracking()
-                                .Where(x => x.UserId == userInfo.ID || (x.GroupId != null && groupIDs.Contains(x.GroupId.Value)))
+                                .Where(x => x.UserCode == userInfo.user.ITCode || (x.GroupCode != null && groupIDs.Contains(x.GroupCode)))
                                 .Distinct()
                                 .ToListAsync();
                 ProcessTreeDp(dataPris);
 
                 //查找登录用户的页面权限
                 var funcPrivileges = await DC.Set<FunctionPrivilege>().AsNoTracking()
-                    .Where(x => x.UserId == userInfo.ID || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
+                    .Where(x=> x.RoleCode != null && roleIDs.Contains(x.RoleCode))
                     .Distinct()
                     .ToListAsync();
 
-                var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.ID)).ToList();
-                var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.ID)).ToList();
+                var roles = DC.Set<FrameworkRole>().AsNoTracking().Where(x => roleIDs.Contains(x.RoleCode)).ToList();
+                var groups = DC.Set<FrameworkGroup>().AsNoTracking().Where(x => groupIDs.Contains(x.GroupCode)).ToList();
 
                 rv = new LoginUserInfo()
                 {
-                    Id = userInfo.ID,
-                    ITCode = userInfo.ITCode,
-                    Name = userInfo.Name,
-                    PhotoId = userInfo.PhotoId,
+                    ITCode = userInfo.user.ITCode,
+                    Name = userInfo.user.Name,
+                    PhotoId = userInfo.user.PhotoId,
                     Roles = roles.Select(x => new SimpleRole { ID = x.ID, RoleCode = x.RoleCode, RoleName = x.RoleName }).ToList(),
                     Groups = groups.Select(x => new SimpleGroup { ID = x.ID, GroupCode = x.GroupCode, GroupName = x.GroupName }).ToList(),
-                    DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserId = x.UserId, GroupId = x.GroupId }).ToList(),
-                    FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, UserId = x.UserId, RoleId = x.RoleId, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList()
+                    DataPrivileges = dataPris.Select(x => new SimpleDataPri { ID = x.ID, RelateId = x.RelateId, TableName = x.TableName, UserCode = x.UserCode, GroupCode = x.GroupCode }).ToList(),
+                    FunctionPrivileges = funcPrivileges.Select(x => new SimpleFunctionPri { ID = x.ID, RoleCode = x.RoleCode, Allowed = x.Allowed, MenuItemId = x.MenuItemId }).ToList()
                 };
             }
             return rv;
 
-        }
-        #endregion
-
-        #region GUID
-        public List<EncHash> EncHashs
-        {
-            get
-            {
-                return ReadFromCache<List<EncHash>>("EncHashs", () =>
-                {
-                    using (var dc = this.CreateDC())
-                    {
-                        return dc.Set<EncHash>().ToList();
-                    }
-                });
-            }
         }
         #endregion
 

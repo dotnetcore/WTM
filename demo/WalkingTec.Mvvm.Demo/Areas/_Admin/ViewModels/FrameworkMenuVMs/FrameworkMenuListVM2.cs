@@ -5,7 +5,7 @@ using WalkingTec.Mvvm.Core.Extensions;
 
 namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
 {
-    public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, FrameworkMenuSearcher>
+    public class FrameworkMenuListVM2 : BasePagedListVM<FrameworkMenu_ListView, BaseSearcher>
     {
         /// <summary>
         /// 页面显示按钮方案，如果需要增加Action类型则将按钮添加到此类中
