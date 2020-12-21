@@ -6,9 +6,14 @@
   @for (int i = 0; i < Model.DpLists.Count; i++)
   {
     <wt:hidden field="DpLists[i].List.Searcher.TableName" />
-    <wt:combobox field="DpLists[i].IsAll" yes-text="@Localizer["AllPris"]" no-text="@Localizer["SelectPris"]" empty-text="@Localizer["NoPris"]" label-text="@Model.DpLists[i].DpName" change-func="IsAllChange@(i)" />
+    <wt:combobox multi-select="false" field="DpLists[i].IsAll" yes-text="@Localizer["AllPris"]" no-text="@Localizer["SelectPris"]" empty-text="@Localizer["NoPris"]" label-text="@Model.DpLists[i].DpName" change-func="IsAllChange@(i)" />
     <wt:row id="selector@(i)">
-      <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" label-text="">
+      <wt:selector list-vm="DpLists[i].List" field="DpLists[i].SelectedIds" text-bind="DpLists[i].List.EntityList[0].Name" label-text="" >
+        <wt:searchpanel vm="DpLists[i].List">
+          <wt:row items-per-row=" ItemsPerRowEnum.Two">
+            <wt:textbox field="DpLists[i].List.Searcher.Filter" />
+          </wt:row>
+        </wt:searchpanel>
       </wt:selector>
     </wt:row>
 

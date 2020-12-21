@@ -127,7 +127,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
 
             var modelType = Field.Metadata.ModelType;
             var list = new List<string>();
-            if (Field.Name.Contains("["))
+            if (Field.Name.Contains("[") && modelType.IsList() == false && modelType.IsArray == false)
             {
                 //默认多对多不必填
                 if (Required == null)
@@ -140,7 +140,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI.Form
             else if (Field.Model != null)
             {
                 // 数组 or 泛型集合
-                if (modelType.IsArray || (modelType.IsGenericType && typeof(List<>).IsAssignableFrom(modelType.GetGenericTypeDefinition())))
+                if (modelType.IsArray || modelType.IsList())
                 {
                     foreach (var item in Field.Model as dynamic)
                     {
@@ -342,7 +342,7 @@ $('#{Id}_Select').on('click',function(){{
     filter.Ids.push(vals[i].value);
   }};
   var ffilter = $.extend(filter, {Id}filter)
-  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? THProgram._localizer["PleaseSelect"]}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "500"},'#Temp{Id}', ffilter);
+  ff.OpenDialog2('/_Framework/Selector', '{windowid}', '{WindowTitle ?? THProgram._localizer["PleaseSelect"]}',{WindowWidth?.ToString() ?? "null"}, {WindowHeight?.ToString() ?? "600"},'#Temp{Id}', ffilter);
 }});
 </script>
 {searchPanelTemplate}

@@ -74,6 +74,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.Controllers
 
         [HttpPost]
         [ActionDescription("Edit")]
+        [ValidateFormItemOnly]
         public ActionResult Edit(FrameworkGroupVM vm)
         {
             if (!ModelState.IsValid)

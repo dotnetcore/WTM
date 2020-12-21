@@ -789,18 +789,16 @@ window.ff = {
     },
 
     GetFormData: function (formId) {
-        var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select');
-        var check = {};
-
         var richtextbox = $("#" + formId + " textarea");
-        for (var i = 0; i < richtextbox.length; i++) {
+       for (var i = 0; i < richtextbox.length; i++) {
             var ra = richtextbox[i].attributes['layeditindex'];
             if (ra !== undefined && ra != null) {
                 var rindex = ra.value;
                 layui.layedit.sync(rindex);
             }
         }
-
+        var searchForm = $('#' + formId), filter = {}, filterback = {}, fieldElem = searchForm.find('input,select,textarea');
+        var check = {};
         layui.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) {

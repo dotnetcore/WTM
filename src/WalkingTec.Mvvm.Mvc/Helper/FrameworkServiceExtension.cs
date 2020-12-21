@@ -508,6 +508,7 @@ namespace WalkingTec.Mvvm.Mvc
             });
             services.Configure<FormOptions>(y =>
             {
+                y.ValueCountLimit = 5000;
                 y.ValueLengthLimit = int.MaxValue - 20480;
                 y.MultipartBodyLengthLimit = WtmConfigs.FileUploadOptions.UploadLimit;
             });

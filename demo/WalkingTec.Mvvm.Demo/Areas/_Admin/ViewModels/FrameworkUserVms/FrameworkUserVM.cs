@@ -95,12 +95,16 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
 
         public override async Task DoEditAsync(bool updateAllFields = false)
         {
+            if (FC.ContainsKey("Entity.ITCode"))
+            {
+                FC.Remove("Entity.ITCode");
+            }
             using (var trans = DC.BeginTransaction())
             {
                 if(SelectedRolesCodes != null)
                 {
                     List<Guid> todelete = new List<Guid>();
-                    todelete.AddRange( DC.Set<FrameworkUserRole>().AsNoTracking().Where(x=> x.UserCode == Entity.ITCode && SelectedRolesCodes.Contains(x.RoleCode)).Select(x=>x.ID));
+                    todelete.AddRange( DC.Set<FrameworkUserRole>().AsNoTracking().Where(x=> x.UserCode == Entity.ITCode).Select(x=>x.ID));
                     foreach (var item in todelete)
                     {
                         DC.DeleteEntity(new FrameworkUserRole { ID = item });
@@ -109,7 +113,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkUserVms
                 if (SelectedGroupCodes != null)
                 {
                     List<Guid> todelete = new List<Guid>();
-                    todelete.AddRange(DC.Set<FrameworkUserGroup>().AsNoTracking().Where(x => x.UserCode == Entity.ITCode && SelectedGroupCodes.Contains(x.GroupCode)).Select(x => x.ID));
+                    todelete.AddRange(DC.Set<FrameworkUserGroup>().AsNoTracking().Where(x => x.UserCode == Entity.ITCode).Select(x => x.ID));
                     foreach (var item in todelete)
                     {
                         DC.DeleteEntity(new FrameworkUserGroup { ID = item });

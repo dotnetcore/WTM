@@ -77,11 +77,11 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             }
 
+            var modeltype = Field.Metadata.ModelType;
             if (MultiSelect == null)
             {
                 MultiSelect = false;
-                var type = Field.Metadata.ModelType;
-                if (Field.Name.Contains("[") || type.IsArray || (type.IsGenericType && typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition())))// Array or List
+                if (Field.Name.Contains("[") ||modeltype.IsArray || modeltype.IsList())// Array or List
                 {
                     MultiSelect = true;
                 }
@@ -118,7 +118,6 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
             #region 添加下拉数据 并 设置默认选中
 
-            var modeltype = Field.Metadata.ModelType;
             var listItems = new List<ComboSelectListItem>();
 
             if (Items?.Model == null) // 添加默认下拉数据源
@@ -131,16 +130,16 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
                 if (checktype.IsEnumOrNullableEnum())
                 {
-                    listItems = checktype.ToListItems(DefaultValue?? Field.Model);
+                    listItems = checktype.ToListItems(DefaultValue ?? Field.Model);
                 }
                 else if (checktype == typeof(bool) || checktype == typeof(bool?))
                 {
                     bool? df = null;
-                    if(bool.TryParse(DefaultValue ?? "",out bool test) == true)
+                    if (bool.TryParse(DefaultValue ?? "", out bool test) == true)
                     {
                         df = test;
                     }
-                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom,df ?? (bool?)Field.Model, YesText, NoText);
+                    listItems = Utils.GetBoolCombo(BoolComboTypes.Custom, df ?? (bool?)Field.Model, YesText, NoText);
                 }
             }
             else // 添加用户设置的设置源
@@ -148,14 +147,14 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 var selectVal = new List<string>();
                 if (DefaultValue == null)
                 {
-                    if (Field.Name.Contains("["))
+                    if (Field.Name.Contains("[") && modeltype.IsList() == false && modeltype.IsArray == false)
                     {
                         //默认多对多不必填
                         if (Required == null)
                         {
                             Required = false;
                         }
-                        selectVal.AddRange( Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
+                        selectVal.AddRange(Field.ModelExplorer.Container.Model.GetPropertySiblingValues(Field.Name));
                     }
                     else if (Field.Model != null)
                     {
@@ -174,7 +173,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 }
                 else
                 {
-                    selectVal.AddRange(DefaultValue.Split(',').Select(x=>x.ToLower()));
+                    selectVal.AddRange(DefaultValue.Split(',').Select(x => x.ToLower()));
                 }
                 if (Items.Metadata.ModelType == typeof(List<ComboSelectListItem>))
                 {
