@@ -554,34 +554,18 @@ namespace WalkingTec.Mvvm.Core
             {
                 Groups = new List<DuplicatedGroup<P>>()
             };
-            if (dinfo == null)
+            if (cinfo != null)
             {
-                dinfo = new DuplicatedInfo<P>();
-            }
-            if (cinfo == null)
-            {
-                cinfo = new DuplicatedInfo<P>();
-            }
-            if (dinfo.Groups != null)
-            {
-                foreach (var di in dinfo.Groups)
+                foreach (var item in cinfo?.Groups)
                 {
-                    bool found = false;
-                    if (cinfo.Groups != null)
-                    {
-                        foreach (var ci in cinfo.Groups)
-                        {
-                            if (di.ToString() == ci.ToString())
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (found == false)
-                    {
-                        finalInfo.Groups.Add(di);
-                    }
+                    finalInfo.Groups.Add(item);
+                }
+            }
+            else if(dinfo != null)
+            {
+                foreach (var item in dinfo?.Groups)
+                {
+                    finalInfo.Groups.Add(item);
                 }
             }
 
@@ -745,9 +729,9 @@ namespace WalkingTec.Mvvm.Core
                 {
                     List<Expression> conditions = new List<Expression>();
                     //生成一个表达式，类似于 x=>x.Id != id，这是为了当修改数据时验证重复性的时候，排除当前正在修改的数据
-                    var idproperty = modelType.GetProperties().Where(x => x.Name.ToLower() == "id").FirstOrDefault();
+                    var idproperty = modelType.GetSingleProperty("ExcelIndex");
                     MemberExpression idLeft = Expression.Property(para, idproperty);
-                    ConstantExpression idRight = Expression.Constant(entity.GetID());
+                    ConstantExpression idRight = Expression.Constant(entity.ExcelIndex);
                     BinaryExpression idNotEqual = Expression.NotEqual(idLeft, idRight);
                     conditions.Add(idNotEqual);
                     List<PropertyInfo> props = new List<PropertyInfo>();
@@ -1176,9 +1160,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="FieldExps">重复数据信息</param>
         /// <returns>重复数据信息</returns>
-        protected DuplicatedInfo<T> CreateFieldsInfo(params DuplicatedField<T>[] FieldExps)
+        protected DuplicatedInfo<P> CreateFieldsInfo(params DuplicatedField<P>[] FieldExps)
         {
-            DuplicatedInfo<T> d = new DuplicatedInfo<T>();
+            DuplicatedInfo<P> d = new DuplicatedInfo<P>();
             d.AddGroup(FieldExps);
             return d;
         }
@@ -1188,9 +1172,9 @@ namespace WalkingTec.Mvvm.Core
         /// </summary>
         /// <param name="FieldExp">重复数据的字段</param>
         /// <returns>重复数据信息</returns>
-        public static DuplicatedField<T> SimpleField(Expression<Func<T, object>> FieldExp)
+        public static DuplicatedField<P> SimpleField(Expression<Func<P, object>> FieldExp)
         {
-            return new DuplicatedField<T>(FieldExp);
+            return new DuplicatedField<P>(FieldExp);
         }
 
         /// <summary>
@@ -1200,9 +1184,9 @@ namespace WalkingTec.Mvvm.Core
         /// <param name="MiddleExp">指向关联表类数组的Lambda</param>
         /// <param name="FieldExps">指向最终字段的Lambda</param>
         /// <returns>重复数据信息</returns>
-        public static DuplicatedField<T> SubField<V>(Expression<Func<T, List<V>>> MiddleExp, params Expression<Func<V, object>>[] FieldExps)
+        public static DuplicatedField<P> SubField<V>(Expression<Func<P, List<V>>> MiddleExp, params Expression<Func<V, object>>[] FieldExps)
         {
-            return new ComplexDuplicatedField<T, V>(MiddleExp, FieldExps);
+            return new ComplexDuplicatedField<P, V>(MiddleExp, FieldExps);
         }
 
         public ErrorObj GetErrorJson()
