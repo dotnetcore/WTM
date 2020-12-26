@@ -1,4 +1,4 @@
-﻿@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
+@model WalkingTec.Mvvm.Demo.ViewModels.StudentVMs.StudentVM
 @inject IStringLocalizer<WalkingTec.Mvvm.Core.Program> Localizer;
 
 <wt:form vm="@Model">
@@ -12,7 +12,6 @@
 <wt:textbox field="Entity.Address" />
 <wt:textbox field="Entity.ZipCode" />
 <wt:upload field="Entity.PhotoId" />
-<wt:switch field="Entity.IsValid" />
 <wt:datetime field="Entity.EnRollDate" />
 <wt:checkbox field="SelectedStudentMajorIDs" items="AllStudentMajors"/>
 </wt:row>

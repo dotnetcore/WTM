@@ -53,9 +53,9 @@ namespace WalkingTec.Mvvm.Demo
                         {
                         var pris = new List<IDataPrivilege>
                         {
-                            new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
-                            new DataPrivilegeInfo<Major>("专业", y => y.MajorName),
-                             new DataPrivilegeInfo<City>("城市", y => y.Name),
+                            //new DataPrivilegeInfo<School>("学校", y => y.SchoolName),
+                            //new DataPrivilegeInfo<Major>("专业", y => y.MajorName),
+                            // new DataPrivilegeInfo<City>("城市", y => y.Name),
                            //new DataPrivilegeInfo<FrameworkMenu>("菜单", y=>y.PageName)
                         };
                         x.AddFrameworkService(dataPrivilegeSettings: pris, webHostBuilderContext: hostingCtx,CsSector:CSSelector);

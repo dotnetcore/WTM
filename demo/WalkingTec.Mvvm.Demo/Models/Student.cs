@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core;
 namespace WalkingTec.Mvvm.Demo.Models
 {
 
-    public class Student : BasePoco
+    public class Student : PersistPoco
     {
 
         [Key]
@@ -52,9 +52,6 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "照片")]
         public FileAttachment Photo { get; set; }
-
-        [Display(Name = "是否有效")]
-        public bool IsValid { get; set; }
 
         [Display(Name = "日期")]
         [Required]
