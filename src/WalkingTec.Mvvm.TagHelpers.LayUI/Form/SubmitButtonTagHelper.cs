@@ -40,7 +40,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                 output.PostElement.AppendHtml($@"
 <script>
 function f_{this.Id}Click(){{
-    var check = eval(""{innerclick}"");
+    var check = eval(""{(string.IsNullOrEmpty(innerclick)?"true":innerclick)}"");
     if(check == undefined || check == false){{return false;}}
     try{{
         {formid}validate = false;

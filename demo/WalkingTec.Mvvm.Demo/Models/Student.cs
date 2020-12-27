@@ -7,7 +7,7 @@ using WalkingTec.Mvvm.Core;
 namespace WalkingTec.Mvvm.Demo.Models
 {
 
-    public class Student : BasePoco
+    public class Student : PersistPoco
     {
 
         [Key]
@@ -32,7 +32,7 @@ namespace WalkingTec.Mvvm.Demo.Models
         public string Name { get; set; }
 
         [Display(Name = "性别")]
-        public SexEnum? Sex { get; set; }
+        public SexEnum Sex { get; set; }
 
         [Display(Name = "手机")]
         [RegularExpression("^[1][3,4,5,7,8][0-9]{9}$", ErrorMessage = "{0}格式错误")]
@@ -52,9 +52,6 @@ namespace WalkingTec.Mvvm.Demo.Models
 
         [Display(Name = "照片")]
         public FileAttachment Photo { get; set; }
-
-        [Display(Name = "是否有效")]
-        public bool IsValid { get; set; }
 
         [Display(Name = "日期")]
         [Required]

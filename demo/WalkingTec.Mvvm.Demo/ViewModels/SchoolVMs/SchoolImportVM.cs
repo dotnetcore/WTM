@@ -44,7 +44,11 @@ namespace WalkingTec.Mvvm.Demo.ViewModels.SchoolVMs
 
     public class SchoolImportVM : BaseImportVM<SchoolTemplateVM, School>
     {
-
+        public override DuplicatedInfo<School> SetDuplicatedCheck()
+        {
+            var rv = CreateFieldsInfo(SimpleField(x => x.SchoolName));
+            return rv;
+        }
     }
 
 }

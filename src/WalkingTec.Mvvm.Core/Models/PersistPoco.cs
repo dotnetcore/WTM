@@ -11,6 +11,6 @@ namespace WalkingTec.Mvvm.Core
         /// IsValid
         /// </summary>
         [Display(Name = "IsValid")]
-        public bool IsValid { get; set; }
+        public bool IsValid { get; set; } = true;
     }
 }
