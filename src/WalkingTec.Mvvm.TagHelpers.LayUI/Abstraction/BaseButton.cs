@@ -78,7 +78,7 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
                     Theme = ButtonThemeEnum.Disabled;
                     output.Attributes.SetAttribute(new TagHelperAttribute("disabled"));
                 }
-                if (Theme != null && Theme != ButtonThemeEnum.Normal)
+                if (Theme != null )
                 {
                     btnclass += " layui-btn-" + Theme.Value.ToString().ToLower();
                 }
