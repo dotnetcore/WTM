@@ -2,6 +2,14 @@
 
 ## v3.x.x （2.x.x同步更新）
 
+##3.8.0 以及 2.8.0 (2020-12-27)
+* **新增：**  增加了CallApiStream方法用户调用返回二进制数组的api
+* **修改：**  修复了枚举类型在多表头列表导出时不显示的问题
+* **修改：**  修复了SubmitButton上添加ComformText不提交的问题
+* **修改：**  修复了ImportVM中SetDuplicateCheck方法的bug，框架现在会优先使用ImportVM中的SetDuplicateCheck方法
+* **修改：**  PersistPoco中IsValid字段默认值改为true
+* **修改：**  修复了按钮无法指定layui-btn-normal样式的问题
+
 ##3.7.9 以及 2.7.9 (2020-11-29)
 * **修改：**  修复layui模式下搜索没有重置页码的bug
 * **修改：**  修复DpWhere方法在某些情况下报错的bug
