@@ -588,6 +588,11 @@ namespace WalkingTec.Mvvm.Core
                         }
                     }
                 }
+                else if (pro.PropertyType.GetTypeInfo().IsSubclassOf(typeof(TopBasePoco)))
+                {
+                    pro.SetValue(Entity, null);
+                }
+
             }
             #endregion
 
