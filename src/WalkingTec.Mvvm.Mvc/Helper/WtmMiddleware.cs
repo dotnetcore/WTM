@@ -19,12 +19,12 @@ namespace WalkingTec.Mvvm.Mvc
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IOptions<Configs> configs)
+        public async Task InvokeAsync(HttpContext context, IOptionsMonitor<Configs> configs)
         {
             if (context.Request.Path == "/")
             {
-                context.Response.Cookies.Append("pagemode", configs.Value.PageMode.ToString());
-                context.Response.Cookies.Append("tabmode", configs.Value.TabMode.ToString());
+                context.Response.Cookies.Append("pagemode", configs.CurrentValue.PageMode.ToString());
+                context.Response.Cookies.Append("tabmode", configs.CurrentValue.TabMode.ToString());
             }
             context.Request.EnableBuffering();
             context.Request.Body.Position = 0;

@@ -649,7 +649,7 @@ namespace WalkingTec.Mvvm.Mvc
 
         public static IApplicationBuilder UseWtmContext(this IApplicationBuilder app)
         {
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             var lg = app.ApplicationServices.GetRequiredService<LinkGenerator>();
             var gd = app.ApplicationServices.GetRequiredService<GlobalData>();
             //获取所有程序集
@@ -755,7 +755,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public static IApplicationBuilder UseWtmMultiLanguages(this IApplicationBuilder app)
         {
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;            
+            var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;            
             if (string.IsNullOrEmpty(configs.Languages) == false)
             {
                 List<CultureInfo> supportedCultures = new List<CultureInfo>();
@@ -778,7 +778,7 @@ namespace WalkingTec.Mvvm.Mvc
         }
         public static IApplicationBuilder UseWtmCrossDomain(this IApplicationBuilder app)
         {
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
+            var configs = app.ApplicationServices.GetRequiredService<IOptionsMonitor<Configs>>().CurrentValue;
             if (configs.CorsOptions.EnableAll == true)
             {
                 if (configs.CorsOptions?.Policy?.Count > 0)

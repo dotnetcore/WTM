@@ -38,18 +38,18 @@ namespace WalkingTec.Mvvm.Core
 
         #region Domains
 
-        private Dictionary<string,FrameworkDomain> _domains;
+        private Dictionary<string,Domain> _domains;
 
         /// <summary>
         /// ConnectionStrings
         /// </summary>
-        public Dictionary<string, FrameworkDomain> Domains
+        public Dictionary<string, Domain> Domains
         {
             get
             {
                 if (_domains == null)
                 {
-                    _domains = new Dictionary<string, FrameworkDomain>();
+                    _domains = new Dictionary<string, Domain>();
                 }
                 return _domains;
             }

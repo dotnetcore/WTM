@@ -48,10 +48,7 @@ namespace WalkingTec.Mvvm.Core
         public string MethodName { get; set; }
 
         [Display(Name = "Domain")]
-        public Guid? DomainId { get; set; }
-
-        [Display(Name = "Domain")]
-        public FrameworkDomain Domain { get; set; }
+        public string Domain { get; set; }
 
         [Display(Name = "ShowOnMenu")]
         [Required(ErrorMessage = "{0}required")]

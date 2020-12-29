@@ -2,11 +2,11 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Options
 @model WalkingTec.Mvvm.Core.BaseVM
-@inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IOptionsMonitor<RequestLocalizationOptions> LocOptions
 
 @{
   var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-  var cultureItems = LocOptions.Value.SupportedUICultures
+  var cultureItems = LocOptions.CurrentValue.SupportedUICultures
       .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
       .ToList();
 }

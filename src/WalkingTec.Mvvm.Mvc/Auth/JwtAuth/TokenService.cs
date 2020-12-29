@@ -28,10 +28,10 @@ namespace WalkingTec.Mvvm.Mvc.Auth
 
         public TokenService(
             ILogger<TokenService> logger,
-            IOptions<Configs> configs
+            IOptionsMonitor<Configs> configs
         )
         {
-            _configs = configs.Value;
+            _configs = configs.CurrentValue;
             _jwtOptions = _configs.JwtOption;
             _logger = logger;
             _dc = CreateDC();

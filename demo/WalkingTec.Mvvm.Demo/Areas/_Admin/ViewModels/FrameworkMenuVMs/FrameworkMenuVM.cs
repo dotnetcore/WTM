@@ -205,7 +205,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.DisplayOrder = order++;
                             menu.Privileges = new List<FunctionPrivilege>();
                             menu.IsInside = true;
-                            menu.DomainId = Entity.DomainId;
+                            menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionDes?.Description ?? action.ActionName;
@@ -290,7 +290,7 @@ namespace WalkingTec.Mvvm.Mvc.Admin.ViewModels.FrameworkMenuVMs
                             menu.DisplayOrder = order++;
                             menu.Privileges = new List<FunctionPrivilege>();
                             menu.IsInside = true;
-                            menu.DomainId = Entity.DomainId;
+                            menu.Domain = Entity.Domain;
                             menu.PageName = action.ActionDes?.Description ?? action.ActionName;
                             menu.ModuleName = action.Module.ModuleName;
                             menu.ActionName = action.ActionDes?.Description ?? action.ActionName;

@@ -88,18 +88,11 @@ namespace WalkingTec.Mvvm.Doc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IOptionsMonitor<Configs> configs)
         {
             IconFontsHelper.GenerateIconFont();
-            var configs = app.ApplicationServices.GetRequiredService<IOptions<Configs>>().Value;
 
-            if (configs == null)
-            {
-                throw new InvalidOperationException("Can not find Configs service, make sure you call AddWtmContext at ConfigService");
-            }
-
-            app.UseExceptionHandler(configs.ErrorHandler);
-
+            app.UseExceptionHandler(configs.CurrentValue.ErrorHandler);
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

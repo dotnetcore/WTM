@@ -26,20 +26,20 @@ namespace WalkingTec.Mvvm.Core
         private CS cs = null;
         private LoggerFilterOptions logConfig;
 
-        public WTMLoggerProvider(IOptions<Configs> _configs, IOptions<LoggerFilterOptions> _logConfig)
+        public WTMLoggerProvider(IOptionsMonitor<Configs> _configs, IOptionsMonitor<LoggerFilterOptions> _logConfig)
         {
-            if (_configs.Value != null)
+            if (_configs.CurrentValue != null)
             {
-                cs = _configs.Value.ConnectionStrings.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
+                cs = _configs.CurrentValue.ConnectionStrings.Where(x => x.Key.ToLower() == "defaultlog").FirstOrDefault();
                 if (cs == null)
                 {
-                    cs = _configs.Value.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
+                    cs = _configs.CurrentValue.ConnectionStrings.Where(x => x.Key.ToLower() == "default").FirstOrDefault();
                 }
                 if (cs == null)
                 {
-                    cs = _configs.Value.ConnectionStrings.FirstOrDefault();
+                    cs = _configs.CurrentValue.ConnectionStrings.FirstOrDefault();
                 }
-                logConfig = _logConfig.Value;
+                logConfig = _logConfig.CurrentValue;
             }
         }
 

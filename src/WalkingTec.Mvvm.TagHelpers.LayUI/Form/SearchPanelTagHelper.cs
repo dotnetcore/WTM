@@ -113,9 +113,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
         public bool? Expanded { get; set; }
 
         private Configs _configs;
-        public SearchPanelTagHelper(IOptions<Configs> configs)
+        public SearchPanelTagHelper(IOptionsMonitor<Configs> configs)
         {
-            _configs = configs.Value;
+            _configs = configs.CurrentValue;
         }
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

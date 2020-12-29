@@ -19,9 +19,9 @@ namespace WalkingTec.Mvvm.Core.Support.FileHandlers
         private GlobalData _gd;
         public static Func<IWtmFileHandler, string> _subDirFunc;
 
-        public WtmFileProvider(IOptions<Configs> configs, GlobalData gd)
+        public WtmFileProvider(IOptionsMonitor<Configs> configs, GlobalData gd)
         {
-            _configs = configs.Value;
+            _configs = configs.CurrentValue;
             _gd = gd;
             _handlers = new Dictionary<string, ConstructorInfo>();
             var types = _gd.GetTypesAssignableFrom<IWtmFileHandler>();

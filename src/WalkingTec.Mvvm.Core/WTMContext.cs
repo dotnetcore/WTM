@@ -281,9 +281,9 @@ namespace WalkingTec.Mvvm.Core
 
         protected ILogger<ActionLog> Logger { get; set; }
 
-        public WTMContext(IOptions<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
+        public WTMContext(IOptionsMonitor<Configs> _config, GlobalData _gd = null, IHttpContextAccessor _http = null, IUIService _ui = null, List<IDataPrivilege> _dp = null, IDataContext dc = null, IStringLocalizerFactory stringLocalizer = null, ILoggerFactory loggerFactory = null)
         {
-            _configInfo = _config.Value;
+            _configInfo = _config.CurrentValue;
             _globaInfo = _gd ?? new GlobalData();
             _httpContext = _http?.HttpContext;
             _stringLocalizerFactory = stringLocalizer;

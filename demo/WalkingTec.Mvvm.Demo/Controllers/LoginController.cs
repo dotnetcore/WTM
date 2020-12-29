@@ -30,7 +30,6 @@ namespace WalkingTec.Mvvm.Demo.Controllers
         [ActionDescription("Login")]
         public IActionResult Login()
         {
-
             LoginVM vm = Wtm.CreateVM<LoginVM>();
             vm.Redirect = HttpContext.Request.Query["Redirect"];
             if (Wtm.ConfigInfo.IsQuickDebug == true)

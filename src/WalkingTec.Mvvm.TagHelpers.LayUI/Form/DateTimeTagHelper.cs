@@ -169,9 +169,9 @@ namespace WalkingTec.Mvvm.TagHelpers.LayUI
 
         private Configs _configInfo;
 
-        public DateTimeTagHelper(IOptions<Configs> configs)
+        public DateTimeTagHelper(IOptionsMonitor<Configs> configs)
         {
-            _configInfo = configs.Value;
+            _configInfo = configs.CurrentValue;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
